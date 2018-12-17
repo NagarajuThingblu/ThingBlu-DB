@@ -1,0 +1,621 @@
+<div class="page-header">
+    <h1 class="pull-left" style="margin:8px 0px;">
+        <!--Page Heading-->
+        <span>Employee Dashboard</span>
+    </h1>
+    <!-- Header Close and Collapse -->
+    <div class="pull-right" style="padding:0px !important; margin-top:2px !important; margin-bottom:2px;">
+      
+    </div>
+  </div>
+
+  <div class="content-section implementation GridDemo">
+      <div class="ui-g">
+          <div class="ui-g-12">
+              <p-panel header="Employee Dashboard" [toggleable]="true" [style]="{'margin-bottom':'20px'}">
+                  <p-tabView>
+                      <p-tabPanel header="Today's" leftIcon="fa-tasks">
+                        <p-table #dttodaysTasks [value]="globalData.todaysData"  [paginator]="true"  
+                        sortMode="single"                      
+                        [responsive]="true"
+                        [rows]="10"
+                        sortField="LastActionDate"
+                        sortOrder="-1"
+                        rowHover='true'
+                        [rowsPerPageOptions]="paginationValuesTodaysData"
+                        (onPage)="todaysDataonPageChange($event)"
+                        [globalFilterFields]="['TaskTypeName','OrderRefId','StrainName','TaskStatus','ManagerName','LastActionDate']"
+                        >
+                        <ng-template pTemplate="caption">
+                                <div style="text-align: right">
+                                    <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                                    <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" (input)="dttodaysTasks.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+                                </div>
+                        </ng-template>
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <!-- <th>Task</th> -->
+                                    <th  [pSortableColumn]="'TaskTypeName'">{{ globalResource.task }} 
+                                        <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>                        
+                                    </th>                                   
+                                    
+                                    <!-- <th>OrderRefId</th> -->
+                                    <th [pSortableColumn]="'OrderRefId'">{{globalResource.order}} 
+                                        <p-sortIcon [field]="'OrderRefId'"></p-sortIcon>                        
+                                    </th>
+
+                                    <!-- <th>Strain</th> -->
+                                    <th [pSortableColumn]="'StrainName'">{{ globalResource.strain }} 
+                                        <p-sortIcon [field]="'StrainName'"></p-sortIcon>                        
+                                    </th>
+                                    <!-- <th>Lot</th>-->
+                                    <!-- <th [pSortableColumn]="'GrowerLotNo'" class="lotNum">{{ globalResource.lot }}# 
+                                        <p-sortIcon [field]="'GrowerLotNo'"></p-sortIcon>                        
+                                    </th> -->
+
+                                    <!-- <th>Status</th> -->
+                                    <th class="stateswidth" [pSortableColumn]="'TaskStatus'">{{ globalResource.status }} 
+                                        <p-sortIcon [field]="'TaskStatus'"></p-sortIcon>                        
+                                    </th>
+                                    <th [pSortableColumn]="'ManagerName'" class="assignby">{{globalResource.assignby}}  
+                                        <p-sortIcon [field]="'ManagerName'"></p-sortIcon>
+                                    </th>
+                                    <!-- <th>Last Action Date</th> -->
+                                    <th class="datewidth" [pSortableColumn]="'LastActionDate'">{{ globalResource.lastactiondate }} 
+                                        <p-sortIcon [field]="'LastActionDate'"></p-sortIcon>                        
+                                    </th>
+                                </tr>
+
+                                    <tr>
+                                        <th>
+                                            <input pInputText type="text" (input)="dttodaysTasks.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
+                                        </th>
+                                        <th>
+                                            <input pInputText type="text" (input)="dttodaysTasks.filter($event.target.value, 'OrderRefId', 'contains')" class="clsControl">
+                                        </th>
+                                        <th>
+                                            <input pInputText type="text" (input)="dttodaysTasks.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
+                                        </th>
+                                        <!-- <th class="lotNum">
+                                            <input pInputText type="text" (input)="dttodaysTasks.filter($event.target.value, 'GrowerLotNo', 'contains')" class="clsControl">
+                                        </th> -->
+                                        <th class="stateswidth">
+                                            <input pInputText type="text" (input)="dttodaysTasks.filter($event.target.value, 'TaskStatus', 'contains')" class="clsControl">
+                                        </th>
+                                        <th>
+                                                <input pInputText type="text" (input)="dttodaysTasks.filter($event.target.value, 'ManagerName', 'contains')" class="clsControl">
+                                            </th>
+                                        <th class="datewidth">
+                                            <input pInputText type="text" (input)="dttodaysTasks.filter($event.target.value, 'LastActionDate', 'contains')" class="clsControl">
+                                        </th>
+                                    </tr>
+                            </ng-template>
+
+                            
+
+                            <ng-template pTemplate="body"let-task let-rowData let-columns ="columns" let-rowIndex="rowIndex">
+                                <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="clsTableRow" (click)= "onRowSelect(task)">
+                                    <td >
+                                            {{task?.TaskTypeName}}
+                                        <!-- <u><a href="#" [routerLink]="['../taskaction',task?.TaskTypeKey, task?.TaskId]">{{task?.TaskTypeName}}</a></u> -->
+                                    </td>
+                                    <td>{{task?.OrderRefId}}</td>
+                                    <td>{{task?.StrainName}} 
+                                        <!-- <div class="clear"></div> -->
+                                        <span *ngIf="task?.LotCounts > 1"> 
+                                        <a class="btn-link" (click)="showDialog(task?.TaskId)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span>
+                                    </td>
+                                    <!-- <td class="lotNum"><span>{{task?.GrowerLotNo}}</span></td> -->
+                                    <td class="stateswidth">{{task?.TaskStatus | InProcessStatus}}</td>
+                                    <td class="assignby"><span>{{task?.ManagerName}}</span></td>
+                                    <td class="datewidth">{{task?.LastActionDate | date: 'MM/dd/yyyy hh:mm a' }}</td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="6">
+                                      {{ globalResource.norecordsfound }}
+                                    </td>
+                                </tr>
+                              </ng-template>
+                              <ng-template pTemplate="paginatorleft" let-state>
+                                <pagination-counts
+                                  *ngIf="globalData.todaysData?.length"
+                                  [inputData]="globalData.todaysData"
+                                  [inputEvent]="todaysDataevent"
+                                ></pagination-counts>
+                              </ng-template>
+                        </p-table>
+                      </p-tabPanel>
+
+                      <p-tabPanel header="In Progress/Paused" leftIcon="fa-tasks"  >
+                            <p-table #dtinProgressTasks 
+                            [value]="globalData.inprogressData" 
+                            [paginator]="true"  
+                            sortMode="single"                      
+                            [responsive]="true"
+                            [rows]="10"
+                            sortField="LastActionDate"
+                            sortOrder="-1"
+                            rowHover='true'
+                            [rowsPerPageOptions]="paginationValuesInprogressData"
+                            (onPage)="inprogressDataonPageChange($event)"
+                            [globalFilterFields]="['TaskTypeName','OrderRefId','StrainName','ManagerName','TaskStatus','LastActionDate']"
+                            >
+                            <ng-template pTemplate="caption">
+                                    <div style="text-align: right">
+                                        <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                                        <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" (input)="dtinProgressTasks.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+                                    </div>
+                            </ng-template>
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <!-- <th>Task</th> -->
+                                        <th  [pSortableColumn]="'TaskTypeName'">{{ globalResource.task }} 
+                                            <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>                        
+                                        </th>                                   
+                                        
+                                       <!-- <th>OrderRefId</th> -->
+                                    <th [pSortableColumn]="'OrderRefId'">{{globalResource.order}} 
+                                            <p-sortIcon [field]="'OrderRefId'"></p-sortIcon>                        
+                                        </th>
+
+                                        <!-- <th>Strain</th> -->
+                                        <th [pSortableColumn]="'StrainName'">{{ globalResource.strain }} 
+                                            <p-sortIcon [field]="'StrainName'"></p-sortIcon>                        
+                                        </th>
+                                        <!-- <th>Lot</th>-->
+                                        <!-- <th [pSortableColumn]="'GrowerLotNo'" class="lotNum">{{ globalResource.lot }}#
+                                            <p-sortIcon [field]="'GrowerLotNo'"></p-sortIcon>                        
+                                        </th> -->
+
+                                        <!-- <th>Status</th> -->
+                                        <th class="stateswidth" [pSortableColumn]="'TaskStatus'">{{ globalResource.status }} 
+                                            <p-sortIcon [field]="'TaskStatus'"></p-sortIcon>                        
+                                        </th>
+                                        <th [pSortableColumn]="'ManagerName'" class="assignby">{{globalResource.assignby}}  
+                                                <p-sortIcon [field]="'ManagerName'"></p-sortIcon>
+                                            </th>
+                                        <!-- <th>Last Action Date</th> -->
+                                        <th class="datewidth" [pSortableColumn]="'LastActionDate'">{{ globalResource.lastactiondate }}
+                                            <p-sortIcon [field]="'LastActionDate'"></p-sortIcon>                        
+                                        </th>
+                                    </tr>
+
+                                        <tr>
+                                            <th >
+                                                <input pInputText type="text" (input)="dtinProgressTasks.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
+                                            </th>
+                                            <th>
+                                                <input pInputText type="text" (input)="dtinProgressTasks.filter($event.target.value, 'OrderRefId', 'contains')" class="clsControl">
+                                            </th>
+                                            <th>
+                                                <input pInputText type="text" (input)="dtinProgressTasks.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
+                                            </th>
+                                            <!-- <th class="lotNum">
+                                                <input pInputText type="text" (input)="dtinProgressTasks.filter($event.target.value, 'GrowerLotNo', 'contains')" class="clsControl">
+                                            </th> -->
+                                            <th class="stateswidth">
+                                                <input pInputText type="text" (input)="dtinProgressTasks.filter($event.target.value, 'TaskStatus', 'contains')" class="clsControl">
+                                            </th>
+                                            <th>
+                                                    <input pInputText type="text" (input)="dtinProgressTasks.filter($event.target.value, 'ManagerName', 'contains')" class="clsControl">
+                                                </th>
+                                            <th class="datewidth">
+                                                <input pInputText type="text" (input)="dtinProgressTasks.filter($event.target.value, 'LastActionDate', 'contains')" class="clsControl">
+                                            </th>
+                                        </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-task let-rowData let-columns ="columns" let-rowIndex="rowIndex">
+                                    <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="clsTableRow" (click)= "onRowSelect(task)">
+                                        <td >
+                                                {{task?.TaskTypeName}}
+                                            <!-- <u><a href="#" [routerLink]="['../taskaction', task?.TaskTypeKey, task?.TaskId]">{{task?.TaskTypeName}}</a></u> -->
+                                        </td>
+                                        <td>{{task?.OrderRefId}}</td>
+                                        <td>{{task?.StrainName}}
+                                                <!-- <div class="clear"></div> -->
+                                                <span *ngIf="task?.LotCounts > 1"> 
+                                           <a class="btn-link" (click)="showDialog(task?.TaskId)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span>
+                                        </td>
+                                        <!-- <td class="lotNum"><span>{{task?.GrowerLotNo}}</span></td> -->
+                                        <td class="stateswidth">{{task?.TaskStatus | InProcessStatus }}</td>
+                                        <td class="assignby"><span>{{task?.ManagerName}}</span></td>
+                                        <td class="datewidth">{{task?.LastActionDate | date: 'MM/dd/yyyy hh:mm a' }}</td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage" let-columns>
+                                    <tr>
+                                        <td [attr.colspan]="6">
+                                          {{ globalResource.norecordsfound }}
+                                        </td>
+                                    </tr>
+                                  </ng-template>
+                                  <ng-template pTemplate="paginatorleft" let-state>
+                                    <pagination-counts
+                                      *ngIf="globalData.inprogressData.length"
+                                      [inputData]="globalData.inprogressData"
+                                      [inputEvent]="inprogressDataevent"
+                                    ></pagination-counts>
+                                  </ng-template>
+                            </p-table>
+                        </p-tabPanel>
+
+                      <p-tabPanel header="Delayed" leftIcon="fa-tasks"  >
+                        <p-table #dtdelayedTasks [value]="globalData.delayedData" [paginator]="true"  
+                        sortMode="single"                      
+                        [responsive]="true"
+                        [rows]="10"
+                        sortField="LastActionDate"
+                        sortOrder="-1" 
+                        rowHover='true'
+                        [rowsPerPageOptions]="paginationValuesDelayedData"
+                        (onPage)="delayedDataonPageChange($event)"
+                        [globalFilterFields]="['TaskTypeName','OrderRefId','StrainName','ManagerName','TaskStatus','LastActionDate']"
+                        >
+                        <ng-template pTemplate="caption">
+                                <div style="text-align: right">
+                                    <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                                    <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" (input)="dtdelayedTasks.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+                                </div>
+                        </ng-template>
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <!-- <th>Task</th> -->
+                                    <th  [pSortableColumn]="'TaskTypeName'">{{ globalResource.task }} 
+                                        <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>                        
+                                    </th>                                   
+                                    
+                                     <!-- <th>OrderRefId</th> -->
+                                     <th [pSortableColumn]="'OrderRefId'">{{globalResource.order}} 
+                                            <p-sortIcon [field]="'OrderRefId'"></p-sortIcon>                        
+                                        </th>
+
+                                    <!-- <th>Strain</th> -->
+                                    <th [pSortableColumn]="'StrainName'">{{ globalResource.strain }} 
+                                        <p-sortIcon [field]="'StrainName'"></p-sortIcon>                        
+                                    </th>
+                                    <!-- <th>Lot</th>-->
+                                    <!-- <th [pSortableColumn]="'GrowerLotNo'" class="lotNum">{{ globalResource.lot }}# 
+                                        <p-sortIcon [field]="'GrowerLotNo'"></p-sortIcon>                        
+                                    </th> -->
+
+                                    <!-- <th>Status</th> -->
+                                    <th class="stateswidth" [pSortableColumn]="'TaskStatus'">{{ globalResource.status }} 
+                                        <p-sortIcon [field]="'TaskStatus'"></p-sortIcon>                        
+                                    </th>
+                                    <th [pSortableColumn]="'ManagerName'" class="assignby">{{globalResource.assignby}}  
+                                            <p-sortIcon [field]="'ManagerName'"></p-sortIcon>
+                                        </th>
+                                    <!-- <th>Last Action Date</th> -->
+                                    <th class="datewidth" [pSortableColumn]="'LastActionDate'">{{ globalResource.lastactiondate }} 
+                                        <p-sortIcon [field]="'LastActionDate'"></p-sortIcon>                        
+                                    </th>
+                                </tr>
+
+                                    <tr>
+                                        <th >
+                                            <input pInputText type="text" (input)="dtdelayedTasks.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
+                                        </th>
+                                        <th>
+                                            <input pInputText type="text" (input)="dtdelayedTasks.filter($event.target.value, 'OrderRefId', 'contains')" class="clsControl">
+                                        </th>
+                                        <th>
+                                            <input pInputText type="text" (input)="dtdelayedTasks.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
+                                        </th>
+                                        <!-- <th class="lotNum">
+                                            <input pInputText type="text" (input)="dtdelayedTasks.filter($event.target.value, 'GrowerLotNo', 'contains')" class="clsControl">
+                                        </th> -->
+                                        <th class="stateswidth">
+                                            <input pInputText type="text" (input)="dtdelayedTasks.filter($event.target.value, 'TaskStatus', 'contains')" class="clsControl">
+                                        </th>
+                                        <th>
+                                                <input pInputText type="text" (input)="dtdelayedTasks.filter($event.target.value, 'ManagerName', 'contains')" class="clsControl">
+                                            </th>
+                                        <th class="datewidth">
+                                            <input pInputText type="text" (input)="dtdelayedTasks.filter($event.target.value, 'LastActionDate', 'contains')" class="clsControl">
+                                        </th>
+                                    </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-task let-rowData let-columns ="columns" let-rowIndex="rowIndex">
+                                <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="clsTableRow" (click)= "onRowSelect(task)">
+                                    <td >
+                                            {{task?.TaskTypeName}}
+                                        <!-- <u><a href="#" [routerLink]="['../taskaction', task?.TaskTypeKey, task?.TaskId]">{{task?.TaskTypeName}}</a></u> -->
+                                    </td>
+                                    <td>{{task?.OrderRefId}}</td>
+                                    <td>{{task?.StrainName}}
+                                            <!-- <div class="clear"></div> -->
+                                            <span *ngIf="task?.LotCounts > 1"> 
+                                       <a class="btn-link" (click)="showDialog(task?.TaskId)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span>
+                                    </td>
+                                    <!-- <td class="lotNum"><span>{{task?.GrowerLotNo}}</span></td> -->
+                                    <td class="stateswidth">{{task?.TaskStatus | InProcessStatus}}</td>
+                                    <td class="assignby"><span>{{task?.ManagerName}}</span></td>
+                                    <td class="datewidth">{{task?.LastActionDate | date: 'MM/dd/yyyy hh:mm a' }}</td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="6">
+                                      {{ globalResource.norecordsfound }}
+                                    </td>
+                                </tr>
+                              </ng-template>
+                              <ng-template pTemplate="paginatorleft" let-state>
+                                <pagination-counts
+                                  *ngIf="globalData.delayedData.length"
+                                  [inputData]="globalData.delayedData"
+                                  [inputEvent]="delayedDataevents"
+                                ></pagination-counts>
+                              </ng-template>
+                        </p-table>
+                      </p-tabPanel>
+                      <p-tabPanel header="Future/Planned" leftIcon="fa-tasks">
+                        <p-table #dtfutureTasks 
+                        [value]="globalData.futureData" 
+                        [paginator]="true"  
+                        sortMode="single"                      
+                        [responsive]="true"
+                        [rows]="10"
+                        rowHover='true'
+                        sortField="LastActionDate"
+                        sortOrder="-1" 
+                        [rowsPerPageOptions]="paginationValuesFutureData"
+                        (onPage)="futureDataonPageChange($event)"
+                        [globalFilterFields]="['TaskTypeName','OrderRefId','StrainName','ManagerName','TaskStatus','LastActionDate']"
+                        >
+                        <ng-template pTemplate="caption">
+                                <div style="text-align: right">
+                                    <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                                    <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" (input)="dtfutureTasks.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+                                </div>
+                        </ng-template>
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <!-- <th>Task</th> -->
+                                    <th  [pSortableColumn]="'TaskTypeName'">{{ globalResource.task }} 
+                                        <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>                        
+                                    </th>                                   
+                                    
+                                     <!-- <th>OrderRefId</th> -->
+                                     <th [pSortableColumn]="'OrderRefId'">{{globalResource.order}} 
+                                            <p-sortIcon [field]="'OrderRefId'"></p-sortIcon>                        
+                                        </th>
+
+                                    <!-- <th>Strain</th> -->
+                                    <th [pSortableColumn]="'StrainName'">{{ globalResource.strain }} 
+                                        <p-sortIcon [field]="'StrainName'"></p-sortIcon>                        
+                                    </th>
+                                    <!-- <th>Lot</th>-->
+                                    <!-- <th [pSortableColumn]="'GrowerLotNo'"  class="lotNum">{{ globalResource.lot }}# 
+                                        <p-sortIcon [field]="'GrowerLotNo'"></p-sortIcon>                        
+                                    </th> -->
+
+                                    <!-- <th>Status</th> -->
+                                    <th class="stateswidth" [pSortableColumn]="'TaskStatus'">{{ globalResource.status }} 
+                                        <p-sortIcon [field]="'TaskStatus'"></p-sortIcon>                        
+                                    </th>
+                                    <th [pSortableColumn]="'ManagerName'" class="assignby">{{globalResource.assignby}}  
+                                            <p-sortIcon [field]="'ManagerName'"></p-sortIcon>
+                                        </th>
+                                    <!-- <th>Last Action Date</th> -->
+                                    <th class="datewidth" [pSortableColumn]="'LastActionDate'">{{ globalResource.lastactiondate }}
+                                        <p-sortIcon [field]="'LastActionDate'"></p-sortIcon>                        
+                                    </th>
+                                </tr>
+
+                                    <tr>
+                                        <th >
+                                            <input pInputText type="text" (input)="dtfutureTasks.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
+                                        </th>
+                                        <th>
+                                            <input pInputText type="text" (input)="dtfutureTasks.filter($event.target.value, 'OrderRefId', 'contains')" class="clsControl">
+                                        </th>
+                                        <th>
+                                            <input pInputText type="text" (input)="dtfutureTasks.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
+                                        </th>
+                                        <!-- <th class="lotNum">
+                                            <input pInputText type="text" (input)="dtfutureTasks.filter($event.target.value, 'GrowerLotNo', 'contains')" class="clsControl">
+                                        </th> -->
+                                        <th class="stateswidth">
+                                            <input pInputText type="text" (input)="dtfutureTasks.filter($event.target.value, 'TaskStatus', 'contains')" class="clsControl">
+                                        </th>
+                                        <th>
+                                                <input pInputText type="text" (input)="dtfutureTasks.filter($event.target.value, 'ManagerName', 'contains')" class="clsControl">
+                                            </th>
+                                        <th class="datewidth">
+                                            <input pInputText type="text" (input)="dtfutureTasks.filter($event.target.value, 'LastActionDate', 'contains')" class="clsControl">
+                                        </th>
+                                    </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-task let-rowData let-columns ="columns" let-rowIndex="rowIndex">
+                                <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="clsTableRow" (click)= "onRowSelect(task)">
+                                    <td >
+                                            {{task?.TaskTypeName}}
+                                        <!-- <u><a href="#" [routerLink]="['../taskaction', task?.TaskTypeKey, task?.TaskId]">{{task?.TaskTypeName}}</a></u> -->
+                                    </td>
+                                    <td>{{task?.OrderRefId}}</td>
+                                    <td>{{task?.StrainName}}
+                                            <!-- <div class="clear"></div> -->
+                                            <span *ngIf="task?.LotCounts > 1"> 
+                                       <a class="btn-link" (click)="showDialog(task?.TaskId)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span>
+                                    </td>
+                                    <!-- <td class="lotNum"><span>{{task?.GrowerLotNo}}</span></td> -->
+                                    <td class="stateswidth">{{task?.TaskStatus | InProcessStatus}}</td>
+                                    <td class="assignby"><span>{{task?.ManagerName}}</span></td>
+                                    <td class="datewidth">{{task?.LastActionDate | date: 'MM/dd/yyyy hh:mm a' }}</td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="6">
+                                      {{ globalResource.norecordsfound }}
+                                    </td>
+                                </tr>
+                              </ng-template>
+                              <ng-template pTemplate="paginatorleft" let-state>
+                                <pagination-counts
+                                  *ngIf="globalData.futureData.length"
+                                  [inputData]="globalData.futureData"
+                                  [inputEvent]="futureDataevent"
+                                ></pagination-counts>
+                              </ng-template>
+                        </p-table>
+                      </p-tabPanel>
+                      <p-tabPanel header="Completed/Review Pending" leftIcon="fa-tasks">
+                        <p-table #dtcompletedTasks [value]="globalData.completedData" [paginator]="true"  
+                        sortMode="single"                      
+                        [responsive]="true"
+                        [rows]="10"
+                        sortField="LastActionDate"
+                        sortOrder="-1" 
+                        rowHover='true'
+                        [rowsPerPageOptions]="paginationValuesCompletedData"
+                        (onPage)="completedDataonPageChange($event)"
+                        [globalFilterFields]="['TaskTypeName','OrderRefId','StrainName','ManagerName','TaskStatus','LastActionDate']"
+                        >
+                        <ng-template pTemplate="caption">
+                            <div style="text-align: right">
+                                <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                                    <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" (input)="dtcompletedTasks.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+                            </div>
+                        </ng-template>
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <!-- <th>Task</th> -->
+                                    <th  [pSortableColumn]="'TaskTypeName'">{{ globalResource.task }} 
+                                        <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>                        
+                                    </th>                                   
+                                    
+                                     <!-- <th>OrderRefId</th> -->
+                                     <th [pSortableColumn]="'OrderRefId'">{{globalResource.order}} 
+                                            <p-sortIcon [field]="'OrderRefId'"></p-sortIcon>                        
+                                        </th>
+
+                                    <!-- <th>Strain</th> -->
+                                    <th [pSortableColumn]="'StrainName'">{{ globalResource.strain }} 
+                                        <p-sortIcon [field]="'StrainName'"></p-sortIcon>                        
+                                    </th>
+                                    <!-- <th>Lot</th>-->
+                                    <!-- <th [pSortableColumn]="'GrowerLotNo'" class="lotNum">{{ globalResource.lot }}# 
+                                        <p-sortIcon [field]="'GrowerLotNo'"></p-sortIcon>                        
+                                    </th> -->
+
+                                    <!-- <th>Status</th> -->
+                                    <th class="stateswidth" [pSortableColumn]="'TaskStatus'">{{ globalResource.status}} 
+                                        <p-sortIcon [field]="'TaskStatus'"></p-sortIcon>                        
+                                    </th>
+                                    <th [pSortableColumn]="'ManagerName'" class="assignby">{{globalResource.assignby}}  
+                                            <p-sortIcon [field]="'ManagerName'"></p-sortIcon>
+                                        </th>
+                                    <!-- <th>Last Action Date</th> -->
+                                    <th class="datewidth" [pSortableColumn]="'LastActionDate'">{{ globalResource.lastactiondate }}
+                                        <p-sortIcon [field]="'LastActionDate'"></p-sortIcon>                        
+                                    </th>
+                                </tr>
+
+                                    <tr>
+                                        <th >
+                                            <input pInputText type="text" (input)="dtcompletedTasks.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
+                                        </th>
+                                        <th>
+                                            <input pInputText type="text" (input)="dtcompletedTasks.filter($event.target.value, 'OrderRefId', 'contains')" class="clsControl">
+                                        </th>
+                                        <th>
+                                            <input pInputText type="text" (input)="dtcompletedTasks.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
+                                        </th>
+                                        <!-- <th class="lotNum">
+                                            <input pInputText type="text" (input)="dtcompletedTasks.filter($event.target.value, 'GrowerLotNo', 'contains')" class="clsControl">
+                                        </th> -->
+                                        <th class="stateswidth">
+                                            <input pInputText type="text" (input)="dtcompletedTasks.filter($event.target.value, 'TaskStatus', 'contains')" class="clsControl">
+                                        </th>
+                                        <th>
+                                                <input pInputText type="text" (input)="dtcompletedTasks.filter($event.target.value, 'ManagerName', 'contains')" class="clsControl">
+                                            </th>
+                                        <th class="datewidth">
+                                            <input pInputText type="text" (input)="dtcompletedTasks.filter($event.target.value, 'LastActionDate', 'contains')" class="clsControl">
+                                        </th>
+                                    </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-task let-rowData let-columns ="columns" let-rowIndex="rowIndex">
+                                <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="clsTableRow" (click)= "onRowSelect(task)">
+                                    <td >
+                                            {{task?.TaskTypeName}}
+                                        <!-- <u><a href="#" [routerLink]="['../taskaction', task?.TaskTypeKey, task?.TaskId]">{{task?.TaskTypeName}}</a></u> -->
+                                    </td>
+                                    <td>{{task?.OrderRefId}}</td>
+                                    <td>{{task?.StrainName}}
+                                            <!-- <div class="clear"></div> -->
+                                            <span *ngIf="task?.LotCounts > 1"> 
+                                       <a class="btn-link" (click)="showDialog(task?.TaskId)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span>
+                                    </td>
+                                    <!-- <td class="lotNum"><span>{{task?.GrowerLotNo}}</span></td> -->
+                                    <td class="stateswidth">{{task?.TaskStatus | InProcessStatus}}</td>
+                                    <td class="assignby"><span>{{task?.ManagerName}}</span></td>
+                                    <td class="datewidth">{{task?.LastActionDate | date: 'MM/dd/yyyy hh:mm a' }}</td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>
+                                    <td [attr.colspan]="6">
+                                      {{ globalResource.norecordsfound }}
+                                    </td>
+                                </tr>
+                              </ng-template>
+                              <ng-template pTemplate="paginatorleft" let-state>
+                                <pagination-counts
+                                  *ngIf="globalData.completedData.length"
+                                  [inputData]="globalData.completedData"
+                                  [inputEvent]="completedDataevent"
+                                ></pagination-counts>
+                              </ng-template>
+                        </p-table>
+                      </p-tabPanel>
+                  </p-tabView>                    
+              </p-panel>                      
+          </div>
+      </div>
+      <p-dialog header="Details" [(visible)]="display" [responsive]="true" [resizable]="false" [width]="400">
+        <div>
+                <p-table #dtCompleted [value]="tasklotDetailsBytaskId">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width:50%">{{ globalResource.strain }} </th>
+                            <th  style="width:50%">{{ globalResource.lot }} </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-task let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                        <tr >
+                            <td>{{task?.StrainName}}</td>
+                            <td>
+                                {{task?.GrowerLotNo}}
+                                <!-- Added by Devdan :: 21-Nov-2018 :: Adding Lot Note and Lot Details Icon -->
+                                <app-lot-comment
+                                    [LotId]="task?.LotId"
+                                    [LotCommentsCount]="task?.LotNoteCount"
+                                    (CommentIconClicked)="commentIconClicked($event)"
+                                ></app-lot-comment>
+                                
+                                <app-lot-note-icon
+                                    [LotId]="task?.LotId"                                
+                                    (NoteIconClicked)="ShowLotNote($event)"
+                                ></app-lot-note-icon>
+                            </td>
+                            </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td [attr.colspan]="2">
+                              {{ globalResource.norecordsfound }}
+                            </td>
+                        </tr>
+                      </ng-template>
+                </p-table>
+        </div>
+    </p-dialog>
+    <app-lot-note [Lot]="lotInfo" *ngIf="lotInfo?.lotId" ></app-lot-note> 
+    <app-popup-lot-comment [Lot]="lotInfo" *ngIf="lotInfo?.showLotCommentModal" (CommentSaved)="OnCommentSaved($event)">
+    </app-popup-lot-comment>
+  </div>

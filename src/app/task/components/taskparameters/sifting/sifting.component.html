@@ -1,0 +1,1069 @@
+<div class="ui-g " [formGroup]="SIFTING" *ngIf="PageFlag.page =='AssignTask'">
+  <!--Strain -->
+ <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+        <label for="strain">{{ globalResource.strain }}<span class="star">*</span></label>:
+      <div class="clear"></div>
+          <p-dropdown
+            [filter] ="true"
+            [options]="strains"
+            (onChange)="onStrainChange('frmHTML')"
+            placeholder="-- Select --"
+            [(ngModel)]="TaskModel.SIFTING.strain"
+            [autoWidth]="true"
+            formControlName="strain"
+            class="clsControl"
+            id="strain"
+            name="strain">
+        </p-dropdown>
+        <div
+          class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+          *ngIf="!SIFTING.controls['strain'].valid&&SIFTING.controls['strain'].dirty">
+           
+            <span *ngIf="SIFTING.controls['strain'].errors['required']">
+              {{ globalResource.strainrequired }}
+            </span>                      
+        </div>
+  
+      </div>
+    </div>
+    <!--End Strain -->
+  <!--Lot No -->
+  <div class="ui-g-12 ui-md-6">
+   <div class="paddingRL">
+       <label for="lotno">{{ globalResource.lotno }}<span class="star">*</span></label>:
+       
+       <app-lot-comment
+            [LotId]="TaskModel.SIFTING.lotno"
+            [LotCommentsCount]="lotInfo.LotNoteCount"
+            (CommentIconClicked)="commentIconClicked($event)"
+        ></app-lot-comment>
+
+
+        <app-lot-note-icon
+          [LotId]="TaskModel.SIFTING.lotno"          
+          (NoteIconClicked)="showLotNote($event)"
+        ></app-lot-note-icon>
+     
+         <p-dropdown
+         [filter] ="true"
+           [options]="lots"
+           placeholder="-- Select --"
+           [(ngModel)]="TaskModel.SIFTING.lotno"
+           [autoWidth]="true"
+           (onChange)="lotOnChange($event)"
+           formControlName="lotno"
+           class="clsControl"
+           id="lotno"
+           name="lotno">
+       </p-dropdown>
+             
+       <div
+         class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+         *ngIf="!SIFTING.controls['lotno'].valid&&SIFTING.controls['lotno'].dirty">
+          
+           <span *ngIf="SIFTING.controls['lotno'].errors['required']">
+             {{ globalResource.lotnorequired }}
+           </span>                      
+       </div>
+ 
+     </div>
+   </div>
+   <!--End Lot No -->
+   <!--Brand-->
+   <!-- <div class="ui-g-12 ui-md-6">
+     <div class="paddingRL">
+         <label for="brand">{{ globalResource.brand }}</label>
+                        
+           <div class="clear"></div>
+          <span class="lblText">{{TaskModel.SIFTING.brand}}</span>   
+       </div>
+   </div> -->
+   <!--End Brand-->
+   <!--Strain-->
+   <!-- <div class="ui-g-12 ui-md-6">
+     <div class="paddingRL">
+         <label for="strain">{{ globalResource.strain }}</label>
+                          <div style="clear:both"></div> -->
+         <!-- <input type="text" 
+               pInputText 
+               [(ngModel)]="TaskModel.SIFTING.strain"                     
+               formControlName="strain"
+               id="strain"
+               name="strain"              
+               class="clsControl"
+               readonly="true"
+           />                            -->
+         
+           <!-- <div class="clear"></div>
+           <span class="lblText">{{TaskModel.SIFTING.strain}}</span> 
+       </div>
+   </div> -->
+   <!--End Strain-->
+   <!--Employee-->
+   <div class="ui-g-12 ui-md-6">
+     <div class="paddingRL">
+         <label for="employee">{{ globalResource.employee }}<span class="star">*</span></label>:
+                      
+         <div class="ui-inputgroup">
+             <p-dropdown
+             [filter] ="true"
+               [options]="employees"
+               placeholder="-- Select --"
+               (onChange)="empOnChange()"
+               [(ngModel)]="TaskModel.SIFTING.employee"
+               [autoWidth]="true"              
+               formControlName="employee"
+               id="employee"
+               class="clsControl"
+               name="employee">
+           </p-dropdown>            
+       </div>
+         <div
+           class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+           *ngIf="!SIFTING.controls['employee'].valid&&SIFTING.controls['employee'].dirty">
+            
+             <span *ngIf="SIFTING.controls['employee'].errors['required']">
+               {{ globalResource.employeerequired }}
+             </span>                      
+         </div>
+       </div>
+   </div>
+   <!--End Employee-->
+ 
+ 
+   <!-- Task Related Extra Paramters -->
+ <div class="ui-g-12 ui-md-6">
+     <div class="paddingRL twocnt">
+        
+             <label class="towlable" for="lotWeight">{{ assignTaskResources.lotweight }}:</label>
+             <!-- <label class="towlable" for="lotWeight">{{ assignTaskResources.balancewt }}</label> -->
+                
+             <!-- <input type="text" 
+               pInputText 
+               [(ngModel)]="TaskModel.SIFTING.lotweight" 
+               [ngModelOptions]="{standalone: true}"
+               id="lotweight" 
+               name="lotweight"       
+               class="clsControl textOneOftwo"  
+               readonly="true"             
+           /> -->        
+           <div class="clear"></div>
+           <span class="lblText">{{ TaskModel.SIFTING.lotweight }}</span> 
+           
+                  
+                 <!-- <input type="text" 
+                   pInputText 
+                   [(ngModel)]="TaskModel.SIFTING.lotBalWt" 
+                   [ngModelOptions]="{standalone: true}"
+                   id="lotBalWt" 
+                   name="lotBalWt"       
+                   class="clsControl texttwo"  
+                   readonly="true"
+               /> -->
+               <!-- <span> {{TaskModel.SIFTING.lotBalWt}} </span> -->
+        
+     </div>  
+   </div>
+   <div class="ui-g-12 ui-md-6">
+     <div class="paddingRL">
+       <label for="assignwt">{{ globalResource.assignedwt }} {{globalResource.measure}}<span class="star">*</span></label>:
+    
+       <input type="number" 
+         pInputText 
+         autocomplete="off"
+         (change)="assignWtOnChnage()"
+         [(ngModel)]="TaskModel.SIFTING.assignwt" 
+         id="assignwt" 
+         name="assignwt" 
+         pKeyFilter="num"
+         formControlName="assignwt"         
+         OnlyNumber="true"
+         maxlength="10"      
+         class="clsControl"  
+       />
+ 
+       <div
+         class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+         *ngIf="!SIFTING.controls['assignwt'].valid&&SIFTING.controls['assignwt'].dirty">
+          <span *ngIf="SIFTING.controls['assignwt'].errors['min']">
+            {{ globalResource.zeronotallow}}
+          </span>
+           <span *ngIf="SIFTING.controls['assignwt'].errors['required']">
+             {{ assignTaskResources.assignedwtrequired }}
+           </span>                               
+       </div>
+ 
+     </div>
+   </div>
+   <!-- End Task Related Extra Paramters -->
+     
+ <!--Estimated Start DateTime-->
+ <div class="ui-g-12 ui-md-6">
+   <div class="paddingRL">
+       <label for="estimatedstartdate">
+         {{ globalResource.eststartdate }}<span class="star">*</span>:
+       </label>
+       <small class="smallTextRed"
+          *ngIf="showPastDateLabel"
+          >({{ globalResource.pastdatetask }})
+        </small>
+       <!-- [maxDate]="TaskModel.SIFTING.enddate" -->
+         <p-calendar                        
+          
+           [(ngModel)]="TaskModel.SIFTING.startdate"
+           [showIcon]="true"
+           [defaultDate]="defaultDate"      
+           (onSelect)="estStartDate_Select()"
+           (onInput)="estStartDate_Select()"  
+           formControlName="estimatedstartdate"          
+           class="clsControl"
+           id="estimatedstartdate"
+           name="estimatedstartdate"
+           >
+         </p-calendar>                              
+         <div
+           class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+           *ngIf="!SIFTING.controls['estimatedstartdate'].valid&&SIFTING.controls['estimatedstartdate'].dirty">
+            
+             <span *ngIf="SIFTING.controls['estimatedstartdate'].errors['required']">
+               {{ globalResource.startdaterequired }}
+             </span>                                                                                                                                                                            
+         </div>
+ 
+         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip 
+           *ngIf="SIFTING.hasError('invalidDate')" >
+             {{ globalResource.datecomparevalidation }}
+         </div>                        
+     </div>
+ </div>
+ <!--End Estimated Start DateTime-->         
+ <!--Estimated End DateTime-->
+ <!-- <div class="ui-g-12 ui-md-6">
+    
+        <div class="paddingRL twocnt">
+           <label class="calonelable" for="estimatedenddate">{{ globalResource.estenddate }} <span class="star">*</span></label>
+           <label class="calTwolable" for="estimatedenddate" >{{ globalResource.endtime }} <span class="star">*</span></label>
+           <div style="clear: both;"></div>
+ 
+ 
+           <p-calendar                        
+             [(ngModel)]="TaskModel.SIFTING.enddate" 
+             [minDate]="TaskModel.SIFTING.startdate"            
+             [showIcon]="true"
+             formControlName="estimatedenddate"
+             id="estimatedenddate"
+             class="clsControl calone"
+             name="estimatedenddate"                      
+           >                      
+         </p-calendar>               
+      
+       
+        <label for="time">{{ globalResource.time }} <span class="star">*</span></label>
+        <p-inputMask 
+        mask="99:99 aa" 
+        class="clsControl caltwo"
+         [(ngModel)]="TaskModel.SIFTING.time" formControlName="endtime"
+         >
+       </p-inputMask>
+        <p-calendar [(ngModel)]="TaskModel.SIFTING.time" formControlName="endtime" [timeOnly]="true" [showIcon]="true" class="clsControl caltwo"></p-calendar>
+      
+      
+     
+    
+         <div
+           class="ui-message ui-messages-error ui-corner-all"
+           *ngIf="!SIFTING.controls['estimatedenddate'].valid
+                 &&SIFTING.controls['estimatedenddate'].dirty">
+            
+             <span *ngIf="SIFTING.controls['estimatedenddate'].errors['required']">
+               {{ globalResource.enddaterequired }}
+             </span>                      
+         </div>           
+       </div>
+ </div> -->
+ <!--End Estimated End DateTime-->
+ <!--esthrs-->
+   <!-- <div class="ui-g-12 ui-md-6">
+       <div class="paddingRL threecnt">
+         
+               <label class="threelable" for="employee">{{ globalResource.estimatedhrs }} <span class="star">*</span></label>
+               <label class="threelable" for="employee">{{ globalResource.emprate }} </label>
+               <label class="threelable" for="employee">{{ globalResource.empestcost }} </label>
+               <div style="clear: both;"></div>
+ 
+               <input 
+               type="text" 
+               pInputText 
+               formControlName="esthrs"
+               OnlyNumber="true"
+               maxlength="6"
+               (change)="estHrsChange()"
+               class="clsControl textthree"
+               [(ngModel)]="TaskModel.SIFTING.esthrs"
+             />
+             <span  class="clsControl textthree"> {{TaskModel.SIFTING.emprate}} </span>
+ 
+             <span class="clsControl textthree" style="margin-left: 25%;" > {{TaskModel.SIFTING.empcost}} </span>
+             
+               <input 
+               type="text" 
+               pInputText           
+               class="clsControl textthree hiddenField"
+               [(ngModel)]="TaskModel.SIFTING.emprate"
+               formControlName="emprate"
+               readonly="true"
+               
+             />
+         
+             
+               <input 
+               type="text" 
+               pInputText           
+               class="clsControl textthree hiddenField"
+               [(ngModel)]="TaskModel.SIFTING.empcost"
+               formControlName="empestcost"
+               readonly="true"
+             />
+ 
+           
+                                     
+         <div
+           class="ui-message ui-messages-error ui-corner-all"
+           *ngIf="!SIFTING.controls['esthrs'].valid&&SIFTING.controls['esthrs'].dirty">
+           
+             <span *ngIf="SIFTING.controls['esthrs'].errors['required']">
+               {{ globalResource.estimatedhrsrequired }}
+             </span>            
+             <span *ngIf="SIFTING.controls['esthrs'].errors.allowOnlyPositiveInteger">
+               {{ globalResource.estimatedhrs + ' ' + globalResource.positiveintegersallowed}}
+             </span>
+         </div>
+       </div>
+   </div> -->
+ <!--End esthrs-->   
+ 
+  <!--Priority-->
+  <div class="ui-g-12 ui-md-6">
+   <div class="paddingRL">
+     <label for="employee">{{ globalResource.priority }}</label>:
+                      
+     <p-dropdown
+       [options]="priorities"
+       [(ngModel)]="TaskModel.SIFTING.priority"
+       [autoWidth]="true"
+       formControlName="priority"
+       id="priority"
+       class="clsControl"
+       name="priority">
+     </p-dropdown>                                  
+   </div>
+ </div>
+ <!--End Priority-->
+ 
+ <!--Notify Manager/Employee-->
+ <div class="ui-g-12 ui-md-6">
+   <div class="paddingRL">                              
+         <p-checkbox          
+           label="{{ assignTaskResources.notifymanager }}"
+           [(ngModel)]="TaskModel.SIFTING.notifymanager"
+           formControlName="notifymanager"
+           binary="true"
+         ></p-checkbox>
+ 
+         <p-checkbox 
+           value="true"
+           label="{{ assignTaskResources.notifyemployee }}"
+           [(ngModel)]="TaskModel.SIFTING.notifyemployee"
+           formControlName="notifyemployee"
+           binary="true"
+         ></p-checkbox>                                                              
+     </div>
+ </div>
+ <!--End Notify Manager/Employee-->
+ <!--Comment-->
+ <div class="ui-g-12 ui-md-6">
+   <div class="paddingRL">
+       <label for="comment">{{ assignTaskResources.comment }}</label>:
+                          
+         <textarea                        
+           pInputTextarea                        
+           [(ngModel)]="TaskModel.SIFTING.usercomment"
+           formControlName="comment"
+           id="comment"
+           name="comment"
+           maxlength="500"
+           class="clsControl"
+           binary="true"
+         ></textarea>
+ 
+         <div
+           class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+           *ngIf="!SIFTING.controls['comment'].valid&&SIFTING.controls['comment'].dirty">
+            
+             <span *ngIf="SIFTING.controls['comment'].errors['maxLength']">
+               {{ assignTaskResources.commentMaxLength }}
+             </span>                      
+       </div>
+     </div>
+ </div>
+ <!--End Comment-->
+ 
+ </div>
+
+ <app-lot-note [Lot]="lotInfo" *ngIf="lotInfo?.showLotNoteModal" (NoteSaved)="onNoteSave($event)" ></app-lot-note> 
+ <app-popup-lot-comment [Lot]="lotInfo" *ngIf="lotInfo?.showLotCommentModal" (CommentSaved)="OnCommentSaved($event)">
+  </app-popup-lot-comment>
+ 
+ <div *ngIf="PageFlag.page =='TaskAction'">
+   <div class="ui-g">
+ 
+     <!--Employee -->
+     <div class="ui-g-12 ui-md-6">
+       <div class="paddingRL">
+           <label>
+             <strong>{{ globalResource.employee }}: </strong>
+           </label>
+         
+           <label>
+             {{TaskModel?.EmpName}}
+           </label>
+         </div>
+       </div>
+       <!--End Employee -->
+       <!--Lot No -->
+       <div class="ui-g-12 ui-md-6">
+         <div class="paddingRL">
+           <label>
+             <strong>{{ globalResource.lotno }}: </strong>
+           </label>
+         
+           <span [class.redText]="TaskModel?.LotDeleted" >
+            {{TaskModel?.GrowerLotNo}}
+            </span>
+
+              <app-lot-comment
+                  [LotId]="TaskModel?.LotId"
+                  [LotCommentsCount]="TaskModel?.LotNoteCount"
+                  (CommentIconClicked)="commentIconClicked($event)"
+              ></app-lot-comment>
+              <app-lot-note-icon
+                [LotId]="TaskModel?.LotId"                
+                (NoteIconClicked)="showLotNote($event)"
+              ></app-lot-note-icon>
+         </div>
+       </div>
+       <!--End Lot No -->
+       <!--Brand-->
+       <!-- <div class="ui-g-12 ui-md-6">
+         <div class="paddingRL">
+           <label>
+             <strong>{{ globalResource.brand }} : </strong>
+           </label>
+         
+             {{TaskModel?.BrandName}}
+         </div>
+       </div> -->
+       <!--End Brand-->
+       <!--Strain-->
+       <div class="ui-g-12 ui-md-6">
+         <div class="paddingRL">
+           <label>
+             <strong>{{ globalResource.strain }}: </strong>
+           </label>
+        
+             {{TaskModel?.StrainName}}
+         </div>
+       </div>
+       <!--End Strain-->
+      
+       <!--Estimated Start DateTime-->
+       <div class="ui-g-12 ui-md-6">
+         <div class="paddingRL">
+             <label>
+               <strong>{{ globalResource.eststartdate }}: </strong>
+             </label>
+           
+               {{TaskModel?.EstStartDate }}
+           </div>
+         </div>
+         <!--End Estimated Start DateTime-->
+ 
+       <!--Estimated End DateTime-->
+       <!-- <div class="ui-g-12 ui-md-6">
+         <div class="paddingRL">
+           <label>
+             <strong>{{ globalResource.estenddate }} : </strong>
+           </label>
+         
+             {{TaskModel?.EstEndDate}}
+         </div>
+       </div> -->
+       <!--End Estimated End DateTime-->
+ 
+ 
+        <!--Actual Start DateTime-->
+        <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
+           <div class="paddingRL">
+               <label>
+                 <strong>{{ globalResource.actualstartdate }}: </strong>
+               </label>
+             
+                 {{TaskModel?.ActStartDate }}
+             </div>
+           </div>
+           <!--End Actual Start DateTime-->
+   
+         <!--Actual End DateTime-->
+         <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+           <div class="paddingRL">
+             <label>
+               <strong>{{ globalResource.actualenddate }}: </strong>
+             </label>
+           
+               {{TaskModel?.ActEndDate}}
+           </div>
+         </div>
+         <!--End Actual End DateTime-->
+ 
+        <!--Est hrs-->
+        <!-- <div class="ui-g-12 ui-md-6">
+         <div class="paddingRL">
+             <label>
+               <strong>{{ globalResource.estimatedhrs }} : </strong>
+             </label>
+          
+               {{TaskModel?.EstHrs}}
+           </div>
+         </div> -->
+         <!--End Est hrs-->
+ 
+           <!--Actual cost-->
+        <div class="ui-g-12 ui-md-6" *ngIf="(TaskModel?.TaskStatus === taskStatus.Completed||TaskModel?.TaskStatus === taskStatus.ReviewPending)&&TaskModel?.TaskStatus !== ''">
+            <div class="paddingRL">
+                <label>
+                  <strong>{{ assignTaskResources.actualcost }}: </strong>
+                </label>
+             
+                  {{TaskModel?.EmpFinalCost | currency}}
+              </div>
+            </div>
+          <!--End Actual costs-->
+ 
+       <!--Priority -->
+       <div class="ui-g-12 ui-md-6">
+         <div class="paddingRL">
+             <label>
+               <strong>{{ globalResource.priority }}: </strong>
+             </label>
+          
+             {{TaskModel?.TaskPriority}}
+           </div>
+         </div>
+         <!--End Priority -->
+ 
+        <!--Misc. Cost-->
+        <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus === taskStatus.Completed">
+           <div class="paddingRL">
+               <label>
+                 <strong>{{ globalResource.misccost }}: </strong>
+               </label>
+            
+                 {{taskReviewModel?.rmisccost | currency }}
+             </div>
+           </div>
+           <!--End Misc. Cost-->
+       
+       <div class="ui-g-12 ui-md-6">
+         <div class="paddingRL">
+           <label>
+             <strong>{{ globalResource.assignwt }}: </strong>
+           </label>      
+             {{TaskModel?.AssignedWt}} {{globalResource.measure}}
+         </div>
+       </div>
+ <hr />
+       <!-- completion parameter -->  
+       <div 
+         *ngIf="TaskModel?.TaskStatus == taskStatus.ReviewPending||TaskModel?.TaskStatus == taskStatus.Completed"
+         class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" 
+         style="margin: 10px 0px; width:100%;">
+               <div class="ui-grid-row">
+                 <div class="ui-grid-col-4">
+     
+                 </div>
+                 <div class="ui-grid-col-4">
+                     <strong>Task Owner</strong>
+                 </div>
+                 <div class="ui-grid-col-4" *ngIf="showToManager">
+                   <strong>Reviewer</strong>
+                 </div>
+               </div>
+     
+               <!-- <div class="ui-grid-row">
+                   <div class="ui-grid-col-4">
+                       <label><strong>{{ assignTaskResources.assignedwt }} :</strong></label>
+                   </div>
+                   <div class="ui-grid-col-4">
+                       {{ taskReviewModel.assignedwt }}          
+                   </div>
+                   <div class="ui-grid-col-4" *ngIf="showToManager">
+                       {{ taskReviewModel.assignedwt }}
+                   </div> 
+               </div> -->
+               <!-- <div class="ui-grid-row">            
+                   <div class="ui-grid-col-4">
+                       <strong>{{ assignTaskResources.processedwt }} :</strong>
+                   </div>
+                   <div class="ui-grid-col-4">
+                       {{ taskCompletionModel.processedwt }}
+                   </div> 
+                   <div class="ui-grid-col-4" *ngIf="showToManager">    
+                       {{ taskReviewModel.rprocessedwt }}       
+                   </div> 
+                 </div>  -->
+                 <!-- Skewed Controls -->            
+             <div class="ui-grid-row">
+     
+               <div class="ui-grid-col-4">
+                   <strong>{{ assignTaskResources.budmaterialwt }}:</strong>
+               </div>
+               <div class="ui-grid-col-4">
+                   {{ taskCompletionModel.usablebudwt }} {{globalResource.listgramunit}}
+               </div> 
+               <div class="ui-grid-col-4" *ngIf="showToManager"> 
+                   {{ taskReviewModel.rusablebudwt }} {{globalResource.listgramunit}}
+               </div>  
+             </div>  
+             
+             <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <strong>{{ assignTaskResources.jointmaterialwt }}:</strong>
+                </div>
+                <div class="ui-grid-col-4">
+                    {{ taskCompletionModel.jointsmaterialwt }} {{globalResource.listgramunit}}
+                </div>
+                <div class="ui-grid-col-4" *ngIf="showToManager">
+                    {{ taskReviewModel.rjointsmaterialwt }} {{globalResource.listgramunit}}
+                </div> 
+              </div>
+
+             <div class="ui-grid-row">
+               <div class="ui-grid-col-4">
+                   <strong>{{ assignTaskResources.oilmaterialwt }}:</strong>
+               </div>
+               <div class="ui-grid-col-4">
+                   {{ taskCompletionModel.oilmaterialwt }} {{globalResource.listgramunit}}
+               </div>
+               <div class="ui-grid-col-4" *ngIf="showToManager">
+                   {{ taskReviewModel.roilmaterialwt }} {{globalResource.listgramunit}}
+               </div> 
+             </div>
+
+             <!-- <div class="ui-grid-row">
+               <div class="ui-grid-col-4">
+                   <strong>{{ assignTaskResources.wastematerialwt }} :</strong>
+               </div>
+               <div class="ui-grid-col-4">
+                   {{ taskCompletionModel.wastematerialwt }}
+               </div>
+               <div class="ui-grid-col-4" *ngIf="showToManager">
+                   {{ taskReviewModel.rwastematerialwt }}
+               </div> 
+           </div> -->
+             <!-- End Skewed Controls -->
+     
+              <!-- Emp Act Hrs -->
+              <div class="ui-grid-row">
+                  <div class="ui-grid-col-4">
+                      <strong>{{ globalResource.actualhrs }}:</strong>
+                  </div>
+                  <div class="ui-grid-col-4">
+                      {{ TaskModel?.ActHrs | minutesToTime }}
+                  </div>
+                  <div class="ui-grid-col-4" *ngIf="showToManager">                
+                      {{ taskReviewModel?.racthrs | minutesToTime }}
+                  </div> 
+              </div>
+              <!-- End Act Hrs -->
+
+            <!-- Emp Return Wt -->
+            <!-- <div class="ui-grid-row">
+              <div class="ui-grid-col-4">
+                  <strong>{{ assignTaskResources.returnwt }} :</strong>
+              </div>
+              <div class="ui-grid-col-4">
+                  {{ TaskModel?.ReturnWt }}
+              </div>
+              <div class="ui-grid-col-4" *ngIf="showToManager">                
+                  {{ TaskModel?.RevReturnWt }}
+              </div> 
+            </div> -->
+
+            <!-- End Return Wt -->
+             <!-- Misc Cost -->
+             <!-- <div class="ui-grid-row">
+                 <div class="ui-grid-col-4">
+                     <strong>{{ assignTaskResources.misccost }} :</strong>
+                 </div>
+                 <div class="ui-grid-col-4">
+                     {{ taskCompletionModel.misccost }}
+                 </div>
+                 <div class="ui-grid-col-4" *ngIf="showToManager">                                    
+                     {{ taskReviewModel.rmisccost }}
+                 </div> 
+             </div> -->
+              <!-- End Misc Cost -->
+       </div>             
+     <!--End completion parameter -->
+ 
+  
+   <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="500" [minWidth]="200" >
+         <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
+         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            
+             <div class="ui-grid-row">            
+                 <div class="ui-grid-col-7">
+                   {{ assignTaskResources.assignedwt }}:
+                 </div>
+                 <div class="ui-grid-col-5">
+                  {{ taskCompletionModel.assignedwt }} {{globalResource.measure}}
+                 </div> 
+               </div>         
+                           
+               <!-- Skewed Controls -->      
+               <!-- <dynamic-form [questions]="questions"></dynamic-form>        -->
+            <div class="ui-grid-row" *ngFor="let question of questions" id="rSkewControls" >
+               <div 
+                 class="ui-grid-col-12 topPaddingZero"                                  
+               >           
+                   <app-question [question]="question" [form]="completionForm.controls['skewTypeGroup']" ></app-question>         
+               </div> 
+           </div>                     
+                     <!-- End Skewed Controls -->   
+         <!-- <div class="ui-grid-row">
+             <div class="ui-grid-col-7">
+               {{ assignTaskResources.misccost }} :
+             </div>
+             <div class="ui-grid-col-5">
+                 <input type="text"
+                   OnlyNumber="true" 
+                   pInputText 
+                   [(ngModel)]="taskCompletionModel.misccost"                         
+                   formControlName="misccost"
+                   id="misccost"
+                   name="misccost"      
+                 />               
+             </div> 
+         </div> -->
+         <div class="ui-grid-row" style="display: none">
+            <div class="ui-grid-col-7">
+              {{ assignTaskResources.returnwt }} :
+            </div>
+            <div class="ui-grid-col-5">
+                <input                    
+                  type="number"                          
+                  pInputText                                                      
+                  placeholder="Return Wt"
+                  formControlName="returnwt"                                            
+                  id="returnwt"
+                  name="returnwt"   
+                  class="clsControl"
+                />   
+            </div> 
+        </div>
+
+         <div class="ui-grid-row">
+             <div class="ui-grid-col-7">
+               {{ assignTaskResources.comment }}:
+             </div>
+             <div class="ui-grid-col-5">
+                 <textarea                        
+                   pInputTextarea                        
+                   [(ngModel)]="taskCompletionModel.miscComment"
+                   formControlName="misccomment"
+                   id="miscComment"
+                   name="miscComment"
+                   maxlength="500"
+                   class="clsControl"
+                   binary="true"
+                 ></textarea>
+             </div> 
+         </div>
+          
+           </div>         
+           <p-footer>
+             <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
+             <!-- [disabled]="!completionForm.valid" -->
+             <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showmodal=false" label="Cancel"></button>
+           </p-footer>
+       </form>
+   </p-dialog>
+ 
+   <p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
+       <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
+ 
+       <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+           <div class="ui-grid-row">
+             <div class="ui-grid-col-4">
+ 
+             </div>
+             <div class="ui-grid-col-4">
+               Task Owner
+             </div>
+             <div class="ui-grid-col-4">
+               Reviewer
+             </div>
+           </div>
+ 
+           <div class="ui-grid-row">
+               <div class="ui-grid-col-4">
+                   <label>{{ assignTaskResources.assignedwt }}:</label>
+               </div>
+               <div class="ui-grid-col-4">                
+                   {{ taskReviewModel.assignedwt }} {{globalResource.listgramunit}}          
+               </div>
+               <div class="ui-grid-col-4">              
+                   {{ taskReviewModel.assignedwt }} {{globalResource.listgramunit}}
+               </div> 
+           </div>
+           <!-- <div class="ui-grid-row">            
+               <div class="ui-grid-col-4">
+                 {{ assignTaskResources.processedwt }} :
+               </div>
+               <div class="ui-grid-col-4">                  
+                   {{ taskReviewModel.processedwt }}
+               </div> 
+               <div class="ui-grid-col-4">
+                   <input type="text" 
+                     OnlyNumber="true"
+                     pInputText 
+                     [(ngModel)]="taskReviewModel.rprocessedwt"                         
+                     formControlName="rprocessedwt"
+                     id="processedwt"
+                     name="processedwt"   
+                   />                  
+               </div> 
+             </div> -->
+
+               <!-- Skewed Controls -->      
+               <!-- <dynamic-form [questions]="questions"></dynamic-form>  -->
+               
+            <div class="ui-grid-row" *ngFor="let question of questions"  >
+                <div class="ui-grid-col-4">
+                    {{ question.label }} <span class="star">*</span>:
+                  </div>
+                  <div class="ui-grid-col-4">
+                      {{ completionForm.value.skewTypeGroup[question.key] }} {{globalResource.listgramunit}}
+                  </div> 
+               <div 
+                 class="ui-grid-col-4"                                  
+               > 
+                   <app-question [question]="question" [form]="reviewForm.controls['skewTypeGroup']" [showLable]="false" ></app-question>         
+               </div> 
+           </div>
+              <!-- End Skewed Controls -->
+         
+         <!-- <div class="ui-grid-row">
+ 
+           <div class="ui-grid-col-4">
+             {{ assignTaskResources.usablebudwt }} :
+           </div>
+           <div class="ui-grid-col-4">
+               {{ taskReviewModel.usablebudwt }}
+           </div> 
+           <div class="ui-grid-col-4">
+               <input type="text" 
+                 OnlyNumber="true"
+                 pInputText 
+                 [(ngModel)]="taskReviewModel.rusablebudwt"                         
+                 formControlName="rusablebudwt"
+                 id="usablebudwt"
+                 name="usablebudwt"      
+               /> 
+           </div> 
+         </div>         
+         <div class="ui-grid-row">
+           <div class="ui-grid-col-4">
+             {{ assignTaskResources.oilmaterialwt }} :
+           </div>
+           <div class="ui-grid-col-4">
+               {{ taskReviewModel.oilmaterialwt }}
+           </div>
+           <div class="ui-grid-col-4">
+               <input type="text" 
+                 OnlyNumber="true"
+                 pInputText 
+                 [(ngModel)]="taskReviewModel.roilmaterialwt"                         
+                 formControlName="roilmaterialwt"
+                 id="oilmaterialwt"
+                 name="oilmaterialwt"      
+               /> 
+           </div> 
+         </div>
+         <div class="ui-grid-row">
+           <div class="ui-grid-col-4">
+             {{ assignTaskResources.wastematerialwt }} :
+           </div>
+           <div class="ui-grid-col-4">
+               {{ taskReviewModel.wastematerialwt }}
+           </div>
+           <div class="ui-grid-col-4">
+               <input type="text" 
+                 OnlyNumber="true"
+                 pInputText 
+                 [(ngModel)]="taskReviewModel.rwastematerialwt"                         
+                 formControlName="rwastematerialwt"
+                 id="wastematerialwt"
+                 name="wastematerialwt"      
+               /> 
+              
+           </div> 
+         </div> -->
+         <!-- End Skewed Controls -->
+      <!--  act hrs -->
+      <div class="ui-grid-row">
+          <div class="ui-grid-col-4">
+              {{ assignTaskResources.actualhrs }}:
+          </div>
+          <div class="ui-grid-col-4">
+              {{ TaskModel?.ActHrs | minutesToTime}}
+          </div>
+          <div class="ui-grid-col-4">
+              <!-- <p-calendar 
+              required 
+              name="acthrs"
+              [stepHour]="1" 
+              [stepMinute]="15" 
+              [timeOnly]="true" 
+              [showTime]="true" 
+              formControlName="ActHrs"
+              hourFormat="24">
+            </p-calendar>   -->
+            <div class="ui-inputgroup ui-inputgroup-border" >
+              <input type="number"                   
+                  pInputText 
+                  autocomplete="off"
+                  pKeyFilter="int"
+                  [(ngModel)]="taskReviewModel.racthrs"                         
+                  formControlName="ActHrs"
+                  id="acthrs"
+                  name="acthrs"                      
+                /> 
+                <span>:</span>
+                <input type="number"                  
+                  pInputText     
+                  autocomplete="off"   
+                  pKeyFilter="int"           
+                  [(ngModel)]="taskReviewModel.ractmins"                         
+                  formControlName="ActMins"
+                  id="actmins"
+                  name="actmins"                      
+                />
+                <!-- Added by Devdan :: Sec to Min change :: 06-Nov-2018 -->
+                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                  *ngIf="!reviewForm.controls['ActMins'].valid&&reviewForm.controls['ActMins'].dirty">
+                    <span *ngIf="reviewForm.controls['ActMins'].errors['max']">
+                      {{ globalResource.maxMinSecValue }}
+                    </span>
+                </div>
+                <!-- ADDED BY DEVDAN :: 06-NOV-2018 :: ADDING TEXTBOX FOR SECONDS -->
+                <span>:</span>
+                <input type="number"                  
+                  pInputText         
+                  autocomplete="off"      
+                  pKeyFilter="int"    
+                  [(ngModel)]="taskReviewModel.ractsecs"                         
+                  formControlName="ActSecs"
+                  id="actsecs"
+                  name="actsecs"                  
+                />
+                <div class="ui-message ui-messages-error-Sec ui-corner-all" appErrorTooltip
+                  *ngIf="!reviewForm.controls['ActSecs'].valid&&reviewForm.controls['ActSecs'].dirty">
+                    <span *ngIf="reviewForm.controls['ActSecs'].errors['max']">
+                      {{ globalResource.maxMinSecValue }}
+                    </span>
+                </div>
+                <!-- END :: Sec to Min change :: 06-Nov-2018 --> 
+            </div>
+          </div> 
+      </div>
+      <!-- End act hrs -->
+      <!-- Emp Est Cost -->
+         <div class="ui-grid-row">
+             <div class="ui-grid-col-4">
+               {{ assignTaskResources.misccost }}:
+             </div>
+             <div class="ui-grid-col-4">
+                 {{ taskReviewModel.misccost | currency }}
+             </div>
+             <div class="ui-grid-col-4">
+                 <input type="text"
+                   OnlyNumber="true" 
+                   pInputText 
+                   pKeyFilter="num"
+                   autocomplete="off"
+                   [(ngModel)]="taskReviewModel.rmisccost"                         
+                   formControlName="rmisccost"
+                   id="misccost"
+                   name="misccost"      
+                 />                   
+                 
+             </div>             
+         </div>
+ 
+         <div class="ui-grid-row" style="display: none">
+            <div class="ui-grid-col-4">
+                {{ assignTaskResources.returnwt }}  :
+            </div>
+            <div class="ui-grid-col-4">               
+                {{ TaskModel?.ReturnWt }}
+            </div>
+            <div class="ui-grid-col-4">
+                <input type="number"
+                  OnlyNumber="true" 
+                  pInputText 
+                  [(ngModel)]="taskReviewModel.rreturnwt"                         
+                  formControlName="returnwt"
+                  id="returnwt"
+                  name="returnwt"      
+                />                                 
+            </div> 
+            
+        </div>
+
+         <div class="ui-grid-row">
+             <div class="ui-grid-col-4">
+               {{ assignTaskResources.comment }}:
+             </div>
+             <div class="ui-grid-col-4">               
+                 {{ taskReviewModel.comment }}
+             </div>
+             <div class="ui-grid-col-4">
+                 <textarea                        
+                   pInputTextarea                        
+                   [(ngModel)]="taskCompletionModel.rmisccomment"
+                   formControlName="rmisccomment"
+                   id="rmisccomment"
+                   name="rmisccomment"
+                   maxlength="500"
+                   class="clsControl"
+                   binary="true"
+                 ></textarea>                 
+                 
+             </div> 
+             
+         </div>
+         <!-- End Emp Cost -->
+         </div>         
+         <p-footer>
+           <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
+           <!-- [disabled]="!reviewForm.valid" -->
+           <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showReviewmodal=false" label="Cancel"></button>
+         </p-footer>
+     </form>
+ </p-dialog>
+ 
+   <p-growl [(value)]="msgs" life='5000'></p-growl>
+ </div>
+ </div>

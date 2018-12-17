@@ -1,0 +1,193 @@
+
+<div class="content-section implementation GridDemo">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header="{{ assignTaskResources.editPageHeading }}"  [toggleable]="true" [style]="{'margin-bottom':'20px'}">
+        <form [formGroup]="assignTaskForm" (ngSubmit)="onSubmit(assignTaskForm.value)">
+          <div class="ui-g ">         
+            <!--Task Name -->
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="taskname">
+                  {{ globalResource.taskname }} <span class="star">*</span>
+                </label>
+             
+                <p-dropdown                  
+                  [options]="tasknames"                            
+                  placeholder="-- Select --"
+                  [(ngModel)]="assignTask.task"
+                  [autoWidth]="true"
+                  formControlName="taskname"
+                  (onChange)="taskTypeChange()"
+                  class="clsControl" 
+                  id="taskname"
+                  name="taskname">
+                </p-dropdown>
+                <!-- (onChange)="ChangeComponent()" -->
+                <div
+                  class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                  *ngIf="!assignTaskForm.controls['taskname'].valid&&assignTaskForm.controls['taskname'].dirty">
+                   
+                    {{ globalResource.tasknamerequired }}
+                </div>
+              </div>
+            </div>
+            <!--End Task Name -->            
+
+              <!-- Dynamic Component Contents Depends on whatever the task is selected -->
+              <!-- <ng-template load-component style="width:100%;"></ng-template> -->
+              <!-- <app-quarantine 
+                *ngIf="assignTask.task=='1'" 
+                style="width:100%;"                
+                [TaskModel]="assignTask"
+                [PageFlag]="page"
+                [ParentFormGroup] = "assignTaskForm"
+              >
+              </app-quarantine> -->
+
+              <app-trimming
+                *ngIf="selectedTaskTypeName=='TRIMMING'&&this.isServiceCallComplete" 
+                style="width:100%;"                 
+                [TaskModel]="assignTask"       
+                [PageFlag]="page"     
+                [ParentFormGroup] = "assignTaskForm"   
+              >
+              </app-trimming>
+
+              <app-sifting
+                *ngIf="selectedTaskTypeName=='SIFTING'&&this.isServiceCallComplete" 
+                style="width:100%;"               
+                [TaskModel]="assignTask"
+                [PageFlag]="page"
+                [ParentFormGroup] = "assignTaskForm"
+               
+              ></app-sifting>
+
+              <!-- <app-bud-unlabelled-packaging
+                *ngIf="assignTask.task=='4'" 
+                style="width:100%;"                 
+                [TaskModel]="assignTask"       
+                [PageFlag]="page"     
+                [ParentFormGroup] = "assignTaskForm"
+              >
+              </app-bud-unlabelled-packaging> -->
+
+              <app-bud-packaging
+                *ngIf="selectedTaskTypeName=='BUDPACKAGING'&&this.isServiceCallComplete" 
+                style="width:100%;"                 
+                [TaskModel]="assignTask"       
+                [PageFlag]="page"     
+                [ParentFormGroup] = "assignTaskForm"
+              >
+              </app-bud-packaging>
+
+              <app-oil-packaging
+                *ngIf="selectedTaskTypeName=='OILPACKAGING'&&this.isServiceCallComplete" 
+                style="width:100%;"                 
+                [TaskModel]="assignTask"       
+                [PageFlag]="page"     
+                [ParentFormGroup] = "assignTaskForm"
+              ></app-oil-packaging>
+
+              <app-grinding
+                *ngIf="selectedTaskTypeName=='GRINDING'&&this.isServiceCallComplete" 
+                style="width:100%;"                 
+                [TaskModel]="assignTask"       
+                [PageFlag]="page"     
+                [ParentFormGroup] = "assignTaskForm"
+              ></app-grinding>
+
+              <app-joints-creation
+                *ngIf="selectedTaskTypeName=='JOINTSCREATION'&&this.isServiceCallComplete" 
+                style="width:100%;"                 
+                [TaskModel]="assignTask"       
+                [PageFlag]="page"     
+                [ParentFormGroup] = "assignTaskForm"
+              >
+                LOADER
+              </app-joints-creation>
+                          
+              <app-tamping
+                *ngIf="selectedTaskTypeName=='TAMPING'&&this.isServiceCallComplete" 
+                style="width:100%;"                 
+                [TaskModel]="assignTask"       
+                [PageFlag]="page"     
+                [ParentFormGroup] = "assignTaskForm"
+              ></app-tamping>
+              
+              <app-tubing
+                *ngIf="selectedTaskTypeName=='TUBING'&&this.isServiceCallComplete" 
+                style="width:100%;"                 
+                [TaskModel]="assignTask"       
+                [PageFlag]="page"     
+                [ParentFormGroup] = "assignTaskForm"
+              ></app-tubing>
+
+              <!-- Added by Devdan :: 09-Oct-2018 -->
+              <app-custom-task
+                *ngIf="selectedTaskTypeName=='CUSTOMTASK'&&this.isServiceCallComplete" 
+                style="width:100%;"                 
+                [TaskModel]="assignTask"       
+                [PageFlag]="page"     
+                [ParentFormGroup] = "assignTaskForm"
+              ></app-custom-task>
+
+              <app-qa-check
+                *ngIf="selectedTaskTypeName=='QACHECK'&&this.isServiceCallComplete" 
+                style="width:100%;"                 
+                [TaskModel]="assignTask"       
+                [PageFlag]="page"     
+                [ParentFormGroup] = "assignTaskForm"
+              ></app-qa-check>
+
+              <app-package-replacement
+                *ngIf="selectedTaskTypeName=='REPACK'&&this.isServiceCallComplete" 
+                style="width:100%;"                 
+                [TaskModel]="assignTask"       
+                [PageFlag]="page"     
+                [ParentFormGroup] = "assignTaskForm"
+              ></app-package-replacement>
+
+              <app-brand-label-replacement
+                *ngIf="selectedTaskTypeName=='REBRAND'&&this.isServiceCallComplete" 
+                style="width:100%;"                 
+                [TaskModel]="assignTask"       
+                [PageFlag]="page"     
+                [ParentFormGroup] = "assignTaskForm"
+              ></app-brand-label-replacement>
+
+              <app-tube-brand-label
+                *ngIf="selectedTaskTypeName=='TUBELABELING'&&this.isServiceCallComplete" 
+                style="width:100%;"                 
+                [TaskModel]="assignTask"       
+                [PageFlag]="page"     
+                [ParentFormGroup] = "assignTaskForm"
+              ></app-tube-brand-label>
+
+              <!--End Dynamic Component Contents Depends on whatever the task is selected -->
+              <div class="ui-g-12 ui-md-12 marginTop-15" style="text-align:right;">
+                <button pButton type="submit" label="Update Task"></button>
+                <!-- [disabled]="!assignTaskForm.valid" -->
+  
+                <button pButton 
+                  type="button" 
+                  label="Cancel" 
+                  class="ui-button-secondary" 
+                  (click) = "backToTaskDetails()">
+                </button>
+            </div>
+          </div>          
+          <!-- <div style="text-align:center;margin-top:20px">
+            Form Submitted
+            <br> {{ diagnostic}}
+          </div>          -->
+        </form>
+
+        <p-growl [(value)]="msgs" life='5000' ></p-growl>
+      </p-panel>
+    </div>
+    <div class="ui-g-1">
+    </div>
+  </div>
+</div>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" class="clsConfirmBox" ></p-confirmDialog> 

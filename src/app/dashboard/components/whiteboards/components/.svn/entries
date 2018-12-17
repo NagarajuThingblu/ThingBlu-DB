@@ -1,0 +1,34 @@
+9
+
+dir
+1278
+https://192.169.154.191:8081/svn/thingbluangular5svnv1/thingblusvn/src/app/dashboard/components/whiteboards/components
+https://192.169.154.191:8081/svn/thingbluangular5svnv1
+
+
+
+2018-05-23T10:27:12.088008Z
+1
+Bharat Tekade
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+74955651-3036-764b-982b-f4a8a0658a00
+
+whiteboard-list
+dir
+
+whiteboard-details
+dir
+

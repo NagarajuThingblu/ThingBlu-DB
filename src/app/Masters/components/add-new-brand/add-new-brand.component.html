@@ -1,0 +1,110 @@
+<p-dialog 
+    header="Add New Brand"
+    [(visible)]="Brand.showBrandModal"
+    modal="modal" 
+    [resizable]="true" 
+    [responsive]="true" 
+    [width]="600" 
+    [minWidth]="200" 
+    class="notecontrol"
+    (onHide)="hideBrandPopup()"
+  >
+  <form #BrandForm="ngForm" [formGroup]="newBrandEntryForm"  (ngSubmit)="saveBrandNames(BrandForm)" novalidate >
+      <div class="ui-g">
+        <!-- Brand Name -->
+                <div class="ui-g-12 ui-md-12">
+                  <div class="paddingRL">
+                      <div class="le-su-12">
+                        <label for="enterbrand">
+                          {{ newBrandResources.enterbrand}}<span class="star">*</span>:
+                        </label>
+
+                        <input pInputText
+                          name="brand"
+                          autocomplete="off"
+                          id="brand"
+                          placeholder="Enter Value"
+                          type="text"
+                          class="clsControl"
+                          formControlName="brand"
+                        />
+
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!newBrandEntryForm.controls['brand'].valid&&newBrandEntryForm.controls['brand'].dirty">
+                            <span *ngIf="newBrandEntryForm.controls['brand'].errors['required']">{{newBrandResources.brandrequired}}</span>
+                            <span *ngIf="newBrandEntryForm.controls['brand'].errors['minlength']">{{newBrandResources.brandLength}}</span>
+                            <span *ngIf="newBrandEntryForm.controls['brand'].errors['whitespace']">{{newBrandResources.brandrequired}}</span>
+                          </div>
+                          
+                      </div>
+                  </div>
+                </div>
+                <!-- End Brand Name -->
+                <!-- Description -->
+                <div class="ui-g-12 ui-md-12">
+                  <div class="paddingRL">
+                      <div class="le-su-12">
+                        <label for="enterdescription">
+                          {{ newBrandResources.enterdescription}}<span class="star"></span>:
+                        </label>
+
+                        <input pInputText
+                          name="description"
+                          id="description"
+                          autocomplete="off"
+                          placeholder="Enter Description"
+                          type="text"
+                          class="clsControl"
+                          formControlName="description"
+                        />
+
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!newBrandEntryForm.controls['description'].valid&&newBrandEntryForm.controls['description'].dirty">
+                            <span *ngIf="newBrandEntryForm.controls['description'].errors['required']">{{newBrandResources.descriptionrequired}}</span>
+                            <span *ngIf="newBrandEntryForm.controls['description'].errors['minlength']">{{newBrandResources.descriptionLength}}</span>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <!-- End Description -->
+
+                <!-- IsActive -->
+                <div class="ui-g-12 ui-md-12">
+                    <div class="paddingRL">
+                      <label></label>
+                      <div class="clear"></div>
+                
+                      <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalResource.IsActiveFlag}}" formControlName="chkIsActive" 
+                      binary="true"></p-checkbox>
+                    </div>
+                  </div>
+                  <!--End IsActive -->
+
+                <div class="ui-g-12 ui-md-12" style="text-align:left;">
+                    <div class="paddingRL">
+                      <p-button  type="submit" label="Save" id="btnBrandSave" name="btnBrandSave" ></p-button>
+
+                      <button pButton
+                          (click)="resetForm()"
+                          type="button"
+                          label="Clear"
+                          class="ui-button-secondary"
+                      >
+                      </button>
+                  </div>
+                </div>
+              </div>
+</form>
+</p-dialog>
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+
+
+
+
+
+
+
+
+
+
+

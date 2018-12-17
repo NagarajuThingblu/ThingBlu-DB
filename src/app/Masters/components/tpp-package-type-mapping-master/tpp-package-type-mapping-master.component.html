@@ -1,0 +1,231 @@
+
+
+<div class="content-section implementation GridDemo">
+  <div class="ui-g">
+
+    <div class="ui-g-12">
+      <p-panel header="{{ tppPackageTypeResources.pageheading }}" [(collapsed)]="collapsed" [toggleable]="true">
+      <p-header>
+          <!-- <button pButton type="submit" name="btnLogin" label="Add New Brand" [style]="{'float':'right'}" (click)="doOPenPanel()" style="align-content: right"></button> -->
+      </p-header>
+        <!--Main New Product Entry Form-->
+        <form
+          [formGroup]="tppPackageTypeForm"
+          (ngSubmit)="onSubmit(tppPackageTypeForm.value)">
+              <div class="ui-g ">
+                <!--TPP -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                      <div class="le-su-12">
+                    <label for="selecttpp" class="towlable">
+                      {{ tppPackageTypeResources.tpp}}<span class="star">*</span></label>:
+
+                    <p-dropdown
+                        [filter] ="true"
+                        id="tpp"
+                        [options]="tpProcessors"
+                        formControlName="tpp"
+                        placeholder="-- Select --"
+                        [autoWidth]="false"
+                        class="clsControl"
+                        [disabled]="tppdisabled"
+                        name="tpp">
+                    </p-dropdown>
+                
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!tppPackageTypeForm.controls['tpp'].valid&&tppPackageTypeForm.controls['tpp'].dirty">
+                      <span *ngIf="tppPackageTypeForm.controls['tpp'].errors['required']">
+                      {{ tppPackageTypeResources.tpprequired }}
+                    </span>
+                    <span *ngIf="tppPackageTypeForm.controls['tpp'].hasError('tppnotpresent')">
+                        {{ tppPackageTypeResources.tppnotpresent }}
+                    </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <!--End TPP -->
+            <!-- Package Type -->
+                    <div class="ui-g-12 ui-md-6">
+                      <div class="paddingRL">
+                          <div class="le-su-12">
+                            <label for="entersubbrand">{{ tppPackageTypeResources.packagetype}}<span class="star">*</span></label>:
+
+                            <input pInputText
+                              name="packagetype"
+                              id="packagetype"
+                              autocomplete="off"
+                              placeholder="Enter Package Type"
+                              type="text"
+                              class="clsControl"
+                              formControlName="packagetype"
+                            />
+
+                            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                              *ngIf="!tppPackageTypeForm.controls['packagetype'].valid&&tppPackageTypeForm.controls['packagetype'].dirty">
+
+                                <span *ngIf="tppPackageTypeForm.controls['packagetype'].errors['required']">
+                                  {{tppPackageTypeResources.packagetyperequired}}
+                                </span>
+                                <span *ngIf="tppPackageTypeForm.controls['packagetype'].errors['maxlength']">{{tppPackageTypeResources.packagetypeLength}}</span>
+                                <span *ngIf="tppPackageTypeForm.controls['packagetype'].errors['whitespace']">{{tppPackageTypeResources.packagetyperequired}}</span>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+              <!-- End Package Type -->
+              <!--Description -->
+              <div class="ui-g-12 ui-md-6">
+                <div class="paddingRL">
+                    <div class="le-su-12">
+                    <label for="description">
+                        {{ tppPackageTypeResources.description}}<span class="star"></span>: 
+                    </label>
+
+                    <input pInputText
+                      name="description"
+                      id="description"
+                      type="text"
+                      autocomplete="off"
+                      class="clsControl"
+                      placeholder="Enter Package Type Description"
+                      formControlName="description"
+                    />
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!tppPackageTypeForm.controls['description'].valid&&tppPackageTypeForm.controls['description'].dirty">
+
+                        <!-- <span *ngIf="tppPackageTypeForm.controls['description'].errors['required']">
+                          {{tppPackageTypeResources.descriptionrequired}}
+                        </span> -->
+                        <!-- <span *ngIf="NewProductTypeEntryForm.controls['firstname'].errors['maxlength']">{{newEmployeeResources.packageUnitLength}}</span>
+                        <span *ngIf="NewProductTypeEntryForm.controls['firstname'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span> -->
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <!--End Description -->
+
+                <!-- IsActive -->
+                <div class="ui-g-12 ui-md-12">
+                  <div class="paddingRL">
+                    <label></label>
+                    <div class="clear"></div>
+              
+                    <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalResource.IsActiveFlag}}" formControlName="chkIsActive" 
+                    binary="true"></p-checkbox>
+                  </div>
+                </div>
+                <!--End IsActive -->
+
+                <div class="ui-g-12 ui-md-12" style="text-align:right;">
+                    <div class="paddingRL">
+                      <p-button  type="submit" label="{{ saveButtonText}}" id="btnTPPPackageTypeSave" name="btnTPPPackageTypeSave" ></p-button>
+                      <button pButton (click)="resetAll()" type="button" label=" {{ clear }}" class="ui-button-secondary"></button>
+                  </div>
+                </div>
+              </div>
+        </form>
+      </p-panel>
+    </div>
+    <div class="ui-g-1">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="content-section implementation GridDemo">
+  <div class="ui-g">
+      <div class="ui-g-12">
+          <!-- TPP Package Type Listing -->
+    <p-panel header="{{ tppPackageTypeResources.listheading}}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >      
+      <p-table #dtTPPPckageTypeListing [value]="allTppPackageTypeList"
+          sortMode="single"                      
+          [responsive]="true" 
+          [paginator]="true" 
+          [rows]="10"           
+          sortField="TPPkgTypeId"
+          sortOrder="-1"
+          [rowsPerPageOptions]="paginationValues"
+          (onPage)="onPageChange($event)"
+          [globalFilterFields]="['TPName','TPPkgTypeName','Description']"
+          >                    
+          <ng-template pTemplate="caption">
+              <div style="text-align: right">
+                  <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                  <input type="text" pInputText autocomplete="off" size="50" placeholder="Global Filter" (input)="dtTPPPckageTypeListing.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+              </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+              <tr>
+                  <th [pSortableColumn]="'TPName'">{{ tppPackageTypeResources.tpp}} <p-sortIcon [field]="'TPName'"></p-sortIcon></th>
+                  <th [pSortableColumn]="'TPPkgTypeName'">{{ tppPackageTypeResources.packagetype}} <p-sortIcon [field]="'TPPkgTypeName'"></p-sortIcon></th>
+                  <th [pSortableColumn]="'Description'">{{ tppPackageTypeResources.description}} <p-sortIcon [field]="'Description'"></p-sortIcon></th>
+                  <th style="width:100px;">Action</th>
+              </tr>
+    
+              <tr>
+                  <th>
+                      <input pInputText autocomplete="off" type="text" (input)="dtTPPPckageTypeListing.filter($event.target.value, 'TPName', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                      <input pInputText autocomplete="off" type="text" (input)="dtTPPPckageTypeListing.filter($event.target.value, 'TPPkgTypeName', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                    <input pInputText autocomplete="off" type="text" (input)="dtTPPPckageTypeListing.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+                </th>
+                <th rowspan="2"></th>  
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-tpppackagetype let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+                  <td>{{tpppackagetype?.TPName}}</td>
+                  <td>{{tpppackagetype?.TPPkgTypeName}}</td>
+                  <td>{{tpppackagetype?.Description}}</td>
+
+                  <td style="width:65px;"> 
+                      <!-- <span class="ui-column-title">{{ newEmployeeResources.edit }}</span> -->
+                      <a href="#" [routerLink]="" (click)="gettpOnEdit(tpppackagetype?.TPPkgTypeId)" >                             
+                          <span class="fa fa-edit"></span>
+                      </a>
+                      <a href="#" [routerLink]="" 
+                      (click)="showConformationMessaegForDelete(tpppackagetype?.TPPkgTypeId,tpppackagetype?.IsActive,1,0)" >
+                        <span class="fa fa-trash"></span>
+                    </a>
+                    <div class="clsToggleButtonDiv">
+                    <p-toggleButton 
+                      [(ngModel)]="tpppackagetype.IsActive" 
+                      onLabel="Active" offLabel="InActive"  
+                      [style]="{'width':'90px'}"
+                      id
+                      (onChange)="showConformationMessaegForDeactive(tpppackagetype?.TPPkgTypeId,tpppackagetype,rowIndex,0,1)" 
+                    >
+                    </p-toggleButton>
+                  </div>
+                </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft" let-state>
+            <pagination-counts
+              *ngIf="allTppPackageTypeList?.length"
+              [inputData]="allTppPackageTypeList"
+              [inputEvent]="event"
+            ></pagination-counts>
+          </ng-template>
+      </p-table>
+    </p-panel>
+      <!--End TPP Package Type Listing  -->
+    </div>
+  </div>
+</div>
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+<p-confirmDialog 
+  class="clsConfirmBox" 
+  header="Confirmation" 
+  icon="fa fa-question-circle" 
+  *ngIf="true"
+  width="425">
+</p-confirmDialog>

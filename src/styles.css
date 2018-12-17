@@ -1,0 +1,827 @@
+/* You can add global styles to this file, and also import other style files */
+body{
+    background-color: #f5f6f6;
+}
+/* Bootstrap Notify ============================ */
+.bootstrap-notify-container {
+    max-width: 320px;
+    text-align: center; }
+    
+    /* Jquery Nestable ============================= */
+    .dd-handle {
+    background-color: #f9f9f9 !important; }
+    .dd-handle:hover {
+      color: #2196F3; }
+    
+    .nestable-dark-theme .dd-handle {
+    background: #ccc !important;
+    border: 1px solid #999 !important; }
+    
+    .dd3-handle {
+    background: #999 !important; }
+    
+    .dd3-content:hover {
+    color: #2196F3; }
+    
+    /* Login Page ================================== */
+    .login-page {
+    background-color: #00BCD4;
+    padding-left: 0;
+    max-width: 360px;
+    margin: 5% auto;
+    overflow-x: hidden; }
+    .login-page .login-box .msg {
+      color: #555;
+      margin-bottom: 30px;
+      text-align: center; }
+    .login-page .login-box a {
+      font-size: 14px;
+      text-decoration: none;
+      color: #00BCD4; }
+    .login-page .login-box .logo {
+      margin-bottom: 20px; }
+      .login-page .login-box .logo a {
+        font-size: 36px;
+        display: block;
+        width: 100%;
+        text-align: center;
+        color: #fff; }
+      .login-page .login-box .logo small {
+        display: block;
+        width: 100%;
+        text-align: center;
+        color: #fff;
+        margin-top: -5px; }
+    
+    /* Sign Up Page ================================ */
+    .signup-page {
+    background-color: #00BCD4;
+    padding-left: 0;
+    max-width: 360px;
+    margin: 5% auto;
+    overflow-x: hidden; }
+    .signup-page .signup-box .msg {
+      color: #555;
+      margin-bottom: 30px;
+      text-align: center; }
+    .signup-page .signup-box a {
+      font-size: 14px;
+      text-decoration: none;
+      color: #00BCD4; }
+    .signup-page .signup-box .logo {
+      margin-bottom: 20px; }
+      .signup-page .signup-box .logo a {
+        font-size: 36px;
+        display: block;
+        width: 100%;
+        text-align: center;
+        color: #fff; }
+      .signup-page .signup-box .logo small {
+        display: block;
+        width: 100%;
+        text-align: center;
+        color: #fff;
+        margin-top: -5px; }
+    
+    /* Forgot Password Page ======================== */
+    .fp-page {
+    background-color: #00BCD4;
+    padding-left: 0;
+    max-width: 360px;
+    margin: 5% auto;
+    overflow-x: hidden; }
+    .fp-page .fp-box .msg {
+      color: #555;
+      margin-bottom: 30px;
+      text-align: center; }
+    .fp-page .fp-box a {
+      font-size: 14px;
+      text-decoration: none;
+      color: #00BCD4; }
+    .fp-page .fp-box .logo {
+      margin-bottom: 20px; }
+      .fp-page .fp-box .logo a {
+        font-size: 36px;
+        display: block;
+        width: 100%;
+        text-align: center;
+        color: #fff; }
+      .fp-page .fp-box .logo small {
+        display: block;
+        width: 100%;
+        text-align: center;
+        color: #fff;
+        margin-top: -5px; }
+      
+      /*------------------ End of sidebar-menu----------------------------- */
+      
+      button, input, select, a {
+      outline: none !important;
+    }
+.ui-widget , body{
+    font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 0.94rem;
+}
+
+/* commen to all*/
+.clear{clear: both;}
+.right{float: right;}
+label {display: inline-block;margin-bottom: .1rem !important;}
+.content-section{padding-left: 10px;}
+a.btn-link {
+    font-weight: 400;
+    color: #337ab7;
+    border-radius: 0;
+}
+/* form design*/
+
+
+@media (min-width: 300px) {
+    .paddingRL{padding: 0em .4em;position: relative;}
+    .colforres{width: 65px !important;}
+}
+@media (min-width: 1024px) {
+    .paddingRL{padding: 0em .8em;position: relative;}
+    .colforres{width: 8.33333% !important;}
+}
+
+
+/* .ui-corner-all.ui-messages-error {
+	position: absolute;
+background: #ffcbc8;
+border: 1px solid #fc9e99;
+z-index: 9;
+min-width: 160px;
+bottom: -40px;
+left: 8px;
+text-align: center;
+box-shadow: 5px 5px 7px 1px rgba(0,0,0,.25);
+transition: box-shadow 200ms cubic-bezier(.4,0,.2,1);
+border-radius: 3px !important;
+} */
+
+.ui-corner-all.ui-messages-error {
+position: absolute;
+background: #ffcbc8;
+border: 1px solid #fc9e99;
+z-index: 9;
+min-width: 160px;
+left: 8px;
+text-align: center;
+box-shadow: 5px 5px 7px 1px rgba(0,0,0,.25);
+transition: box-shadow 200ms cubic-bezier(.4,0,.2,1);
+border-radius: 3px !important;
+}
+.ui-messages-error:after, .ui-messages-error:before {
+	bottom: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.ui-messages-error:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-bottom-color: #fc9e99;
+	border-width: 10px;
+	margin-left: -50px;
+}
+/* .ui-messages-error:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-bottom-color: #ffcbc8;
+	border-width: 17px;
+	margin-left: -17px;
+} */
+
+/* Added by Devdan :: 13-Nov-2018 :: Error message style for Seconds input field */
+.ui-corner-all.ui-messages-error-Sec {
+    position: absolute;
+    background: #ffcbc8;
+    border: 1px solid #fc9e99;
+    z-index: 9;
+    min-width: 160px;
+    left: 8px;
+    text-align: center;
+    box-shadow: 5px 5px 7px 1px rgba(0,0,0,.25);
+    transition: box-shadow 200ms cubic-bezier(.4,0,.2,1);
+    border-radius: 3px !important;
+    color: #ab1a0f;
+    }
+    .ui-messages-error-Sec:after, .ui-messages-error-Sec:before {
+        bottom: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+    
+    .ui-messages-error-Sec:after {
+        border-color: rgba(136, 183, 213, 0);
+        border-bottom-color: #fc9e99;
+        border-width: 10px;
+        margin-left: 50px;
+    }
+
+
+
+
+.star{color: red;}
+p-calendar.clsControl > span{width:100%;}
+p-calendar.clsControl > span input{width:calc(100% - 2em);}
+.clsControl{width: 100% !important;display: block;}
+.clsControl > div{width: 100% !important;}
+.clsControlsmall{width: 80% !important;float: left;}
+.clsControlsmall > div{width: 80% !important;float: left;}
+
+
+.twocnt .towlable {width: 49.3% !important;}
+.twocnt .droptwo {width: 49% !important;}
+.twocnt .droptwo > div {width: 49% !important;}
+.twocnt .texttwo {width: 50% !important;float: right;}
+.twocnt .textOneOftwo {width: 49% !important;}
+
+
+.twocnt .calonelable {width: 69.3% !important;}
+.twocnt .calTwolable {width: 29.3% !important;}
+.twocnt .calone {width: 69% !important;display: inline-block;float: left;}
+.twocnt .caltwo {width: 30% !important;float: right;display: inline-block;}
+
+
+.threecnt .threelable {width: 32.333% !important;}
+.threecnt .textthree{width: 32.1% !important;}
+
+
+
+
+
+
+.input-group-addon, .input-group-btn{width: 0px !important;}
+.fixed-top{z-index: 996 !important;}
+
+.textRight{text-align: right;}
+
+.no-wrap{
+    white-space: nowrap;
+}
+.marginBottom{margin-bottom: 10px;}
+.notecontrol .ui-panel-content-wrapper{max-height: 150px;overflow: auto;}
+.notecontrol .clsNoteHeader, .notecontrol .ui-card-body{padding: 5px 10px !important;}
+.ui-dialog.ui-widget .ui-dialog-titlebar{    padding: 0.3em 1.5em !important;}
+span.ui-panel-title h3 {
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(0,0,0,.1);
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+    margin-top: 10px;
+}
+span.ui-panel-title {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.topPaddingZero{padding-top: 3em}
+.sideisthere{
+    /* padding-left: 280px !important; */
+    -moz-transition: all 0.5s;
+-o-transition: all 0.5s;
+-webkit-transition: all 0.5s;
+transition: all 0.5s;
+  }
+   .ls-closed .sideisthere, .overlay-open .sideisthere{
+    padding-left: .5em !important;
+    -moz-transition: all 0.5s;
+-o-transition: all 0.5s;
+-webkit-transition: all 0.5s;
+transition: all 0.5s;
+   }
+
+
+.ui-panel-titlebar{   
+    background-image: none !important;  
+    background-color: #00ACEC !important;
+    color:white !important;
+}
+.marginTop-10{margin-top: 10px;}
+.marginTop-15{margin-top: 15px;}
+.marginTop-20{margin-top: 20px;}
+.orange-background {
+    background-color: #f8a326 !important;
+}
+.page-header {
+    border-bottom-color: #cdd2d2;
+    position: relative;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    margin-right: -7px;
+    color: black;
+    background: white;
+    min-height: 35px !important;
+    padding: 0px 15px;
+    overflow: hidden;
+    *zoom: 1;
+border-bottom: 1px solid #eee;
+}
+.page-header h1.pull-left {
+    margin: 8px 0px;
+    font-size: 18px;
+    line-height: 20px;
+}
+.pull-left {
+    float: left !important;
+}
+.page-header .pull-right {
+    padding: 0px !important;
+    margin-top: 2px !important;
+    margin-bottom: 2px;
+}
+.pull-right {
+    float: right !important;
+}
+h1 {
+    font-size: 28px;
+}
+
+.cursor{
+    cursor: pointer;
+}
+
+.le-su-6{
+    float: left;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0em .5em .5em 0em ;
+    width: 50%;
+}
+.ri-su-6{
+    float: right;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 0em 0em .5em .5em ;
+    width: 50%;
+}
+
+p-footer{float: right;}
+.ui-dialog p-footer{
+    float: none;
+    width: 100%;
+    display: inline-block;
+    text-align: right;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+nav.navbar-right > li{
+    display: inline-block;
+      }
+
+    
+
+
+    .ui-growl {
+        position: fixed;
+        top: auto;
+        bottom: 20px;
+        right: 20px;
+        width: 301px;
+        left: auto;
+        z-index: 99999 !important;
+    }
+    .ui-growl-message p {
+        font-weight: normal;
+        margin: 20px 0px 20px -43px;
+        text-align: center;
+    }
+
+    .ui-growl-message p {
+        font-weight: normal;
+        margin: 2px -16px 15px -57px;
+        text-align: center;
+        border-top: 1px solid #fff;
+        padding-top: 20px;
+    }
+    
+    .ui-growl-image {
+        top: .14em;
+    }
+    .ui-dropdown label.ui-dropdown-label {
+        cursor: pointer;
+        height: 29px;
+    }
+
+
+    .ui-corner-all {
+        border-radius: 0px !important;
+    }
+    .ui-menu, .ui-menubar, .ui-menubar .ui-submenu-list, .ui-tieredmenu, .ui-tieredmenu .ui-submenu-list, .ui-slidemenu, .ui-slidemenu .ui-submenu-list, .ui-contextmenu, .ui-contextmenu .ui-submenu-list, .ui-megamenu {
+        color: #1b1d1f;
+        background: #fff !important;
+     }
+    
+    .ui-slidemenu .ui-slidemenu-wrapper {
+        position: relative;
+        height: 65px !important;
+        /* height: auto !important; */
+    }
+    
+    .ui-slidemenu .ui-slidemenu-content {
+        overflow-x: hidden;
+        overflow-y: auto;
+        position: relative;
+      /*   height: auto !important;
+        max-height: 180px;
+        min-height: 120px; 
+        min-height: 35px;*/
+    }
+    .ui-menu .ui-menuitem > .ui-menuitem-link:hover, .ui-menubar .ui-menuitem > .ui-menuitem-link:hover, .ui-tieredmenu .ui-menuitem > .ui-menuitem-link:hover, .ui-slidemenu .ui-menuitem > .ui-menuitem-link:hover, .ui-contextmenu .ui-menuitem > .ui-menuitem-link:hover, .ui-megamenu .ui-menuitem > .ui-menuitem-link:hover {
+        background-color: #31ACD6 !important;
+        color: #ffffff;
+    }
+
+
+    app-sidebar{
+        width: 270px;
+        display: table;
+        height: calc(100vh - 70px);
+        position: fixed;
+        top: 40px;
+        left: 0;
+        z-index: 99;
+    }
+
+    .hamburger{
+        box-shadow: none !important;
+        background: #fff;
+        padding: .2rem .2rem;
+        position: fixed;
+        z-index: 999;
+        left: 5px;
+        top: 3px;
+    }
+    .hamburger .fa{font-size: 24px;}
+    ul.rightMenu li.lithree .ui-slidemenu, ul.rightMenu li.litwo .ui-slidemenu, ul.rightMenu li.lione .ui-slidemenu{top:40px !important;}
+
+    .hiddenField {
+        display: none;
+    }
+    .ui-button{margin-right:0em !important;border:0em !important;} /* margin-left: 8px; */
+    [type=reset], [type=submit], button, html [type=button]{
+
+        -webkit-appearance: none !important;
+    }
+    .ui-state-disabled, .ui-widget:disabled {
+        opacity: 0.6 !important;
+    }
+    .ui-button.ui-button-secondary.ui-state-default, .ui-splitbutton.ui-button-secondary .ui-button.ui-state-default {
+        background-color: #e6e6e6 !important;
+        border-color: #ccc;
+        color: #373a3c;
+    }
+    .childpadding div > .ui-grid-col-2,.childpadding div > .ui-grid-col-1 {
+        border: 1px solid #d6d6d6;
+        border-left: 0px;
+        padding:  5px !important;
+    }
+    .childpadding div > .ui-grid-col-2,.childpadding div > .ui-grid-col-3,.childpadding div > .ui-grid-col-1 {
+        border: 1px solid #d6d6d6;
+        padding:  5px !important;
+    }
+    .childpadding div > .ui-grid-col-2:first-child, .childpadding div > .ui-grid-col-1{border-left: 1px solid #d6d6d6;}
+
+
+    .ui-fieldset-legend-text{
+        font-size: 1rem !important;
+        color: #000;
+    }
+.ui-fieldset, .ui-fieldset .ui-fieldset-legend {
+  padding: .1em 1em !important; 
+  
+}
+
+.childpadding .fa-plus-circle,.childpadding .fa-minus-circle,.childpadding .fa-copy, .childpadding .fa-info-circle
+{font-size: 1.4rem}
+
+.childpadding > .ui-grid-row > .ui-grid-col-2, .childpadding > .ui-grid-row > .ui-grid-col-1{
+    border: 1px solid #d6d6d6;
+    border-left: 0px;
+    padding:  5px !important;;
+}
+.childpadding > .ui-grid-row > .ui-grid-col-2:first-child{    border-left: 1px solid #d6d6d6;}
+legend{width: auto;max-width: auto;}   
+fieldset{margin-top: 10px;}
+/* .orderRequest .ui-overlaypanel{
+    top: 55px !important;
+    left: auto !important;
+    right: 10%;
+} */
+.orderRequest a.ng-star-inserted {
+    /* margin-top: 4px; */
+   /* margin-left: 10px;*/
+    display: inline-block;
+}
+/* .ui-helper-clearfix{width: calc(100% - 60px) !important;} */
+.ui-paginator {
+    text-align: right !important;
+}
+.orderRequest a.addbtn{
+    margin-top: -37px;
+    display: block;
+    float: right;
+    margin-right: -14px;
+}
+.ui-fluid .ui-calendar-button {
+    margin-left: 0px;
+}
+.lblText{display: block;min-height: 30px;background-color: #e6e6e6;color: #000000;padding: 2px 4px;height: 32px;}
+.lblText50{display: block;min-height: 30px;background-color: #e6e6e6;color: #000000;padding: 2px 4px;float: right;height: 32px;}
+@media (max-width: 767px) {
+    .ui-dialog{width: 100% !important;}
+    .navbar-brand{
+        margin-top: -1px;
+    width: 50px;
+    }
+    .orderRequest a.addbtn{margin-top: 10px;}
+    .childpadding >div > div > .ui-grid-col-2,.childpadding >div > div > .ui-grid-col-1 {
+        border: 0px !important;
+        border-left: 0px !important;
+        margin-bottom:  4px;
+    }
+    .childpadding > .ng-star-inserted{
+        border: 1px solid #d6d6d6;
+        margin-bottom:  4px;
+    }
+    .childpadding{padding-bottom: 30px;}
+    .childpadding > a{bottom: -5px !important;}    
+    .content-section {
+        padding: 10px 0px;
+    }
+   
+}
+
+/* To hide input[type=number] textbox arrows  */
+/* Webkit browsers like Safari and Chrome */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+
+/* For Firefox */
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+/* End To hide input[type=number] textbox arrows  */
+
+
+/* .ui-dialog-mask{
+    z-index: 9999 !important;
+}
+
+.ui-dialog.ui-widget{
+    z-index: 99999 !important;
+} */
+
+   /* input group with border */
+.ui-inputgroup-border .ui-inputtext:not(:last-child) {
+    border-right:1px solid #c0c0c0 !important;
+}
+
+.ui-inputgroup-border .ui-inputtext:not(:first-child) {
+    border-left:1px solid #c0c0c0 !important;
+}
+
+input[readonly] {
+    background-color:  #ddd;
+}
+
+
+
+.ui-datepicker{width: auto !important;}
+p-header.accordionHeader {
+    display: inline-block;
+    width: calc(100% - 37px);
+}
+.reviewedQty{float: right;width:108px;padding: 0em .25em !important;margin-left: 4px;}
+p-header.accordionHeader p.panel-title {
+    width: calc(100% - 118px);
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+}
+
+p-header.accordionHeader p.panel-titleCompletion {
+    width: calc(100% - 233px);
+    display: inline-block;
+    margin: 0px;
+    padding: 0px;
+}
+p-header.accordionHeader span.ui-panel-title{
+    margin-bottom: 0px !important;
+    vertical-align: top;
+    line-height: 18px;
+}
+
+.panel-content .table {
+    margin-bottom: 0rem;
+}
+.table.noborder{
+    border-top: 0px;
+    border-bottom: 0px;
+    margin: 0px;
+}
+.table.noborder tbody tr td, .table.noborder tbody tr th {
+    padding: 5px 10px;
+    border-top: 0px;
+    border-bottom: 0px;
+}
+
+.ui-dropdown .ui-dropdown-trigger .fa{
+    margin-top: 0.6rem !important;
+}
+.ui-dropdown .ui-dropdown-label{    padding-right: 2em !important;}
+
+/* Added By Bharat T on 18th-Jun-2018*/
+.smallTextRed {
+    color: red;
+}
+/* End of Added By Bharat T on 18th-Jun-2018
+.ui-table{background: #ffffff;}
+.ui-table .ui-table-thead>tr>th, .ui-table .ui-table-tbody>tr>td, .ui-table .ui-table-tfoot>tr>td {
+   background: transparent;
+    position: relative;
+}*/
+
+.ui-table-caption > .ng-star-inserted > .ui-inputtext{width: 212px !important;}
+.ui-progressbar-determinate .ui-progressbar-label{font-size: 11px;}
+p-dropdown{display: block;}
+/* modified by Devdan :: 20-NOv-2018 :: Css for app-lot-comment */
+.contAndIcon > .clsControl{width: calc(100% - 55px) !important;}
+.contAndIcon > app-lot-note-icon{
+    position: absolute;
+    right: 1px;
+    top: 4px;
+}
+/* Added by Devdan :: 20-NOv-2018 :: Css for app-lot-comment */
+.contAndIcon > app-lot-comment{
+    position: absolute;
+    right: 25px;
+    top: 4px;
+}
+.ui-table .ui-table-tbody>tr>td{word-break: break-word;}
+.ui-table .ui-table-tbody>tr>td>span{white-space: nowrap;}
+.lotNum{width:170px;}
+.links .ui-button{
+    font-weight: 400;
+    color: #337ab7 !important;
+    border-radius: 0;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent !important;
+}
+
+.links .ui-button.ui-button-text-icon-left .ui-button-text {
+    padding: .25em 1em .25em 1em;
+}
+
+.link .ui-button, .link .ui-button:active, .link .ui-button:focus, .link .ui-button:hover {
+    border-color: transparent !important;
+}
+
+.link .ui-widget-header .ui-button:enabled:hover, .link .ui-widget-header .ui-button:focus, .link .ui-widget-content .ui-button:enabled:hover, 
+.link .ui-widget-content .ui-button:focus, .link .ui-widget.ui-button:enabled:hover, .link .ui-widget.ui-button:focus, 
+.link .ui-button:enabled:hover, .ui-button:focus{
+    border-color: transparent !important;
+}
+.datewidth{width:97px;}
+.taskwidth{width: 114px;}
+.stateswidth{width: 103px;}
+.ui-tabview .ui-tabview-panel{padding: 0px !important;}
+.thc{width: 54px;}
+.wtg{width: 68px;}
+.iconwidth{width:30px;}
+
+/* Added By Bharat T on 24th-July-2018 for calendar todays date changes */
+.ui-datepicker-today > .ui-state-highlight:not(.ui-state-active) {
+    background: none !important;
+}
+
+.ui-datepicker-today > .ui-state-highlight:not(.ui-state-active):hover {
+    border-color: #c0c0c0 !important;
+    background: #eeeeee !important;
+    color: #212121 !important;
+}
+/* End of Added By Bharat T on 24th-July-2018 for calendar todays date changes 
+
+
+
+.ui-table .ui-table-tbody > tr > td{
+    border: 1px solid #14b4e642 !important;
+}
+
+.ui-table .ui-table-thead > tr > th, .ui-table .ui-table-tfoot > tr > td {
+    background: #14b4e614 !important;
+    border-color: #14b4e642 !important;
+}
+.ui-table-caption.ui-widget-header {
+    border: 1px solid #14b4e642 !important;
+    background: #14b4e614 !important;
+}
+
+*/
+.ui-table .ui-sortable-column.ui-state-highlight {
+    background-color: #1C3C93 !important;
+    color: #FFFFFF;
+}
+
+/* Confirm Box Styles By Bharat On 6th-Aug-2018 */
+.clsConfirmBox .ui-confirmdialog, .clsConfirmBox .ui-dialog-titlebar, .clsConfirmBox .ui-dialog-footer {
+    background-color: #4CAF50 !important;
+}
+.clsConfirmBox .ui-dialog-titlebar {
+    background: linear-gradient(to bottom, #4CAF50 0%, #4CAF50 100%);
+    border-bottom: 1px solid #D5D5D5;
+}
+
+.clsConfirmBox .ui-dialog-titlebar-close, .clsConfirmBox .ui-dialog-content, .clsConfirmBox .ui-dialog-titlebar {
+    color: #FFFFFF !important;
+}
+
+.clsConfirmBox .ui-dialog .ui-dialog-titlebar-icon:hover {
+    border-color: #c0c0c0;
+    background: #212121;
+    color: #212121;
+}
+/* End of Confirm Box Styles By Bharat On 6th-Aug-2018 */
+
+.clsToggleButtonDiv .ui-togglebutton {
+    border: 1px solid #988a8a !important;
+}
+
+.clsToggleButtonDiv{float: right;}
+
+.clsToggleButtonDiv .ui-togglebutton.ui-button.ui-state-default, clsToggleButtonDiv .ui-selectbutton .ui-button.ui-state-default{
+   
+    font-size: 11px !important;
+    width: 45px !important;
+}
+.clsToggleButtonDiv .ui-togglebutton.ui-button.ui-state-default .ui-button-text.ui-unselectable-text, clsToggleButtonDiv .ui-selectbutton .ui-button.ui-state-default .ui-button-text.ui-unselectable-text{
+    padding: .25em 0em !important;
+}
+.ui-paginator p-dropdown{display: inline-block !important;}
+
+th.midiamwidthhh.ui-sortable-column  {
+    width: 100px;
+}
+input[ppassword] {
+    text-security:disc;
+    -webkit-text-security:disc;
+    -mox-text-security:disc;
+    -moz-text-security:disc;
+    -webkit-text-security: disc;
+}
+
+
+.ui-state-disabled:not(td.ui-datepicker-other-month), .ui-widget:disabled {
+    opacity: 0.35;
+    filter: Alpha(Opacity=35);
+    background-image: none;
+    border: 1px solid #eee !important;
+    cursor: default !important;
+    background-color: #d6d6d6 !important;
+}
+.ui-dropdown.ui-state-disabled .ui-dropdown-trigger, .ui-dropdown.ui-state-disabled .ui-dropdown-label {
+    cursor: default;
+    background-color: #d6d6d6 !important;
+}
+
+.clsControl[ng-reflect-readonly="true"] .ui-state-default, .clsControl[ng-reflect-readonly="true"] .ui-dropdown-label{
+    background-color:  #E6E6E6 !important;
+}
+
+td.clsAssignTaskColumn .ui-button-text {
+    padding: .25em 0.4em !important;
+}
+

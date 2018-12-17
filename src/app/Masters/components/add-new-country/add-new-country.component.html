@@ -1,0 +1,57 @@
+<p-dialog 
+    header="Add New Country"
+    [(visible)]="Country.showCountryModal"
+    modal="modal" 
+    [resizable]="true" 
+    [responsive]="true" 
+    [width]="600" 
+    [minWidth]="200" 
+    class="notecontrol"
+    (onHide)="hideCountryPopup()"
+  >
+  <form #CountryForm="ngForm" [formGroup]="newCountryEntryForm"  (ngSubmit)="saveCountryNames(CountryForm)" novalidate >
+      <div class="ui-g">
+<!-- country Name -->
+<div class="ui-g-12 ui-md-12">
+    <div class="paddingRL">
+        <div class="le-su-12">
+          <label for="enterbrand">
+            {{ newCountryResources.country}}<span class="star">*</span>:
+          </label>
+
+          <input pInputText
+            name="country"
+            autocomplete="off"
+            id="country"
+            placeholder="Enter Value"
+            type="text"
+            class="clsControl"
+            formControlName="country"
+          />
+
+          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+            *ngIf="!newCountryEntryForm.controls['country'].valid&&newCountryEntryForm.controls['country'].dirty">
+              <span *ngIf="newCountryEntryForm.controls['country'].errors['required']">{{newCountryResources.countryrequired}}</span>
+            </div>
+        </div>
+    </div>
+  </div>
+  <!-- End country Name -->
+  
+  <div class="ui-g-12 ui-md-6" style="text-align:left;">
+      <div class="paddingRL">
+        <p-button  type="submit" label="Save" id="btnCountrySave" name="btnCountrySave" ></p-button>
+
+        <button pButton
+            (click)="resetForm()"
+            type="button"
+            label="Clear"
+            class="ui-button-secondary"
+        >
+        </button>
+    </div>
+  </div>
+</div>
+</form>
+</p-dialog>
+<p-growl [(value)]="msgs" life='5000'></p-growl>

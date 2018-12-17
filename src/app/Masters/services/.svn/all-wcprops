@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/thingbluangular5svnv1/!svn/ver/1217/thingblusvn/src/app/Masters/services
+END
+tpp-package-type.service.ts
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/thingbluangular5svnv1/!svn/ver/1217/thingblusvn/src/app/Masters/services/tpp-package-type.service.ts
+END
+strain-type.service.ts
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/thingbluangular5svnv1/!svn/ver/1217/thingblusvn/src/app/Masters/services/strain-type.service.ts
+END
+tasksetting.service.ts
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/thingbluangular5svnv1/!svn/ver/1217/thingblusvn/src/app/Masters/services/tasksetting.service.ts
+END
+genetics.service.ts
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/thingbluangular5svnv1/!svn/ver/1217/thingblusvn/src/app/Masters/services/genetics.service.ts
+END
+tpprocessor.service.ts
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/thingbluangular5svnv1/!svn/ver/1217/thingblusvn/src/app/Masters/services/tpprocessor.service.ts
+END
+new-client.service.ts
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/thingbluangular5svnv1/!svn/ver/1217/thingblusvn/src/app/Masters/services/new-client.service.ts
+END
+brand.service.ts
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/thingbluangular5svnv1/!svn/ver/1217/thingblusvn/src/app/Masters/services/brand.service.ts
+END
+new-employee.service.ts
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/thingbluangular5svnv1/!svn/ver/1217/thingblusvn/src/app/Masters/services/new-employee.service.ts
+END
+new-product-type.service.ts
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/thingbluangular5svnv1/!svn/ver/1217/thingblusvn/src/app/Masters/services/new-product-type.service.ts
+END
+retailer.service.ts
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/thingbluangular5svnv1/!svn/ver/976/thingblusvn/src/app/Masters/services/retailer.service.ts
+END
+city.service.ts
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/thingbluangular5svnv1/!svn/ver/1217/thingblusvn/src/app/Masters/services/city.service.ts
+END
+packagingtypes.service.ts
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/thingbluangular5svnv1/!svn/ver/1217/thingblusvn/src/app/Masters/services/packagingtypes.service.ts
+END
+strain-master.service.ts
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/thingbluangular5svnv1/!svn/ver/1217/thingblusvn/src/app/Masters/services/strain-master.service.ts
+END

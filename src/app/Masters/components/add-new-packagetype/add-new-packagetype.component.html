@@ -1,0 +1,94 @@
+<p-dialog 
+    header="Add New Package Type"
+    [(visible)]="PackageType.showPackageTypeModal"
+    modal="modal" 
+    [resizable]="true" 
+    [responsive]="true" 
+    [width]="600" 
+    [minWidth]="200" 
+    class="notecontrol"
+    (onHide)="hidePackageTypePopup()"
+  >
+  <form #PackageTypeForm="ngForm" [formGroup]="newPackageTypeEntryForm"  (ngSubmit)="savePackageTypeNames(PackageTypeForm)" novalidate >
+      <div class="ui-g">
+                <!-- PackageType Name -->
+                <div class="ui-g-12 ui-md-12">
+                  <div class="paddingRL">
+                      <div class="le-su-12">
+                        <label for="enterpackagetype">
+                          {{ newPackageTypeResources.enterpackagetype}}  <span class="star">*</span>
+                        </label>
+
+                        <input pInputText
+                          name="packagetype"
+                          id="packagetype"
+                          autocomplete="off"
+                          placeholder="Enter Value"
+                          type="text"
+                          class="clsControl"
+                          formControlName="packagetype"
+                        />
+
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!newPackageTypeEntryForm.controls['packagetype'].valid&&newPackageTypeEntryForm.controls['packagetype'].dirty">
+                            <span *ngIf="newPackageTypeEntryForm.controls['packagetype'].errors['required']">{{newPackageTypeResources.packagetyperequired}}</span>
+                            <span *ngIf="newPackageTypeEntryForm.controls['packagetype'].errors['maxlength']">{{newPackageTypeResources.packagetypeLength}}</span>
+                            <span *ngIf="newPackageTypeEntryForm.controls['packagetype'].errors['whitespace']">{{newPackageTypeResources.packagetyperequired}}</span>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <!-- End PackageType Name -->
+                <!-- description -->
+                <div class="ui-g-12 ui-md-12">
+                    <div class="paddingRL">
+                        <div class="le-su-12">
+                          <label for="enterdescription">
+                            {{ newPackageTypeResources.enterdescription}}
+                          </label>
+  
+                          <input pInputText
+                            name="description"
+                            id="description"
+                            type="text"
+                            autocomplete="off"
+                            placeholder="Enter Value"
+                            class="clsControl"
+                            formControlName="description"
+                          />
+  
+                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                            *ngIf="!newPackageTypeEntryForm.controls['description'].valid&&newPackageTypeEntryForm.controls['description'].dirty">
+                              <span *ngIf="newPackageTypeEntryForm.controls['description'].errors['required']">{{newPackageTypeResources.descriptionrequired}}</span>
+                              <span *ngIf="newPackageTypeEntryForm.controls['description'].errors['minlength']">{{newPackageTypeResources.descriptionLength}}</span>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <!-- End description -->
+
+                  <!-- IsActive -->
+                <div class="ui-g-12 ui-md-12">
+                    <div class="paddingRL">
+                      <label></label>
+                      <div class="clear"></div>
+                
+                      <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalResource.IsActiveFlag}}" formControlName="chkIsActive" 
+                      binary="true"></p-checkbox>
+                    </div>
+                  </div>
+                  <!--End IsActive -->
+
+                  
+                <div class="ui-g-12 ui-md-12" style="text-align:left;">
+                    <div class="paddingRL">
+                      <p-button  type="submit" label="Save" id="btnPackageTypeSave" name="btnPackageTypeSave" ></p-button>
+
+                      <button pButton (click)="resetForm()" type="button" label="Clear" class="ui-button-secondary"></button>
+                  </div>
+                </div>
+              </div>
+
+</form>
+</p-dialog>
+<p-growl [(value)]="msgs" life='5000'></p-growl>

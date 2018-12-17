@@ -1,0 +1,7 @@
+.fa-info-circle{
+    color:red;
+}
+
+legend {
+    width: auto !important;
+}

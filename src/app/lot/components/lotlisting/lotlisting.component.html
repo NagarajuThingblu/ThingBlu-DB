@@ -1,0 +1,159 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+      <div class="">
+
+          <!-- Lot Listing -->
+    <p-panel header="Lot List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+      <p-table #dtLotListing [value]="allLotsByClient"
+          sortMode="single"
+          [responsive]="true"
+          [paginator]="true"
+          [rows]="10"
+          sortField="LotEntryDate"
+          sortOrder="-1"
+          [rowsPerPageOptions]="paginationValues"
+          (onPage)="onPageChange($event)"
+          [globalFilterFields]="['GrowerLotNo','GrowerName','MaterialType','StrainName','StartWeight','LotEntryDate','UsableWeight','THC']"
+          
+          >                    
+          <ng-template pTemplate="caption">
+              <div style="text-align: right">
+                  <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                  <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" (input)="dtLotListing.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+              </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+              <tr>
+                  <th [pSortableColumn]="'GrowerLotNo'" class="lotNum">{{globalResource.lotno}}
+                      <p-sortIcon [field]="'GrowerLotNo'"></p-sortIcon>                                
+                  </th>
+                  <th [pSortableColumn]="'GrowerName'">{{globalResource.grower}}
+                      <p-sortIcon [field]="'GrowerName'"></p-sortIcon>
+                  </th>
+                  <th [pSortableColumn]="'MaterialType'"> {{ lotListResource.type }} <p-sortIcon [field]="'MaterialType'"></p-sortIcon></th>
+                  <th [pSortableColumn]="'StrainName'">{{globalResource.strain}} <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>    
+                  <!-- <th class="thc" [pSortableColumn]="'THC'">{{globalResource.totalthc}} <p-sortIcon [field]="'TotalTHC'"></p-sortIcon></th>                   -->
+                  <th class="wtg" [pSortableColumn]="'UsableWeight'">{{globalResource.usablewt}} {{ globalResource.listgramunit }} <p-sortIcon [field]="'UsableWeight'"></p-sortIcon></th>                  
+                  <th class="wtg" [pSortableColumn]="'StartWeight'">{{lotListResource.startwt}} {{ globalResource.listgramunit }} <p-sortIcon [field]="'StartWeight'"></p-sortIcon></th>              
+                  <th class="datewidth" [pSortableColumn]="'LotEntryDate'">{{globalResource.createddate}} <p-sortIcon [field]="'LotEntryDate'"></p-sortIcon></th>              
+                  <!-- Added By Bharat T on 13th-July-2018 -->
+                  <th style="width:40px;" *ngIf="_cookieService.UserRole=='Manager'">                    
+                    </th>
+                  <!-- End of Added By Bharat T on 13th-July-2018 -->
+                  <th style="width:30px;"> </th>
+              </tr>
+    
+              <tr>
+                  <th class="lotNum">
+                      <input pInputText type="text" autocomplete="off" (input)="dtLotListing.filter($event.target.value, 'GrowerLotNo', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                      <input pInputText type="text" autocomplete="off" (input)="dtLotListing.filter($event.target.value, 'GrowerName', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                    <input pInputText type="text" autocomplete="off" (input)="dtLotListing.filter($event.target.value, 'MaterialType', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                      <input pInputText type="text" autocomplete="off" (input)="dtLotListing.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
+                  </th>
+                  <!-- <th>
+                    <input pInputText type="text" autocomplete="off"  (input)="dtLotListing.filter($event.target.value, 'TotalTHC', 'contains')" class="clsControl">
+                </th>  -->
+                <th>
+                    <input pInputText type="text" autocomplete="off"  (input)="dtLotListing.filter($event.target.value, 'UsableWeight', 'contains')" class="clsControl">
+                    </th> 
+                  <th>
+                      <input pInputText type="text" autocomplete="off" (input)="dtLotListing.filter($event.target.value, 'StartWeight', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                    <input pInputText type="text" autocomplete="off" (input)="dtLotListing.filter($event.target.value, 'LotEntryDate', 'contains')" class="clsControl">
+                </th>
+                <th *ngIf="_cookieService.UserRole=='Manager'">  </th>
+                <th rowspan="2"></th>                        
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-lot let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+                  <!-- <td>
+                      <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
+                  </td> -->
+
+                  <td class="lotNum">
+                        <span class="ui-column-title">{{globalResource.lotno}}</span>
+                      <span>
+                        {{lot?.GrowerLotNo}}
+                        <app-lot-comment
+                            [LotId]="lot?.LotId"
+                            [LotCommentsCount]="lot?.LotNoteCount"
+                            (CommentIconClicked)="commentIconClicked($event)"
+                        ></app-lot-comment>
+                      </span>
+                  </td>
+                  <td><span class="ui-column-title">{{globalResource.grower}}</span> {{lot?.GrowerName}}</td>
+                  <td><span class="ui-column-title">{{lotListResource.type}}</span> {{lot?.LotType }}</td>
+                  <td><span class="ui-column-title">{{globalResource.strain}}</span> {{lot?.StrainName }}</td>   
+                  <!-- <td class="thc"><span class="ui-column-title">{{globalResource.totalthc}}</span> {{lot?.TotalTHC }} </td>                   -->
+                  <td class="wtg"><span class="ui-column-title">{{globalResource.usablewt}}</span> {{lot?.UsableWeight }} </td>
+                  <td class="wtg"><span class="ui-column-title">{{lotListResource.startwt}}</span> {{lot?.StartWeight }} </td>
+                  <td class="datewidth"><span class="ui-column-title">{{globalResource.createddate}}</span> {{lot?.LotEntryDate | date: 'MM/dd/yyyy' }}</td>
+                  <!-- Added By Bharat T on 13th-July-2018 -->
+                  <td style="width:65px;" *ngIf="_cookieService.UserRole=='Manager'"> 
+                        <span class="ui-column-title">{{ lotListResource.edit }}</span>
+                        <a href="#" [routerLink]="" (click)="editLot(lot?.LotId)" >                             
+                            <span class="fa fa-edit"></span>
+                        </a>
+                        <a href="#" [routerLink]="" (click)="deleteLot(lot?.LotId)" >
+                            <span class="fa fa-trash"></span>
+                        </a>
+                  </td>
+                  <!-- End of Added By Bharat T on 13th-July-2018 -->
+                  <td  style="width:65px;">
+                        <span class="ui-column-title">{{globalResource.details}}</span>
+                        <app-lot-note-icon
+                            [LotId]="lot?.LotId"                            
+                            (NoteIconClicked)="showLotNote($event)"
+                        ></app-lot-note-icon>
+                        <span class="ui-column-title">{{globalResource.details}}</span>
+                        <u>
+                        <a [routerLink]="" title="Close Lot" *ngIf="userRole==='Manager'" (click)="showLotShinkagePopup(lot?.LotId)" >
+                            <i class='fa fa-compress'></i></a>
+                        </u>
+                </td>         
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft" let-state>
+                <pagination-counts
+                  *ngIf="allLotsByClient?.length"
+                  [inputData]="allLotsByClient"
+                  [inputEvent]="event"
+                ></pagination-counts>
+              </ng-template>
+      </p-table>
+    </p-panel>
+    
+      <!--End Lot Listing  -->
+    </div>
+  </div>
+
+  <app-lot-note [Lot]="lotInfo" *ngIf="lotInfo?.lotId" (NoteSaved)="onNoteSave($event)" >
+  </app-lot-note>
+  <app-popup-lot-comment [Lot]="lotInfo" *ngIf="lotInfo?.lotId" (CommentSaved)="OnCommentSaved($event)">
+    </app-popup-lot-comment>
+</div>
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+
+<app-lot-edit 
+    [Lot]="lotInfo" 
+    [LotEditDetails]="lotEditDetails" 
+    [questions]="questions" 
+    (LotUpdate)="onLotUpdate($event)"
+    *ngIf="lotInfo?.lotId&&lotInfo.showEditLotModal" 
+></app-lot-edit>
+
+<app-shrinkage-lot-close-popup 
+    [LotInfo]="lotInfo"
+    *ngIf="lotInfo?.lotId" 
+    (ShrinkSaved)="OnShirnkSave($event)"
+>
+</app-shrinkage-lot-close-popup>
+<p-confirmDialog class="clsConfirmBox" header="Confirmation" icon="fa fa-question-circle" width="425"></p-confirmDialog> 

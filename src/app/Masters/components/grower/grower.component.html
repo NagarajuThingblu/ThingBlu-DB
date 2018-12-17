@@ -1,0 +1,700 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+
+    <div class="ui-g-12">
+          <!-- New Grower -->
+        <p-panel header="{{ pageheading }}" [toggleable]="true"  >
+          <p-header>
+         
+        </p-header>
+          <form
+            [formGroup]="growerForm"
+            (ngSubmit)="onSubmit(growerForm.value)">
+             <div class="ui-g">                  
+                  <!-- Grower Name -->
+                  <div class="ui-g-12 ui-md-6">
+                      <div class="paddingRL">
+                          <label for="grower">
+                            {{ growerResources.grower}}
+                            <span class="star">*</span>
+                          </label>:
+  
+                          <input pInputText
+                            name="Grower"
+                            id="Grower"
+                           autocomplete="off"
+                            type="text"
+                            class="clsControl"
+                            formControlName="grower"
+                            placeholder="Enter Grower Name"
+                          />
+                        
+                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                            *ngIf="!growerForm.controls['grower'].valid&&growerForm.controls['grower'].dirty">
+
+                          <span *ngIf="growerForm.controls['grower'].errors['required']">
+                            {{ growerResources.growerrequired }}
+                          </span>
+                          <span *ngIf="growerForm.controls['grower'].errors['whitespace']">
+                            {{ growerResources.growerrequired }}
+                          </span>
+                          <span *ngIf="growerForm.controls['grower'].errors['maxlength']">
+                            {{growerResources.growerLength}}
+                          </span>
+                        </div>
+
+                        </div>
+                    </div>
+                    <!--End Grower Name -->
+                    <!-- Office Phone -->
+                    <div class="ui-g-12 ui-md-6">
+                        <div class="paddingRL">
+                            <label for="officephone"> {{ growerResources.officephone}}
+                              <span class="star">*</span>
+                            </label>:
+    
+                            <input pInputText
+                              name="officephone"
+                              id="officephone"
+                              type="text"
+                              autocomplete="off"
+                              pKeyFilter="int"
+                              class="clsControl"
+                              formControlName="officePhone"
+                              placeholder="Enter Office Phone"
+                            />
+    
+                            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                              *ngIf="!growerForm.controls['officePhone'].valid&&growerForm.controls['officePhone'].dirty">
+                              <span *ngIf="growerForm.controls['officePhone'].errors['required']">
+                                {{growerResources.officephonerequired}}
+                              </span>
+                              <span *ngIf="growerForm.controls['officePhone'].errors['maxlength']">
+                                  {{growerResources.officephoneLength}}
+                              </span>
+                            </div>
+                            
+                          </div>
+                      </div>
+                      <!--End Office Phone -->
+                      <!-- cell phone -->
+                  <div class="ui-g-12 ui-md-6">
+                      <div class="paddingRL">
+                          <label for="cellphone">{{ growerResources.cellphone}}</label>:
+  
+                          <input pInputText
+                            name="cellphone"
+                            id="cellphone"
+                            autocomplete="off"
+                            type="text"
+                            class="clsControl"
+                            formControlName="cellPhone"
+                            pKeyFilter="int"
+                            placeholder="Enter Cell Phone"
+                          />
+                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!growerForm.controls['cellPhone'].valid&&growerForm.controls['cellPhone'].dirty">
+                          <span *ngIf="growerForm.controls['cellPhone'].errors['maxlength']">
+                              {{growerResources.officephoneLength}}
+                          </span>
+                        </div>
+                        </div>
+                    </div>
+                 
+                    <!--End cell phone -->                    
+                    <!-- Primary Email-->
+                    <div class="ui-g-12 ui-md-6">
+                      <div class="paddingRL">
+                          <label for="primaryemail">{{ growerResources.primaryemail}}</label>:
+  
+                          <input pInputText
+                            name="primaryemail"
+                            autocomplete="off"
+                            id="primaryemail"
+                            type="text"
+                            class="clsControl"
+                            formControlName="primaryEmail"
+                            placeholder="Enter Primary Email"
+                            pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                            />
+
+                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!growerForm.controls['primaryEmail'].valid&&growerForm.controls['primaryEmail'].dirty">
+                            <span *ngIf="growerForm.controls['primaryEmail'].errors['pattern']">
+                              {{ globalResource.validemail  }}
+                            </span>
+                            <span *ngIf="growerForm.controls['primaryEmail'].errors['maxlength']">
+                              {{growerResources.emailLength}}
+                            </span>
+                          </div>
+                        </div>
+                    </div>
+  
+                      <!--End Primary Email -->
+                      <!-- Primary Email-->
+                    <div class="ui-g-12 ui-md-6">
+                      <div class="paddingRL">
+                          <label for="secondaryemail"> {{ growerResources.secondaryemail}} </label>:
+  
+                          <input pInputText
+                            name="secondaryemail"
+                            id="secondaryemail"
+                            type="text"
+                            autocomplete="off"
+                            class="clsControl"
+                            formControlName="secondaryEmail"
+                            placeholder="Enter Secondary Phone"
+                            pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                          />
+
+                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!growerForm.controls['secondaryEmail'].valid&&growerForm.controls['secondaryEmail'].dirty">
+                          <span *ngIf="growerForm.controls['secondaryEmail'].errors['pattern']">
+                            {{ globalResource.validemail  }}
+                        </span>
+                        <span *ngIf="growerForm.controls['secondaryEmail'].errors['maxlength']">
+                          {{growerResources.emailLength}}
+                        </span>
+                          </div>
+                        </div>
+                    </div>
+  
+                      <!--End Primary Email -->
+                      <!--Contact Person-->
+                    <div class="ui-g-12 ui-md-6">
+                      <div class="paddingRL">
+                          <label for="contactperson"> {{ growerResources.contactperson}} </label>:
+  
+                          <input pInputText
+                            name="contactperson"
+                            id="contactperson"
+                            autocomplete="off"
+                            type="text"
+                            class="clsControl"
+                            formControlName="contactPerson"
+                            placeholder="Enter Contact Person"
+                          />
+                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!growerForm.controls['contactPerson'].valid&&growerForm.controls['contactPerson'].dirty">
+                        <span *ngIf="growerForm.controls['contactPerson'].errors['maxlength']">
+                          {{growerResources.contactpersonLength}}
+                        </span>
+                          </div>
+                        </div>
+                    </div>
+  
+                     <!--End Contact Person -->                     
+                    <!--country -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                      <div class="le-su-12">
+                          <label for="country" class="towlable">{{ growerResources.country}}<span class="star">*</span></label>:
+    
+                          <p-dropdown
+                          [filter] ="true"
+                          id="country"
+                          formControlName="country"
+                          [options]="countries"
+                          (onChange)="countryChange()"
+                          placeholder="-- Select --"
+                          autocomplete="off"
+                          [autoWidth]="false"
+                          class="clsControl"
+                          name="country">
+                          </p-dropdown>
+                          
+                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!growerForm.controls['country'].valid&&growerForm.controls['country'].dirty">
+                          {{ growerResources.countryrequired }}
+                          </div>
+
+                        </div>
+                      </div>
+                   </div>
+                  
+                  <!--End country -->
+                    <!--state -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                      <div class="le-su-12">
+                          <label for="state" class="towlable">{{ growerResources.state}}<span class="star">*</span></label>:
+    
+                          <p-dropdown
+                          [filter] ="true"
+                          id="state"
+                          formControlName="state"
+                          (onChange)="stateChange()"
+                          autocomplete="off"
+                          [options]="states"
+                          placeholder="-- Select --"
+                          [autoWidth]="false"
+                          class="clsControl"
+                          name="state">
+                          </p-dropdown>
+  
+                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!growerForm.controls['state'].valid&&growerForm.controls['state'].dirty">
+                          {{ growerResources.staterequired }}
+                          </div>
+
+                        </div>
+                      </div>
+                   </div>
+                  
+                    <!--End state -->
+
+                    <!--Address-->
+                    <div class="ui-g-12 ui-md-6">
+                      <div class="paddingRL">
+                          <label for="address"> {{ growerResources.address}}<span class="star"></span></label>:
+  
+                          <textarea
+                          pInputTextarea
+                            name="address"
+                            id="address"
+                            type="text"
+                            autocomplete="off"
+                            class="clsControl"
+                            formControlName="address"
+                            placeholder="Enter Address"
+                          ></textarea>
+                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                            *ngIf="!growerForm.controls['address'].valid&&growerForm.controls['address'].dirty">
+                            <span *ngIf="growerForm.controls['address'].errors['maxlength']">
+                              {{growerResources.addressLength}}
+                            </span>
+                          </div>
+                        </div>
+                    </div>
+
+                     <!--End Address -->
+                     
+                      <!--city -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                      <div class="le-su-12">
+                          <label for="city" class="towlable">{{ growerResources.city}}<span class="star">*</span></label>:
+    
+                          <p-dropdown
+                          [filter] ="true"
+                          id="city"
+                          formControlName="city"
+                          [options]="cities"
+                          placeholder="-- Select --"
+                          [autoWidth]="false"
+                          class="clsControl"
+                          name="city">
+                          </p-dropdown>
+  
+                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!growerForm.controls['city'].valid&&growerForm.controls['city'].dirty">
+                          {{ growerResources.cityrequired }}
+                          </div>
+
+                        </div>
+                      </div>
+                   </div>
+                  
+                  <!--End city -->
+                    <!--zipcode-->
+                   <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                        <label for="zipcode"> {{ growerResources.zipcode}}  <span class="star">*</span></label>:
+
+                        <input pInputText
+                          name="zipcode"
+                          id="zipcode"
+                          autocomplete="off"
+                          type="text"
+                          class="clsControl"
+                          formControlName="zipCode"
+                          pKeyFilter="int"
+                          placeholder="Enter ZIP Code"
+                        />
+                        
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!growerForm.controls['zipCode'].valid&&growerForm.controls['zipCode'].dirty">
+                          <span *ngIf="growerForm.controls['zipCode'].errors['required']">
+                            {{growerResources.zipcoderequired}}
+                          </span>
+                          <span *ngIf="growerForm.controls['zipCode'].errors['maxlength']">
+                            {{growerResources.zipcodeLength}}
+                          </span>
+                      </div>
+                      </div>
+                  </div>
+
+                   <!--End zipcode -->                     
+                       <!--description-->
+                      <div class="ui-g-12 ui-md-6">
+                        <div class="paddingRL">
+                            <label for="description"> {{ growerResources.description}} </label>:
+    
+                           
+                            <textarea 
+                            pInputTextarea           
+                            formControlName="description"
+                            placeholder="Enter Description"
+                            autocomplete="off"
+                            maxLength="500"
+                            name="description"
+                            class="clsControl"
+                          ></textarea>
+                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!growerForm.controls['description'].valid&&growerForm.controls['description'].dirty">
+                          <span *ngIf="growerForm.controls['description'].errors['maxlength']">
+                            {{growerResources.descriptionLength}}
+                          </span>
+                      </div>
+    
+                          </div>
+                      </div>
+                      
+                       <!--End longitude -->
+                      <!-- IsActive -->
+                      <div class="ui-g-12 ui-md-12">
+                        <div class="paddingRL">
+                          <label></label>
+                          <div class="clear"></div>
+                    
+                          <p-checkbox value="true" 
+                          [(ngModel)]="chkIsActive" 
+                          label="{{globalResource.IsActiveFlag}}" 
+                          formControlName="chkIsActive" 
+                          binary="true"></p-checkbox>
+                        </div>
+                      </div>
+                      <!--End IsActive -->
+                       <div class="ui-g-12 ui-md-12" style="text-align:right;">
+                        <div class="paddingRL">
+                            <!-- <button pButton type="submit" name="btnLogin" label="Add New" (click)="resetAll()" style="align-content: right"></button> -->
+                          <p-button  type="submit" label="{{ saveButtonText}}" id="btnGrowerSave" name="btnGrowerSave" ></p-button>
+                          <button pButton (click)="resetForm()" type="button" label="{{ clear }}" class="ui-button-secondary"></button>
+                      </div>
+                    </div>
+                </div>
+           </form>
+           
+        </p-panel>
+  </div>
+  
+</div>
+<div class="ui-g">
+  <div class="ui-g-12">
+    <p-panel header="{{ growerResources.growerlist }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+      <p-table #dtGrowerList [value]="allGrowerList"
+      class="clsTableSelection"
+      sortMode="single"                      
+      [responsive]="true" 
+      [paginator]="true" 
+      [rows]="10"           
+      sortField="RawSupId"
+      sortOrder="-1"
+      [rowsPerPageOptions]="paginationValues"
+      (onPage)="onPageChange($event)"
+      [globalFilterFields]="['RawSupplierName','ContactPerson','PrimaryEmail','OfficePhone','StateName','CityName']"
+      selectionMode="single"
+      (onRowSelect)="onRowSelect($event)"
+      (onRowUnselect)="onRowSelect($event)"
+      dataKey="RawSupId"
+      >                    
+      <ng-template pTemplate="caption">
+          <div style="text-align: right">
+              <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+              <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" (input)="dtGrowerList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+          </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+          <tr>
+              <!-- <th [pSortableColumn]="'ClientName'">Client Name <p-sortIcon [field]="'ClientName'"></p-sortIcon></th> -->
+              <th [pSortableColumn]="'RawSupplierName'">Grower Name <p-sortIcon [field]="'RawSupplierName'"></p-sortIcon></th>
+              <th [pSortableColumn]="'ContactPerson'"> Contact Person <p-sortIcon [field]="'ContactPerson'"></p-sortIcon></th>
+              <th [pSortableColumn]="'PrimaryEmail'">Primary Email <p-sortIcon [field]="'PrimaryEmail'"></p-sortIcon></th>    
+              <th [pSortableColumn]="'OfficePhone'">Office Phone <p-sortIcon [field]="'OfficePhone'"></p-sortIcon></th>                  
+              <th [pSortableColumn]="'StateName'">State  <p-sortIcon [field]="'StateName'"></p-sortIcon></th>              
+              <th [pSortableColumn]="'CityName'">City <p-sortIcon [field]="'CityName'"></p-sortIcon></th>              
+              <th style="width:100px;">Action</th>
+          </tr>
+
+          <tr>
+              <!-- <th>
+                  <input pInputText type="text" autocomplete="off" (input)="dtGrowerList.filter($event.target.value, 'ClientName', 'contains')" class="clsControl">
+              </th> -->
+              <th>
+                  <input pInputText type="text" autocomplete="off" (input)="dtGrowerList.filter($event.target.value, 'RawSupplierName', 'contains')" class="clsControl">
+              </th>
+              <th>
+                <input pInputText type="text" autocomplete="off" (input)="dtGrowerList.filter($event.target.value, 'ContactPerson', 'contains')" class="clsControl">
+              </th>
+              <th>
+                  <input pInputText type="text" autocomplete="off" (input)="dtGrowerList.filter($event.target.value, 'PrimaryEmail', 'contains')" class="clsControl">
+              </th>
+              <th>
+                <input pInputText type="text" autocomplete="off"  (input)="dtGrowerList.filter($event.target.value, 'OfficePhone', 'contains')" class="clsControl">
+            </th>                 
+              <th>
+                  <input pInputText type="text" autocomplete="off" (input)="dtGrowerList.filter($event.target.value, 'StateName', 'contains')" class="clsControl">
+              </th>
+              <th>
+                <input pInputText type="text" autocomplete="off" (input)="dtGrowerList.filter($event.target.value, 'CityName', 'contains')" class="clsControl">
+            </th>
+            <th rowspan="2"></th>
+                                    
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-grower let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="grower" [pSelectableRowIndex]="rowIndex" >
+              <!-- <td>
+                  <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
+              </td> -->
+
+              <!-- <td>{{grower?.ClientName}}</td> -->
+              <td>{{grower?.RawSupplierName}}</td>
+              <td>{{grower?.ContactPerson }}</td>
+              <td>{{grower?.PrimaryEmail }}</td>   
+              <td>{{grower?.OfficePhone }}  </td>                  
+              <td>{{grower?.StateName }}  </td>
+              <td>{{grower?.CityName }}</td>
+              <td style="width:65px;" (click)="$event.stopPropagation();"> 
+                 <span class="ui-column-title">edit</span>
+                <a href="#" [routerLink]="" (click)="getGrowerOnEdit(grower?.RawSupId)" >                             
+                    <span class="fa fa-edit"></span>
+                </a>
+                <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(grower?.RawSupId,grower,1,0)" >
+                  <span class="fa fa-trash"></span>
+              </a>
+        <!-- <p-inputSwitch 
+        (onChange)="showConformationMessaegForDeactive(grower?.RawSupId,grower,rowIndex,0,1)" 
+        [(ngModel)]="grower.IsActive">
+      </p-inputSwitch>  -->
+      <div class="clsToggleButtonDiv">
+        <p-toggleButton 
+          [(ngModel)]="grower.IsActive" 
+          onLabel="Active" offLabel="InActive"  
+          [style]="{'width':'90px'}"
+          id
+          (onChange)="showConformationMessaegForDeactive(grower?.RawSupId,grower,rowIndex,0,1)"
+        >
+
+        </p-toggleButton>
+      </div>
+          </td>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft" let-state>
+        <pagination-counts
+          *ngIf="allGrowerList?.length"
+          [inputData]="allGrowerList"
+          [inputEvent]="event"
+        ></pagination-counts>
+      </ng-template>
+  </p-table>
+     </p-panel>
+  </div>
+</div>
+</div>
+
+<!-- To view grid row details -->
+  <p-dialog header="{{growerResources.growerdetails}}" [(visible)]="displayInfoDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="620">
+    <div class="ui-g ui-fluid" *ngIf="selectedGrower">
+      <!-- Grower Name -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  growerResources.grower }}: </strong>
+            </label>
+  
+            <label>
+              {{ selectedGrower?.RawSupplierName }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Grower Name -->
+
+      <!-- Office Phone -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  growerResources.officephone }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedGrower?.OfficePhone }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Office phone -->
+
+      <!-- Cell Phone -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  growerResources.cellphone }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedGrower?.CellPhone }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Cell Phone -->
+
+      <!-- Primary Email -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  growerResources.primaryemail }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedGrower?.PrimaryEmail }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Primary Email -->
+
+      <!-- Secondary Email -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  growerResources.secondaryemail }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedGrower?.SecondaryEmail }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Secondary Email -->
+
+      <!-- Contact Person -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  growerResources.contactperson }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedGrower?.ContactPerson }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Contact Person -->
+
+      <!-- Country -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  growerResources.country }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedGrower?.CountryName }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Country -->
+
+      <!-- State -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  growerResources.state }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedGrower?.StateName }}
+            </label>
+          </div>
+      </div>
+      <!-- End of State -->
+
+      <!-- Address -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  growerResources.address }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedGrower?.Address }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Address -->
+
+      <!-- City -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  growerResources.city }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedGrower?.CityName }}
+            </label>
+          </div>
+      </div>
+      <!-- End of City -->
+
+      <!-- Zip Code -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  growerResources.zipcode }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedGrower?.ZipCode }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Zip Code -->
+
+      <!-- Description -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  growerResources.description }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedGrower?.Description }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Description -->   
+      
+      <!-- Is Active -->
+      <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+              <label>
+                <strong>{{  globalResource.IsActiveFlag }}: </strong>
+              </label>
+    
+              <label> 
+                {{ selectedGrower?.IsActive ? 'Yes' : 'No' }}
+              </label>
+            </div>
+        </div>
+        <!-- End of Is Active -->   
+    </div>
+
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa fa-close" (click)="displayInfoDialog = false" label="Cancel"></button>          
+        </div>
+    </p-footer>
+  </p-dialog>
+<!-- End of To view grid row details -->
+
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+<p-confirmDialog 
+  header="Confirmation" 
+  icon="fa fa-question-circle" 
+  width="425" 
+  *ngIf="true"
+  class="clsConfirmBox" >
+</p-confirmDialog> 
+          
+

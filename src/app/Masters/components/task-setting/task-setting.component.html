@@ -1,0 +1,147 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+    <div class="ui-g-12">        
+      <p-panel header="{{ pageheading }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+        <form
+          [formGroup]="taskSettingForm"
+          (ngSubmit)="onSubmit(taskSettingForm.value)">             
+          <div class="ui-g">
+            <!--Task type -->
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <div class="le-su-12">
+                  <label for="taskType" class="towlable">
+                    {{ taskSettingResources.taskType }}<span class="star">*</span>
+                  </label>:
+                  <p-dropdown
+                    [filter] ="true"
+                    id="taskType"
+                    formControlName="taskType"
+                    [options]="taskTypes"
+                    placeholder="-- Select --"
+                    [autoWidth]="false"
+                    class="clsControl"
+                    #taskTypeChange
+                    (onChange)="taskChange()"
+                    name="taskType">
+                  </p-dropdown>                    
+                  <div class="ui-message ui-messages-error ui-corner-all" style="top:67px;left:-5px;" appErrorTooltip
+                    *ngIf="!taskSettingForm.controls['taskType'].valid && 
+                      taskSettingForm.controls['taskType'].dirty">
+                    {{ taskSettingResources.taskTyperequired }}
+                  </div>
+                </div>
+              </div>              
+            </div>
+            <!-- End Task Taype -->
+            <div class="ui-g-12 ui-md-6" style="padding-top:25px;">
+              <!-- IsReview -->
+              <div class="ui-g-12 ui-md-6">
+                <div class="paddingRL">
+                  <p-checkbox value="true" 
+                    label="{{taskSettingResources.isReview}}" 
+                    formControlName="IsReview"
+                    binary="true">
+                  </p-checkbox>
+                  <!-- [(ngModel)]="IsReview"  -->
+                </div>
+              </div>
+              <!--End IsReview -->
+              <!-- IsNotification -->
+              <div class="ui-g-12 ui-md-6">
+                <div class="paddingRL">
+                  <p-checkbox value="true" 
+                    label="{{taskSettingResources.isNotification}}" 
+                    formControlName="IsNotification"
+                    binary="true">
+                  </p-checkbox>
+                  <!-- [(ngModel)]="IsNotification"  -->
+                </div>
+              </div>
+              <!--End IsNotification -->
+            </div>
+            <div class="ui-g-12 ui-md-12" style="text-align:right;">
+              <div class="paddingRL">
+                <p-button  type="submit" id="btnSaveTaskSetting" 
+                  label="{{ saveButtonText }}" name="btnSaveTaskSetting" ></p-button>
+                <button pButton (click)="resetForm()" type="button" label="{{ clear }}" 
+                  class="ui-button-secondary"></button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <p-panel header="{{ taskSettingResources.taskList }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+          <p-table 
+            #dtallTasksList [value]="allTasksList" 
+            sortMode="single"                      
+            [responsive]="true" 
+            [paginator]="true" 
+            [rows]="10"          
+            sortOrder="-1"
+            [globalFilterFields]="['TaskTypeName','IsReview','IsNotification']"              
+            [rowsPerPageOptions]="paginationValues"
+            class="clsTableSelection"
+            dataKey="taskId">
+          <ng-template pTemplate="caption">
+            <div style="text-align: right">
+              <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+              <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" 
+                (input)="dtallTasksList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th [pSortableColumn]="'TaskTypeName'"> Task Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon></th>
+              <th [pSortableColumn]="'IsReview'">Is Review <p-sortIcon [field]="'IsReview'"></p-sortIcon></th>    
+              <th [pSortableColumn]="'IsNotification'">Is Notification<p-sortIcon [field]="'IsNotification'"></p-sortIcon></th>              
+              <th style="width:100px;">Action</th>                  
+            </tr>
+            <tr>
+              <th>
+                <input pInputText type="text" autocomplete="off" 
+                (input)="dtallTasksList.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
+              </th>
+              <th>
+                <input pInputText type="text" autocomplete="off" 
+                (input)="dtallTasksList.filter($event.target.value, 'IsReview', 'contains')" class="clsControl">
+              </th>
+              <th>
+                <input pInputText type="text" autocomplete="off" 
+                (input)="dtallTasksList.filter($event.target.value, 'IsNotification', 'contains')" class="clsControl">
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-task let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+              <td>{{task?.TaskTypeName }}</td>
+              <td>{{task?.IsReview }}</td>   
+              <td>{{task?.IsNotification }}</td>            
+              <td style="width:65px;" (click)="$event.stopPropagation();"> 
+                <span class="ui-column-title">edit</span>
+                <a href="#" [routerLink]="" (click)="editTaskSetting(task?.TaskTypeId)" >                             
+                  <span class="fa fa-edit"></span>
+                </a>              
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft" let-state>
+            <pagination-counts
+              *ngIf="allTasksList?.length"
+              [inputData]="allTasksList"
+              [inputEvent]="event">
+            </pagination-counts>
+          </ng-template>
+        </p-table>
+      </p-panel>
+    </p-panel>
+    </div>
+  </div>
+  <p-growl [(value)]="msgs" life='5000'></p-growl>
+  <p-confirmDialog 
+    header="Confirmation" 
+    icon="fa fa-question-circle" 
+    width="425" 
+    *ngIf="true"
+    class="clsConfirmBox" >
+  </p-confirmDialog> 
+</div>

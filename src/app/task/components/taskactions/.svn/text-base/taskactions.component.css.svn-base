@@ -1,0 +1,13 @@
+.wrapTextWithNoSpace {
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.btnMargin {
+    margin-left: 0!important;
+    margin-right: 10px!important;
+}
+
+.btnBack {
+    text-align: right;
+}

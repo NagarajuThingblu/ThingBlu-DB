@@ -1,0 +1,63 @@
+export class LoginResources {
+    static getResources() {
+        return {
+            en: {
+                username: 'Username',
+                password: 'Password',
+                usernameRequired: 'Please enter valid username.',
+                passwordRequired: 'Please enter valid password.',
+                passwordLength: 'Must be longer than 6 characters',
+                passwordMinLength: 'Minimun 6 characters are required.',
+                performanceMatter: 'Because Performance, Matters',
+                badusernamepassword: 'Provided username or password is incorrect.',
+                oldPasswordRequired: 'Current password required.',
+                newPassword: 'New password required.',
+                passwordnotmatched: 'New password and confirm new password should be same.',
+                passwordResertSuccess: 'Your password details has been updated sucessfully.',
+                invalidDetails: 'Please provide correct current password.',
+                CurrentPassword: 'Current Password',
+                oldPasswordmaxLength: 'Password can not be greater than 20 characters.',
+                EnterNewPassword: 'Enter New Password',
+                ConfirmPassword: 'Confirm Password',
+                oldNewPasswordIsSame: 'New password is same as current existing password.',
+                confirmPasswordRequired: 'Please enter confirm password.',
+                passwordMaxLength: 'Maximum 20 characters are allowed.',
+                forgotpasswordResources: {
+                    enterEmpEmailId: 'Please enter your email id',
+                    emailrequired: 'Email required',
+                    enterNewPassword: 'Enter New Password',
+                    newpasswordRequired: 'Please enter password.',
+                    conformPassword: 'Confirm Password',
+                    confirmPasswordRequired: 'Please enter confirm password.',
+                    citylist: 'City, State, Country List',
+                    addnewcountry: 'Add New Country',
+                    addnewstate: 'Add New State',
+                    citysuccess: 'City added successfully',
+                    cityexists: 'City already exist',
+                    emailRequired: 'Email id is required',
+                    sendmailsuccess: 'Your password details has been sent on your registered email id..!',
+                    empNotActive: 'Employee registered with this email id is not active.',
+                    empNotExist: 'Email id is not registered in the system,please enter registered email id.',
+                    passwordchangesuccess: 'Your password has been successfully updated in system.',
+                    linkexpired: 'This link is Expired/Invalid,Click on I forgot my password to regenerate the link.',
+                    passwordnotmatched: 'New password and confirm new password should be same.',
+                    passwordLength: 'Must be longer than 6 characters',
+                    passwordMaxLength: 'Maximum 20 characters are allowed.',
+                    validemail: 'Please enter valid email',
+                    passwordMinLength: 'Minimun 6 characters are required.',
+                },
+                tblIPAddress: 'IP Address',
+                tblDeviceName: 'Device Name',
+                tblBrowserName: 'Browser Name',
+                tblLoginDateTime: 'Login Time',
+                tblLoginDate: 'Login Date',
+                accountAlreadyLoggedInMsg: `Account is already logged in with
+                        different devices. Please sign out any one account for login or login with different accounts.`,
+                clickHere: 'Click Here',
+                loggedInDeviceList: 'Logged In Devices List',
+                iForgotMyPassword: 'I forgot my password !',
+                poweredBy: 'Powered By'
+            }
+        };
+    }
+}

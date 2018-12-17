@@ -1,0 +1,129 @@
+
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+      <div class="ui-g-12">
+          <!-- Employee Listing -->
+    <p-panel header="{{ newEmployeeResources.headingemployeelist}}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >      
+      <p-table #dtEmployeeListing [value]="allEmployeeList"
+          sortMode="single"                      
+          [responsive]="true" 
+          [paginator]="true" 
+          [rows]="10"           
+          sortField="EmpId"
+          sortOrder="-1"
+          [rowsPerPageOptions]="PaginationValues"
+          (onPage)="onPageChange($event)"
+          [globalFilterFields]="['FirstName','LastName','Gender','DOB','Role','CityName','CellPhone']"
+          >                    
+          <ng-template pTemplate="caption">
+              <div style="text-align: right">
+                  <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                  <input type="text" pInputText autocomplete="off" size="50" placeholder="Global Filter" (input)="dtEmployeeListing.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+              </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+              <tr>
+                  <!-- <th [pSortableColumn]="'ClientName'">{{ newEmployeeResources.clientname}} <p-sortIcon [field]="'ClientName'"></p-sortIcon></th> -->
+                  <th [pSortableColumn]="'FirstName'">{{ newEmployeeResources.firstnameshort}} <p-sortIcon [field]="'FirstName'"></p-sortIcon></th>                  
+                  <th [pSortableColumn]="'LastName'">{{ newEmployeeResources.lastnameshort}} <p-sortIcon [field]="'LastName'"></p-sortIcon></th>              
+                  <th [pSortableColumn]="'Gender'">{{ newEmployeeResources.gender}} <p-sortIcon [field]="'Gender'"></p-sortIcon></th>  
+                  <th [pSortableColumn]="'DOB'">{{ newEmployeeResources.dob}} <p-sortIcon [field]="'DOB'"></p-sortIcon></th>
+                  <th [pSortableColumn]="'Role'">{{ newEmployeeResources.userrole}} <p-sortIcon [field]="'Role'"></p-sortIcon></th>
+                  <th [pSortableColumn]="'CityName'">{{ newEmployeeResources.city}} <p-sortIcon [field]="'CityName'"></p-sortIcon></th>           
+                  <th [pSortableColumn]="'CellPhone'">{{ newEmployeeResources.cellphone}} <p-sortIcon [field]="'CellPhone'"></p-sortIcon></th>
+                  <!-- <th [pSortableColumn]="'PrimaryEmail'">{{ newEmployeeResources.primaryemail}} <p-sortIcon [field]="'PrimaryEmail'"></p-sortIcon></th> -->
+                  <th style="width:100px;"> </th>
+              </tr>
+    
+              <tr>
+                  <!-- <th>
+                      <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'ClientName', 'contains')" class="clsControl">
+                  </th> -->
+                  <th>
+                      <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'FirstName', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                    <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'LastName', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                      <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'Gender', 'contains')" class="clsControl">
+                  </th>                 
+                  <th>
+                      <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'DOB', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                    <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'Role', 'contains')" class="clsControl">
+                </th>
+                <th>
+                  <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'CityName', 'contains')" class="clsControl">
+                </th>
+                <th>
+                  <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'CellPhone', 'contains')" class="clsControl">
+                </th>
+                <!-- <th>
+                  <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'PrimaryEmail', 'contains')" class="clsControl">
+                </th> -->
+                <th rowspan="2"></th>  
+          </ng-template>
+          <ng-template pTemplate="body" let-newemployee let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+                  <!-- <td>{{newemployee?.ClientName}}</td> -->
+                  <td>{{newemployee?.FirstName}}</td>
+                  <td>{{newemployee?.LastName }}</td>
+                  <td>{{newemployee?.GenderName }}</td>                  
+                  <td>{{newemployee?.DOB | date: 'MM/dd/yyyy' }}</td>
+                  <td>{{newemployee?.Role}}</td>
+                  <td>{{newemployee?.CityName}}</td>
+                  <td>{{newemployee?.CellPhone}}</td>
+                  <!-- <td>{{newemployee?.PrimaryEmail}}</td>    -->
+                  <td style="width:65px;"> 
+                      <span class="ui-column-title">{{ newEmployeeResources.edit }}</span>
+                      <a href="#" [routerLink]="" (click)="editEmployee(newemployee?.EmpId)" >                             
+                          <span class="fa fa-edit"></span>
+                      </a>
+                      <!-- <a href="#" [routerLink]="" (click)="deleteEmployee(newemployee?.EmpId)" >
+                          <span class="fa fa-trash"></span>
+                      </a> -->
+                      <a href="#" [routerLink]="" 
+                      (click)="showConformationMessaegForDelete(newemployee?.EmpId,newemployee,1,0)" >
+                        <span class="fa fa-trash"></span>
+                    </a>
+                    <!-- <p-button class="links"  type="button" label="{{ newemployee?.IsActive }}" id="btn_starinshow"  
+                    (click)="showConformationMessaegForDeactive(newemployee?.EmpId)" name="btnshow" ></p-button>-->
+                    <!-- <p-inputSwitch 
+                    (onChange)="showConformationMessaegForDeactive(newemployee?.EmpId,newemployee?.IsActive,$event, rowIndex)" 
+                    [(ngModel)]="newemployee.IsActive">
+                    </p-inputSwitch> -->
+
+                    <div class="clsToggleButtonDiv">
+                        <p-toggleButton 
+                          [(ngModel)]="newemployee.IsActive" 
+                          onLabel="Active" offLabel="InActive"  
+                          [style]="{'width':'90px'}"
+                          id
+                          (onChange)="showConformationMessaegForDeactive(newemployee?.EmpId,newemployee, rowIndex,0,1)" 
+                        >
+                        </p-toggleButton>
+                      </div>
+                </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft" let-state>
+            <pagination-counts
+              *ngIf="allEmployeeList?.length"
+              [inputData]="allEmployeeList"
+              [inputEvent]="event"
+            ></pagination-counts>
+          </ng-template>
+      </p-table>
+    </p-panel>
+      <!--End Employee Listing  -->
+    </div>
+  </div>
+</div>
+<p-confirmDialog 
+    class="clsConfirmBox" 
+    header="Confirmation" 
+    icon="fa fa-question-circle" 
+    *ngIf="true"
+    width="425"></p-confirmDialog>

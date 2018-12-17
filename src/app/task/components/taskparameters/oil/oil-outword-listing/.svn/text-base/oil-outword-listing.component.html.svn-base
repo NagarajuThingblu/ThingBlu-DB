@@ -1,0 +1,197 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+      <div class="ui-g-12">
+          <!-- Order Listing -->
+  <p-panel header="{{ oilOutwordResource.pageheading }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+      <p-table #dtOilOutword [value]="allOilOutwordRequests" 
+          sortMode="single"                      
+          [responsive]="true" 
+          [paginator]="true" 
+          [rows]="10" 
+          sortField="ActionDate"
+          sortOrder="-1"
+          [rowsPerPageOptions]="paginationValues"
+            (onPage)="onPageChange($event)"
+          [globalFilterFields]="['ActionTaker','TPName','ActionDate','OutwardDate','ExpectedReturnDate']"            
+          >                    
+          <ng-template pTemplate="caption">
+              <div style="text-align: right">
+                  <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                  <input type="text" pInputText autocomplete="off" size="50" placeholder="Global Filter" (input)="dtOilOutword.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+              </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+              <tr>
+                <th [pSortableColumn]="'TPName'">{{ oilOutwordResource.tpname }}
+                    <p-sortIcon [field]="'TPName'"></p-sortIcon>
+                </th>
+                <th class="datewidth" [pSortableColumn]="'OutwardDate'">{{ oilOutwordResource.outwarddate }}
+                    <p-sortIcon [field]="'OutwardDate'"></p-sortIcon>
+                </th>
+                <th class="datewidth" [pSortableColumn]="'ExpectedReturnDate'">{{ oilOutwordResource.expreturndate }}
+                    <p-sortIcon [field]="'ExpectedReturnDate'"></p-sortIcon>
+                </th>
+                <th class="midiamwidth" [pSortableColumn]="'ActionTaker'">{{ globalResource.actiontaker }}
+                    <p-sortIcon [field]="'ActionTaker'"></p-sortIcon>                                
+                </th>                 
+                <th class="datewidth" [pSortableColumn]="'ActionDate'"> {{ globalResource.actiondate }} 
+                <p-sortIcon [field]="'ActionDate'"></p-sortIcon></th>                  
+                <th class="iconwidth">
+                    <!-- {{ oilOutwordResource.wtdetails }} -->
+                </th>
+              </tr>
+    
+              <tr>
+                <th>
+                      <input pInputText autocomplete="off" type="text" (input)="dtOilOutword.filter($event.target.value, 'TPName', 'contains')" class="clsControl">
+                </th>
+                <th>
+                    <input pInputText autocomplete="off" type="text" (input)="dtOilOutword.filter($event.target.value, 'OutwardDate', 'contains')" class="clsControl">
+                </th>
+                <th>
+                    <input pInputText autocomplete="off" type="text" (input)="dtOilOutword.filter($event.target.value, 'ExpectedReturnDate', 'contains')" class="clsControl">
+                </th>
+                <th>
+                    <input pInputText autocomplete="off" type="text" (input)="dtOilOutword.filter($event.target.value, 'ActionTaker', 'contains')" class="clsControl">
+                </th>                 
+                <th>
+                    <input pInputText autocomplete="off" type="text" (input)="dtOilOutword.filter($event.target.value, 'ActionDate', 'contains')" class="clsControl">
+                </th>
+                <th rowspan="2"></th>                        
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-details let-rowData  let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">                 
+                  <td>{{details?.TPName}}</td>
+                  <td class="datewidth">{{details?.OutwardDate | date: 'MM/dd/yyyy'}}</td>
+                  <td class="datewidth">{{details?.ExpectedReturnDate | date: 'MM/dd/yyyy' }}</td>
+                  <td class="midiamwidth">{{details?.ActionTaker}}</td>
+                  <td class="datewidth">{{details?.ActionDate | date:'MM/dd/yyyy hh:mm a' }}</td>                  
+                  <td class="iconwidth">
+                    <u><a [routerLink]="" (click)="getTPProcessorInfo(details)" ><i class='fa fa-info-circle'></i></a></u>
+                </td>         
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft" let-state>
+            <pagination-counts
+              *ngIf="allOilOutwordRequests?.length"
+              [inputData]="allOilOutwordRequests"
+              [inputEvent]="event"
+            ></pagination-counts>
+          </ng-template>
+      </p-table>
+    </p-panel>
+    
+    <p-dialog header="{{ oilOutwordResource.tplotdetails }}" [(visible)]="showTPDetailsModel" modal="modal" [resizable]="true" [responsive]="true" [width]="640" [minWidth]="200" >
+      <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+         
+          <div class="ui-g">
+                <div class="ui-g-12 ui-md-6">
+                  <label>
+                    <strong>{{ oilOutwordResource.tpname }} : </strong>
+                  </label>
+
+                  <label>
+                    {{ selectedTPDetails?.tpDetails?.TPName }}
+                  </label>
+                </div>
+
+                <div class="ui-g-12 ui-md-6">
+                    <label>
+                        <strong>{{ oilOutwordResource.outwarddate }} : </strong>
+                    </label>
+
+                    <label>
+                        {{ selectedTPDetails?.tpDetails?.OutwardDate | date:'MM/dd/yyyy hh:mm a'  }}
+                    </label>
+                </div>
+
+                <div class="ui-g-12 ui-md-6">
+                    <label>
+                        <strong>{{ oilOutwordResource.expreturndate }} : </strong>
+                    </label>
+    
+                    <label>
+                        {{ selectedTPDetails?.tpDetails?.ExpectedReturnDate | date:'MM/dd/yyyy hh:mm a' }}
+                    </label>
+                </div>
+
+                <div class="ui-g-12 ui-md-6">
+                    <label>
+                        <strong>{{ globalResource.actiontaker }} :</strong>
+                    </label>
+
+                    <label>
+                        {{ selectedTPDetails?.tpDetails?.ActionTaker }}
+                    </label>
+                </div>
+
+                <div class="ui-g-12 ui-md-12">
+                    <label>
+                        <strong>{{ globalResource.actiondate }} :</strong>
+                    </label>
+
+                    <label>
+                        {{ selectedTPDetails?.tpDetails?.ActionDate | date: 'MM/dd/yyyy hh:mm:ss a' }}
+                    </label>
+                </div>
+          </div>
+
+          <p-table [value]="selectedTPDetails.tpLotDetails" 
+            *ngIf="selectedTPDetails?.tpLotDetails?.length"
+            sortMode="single"                      
+            [responsive]="true" 
+            [paginator]="true" 
+            [rows]="10"           
+          >
+              <ng-template pTemplate="caption">
+                      <h6>TP Processor Outward Details</h6>
+              </ng-template>
+              <ng-template pTemplate="header">
+                  <tr>
+                      <th  class="lotNum">{{globalResource.lotno}}</th>
+                      <th style="width:40%">{{globalResource.strain}}</th>
+                      <!-- <th style="width:20%">{{oilOutwordResource.lotoutwordcode}}</th> -->
+                      <th style="width:40%">{{oilOutwordResource.transferwt}}</th>                                   
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-details>
+                  <tr>
+                    <td class="lotNum">
+                        <span>
+                            {{details?.GrowerLotNo}}
+                            <!-- Added by Devdan :: 20-Nov-2018 :: Adding Comnent popup -->
+                            <app-lot-comment
+                                [LotId]="details?.LotId"
+                                [LotCommentsCount]="details?.LotNoteCount"
+                                (CommentIconClicked)="commentIconClicked($event)"
+                            ></app-lot-comment>
+                            <app-lot-note-icon
+                                [LotId]="details?.LotId"
+                                (NoteIconClicked)="ShowLotNote($event)"
+                            ></app-lot-note-icon>
+                        </span>
+                    </td>
+                    <td>{{details?.StrainName}}</td>
+                    <!-- <td>{{details?.LotOutwordCode}}</td> -->
+                    <td>{{details?.TransferWt}} {{globalResource.listgramunit}}</td>                   
+                  </tr>
+              </ng-template>
+          </p-table>        
+        </div>
+        <p-footer>            
+                <button type="button" pButton icon="fa-close" (click)="showTPDetailsModel=false" label="Cancel"></button>
+                <div class="clear"></div>
+            </p-footer>
+            <div class="clear"></div>
+    </p-dialog>
+
+    <!--End Order Listing  -->
+          </div>
+      </div>
+  </div>
+  <!-- Added by Devdan :: 20-Nov-2018 :: Adding Comnent popup -->
+  <app-lot-note [Lot]="lotInfo" *ngIf="lotInfo?.showLotNoteModal" (NoteSaved)="OnNoteSave($event)" >
+</app-lot-note> 
+<app-popup-lot-comment [Lot]="lotInfo" *ngIf="lotInfo?.showLotCommentModal" (CommentSaved)="OnCommentSaved($event)">
+</app-popup-lot-comment>

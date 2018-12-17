@@ -1,0 +1,553 @@
+
+
+<div class="content-section implementation GridDemo">
+  <div class="ui-g">
+
+    <div class="ui-g-12">
+      <p-panel header="{{ newProductTypeResources.pageheading }}" [(collapsed)]="collapsed" [toggleable]="true">
+          <p-header>
+              <!-- <button pButton type="submit" name="btnLogin" label="Add New Product Type"  (click)="doOPenPanel()"></button> -->
+          </p-header>
+        <!--Main New Product Entry Form-->
+        <form
+          [formGroup]="newProductTypeEntryForm"
+          (ngSubmit)="onSubmit(newProductTypeEntryForm.value)">
+              <div class="ui-g ">
+                <!--Brand -->
+                  <div class="ui-g-12 ui-md-6">
+                      <div class="paddingRL">
+                        <label for="brand" class="towlable">{{ newProductTypeResources.brand}}<span class="star">*</span></label>:
+
+                        <p-dropdown
+                            [filter] ="true"
+                            id="brand"
+                            formControlName="brand"
+                            (onChange)="brandChange()"
+                            [options]="brands"
+                            placeholder="-- Select --"
+                            [autoWidth]="false"
+                            class="clsControl"
+                            name="brand">
+                      </p-dropdown>                    
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newProductTypeEntryForm.controls['brand'].valid&&newProductTypeEntryForm.controls['brand'].dirty">
+                       <span *ngIf="newProductTypeEntryForm.controls['brand'].errors['required']">
+                          {{ newProductTypeResources.brandrequired }}
+                        </span>
+                       <span *ngIf="newProductTypeEntryForm.controls['brand'].hasError('brandnotpresent')">
+                          {{ newProductTypeResources.brandnotpresent }} 
+                       </span>
+                      </div>
+                    
+                      <p-button class="links" type="button" icon="fa fa-plus" label="{{ newProductTypeResources.addnewbrand}}" id="btn_brandshow" (click)="showBrandPopup()" name="btnshow" ></p-button>
+                       <a href="#"></a>
+                    </div>
+                </div>
+                <!--End Brand -->
+                <!-- Sub Brand  -->
+                <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <label for="subbrand">{{ newProductTypeResources.subbrand }}</label>:
+                      <p-dropdown
+                        [filter] ="true"
+                        id="subBrand"
+                        formControlName="subBrand"
+                        [options]="subbrands"
+                        placeholder="-- Select --"
+                        [autoWidth]="false"
+                        class="clsControl"
+                        name="subBrand">
+                      </p-dropdown>
+
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!newProductTypeEntryForm.controls['subBrand'].valid&&newProductTypeEntryForm.controls['subBrand'].dirty">
+                      <span *ngIf="newProductTypeEntryForm.controls['subBrand'].hasError('subbrandnotpresent')">
+                          {{ newProductTypeResources.subbrandnotpresent }} 
+                      </span>
+                    </div>
+
+                      <p-button class="links"  type="button" icon="fa fa-plus" label="{{ newProductTypeResources.addsubbrand}}" id="btn_subbrandshow" (click)="showSubBrandPopup()" name="subbrandshow" ></p-button>
+                  </div>
+                </div>
+                <!--End Sub Brand  -->
+                <!-- Starin  -->
+                  <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <label for="strain">{{ newProductTypeResources.strain }}<span class="star">*</span></label>:
+
+                      <p-dropdown
+                        [filter] ="true"
+                        id="strain"
+                        formControlName="strain"
+                        [options]="strains"
+                        placeholder="-- Select --"
+                        [autoWidth]="false"
+                        class="clsControl"
+                        name="strain">
+                      </p-dropdown>
+                    
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newProductTypeEntryForm.controls['strain'].valid&&newProductTypeEntryForm.controls['strain'].dirty">
+                        <span *ngIf="newProductTypeEntryForm.controls['strain'].errors['required']">
+                            {{ newProductTypeResources.strainrequired }}
+                        </span>
+                        <span *ngIf="newProductTypeEntryForm.controls['strain'].hasError('strainnotpresent')">
+                            {{ newProductTypeResources.strainnotpresent }} 
+                        </span>
+                    </div>
+
+                      <p-button class="links"  type="button" icon="fa fa-plus" label="{{ newProductTypeResources.addstrain}}" id="btn_starinshow" (click)="showStrainPopup()" name="btnshow" ></p-button>
+                    </div>
+                  </div>
+                <!--End  Starin  -->
+                <!-- Skew Type -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <label for="skewtype">{{ newProductTypeResources.skewtype }}<span class="star">*</span></label>:
+
+                    <p-dropdown
+                      [filter] ="true"
+                      id="skewType"
+                      formControlName="skewType"
+                      [options]="skewtypes"
+                      (onChange) = "skewType_InChange()"
+                      placeholder="-- Select --"
+                      [autoWidth]="false"
+                      class="clsControl"
+                      name="skewType">
+                    </p-dropdown>
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!newProductTypeEntryForm.controls['skewType'].valid&&newProductTypeEntryForm.controls['skewType'].dirty">
+                      <span *ngIf="newProductTypeEntryForm.controls['skewType'].errors['required']">
+                          {{ newProductTypeResources.skewtyperequired }}
+                      </span>
+                      <span *ngIf="newProductTypeEntryForm.controls['skewType'].hasError('skewnotpresent')">
+                          {{ newProductTypeResources.skewnotpresent }} 
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+                <!-- End Skew Type -->
+                <!-- Package Type -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <label for="packagetype">{{ newProductTypeResources.packagetype }}<span class="star">*</span></label>:
+
+                    <p-dropdown
+                      [filter] ="true"
+                      id="packageType"
+                      formControlName="packageType"
+                      [options]="packagetypes"
+                      placeholder="-- Select --"
+                      [autoWidth]="false"
+                      class="clsControl"
+                      name="packageType">
+                    </p-dropdown>
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!newProductTypeEntryForm.controls['packageType'].valid&&newProductTypeEntryForm.controls['packageType'].dirty">
+                      <span *ngIf="newProductTypeEntryForm.controls['packageType'].errors['required']">
+                          {{ newProductTypeResources.packagetyperequired }}
+                      </span>
+                      <span *ngIf="newProductTypeEntryForm.controls['packageType'].hasError('pkgtypenotpresent')">
+                          {{ newProductTypeResources.pkgtypenotpresent }} 
+                      </span>
+                    </div>
+                      <p-button class="links"  type="button" icon="fa fa-plus" label="{{ newProductTypeResources.addpackagetype}}" id="btn_packagetypeshow" (click)="showPackageTypePopup()" name="btn_packagetypeshow" ></p-button>
+
+                    </div>
+                  </div>
+                  <!-- End Package Type -->
+                <!-- Package Unit -->
+                <!-- <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <div class="le-su-12">
+                        <label for="packageunit">
+                          {{ newProductTypeResources.packageunit}}<span class="star">*</span>:
+                        </label>
+
+                        <input pInputText
+                          name="packageunit"
+                          id="packageunit"
+                          type="number"
+                          autocomplete="off"
+                          class="clsControl"
+                          OnlyNumber="true"                          
+                          formControlName="packageUnit"
+                          placeholder="Enter Package Unit"
+                          min="0.1"
+                        />
+
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!newProductTypeEntryForm.controls['packageUnit'].valid&&newProductTypeEntryForm.controls['packageUnit'].dirty">
+
+                            <span *ngIf="newProductTypeEntryForm.controls['packageUnit'].errors['required']">
+                              {{newProductTypeResources.packageunitrequired}}
+                            </span>
+                            <span *ngIf="newProductTypeEntryForm.controls['packageUnit'].errors['maxlength']">
+                              {{newProductTypeResources.packageUnitLength}}
+                            </span>
+                            <span *ngIf="newProductTypeEntryForm.controls['packageUnit'].errors['min']">
+                              {{ newProductTypeResources.packageunitval }}
+                            </span>
+                            <span *ngIf="newProductTypeEntryForm.controls['packageUnit'].hasError('invalidinput')">
+                                {{ newProductTypeResources.packageunitval }}
+                              </span>
+                          </div>
+                      </div>
+                  </div>
+                </div> -->
+                <!--End Package Unit -->
+                <!-- Package Item Quantity -->
+                <!-- <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                      <div class="le-su-12">
+                        <label for="packageitemqty">
+                          {{ newProductTypeResources.packageitemqty}}<span class="star">*</span>:
+                        </label>
+
+                        <input pInputText
+                          name="packageitemquantity"
+                          id="packageitemquantity"
+                          type="number"
+                          class="clsControl"
+                          autocomplete="off"
+                          formControlName="packageItemQty"
+                          placeholder="Enter Package Item Qty"
+                          min="1"
+                        />
+
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!newProductTypeEntryForm.controls['packageItemQty'].valid&&newProductTypeEntryForm.controls['packageItemQty'].dirty">
+
+                            <span *ngIf="newProductTypeEntryForm.controls['packageItemQty'].errors['required']">
+                              {{newProductTypeResources.packageitemqtyrequired}}
+                            </span>
+                            <span *ngIf="newProductTypeEntryForm.controls['packageItemQty'].errors['maxlength']">
+                              {{newProductTypeResources.packageItemQtyLength}}
+                            </span>
+                            <span *ngIf="newProductTypeEntryForm.controls['packageItemQty'].errors['min']">
+                              {{ newProductTypeResources.packageitemqtyval }}
+                            </span>
+                            <span *ngIf="newProductTypeEntryForm.controls['packageItemQty'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span>
+                          </div>
+                      </div>
+                  </div>
+                </div> -->
+                <!-- End Package Item Quantity -->
+                <!-- Package Lable -->
+                <!-- <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                      <div class="le-su-12">
+                        <label for="packagelbl">
+                          {{ newProductTypeResources.packagelbl}}<span class="star"></span>:
+                        </label>
+
+                        <input pInputText
+                          name="packagelable"
+                          id="packagelable"
+                          autocomplete="off"
+                          type="text"
+                          class="clsControl"
+                          formControlName="packageLable"
+                          placeholder="Enter Package Lable"
+                        />
+
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!newProductTypeEntryForm.controls['packageLable'].valid&&newProductTypeEntryForm.controls['packageLable'].dirty">
+                            <span *ngIf="newProductTypeEntryForm.controls['packageLable'].errors['maxlength']">{{newProductTypeResources.packageLableLength}}</span>
+                          </div>
+                      </div>
+                  </div>
+                </div> -->
+                <!-- End Package Lable -->
+                <!-- IsActive -->
+                <!-- <div class="ui-g-12 ui-md-6">
+                <div class="paddingRL">
+                  <label></label>
+                  <div class="clear"></div>
+            
+                  <p-checkbox value="true" [(ngModel)]="chkSelectAll" label="{{globalResource.IsActiveFlag}}"formControlName="chkSelectAll" 
+                  binary="true"></p-checkbox>
+                </div>
+              </div> -->
+              <!--End IsActive -->
+
+                <!-- <div class="ui-g-12 ui-md-12" style="text-align:right;">
+                    <div class="paddingRL">
+                      <p-button  type="submit" label="{{ saveButtonText }}" id="btnProductTypeSave" name="btnProductTypeSave" ></p-button>
+                      <button pButton (click)="resetForm()" type="button" label="{{ clear }}" class="ui-button-secondary"></button>
+                  </div>
+                </div> -->
+              </div>
+
+
+
+              <div formArrayName="items" style="position: relative">
+                      <div style="width:calc(100% - 20px);float:left;">
+                        <p-table [value]="productTypeDetailsArr?.controls" id="productTypeDetails" name="productTypeDetails">
+                            <ng-template pTemplate="header">
+                                <tr>                                   
+                                    <th>{{ newProductTypeResources.packageunit }}
+                                        <span class="star">*</span>
+                                    </th>
+                                    <th>{{ newProductTypeResources.packageitemqty }}
+                                        <span class="star">*</span>
+                                    </th>
+                                    <th style="width: 80px;">Is Active</th>
+                                    <th style="width: 60px;">Action</th>                             
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-item let-i="rowIndex" >
+                                <tr [formGroupName]="i">
+                                    <td>
+                                      <input pInputText
+                                      name="packageunit"
+                                      id="packageunit"
+                                      type="number"
+                                      autocomplete="off"
+                                      class="clsControl"
+                                      OnlyNumber="true"       
+                                      formControlName="packageUnit"
+                                      placeholder="Enter Package Unit"
+                                      min="0.1"
+                                    />
+            
+                                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                      *ngIf="!item.controls['packageUnit'].valid&&item.controls['packageUnit'].dirty">
+            
+                                        <span *ngIf="item.controls['packageUnit'].errors['required']">
+                                          {{newProductTypeResources.packageunitrequired}}
+                                        </span>
+                                        <span *ngIf="item.controls['packageUnit'].errors['max']">
+                                          {{newProductTypeResources.packageUnitLength}}
+                                        </span>
+                                        <span *ngIf="item.controls['packageUnit'].errors['min']">
+                                          {{ newProductTypeResources.packageunitval }}
+                                        </span>
+                                        <span *ngIf="item.controls['packageUnit'].hasError('invalidinput')">
+                                            {{ newProductTypeResources.packageunitval }}
+                                          </span>  
+                                          <span *ngIf="item.controls['packageUnit'].hasError('brandnotpresent')">
+                                              This product type already exists.
+                                           </span>                          
+                                      </div>
+                                    </td>
+
+                                    <td>
+                                        <input pInputText
+                                          name="packageitemquantity"
+                                          id="packageitemquantity"
+                                          type="number"                                        
+                                          class="clsControl"
+                                          autocomplete="off"  
+                                          formControlName="packageItemQty"
+                                          placeholder="Enter Package Item Qty"                                         
+                                        />     
+                                      
+                                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                        *ngIf="!item.controls['packageItemQty'].valid&&item.controls['packageItemQty'].dirty">
+              
+                                          <span *ngIf="item.controls['packageItemQty'].errors['required']">
+                                            {{newProductTypeResources.packageitemqtyrequired}}
+                                          </span>
+                                          <span *ngIf="item.controls['packageItemQty'].errors['max']">
+                                            {{newProductTypeResources.packageItemQtyLength}}
+                                          </span>
+                                          <span *ngIf="item.controls['packageItemQty'].errors['min']">
+                                            {{ newProductTypeResources.packageitemqtyval }}
+                                          </span>                              
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                      <p-checkbox value="true"
+                                       formControlName="chkSelectAll" checked="true"
+                                      binary="true"></p-checkbox>                                      
+                                    </td>
+  
+                                    <!-- Remove Row Entry -->
+                                    <td>
+                                        <a (click)="deleteItem(i)" >                                                    
+                                            <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                                            </span>
+                                        </a>   
+                                    </td>
+                                    
+                                    <!-- End of Remove Row Entry -->
+                                </tr>   
+                                <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
+                                    This product type already exists.
+                              </div>              
+                            </ng-template>
+                            <!-- <ng-template pTemplate="emptymessage">
+                              <tr>
+                                  <td [attr.colspan]="7">
+                                     {{ globalResource.norecordsfound }}
+                                  </td>
+                              </tr>
+                            </ng-template> -->  
+                            
+                        </p-table>
+  
+                    </div>
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="productTypeDetailsArr.hasError('duplicate')">
+                      duplicate entries
+                    </div>  
+                    <div style="position: absolute;right: 0px;bottom: 42px;">
+                        <a (click)="addItem()" *ngIf="newProductTypeEntryForm.get('items').valid">
+                            <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                            </span>
+                        </a>
+                    </div>
+                    <div class="ui-g" style="width:100%;text-align:right;">
+                        <div class="ui-g-12">
+                            <button pButton type="submit" label="Save" ></button>
+                            <button 
+                                pButton 
+                                (click)="resetForm()" 
+                                type="button" 
+                                label="Clear" 
+                                class="ui-button-secondary">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+              <!-- New Work -->
+              <!-- <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid childpadding"
+               style="margin: 10px 0px;" 
+                formArrayName="items">
+                          
+              <div style="width: calc(100% - 20px);">
+                  <div class="ui-grid-row">                               
+                      <div class="ui-grid-col-3">
+                          <strong>Pkg unit</strong>
+                      </div>
+                      <div class="ui-grid-col-3">
+                          <strong>Pkt Qty</strong>
+                      </div>                                                            
+                      <div class="ui-grid-col-1">
+                             
+                      </div>                        
+                  </div>
+                  <div *ngFor="let item of productTypeDetailsArr?.controls; let i = index;">
+                      <div [formGroupName]="i" class="ui-grid-row">
+
+                <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                        <div class="le-su-12">
+                          <label for="packageitemqty">
+                            {{ newProductTypeResources.packageitemqty}}<span class="star">*</span>:
+                          </label>
+  
+                          <input pInputText
+                            name="packageitemquantity"
+                            id="packageitemquantity"
+                            type="number"
+                            class="clsControl"
+                            autocomplete="off"
+                            formControlName="packageItemQty"
+                            placeholder="Enter Package Item Qty"
+                            min="1"
+                          />
+  
+                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                            *ngIf="!item.controls['packageItemQty'].valid&&item.controls['packageItemQty'].dirty">
+  
+                              <span *ngIf="item.controls['packageItemQty'].errors['required']">
+                                {{newProductTypeResources.packageitemqtyrequired}}
+                              </span>
+                              <span *ngIf="item.controls['packageItemQty'].errors['maxlength']">
+                                {{newProductTypeResources.packageItemQtyLength}}
+                              </span>
+                              <span *ngIf="item.controls['packageItemQty'].errors['min']">
+                                {{ newProductTypeResources.packageitemqtyval }}
+                              </span>                              
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+                <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <div class="le-su-12">
+                        <label for="packageunit">
+                          {{ newProductTypeResources.packageunit}}<span class="star">*</span>:
+                        </label>
+
+                        <input pInputText
+                          name="packageunit"
+                          id="packageunit"
+                          type="number"
+                          autocomplete="off"
+                          class="clsControl"
+                          OnlyNumber="true"                          
+                          formControlName="packageUnit"
+                          placeholder="Enter Package Unit"
+                          min="0.1"
+                        />
+
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!item.controls['packageUnit'].valid&&item.controls['packageUnit'].dirty">
+
+                            <span *ngIf="item.controls['packageUnit'].errors['required']">
+                              {{newProductTypeResources.packageunitrequired}}
+                            </span>
+                            <span *ngIf="item.controls['packageUnit'].errors['maxlength']">
+                              {{newProductTypeResources.packageUnitLength}}
+                            </span>
+                            <span *ngIf="item.controls['packageUnit'].errors['min']">
+                              {{ newProductTypeResources.packageunitval }}
+                            </span>
+                            <span *ngIf="item.controls['packageUnit'].hasError('invalidinput')">
+                                {{ newProductTypeResources.packageunitval }}
+                              </span>                            
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                                                      
+
+                         <div class="ui-grid-col-1">
+                              <a (click)="deleteItem(i)" >
+                                  <span class="fa fa-minus-circle">
+                                  </span>
+                              </a>                                    
+                        </div>
+               
+                      </div>                                                                                                                              
+                  </div>
+              </div>
+                  <a class="addbtn" style="margin-right: -7px;" [routerLink]="" (click)="addItem()" *ngIf="newProductTypeEntryForm.get('items').valid">
+                      <span class="fa fa-plus-circle">
+                      </span>
+                  </a>
+              </div> -->
+              <!-- End New Work -->
+        </form>
+      </p-panel>
+    </div>
+   
+  </div>
+  <p-growl [(value)]="msgs" life='5000'></p-growl>
+  <app-add-new-brand [Brand]="BrandInfo" (BrandSaved)="onBrandSave($event)"></app-add-new-brand>
+
+  <app-add-new-strain [Strain]="StrainInfo" (StrainSaved)="onStrainSave($event)"></app-add-new-strain>
+
+  <app-add-new-packagetype [PackageType]="PackageTypeInfo" (PackageTypeSaved)="onPackageTypeSave($event)"></app-add-new-packagetype>
+  
+  <app-add-new-sub-brand [SubBrand]="SubBrandInfo" (SubBrandSaved)="onSubBrandSave($event)"></app-add-new-sub-brand>
+</div>
+
+<app-product-type-listing
+(ProductTypeEditEvent)="getEmployeeOnEdit($event)"
+(ProductTypeDeleteEvent)="productTypeDeleteEvent($event,1,0)"
+(ProductTypeDeactivateEvent)="productTypeDeleteEvent($event,0,1)"
+[allProductTypeList]="allProductTypeList"
+[PaginationValues]="paginationValues"></app-product-type-listing>

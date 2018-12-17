@@ -1,0 +1,27 @@
+<div class="ui-g-12"  formArrayName="completeParamArr">
+    <h5>Order Details</h5>      
+        <div *ngFor="let control of budOrderPackets?.controls; let i = index " >
+            <div [formGroupName]="i">
+
+
+                <label 
+                [attr.for]="question.key"
+                >Lot No
+        
+                <span class="star">*</span> 
+              </label>
+
+                <input pInputText 
+                  autocomplete="off"
+                  [formControlName]="lotno" 
+                  OnlyNumber="true"          
+                  type="text"                 
+                  class="clsControl"
+                  >
+            </div>
+        </div>
+
+    <!-- <div class="text-right">              
+      <button type="submit" pButton icon="fa-check"  label="Confirm" ></button>          
+    </div> -->
+  </div>

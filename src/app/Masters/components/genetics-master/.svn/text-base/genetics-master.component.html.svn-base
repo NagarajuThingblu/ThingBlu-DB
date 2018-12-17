@@ -1,0 +1,200 @@
+
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+
+    <div class="ui-g-12">
+          <!-- New Strain -->
+        <p-panel header="{{pageHeader}}" [toggleable]="true" >
+          <p-header>
+         
+          </p-header>
+<form
+  [formGroup]="geneticsMasterForm"  (ngSubmit)="onSubmit(geneticsMasterForm)" >
+  <div class="ui-g">
+    <!-- StrainType Name -->
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="genetics">
+                      {{ newGeneticsResources.geneticsName}}<span class="star">*</span>:
+                    </label>
+
+                    <input pInputText
+                      name="genetics"
+                      id="genetics"
+                      autocomplete="off"
+                      type="text"
+                      class="clsControl"
+                      placeholder="Enter Genetics Name"
+                      formControlName="genetics"
+                    />
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!geneticsMasterForm.controls['genetics'].valid&&geneticsMasterForm.controls['genetics'].dirty">
+
+                        <span *ngIf="geneticsMasterForm.controls['genetics'].errors['required']">
+                          {{newGeneticsResources.geneticsrequired}}
+                        </span>
+                        <span *ngIf="geneticsMasterForm.controls['genetics'].errors['maxlength']">
+                          {{newGeneticsResources.geneticsLength}}
+                        </span>
+                        <span *ngIf="geneticsMasterForm.controls['genetics'].errors['whitespace']">
+                          {{newGeneticsResources.geneticsrequired}}
+                        </span>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <!-- End StrainType Name -->
+            <!-- Description -->
+            <div class="ui-g-12 ui-md-6">
+                <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="description">
+                        {{ newGeneticsResources.enterdescription}}<span class="star"></span>:
+                      </label>
+
+                      <input pInputText
+                        name="description"
+                        id="description"
+                        class="clsControl"
+                        autocomplete="off"
+                        placeholder="Enter Genetics Description"
+                        formControlName="description"
+                      />
+
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!geneticsMasterForm.controls['description'].valid&&geneticsMasterForm.controls['description'].dirty">
+
+                          <span *ngIf="geneticsMasterForm.controls['description'].errors['required']">
+                            {{newGeneticsResources.descriptionrequired}}
+                          </span>
+                          <span *ngIf="StrainTypeMasterForm.controls['description'].errors['maxlength']">{{newStrainTypeResources.descriptionLength}}</span>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <!-- End Description -->
+              <!-- IsActive -->
+              <div class="ui-g-12 ui-md-12">
+                <div class="paddingRL">
+                  <label></label>
+                  <div class="clear"></div>
+            
+                  <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalResource.IsActiveFlag}}"formControlName="chkIsActive" binary="true"></p-checkbox>
+                </div>
+            </div>
+            <!--End IsActive -->
+
+            <div class="ui-g-12 ui-md-12" style="text-align:right;">
+                <div class="paddingRL">
+                    <!-- <button pButton type="submit" name="btnstraintype" label="Add New" (click)="resetAll()" style="align-content: right"></button> -->
+                  <p-button  type="submit" label="{{ saveButtonText}}"  id="btnStrainTypeSave" name="btnStrainTypeSave" ></p-button>
+
+                  <button pButton
+                      (click)="resetAll()"
+                      type="button"
+                      label="{{clear}}"
+                      class="ui-button-secondary"
+                  >
+                  </button>
+              </div>
+            </div>
+          </div>
+
+</form>
+</p-panel>
+</div>
+  </div>
+ <div class="ui-g">
+   <div class="ui-g-12">
+    <p-panel header="Genetics List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+      <p-table #dtGeneticsList [value]="allGeneticsList" 
+      sortMode="single"                      
+      [responsive]="true" 
+      [paginator]="true" 
+      [rows]="10"           
+      sortField="GeneticsId"
+      sortOrder="-1"
+      [rowsPerPageOptions]="paginationValues"
+        (onPage)="onPageChange($event)"
+      [globalFilterFields]="['GeneticsName','Description' ]"
+      
+      >                    
+      <ng-template pTemplate="caption">
+          <div style="text-align: right">
+              <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+              <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" (input)="dtGeneticsList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+          </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+          <tr>
+              <th [pSortableColumn]="'GeneticsName'">Genetics Name  <p-sortIcon [field]="'GeneticsName'"></p-sortIcon> </th>
+              <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>            
+              <th style="width:100px;"> </th>
+          </tr>
+
+          <tr>
+              <th>
+                  <input pInputText type="text" autocomplete="off" (input)="dtGeneticsList.filter($event.target.value, 'GeneticsName', 'contains')" class="clsControl">
+              </th>
+              <th>
+                  <input pInputText type="text" autocomplete="off" (input)="dtGeneticsList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+              </th>
+            <th rowspan="2"></th>
+                                    
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-Genetics let-rowData let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+              <!-- <td>
+                  <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
+              </td> -->
+
+              <td>{{Genetics?.GeneticsName}}</td>
+               <td>{{Genetics?.Description}}</td>
+              <td style="width:65px;"> 
+                 <span class="ui-column-title">edit</span>
+                <a href="#" [routerLink]="" (click)="getGeneticsOnEdit(Genetics?.GeneticsId)" >                             
+                    <span class="fa fa-edit"></span>
+                </a>
+                <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(Genetics?.GeneticsId,Genetics,1,0)" >
+                  <span class="fa fa-trash"></span>
+              </a>
+        <!-- <p-inputSwitch 
+          (onChange)="showConformationMessaegForDeactive(StrainType?.StrainTypeId,$event, rowIndex)" 
+          [(ngModel)]="StrainType.IsActive">
+        </p-inputSwitch>  -->
+              <div class="clsToggleButtonDiv">
+                    <p-toggleButton 
+                      [(ngModel)]="Genetics.IsActive" 
+                      onLabel="Active" offLabel="InActive"  
+                      [style]="{'width':'90px'}"
+                      (onChange)="showConformationMessaegForDeactive(Genetics?.GeneticsId,Genetics, rowIndex,0,1)"
+                    >
+                    </p-toggleButton>
+              </div>
+          </td>  
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft" let-state>
+        <pagination-counts
+          *ngIf="allGeneticsList?.length"
+          [inputData]="allGeneticsList"
+          [inputEvent]="event"
+        ></pagination-counts>
+      </ng-template>
+  </p-table>
+     </p-panel>
+   </div>
+ </div>
+</div>
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+<p-confirmDialog 
+  header="Confirmation" 
+  icon="fa fa-question-circle" 
+  width="425" 
+  *ngIf="true"
+  class="clsConfirmBox" >
+</p-confirmDialog> 
+          

@@ -1,0 +1,302 @@
+<div class="content-section implementation GridDemo">
+  <div class="ui-g"> 
+    <div class="ui-g-12">
+      <p-panel>
+        <p-header>
+          <div class="ui-helper-clearfix">
+            <span class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px">
+              {{ taskActionResource.pageheading }}
+            </span>
+
+            <span [style]="{'float':'right'}">({{ taskActionDetails?.TaskTypeName + ' - ' }} {{ taskActionDetails?.TaskStatus | InProcessStatus }})</span>
+          </div>
+        </p-header>
+        <form #assignTaskForm="ngForm" >
+          <div class="ui-g ">           
+            <!-- Added by Devdan :: 20-Nov-2018 :: Back button redirect to dashboard -->
+            <div class="ui-g-12 ui-g-nopad btnBack">
+              <button 
+                pButton 
+                type="button" 
+                class="ui-button-primary btnMargin"
+                icon="fa fa-chevron-left"
+                label="Back To Dashboard" 
+                (click) = "backToDashboard()">
+              </button>
+            </div>  
+            <!-- Dynamic Component Contents Depends on whatever the task is selected -->
+            <!-- <ng-template load-component style="width:100%;"></ng-template> -->
+            <!-- <app-quarantine 
+                *ngIf="taskid==1" 
+                style="width:100%;"            
+                [PageFlag]="page"
+              >
+              </app-quarantine>   -->
+
+              <app-trimming 
+                *ngIf="taskActionDetails?.TaskTypeKey=='TRIMMING'&&taskActionDetails" 
+                style="width:100%;"            
+                [PageFlag]="page"
+                [TaskModel]="taskActionDetails"
+                (TaskCompleteOrReviewed)="getTaskDetaisByTask()"
+              >
+              </app-trimming>  
+
+             <app-sifting 
+             *ngIf="taskActionDetails?.TaskTypeKey=='SIFTING'&&taskActionDetails" 
+              style="width:100%;"            
+              [PageFlag]="page"
+              [TaskModel]="taskActionDetails"
+              [questions]="questions"
+              (TaskCompleteOrReviewed)="getTaskDetaisByTask()"
+            >
+            </app-sifting>  
+
+            <app-bud-packaging
+              *ngIf="taskActionDetails?.TaskTypeKey=='BUDPACKAGING'&&taskActionDetails" 
+              style="width:100%;"            
+              [PageFlag]="page"
+              [TaskModel]="taskActionDetails"  
+              (TaskCompleteOrReviewed)="getTaskDetaisByTask()"            
+            >
+
+            </app-bud-packaging>
+
+            <app-grinding
+              *ngIf="taskActionDetails?.TaskTypeKey=='GRINDING'&&taskActionDetails" 
+              style="width:100%;"                              
+              [PageFlag]="page"
+              [TaskModel]="taskActionDetails" 
+              (TaskCompleteOrReviewed)="getTaskDetaisByTask()"       
+          ></app-grinding>
+
+          <app-joints-creation
+            *ngIf="taskActionDetails?.TaskTypeKey=='JOINTSCREATION'&&taskActionDetails"
+            style="width:100%;"
+            [PageFlag]="page"
+            [TaskModel]="taskActionDetails"
+            (TaskCompleteOrReviewed)="getTaskDetaisByTask()"
+          >
+          </app-joints-creation>
+
+          <app-tamping
+            *ngIf="taskActionDetails?.TaskTypeKey=='TAMPING'&&taskActionDetails"
+            style="width:100%;"
+            [PageFlag]="page"
+            [TaskModel]="taskActionDetails"
+            (TaskCompleteOrReviewed)="getTaskDetaisByTask()"
+          ></app-tamping>
+          
+          <app-tubing
+            *ngIf="taskActionDetails?.TaskTypeKey=='TUBING'&&taskActionDetails"
+            style="width:100%;"
+            [PageFlag]="page"
+            [TaskModel]="taskActionDetails"
+            (TaskCompleteOrReviewed)="getTaskDetaisByTask()"
+          ></app-tubing>
+          
+          <app-oil-packaging
+            *ngIf="taskActionDetails?.TaskTypeKey=='OILPACKAGING'&&taskActionDetails" 
+            style="width:100%;"
+            [PageFlag]="page"
+            [TaskModel]="taskActionDetails"
+            (TaskCompleteOrReviewed)="getTaskDetaisByTask()"
+          ></app-oil-packaging>
+          
+          <app-custom-task
+            *ngIf="taskActionDetails?.TaskTypeKey=='CUSTOMTASK'&&taskActionDetails" 
+            style="width:100%;"
+            [PageFlag]="page"
+            [TaskModel]="taskActionDetails"
+            (TaskCompleteOrReviewed)="getTaskDetaisByTask()"
+          ></app-custom-task>
+
+          <app-qa-check
+            *ngIf="taskActionDetails?.TaskTypeKey=='QACHECK'&&taskActionDetails" 
+            style="width:100%;"
+            [PageFlag]="page"
+            [TaskModel]="taskActionDetails"
+            (TaskCompleteOrReviewed)="getTaskDetaisByTask()"
+          ></app-qa-check>
+
+          <app-package-replacement
+            *ngIf="taskActionDetails?.TaskTypeKey=='REPACK'&&taskActionDetails" 
+            style="width:100%;"
+            [PageFlag]="page"
+            [TaskModel]="taskActionDetails"
+            (TaskCompleteOrReviewed)="getTaskDetaisByTask()"
+          ></app-package-replacement>
+
+          <app-brand-label-replacement
+            *ngIf="taskActionDetails?.TaskTypeKey=='REBRAND'&&taskActionDetails" 
+            style="width:100%;"
+            [PageFlag]="page"
+            [TaskModel]="taskActionDetails"
+            (TaskCompleteOrReviewed)="getTaskDetaisByTask()"
+          ></app-brand-label-replacement>
+
+          <app-tube-brand-label
+            *ngIf="taskActionDetails?.TaskTypeKey=='TUBELABELING'&&taskActionDetails"
+            style="width:100%;"
+            [PageFlag]="page"
+            [TaskModel]="taskActionDetails"
+            (TaskCompleteOrReviewed)="getTaskDetaisByTask()"
+          ></app-tube-brand-label>
+
+            <!--End Dynamic Component Contents Depends on whatever the task is selected -->
+
+          </div>
+          <div class="ui-g">            
+            <div class="ui-g-12 ui-md-6">
+                <button 
+                  pButton 
+                  type="button" 
+                  label="Start Task" 
+                  class="btnMargin"
+                  (click)="startTask();" 
+                  *ngIf="taskActionDetails?.TaskStatus==''||(taskActionDetails?.TaskStatus==TaskStatus.Assigned&&taskActionDetails?.TaskStatus!=TaskStatus.Completed)" >
+                </button>
+            
+                <button 
+                  pButton 
+                  type="button" 
+                  label="Pause" 
+                  class="ui-button-primary btnMargin" 
+                  (click)="resumeOrPauseTask('Pause');" 
+                  *ngIf="taskActionDetails?.TaskStatus==TaskStatus.InProcess&&taskActionDetails?.TaskStatus!=TaskStatus.Completed" >
+                </button>
+
+                <button 
+                  pButton 
+                  type="button" 
+                  label="Resume" 
+                  class="ui-button-primary btnMargin" 
+                  (click)="resumeOrPauseTask('Resume');" 
+                  *ngIf="taskActionDetails?.TaskStatus==TaskStatus.Paused&&taskActionDetails?.TaskStatus!=TaskStatus.Completed">
+                </button>
+
+                <button 
+                  pButton 
+                  type="button" 
+                  label="Complete" 
+                  class="ui-button-primary btnMargin" 
+                  (click)="page.showmodal=true;" 
+                  *ngIf="taskActionDetails?.TaskStatus!=TaskStatus.Assigned&&taskActionDetails?.TaskStatus!=TaskStatus.Completed&&taskActionDetails?.TaskStatus!=TaskStatus.ReviewPending&&taskActionDetails?.TaskStatus!=''">
+                </button>
+    
+                <span *ngIf="_cookieService.UserRole == userRoles.Manager" >
+                  <button 
+                    pButton 
+                    type="button" 
+                    label="Edit" 
+                    class="ui-button-primary btnMargin" 
+                    (click)="editTask();"
+                    *ngIf="taskActionDetails?.TaskStatus==''||taskActionDetails?.TaskStatus==TaskStatus.Assigned"
+                    >
+                  </button>
+      
+                  <button 
+                    pButton 
+                    type="button" 
+                    label="Delete" 
+                    class="ui-button-primary btnMargin" 
+                    (click)="deleteTask();"
+                    *ngIf="taskActionDetails?.TaskStatus==''||taskActionDetails?.TaskStatus==TaskStatus.Assigned"
+                  ></button>
+              </span>
+
+              <!-- <button                   
+                  pButton 
+                  type="button" 
+                  label="Submit Review" 
+                  class="ui-button-primary" 
+                  (click)="page.showReviewmodal=true;"                  
+              ></button> -->
+
+              <span *ngIf="_cookieService.UserRole == userRoles.Manager" >
+                <button                   
+                  pButton 
+                  type="button" 
+                  label="Submit Review" 
+                  class="ui-button-primary btnMargin" 
+                  (click)="page.showReviewmodal=true;"
+                  *ngIf="taskActionDetails?.TaskStatus == TaskStatus.ReviewPending&&taskActionDetails?.TaskStatus != TaskStatus.Completed"
+              ></button>
+            </span>
+            </div>
+            <div class="ui-g-12 ui-md-6"></div>           
+          </div>         
+          <!-- <hr/> -->
+        </form>
+
+        <!-- <p-footer style="text-align:right;display:block;">
+              <button pButton type="submit" label="Assign Task" ></button>
+  
+              <button pButton 
+                type="button" 
+                label="Edit" 
+                class="ui-button-primary" 
+                (click)="assignTaskForm.reset();" 
+              ></button>
+
+              <button pButton 
+                type="button" 
+                label="Delete" 
+                class="ui-button-primary" 
+                (click)="assignTaskForm.reset();" 
+              ></button> 
+
+          </p-footer> -->
+
+        <div class="ui-panel-content">
+          <!-- <span class="ui-panel-title">
+            <h3 class="first">{{taskActionDetails?.TaskTypeName + ' ' + taskActionResource.allrommtaskstatus }} </h3>
+          </span>
+         
+
+          <p-dataTable [value]="empRoomTasks" [loading]="loading">
+            <p-column field="type" header="Type"></p-column>
+            <p-column field="taskstatus" header="Task Status"></p-column>
+            <p-column field="enddate" header="End Date"></p-column>
+            <p-column field="lastactionby" header="Last Action By"></p-column>
+          </p-dataTable> -->
+
+          <span class="ui-panel-title">
+            <h3 class="first">{{ taskActionResource.currenttaskhistory }} </h3>
+          </span>
+         
+          <!-- 
+          <p-dataTable [value]="taskStatusHistory" [loading]="loading">
+            <p-column field="TaskStatus" header="Status"></p-column>
+            <p-column field="ActionDate" header="Status Updated On"></p-column>
+            <p-column field="ActionTaker" header="Action Taken By"></p-column>
+            <p-column field="Comment" header="Comment"></p-column>
+          </p-dataTable> -->
+
+          <p-table [value]="taskStatusHistory">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Status</th>
+                    <th>Status Updated On</th>
+                    <th>Action Taken By</th>
+                    <th>Comment</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-taskstatus>
+                <tr>
+                    <td>{{taskstatus.TaskStatus | InProcessStatus}}</td>
+                    <td>{{taskstatus.ActionDate}}</td>
+                    <td>{{taskstatus.ActionTaker}}</td>
+                    <td class="wrapTextWithNoSpace">{{taskstatus.Comment}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        </div>
+
+      </p-panel>
+    </div>
+  </div>
+  <p-growl [(value)]="msgs" life='5000'></p-growl>
+</div>
+
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" class="clsConfirmBox" ></p-confirmDialog> 

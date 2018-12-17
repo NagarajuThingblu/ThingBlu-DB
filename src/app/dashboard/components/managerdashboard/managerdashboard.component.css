@@ -1,0 +1,24 @@
+@media (min-width: 767px) {
+    .assignby{width: 90px;}
+}
+@media (min-width: 1025px) {
+    .assignby{width: 170px;}
+}
+td.assignby, td.assignby > span{
+    word-break: break-all !important;
+    white-space: unset !important;
+}
+
+tr.clsTableRow.ui-state-highlight{
+    background: #ffffff !important;
+    color: #222222 !important;
+}
+
+tr.clsTableRow:nth-child(even).ui-state-highlight{
+    background: #fafafb !important;
+    color: #222222 !important;
+}
+
+.clsElpTime {
+    width: 125px;
+}

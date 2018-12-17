@@ -1,0 +1,201 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+
+    <div class="ui-g-12">
+          <!-- New Strain -->
+        <p-panel header="{{pageHeader}}" [toggleable]="true"  >
+          <p-header>
+         
+          </p-header>
+<form
+  [formGroup]="strainTypeMasterForm"  (ngSubmit)="saveStrainTypeNames(strainTypeMasterForm)" >
+  <div class="ui-g">
+    <!-- StrainType Name -->
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="enterstrain">
+                      {{ newStrainTypeResources.enterstraintype}}<span class="star">*</span>:
+                    </label>
+
+                    <input pInputText
+                      name="straintype"
+                      id="straintype"
+                      autocomplete="off"
+                      type="text"
+                      class="clsControl"
+                      placeholder="Enter Strain Type Name"
+                      formControlName="straintype"
+                    />
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!strainTypeMasterForm.controls['straintype'].valid&&strainTypeMasterForm.controls['straintype'].dirty">
+
+                        <span *ngIf="strainTypeMasterForm.controls['straintype'].errors['required']">
+                          {{newStrainTypeResources.straintyperequired}}
+                        </span>
+                        <span *ngIf="strainTypeMasterForm.controls['straintype'].errors['maxlength']">
+                          {{newStrainTypeResources.straintypeLength}}
+                        </span>
+                        <span *ngIf="strainTypeMasterForm.controls['straintype'].errors['whitespace']">
+                          {{newStrainTypeResources.straintyperequired}}
+                        </span>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <!-- End StrainType Name -->
+            <!-- Description -->
+            <div class="ui-g-12 ui-md-6">
+                <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="description">
+                        {{ newStrainTypeResources.enterdescription}}<span class="star"></span>:
+                      </label>
+
+                      <input pInputText
+                        name="description"
+                        id="description"
+                        class="clsControl"
+                        autocomplete="off"
+                        placeholder="Enter Strain Type Description"
+                        formControlName="description"
+                      />
+
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!strainTypeMasterForm.controls['description'].valid&&strainTypeMasterForm.controls['description'].dirty">
+
+                          <span *ngIf="strainTypeMasterForm.controls['description'].errors['required']">
+                            {{newStrainTypeResources.descriptionrequired}}
+                          </span>
+                          <span *ngIf="strainTypeMasterForm.controls['description'].errors['maxlength']">
+                            {{newStrainTypeResources.descriptionLength}}
+                          </span>
+                        </div>
+                    </div>
+                </div>
+              </div>
+              <!-- End Description -->
+              <!-- IsActive -->
+              <div class="ui-g-12 ui-md-12">
+                <div class="paddingRL">
+                  <label></label>
+                  <div class="clear"></div>
+            
+                  <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalResource.IsActiveFlag}}"formControlName="chkIsActive" binary="true"></p-checkbox>
+                </div>
+            </div>
+            <!--End IsActive -->
+
+            <div class="ui-g-12 ui-md-12" style="text-align:right;">
+                <div class="paddingRL">
+                    <!-- <button pButton type="submit" name="btnstraintype" label="Add New" (click)="resetAll()" style="align-content: right"></button> -->
+                  <p-button  type="submit" label="{{ saveButtonText}}"  id="btnStrainTypeSave" name="btnStrainTypeSave" ></p-button>
+
+                  <button pButton
+                      (click)="resetAll()"
+                      type="button"
+                      label="{{clear}}"
+                      class="ui-button-secondary"
+                  >
+                  </button>
+              </div>
+            </div>
+          </div>
+
+</form>
+</p-panel>
+</div>
+  </div>
+ <div class="ui-g">
+   <div class="ui-g-12">
+    <p-panel header="Strain Type List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+      <p-table #dtStrainTypeList [value]="allStrainTypeList" 
+      sortMode="single"                      
+      [responsive]="true" 
+      [paginator]="true" 
+      [rows]="10"           
+      sortField="StrainTypeId"
+      sortOrder="-1"
+      [rowsPerPageOptions]="paginationValues"
+      (onPage)="onPageChange($event)"
+      [globalFilterFields]="['StrainTypeName','Description' ]"
+      
+      >                    
+      <ng-template pTemplate="caption">
+          <div style="text-align: right">
+              <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+              <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" (input)="dtStrainTypeList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+          </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+          <tr>
+              <th [pSortableColumn]="'StrainTypeName'">Strain Type  <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
+              <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>            
+              <th style="width:100px;"> </th>
+          </tr>
+
+          <tr>
+              <th>
+                  <input pInputText type="text" autocomplete="off" (input)="dtStrainTypeList.filter($event.target.value, 'StrainTypeName', 'contains')" class="clsControl">
+              </th>
+              <th>
+                  <input pInputText type="text" autocomplete="off" (input)="dtStrainTypeList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+              </th>
+            <th rowspan="2"></th>
+                                    
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-StrainType let-rowData let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+              <!-- <td>
+                  <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
+              </td> -->
+
+              <td>{{StrainType?.StrainTypeName}}</td>
+               <td>{{StrainType?.Description}}</td>
+              <td style="width:65px;"> 
+                 <span class="ui-column-title">edit</span>
+                <a href="#" [routerLink]="" (click)="getStrainOnEdit(StrainType?.StrainTypeId)" >                             
+                    <span class="fa fa-edit"></span>
+                </a>
+                <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(StrainType?.StrainTypeId,StrainType,1,0)" >
+                  <span class="fa fa-trash"></span>
+              </a>
+        <!-- <p-inputSwitch 
+          (onChange)="showConformationMessaegForDeactive(StrainType?.StrainTypeId,$event, rowIndex)" 
+          [(ngModel)]="StrainType.IsActive">
+        </p-inputSwitch>  -->
+              <div class="clsToggleButtonDiv">
+                    <p-toggleButton 
+                      [(ngModel)]="StrainType.IsActive" 
+                      onLabel="Active" offLabel="InActive"  
+                      [style]="{'width':'90px'}"
+                      (onChange)="showConformationMessaegForDeactive(StrainType?.StrainTypeId,StrainType, rowIndex,0,1)"
+                    >
+                    </p-toggleButton>
+              </div>
+          </td>  
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft" let-state>
+        <pagination-counts
+          *ngIf="allStrainTypeList?.length"
+          [inputData]="allStrainTypeList"
+          [inputEvent]="event"
+        ></pagination-counts>
+      </ng-template>
+  </p-table>
+     </p-panel>
+   </div>
+ </div>
+</div>
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+<p-confirmDialog 
+  header="Confirmation" 
+  icon="fa fa-question-circle" 
+  width="425" 
+  *ngIf="true"
+  class="clsConfirmBox" >
+</p-confirmDialog> 
+          

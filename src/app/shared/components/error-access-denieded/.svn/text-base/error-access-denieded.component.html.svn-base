@@ -1,0 +1,13 @@
+<div class="content-section implementation GridDemo orderRequest">
+    <div class="ui-g">
+      <div class="ui-g-12">
+        <div class="error-main">
+            <div class="error-heading">{{accessdeniedResources.oops}}</div>
+            <div style="text-align: center"> <p>{{accessdeniedResources.errormsg}}</p>
+              <strong> {{accessdeniedResources.rediretmsg}}  </strong>
+                <a class="btn-link" [routerLink]="" (click)="redirectClick()" ><strong>{{accessdeniedResources.clickhere}}</strong></a> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

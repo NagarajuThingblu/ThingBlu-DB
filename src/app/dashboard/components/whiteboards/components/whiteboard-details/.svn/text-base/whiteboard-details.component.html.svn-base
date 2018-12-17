@@ -1,0 +1,15 @@
+<div class="content-section implementation GridDemo">
+  <div class="ui-g">
+      <div class="ui-g-1">
+      </div>
+      <div class="ui-g-10">
+        <p-panel header="{{whiteboardFlag}} Whiteboard" [toggleable]="true" [style]="{'margin-bottom':'20px'}">
+            <p-dataTable [value]="whiteboardData">
+              <p-column *ngFor="let col of cols" [field]="col.field" [header]="col.header"></p-column>
+            </p-dataTable>
+        </p-panel>  
+      </div>
+      <div class="ui-g-1">
+      </div>
+  </div>
+</div>

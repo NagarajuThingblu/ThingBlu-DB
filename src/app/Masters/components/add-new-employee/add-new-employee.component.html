@@ -1,0 +1,713 @@
+
+
+<div class="content-section implementation GridDemo">
+  <div class="ui-g">
+
+    <div class="ui-g-12">
+      <p-panel header="{{ newEmployeeResources.pageheading }}" [(collapsed)]="collapsed" [toggleable]="true" [style]="{'margin-bottom':'20px'}">
+      <p-header>
+          <!-- <button pButton type="submit" name="btnLogin" label="Add New Employee" (click)="doOPenPanel()" style="align-content: right"></button> -->
+      </p-header>
+        <!--Main New Product Entry Form-->
+        <form
+          [formGroup]="newEmployeeForm"
+          (ngSubmit)="onSubmit(newEmployeeForm.value)">
+              <div class="ui-g ">
+                <!--Client Name -->
+                  <!-- <div class="ui-g-12 ui-md-6">
+                      <div class="paddingRL">
+                        <label for="clientname" class="towlable">{{ newEmployeeResources.clientname}}<span class="star">*</span></label>:
+
+                        <p-dropdown
+                            [filter] ="true"
+                            id="clientname"
+                            formControlName="clientname"
+                            [options]="clients"
+                            placeholder="-- Select --"
+                            [autoWidth]="false"
+                            class="clsControl"
+                            name="clientname"
+                            [disabled]="true"
+                            >
+                      </p-dropdown>
+                    
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newEmployeeForm.controls['clientname'].valid&&newEmployeeForm.controls['clientname'].dirty">
+                        {{ newEmployeeResources.clientnamerequired }}
+                      </div>
+                      </div>
+                </div> -->
+                <!--End Client Name -->
+
+                <!--Employee First Name -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                      <div class="le-su-12">
+                      <label for="firstname">
+                        {{ newEmployeeResources.firstname}}<span class="star">*</span>:
+                      </label>
+
+                      <input pInputText
+                        name="firstname"
+                        id="firstname"
+                        type="text"
+                        autocomplete="off"
+                        class="clsControl"
+                        placeholder="Enter First Name"
+                        formControlName="firstname"
+                      />
+
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newEmployeeForm.controls['firstname'].valid&&newEmployeeForm.controls['firstname'].dirty">
+
+                          <span *ngIf="newEmployeeForm.controls['firstname'].errors['required']">
+                            {{newEmployeeResources.firstnamerequired}}
+                          </span>
+                          <span *ngIf="newEmployeeForm.controls['firstname'].errors['whitespace']">
+                            {{newEmployeeResources.firstnamerequired}}
+                          </span>
+                          <span *ngIf="newEmployeeForm.controls['firstname'].hasError('duplicatefirstname')">
+                              {{newEmployeeResources.duplicatefirstname}}
+                            </span>
+                          <!-- <span *ngIf="NewProductTypeEntryForm.controls['firstname'].errors['maxlength']">{{newEmployeeResources.packageUnitLength}}</span>
+                          <span *ngIf="NewProductTypeEntryForm.controls['firstname'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span> -->
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End Employee First Name -->
+
+                <!--Employee Middle Name -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="middlename">
+                        {{ newEmployeeResources.middlename}}<span class="star"></span>:
+                      </label>
+
+                      <input pInputText
+                        name="middlename"
+                        id="middlename"
+                        autocomplete="off"
+                        class="clsControl"
+                        placeholder="Enter Middle Name"
+                        formControlName="middlename"
+                      />
+
+                      <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newEmployeeForm.controls['middlename'].valid&&newEmployeeForm.controls['middlename'].dirty">
+
+                          <span *ngIf="newEmployeeForm.controls['middlename'].errors['required']">
+                            {{newEmployeeResources.middlenamerequired}}
+                          </span>
+                        </div> -->
+                    </div>
+                  </div>
+                </div>
+                <!--End Employee Middle Name -->
+
+                <!--Employee Last Name -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="lastname">
+                        {{ newEmployeeResources.lastname}}<span class="star">*</span>:
+                      </label>
+
+                      <input pInputText
+                        name="lastname"
+                        id="lastname"
+                        autocomplete="off"
+                        class="clsControl"
+                        placeholder="Enter Last Name"
+                        formControlName="lastname"
+                      />
+
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newEmployeeForm.controls['lastname'].valid&&newEmployeeForm.controls['lastname'].dirty">
+
+                          <span *ngIf="newEmployeeForm.controls['lastname'].errors['required']">
+                            {{newEmployeeResources.lastnamerequired}}
+                          </span>
+                          <span *ngIf="newEmployeeForm.controls['lastname'].errors['whitespace']">
+                            {{newEmployeeResources.lastnamerequired}}
+                          </span>
+                          <span *ngIf="newEmployeeForm.controls['lastname'].hasError('duplicatelastname')">
+                              {{newEmployeeResources.duplicatelastname}}
+                          </span>
+                          <!-- <span *ngIf="newEmployeeForm.controls['lastname'].errors['maxlength']">{{newEmployeeResources.packageUnitLength}}</span>
+                          <span *ngIf="newEmployeeForm.controls['lastname'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span> -->
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End Employee Last Name -->
+
+
+                <!-- Gender  -->
+                <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <label for="gender">{{ newEmployeeResources.gender }}<span class="star">*</span>:
+                      </label>
+                      <p-dropdown
+                        [filter] ="true"
+                        id="gender"
+                        formControlName="gender"
+                        [options]="genders"
+                        placeholder="-- Select --"
+                        [autoWidth]="false"
+                        class="clsControl"
+                        name="gender">
+                      </p-dropdown>
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newEmployeeForm.controls['gender'].valid&&newEmployeeForm.controls['gender'].dirty">
+
+                          {{ newEmployeeResources.genderrequired }}
+                      </div>
+                  </div>
+                </div>
+
+                <!--End Gender  -->
+
+                <!--DOB -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="dob">
+                        {{ newEmployeeResources.dob}}<span class="star">*</span>:
+                      </label>
+
+                      <p-calendar                                                            
+                       [showIcon]="true"                                     
+                       formControlName="dob"          
+                       class="clsControl"
+                       id="dob"
+                       placeholder="Select DOB"
+                       name="dob"
+                       required
+                       [maxDate]="dateTime"
+                      >
+                      </p-calendar>
+
+                      <div
+                      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!newEmployeeForm.controls['dob'].valid&&newEmployeeForm.controls['dob'].dirty">
+                      <i class="fa fa-close"></i>
+                      <span *ngIf="newEmployeeForm.controls['dob'].errors['required']">
+                          {{ newEmployeeResources.dobrequired }}
+                      </span>                      
+                  </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End DOB -->
+
+                <!--Cell Phone -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="cellphone">
+                        {{ newEmployeeResources.cellphone}}<span class="star">*</span>:
+                      </label>
+
+                      <input pInputText
+                        name="cellphone"
+                        id="cellphone"
+                        type="text"
+                        autocomplete="off"
+                        class="clsControl"
+                        formControlName="cellphone"
+                        pKeyFilter="int"
+                        placeholder="Enter Cell Phone"
+                      />
+
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newEmployeeForm.controls['cellphone'].valid&&newEmployeeForm.controls['cellphone'].dirty">
+
+                          <span *ngIf="newEmployeeForm.controls['cellphone'].errors['required']">
+                            {{newEmployeeResources.cellphonerequired}}
+                          </span>
+                          <span *ngIf="newEmployeeForm.controls['cellphone'].errors['maxlength']">
+                            {{newEmployeeResources.officephoneLength}}
+                          </span>
+                          <!-- <span *ngIf="newEmployeeForm.controls['cellphone'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span> -->
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End Cell Phone -->
+
+                <!--Home Phone -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="homephone">
+                        {{ newEmployeeResources.homephone}}<span class="star"></span>:
+                      </label>
+
+                      <input pInputText
+                        name="homephone"
+                        id="homephone"
+                        type="text"
+                        autocomplete="off"
+                        class="clsControl"
+                        formControlName="homephone"
+                        pKeyFilter="int"
+                        placeholder="Enter Home Phone"
+                      />
+
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newEmployeeForm.controls['homephone'].valid&&newEmployeeForm.controls['homephone'].dirty">
+
+                          <span *ngIf="newEmployeeForm.controls['homephone'].errors['required']">
+                            {{newEmployeeResources.homephonerequired}}
+                          </span>
+                          <span *ngIf="newEmployeeForm.controls['homephone'].errors['maxlength']">
+                              {{newEmployeeResources.officephoneLength}}
+                            </span>
+                          <!-- <span *ngIf="newEmployeeForm.controls['packageUnit'].errors['maxlength']">{{newEmployeeResources.packageUnitLength}}</span>
+                          <span *ngIf="newEmployeeForm.controls['packageUnit'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span> -->
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End Home Phone -->
+
+                <!--Primary Email -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="primaryemail">
+                        {{ newEmployeeResources.primaryemail}}<span class="star">*</span>:
+                      </label>
+
+                      <input pInputText
+                        name="primaryemail"
+                        id="primaryemail"
+                        type="text"
+                        autocomplete="off"
+                        class="clsControl"
+                        formControlName="primaryemail"
+                        placeholder="Enter Primary Email"
+                        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                      />
+
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newEmployeeForm.controls['primaryemail'].valid&&newEmployeeForm.controls['primaryemail'].dirty">
+
+                          <span *ngIf="newEmployeeForm.controls['primaryemail'].errors['required']">
+                            {{newEmployeeResources.primaryemailrequired}}
+                          </span>
+                          <span *ngIf="newEmployeeForm.controls['primaryemail'].hasError('duplicateemail')">
+                              {{newEmployeeResources.duplicateemail}}
+                          </span>
+                          <span *ngIf="newEmployeeForm.controls['primaryemail'].errors['pattern']">
+                              {{ globalResource.validemail  }}
+                          </span>
+                          <!-- <span *ngIf="newEmployeeForm.controls['primaryemail'].errors['maxlength']">{{newEmployeeResources.packageUnitLength}}</span>-->
+                        </div>
+                        <!-- <div class="ui-message ui-messages-error ui-corner-all"
+                          *ngIf="!newEmployeeForm.controls['primaryemail'].valid&&newEmployeeForm.controls['primaryemail'].errors.pattern">
+                          {{ globalResource.validemail  }} 
+                        </div> -->
+                    </div>
+                  </div>
+                </div>
+                <!--End Primary Email -->
+                <!--Secondary Email -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="secondaryemail">
+                        {{ newEmployeeResources.secondaryemail}}<span class="star"></span>:
+                      </label>
+
+                      <input pInputText
+                        name="secondaryemail"
+                        id="secondaryemail"
+                        type="text"
+                        autocomplete="off"
+                        class="clsControl"
+                        formControlName="secondaryemail"
+                        placeholder="Enter Secondary Email"
+                        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                      />
+
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newEmployeeForm.controls['secondaryemail'].valid&&newEmployeeForm.controls['secondaryemail'].dirty">
+                          <span *ngIf="newEmployeeForm.controls['secondaryemail'].errors['maxlength']">
+                            {{newEmployeeResources.packageUnitLength}}
+                          </span>
+                          <span *ngIf="newEmployeeForm.controls['secondaryemail'].hasError('zeronotallowed')">
+                            {{ globalResource.zeronotallow }}
+                          </span>
+                          <span *ngIf="newEmployeeForm.controls['secondaryemail'].errors['sameEmailAddr']">
+                              {{newEmployeeResources.sameEmailAddr}}
+                          </span>
+                          <span *ngIf="newEmployeeForm.controls['secondaryemail'].errors['pattern']">
+                              {{ globalResource.validemail  }}
+                          </span>
+                        </div>
+                        <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!newEmployeeForm.controls['secondaryemail'].valid &&newEmployeeForm.controls['secondaryemail'].errors.pattern">
+                          {{ globalResource.validemail }} 
+                        </div> -->
+                    </div>
+                  </div>
+                </div>
+                <!--End Secondary Email -->
+                <!--Address -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="address">
+                        {{ newEmployeeResources.address}}<span class="star">*</span>:
+                      </label>
+
+                      <textarea pInputTextarea
+                        maxLength="500"
+                        name="address"
+                        id="address"
+                        autocomplete="off"
+                        class="clsControl"
+                        placeholder="Enter Address"
+                        formControlName="address"
+                      ></textarea>
+
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newEmployeeForm.controls['address'].valid&&newEmployeeForm.controls['address'].dirty">
+
+                          <span *ngIf="newEmployeeForm.controls['address'].errors['required']">
+                            {{newEmployeeResources.addressrequired}}
+                          </span>
+                          <!-- <span *ngIf="newEmployeeForm.controls['address'].errors['maxlength']">{{newEmployeeResources.packageUnitLength}}</span>
+                          <span *ngIf="newEmployeeForm.controls['address'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span> -->
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                <!--End Address -->
+
+                <!-- Country  -->
+                  <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <label for="country">{{ newEmployeeResources.country }}<span class="star">*</span></label>:
+
+                      <p-dropdown
+                        [filter] ="true"
+                        id="country"
+                        (onChange)="getStatesOnCountryChange()"
+                        formControlName="country"
+                        [options]="countries"
+                        placeholder="-- Select --"
+                        [autoWidth]="false"
+                        class="clsControl"
+                        name="country">
+                      </p-dropdown>
+
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newEmployeeForm.controls['country'].valid&&newEmployeeForm.controls['country'].dirty">
+                          {{ newEmployeeResources.countryrequired }}
+                      </div>
+                    </div>
+                  </div>
+                <!--End  Country  -->
+
+                <!-- State -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <label for="state">{{ newEmployeeResources.state }}<span class="star">*</span></label>:
+
+                    <p-dropdown
+                      [filter] ="true"
+                      id="state"
+                      formControlName="state"
+                      (onChange)="getCityOnStateChange()"
+                      [options]="states"
+                      placeholder="-- Select --"
+                      [autoWidth]="false"
+                      class="clsControl"
+                      name="state">
+                    </p-dropdown>
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newEmployeeForm.controls['state'].valid&&newEmployeeForm.controls['state'].dirty">
+                          {{ newEmployeeResources.staterequired }}
+                      </div>
+                  </div>
+                </div>
+                <!-- End State -->
+                <!-- City -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <label for="city">{{ newEmployeeResources.city }}<span class="star">*</span></label>:
+
+                    <p-dropdown
+                      [filter] ="true"
+                      id="city"
+                      formControlName="city"
+                      [options]="cities"
+                      placeholder="-- Select --"
+                      [autoWidth]="false"
+                      class="clsControl"
+                      name="city">
+                    </p-dropdown>
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!newEmployeeForm.controls['city'].valid&&newEmployeeForm.controls['city'].dirty">
+                      {{ newEmployeeResources.cityrequired }}
+                  </div>
+                    </div>
+                  </div>
+                  <!-- End City -->
+                <!-- Zip Code -->
+                <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <div class="le-su-12">
+                        <label for="zipcode">
+                          {{ newEmployeeResources.zipcode}}<span class="star">*</span>:
+                        </label>
+
+                        <input pInputText
+                          name="zipcode"
+                          id="zipcode"
+                          type="number"
+                          autocomplete="off"
+                          class="clsControl"
+                          formControlName="zipcode"
+                          placeholder="Enter ZIP Code"
+                          maxlength="9"
+                        />
+
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!newEmployeeForm.controls['zipcode'].valid&&newEmployeeForm.controls['zipcode'].dirty">
+                          <span *ngIf="newEmployeeForm.controls['zipcode'].errors['required']">
+                          {{ newEmployeeResources.zipcoderequired }}
+                          </span>
+                          <span *ngIf="newEmployeeForm.controls['zipcode'].errors['maxlength']">{{newEmployeeResources.zipcodeLength}}</span>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                <!--End Zip Code -->
+                <!-- User Name -->
+                <div class="ui-g-12 ui-md-6" *ngIf="showTextbox === true">
+                  <div class="paddingRL">
+                      <div class="le-su-12">
+                        <label for="empusername">
+                          {{ newEmployeeResources.username}}<span class="star">*</span>:
+                        </label>
+
+                        <input pInputText
+                          name="empusername"
+                          id="empusername"
+                          type="text"
+                          class="clsControl"
+                          autocomplete="off"
+                          placeholder="Enter Username"
+                          formControlName="empusername"
+                        />
+
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!newEmployeeForm.controls['empusername'].valid&&newEmployeeForm.controls['empusername'].dirty">
+
+                            <span *ngIf="newEmployeeForm.controls['empusername'].errors['required']">
+                              {{newEmployeeResources.usernamerequired}}
+                            </span>
+                            <span *ngIf="newEmployeeForm.controls['empusername'].hasError('duplicateusername')">
+                                {{newEmployeeResources.duplicateusername}}
+                            </span>
+                            <!-- <span *ngIf="newEmployeeForm.controls['empusername'].errors['maxlength']">{{newEmployeeResources.packageItemQtyLength}}</span> -->
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <!-- End User Name -->
+                <!-- Password -->
+                <div class="ui-g-12 ui-md-6" *ngIf="showTextbox === true">
+                  <div class="paddingRL">
+                      <div class="le-su-12">
+                        <label for="emppassword">
+                          {{ newEmployeeResources.password}}<span class="star">*</span>:
+                        </label>
+
+                        <input pInputText               
+                          autocomplete="off"
+                          type="password"
+                          class="clsControl"
+                          placeholder="Enter Password"
+                          formControlName="emppassword"
+                        />
+
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!newEmployeeForm.controls['emppassword'].valid&&newEmployeeForm.controls['emppassword'].dirty">
+                          <span *ngIf="newEmployeeForm.controls['emppassword'].errors['required']">
+                            {{newEmployeeResources.passwordrequired}}
+                          </span>
+                            <!-- <span *ngIf="newEmployeeForm.controls['emppassword'].errors['pattern']">dfgdfg</span> -->
+                          <span *ngIf="newEmployeeForm.controls['emppassword'].errors['minlength']">
+                              {{newEmployeeResources.passwordMinLength}}
+                          </span>
+                          <span *ngIf="newEmployeeForm.controls['emppassword'].errors['maxlength']">
+                              {{newEmployeeResources.passwordMaxLength}}
+                          </span>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                <!-- End Password -->
+
+                <!-- User Role -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <label for="userrole">{{ newEmployeeResources.userrole }}<span class="star">*</span></label>:
+
+                    <p-dropdown
+                      [filter] ="true"
+                      id="userrole"
+                      formControlName="userrole"
+                      [options]="roles"
+                      placeholder="-- Select --"
+                      [autoWidth]="false"
+                      class="clsControl"
+                      name="userrole">
+                    </p-dropdown>
+
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newEmployeeForm.controls['userrole'].valid&&newEmployeeForm.controls['userrole'].dirty">
+
+                          {{ newEmployeeResources.userrolerequired }}
+                      </div>
+
+                      <p-button  type="button" class="links" icon="fa fa-plus" label="{{ newEmployeeResources.adduserrole}}" id="btn_userroleshow" (click)="showUserRolePopup()" name="btnshow" ></p-button>
+                    </div>
+                  </div>
+                  <!-- End User Role -->
+
+                  <!-- Hourly labour Rate -->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                      <div class="le-su-12">
+                        <label for="hourlylabourrate">
+                          {{ newEmployeeResources.hourlylabourrate}}<span class="star">*</span>:
+                        </label>
+
+                        <input pInputText
+                          name="hourlylabourrate"
+                          id="hourlylabourrate"
+                          autocomplete="off"
+                          type="number"
+                          class="clsControl"
+                          placeholder="Enter Hourly Rate"
+                          formControlName="hourlylabourrate"
+                        />
+
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!newEmployeeForm.controls['hourlylabourrate'].valid&&newEmployeeForm.controls['hourlylabourrate'].dirty">
+
+                          {{ newEmployeeResources.hourlylabourraterequired }}
+                      </div>
+                      </div>
+                  </div>
+                </div>
+                <!-- End Hourly labour Rate -->
+                <!-- IsActive -->
+                <div class="ui-g-12 ui-md-12">
+                  <div class="paddingRL">
+                    <label></label>
+                    <div class="clear"></div>
+
+                    <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalResource.IsActiveFlag}}" formControlName="chkIsActive" 
+                    binary="true"></p-checkbox>
+                  </div>
+                </div>
+                <!--End IsActive -->
+                <div class="ui-g-12 ui-md-12" style="text-align:right;">
+                    <div class="paddingRL">
+                      <p-button  type="submit" label="{{ saveButtonText}}" id="btnProductTypeSave" name="btnProductTypeSave" ></p-button>
+                      <button pButton (click)="resetAll()" type="button" label="{{ clear }}" class="ui-button-secondary"></button>
+                  </div>
+                </div>
+              </div>
+        </form>
+      </p-panel>
+    </div>
+    <div class="ui-g-1">
+    </div>
+  </div>
+  <p-growl [(value)]="msgs" life='5000'></p-growl>
+</div>
+<app-add-new-user-role [NewUser]=(newUserInfo) (UserRoleSaved)="OnUserRoleSave($event)"></app-add-new-user-role>
+
+<app-employee-listing (EmployeeEditEvent)="GetEmployeeOnEdit($event)" 
+(EmployeeDeleteEvent)="EmployeeDeleteEvent($event)"
+(EmployeeDeactivateEvent)="EmployeeDeleteEvent($event)"
+[allEmployeeList]="allEmployeeList"
+[PaginationValues]="paginationValues"></app-employee-listing>
+
+
+
+
+
+
+
+
+
+<p-dialog 
+    header="Employee current task details" 
+    [(visible)]="showEmpTaskModal" 
+    modal="modal" 
+    [resizable]="true" 
+    [responsive]="true" 
+    [width]="730" 
+    [minWidth]="200" 
+    class="notecontrol"    
+>
+            <div class="ui-g ">     
+                <div class="ui-g-12 ui-md-12">
+                    <div class="paddingRL">
+                        <span class="star ui-message ui-messages-warn ui-corner-all" style="font-size: 14px">
+                            Please complete all this task first to inactivate the user
+                        </span>
+                    </div>
+                </div>     
+                <p-table [value]="getInventoryList" >
+                    <ng-template pTemplate="header">
+                        <tr>
+                          <th   class="lotNum">TaskName                       
+                          </th>
+                          <th   class="lotNum">Strain Name                       
+                          </th>
+                          <th   class="lotNum">Lot                   
+                          </th>
+                          <th   class="lotNum"> Status                       
+                          </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-TaskDetails >
+                        <tr>
+                            <td class="lotNum">                             
+                              {{TaskDetails.TaskTypeName}}
+                            </td>
+                            <td style="align-items:right" >
+                                {{TaskDetails.StrainName}}
+                            </td> 
+                            <td style="align-items:right" >
+                                {{TaskDetails.GrowerLotNo}}
+                            </td> 
+                            <td style="align-items:right" >
+                                {{TaskDetails.TaskStatus}}
+                            </td>
+                        </tr>
+                      </ng-template>
+                </p-table>
+                 
+            </div>
+        </p-dialog>
+        
+
+
+
+
+
+

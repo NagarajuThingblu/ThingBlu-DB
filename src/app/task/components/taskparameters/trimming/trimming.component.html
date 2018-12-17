@@ -1,0 +1,1240 @@
+<div class="ui-g " [formGroup]="TRIMMING" *ngIf="PageFlag.page =='AssignTask'">
+  <!--Strain -->
+ <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+        <label for="strain">{{ globalResource.strain }}<span class="star">*</span></label>:
+      <div class="clear"></div>
+          <p-dropdown
+            [filter] ="true"
+            [options]="strains"
+            placeholder="-- Select --"
+            [(ngModel)]="TaskModel.TRIMMING.strain"
+            [autoWidth]="true"
+            (onChange)="onStrainChange('frmHTML')"
+            formControlName="strain"
+            class="clsControl"
+            id="strain"
+            name="strain">
+        </p-dropdown>
+        <div
+          class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+          *ngIf="!TRIMMING.controls['strain'].valid&&TRIMMING.controls['strain'].dirty">
+           
+            <span *ngIf="TRIMMING.controls['strain'].errors['required']">
+              {{ globalResource.strainrequired }}
+            </span>                      
+        </div>
+  
+      </div>
+    </div>
+    <!--End Strain -->
+ <!--Lot No -->
+ <div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+      <label for="lotno">{{ globalResource.lotno }}<span class="star">*</span></label>:
+        <!-- Merged by Devdan :: 21-Nov-2018 :: App lot note comment change -->
+        <app-lot-comment
+            [LotId]="TaskModel.TRIMMING.lotno"
+            [LotCommentsCount]="lotInfo.LotNoteCount"
+            (CommentIconClicked)="commentIconClicked($event)"
+        ></app-lot-comment>
+        <app-lot-note-icon
+          [LotId]="TaskModel.TRIMMING.lotno"        
+          (NoteIconClicked)="showLotNote($event)"
+        ></app-lot-note-icon>
+    <div class="clear"></div>
+        <p-dropdown
+          [filter] ="true"
+          [options]="lots"
+          placeholder="-- Select --"
+          [(ngModel)]="TaskModel.TRIMMING.lotno"
+          [autoWidth]="true"
+          (onChange)="lotOnChange()"
+          formControlName="lotno"
+          class="clsControl"
+          id="lotno"
+          name="lotno">
+      </p-dropdown>
+      <div
+        class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+        *ngIf="!TRIMMING.controls['lotno'].valid&&TRIMMING.controls['lotno'].dirty">
+         
+          <span *ngIf="TRIMMING.controls['lotno'].errors['required']">
+            {{ globalResource.lotnorequired }}
+          </span>                      
+      </div>
+
+    </div>
+  </div>
+  <!--End Lot No -->
+  <!--Brand-->
+  <!-- <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+        <label for="brand">{{ globalResource.brand }}</label>                             
+          <div class="clear"></div>
+                    <span class="lblText">{{TaskModel.TRIMMING.brand}}</span>
+      </div>
+  </div> -->
+  <!--End Brand-->
+  <!--Strain-->
+  <!-- <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+        <label for="strain">{{ globalResource.strain }}</label>
+                         <div style="clear:both"></div> -->
+        <!-- <input type="text" 
+              pInputText 
+              [(ngModel)]="TaskModel.TRIMMING.strain"                     
+              formControlName="strain"
+              id="strain"
+              name="strain"              
+              class="clsControl"
+              readonly="true"
+          />                            -->
+          <!-- <div class="clear"></div>
+          <span class="lblText" id="strain">{{TaskModel.TRIMMING.strain}}</span>
+      </div>
+  </div> -->
+  <!--End Strain-->
+  <!--Employee-->
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+        <label for="employee">{{ globalResource.employee }}<span class="star">*</span></label>:
+                     
+        <div class="ui-inputgroup">
+            <p-dropdown
+              [filter] ="true"
+              [options]="employees"
+              placeholder="-- Select --"
+              (onChange)="empOnChange()"
+              [(ngModel)]="TaskModel.TRIMMING.employee"
+              [autoWidth]="true"              
+              formControlName="employee"
+              id="employee"
+              class="clsControl"
+              name="employee">
+          </p-dropdown>            
+      </div>
+        <div
+          class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+          *ngIf="!TRIMMING.controls['employee'].valid&&TRIMMING.controls['employee'].dirty">
+           
+            <span *ngIf="TRIMMING.controls['employee'].errors['required']">
+              {{ globalResource.employeerequired }}
+            </span>                      
+        </div>
+      </div>
+  </div>
+  <!--End Employee-->
+
+
+  <!-- Task Related Extra Paramters -->
+<div class="ui-g-12 ui-md-6">
+    <div class="paddingRL twocnt">
+       
+            <label class="towlable" for="lotWeight">{{ assignTaskResources.lotweight }}:</label>
+            <!-- <label class="towlable" for="lotWeight">{{ assignTaskResources.balancewt }}</label> -->
+          
+            <!-- <input type="text" 
+              pInputText 
+              [(ngModel)]="TaskModel.TRIMMING.lotweight" 
+              [ngModelOptions]="{standalone: true}"
+              id="lotweight" 
+              name="lotweight"       
+              class="clsControl textOneOftwo"  
+              readonly="true"             
+          /> -->    
+          <div class="clear"></div>
+          <span class="lblText" id="lbllotweight">{{TaskModel.TRIMMING.lotweight}}</span> 
+
+          
+                 
+                <!-- <input type="text" 
+                  pInputText 
+                  [(ngModel)]="TaskModel.TRIMMING.lotBalWt" 
+                  [ngModelOptions]="{standalone: true}"
+                  id="lotBalWt" 
+                  name="lotBalWt"       
+                  class="clsControl texttwo"  
+                  readonly="true"
+              /> -->
+              <!-- <span> {{TaskModel.TRIMMING.lotBalWt}} </span> -->
+       
+    </div>  
+  </div>
+  <!-- <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL"> -->
+      <!-- <label for="assignwt">{{ globalResource.assignedwt }} </label>
+   
+      <input type="text" 
+        pInputText 
+        (change)="assignWtOnChnage()"
+        [(ngModel)]="TaskModel.TRIMMING.assignwt" 
+        id="assignwt" 
+        name="assignwt" 
+        formControlName="assignwt"
+        OnlyNumber="true"
+        maxlength="6"        
+        class="clsControl"   
+      />-->
+
+      <!-- <div
+        class="ui-message ui-messages-error ui-corner-all"
+        *ngIf="!TRIMMING.controls['assignwt'].valid&&TRIMMING.controls['assignwt'].dirty">
+         
+          <span *ngIf="TRIMMING.controls['assignwt'].errors['required']">
+            {{ assignTaskResources.wttobetrimrequired }}
+          </span>   
+          <span *ngIf="TRIMMING.controls['assignwt'].errors.allowOnlyPositiveInteger">
+            {{ assignTaskResources.wttobetrim + ' ' + globalResource.positiveintegersallowed}}
+          </span>                   
+    </div> -->
+<!-- 
+    </div>
+  </div> -->
+  <!-- End Task Related Extra Paramters -->
+    
+<!--Estimated Start DateTime-->
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+      <label for="estimatedstartdatetime">
+        {{ globalResource.eststartdate }}<span class="star">*</span>:
+        <small class="smallTextRed"
+          *ngIf="showPastDateLabel"
+          >({{ globalResource.pastdatetask }})
+        </small>
+      </label>
+      <!-- [maxDate]="TaskModel.TRIMMING.enddate" -->
+        <p-calendar         
+          [(ngModel)]="TaskModel.TRIMMING.startdate"
+          [showIcon]="true"
+          (onSelect)="estStartDate_Select()"
+          (onInput)="estStartDate_Select()"
+          [defaultDate]="defaultDate"        
+          [locale]="en"
+          formControlName="estimatedstartdate"          
+          class="clsControl"
+          id="estimatedstartdate"
+          name="estimatedstartdate"
+          >
+        </p-calendar>                              
+        <div
+          class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+          *ngIf="!TRIMMING.controls['estimatedstartdate'].valid&&TRIMMING.controls['estimatedstartdate'].dirty">
+           
+            <span *ngIf="TRIMMING.controls['estimatedstartdate'].errors['required']">
+              {{ globalResource.startdaterequired }}
+            </span>                                                                                                                                                                            
+        </div>
+
+        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip 
+          *ngIf="TRIMMING.hasError('invalidDate')" >
+            {{ globalResource.datecomparevalidation }}
+        </div>                        
+    </div>
+</div>
+<!--End Estimated Start DateTime-->         
+<!--Estimated End DateTime-->
+<!-- <div class="ui-g-12 ui-md-6">
+   
+       <div class="paddingRL twocnt">
+          <label class="calonelable" for="estimatedenddate">{{ globalResource.estenddate }} <span class="star">*</span></label>
+          <label class="calTwolable" for="estimatedenddate" >{{ globalResource.endtime }} <span class="star">*</span></label>
+          <div style="clear: both;"></div>
+
+
+          <p-calendar                        
+            [(ngModel)]="TaskModel.TRIMMING.enddate" 
+            [minDate]="TaskModel.TRIMMING.startdate"            
+            [showIcon]="true"
+            formControlName="estimatedenddate"
+            id="estimatedenddate"
+            class="clsControl calone"
+            name="estimatedenddate"                      
+          >                      
+        </p-calendar>               
+     
+      
+       <label for="time">{{ globalResource.time }} <span class="star">*</span></label>
+       <p-inputMask 
+       mask="99:99 aa" 
+       class="clsControl caltwo"
+        [(ngModel)]="TaskModel.TRIMMING.time" formControlName="endtime"
+        >
+      </p-inputMask>
+       <p-calendar [(ngModel)]="TaskModel.TRIMMING.time" formControlName="endtime" [timeOnly]="true" [showIcon]="true" class="clsControl caltwo"></p-calendar>
+     
+     
+    
+   
+        <div
+          class="ui-message ui-messages-error ui-corner-all"
+          *ngIf="!TRIMMING.controls['estimatedenddate'].valid
+                &&TRIMMING.controls['estimatedenddate'].dirty">
+           
+            <span *ngIf="TRIMMING.controls['estimatedenddate'].errors['required']">
+              {{ globalResource.enddaterequired }}
+            </span>                      
+        </div>           
+      </div>
+</div> -->
+<!--End Estimated End DateTime-->
+<!--esthrs-->
+  <!-- <div class="ui-g-12 ui-md-6">
+      <div class="paddingRL threecnt">
+        
+              <label class="threelable" for="employee">{{ globalResource.estimatedhrs }} <span class="star">*</span></label>
+              <label class="threelable" for="employee">{{ globalResource.emprate }} </label>
+              <label class="threelable" for="employee">{{ globalResource.empestcost }} </label>
+              <div style="clear: both;"></div>
+
+              <input 
+              type="text" 
+              pInputText 
+              formControlName="esthrs"
+              OnlyNumber="true"
+              maxlength="6"
+              (change)="estHrsChange()"
+              class="clsControl textthree"
+              [(ngModel)]="TaskModel.TRIMMING.esthrs"
+            />
+            <span  class="clsControl textthree"> {{TaskModel.TRIMMING.emprate}} </span>
+
+            <span class="clsControl textthree" style="margin-left: 25%;" > {{TaskModel.TRIMMING.empcost}} </span>
+            
+              <input 
+              type="text" 
+              pInputText           
+              class="clsControl textthree hiddenField"
+              [(ngModel)]="TaskModel.TRIMMING.emprate"
+              formControlName="emprate"
+              readonly="true"
+              
+            />
+        
+            
+              <input 
+              type="text" 
+              pInputText           
+              class="clsControl textthree hiddenField"
+              [(ngModel)]="TaskModel.TRIMMING.empcost"
+              formControlName="empestcost"
+              readonly="true"
+            />
+
+          
+                                    
+        <div
+          class="ui-message ui-messages-error ui-corner-all"
+          *ngIf="!TRIMMING.controls['esthrs'].valid&&TRIMMING.controls['esthrs'].dirty">
+          
+            <span *ngIf="TRIMMING.controls['esthrs'].errors['required']">
+              {{ globalResource.estimatedhrsrequired }}
+            </span>            
+            <span *ngIf="TRIMMING.controls['esthrs'].errors.allowOnlyPositiveInteger">
+              {{ globalResource.estimatedhrs + ' ' + globalResource.positiveintegersallowed}}
+            </span>
+        </div>
+      </div>
+  </div> -->
+<!--End esthrs-->   
+
+ <!--Priority-->
+ <div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label for="employee">{{ globalResource.priority }}:</label>
+                     
+    <p-dropdown
+      [options]="priorities"
+      [(ngModel)]="TaskModel.TRIMMING.priority"
+      [autoWidth]="true"
+      formControlName="priority"
+      id="priority"
+      class="clsControl"
+      name="priority">
+    </p-dropdown>                                  
+  </div>
+</div>
+<!--End Priority-->
+
+<!--Notify Manager/Employee-->
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">                              
+        <p-checkbox          
+          label="{{ assignTaskResources.notifymanager }}"
+          [(ngModel)]="TaskModel.TRIMMING.notifymanager"
+          formControlName="notifymanager"
+          binary="true"
+        ></p-checkbox>
+
+        <p-checkbox 
+          value="true"
+          label="{{ assignTaskResources.notifyemployee }}"
+          [(ngModel)]="TaskModel.TRIMMING.notifyemployee"
+          formControlName="notifyemployee"
+          binary="true"
+        ></p-checkbox>                                                              
+    </div>
+</div>
+<!--End Notify Manager/Employee-->
+<!--Comment-->
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+      <label for="comment">{{ assignTaskResources.comment }}:</label>
+                         
+        <textarea                        
+          pInputTextarea                        
+          [(ngModel)]="TaskModel.TRIMMING.usercomment"
+          formControlName="comment"
+          id="comment"
+          name="comment"
+          maxlength="500"
+          class="clsControl"         
+        ></textarea>
+
+        <div
+          class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+          *ngIf="!TRIMMING.controls['comment'].valid&&TRIMMING.controls['comment'].dirty">
+           
+            <span *ngIf="TRIMMING.controls['comment'].errors['maxLength']">
+              {{ assignTaskResources.commentMaxLength }}
+            </span>                      
+      </div>
+    </div>
+</div>
+<!--End Comment-->
+
+</div>
+
+<app-lot-note [Lot]="lotInfo" *ngIf="lotInfo?.showLotNoteModal" (NoteSaved)="onNoteSave($event)" ></app-lot-note> 
+<app-popup-lot-comment [Lot]="lotInfo" *ngIf="lotInfo?.showLotCommentModal" (CommentSaved)="OnCommentSaved($event)">
+  </app-popup-lot-comment>
+
+<div *ngIf="PageFlag.page =='TaskAction'">
+  <div class="ui-g">
+
+    <!--Employee -->
+    <div class="ui-g-12 ui-md-6">
+      <div class="paddingRL">
+          <label>
+            <strong>{{ globalResource.employee }}: </strong>
+          </label>
+        
+          <label>
+            {{TaskModel?.EmpName}}
+          </label>
+        </div>
+      </div>
+      <!--End Employee -->
+      <!--Lot No -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label>
+            <strong>{{ globalResource.lotno }}: </strong>
+          </label>
+          <span [class.redText]="TaskModel?.LotDeleted" >
+              {{TaskModel?.GrowerLotNo}}
+          </span>
+          
+            <app-lot-comment
+                [LotId]="TaskModel?.LotId"
+                [LotCommentsCount]="TaskModel?.LotNoteCount"
+                (CommentIconClicked)="commentIconClicked($event)"
+            ></app-lot-comment>
+
+            <app-lot-note-icon
+              [LotId]="TaskModel?.LotId"              
+              (NoteIconClicked)="showLotNote($event)"
+            ></app-lot-note-icon>
+        </div>
+      </div>
+      <!--End Lot No -->
+      <!--Brand-->
+      <!-- <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label>
+            <strong>{{ globalResource.brand }} : </strong>
+          </label>
+        
+            {{TaskModel?.BrandName}}
+        </div>
+      </div> -->
+      <!--End Brand-->
+      <!--Strain-->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label>
+            <strong>{{ globalResource.strain }}: </strong>
+          </label>
+       
+            {{TaskModel?.StrainName}}
+        </div>
+      </div>
+      <!--End Strain-->
+     
+      <!--Estimated Start DateTime-->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{ globalResource.eststartdate }}: </strong>
+            </label>
+          
+              {{TaskModel?.EstStartDate }}
+          </div>
+        </div>
+        <!--End Estimated Start DateTime-->
+
+      <!--Estimated End DateTime-->
+      <!-- <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label>
+            <strong>{{ globalResource.estenddate }} : </strong>
+          </label>
+        
+            {{TaskModel?.EstEndDate}}
+        </div>
+      </div> -->
+      <!--End Estimated End DateTime-->
+
+
+       <!--Actual Start DateTime-->
+       <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned &&TaskModel?.TaskStatus !== ''" >
+          <div class="paddingRL">
+              <label>
+                <strong>{{ globalResource.actualstartdate }}: </strong>
+              </label>
+            
+                {{TaskModel?.ActStartDate }}
+            </div>
+          </div>
+          <!--End Actual Start DateTime-->
+  
+        <!--Actual End DateTime-->
+        <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+          <div class="paddingRL">
+            <label>
+              <strong>{{ globalResource.actualenddate }}: </strong>
+            </label>
+          
+              {{TaskModel?.ActEndDate}}
+          </div>
+        </div>
+        <!--End Actual End DateTime-->
+
+       <!--Est hrs-->
+       <!-- <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{ globalResource.estimatedhrs }} : </strong>
+            </label>
+         
+              {{TaskModel?.EstHrs}}
+          </div>
+        </div> -->
+        <!--End Est hrs-->
+
+        <!--Actual cost-->
+        <div class="ui-g-12 ui-md-6" *ngIf="(TaskModel?.TaskStatus === taskStatus.Completed||TaskModel?.TaskStatus === taskStatus.ReviewPending)&&TaskModel?.TaskStatus !== ''">
+            <div class="paddingRL">
+                <label>
+                  <strong>{{ assignTaskResources.actualcost }}: </strong>
+                </label>
+             
+                  {{TaskModel?.EmpFinalCost | currency}}
+              </div>
+            </div>
+          <!--End Actual costs-->
+
+      <!--Priority -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{ globalResource.priority }}: </strong>
+            </label>
+         
+            {{TaskModel?.TaskPriority}}
+          </div>
+        </div>
+        <!--End Priority -->
+
+       <!--Misc. Cost-->
+       <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus === taskStatus.Completed">
+          <div class="paddingRL">
+              <label>
+                <strong>{{ globalResource.misccost }}: </strong>
+              </label>
+           
+                {{taskReviewModel?.rmisccost | currency}}
+            </div>
+          </div>
+
+           <!--totallotweight-->
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+              <label>
+                <strong> {{ assignTaskResources.totallotweight }}: </strong>
+              </label>
+           
+                {{TaskModel?.StartWeight}}{{globalResource.measure}}
+            </div>
+          </div>
+          
+        <!--End totallotweight-->
+
+        <!-- Is Lot Completed -->
+        <!-- <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus === taskStatus.Completed || TaskModel?.TaskStatus === taskStatus.ReviewPending">
+          <div class="paddingRL">
+            <label>
+                <strong>{{ assignTaskResources.islotcomplete }}:</strong>
+            </label>
+          
+            {{ TaskModel.IsLotCompleted }} 
+          </div> 
+        </div>   -->
+        <!-- End of Is Lot Completed -->
+
+      <!-- <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label>
+            <strong>{{ globalResource.assignwt }} : </strong>
+          </label>      
+            {{TaskModel?.AssignedWt}}
+        </div>
+      </div> -->
+<hr />
+      <!-- completion parameter -->  
+      <div 
+        *ngIf="TaskModel?.TaskStatus == taskStatus.ReviewPending||TaskModel?.TaskStatus == taskStatus.Completed"
+        class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" 
+        style="margin: 10px 0px; width:100%;">
+              <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+    
+                </div>
+                <div class="ui-grid-col-4">
+                    <strong>Task Owner</strong>
+                </div>
+                <div class="ui-grid-col-4" *ngIf="showToManager">
+                  <strong>Reviewer</strong>
+                </div>
+              </div>
+    
+              <!-- <div class="ui-grid-row">
+                  <div class="ui-grid-col-4">
+                      <label><strong>{{ assignTaskResources.assignedwt }} :</strong></label>
+                  </div>
+                  <div class="ui-grid-col-4">
+                      {{ taskReviewModel.assignedwt }}          
+                  </div>
+                  <div class="ui-grid-col-4" *ngIf="showToManager">
+                      {{ taskReviewModel.assignedwt }}
+                  </div> 
+              </div> -->
+              <div class="ui-grid-row">            
+                  <div class="ui-grid-col-4">
+                      <strong>{{ assignTaskResources.processedwt }}:</strong>
+                  </div>
+                  <div class="ui-grid-col-4">
+                      {{ taskCompletionModel.processedwt }}
+                  </div> 
+                  <div class="ui-grid-col-4" *ngIf="showToManager">    
+                      <!-- {{ taskReviewModel.rprocessedwt }}        -->
+                      {{ TaskModel.RevProcessedWt }}
+                  </div> 
+                </div>                         
+                <!-- Skewed Controls -->            
+            <div class="ui-grid-row">
+    
+              <div class="ui-grid-col-4">
+                  <strong>{{ assignTaskResources.usablebudwt }}:</strong>
+              </div>
+              <div class="ui-grid-col-4">
+                  {{ taskCompletionModel.usablebudwt }}
+              </div> 
+              <div class="ui-grid-col-4" *ngIf="showToManager"> 
+                  <!-- {{ taskReviewModel.rusablebudwt }} -->
+                  {{ TaskModel.RevUsableWt }}
+              </div> 
+            </div>         
+            <div class="ui-grid-row">
+              <div class="ui-grid-col-4">
+                  <strong>{{ assignTaskResources.oilmaterialwt }}:</strong>
+              </div>
+              <div class="ui-grid-col-4">
+                  {{ taskCompletionModel.oilmaterialwt }}
+              </div>
+              <div class="ui-grid-col-4" *ngIf="showToManager">
+                  <!-- {{ taskReviewModel.roilmaterialwt }} -->
+                  {{ TaskModel.RevOilMaterialWt }}
+              </div> 
+            </div>
+            <div class="ui-grid-row">
+              <div class="ui-grid-col-4">
+                  <strong>{{ assignTaskResources.wastematerialwt }}:</strong>
+              </div>
+              <div class="ui-grid-col-4">
+                  {{ taskCompletionModel.wastematerialwt }}
+              </div>
+              <div class="ui-grid-col-4" *ngIf="showToManager">
+                  <!-- {{ taskReviewModel.rwastematerialwt }} -->
+                  {{ TaskModel.RevWasteWt }}
+              </div> 
+          </div>
+            <!-- End Skewed Controls -->
+    
+            <!-- Emp Act Hrs -->
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <strong>{{ globalResource.actualhrs }}:</strong>
+                </div>
+                <div class="ui-grid-col-4">
+                    {{ TaskModel?.ActHrs | minutesToTime }}
+                </div>
+                <div class="ui-grid-col-4" *ngIf="showToManager">                
+                    {{ taskReviewModel?.racthrs | minutesToTime }}
+                </div> 
+                
+            </div>
+
+            <div class="ui-grid-row">
+              <div class="ui-grid-col-4">
+                  <strong>{{ assignTaskResources.islotcomplete }}:</strong>
+              </div>
+              <div class="ui-grid-col-4">
+                  {{ taskCompletionModel.IsTaskComplete  }}
+              </div>
+              <div class="ui-grid-col-4" *ngIf="showToManager">
+                  <!-- {{ taskReviewModel.rwastematerialwt }} -->
+                  {{ taskReviewModel.IsRevTrimCompleted }}
+              </div> 
+          </div>
+            <!-- End Act Hrs -->
+            <!-- Misc Cost -->
+            <!-- <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <strong>{{ assignTaskResources.misccost }} :</strong>
+                </div>
+                <div class="ui-grid-col-4">
+                    {{ taskCompletionModel.misccost }}
+                </div>
+                <div class="ui-grid-col-4" *ngIf="showToManager">                                    
+                    {{ taskReviewModel.rmisccost }}
+                </div> 
+            </div> -->
+             <!-- End Misc Cost -->
+      </div>             
+    <!--End completion parameter -->
+
+ 
+  <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="400" [minWidth]="200" >
+        <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
+
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <span class="star" style="font-size: 12px"  *ngIf="taskCompletionModel.istrimmedCompleted==='Yes'">
+               {{ assignTaskResources.lotfullytrimmedmsg }}
+              </span>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-7">
+                    <label>{{ assignTaskResources.islotcomplete }}:</label> 
+                </div>
+                <div class="ui-grid-col-5"> 
+                    <!-- label="{{taskCompletionModel.islotcomplete ? 'Yes' : 'No'}}"                   -->
+                    <p-checkbox 
+                      value="true"
+                      label="Yes" 
+                      (onChange)="isTaskCompleteOnChange('YES')"
+                      [(ngModel)]="taskCompletionModel.islotcompleteyes"
+                      formControlName="islotcompleteyes"
+                      binary="true"
+                    ></p-checkbox>
+
+                    <p-checkbox 
+                      value="taskCompletionModel.islotcompleteno"
+                      label="No"
+                      (onChange)="isTaskCompleteOnChange('NO')"  
+                      [(ngModel)]="taskCompletionModel.islotcompleteno"        
+                      formControlName="islotcompleteno"
+                      binary="true"
+                    ></p-checkbox>
+                    <!-- (onChange)="isTaskCompleteOnChange()" -->
+                </div> 
+            </div>
+            <!-- <div class="ui-grid-row">            
+                <div class="ui-grid-col-7">
+                  {{ assignTaskResources.processedwt }} *:
+                </div>
+                <div class="ui-grid-col-5">
+                    <input type="text"
+                      OnlyNumber="true"
+                      pInputText 
+                      [(ngModel)]="taskCompletionModel.processedwt"                         
+                      formControlName="processedwt"
+                      id="processedwt"
+                      name="processedwt"      
+                    /> 
+
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!completionForm.controls['processedwt'].valid&&completionForm.controls['processedwt'].dirty">
+                        <span *ngIf="completionForm.controls['processedwt'].errors['required']">
+                            {{ assignTaskResources.processedwtrequired }}
+                        </span>
+                        <span *ngIf="completionForm.controls['processedwt'].errors['incorrectProcessWt']">
+                            {{ assignTaskResources.incorrectProcessWt }}
+                        </span>
+                        
+                    </div>
+                </div> 
+              </div>                          -->
+              <!-- Skewed Controls -->
+           <!-- <div class="ui-grid-row" *ngFor="let question of questions">
+              <div 
+                class="ui-grid-col-12 topPaddingZero"                 
+                
+              >           
+                  <app-question [question]="question" [form]="completionForm.controls['skewTypeGroup']" ></app-question>         
+              </div> 
+          </div>                -->
+
+
+          <div class="ui-grid-row">
+
+            <div class="ui-grid-col-7">
+              {{ assignTaskResources.totallotweight }}:
+            </div>
+            <div class="ui-grid-col-5">
+              {{TaskModel?.StartWeight}} {{globalResource.measure}}
+            </div> 
+          </div> 
+          
+          <div class="ui-grid-row">
+
+            <div class="ui-grid-col-7">
+              {{ assignTaskResources.usablebudwt }}*:
+            </div>
+            <div class="ui-grid-col-5">
+                <input type="text"
+                  OnlyNumber="true"
+                  pKeyFilter="num"
+                  pInputText 
+                  autocomplete="off"
+                  [(ngModel)]="taskCompletionModel.usablebudwt"                         
+                  formControlName="usablebudwt"
+                  id="usablebudwt"
+                  name="usablebudwt"      
+                /> 
+
+                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="!completionForm.controls['usablebudwt'].valid&&completionForm.controls['usablebudwt'].dirty">
+                   
+                    {{ assignTaskResources.usablebudwtrequired }}
+                </div>
+            </div> 
+          </div>         
+          <!-- <div class="ui-grid-row">
+            <div class="ui-grid-col-7">
+              {{ assignTaskResources.oilmaterialwt }} *:
+            </div>
+            <div class="ui-grid-col-5">
+                <input type="text" 
+                  OnlyNumber="true"
+                  pInputText 
+                  [readOnly]="!taskCompletionModel.islotcomplete"
+                  [(ngModel)]="taskCompletionModel.oilmaterialwt"                         
+                  formControlName="oilmaterialwt"
+                  id="oilmaterialwt"
+                  name="oilmaterialwt"      
+                /> 
+
+                <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!completionForm.controls['oilmaterialwt'].valid&&completionForm.controls['oilmaterialwt'].dirty">
+                   
+                    {{ assignTaskResources.oilmaterialwtrequired }}
+                </div>
+            </div> 
+          </div>
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-7">
+              {{ assignTaskResources.wastematerialwt }} *:
+            </div>
+            <div class="ui-grid-col-5">
+                <input 
+                  type="text" 
+                  OnlyNumber="true"
+                  pInputText 
+                  [readOnly]="!taskCompletionModel.islotcomplete"
+                  [(ngModel)]="taskCompletionModel.wastematerialwt"                         
+                  formControlName="wastematerialwt"
+                  id="wastematerialwt"
+                  name="wastematerialwt"      
+                /> 
+
+                <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!completionForm.controls['wastematerialwt'].valid&&completionForm.controls['wastematerialwt'].dirty">
+                   
+                    {{ assignTaskResources.wastematerialwtrequired }}
+                </div>
+            </div> 
+        </div> -->
+
+        <!-- <div class="ui-grid-row">
+            <div class="ui-grid-col-7">
+              {{ assignTaskResources.misccost }} :
+            </div>
+            <div class="ui-grid-col-5">
+                <input type="text"
+                  OnlyNumber="true" 
+                  pInputText 
+                  [(ngModel)]="taskCompletionModel.misccost"                         
+                  formControlName="misccost"
+                  id="misccost"
+                  name="misccost"      
+                />               
+            </div> 
+        </div> -->
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-7">
+              {{ assignTaskResources.comment }}:
+            </div>
+            <div class="ui-grid-col-5">
+                <textarea                        
+                  pInputTextarea                        
+                  [(ngModel)]="taskCompletionModel.miscComment"
+                  formControlName="misccomment"
+                  id="miscComment"
+                  name="miscComment"
+                  maxlength="500"
+                  class="clsControl"
+                  binary="true"
+                ></textarea>
+            </div> 
+        </div>
+          <!-- End Skewed Controls -->
+          </div>         
+          <p-footer>
+            <button type="submit" pButton icon="fa-check"  label="Confirm" ></button>
+            <!-- [disabled]="!completionForm.valid" -->
+            <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showmodal=false" label="Cancel"></button>
+          </p-footer>
+      </form>
+  </p-dialog>
+
+  <p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
+      <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
+
+      <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <span class="star ui-message ui-messages-warn ui-corner-all" style="font-size: 14px"  *ngIf="taskCompletionModel.istrimmedCompleted==='Yes'">
+               {{ assignTaskResources.lotfullytrimmedmsg }}
+              </span>
+          <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+
+            </div>
+            <div class="ui-grid-col-4">
+              Task Owner
+            </div>
+            <div class="ui-grid-col-4">
+              Reviewer
+            </div>
+          </div>
+
+          <!-- <div class="ui-grid-row">
+              <div class="ui-grid-col-4">
+                  <label>{{ assignTaskResources.assignedwt }} :</label>
+              </div>
+              <div class="ui-grid-col-4">                
+                  {{ taskReviewModel.assignedwt }}          
+              </div>
+              <div class="ui-grid-col-4">              
+                  {{ taskReviewModel.assignedwt }}
+              </div> 
+          </div> -->
+          <!-- <div class="ui-grid-row">            
+              <div class="ui-grid-col-4">
+                {{ assignTaskResources.processedwt }} :
+              </div>
+              <div class="ui-grid-col-4">                 
+                  {{ taskReviewModel.processedwt }}
+              </div> 
+              <div class="ui-grid-col-4">
+                  <input type="text" 
+                    OnlyNumber="true"
+                    pInputText 
+                    [(ngModel)]="taskReviewModel.rprocessedwt"                         
+                    formControlName="rprocessedwt"
+                    id="processedwt"
+                    name="processedwt"   
+                  />                  
+              </div> 
+            </div> -->
+            <!-- Skewed Controls -->
+         <!-- <div class="ui-grid-row" *ngFor="let question of questions">
+            <div 
+              class="ui-grid-col-12 topPaddingZero"                 
+              
+            >           
+                <app-question [question]="question" [form]="completionForm.controls['skewTypeGroup']" ></app-question>         
+            </div> 
+        </div>                -->
+
+        <div class="ui-grid-row">
+
+          <div class="ui-grid-col-4">
+            {{ assignTaskResources.totallotweight }}:
+          </div>
+          <div class="ui-grid-col-4">
+              
+          </div> 
+          <div class="ui-grid-col-4">
+            {{ taskReviewModel.totallotweight }}{{globalResource.measure}}
+          </div> 
+        </div>  
+        <div class="ui-grid-row">
+
+          <div class="ui-grid-col-4">
+            {{ assignTaskResources.islotcomplete }}:
+          </div>
+          <div class="ui-grid-col-4">
+            {{ taskReviewModel.IsLotCompleted }}
+          </div> 
+           
+         <div class="ui-grid-col-4">
+          <!-- label="{{taskCompletionModel.islotcomplete ? 'Yes' : 'No'}}"                   -->
+          <p-checkbox 
+            value="true"
+            label="Yes" 
+            (onChange)="isRVTaskCompleteOnChange('YES')"
+            [(ngModel)]="taskReviewModel.islotcompleteyes"
+            formControlName="rvislotcompleteyes"
+            binary="true"
+          ></p-checkbox>
+
+          <p-checkbox 
+            value="taskCompletionModel.islotcompleteno"
+            label="No"
+            (onChange)="isRVTaskCompleteOnChange('NO')"  
+            [(ngModel)]="taskReviewModel.islotcompleteno"        
+            formControlName="rvislotcompleteno"
+            binary="true"
+          ></p-checkbox>
+          <!-- (onChange)="isTaskCompleteOnChange()" -->
+      </div> 
+  </div> 
+
+        <div class="ui-grid-row">
+
+          <div class="ui-grid-col-4">
+            {{ assignTaskResources.usablebudwt }}:
+          </div>
+          <div class="ui-grid-col-4">
+              <!-- <input type="number" 
+                pInputText 
+                [(ngModel)]="taskReviewModel.usablebudwt"                         
+                [ngModelOptions]="{standalone: true}"
+                id="usablebudwt"
+                name="usablebudwt" 
+                readonly="true"     
+              />             -->
+              {{ taskReviewModel.usablebudwt }}
+          </div> 
+          <div class="ui-grid-col-4">
+              <input type="text" 
+                OnlyNumber="true"
+                pKeyFilter="num"
+                pInputText 
+                autocomplete="off"
+                [(ngModel)]="taskReviewModel.rusablebudwt"                         
+                formControlName="rusablebudwt"
+                id="rusablebudwt"
+                name="rusablebudwt"      
+              /> 
+          </div> 
+        </div>         
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4">
+            {{ assignTaskResources.oilmaterialwt }}:
+          </div>
+          <div class="ui-grid-col-4">
+              <!-- <input type="number" 
+                pInputText 
+                [(ngModel)]="taskReviewModel.oilmaterialwt"                         
+                [ngModelOptions]="{standalone: true}"
+                id="oilmaterialwt"
+                name="oilmaterialwt"  
+                readonly="true"    
+              />  -->
+              {{ taskReviewModel.oilmaterialwt }}
+          </div>
+          <div class="ui-grid-col-4">
+              <input type="text" 
+                OnlyNumber="true"
+                pKeyFilter="num"
+                pInputText 
+                autocomplete="off"
+                [(ngModel)]="taskReviewModel.roilmaterialwt"                         
+                formControlName="roilmaterialwt"
+                id="oilmaterialwt"
+                name="oilmaterialwt"      
+              /> 
+          </div> 
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4">
+            {{ assignTaskResources.wastematerialwt }}:
+          </div>
+          <div class="ui-grid-col-4">
+              <!-- <input type="number" 
+                pInputText 
+                [(ngModel)]="taskReviewModel.wastematerialwt"                         
+                [ngModelOptions]="{standalone: true}"
+                id="wastematerialwt"
+                name="wastematerialwt"
+                readonly="true"      
+              />  -->
+              {{ taskReviewModel.wastematerialwt }}
+          </div>
+          <div class="ui-grid-col-4">
+              <input type="text" 
+                OnlyNumber="true"
+                pKeyFilter="num"
+                pInputText 
+                autocomplete="off"
+                [(ngModel)]="taskReviewModel.rwastematerialwt"                         
+                formControlName="rwastematerialwt"
+                id="wastematerialwt"
+                name="wastematerialwt"      
+              /> 
+             
+          </div> 
+        </div>
+        <!-- End Skewed Controls -->
+
+        <!--  act hrs -->
+      <div class="ui-grid-row">
+          <div class="ui-grid-col-4">
+              {{ assignTaskResources.actualhrs }}:
+          </div>
+          <div class="ui-grid-col-4">
+              {{ TaskModel?.ActHrs  | minutesToTime }}
+          </div>
+          <div class="ui-grid-col-4">
+              <!-- <p-calendar 
+              required 
+              name="acthrs"
+              [stepHour]="1" 
+              [stepMinute]="15" 
+              [timeOnly]="true" 
+              [showTime]="true" 
+              formControlName="ActHrs"
+              hourFormat="24">
+            </p-calendar>   -->
+            <div class="ui-inputgroup ui-inputgroup-border" >
+              <input type="number"                   
+                  pInputText 
+                  autocomplete="off"
+                  pKeyFilter="int"
+                  [(ngModel)]="taskReviewModel.racthrs"                         
+                  formControlName="ActHrs"
+                  id="acthrs"
+                  name="acthrs"                      
+                /> 
+                <span>:</span>
+                <input type="number"                  
+                  pInputText         
+                  autocomplete="off"      
+                  pKeyFilter="int"    
+                  [(ngModel)]="taskReviewModel.ractmins"                         
+                  formControlName="ActMins"
+                  id="actmins"
+                  name="actmins"                      
+                />
+                <!-- Added by Devdan :: Sec to Min change :: 06-Nov-2018 -->
+                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                  *ngIf="!reviewForm.controls['ActMins'].valid&&reviewForm.controls['ActMins'].dirty">
+                    <span *ngIf="reviewForm.controls['ActMins'].errors['max']">
+                      {{ globalResource.maxMinSecValue }}
+                    </span>
+                </div>
+                <!-- ADDED BY DEVDAN :: 06-NOV-2018 :: ADDING TEXTBOX FOR SECONDS -->
+                <span>:</span>
+                <input type="number"                  
+                  pInputText         
+                  autocomplete="off"      
+                  pKeyFilter="int"    
+                  [(ngModel)]="taskReviewModel.ractsecs"                         
+                  formControlName="ActSecs"
+                  id="actsecs"
+                  name="actsecs"                  
+                />
+                <div class="ui-message ui-messages-error-Sec ui-corner-all" appErrorTooltip
+                  *ngIf="!reviewForm.controls['ActSecs'].valid&&reviewForm.controls['ActSecs'].dirty">
+                    <span *ngIf="reviewForm.controls['ActSecs'].errors['max']">
+                      {{ globalResource.maxMinSecValue }}
+                    </span>
+                </div>
+                <!-- END :: Sec to Min change :: 06-Nov-2018 -->
+            </div>
+          </div> 
+      </div>
+      <!-- End act hrs -->
+
+        <!-- Emp Est Cost -->
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+              {{ assignTaskResources.misccost }}:
+            </div>
+            <div class="ui-grid-col-4">
+                <!-- <input type="number" 
+                  pInputText 
+                  [(ngModel)]="taskReviewModel.misccost"                         
+                  [ngModelOptions]="{standalone: true}"
+                  id="wastematerialwt"
+                  name="wastematerialwt"
+                  readonly="true"      
+                />  -->
+                {{ taskReviewModel.misccost | currency }}
+            </div>
+            <div class="ui-grid-col-4">
+                <input type="text"
+                  OnlyNumber="true"
+                  pKeyFilter="num" 
+                  pInputText 
+                  autocomplete="off"
+                  [(ngModel)]="taskReviewModel.rmisccost"                         
+                  formControlName="rmisccost"
+                  id="misccost"
+                  name="misccost"      
+                />                   
+                
+            </div>             
+        </div>
+
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+              {{ assignTaskResources.comment }}:
+            </div>
+            <div class="ui-grid-col-4">               
+                {{ taskReviewModel.comment }}
+            </div>
+            <div class="ui-grid-col-4">
+                <textarea                        
+                  pInputTextarea                        
+                  [(ngModel)]="taskCompletionModel.rmisccomment"
+                  formControlName="rmisccomment"
+                  id="rmisccomment"
+                  name="rmisccomment"
+                  maxlength="500"
+                  class="clsControl"
+                  binary="true"
+                ></textarea>                 
+                
+            </div> 
+            
+        </div>
+        <!-- End Emp Cost -->
+        </div>         
+        <p-footer>
+          <button type="submit" pButton icon="fa-check"  label="Confirm" ></button>
+          <!-- [disabled]="!reviewForm.valid" -->
+          <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showReviewmodal=false" label="Cancel"></button>
+        </p-footer>
+    </form>
+</p-dialog>
+
+  <p-growl [(value)]="msgs" life='5000'></p-growl>
+</div>

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/thingbluangular5svnv1/!svn/ver/1259/thingblusvn/src/app/guards
+END
+auth.guard.spec.ts
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/thingbluangular5svnv1/!svn/ver/1/thingblusvn/src/app/guards/auth.guard.spec.ts
+END
+auth.interceptor.ts
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/thingbluangular5svnv1/!svn/ver/1244/thingblusvn/src/app/guards/auth.interceptor.ts
+END
+role.guard.ts
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/thingbluangular5svnv1/!svn/ver/1259/thingblusvn/src/app/guards/role.guard.ts
+END
+auth.guard.ts
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/thingbluangular5svnv1/!svn/ver/1244/thingblusvn/src/app/guards/auth.guard.ts
+END

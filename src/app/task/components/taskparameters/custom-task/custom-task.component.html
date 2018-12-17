@@ -1,0 +1,341 @@
+<div class="ui-g " [formGroup]="CUSTOMTASK" *ngIf="PageFlag.page =='AssignTask'">
+
+   <!--Employee-->
+   <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+        <label for="strain">{{ globalResource.employee }}</label>{{ globalResource.labelcolon }}
+                         <div style="clear:both"></div>
+          <div class="clear"></div>
+          <span class="lblText">{{ _cookieService.EmpName }}</span>
+      </div>
+  </div>
+  <!--End Employee-->
+ 
+ <!--Estimated Start DateTime-->
+ <div class="ui-g-12 ui-md-6">
+   <div class="paddingRL">
+       <label for="estimatedstartdatetime">
+         {{ globalResource.eststartdate }}<span class="star">*</span>{{ globalResource.labelcolon }}
+       </label>
+       <small class="smallTextRed"
+        *ngIf="showPastDateLabel"
+        >({{ globalResource.pastdatetask }})
+      </small>
+       <!-- [maxDate]="TaskModel.CUSTOMTASK.enddate" -->
+         <p-calendar                                  
+           [(ngModel)]="TaskModel.CUSTOMTASK.startdate"
+           [showIcon]="true"
+           [disabled]="true"
+           [defaultDate]="defaultDate"
+           formControlName="estimatedstartdate"          
+           class="clsControl"
+           id="estimatedstartdate"
+           name="estimatedstartdate"
+           >
+         </p-calendar> 
+         <!-- (onSelect)="EstStartDate_Select()"
+         (onInput)="EstStartDate_Select()"  -->                      
+     </div>
+ </div>
+ <!--End Estimated Start DateTime-->   
+ 
+ <!--Comment-->
+ <div class="ui-g-12 ui-md-6">
+   <div class="paddingRL">
+       <label for="comment">{{ assignTaskResources.comment }}</label>{{ globalResource.labelcolon }}
+                     {{TaskModel.CUSTOMTASK.usercomment}}     
+         <textarea                        
+           pInputTextarea                        
+           [(ngModel)]="TaskModel.CUSTOMTASK.usercomment"
+           formControlName="comment"
+           id="comment"
+           name="comment"
+           maxlength="500"
+           class="clsControl"
+         ></textarea>
+ 
+         <div
+           class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+           *ngIf="!CUSTOMTASK.controls['comment'].valid&&CUSTOMTASK.controls['comment'].dirty">
+            
+             <span *ngIf="CUSTOMTASK.controls['comment'].errors['maxLength']">
+               {{ assignTaskResources.commentMaxLength }}
+             </span>                      
+       </div>
+     </div>
+ </div>
+ <!--End Comment-->
+ 
+ </div>
+ 
+ <div *ngIf="PageFlag.page =='TaskAction'">
+  <div class="ui-g">
+
+    <!--Employee -->
+    <div class="ui-g-12 ui-md-6">
+      <div class="paddingRL">
+          <label>
+            <strong>{{ globalResource.employee }}: </strong>
+          </label>
+        
+          <label>
+            {{TaskModel?.EmpName}}
+          </label>
+        </div>
+      </div>
+      <!--End Employee -->
+     
+      <!--Estimated Start DateTime-->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{ globalResource.eststartdate }}: </strong>
+            </label>
+          
+              {{TaskModel?.EstStartDate }}
+          </div>
+        </div>
+        <!--End Estimated Start DateTime-->
+
+       <!--Actual Start DateTime-->
+       <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned &&TaskModel?.TaskStatus !== ''" >
+          <div class="paddingRL">
+              <label>
+                <strong>{{ globalResource.actualstartdate }}: </strong>
+              </label>
+            
+                {{TaskModel?.ActStartDate }}
+            </div>
+          </div>
+          <!--End Actual Start DateTime-->
+  
+        <!--Actual End DateTime-->
+        <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+          <div class="paddingRL">
+            <label>
+              <strong>{{ globalResource.actualenddate }}: </strong>
+            </label>
+          
+              {{TaskModel?.ActEndDate}}
+          </div>
+        </div>
+        <!--End Actual End DateTime-->
+
+        <!--Actual Costs-->
+        <div class="ui-g-12 ui-md-6" *ngIf="(TaskModel?.TaskStatus === taskStatus.Completed||TaskModel?.TaskStatus === taskStatus.ReviewPending)&&TaskModel?.TaskStatus !== ''">
+            <div class="paddingRL">
+                <label>
+                  <strong>{{ assignTaskResources.actualcost }}: </strong>
+                </label>
+            
+                {{TaskModel?.EmpFinalCost | currency }}
+              </div>
+            </div>
+          <!--End Actual Costs-->
+
+        <!--Misc. Cost-->
+        <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus === taskStatus.Completed">
+          <div class="paddingRL">
+              <label>
+                <strong>{{ globalResource.misccost }}: </strong>
+              </label>
+            
+                {{taskReviewModel?.rmisccost | currency }}
+            </div>
+          </div>
+          <!--End Misc. Cost-->
+<hr />
+      <!-- completion parameter -->  
+      <div 
+        *ngIf="TaskModel?.TaskStatus == taskStatus.ReviewPending||TaskModel?.TaskStatus == taskStatus.Completed"
+        class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" 
+        style="margin: 10px 0px; width:100%;">
+
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+    
+                </div>
+                <div class="ui-grid-col-4">
+                    <strong>Task Owner</strong>
+                </div>
+                <div class="ui-grid-col-4" *ngIf="showToManager">
+                  <strong>Reviewer</strong>
+                </div>
+              </div>
+    
+            <!-- Emp Est Cost -->
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <strong>{{ globalResource.actualhrs }}:</strong>
+                </div>
+                <div class="ui-grid-col-4">
+                   {{ TaskModel?.ActHrs | minutesToTime }}
+                </div>
+                <div class="ui-grid-col-4" *ngIf="showToManager">                
+                   {{ taskReviewModel?.racthrs | minutesToTime }}
+                </div> 
+            </div>
+            <!-- End Emp Cost -->
+      </div>             
+    <!--End completion parameter -->
+
+ 
+  <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
+        <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
+
+         <div class="ui-grid-row">
+             <div class="ui-grid-col-4">
+                <strong>{{ assignTaskResources.comment }}:</strong>
+             </div>
+             <div class="ui-grid-col-4">               
+                 {{ taskReviewModel.comment }}
+             </div>
+             <div class="ui-grid-col-4">
+                 <textarea                        
+                   pInputTextarea                        
+                   [(ngModel)]="taskCompletionModel.misccomment"
+                   formControlName="misccomment"
+                   id="misccomment"
+                   name="misccomment"
+                   maxlength="500"
+                   class="clsControl"
+                   binary="true"
+                 ></textarea>                 
+                 
+             </div> 
+             
+         </div>
+         <!-- End Emp Cost -->     
+          <p-footer>
+            <button type="submit" pButton icon="fa-check"  label="Confirm" ></button>
+            <!-- [disabled]="!completionForm.valid" -->
+            <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showmodal=false" label="Cancel"></button>
+          </p-footer>
+      </form>
+  </p-dialog>
+
+  <p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
+      <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
+
+        <!--  act hrs -->
+        <table class="table noborder">
+        <tr>
+           <td>
+               {{ assignTaskResources.actualhrs }}:
+           </td>
+           <td>
+               {{ TaskModel?.ActHrs | minutesToTime }}
+           </td>
+           <td>
+            <div class="ui-inputgroup ui-inputgroup-border" >
+              <input type="number"                   
+                  pInputText
+                  autocomplete="off" 
+                  [(ngModel)]="taskReviewModel.racthrs"                         
+                  formControlName="ActHrs"
+                  id="acthrs"
+                  name="acthrs"
+                  pKeyFilter="int"
+                  style="width:80px"                   
+                /> 
+                <span>:</span>
+                <input type="number"                  
+                  pInputText
+                  autocomplete="off"                   
+                  [(ngModel)]="taskReviewModel.ractmins"                         
+                  formControlName="ActMins"
+                  pKeyFilter="int"
+                  id="actmins"
+                  name="actmins"  
+                  style="width:80px"
+                /> 
+                <!-- Added by Devdan :: Sec to Min change :: 06-Nov-2018 -->
+                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                  *ngIf="!reviewForm.controls['ActMins'].valid&&reviewForm.controls['ActMins'].dirty">
+                    <span *ngIf="reviewForm.controls['ActMins'].errors['max']">
+                      {{ globalResource.maxMinSecValue }}
+                    </span>
+                </div>
+                <!-- ADDED BY DEVDAN :: 06-NOV-2018 :: ADDING TEXTBOX FOR SECONDS -->
+                <span>:</span>
+                <input type="number"                  
+                  pInputText         
+                  autocomplete="off"      
+                  pKeyFilter="int"    
+                  [(ngModel)]="taskReviewModel.ractsecs"                         
+                  formControlName="ActSecs"
+                  id="actsecs"
+                  name="actsecs"
+                  style="width:80px"
+                />
+                <div class="ui-message ui-messages-error-Sec ui-corner-all" appErrorTooltip
+                  *ngIf="!reviewForm.controls['ActSecs'].valid&&reviewForm.controls['ActSecs'].dirty">
+                    <span *ngIf="reviewForm.controls['ActSecs'].errors['max']">
+                      {{ globalResource.maxMinSecValue }}
+                    </span>
+                </div>
+                <!-- END :: Sec to Min change :: 06-Nov-2018 -->
+            </div> 
+           </td> 
+       </tr>
+       <!-- End act hrs -->
+ 
+         <!-- Emp Misc Cost -->
+         <tr>
+           <td>
+               {{ assignTaskResources.misccost }}:
+             </td>
+             <td>             
+                 {{ taskReviewModel.misccost | currency }}
+             </td>
+             <td>
+                 <input type="number"
+                   OnlyNumber="true" 
+                   pInputText
+                   autocomplete="off" 
+                   [(ngModel)]="taskReviewModel.rmisccost"                         
+                   formControlName="rmisccost"
+                   id="misccost"
+                   name="misccost"      
+                 />                   
+                 
+             </td>             
+         </tr>
+          <!-- End Emp Misc Cost -->
+
+         <tr>
+           <td>
+                <strong>{{ assignTaskResources.comment }}:</strong>
+             </td>
+             <td>              
+                 {{ taskReviewModel.comment }}
+             </td>
+             <td>
+                 <textarea                        
+                   pInputTextarea                        
+                   [(ngModel)]="taskReviewModel.rmisccomment"
+                   formControlName="rmisccomment"
+                   id="rmisccomment"
+                   name="rmisccomment"
+                   maxlength="500"
+                   class="clsControl"
+                   binary="true"
+                 ></textarea>                 
+                 
+             </td> 
+             
+         </tr>
+         <!-- End Emp Cost -->  
+       </table>
+         
+        <p-footer>
+          <button type="submit" pButton icon="fa-check"  label="Confirm"></button>
+          <!-- [disabled]="!reviewForm.valid" -->
+          <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showReviewmodal=false" label="Cancel"></button>
+        </p-footer>
+        <p></p>
+    </form>
+</p-dialog>
+
+  <p-growl [(value)]="msgs" life='5000'></p-growl>
+</div>

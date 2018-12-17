@@ -1,0 +1,837 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+
+    <div class="ui-g-12">
+          <!-- New tpprocessor -->
+        <p-panel header="{{ pageheading }}" [toggleable]="true">
+          <form
+            [formGroup]="tpprocessorForm"
+            (ngSubmit)="onSubmit(tpprocessorForm.value)">
+             <div class="ui-g">                     
+                        <!-- tpprocessor Name -->
+                        <div class="ui-g-12 ui-md-6">
+                            <div class="paddingRL">
+                                <label for="tpprocessor"> {{tpprocessorResources.tpprocessorname1}} <span class="star">*</span></label>:
+        
+                                <input pInputText
+                                  name="tpprocessor"
+                                  id="tpprocessor"
+                                 autocomplete="off"
+                                  type="text"
+                                  class="clsControl"
+                                  placeholder="Enter TP Processor Name"
+                                  formControlName="tpprocessor"
+                                />
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                  *ngIf="!tpprocessorForm.controls['tpprocessor'].valid&&tpprocessorForm.controls['tpprocessor'].dirty">
+      
+                                  <span *ngIf="tpprocessorForm.controls['tpprocessor'].errors['required']">
+                                    {{ tpprocessorResources.tpprocessorrequired }}
+                                  </span>
+                                  <span *ngIf="tpprocessorForm.controls['tpprocessor'].errors['whitespace']">
+                                    {{ tpprocessorResources.tpprocessorrequired }}
+                                  </span>
+                                  <span *ngIf="tpprocessorForm.controls['tpprocessor'].errors['maxlength']">
+                                    {{tpprocessorResources.tpprocessorLength}}
+                                  </span>
+                              </div>
+                              </div>
+                          </div>
+                          <!--End tpprocessor Name -->
+                          <!-- Expected yield -->
+                        <div class="ui-g-12 ui-md-6">
+                            <div class="paddingRL">
+                                <label for="expectedYeild"> {{ tpprocessorResources.expectedYeild}}<span class="star">*</span></label>:
+        
+                                <input pInputText
+                                  name="expectedYeild"
+                                  id="expectedYeild"
+                                  type="number"
+                                  autocomplete="off"
+                                  class="clsControl"
+                                  OnlyNumber="true"              
+                                  placeholder="Enter Expected Yeild"
+                                  formControlName="expectedYeild"
+                                  min="0.1"
+                                />
+        
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                  *ngIf="!tpprocessorForm.controls['expectedYeild'].valid&&tpprocessorForm.controls['expectedYeild'].dirty">
+                                  <span *ngIf="tpprocessorForm.controls['expectedYeild'].errors['required']">
+                                    {{tpprocessorResources.expectedYeildrequired}}
+                                  </span>
+                                  <span *ngIf="tpprocessorForm.controls['expectedYeild'].errors['max']">
+                                      {{tpprocessorResources.expectedYeildMaxLength}}
+                                  </span>
+                                  <span *ngIf="tpprocessorForm.controls['expectedYeild'].errors['min']">
+                                      {{tpprocessorResources.expectedYeildMinLength}}
+                                  </span>
+                                  <span *ngIf="tpprocessorForm.controls['expectedYeild'].hasError('invalidinput')">
+                                    {{ tpprocessorResources.expectedYeildMinLength }}
+                                  </span>  
+                                </div>
+                                
+                              </div>
+                          </div>
+                          <!--End Expected yield -->
+                          <!-- Material as payment -->
+                          <div class="ui-g-12 ui-md-6">
+                              <div class="paddingRL">
+                                  <label for="materialaspayment"> 
+                                    {{ tpprocessorResources.materialaspayment}}<span class="star">*</span>:
+                                  </label>
+          
+                                  <input pInputText
+                                    name="materialaspayment"
+                                    id="materialaspayment"
+                                    type="number"
+                                    autocomplete="off"
+                                    class="clsControl"
+                                    OnlyNumber="true"
+                                    placeholder="Enter Material Payment"
+                                    formControlName="materialaspayment"
+                                    min="0.1"
+                                  />
+                                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                    *ngIf="!tpprocessorForm.controls['materialaspayment'].valid&&tpprocessorForm.controls['materialaspayment'].dirty">
+                                    <span *ngIf="tpprocessorForm.controls['materialaspayment'].errors['required']">
+                                      {{tpprocessorResources.materialaspaymentrequired}}
+                                    </span>
+                                    <span *ngIf="tpprocessorForm.controls['materialaspayment'].errors['max']">
+                                        {{tpprocessorResources.materialaspaymentMaxLength}}
+                                    </span>
+                                    <span *ngIf="tpprocessorForm.controls['materialaspayment'].errors['min']">
+                                        {{tpprocessorResources.materialaspaymentMinLength}}
+                                    </span>
+                                    <span *ngIf="tpprocessorForm.controls['materialaspayment'].hasError('invalidinput')">
+                                      {{ tpprocessorResources.materialaspaymentMinLength }}
+                                    </span>  
+                                  </div>
+                                  
+                                </div>
+                            </div>
+                          <!--End Material as payment -->
+                          <!--Exp Turnaround Time (Days) -->
+                          <div class="ui-g-12 ui-md-6">
+                              <div class="paddingRL">
+                                  <label for="expturnaroundtime"> 
+                                    {{ tpprocessorResources.exrturnaroundtime}}<span class="star">*</span>:
+                                  </label>
+          
+                                  <input pInputText
+                                    name="expturnaroundtime"
+                                    id="expturnaroundtime"
+                                    type="number"
+                                    autocomplete="off"
+                                    pKeyFilter="int"
+                                    class="clsControl"
+                                    placeholder="Enter Turnaround Days"
+                                    formControlName="expturnaroundtime"
+                                    min="0"
+                                  />
+                                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                    *ngIf="!tpprocessorForm.controls['expturnaroundtime'].valid&&tpprocessorForm.controls['expturnaroundtime'].dirty">
+                                    <span *ngIf="tpprocessorForm.controls['expturnaroundtime'].errors['required']">
+                                      {{tpprocessorResources.exrturnaroundtimerequired}}
+                                    </span>
+                                    <span *ngIf="tpprocessorForm.controls['expturnaroundtime'].errors['min']">
+                                        {{tpprocessorResources.expturnaroundtimeMinLength}}
+                                    </span>
+                                  </div>
+                                  
+                                </div>
+                            </div>
+                          <!--End Exp Turnaround Time (Days) -->
+                          <!-- Office Phone -->
+                          <div class="ui-g-12 ui-md-6">
+                              <div class="paddingRL">
+                                  <label for="officephone"> {{ tpprocessorResources.officephone}}<span class="star">*</span></label>:
+          
+                                  <input pInputText
+                                    name="officephone"
+                                    id="officephone"
+                                    type="text"
+                                    autocomplete="off"
+                                    pKeyFilter="int"
+                                    class="clsControl"
+                                    placeholder="Enter Office Phone"
+                                    formControlName="officePhone"
+                                  />
+          
+                                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                    *ngIf="!tpprocessorForm.controls['officePhone'].valid&&tpprocessorForm.controls['officePhone'].dirty">
+                                    <span *ngIf="tpprocessorForm.controls['officePhone'].errors['required']">
+                                      {{tpprocessorResources.officephonerequired}}
+                                    </span>
+                                    <span *ngIf="tpprocessorForm.controls['officePhone'].errors['maxlength']">
+                                        {{tpprocessorResources.officephoneLength}}
+                                    </span>
+                                  </div>
+                                  
+                                </div>
+                            </div>
+                           
+                            <!--End Office Phone -->
+                            <!-- cell phone -->
+                        <div class="ui-g-12 ui-md-6">
+                            <div class="paddingRL">
+                                <label for="cellphone"> {{ tpprocessorResources.cellphone}} </label>:
+        
+                                <input pInputText
+                                  name="cellphone"
+                                  id="cellphone"
+                                  autocomplete="off"
+                                  type="text"
+                                  class="clsControl"
+                                  placeholder="Enter Cell Phone"
+                                  formControlName="cellPhone"
+                                />
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                *ngIf="!tpprocessorForm.controls['cellPhone'].valid&&tpprocessorForm.controls['cellPhone'].dirty">
+                                <span *ngIf="tpprocessorForm.controls['cellPhone'].errors['maxlength']">
+                                    {{tpprocessorResources.officephoneLength}}
+                                </span>
+                              </div>
+                              </div>
+                          </div>
+                       
+                          <!--End cell phone -->                          
+                          <!-- Primary Email-->
+                          <div class="ui-g-12 ui-md-6">
+                            <div class="paddingRL">
+                                <label for="primaryemail"> {{ tpprocessorResources.primaryemail}}
+                                  <span class="star">*</span>
+                                </label>:
+        
+                                <input pInputText
+                                  name="primaryemail"
+                                  autocomplete="off"
+                                  id="primaryemail"
+                                  type="text"
+                                  class="clsControl"
+                                  placeholder="Enter Primary Email"
+                                  formControlName="primaryEmail"
+                                  pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                                  />
+                                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                  *ngIf="!tpprocessorForm.controls['primaryEmail'].valid&&tpprocessorForm.controls['primaryEmail'].dirty">
+                                  <span *ngIf="tpprocessorForm.controls['primaryEmail'].errors['required']">
+                                    {{tpprocessorResources.primaryemailrequired}}
+                                  </span>
+                                  <span *ngIf="tpprocessorForm.controls['primaryEmail'].errors['maxlength']">
+                                      {{tpprocessorResources.emailLength}}
+                                  </span>
+                                  <span *ngIf="tpprocessorForm.controls['primaryEmail'].errors['pattern']">
+                                    {{tpprocessorResources.validemail}} 
+                                  </span>
+                                </div>
+                                <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                *ngIf="!tpprocessorForm.controls['primaryEmail'].valid&&tpprocessorForm.controls['primaryEmail'].errors.pattern">
+                                {{tpprocessorResources.validemail}} 
+                                </div> -->
+                              </div>
+                          </div>
+        
+                            <!--End Primary Email -->
+                            <!-- secondaryemail Email-->
+                          <div class="ui-g-12 ui-md-6">
+                            <div class="paddingRL">
+                                <label for="secondaryemail"> {{ tpprocessorResources.secondaryemail}} </label>:
+        
+                                <input pInputText
+                                  name="secondaryemail"
+                                  id="secondaryemail"
+                                  type="text"
+                                  autocomplete="off"
+                                  class="clsControl"
+                                  formControlName="secondaryEmail"
+                                  placeholder="Enter Secondary Email"
+                                  pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                                />
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                *ngIf="!tpprocessorForm.controls['secondaryEmail'].valid&&tpprocessorForm.controls['secondaryEmail'].dirty">
+                                <span *ngIf="tpprocessorForm.controls['secondaryEmail'].errors['maxlength']">
+                                    {{tpprocessorResources.emailLength}}
+                                </span>
+                                <span *ngIf="tpprocessorForm.controls['secondaryEmail'].errors['pattern']">
+                                    {{tpprocessorResources.validemail}} 
+                                  </span>
+                                  <span *ngIf="tpprocessorForm.controls['secondaryEmail'].errors['duplicateEmail']">
+                                    {{ tpprocessorResources.duplicateEmail }}
+                                  </span>
+                              </div>
+                              </div>
+                          </div>
+        
+                            <!--End secondaryemail Email -->
+                            <!--Contact Person-->
+                          <div class="ui-g-12 ui-md-6">
+                            <div class="paddingRL">
+                                <label for="contactperson"> {{ tpprocessorResources.contactperson}} </label>:
+        
+                                <input pInputText
+                                  name="contactperson"
+                                  id="contactperson"
+                                  autocomplete="off"
+                                  type="text"
+                                  class="clsControl"
+                                  placeholder="Enter Contact Person"
+                                  formControlName="contactPerson"
+                                />
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                *ngIf="!tpprocessorForm.controls['contactPerson'].valid&&tpprocessorForm.controls['contactPerson'].dirty">
+                                <span *ngIf="tpprocessorForm.controls['contactPerson'].errors['maxlength']">
+                                    {{tpprocessorResources.contactpersonLength}}
+                                  </span>
+                              </div>
+                              </div>
+                          </div>
+                           <!--End Contact Person -->
+                          <!--country -->
+                      <div class="ui-g-12 ui-md-6">
+                        <div class="paddingRL">
+                            <div class="le-su-12">
+                                <label for="country" class="towlable">{{ tpprocessorResources.country}}<span class="star">*</span></label>:
+          
+                                <p-dropdown
+                                [filter] ="true"
+                                id="country"
+                                formControlName="country"
+                                [options]="countries"
+                                (onChange)="countryChange()"
+                                placeholder="-- Select --"
+                                autocomplete="off"
+                                [autoWidth]="false"
+                                class="clsControl"
+                                name="country">
+                                </p-dropdown>
+                                
+                                <div class="ui-message ui-messages-error ui-corner-all"  appErrorTooltip
+                                *ngIf="!tpprocessorForm.controls['country'].valid&&tpprocessorForm.controls['country'].dirty">
+                                {{ tpprocessorResources.countryrequired }}
+                                </div>
+      
+                              </div>
+                            </div>
+                         </div>
+                        
+                        <!--End country -->
+                          <!--state -->
+                      <div class="ui-g-12 ui-md-6">
+                        <div class="paddingRL">
+                            <div class="le-su-12">
+                                <label for="state" class="towlable">{{ tpprocessorResources.state}}<span class="star">*</span></label>:
+          
+                                <p-dropdown
+                                [filter] ="true"
+                                id="state"
+                                formControlName="state"
+                                (onChange)="stateChange()"
+                                autocomplete="off"
+                                [options]="states"
+                                placeholder="-- Select --"
+                                [autoWidth]="false"
+                                class="clsControl"
+                                name="state">
+                                </p-dropdown>
+        
+                                <div class="ui-message ui-messages-error ui-corner-all"  appErrorTooltip
+                                *ngIf="!tpprocessorForm.controls['state'].valid&&tpprocessorForm.controls['state'].dirty">
+                                {{ tpprocessorResources.staterequired }}
+                                </div>
+      
+                              </div>
+                            </div>
+                         </div>
+                        
+                          <!--End state -->                                                   
+                          <!--Address-->
+                          <div class="ui-g-12 ui-md-6">
+                            <div class="paddingRL">
+                                <label for="address"> {{ tpprocessorResources.address}}  <span class="star"></span></label>:
+        
+                                <textarea pInputTextarea
+                                  name="address"
+                                  id="address"
+                                  type="text"
+                                  autocomplete="off"
+                                  class="clsControl"
+                                  maxLength="500"
+                                  placeholder="Enter Address"
+                                  formControlName="address"
+                                  ></textarea>
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                  *ngIf="!tpprocessorForm.controls['address'].valid&&tpprocessorForm.controls['address'].dirty">
+                                  {{ tpprocessorResources.addressrequired }}
+                                </div>
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                  *ngIf="!tpprocessorForm.controls['address'].valid&&tpprocessorForm.controls['address'].dirty">
+                                  <span *ngIf="tpprocessorForm.controls['address'].errors['maxlength']">
+                                      {{tpprocessorResources.addressLength}}
+                                    </span>
+                              </div>
+                              </div>
+                          </div>
+                          <!--End Address -->
+                           <!--city -->
+                          <div class="ui-g-12 ui-md-6">
+                              <div class="paddingRL">
+                                  <div class="le-su-12">
+                                  <label for="city" class="towlable">{{ tpprocessorResources.city}}<span class="star">*</span></label>:
+            
+                                  <p-dropdown
+                                  [filter] ="true"
+                                  id="city"
+                                  formControlName="city"
+                                  [options]="cities"
+                                  placeholder="-- Select --"
+                                  [autoWidth]="false"
+                                  class="clsControl"
+                                  name="city">
+                                  </p-dropdown>
+          
+                                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                  *ngIf="!tpprocessorForm.controls['city'].valid&&tpprocessorForm.controls['city'].dirty">
+                                  {{ tpprocessorResources.cityrequired }}
+                                  </div>
+        
+                                </div>
+                              </div>
+                           </div>                          
+                          <!--End city -->
+                          <!--zipcode-->
+                           <div class="ui-g-12 ui-md-6">
+                            <div class="paddingRL">
+                                <label for="zipcode"> {{ tpprocessorResources.zipcode}}<span class="star">*</span></label>:
+        
+                                <input pInputText
+                                  name="zipcode"
+                                  id="zipcode"
+                                  autocomplete="off"
+                                  type="text"
+                                  class="clsControl"
+                                  pKeyFilter="int"
+                                  placeholder="Enter Zip Code"
+                                  formControlName="zipCode"
+                                />
+                                
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                *ngIf="!tpprocessorForm.controls['zipCode'].valid&&tpprocessorForm.controls['zipCode'].dirty">
+                                <span *ngIf="tpprocessorForm.controls['zipCode'].errors['required']">
+                                  {{tpprocessorResources.zipcoderequired}}
+                                </span>
+                                <span *ngIf="tpprocessorForm.controls['zipCode'].errors['maxlength']">
+                                    {{tpprocessorResources.zipcodeLength}}
+                                  </span>
+                              </div>
+        
+                              </div>
+                          </div>        
+                           <!--End zipcode -->   
+                             <!--description-->
+                            <div class="ui-g-12 ui-md-6">
+                              <div class="paddingRL">
+                                  <label for="description"> {{ tpprocessorResources.description}} </label>:
+          
+                                  <textarea 
+                                  pInputTextarea           
+                                  formControlName="description"
+                                  placeholder="Add Description"
+                                  autocomplete="off"
+                                  maxLength="500"
+                                  name="description"
+                                  class="clsControl"
+                                ></textarea>
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                      *ngIf="!tpprocessorForm.controls['description'].valid&&tpprocessorForm.controls['description'].dirty">
+                                      <span *ngIf="tpprocessorForm.controls['description'].errors['maxlength']">
+                                          {{tpprocessorResources.descriptionLength}}
+                                        </span>
+                                  </div>
+                                </div>
+                            </div>
+                             <!--End description -->
+                             <!-- IsActive -->
+                            <div class="ui-g-12 ui-md-12">
+                                <div class="paddingRL">
+                                  <label></label>
+                                  <div class="clear"></div>
+                            
+                                  <p-checkbox value="true" 
+                                  [(ngModel)]="chkIsActive" 
+                                  label="{{globalResources.IsActiveFlag}}" 
+                                  formControlName="chkIsActive" 
+                                  binary="true"></p-checkbox>
+                                </div>
+                              </div>
+                              <!--End IsActive -->
+
+                             <div class="ui-g-12 ui-md-12" style="text-align:right;">
+                              <div class="paddingRL">
+                                <p-button  type="submit" label="{{ saveButtonText }}" id="btntpprocessorSave" name="btntpprocessorSave" ></p-button>
+                                <button pButton (click)="resetForm()" type="button" label="{{ clear }}" class="ui-button-secondary"></button>
+                            </div>
+                          </div>
+             </div>
+          </form>
+         
+        </p-panel>
+    </div>
+  </div>
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header="{{ tpprocessorResources.tpprocessorlist }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+        <p-table #dttpProcessorList [value]="alltpprocessorList" 
+        class="clsTableSelection"
+        sortMode="single"               
+        [responsive]="true" 
+        [paginator]="true" 
+        [rows]="10"
+        sortField="TPId"
+        sortOrder="-1"
+        [rowsPerPageOptions]="paginationValues"
+        (onPage)="onPageChange($event)"
+        [globalFilterFields]="['TPName','ContactPerson','PrimaryEmail','OfficePhone','StateName','CityName']"
+        selectionMode="single"     
+        (onRowSelect)="onRowSelect($event)"
+        (onRowUnselect)="onRowSelect($event)"
+        dataKey="TPId"
+        >                    
+        <ng-template pTemplate="caption">
+            <div style="text-align: right">
+                <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" (input)="dttpProcessorList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <!-- <th [pSortableColumn]="'ClientName'">Client 
+                    <p-sortIcon [field]="'ClientName'"></p-sortIcon>                                
+                </th> -->
+                <th [pSortableColumn]="'TPName'">TP Processor Name
+                    <p-sortIcon [field]="'TPName'"></p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'ContactPerson'"> Contact Person <p-sortIcon [field]="'ContactPerson'"></p-sortIcon></th>
+                <th [pSortableColumn]="'PrimaryEmail'">Primary Email <p-sortIcon [field]="'PrimaryEmail'"></p-sortIcon></th>    
+                <th [pSortableColumn]="'OfficePhone'">Office Phone <p-sortIcon [field]="'OfficePhone'"></p-sortIcon></th>                  
+                <th [pSortableColumn]="'StateName'">State  <p-sortIcon [field]="'StateName'"></p-sortIcon></th>              
+                <th [pSortableColumn]="'CityName'">City <p-sortIcon [field]="'CityName'"></p-sortIcon></th>              
+                <th style="width: 100px;">Action</th>      
+            </tr>
+  
+            <tr>
+                <!-- <th>
+                    <input pInputText type="text" autocomplete="off" (input)="dttpProcessorList.filter($event.target.value, 'ClientName', 'contains')" class="clsControl">
+                </th> -->
+                <th>
+                    <input pInputText type="text" autocomplete="off" (input)="dttpProcessorList.filter($event.target.value, 'TPName', 'contains')" class="clsControl">
+                </th>
+                <th>
+                  <input pInputText type="text" autocomplete="off" (input)="dttpProcessorList.filter($event.target.value, 'ContactPerson', 'contains')" class="clsControl">
+                </th>
+                <th>
+                    <input pInputText type="text" autocomplete="off" (input)="dttpProcessorList.filter($event.target.value, 'PrimaryEmail', 'contains')" class="clsControl">
+                </th>
+                <th>
+                  <input pInputText type="text" autocomplete="off"  (input)="dttpProcessorList.filter($event.target.value, 'OfficePhone', 'contains')" class="clsControl">
+              </th>                 
+                <th>
+                    <input pInputText type="text" autocomplete="off" (input)="dttpProcessorList.filter($event.target.value, 'StateName', 'contains')" class="clsControl">
+                </th>
+                <th>
+                  <input pInputText type="text" autocomplete="off" (input)="dttpProcessorList.filter($event.target.value, 'CityName', 'contains')" class="clsControl">
+              </th>
+              <th rowspan="2"></th>               
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-tpprocessor let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+                <!-- <td>
+                    <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
+                </td> -->
+
+                <!-- <td>{{tpprocessor?.ClientName}}</td> -->
+                <td>{{tpprocessor?.TPName}}</td>
+                <td>{{tpprocessor?.ContactPerson }}</td>
+                <td>{{tpprocessor?.PrimaryEmail }}</td>   
+                <td>{{tpprocessor?.OfficePhone }}  </td>                  
+                <td>{{tpprocessor?.StateName }}  </td>
+                <td>{{tpprocessor?.CityName }}</td>
+                <td style="width:65px;" (click)="$event.stopPropagation();"> 
+                  <span class="ui-column-title">edit</span>
+                  <a href="#" [routerLink]="" (click)="getTppOnEdit(tpprocessor?.TPId)" >                             
+                      <span class="fa fa-edit"></span>
+                  </a>
+                  <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(tpprocessor?.TPId,tpprocessor,1,0)" >
+                    <span class="fa fa-trash"></span>
+                </a>
+                  <div class="clsToggleButtonDiv">
+                    <p-toggleButton 
+                      [(ngModel)]="tpprocessor.IsActive" 
+                      onLabel="Active" offLabel="InActive"  
+                      [style]="{'width':'90px'}"
+                      id
+                      (onChange)="showConformationMessaegForDeactive(tpprocessor?.TPId,tpprocessor,rowIndex,0,1)"
+                    >
+                  </p-toggleButton>
+                  </div> 
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft" let-state>
+            <pagination-counts
+              *ngIf="alltpprocessorList?.length"
+              [inputData]="alltpprocessorList"
+              [inputEvent]="event"
+            ></pagination-counts>
+          </ng-template>
+    </p-table>
+       </p-panel>
+    </div>
+  </div>
+  <p-growl [(value)]="msgs" life='5000'></p-growl>
+</div>
+
+<!-- To view grid row details -->
+<p-dialog header="{{ tpprocessorResources.tpprocessordetails}}" [(visible)]="displayInfoDialog" [responsive]="true" showEffect="fade" [modal]="true" [width]="620">
+    <div class="ui-g ui-fluid" *ngIf="selectedTPProcessor">
+      <!-- TPProcessor Name -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.tpprocessorname1 }}: </strong>
+            </label>
+  
+            <label>
+              {{ selectedTPProcessor?.TPName }}
+            </label>
+          </div>
+      </div>
+      <!-- End of TPProcessor Name -->
+
+      <!-- expectedYeild  -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.expectedYeild }}: </strong>
+            </label>
+  
+            <label>
+              {{ selectedTPProcessor?.ExpectedYield }}
+            </label>
+          </div>
+      </div>
+      <!-- End of expectedYeild -->
+
+      <!-- materialaspayment -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.materialaspayment }}: </strong>
+            </label>
+  
+            <label>
+              {{ selectedTPProcessor?.MaterialPaymant }}
+            </label>
+          </div>
+      </div>
+      <!-- End of materialaspayment -->
+
+      <!-- exrturnaroundtime  -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.exrturnaroundtime  }}: </strong>
+            </label>
+
+            <label>
+              {{ selectedTPProcessor?.TurnAroundDays }}
+            </label>
+          </div>
+      </div>
+      <!-- End of exrturnaroundtime  -->
+
+      <!-- Office Phone -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.officephone }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedTPProcessor?.OfficePhone }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Office phone -->
+
+      <!-- Cell Phone -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.cellphone }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedTPProcessor?.CellPhone }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Cell Phone -->
+
+      <!-- Primary Email -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.primaryemail }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedTPProcessor?.PrimaryEmail }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Primary Email -->
+
+      <!-- Secondary Email -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.secondaryemail }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedTPProcessor?.SecondaryEmail }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Secondary Email -->
+
+      <!-- Contact Person -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.contactperson }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedTPProcessor?.ContactPerson }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Contact Person -->
+
+      <!-- Country -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.country }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedTPProcessor?.CountryName }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Country -->
+
+      <!-- State -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.state }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedTPProcessor?.StateName }}
+            </label>
+          </div>
+      </div>
+      <!-- End of State -->
+
+      <!-- Address -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.address }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedTPProcessor?.Address }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Address -->
+
+      <!-- City -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.city }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedTPProcessor?.CityName }}
+            </label>
+          </div>
+      </div>
+      <!-- End of City -->
+
+      <!-- Zip Code -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.zipcode }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedTPProcessor?.ZipCode }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Zip Code -->
+
+      <!-- Description -->
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{  tpprocessorResources.description }}: </strong>
+            </label>
+  
+            <label> 
+              {{ selectedTPProcessor?.Description }}
+            </label>
+          </div>
+      </div>
+      <!-- End of Description -->   
+      
+      <!-- Is Active -->
+      <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+              <label>
+                <strong>{{  globalResources.IsActiveFlag }}: </strong>
+              </label>
+    
+              <label> 
+                {{ selectedTPProcessor?.IsActive ? 'Yes' : 'No' }}
+              </label>
+            </div>
+        </div>
+        <!-- End of Is Active -->   
+    </div>
+
+    <p-footer>
+        <div class="ui-dialog-buttonpane ui-helper-clearfix">
+            <button type="button" pButton icon="fa fa-close" (click)="displayInfoDialog = false" label="Cancel"></button>          
+        </div>
+    </p-footer>
+  </p-dialog>
+<!-- End of To view grid row details -->
+
+<p-confirmDialog 
+  header="Confirmation" 
+  icon="fa fa-question-circle" 
+  width="425" 
+  *ngIf="true"
+  class="clsConfirmBox" >
+</p-confirmDialog> 

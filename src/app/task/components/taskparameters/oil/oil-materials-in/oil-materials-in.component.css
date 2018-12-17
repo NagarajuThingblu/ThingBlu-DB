@@ -1,0 +1,17 @@
+.clsPkgReturnPnl .ui-panel-titlebar {
+    background-color: #ebedf0 !important;
+    color: black !important;
+}
+
+.taglist {
+    display: inline;
+    list-style: none;
+    padding-left: 0px;
+  }
+  
+  .taglist li {
+    display: inline;
+  }
+
+.taglist li:before {content: ", ";}
+.taglist li:first-child:before {content: ""; } /* empty string */

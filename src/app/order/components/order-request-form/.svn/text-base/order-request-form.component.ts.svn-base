@@ -1,0 +1,552 @@
+import { CookieService } from 'ngx-cookie-service';
+import { PositiveIntegerValidator } from './../../../shared/validators/positive-integer.validator';
+import { OrderService } from './../../service/order.service';
+import { SelectItem, ConfirmationService } from 'primeng/api';
+import { FormGroup, FormControl, FormBuilder, FormArray, Validators, AbstractControl, FormControlName } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { Message } from 'primeng/api';
+import { OverlayPanel } from 'primeng/overlaypanel';
+import { GlobalResources } from '../../../global resource/global.resource';
+import { TaskResources } from '../../../task/task.resources';
+import { DropdwonTransformService } from '../../../shared/services/dropdown-transform.service';
+import { OrderResource } from '../../order.resource';
+import * as _ from 'lodash';
+import { LoaderService } from '../../../shared/services/loader.service';
+import { AppCommonService } from '../../../shared/services/app-common.service';
+import { Title } from '@angular/platform-browser';
+import { UserModel } from '../../../shared/models/user.model';
+
+// const originFormControlNgOnChanges = FormControlDirective.prototype.ngOnChanges;
+// FormControlDirective.prototype.ngOnChanges = function () {
+//     this.form.nativeElement = this.valueAccessor._elementRef.nativeElement;
+//     return originFormControlNgOnChanges.apply(this, arguments);
+// };
+
+@Component({
+  moduleId: module.id,
+  selector: 'app-order-request-form',
+  templateUrl: 'order-request-form.component.html',
+  styleUrls: ['order-request-form.component.css']
+})
+export class OrderRequestFormComponent implements OnInit {
+  orderRequestForm: FormGroup;
+
+  retailers: SelectItem[];
+  UBI: any;
+  UBIEmpty: any = null;
+  retailersNew: any[];
+  ABrands: SelectItem[];
+  BBrands: SelectItem[];
+  CBrands: SelectItem[];
+
+  UBICode: any;
+  AData: any;
+  BData: any;
+  CData: any;
+  // Commented by Devdan :: 31-Oct-2018 :: Unused
+  // SubBrands: SelectItem[];
+  // Strains: SelectItem[];
+  // Commented by Devdan :: 31-Oct-2018 :: Unused
+  // BudPackageTypes: SelectItem[];
+  // JointsPackageTypes: SelectItem[];
+  // OilPackageTypes: SelectItem[];
+  // Commented by Devdan :: 31-Oct-2018 :: Unused
+  // BudPackageSizes: SelectItem[];
+  // JointsPackageSizes: SelectItem[];
+  // OilPackageSizes: SelectItem[];
+
+  blockSpace: RegExp = /[^\s]/;
+  public defaultDate: Date;
+  public _cookieService: any;
+
+  public globalData: any = {
+    brandStrainDetails: []
+  };
+
+  whichControl: any;
+
+  submitted = false;
+
+  constructor(
+    private fb: FormBuilder,
+    private orderService: OrderService,
+    private dropdwonTransformService: DropdwonTransformService,
+    private loaderService: LoaderService,
+    private appCommonService: AppCommonService,
+    private titleService: Title,
+    private confirmationService: ConfirmationService,
+    private cookieService: CookieService
+  ) {
+      this._cookieService = <UserModel>this.appCommonService.getUserProfile();
+  }
+
+  items: FormArray;
+  aBudItems = new FormArray([], this.customGroupValidation );
+  bJointsItems = new FormArray([], this.customGroupValidation );
+  cOilItems = new FormArray([], this.customGroupValidation );
+
+  public msgs: Message[] = [];
+  public globalResource: any;
+  public orderRequestResource: any;
+
+  createItem(orderFlag): FormGroup {
+    if (orderFlag === 'aBudItems') {
+      return this.fb.group({
+        brand: new FormControl(null, Validators.required),
+        subbrand: new FormControl(null),
+        strain: new FormControl(null, Validators.required),
+        packageType: new FormControl(null, Validators.required),
+        packageSize: new FormControl(null, Validators.required),
+        itemQty: new FormControl(1, Validators.required),
+        orderQty: new FormControl(null, Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger]))
+      });
+    } else if (orderFlag === 'bJointsItems') {
+      return this.fb.group({
+        brand: new FormControl(null, Validators.required),
+        subbrand: new FormControl(null),
+        strain: new FormControl(null, Validators.required),
+        packageType: new FormControl(null, Validators.required),
+        packageSize: new FormControl(null, Validators.required),
+        itemQty: new FormControl(null, Validators.required),
+        orderQty: new FormControl(null, Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger]))
+      });
+    } else if (orderFlag === 'cOilItems') {
+      return this.fb.group({
+        brand: new FormControl(null, Validators.required),
+        subbrand: new FormControl(null),
+        strain: new FormControl(null, Validators.required),
+        packageType: new FormControl(null, Validators.required),
+        packageSize: new FormControl(null, Validators.required),
+        itemQty: new FormControl(1, Validators.required),
+        orderQty: new FormControl(null, Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger]))
+      });
+    }
+  }
+
+  createCopyItem(orderFlag, currentItem): FormGroup {
+    if (orderFlag === 'aBudItems') {
+      return this.fb.group({
+        brand: new FormControl(currentItem.get('brand').value, Validators.required),
+        subbrand: new FormControl(currentItem.get('subbrand').value),
+        strain: new FormControl(currentItem.get('strain').value, Validators.required),
+        packageType: new FormControl(currentItem.get('packageType').value, Validators.required),
+        packageSize: new FormControl(currentItem.get('packageSize').value, Validators.required),
+        itemQty: new FormControl(currentItem.get('itemQty').value, Validators.required),
+        orderQty: new FormControl(null, Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger]))
+      });
+    } else if (orderFlag === 'bJointsItems') {
+      return this.fb.group({
+        brand: new FormControl(currentItem.get('brand').value, Validators.required),
+        subbrand: new FormControl(currentItem.get('subbrand').value),
+        strain: new FormControl(currentItem.get('strain').value, Validators.required),
+        packageType: new FormControl(currentItem.get('packageType').value, Validators.required),
+        packageSize: new FormControl(currentItem.get('packageSize').value, Validators.required),
+        itemQty: new FormControl(currentItem.get('itemQty').value, Validators.required),
+        orderQty: new FormControl(null, Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger]))
+      });
+    } else if (orderFlag === 'cOilItems') {
+      return this.fb.group({
+        brand: new FormControl(currentItem.get('brand').value, Validators.required),
+        subbrand: new FormControl(currentItem.get('subbrand').value),
+        strain: new FormControl(currentItem.get('strain').value, Validators.required),
+        packageType: new FormControl(currentItem.get('packageType').value, Validators.required),
+        packageSize: new FormControl(currentItem.get('packageSize').value, Validators.required),
+        itemQty: new FormControl(currentItem.get('itemQty').value, Validators.required),
+        orderQty: new FormControl(null, Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger]))
+      });
+    }
+  }
+
+  addItem(orderFormArray): void {
+    this.items = this.orderRequestForm.get(orderFormArray) as FormArray;
+    this.items.push(this.createItem(orderFormArray));
+  }
+
+  copyCurrentItem(orderFormArray, currentItem) {
+    this.items = this.orderRequestForm.get(orderFormArray) as FormArray;
+    this.items.push(this.createCopyItem(orderFormArray, currentItem));
+  }
+
+  deleteItem(index: number, orderFormArray) {
+    // control refers to your formarray
+    const control = <FormArray>this.orderRequestForm.controls[orderFormArray];
+    // remove the chosen row
+    control.removeAt(index);
+  }
+
+  ngOnInit() {
+    this.orderRequestResource = OrderResource.getResources().en.orderrequest;
+    this.globalResource = GlobalResources.getResources().en;
+    this.titleService.setTitle(this.orderRequestResource.orderrequesttitle);
+    this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
+    this.defaultDate.setDate( this.defaultDate.getDate() + 1 );
+    this.orderRequestForm = this.fb.group({
+      retailers: new FormControl(null, Validators.required),
+      ubicode: new FormControl(null),
+      deliverydate: new FormControl(null, Validators.required),
+      orderrefid: new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
+      aBudItems: this.aBudItems,
+      bJointsItems: this.bJointsItems,
+      cOilItems: this.cOilItems
+    });
+
+    this.getRetailers();
+    this.getBrandStrainPackageByClient();
+  }
+  // get diagnostic() { return JSON.stringify(this.orderRequestForm.value); }
+
+  showErrors(event, overlaypanel: OverlayPanel) {
+    overlaypanel.toggle(event);
+  }
+
+  get getABudItems(): FormArray {
+    return this.orderRequestForm.get('aBudItems') as FormArray;
+  }
+
+  get getBJointsItems(): FormArray {
+    return this.orderRequestForm.get('bJointsItems') as FormArray;
+  }
+
+  get getCOilItems(): FormArray {
+    return this.orderRequestForm.get('cOilItems') as FormArray;
+  }
+  getUBICode() {
+    this.UBICode = null;
+    const UBI = this.retailersNew.filter(x => x.RetailerId === this.orderRequestForm.value.retailers);
+    this.UBI = UBI[0]['UBINo'];
+    this.UBICode = this.UBI;
+  }
+
+  getRetailers() {
+    this.loaderService.display(true);
+    this.orderService.getRetailers(true).subscribe(
+      data => {
+        // console.log(data);
+        this.retailers = this.dropdwonTransformService.transform(data, 'RetailerName', 'RetailerId', '-- Select --') ;
+        this.retailersNew = data;
+        console.log(this.retailers);
+        console.log(this.retailersNew);
+        this.loaderService.display(false);
+      } ,
+      error => { console.log(error);  this.loaderService.display(false); },
+      () => console.log('sucess')
+    );
+  }
+
+  getBrandStrainPackageByClient() {
+    this.loaderService.display(true);
+    this.orderService.getBrandStrainPackageByClient().subscribe(
+      data => {
+        // console.log(data);
+        if (data !== 'No data found!') {
+
+          this.globalData.brandStrainDetails = data;
+          let brands;
+
+          // For A Bud
+          this.AData = data.Table.filter(item => {
+            return item.SkewKeyName === 'BUD';
+          });
+
+          console.log('budbud', this.AData);
+          brands = this.removeDuplicatesById(this.AData);
+          this.ABrands = this.dropdwonTransformService.transform(brands, 'BrandName', 'BrandId', '-- Select --');
+
+          // For B Joints
+          this.BData = data.Table.filter(item => {
+            return item.SkewKeyName === 'JOINTS';
+          });
+          brands = this.removeDuplicatesById(this.BData);
+          this.BBrands = this.dropdwonTransformService.transform(brands, 'BrandName', 'BrandId', '-- Select --');
+
+          // For C Oil
+          this.CData = data.Table.filter(item => {
+            return item.SkewKeyName === 'OIL';
+          });
+          brands = this.removeDuplicatesById(this.CData);
+          this.CBrands = this.dropdwonTransformService.transform(brands, 'BrandName', 'BrandId', '-- Select --');
+          // this.Strains = this.dropdwonTransformService.transform(data.Table1, 'StrainName', 'StrainId', '-- Select --');
+
+          // this.BudPackageTypes = this.dropdwonTransformService.transform(
+          //       data.Table2.filter(result => result.SkewName === 'Bud'),
+          //           'PkgTypeName', 'PkgTypeId', '-- Select --');
+
+          // this.JointsPackageTypes = this.dropdwonTransformService.transform(
+          //   data.Table2.filter(result => result.SkewName === 'Joints'),
+          //   'PkgTypeName', 'PkgTypeId', '-- Select --');
+
+          // this.OilPackageTypes = this.dropdwonTransformService.transform(
+          //  data.Table2.filter(result => result.SkewName === 'Oil'),
+          //   'PkgTypeName', 'PkgTypeId', '-- Select --');
+
+          //   console.log(this.globalData.brandStrainDetails.Table3.filter(result => result.PkgTypeName === 'Bag'));
+          // this.BudPackageSizes = this.dropdwonTransformService.transform(data.Table3, 'UnitValue', 'UnitValue', '-- Select --');
+
+        } else {
+          this.AData = [];
+          this.BData = [];
+          this.CData = [];
+
+          this.ABrands = [];
+          this.BBrands = [];
+          this.CBrands = [];
+        }
+        this.loaderService.display(false);
+        // this.retailers = this.dropdwonTransformService.transform(data, 'RetailerName', 'RetailerId', '-- Select --') ;
+      } ,
+      error => { console.log(error);  this.loaderService.display(false); },
+      () => console.log('sucess')
+    );
+  }
+
+  dropdownOnChange(flag, formArrayItem) {
+    if (String(flag).toLocaleUpperCase() === 'BRAND') {
+      (formArrayItem as FormGroup).patchValue({ subbrand: null, strain: null, packageType: null, packageSize: null });
+      (formArrayItem as FormGroup).markAsPristine();
+    } else if (String(flag).toLocaleUpperCase() === 'SUBBRAND') {
+      (formArrayItem as FormGroup).patchValue({ strain: null, packageType: null, packageSize: null });
+      (formArrayItem as FormGroup).markAsPristine();
+    } else if (String(flag).toLocaleUpperCase() === 'STRAIN') {
+      (formArrayItem as FormGroup).patchValue({ packageType: null, packageSize: null });
+      (formArrayItem as FormGroup).markAsPristine();
+    } else if (String(flag).toLocaleUpperCase() === 'PKGTYPE') {
+      (formArrayItem as FormGroup).patchValue({ packageSize: null });
+      (formArrayItem as FormGroup).markAsPristine();
+    }
+  }
+
+  removeDuplicatesById(dataObject) {
+    // To get unique record according brand and strain
+    const newArr = [];
+    dataObject.forEach((value, key) => {
+      let exists = false;
+      newArr.forEach((val2, key1) => {
+        if (value.BrandId === val2.BrandId) { exists = true; }
+      });
+
+      if (exists === false && value.BrandId !== '') { newArr.push(value); }
+    });
+    return newArr;
+    // End of getting unique record accroding brand and strain
+  }
+
+  packageTypeChange(skewName, formArrayGroup) {
+    // console.log(formArrayGroup.controls['packageSize']);
+    // console.log(skewName);
+    // const selectedPackageType = formArrayGroup.controls['packageType'].value;
+    // const filteredData =  this.globalData.brandStrainDetails.Table3.filter(result => result.PkgTypeId === selectedPackageType);
+
+    // formArrayGroup.value.pkgSizeOptions = this.dropdwonTransformService.transform(filteredData, 'UnitValue', 'UnitValue', '-- Select --');
+
+  }
+
+  bindDynamicPackageSize(fromArrayGroup) {
+    // return [
+    //     {label: '-- Select --', value: null},
+    //     {label: '1 gram', value: '1'},
+    //     {label: '2 gram', value: '2'},
+    //     {label: '3.4 gram', value: '3'},
+    //     {label: '7 gram', value: '4'},
+    //   ];
+    // console.log(fromArrayGroup.get('packageSize'));
+    // setTimeout(() => {
+    if (this.globalData.brandStrainDetails.Table3) {
+      const selectedPackageType = fromArrayGroup.controls['packageType'].value;
+      const filteredData =  this.globalData.brandStrainDetails.Table3.filter(result => result.PkgTypeId === selectedPackageType);
+
+     return this.dropdwonTransformService.transform(filteredData, 'UnitValue', 'UnitValue', '-- Select --');
+    } else {
+      return { label: '-- Select --', value: null};
+    }
+  // }, 200);
+  }
+
+  customGroupValidation (formArray) {
+    let isError = false;
+    const result = _.groupBy( formArray.controls , c => {
+      return [c.value.brand, c.value.subbrand, c.value.strain, c.value.packageType, c.value.packageSize, c.value.itemQty];
+    });
+
+    console.log(formArray.controls);
+    for (const prop in result) {
+        if (result[prop].length > 1 && (result[prop][0].controls['packageSize'].value !== '' && result[prop][0].controls['packageType'].value !== '')) {
+            isError = true;
+            _.forEach(result[prop], function (item: any, index) {
+              item._status = 'INVALID';
+            });
+        } else {
+            result[prop][0]._status = 'VALID';
+            console.log(result[prop].length);
+        }
+    }
+    if (isError) { return {'duplicate': 'duplicate entries'}; }
+}
+
+resetForm() {
+    this.orderRequestForm.reset();
+    this.UBICode = null;
+        this.orderRequestForm = this.fb.group({
+          retailers: new FormControl(null, Validators.required),
+          deliverydate: new FormControl(null, Validators.required),
+          orderrefid: new FormControl(null, Validators.required),
+          aBudItems: new FormArray([], this.customGroupValidation ),
+          bJointsItems: new FormArray([], this.customGroupValidation ),
+          cOilItems: new FormArray([], this.customGroupValidation )
+        });
+}
+
+  onSubmit(formModel) {
+    this.submitted = true;
+
+    // console.log(this.customGroupValidation(this.getABudItems));
+
+    // return;
+    console.log(formModel);
+    if (this.orderRequestForm.valid) {
+        const orderDetailsForApi: any = {
+          OrderDetails: {
+            RetlrId: formModel.retailers,
+            DeliveryDate: new Date(formModel.deliverydate).toLocaleDateString().replace(/\u200E/g, ''),
+            OrderRefId: formModel.orderrefid
+          },
+          OrderSkewDetails: []
+        };
+        // orderDetailsForApi.OrderDetails.push();
+
+        if (formModel.aBudItems.length === 0 && formModel.bJointsItems.length === 0 && formModel.cOilItems.length === 0) {
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.orderRequestResource.filloneorderdetails });
+
+          return;
+        }
+
+        formModel.aBudItems.forEach((element, index) => {
+          orderDetailsForApi.OrderSkewDetails.push({
+            'SkewKeyName': 'BUD',
+            'BrandId': Number(element.brand),
+            'SubBrandId': Number(element.subbrand),
+            'StrainId': Number(element.strain),
+            'PkgTypeId': Number(element.packageType),
+            'UnitValue': Number(element.packageSize),
+            'Qty':  Number(element.orderQty),
+            'ItemQty': Number(element.itemQty),
+            'IndexCode': String(index)
+          });
+        });
+
+        formModel.bJointsItems.forEach((element, index) => {
+          orderDetailsForApi.OrderSkewDetails.push({
+            'SkewKeyName': 'JOINTS',
+            'BrandId': Number(element.brand),
+            'SubBrandId': Number(element.subbrand),
+            'StrainId': Number(element.strain),
+            'PkgTypeId': Number(element.packageType),
+            'UnitValue': Number(element.packageSize),
+            'Qty':  Number(element.orderQty),
+            'ItemQty': Number(element.itemQty),
+            'IndexCode': String(index)
+          });
+        });
+
+        formModel.cOilItems.forEach((element, index) => {
+          orderDetailsForApi.OrderSkewDetails.push({
+            'SkewKeyName': 'OIL',
+            'BrandId': Number(element.brand),
+            'SubBrandId': Number(element.subbrand),
+            'StrainId': Number(element.strain),
+            'PkgTypeId': Number(element.packageType),
+            'UnitValue': Number(element.packageSize),
+            'Qty':  Number(element.orderQty),
+            'ItemQty': Number(element.itemQty),
+            'IndexCode': String(index)
+          });
+        });
+
+        console.log(orderDetailsForApi);
+
+        this.confirmationService.confirm({
+          message: this.orderRequestResource.ordersaveconfirm,
+          header: 'Confirmation',
+          icon: 'fa fa-exclamation-triangle',
+          accept: () => {
+            this.saveOrder(orderDetailsForApi, 'CheckLotExists');
+          },
+          reject: () => {
+              // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
+          }
+      });
+    } else {
+      this.appCommonService.validateAllFields(this.orderRequestForm);
+    }
+  }
+
+  saveOrder(orderDetailsForApi, Flag) {
+    orderDetailsForApi.OrderDetails['OrderSaveFlag'] = Flag;
+    // http call starts
+    this.loaderService.display(true);
+    this.orderService.saveRetailerOrder(orderDetailsForApi)
+    .subscribe(
+      data => {
+
+        // console.log(data);
+        if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
+          this.msgs = [];
+          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.orderRequestResource.ordersubmitted });
+
+          this.resetForm();
+        } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'DUPLICATE') {
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.orderRequestResource.duplicates2number });
+        } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
+          this.msgs = [];
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'PROTYPENOTPRESENT') {
+          // this.msgs = [];
+          // this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+          data.forEach(dataItem => {
+            let formGroup;
+
+            if (dataItem.SkewKeyName === 'BUD') {
+               formGroup = (<FormGroup>this.orderRequestForm.get('aBudItems.' + dataItem.ErrRowIndex));
+
+            } else if (dataItem.SkewKeyName === 'JOINTS') {
+               formGroup = (<FormGroup>this.orderRequestForm.get('bJointsItems.' + dataItem.ErrRowIndex));
+
+            } else if (dataItem.SkewKeyName === 'OIL') {
+               formGroup = (<FormGroup>this.orderRequestForm.get('cOilItems.' + dataItem.ErrRowIndex));
+            }
+
+            (formGroup as FormGroup).setErrors({ 'prototypenotpresent': true });
+            this.loaderService.display(false);
+          });
+          return;
+        } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'NOLOTPRESENT') {
+            this.confirmationService.confirm({
+              message: data[0].ResultMessage,
+              header: this.globalResource.applicationmsg,
+              icon: 'fa fa-trash',
+              accept: () => {
+                this.saveOrder(orderDetailsForApi, 'SaveOrder');
+              },
+              reject: () => {
+                  // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
+              }
+            });
+        } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'INACTIVERETAILER') {
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.orderRequestResource.inactiveretailer });
+        }
+
+        // http call ends
+        this.loaderService.display(false);
+      },
+      error => {
+          console.log(error);
+          this.msgs = [];
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
+            // http call ends
+            this.loaderService.display(false);
+      });
+  }
+
+}

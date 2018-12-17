@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+          <div class="page-header">
+              <h2>Password Conversion</h2>
+          </div>
+          <form class="form-inline" [formGroup]="pwdForm" >
+              <div class="row">
+                  <div class="col-sm-12 col-lg-4">
+                      <div class="form-group">
+                          <label for="from" class="sr-only">From:</label>
+                          <input type="text" class="form-control" placeholder="From" id="from" [(ngModel)]="fromText" formControlName="fromtext" />
+                      </div>                      
+                  </div>
+                  <div class="col-sm-12 col-lg-4">
+                      <div class="form-group">
+                          <label for="to" class="sr-only">To:</label>
+                          <input type="text" class="form-control" placeholder="To" id="to" [(ngModel)]="toText" formControlName="totext" />
+                      </div>                      
+                  </div>
+                  <div class="col-sm-12 col-lg-4">
+                      <button type="button" class="btn btn-default" (click)="Encrypt()" >Encrypt</button>
+                      <button type="button" class="btn btn-default" (click)="Decrypt()" >Decrypt</button>
+                  </div>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>

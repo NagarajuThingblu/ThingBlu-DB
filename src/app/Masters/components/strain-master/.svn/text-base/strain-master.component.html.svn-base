@@ -1,0 +1,453 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+
+    <div class="ui-g-12">
+          <!-- New Strain -->
+        <p-panel header="{{ pageheading }}" [toggleable]="true"  >
+          <p-header>
+         
+          </p-header>
+          <form
+            [formGroup]="strainmasterForm"
+            (ngSubmit)="onSubmit(strainmasterForm.value)">             
+                <div class="ui-g">
+                    <!--Strain Types -->
+                    <div class="ui-g-12 ui-md-6">
+                        <div class="paddingRL">
+                            <div class="le-su-12">
+                                <label for="enterstraintype">{{ newStrainResources.enterstraintype}}<span class="star">*</span></label>:
+                                <p-dropdown
+                                    [filter] ="true"
+                                    id="straintype"
+                                    [options]="straintypes"
+                                    formControlName="straintype"
+                                    placeholder="-- Select --"
+                                    [autoWidth]="false"
+                                    class="clsControl"                                    
+                                    name="straintype">
+                                </p-dropdown>
+                                <!-- [disabled]="strainTypeDisabled" -->
+                      
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                  *ngIf="!strainmasterForm.controls['straintype'].valid&&strainmasterForm.controls['straintype'].dirty">
+                                  <span *ngIf="strainmasterForm.controls['straintype'].errors['required']">
+                                  {{ newStrainResources.straintyperequired }}
+                                </span>
+                                <span *ngIf="strainmasterForm.controls['straintype'].hasError('straintypenotpresent')">
+                                    {{ newStrainResources.straintypenotpresent }} 
+                                </span>
+                                </div>
+                          <!-- <p-button  type="button" label="Add new strain type" id="btn_straintype" (click)="ShowstraintypePopup()" name="btnstraintype" ></p-button> -->
+                        </div>
+                  </div>
+                </div>
+                <!--End Strain Types -->
+
+                <!-- Genetics Name -->
+                <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                        <div class="le-su-12">
+                          <label for="genetics">
+                              {{ newStrainResources.genetics}}<span class="star">*</span>:
+                          </label>
+
+                          <p-dropdown
+                            [filter] ="true"
+                            id="genetics"
+                            [options]="genetics"
+                            formControlName="genetics"
+                            placeholder="-- Select --"
+                            [autoWidth]="false"
+                            class="clsControl"
+                            [disabled]="geneticsDisabled"
+                            name="genetics">
+                        </p-dropdown>
+
+                            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                            *ngIf="!strainmasterForm.controls['genetics'].valid&&strainmasterForm.controls['genetics'].dirty">
+                            <span *ngIf="strainmasterForm.controls['genetics'].errors['required']">
+                                {{newStrainResources.geneticsrequired}}
+                          </span>
+                          <span *ngIf="strainmasterForm.controls['genetics'].hasError('geneticsnotpresent')">
+                              {{ newStrainResources.geneticsnotpresent }} 
+                           </span>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+            <!-- End Genetics Name -->
+  
+                <!-- Strain Name -->
+                        <div class="ui-g-12 ui-md-6">
+                          <div class="paddingRL">
+                              <div class="le-su-12">
+                                <label for="enterstrain">
+                                  {{ newStrainResources.enterstrain}}<span class="star">*</span>:
+                                </label>
+  
+                                <input pInputText
+                                  name="strain"
+                                  id="strain"
+                                  autocomplete="off"
+                                  placeholder="Enter Strain Name"
+                                  type="text"
+                                  class="clsControl"
+                                  formControlName="strain"
+                                />
+  
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                  *ngIf="!strainmasterForm.controls['strain'].valid&&strainmasterForm.controls['strain'].dirty">
+                                  <span *ngIf="strainmasterForm.controls['strain'].errors['required']">{{newStrainResources.strainrequired}}</span>
+                                  <span *ngIf="strainmasterForm.controls['strain'].errors['maxlength']">{{newStrainResources.strainLength}}</span>
+                                  <span *ngIf="strainmasterForm.controls['strain'].errors['whitespace']">{{newStrainResources.strainrequired}}</span>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                  <!-- End Strain Name -->
+
+                  <!--Description -->
+                <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                        <div class="le-su-12">
+                        <label for="description">
+                          {{ newStrainResources.description}}<span class="star"></span>:
+                        </label>
+  
+                        <input pInputText
+                          name="description"
+                          id="description"
+                          type="text"
+                          autocomplete="off"
+                          class="clsControl"
+                          placeholder="Enter Strain Description"
+                          formControlName="description"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <!--End Description -->
+
+
+
+                <!-- IsActive -->
+                <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <label></label>
+                      <div class="clear"></div>
+                
+                      <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalResource.IsActiveFlag}}" formControlName="chkIsActive" 
+                      binary="true"></p-checkbox>
+                    </div>
+                  </div>
+                  <!--End IsActive -->
+
+                  <!-- THC -->
+                  <!-- <div class="ui-g-12 ui-md-6">
+                      <div class="paddingRL">
+                          <div class="le-su-12">
+                            <label for="enterthc">
+                              {{ newStrainResources.enterthc}}  <span class="star">*</span>
+                            </label>
+    
+                            <input pInputText
+                              name="thc"
+                              id="thc"
+                              type="number"
+                              autocomplete="off"
+                              placeholder="Enter Value"
+                              class="clsControl"
+                              OnlyNumber="true"
+                              [AllowZero]="false"
+                              formControlName="thc"
+                            />
+    
+                            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                              *ngIf="!strainmasterForm.controls['thc'].valid&&strainmasterForm.controls['thc'].dirty">
+                                <span *ngIf="strainmasterForm.controls['thc'].errors['required']">{{newStrainResources.thcrequired}}</span>
+                                <span *ngIf="strainmasterForm.controls['thc'].errors['maxlength']">{{newStrainResources.thcLength}}</span>
+                                <span *ngIf="strainmasterForm.controls['thc'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span>
+                              </div> 
+                          </div>
+                      </div>
+                    </div> -->
+                    <!-- End THC -->
+                    <!-- THCA -->
+                    <!-- <div class="ui-g-12 ui-md-6">
+                        <div class="paddingRL">
+                            <div class="le-su-12">
+                              <label for="enterthca">
+                                {{ newStrainResources.enterthca}}  <span class="star">*</span>
+                              </label>
+      
+                              <input pInputText
+                                name="thca"
+                                id="thca"
+                                type="number"
+                                class="clsControl"
+                                autocomplete="off"
+                                placeholder="Enter Value"
+                                OnlyNumber="true"
+                                [AllowZero]="false"
+                                formControlName="thca"
+                              />
+      
+                              <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                *ngIf="!strainmasterForm.controls['thca'].valid&&strainmasterForm.controls['thca'].dirty">
+                                  <span *ngIf="strainmasterForm.controls['thca'].errors['required']">{{newStrainResources.thcarequired}}</span>
+                                  <span *ngIf="strainmasterForm.controls['thca'].errors['maxlength']">{{newStrainResources.thcaLength}}</span>
+                                  <span *ngIf="strainmasterForm.controls['thca'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span>
+                                </div>
+  
+                                
+                            </div>
+                        </div>
+                      </div> -->
+                      <!-- End THCA -->
+                      <!-- CBD -->
+                      <!-- <div class="ui-g-12 ui-md-6">
+                          <div class="paddingRL">
+                              <div class="le-su-12">
+                                <label for="entercbd">
+                                  {{ newStrainResources.entercbd}}  <span class="star">*</span>
+                                </label>
+        
+                                <input pInputText
+                                  name="cbd"
+                                  id="cbd"
+                                  class="clsControl"
+                                  formControlName="cbd"
+                                  autocomplete="off"
+                                  placeholder="Enter Value"
+                                  type="number"
+                                  OnlyNumber="true"
+                                  [AllowZero]="false"
+                                />
+        
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                  *ngIf="!strainmasterForm.controls['cbd'].valid&&strainmasterForm.controls['cbd'].dirty">
+        
+                                    <span *ngIf="strainmasterForm.controls['cbd'].errors['required']">
+                                      {{newStrainResources.cbdrequired}}
+                                    </span>
+                                    <span *ngIf="strainmasterForm.controls['cbd'].errors['maxlength']">{{newStrainResources.cbdLength}}</span>
+                                    <span *ngIf="strainmasterForm.controls['cbd'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span>
+                                  </div>
+                              </div>
+                          </div>
+                        </div> -->
+                      <!-- End CBD -->
+                      <!-- CBDA -->
+                      <!-- <div class="ui-g-12 ui-md-6">
+                          <div class="paddingRL">
+                              <div class="le-su-12">
+                                <label for="entercbda">
+                                  {{ newStrainResources.entercbda}}  <span class="star">*</span>
+                                </label>
+        
+                                <input pInputText
+                                  name="cbda"
+                                  id="cbda"
+                                  class="clsControl"
+                                  formControlName="cbda"
+                                  autocomplete="off"
+                                  placeholder="Enter Value"
+                                  type="number"
+                                  OnlyNumber="true"
+                                  [AllowZero]="false"
+                                />
+        
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                  *ngIf="!strainmasterForm.controls['cbda'].valid&&strainmasterForm.controls['cbda'].dirty">
+        
+                                    <span *ngIf="strainmasterForm.controls['cbda'].errors['required']">
+                                      {{newStrainResources.cbdarequired}}
+                                    </span>
+                                    <span *ngIf="strainmasterForm.controls['cbda'].errors['maxlength']">{{newStrainResources.cbdaLength}}</span>
+                                    <span *ngIf="strainmasterForm.controls['cbda'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span>
+                                  </div>
+                              </div>
+                          </div>
+                        </div> -->
+                      <!-- End CBDA -->
+                      <!-- Total -->
+                        <!-- <div class="ui-g-12 ui-md-6">
+                            <div class="paddingRL">
+                                <div class="le-su-12">
+                                  <label for="total">
+                                    {{ newStrainResources.entertotal}}  <span class="star">*</span>
+                                  </label>
+          
+                                  <input pInputText
+                                    name="total"
+                                    id="total"
+                                    class="clsControl"
+                                    autocomplete="off"
+                                    formControlName="total"
+                                    placeholder="Enter Value"
+                                    type="number"
+                                    OnlyNumber="true"
+                                    [AllowZero]="false"
+                                  />
+                                  </div>
+                                  </div>
+                                  </div>
+                                  <div class="ui-g-12 ui-md-6">
+                                      <div class="paddingRL">
+                                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                    *ngIf="!strainmasterForm.controls['total'].valid&&strainmasterForm.controls['total'].dirty">
+          
+                                      <span *ngIf="strainmasterForm.controls['total'].errors['required']">
+                                        {{newStrainResources.totalrequired}}
+                                      </span>
+                                      <span *ngIf="strainmasterForm.controls['total'].errors['maxlength']">{{newStrainResources.totalLength}}</span>
+                                      <span *ngIf="strainmasterForm.controls['total'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span>
+                                    </div>
+                                </div>
+                            </div> -->
+                          
+                      <!-- End Total -->
+  
+                      <div class="ui-g-12 ui-md-12" style="text-align:right;">
+                          <div class="paddingRL">
+                              <!-- <button pButton type="submit" name="btnLogin" label="Add New" (click)="resetAll()" style="align-content: right"></button> -->
+                            <p-button  type="submit"  label="{{ saveButtonText}}" id="btnStrainSave" name="btnStrainSave" ></p-button>
+  
+                            <button pButton
+                                (click)="resetAll()"
+                                type="button"
+                                label="{{ clear }}"
+                                class="ui-button-secondary"
+                            >
+                            </button>
+                        </div>
+                      </div>
+                    </div>
+          </form>
+        </p-panel>
+     </div>
+    
+    </div>
+     <div class="ui-g">
+       <div class="ui-g-12">
+        <p-panel header="Strain List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+          <p-table #dtStrainList [value]="allStrainList" 
+          sortMode="single"                      
+          [responsive]="true" 
+          [paginator]="true" 
+          [rows]="10"           
+          sortField="StrainId"
+          sortOrder="-1"
+          [rowsPerPageOptions]="paginationValues"
+          (onPage)="onPageChange($event)"
+          [globalFilterFields]="['StrainName','StrainTypeName','GeneticsName','Description']"
+          
+          >                    
+          <ng-template pTemplate="caption">
+              <div style="text-align: right">
+                  <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                  <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" (input)="dtStrainList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+              </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+              <tr>
+                  <th [pSortableColumn]="'StrainName'">Strain  <p-sortIcon [field]="'StrainName'"></p-sortIcon> </th>
+                  <th [pSortableColumn]="'StrainTypeName'">Strain Type  <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
+                  <th [pSortableColumn]="'GeneticsName'"> GeneticsName <p-sortIcon [field]="'GeneticsName'"></p-sortIcon></th>
+                  <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>
+                  <!-- <th [pSortableColumn]="'THC'">THC(%) <p-sortIcon [field]="'THC'"></p-sortIcon></th>    
+                  <th [pSortableColumn]="'CBD'">CBD(%) <p-sortIcon [field]="'CBD'"></p-sortIcon></th>                  
+                  <th [pSortableColumn]="'THCA'">THCA(%)  <p-sortIcon [field]="'THCA'"></p-sortIcon></th>              
+                  <th [pSortableColumn]="'CBDA'">CBDA(%) <p-sortIcon [field]="'CBDA'"></p-sortIcon></th> -->
+                  <th style="width:100px;"> </th>
+              </tr>
+    
+              <tr>
+                  <th>
+                      <input pInputText type="text" autocomplete="off" (input)="dtStrainList.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                      <input pInputText type="text" autocomplete="off" (input)="dtStrainList.filter($event.target.value, 'StrainTypeName', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                    <input pInputText type="text" autocomplete="off" (input)="dtStrainList.filter($event.target.value, 'GeneticsName', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                      <input pInputText type="text" autocomplete="off" (input)="dtStrainList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+                    </th>
+                  <!-- <th>
+                      <input pInputText type="text" autocomplete="off" (input)="dtStrainList.filter($event.target.value, 'THC', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                    <input pInputText type="text" autocomplete="off"  (input)="dtStrainList.filter($event.target.value, 'CBD', 'contains')" class="clsControl">
+                </th>                 
+                  <th>
+                      <input pInputText type="text" autocomplete="off" (input)="dtStrainList.filter($event.target.value, 'THCA', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                    <input pInputText type="text" autocomplete="off" (input)="dtStrainList.filter($event.target.value, 'CBDA', 'contains')" class="clsControl">
+                </th> -->
+                <th rowspan="2"></th>
+                                        
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-Strain let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+                  <!-- <td>
+                      <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
+                  </td> -->
+  
+                  <td>{{Strain?.StrainName}}</td>
+                  <td>{{Strain?.StrainTypeName}}</td>
+                  <td>{{Strain?.GeneticsName }}</td>
+                  <td>{{Strain?.Description }}</td>
+                  <!-- <td>{{Strain?.THC }}</td>   
+                  <td>{{Strain?.CBD }}  </td>                  
+                  <td>{{Strain?.THCA }}  </td>
+                  <td>{{Strain?.CBDA }}</td> -->
+                  <td style="width:65px;"> 
+                     <span class="ui-column-title">edit</span>
+                    <a href="#" [routerLink]="" (click)="getStrainOnEdit(Strain?.StrainId)" >                             
+                        <span class="fa fa-edit"></span>
+                    </a>
+                    <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(Strain?.StrainId,Strain,1,0)" >
+                      <span class="fa fa-trash"></span>
+                  </a>
+            <!-- <p-inputSwitch 
+            (onChange)="showConformationMessaegForDeactive(Strain?.StrainId,$event, rowIndex)" 
+            [(ngModel)]="Strain.IsActive">
+          </p-inputSwitch>  -->
+          <div class="clsToggleButtonDiv">
+              <p-toggleButton 
+                  [(ngModel)]="Strain.IsActive" 
+                  onLabel="Active" offLabel="InActive"  
+                  [style]="{'width':'90px'}"
+                  (onChange)="showConformationMessaegForDeactive(Strain?.StrainId,Strain, rowIndex,0,1)"
+                >               
+              </p-toggleButton>
+            </div>
+              </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft" let-state>
+            <pagination-counts
+              *ngIf="allStrainList?.length"
+              [inputData]="allStrainList"
+              [inputEvent]="event"
+            ></pagination-counts>
+          </ng-template>
+      </p-table>
+         </p-panel>  
+       </div>
+     </div>
+
+  </div>
+  <p-growl [(value)]="msgs" life='5000'></p-growl>    
+ <p-confirmDialog 
+  header="Confirmation" 
+  icon="fa fa-question-circle"
+  width="425" 
+  *ngIf="true"
+  class="clsConfirmBox" >
+ </p-confirmDialog> 
+          

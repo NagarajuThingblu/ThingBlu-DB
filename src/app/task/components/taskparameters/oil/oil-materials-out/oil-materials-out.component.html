@@ -1,0 +1,301 @@
+<div class="content-section implementation GridDemo orderRequest">
+    <div class="ui-g">
+        <div class="ui-g-12">
+
+            <p-panel header="{{ oilmaterialsout.pageheading }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}">
+
+                <form [formGroup]="oilProcessorForm" (ngSubmit)="onSubmit(oilProcessorForm.value)">
+                    <!-- A Bud -->
+                    <div class="ui-g" style="margin: 10px 0px">
+                        <!-- TP Processor -->
+                            <div class="ui-g-12 ui-md-3" style="padding-left: 0em !important">
+                                <div class="paddingRL"  style="padding-left: 0em !important">
+                                <label>{{ oilmaterialsout.thirdpartyprocessor }} :</label>
+                                    
+                                <p-dropdown 
+                                    [filter] ="true"
+                                    [options]="processors"  
+                                    placeholder="Select Processor"
+                                    (onChange)="tpProcessOnChange()"
+                                    formControlName="processor" 
+                                    class="clsControl" 
+                                    id="processor"
+                                    name="processor">
+                                </p-dropdown>
+
+                                <div
+                                    class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                    *ngIf="!oilProcessorForm.controls['processor'].valid&&oilProcessorForm.controls['processor'].dirty">
+                                    <i class="fa fa-close"></i>
+                                    <span *ngIf="oilProcessorForm.controls['processor'].errors['required']">
+                                            {{ oilmaterialsout.thirdpartyprocessor }} {{globalResource.isrequiredmsg }} 
+                                    </span>
+                                    <span *ngIf="oilProcessorForm.controls['processor'].hasError('tppnotpresent')">
+                                            {{ oilmaterialsout.tppnotpresent }} 
+                                    </span>
+                                </div>
+                            </div>
+                            </div>
+                            <!-- End TP Processor -->
+                            <!-- Outward Date -->
+                            <div class="ui-g-12 ui-md-3">
+                                <div class="paddingRL">
+                                <label>{{ globalResource.outwarddate }}<span class="star">*</span> :</label>                                                            
+                                    <p-calendar                                                            
+                                        [showIcon]="true"                                     
+                                        formControlName="outwardDate"
+                                        (onSelect)="outwardDateOnChange()"
+                                        (onBlur)="outwardDateOnChange()"
+                                        [ngModel]="defaultDate"                                       
+                                        class="clsControl"
+                                        id="outwardDate"
+                                        name="outwardDate"
+                                    >
+                                </p-calendar>  
+                                <div class="clear"></div>
+
+                                <div
+                                    class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                    *ngIf="!oilProcessorForm.controls['outwardDate'].valid&&oilProcessorForm.controls['outwardDate'].dirty
+                                    &&oilProcessorForm.controls['outwardDate'].hasError('required')
+                                    ">
+                                    <i class="fa fa-close"></i>
+                                    <span *ngIf="oilProcessorForm.controls['outwardDate'].hasError('required')">
+                                        {{ oilmaterialsout.outwarddaterequired }}
+                                    </span>                      
+                                </div>
+                                </div> 
+                            </div>   
+                            <!-- End Outward Date -->
+
+                            <!--  Exp Return Date -->
+                            <div class="ui-g-12 ui-md-3">
+                                <div class="paddingRL">
+                                <label> {{ globalResource.expreturndate }}  <span class="star">*</span> :</label>                                                            
+                                    <p-calendar                                                            
+                                        [showIcon]="true"                       
+                                        formControlName="expReturnDate"
+                                        disabled="false"                                      
+                                        class="clsControl"
+                                        id="expReturnDate"
+                                        name="expReturnDate" 
+                                    >
+                                </p-calendar>  
+                                <div class="clear"></div>
+                                <div
+                                        class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                        *ngIf="!oilProcessorForm.controls['expReturnDate'].valid&&oilProcessorForm.controls['expReturnDate'].dirty">
+                                        <i class="fa fa-close"></i>
+                                        <span *ngIf="oilProcessorForm.controls['expReturnDate'].errors['required']">
+                                            {{ oilmaterialsout.deliverydateisrequired }}
+                                        </span>                      
+                                    </div>
+                                </div>
+                            </div>   
+                            <!-- End Exp Return Date -->
+
+                            <!-- Expected Yield -->
+                            <div class="ui-g-12 ui-md-3">
+                                    <div class="paddingRL ">                                       
+                                        <label class="towlable" for="lotWeight">{{ oilmaterialsout.expyieldpercent }}</label> :                                            
+                                          <div class="clear"></div>
+                                          <span class="lblText" id="lbllotweight">{{ tpPrcsrDetails.expYieldPercent }}</span>                                           
+                                    </div>  
+                            </div>
+                            <!-- End Expected Yield -->
+                    </div>                    
+
+                    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid childpadding" style="margin: 10px 0px;" formArrayName="items">
+                          
+                        <div style="width: calc(100% - 20px);">
+                            <div class="ui-grid-row">                               
+                                <div class="ui-grid-col-3">
+                                    <strong>{{globalResource.strain}}</strong>
+                                </div>
+                                <div class="ui-grid-col-3">
+                                    <strong>{{globalResource.lotno}}</strong>
+                                </div>                                                            
+                                <div class="ui-grid-col-2">
+                                    <strong>{{oilmaterialsout.availlotwt}}</strong>
+                                </div>
+                                <div class="ui-grid-col-3">
+                                    <strong>{{oilmaterialsout.transferwttoprocessor}} {{ globalResource.measure }}</strong>
+                                </div>
+                                <!-- <div class="ui-grid-col-2">
+                                    <strong>{{globalResource.uniqueid}}</strong>
+                                </div>     -->
+                                <div class="ui-grid-col-1">
+                                       
+                                </div>                        
+                            </div>
+                            <div *ngFor="let item of oilProcessorFormArray.controls; let i = index;">
+                                <div [formGroupName]="i" class="ui-grid-row">
+                                   
+                                    <div class="ui-grid-col-3">
+                                        <p-dropdown 
+                                            [filter] ="true"
+                                            [options]="strains"
+                                            (onChange)="getLots(item, i)"
+                                            [autoWidth]="false" 
+                                            placeholder="Select Strain" 
+                                            formControlName="strain" 
+                                            id="strain" 
+                                            name="strain">
+                                        </p-dropdown>
+
+                                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                            *ngIf="!item.controls['strain'].valid&&item.controls['strain'].dirty">                                      
+                                            <div>
+                                                <i class="fa fa-close"></i>
+                                                <span *ngIf="item.controls['strain'].errors['required']">
+                                                        {{ globalResource.strain }} {{globalResource.isrequiredmsg }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>                                   
+                                    <div class="ui-grid-col-3 ">
+                                            <div class="input-group contAndIcon">
+                                                <p-dropdown
+                                                    [filter] ="true"
+                                                    [options]="lotDetailsArr[i]"
+                                                    (onChange)="lotOnChange(item, i)"
+                                                    placeholder="-- Select --"
+                                                    [autoWidth]="true"                                           
+                                                    formControlName="lotno"
+                                                    class="clsControl"
+                                                    id="lotno"
+                                                    name="lotno">
+                                                </p-dropdown>                                               
+
+                                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                                *ngIf="!item.controls['lotno'].valid&&item.controls['lotno'].dirty">                                      
+                                                <div>
+                                                    <i class="fa fa-close"></i>
+                                                    <span *ngIf="item.controls['lotno'].errors['required']">
+                                                            {{ globalResource.lotno }} {{globalResource.isrequiredmsg }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            &nbsp;&nbsp;
+                                            <!-- Added by Devdan :: 20-Nov-2018 :: Adding Comnent popup -->
+                                            <app-lot-comment
+                                                [LotId]="item.value.lotno"
+                                                [LotCommentsCount]="lotNoteCount"
+                                                (CommentIconClicked)="commentIconClicked($event)"
+                                                styleClass="clsLotComment"
+                                            ></app-lot-comment>
+                                            <app-lot-note-icon
+                                                [LotId]="item.value.lotno"                                                
+                                                (NoteIconClicked)="showLotNote($event)"
+                                            ></app-lot-note-icon>
+                                            </div>                                           
+                                    </div>
+                                    <div class="ui-grid-col-2">
+                                        <div class="lblText">
+                                                <span  *ngIf="selectedLotInRow[i]?.LotWeight">{{ selectedLotInRow[i]?.LotWeight }} {{ globalResource.listgramunit }} </span>
+                                        </div>
+                                       
+                                    </div>
+                                    <div class="ui-grid-col-3">
+                                            <input pInputText autocomplete="off" type="number"                                              
+                                                formControlName="processortransferweight"
+                                                placeholder="Processor tr wt."
+                                                OnlyNumber="true"
+                                                pKeyFilter="num"
+                                                OnlyNumber="true"
+                                                [AllowZero]="false"
+                                                id="processortransferweight"
+                                                name="processortransferweight"
+                                            />
+
+                                            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                                *ngIf="!item.controls['processortransferweight'].valid&&item.controls['processortransferweight'].dirty">                                      
+                                                <div>
+                                                    <i class="fa fa-close"></i>
+                                                    <span *ngIf="item.controls['processortransferweight'].errors['required']">
+                                                            {{ oilmaterialsout.transferwttoprocessor }} {{globalResource.isrequiredmsg }}
+                                                    </span>
+                                                    <span *ngIf="item.controls['processortransferweight'].errors['max']">
+                                                            {{ oilmaterialsout.tfwtgreaterthanlotwt }}
+                                                    </span>
+                                                    <span *ngIf="item.controls['processortransferweight'].hasError('zeronotallowed')">
+                                                            {{ globalResource.zeronotallow }}
+                                                    </span>
+                                                    <span *ngIf="item.controls['processortransferweight'].hasError('maxlengthexceed')">
+                                                        {{ globalResource.maxlengthexceed}}
+                                                    </span>
+                                                    <span *ngIf="item.controls['processortransferweight'].hasError('invalidinput')">
+                                                    {{ globalResource.invalidinput}}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                    </div>                                    
+                                    <!-- <div class="ui-grid-col-2">
+
+                                        <input pInputText autocomplete="off" type="text"                                           
+                                            formControlName="uniquecode"
+                                            pKeyFilter="alphanum"
+                                            placeholder="Unique Id"
+                                            id="uniquecode"
+                                            name="uniquecode"                                       
+                                        />
+                                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                            *ngIf="!item.controls['uniquecode'].valid&&item.controls['uniquecode'].dirty">
+                                            <div>
+                                                <i class="fa fa-close"></i>
+                                                <span *ngIf="item.controls['uniquecode'].errors['required']">
+                                                        {{ globalResource.uniqueid }} {{globalResource.isrequiredmsg }}
+                                                </span>
+
+                                                <span *ngIf="item.controls['uniquecode'].hasError('duplicatecode')">
+                                                    Duplicate unique ids.    
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div> -->
+
+                                   <div class="ui-grid-col-1">
+
+                                        <!-- <a *ngIf="item.dirty && !item.valid" (mouseenter)="op1.show($event)">                                            
+                                            <span class="fa fa-info-circle">
+                                            </span>
+                                        </a> -->
+                                        <!-- <div class="clear"></div> -->
+                                        <a (click)="deleteItem(i)" >
+                                            <!-- *ngIf="orderRequestForm.get('aBudItems').controls.length > 1"" -->
+                                            <span class="fa fa-minus-circle">
+                                            </span>
+                                        </a>                                    
+                                  </div>
+                                </div>                                                                                                                              
+                            </div>
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="oilProcessorFormArray.hasError('duplicate')">
+                                duplicate entries
+                        </div>
+                        </div>
+                            <a class="addbtn" style="margin-right: -7px;" [routerLink]="" (click)="addItem()" *ngIf="oilProcessorForm.get('items').valid">
+                                <span class="fa fa-plus-circle">
+                                </span>
+                            </a>
+                        </div>
+
+                        
+                    <div class="ui-g-12 ui-md-12" style="text-align:right;">
+                        <button pButton type="submit" label="Save" ></button>
+                        <!-- [disabled]="!orderRequestForm.valid" -->
+                        <button pButton (click)="resetForm()" type="button" label="Clear" class="ui-button-secondary">
+                        </button>
+                    </div>
+                    <div class="clear"></div>
+
+                </form>
+            </p-panel>
+            <p-growl [(value)]="msgs" life='5000'></p-growl>
+        </div>
+    </div>
+
+    <app-lot-note [Lot]="lotInfo" *ngIf="lotInfo?.showLotNoteModal" (NoteSaved)="OnNoteSave($event)" ></app-lot-note> 
+    <app-popup-lot-comment [Lot]="lotInfo" *ngIf="lotInfo?.showLotCommentModal" (CommentSaved)="OnCommentSaved($event)">
+        </app-popup-lot-comment>
+</div>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" class="clsConfirmBox" ></p-confirmDialog> 

@@ -1,0 +1,9 @@
+tr.clsTableRow.ui-state-highlight{
+    background: #ffffff !important;
+    color: #222222 !important;
+}
+
+tr.clsTableRow:nth-child(even).ui-state-highlight{
+    background: #fafafb !important;
+    color: #222222 !important;
+}

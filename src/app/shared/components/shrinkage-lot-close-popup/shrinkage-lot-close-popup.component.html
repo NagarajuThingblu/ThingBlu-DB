@@ -1,0 +1,403 @@
+<p-dialog header="Mark Shrinkage & Lot Close" [(visible)]="LotInfo.showLotShrnkageModel" modal="modal" [resizable]="true"
+    [responsive]="true" [width]="620" [minWidth]="200" class="notecontrol" (onHide)="cancelLotShrnkageModel()">
+
+    <div class="ui-g ">
+        <div class="ui-g-12 ui-md-6">
+            <div class="paddingRL">
+
+                <label>
+                    <strong> {{lotshrinkageResource.lotno}} : </strong>
+                </label>
+
+                <label>
+                    {{ LotInfo['GrowerLotNo'] }}
+                </label>
+            </div>
+        </div>
+
+        <div class="ui-g-12 ui-md-6">
+            <div class="paddingRL">
+                <label>
+                    <strong>{{lotshrinkageResource.grower}} : </strong>
+                </label>
+
+                <label>
+                    {{ LotInfo['GrowerName'] }}
+                </label>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="paddingRL">
+                <label>
+                    <strong>{{lotshrinkageResource.strain}} : </strong>
+                </label>
+
+                <label>
+                    {{ LotInfo['StrainName'] }}
+                </label>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="paddingRL">
+                <label>
+                    <strong>{{lotshrinkageResource.lottype}} : </strong>
+                </label>
+
+                <label>
+                    {{ LotInfo['LotType'] }}
+                </label>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="paddingRL">
+                <label>
+                    <strong>{{lotshrinkageResource.startweight}} : </strong>
+                </label>
+
+                <label>
+                    {{ LotInfo['StartWeight'] }} {{globalResource.measure}}
+                </label>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6"> 
+            <div class="paddingRL">
+                <label>
+                    <strong>{{lotshrinkageResource.wasteweight}} : </strong>
+                </label>
+
+                <label>
+                    {{ LotInfo['WasteWeight'] }} {{globalResource.measure}}
+                </label>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="paddingRL">
+                <label>
+                    <strong>Order proc. Weight : </strong>
+                </label>
+
+                <label>
+                    {{ LotInfo['OrderProcessedWT'] }} {{globalResource.measure}}
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ">
+        <span><strong>Raw Inventory</strong></span>
+        <p-table [value]="getLotShrinkageRawInvList">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>
+                    </th>
+                    <th>{{lotshrinkageResource.unassignedWt}}
+                    </th>
+                    <th>{{lotshrinkageResource.assignedwt}}
+                    </th>
+                    <th>{{lotshrinkageResource.processedwt}}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-TaskDetails let-i="rowIndex">
+                <tr>
+                    <td>
+                        {{ TaskDetails?.WeightType}}
+                    </td>
+                    <td style="align-items:right">
+                        {{ TaskDetails?.UnAssignedWt }}
+                        <a *ngIf="TaskDetails?.WeightType=='Available Wt'" [routerLink]="" title="Close Lot" (click)="saveShrinkageWeightForTrimming(TaskDetails,'UnAssignedWt',TaskDetails?.UnAssignedWt,'Raw TrimInventory')">
+                            <i class='fa fa-compress'></i>
+                        </a>
+
+                    </td>
+                    <td>
+                        {{ TaskDetails?.AssignedWt}}
+                        <a *ngIf="TaskDetails?.WeightType=='Available Wt'" [routerLink]="" title="Close Lot" (click)="saveShrinkageWeight(TaskDetails,'AssignedWt',TaskDetails?.AssignedWt,'Raw Inventory')">
+                            <i class='fa fa-compress'></i>
+                        </a>
+                    </td>
+                    <td>
+                        {{ TaskDetails?.ProcessedWt}} 0
+                        <!-- <a [routerLink]=""  *ngIf="TaskDetails?.WeightType=='Available Wt'" (click)="saveShrinkageWeight(TaskDetails,'Processed',TaskDetails?.ProcessedWt)" >
+                                            <i class='fa fa-compress'></i></a> -->
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <!-- Skew BUD-->
+        <span><strong>{{ globalResource.budmaterial }}</strong></span>
+        <p-table [value]="getLotShrinkageSkewBudList">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>
+                    </th>
+                    <th>{{lotshrinkageResource.unassignedWt}}
+                    </th>
+                    <th>{{lotshrinkageResource.assignedwt}}
+                    </th>
+                    <th>{{lotshrinkageResource.processedwt}}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-TaskDetails>
+                <tr>
+                    <td>
+                        {{ TaskDetails?.WeightType}}
+                    </td>
+                    <td style="align-items:right">
+                        {{ TaskDetails?.UnAssignedWt }}
+
+                        <a [routerLink]="" title="Close Lot" *ngIf="TaskDetails?.WeightType=='Available Wt'" (click)="saveShrinkageWeight(TaskDetails,'UnAssignedWt',TaskDetails?.UnAssignedWt,'Skew BUD')">
+                            <i class='fa fa-compress'></i></a>
+                    </td>
+                    <td>
+                        {{ TaskDetails?.AssignedWt}}
+                        <a [routerLink]="" title="Close Lot" *ngIf="TaskDetails?.WeightType=='Available Wt'" (click)="saveShrinkageWeight(TaskDetails,'AssignedWt',TaskDetails?.AssignedWt,'Skew BUD')">
+                            <i class='fa fa-compress'></i></a>
+                    </td>
+                    <td>
+                        {{ TaskDetails?.ProcessedWt}} 0
+                        <!-- <a [routerLink]=""  *ngIf="TaskDetails?.WeightType=='Available Wt'"   (click)="saveShrinkageWeight(TaskDetails,'ProcessedWt',TaskDetails?.ProcessedWt)" >
+                                        <i class='fa fa-compress'></i></a> -->
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <!-- Skew JOINTS-->
+        <span><strong>{{ globalResource.jointsmaterial }}</strong></span>
+        <p-table [value]="getLotShrinkageSkewJointsList">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>
+                    </th>
+                    <th>{{lotshrinkageResource.unassignedWt}}
+                    </th>
+                    <th>{{lotshrinkageResource.assignedwt}}
+                    </th>
+                    <th>{{lotshrinkageResource.processedwt}}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-TaskDetails>
+                <tr>
+                    <td>
+                        {{ TaskDetails?.WeightType}}
+                    </td>
+                    <td style="align-items:right">
+                        {{ TaskDetails?.UnAssignedWt }}
+                        <a [routerLink]="" title="Close Lot" *ngIf="TaskDetails?.WeightType=='Available Wt'" (click)="saveShrinkageWeight(TaskDetails,'UnAssignedWt',TaskDetails?.UnAssignedWt,'Skew Joints')">
+                            <i class='fa fa-compress'></i></a>
+
+                    </td>
+                    <td>
+                        {{ TaskDetails?.AssignedWt}}
+                        <a [routerLink]="" title="Close Lot" *ngIf="TaskDetails?.WeightType=='Available Wt'" (click)="saveShrinkageWeight(TaskDetails,'AssignedWt',TaskDetails?.AssignedWt,'Skew Joints')">
+                            <i class='fa fa-compress'></i></a>
+                    </td>
+                    <td>
+                        {{ TaskDetails?.ProcessedWt}} 0
+                        <!-- <a [routerLink]=""  *ngIf="TaskDetails?.WeightType=='Available Wt'"  (click)="saveShrinkageWeight(TaskDetails,'ProcessedWt',TaskDetails?.ProcessedWt)" >
+                                    <i class='fa fa-compress'></i></a> -->
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <!-- Skew Oil-->
+        <span><strong>{{ globalResource.othermaterial }}</strong></span>
+        <p-table [value]="getLotShrinkageSkewOilList">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>
+                    </th>
+                    <th>{{lotshrinkageResource.unassignedWt}}
+                    </th>
+                    <th>{{lotshrinkageResource.assignedwt}}
+                    </th>
+                    <th>{{lotshrinkageResource.processedwt}}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-TaskDetails>
+                <tr>
+                    <td>
+                        {{ TaskDetails?.WeightType}}
+                    </td>
+                    <td style="align-items:right">
+                        {{ TaskDetails?.UnAssignedWt }}
+                        <a [routerLink]="" title="Close Lot" *ngIf="TaskDetails?.WeightType=='Available Wt'" (click)="saveShrinkageWeight(TaskDetails,'UnAssignedWt',TaskDetails?.UnAssignedWt,'Skew Oil')">
+                            <i class='fa fa-compress'></i></a>
+
+                    </td>
+                    <td>
+                        {{ TaskDetails?.AssignedWt}}
+                        <!-- <a [routerLink]="" title="Close Lot" *ngIf="TaskDetails?.WeightType=='Available Wt'" (click)="saveShrinkageWeight(TaskDetails,'AssignedWt',TaskDetails?.AssignedWt,'Skew Oil    ')">
+                            <i class='fa fa-compress'></i></a> -->
+                    </td>
+                    <td>
+                        {{ TaskDetails?.ProcessedWt}} 0
+                        <!-- <a [routerLink]=""  *ngIf="TaskDetails?.WeightType=='Available Wt'"   (click)="saveShrinkageWeight(TaskDetails,'ProcessedWt',TaskDetails?.ProcessedWt)" >
+                            <i class='fa fa-compress'></i></a> -->
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+    </div>
+
+
+</p-dialog>
+<p-confirmDialog class="clsConfirmBox" key="MarkShrinkage" header="Confirmation" icon="fa fa-question-circle" width="425">
+</p-confirmDialog>
+<p-confirmDialog class="clsConfirmBox" key="MarkTrimShrinkage" header="Confirmation" icon="fa fa-question-circle" width="425">
+</p-confirmDialog>
+
+<p-dialog header="Task List" [(visible)]="showLotPorgresstasksModel" modal="modal" [resizable]="true" [responsive]="true"
+    [width]="620" [minWidth]="200" class="notecontrol" (onHide)="cancelLotPorgresstasksModel()">
+    <div class="ui-g ">
+        <div class="ui-g-12 ui-md-12">
+            <div class="paddingRL">
+                <span class="star ui-message ui-messages-warn ui-corner-all" style="font-size: 14px">
+                    {{lotshrinkageResource.Shrinkagemsg}}
+                </span>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="paddingRL">
+                <label>
+                    <strong>{{lotshrinkageResource.lotno}} :</strong>
+                </label>
+                <label>
+                    {{ LotInfo['GrowerLotNo'] }}
+                </label>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="paddingRL">
+                <label>
+                    <strong>{{lotshrinkageResource.inventorytype}} :</strong>
+                </label>
+                <label>
+                    {{ inventoryType}}
+                </label>
+            </div>
+        </div>
+        <p-table [value]="getLotProgressTasksDetails">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>
+                        {{lotshrinkageResource.employee}}
+                    </th>
+                    <th>
+                        {{lotshrinkageResource.tasktype}}
+                    </th>
+                    <th>
+                        {{lotshrinkageResource.grower}}
+                    </th>
+                    <th>
+                        {{lotshrinkageResource.strain}}
+                    </th>
+                    <th>
+                        {{lotshrinkageResource.taskstatus}}
+                    </th>
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-TasklotDetails>
+                <tr>
+                    <td>
+                        {{ TasklotDetails?.EmpName}}
+                    </td>
+                    <td>
+                        {{ TasklotDetails?.TaskTypeName}}
+                    </td>
+                    <td>
+                        {{ TasklotDetails?.RawSupplierName}}
+                    </td>
+                    <td>
+                        {{ TasklotDetails?.StrainName}}
+                    </td>
+                    <td>
+                        {{ TasklotDetails?.TaskStatus | InProcessStatus}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+</p-dialog>
+
+<p-dialog header="Task List" [(visible)]="showLotPorgressTrimtasksModel" modal="modal" [resizable]="true" [responsive]="true"
+    [width]="620" [minWidth]="200" class="notecontrol" (onHide)="cancelLotPorgressTrimtasksModel()">
+    <div class="ui-g ">
+        <div class="ui-g-12 ui-md-12">
+            <div class="paddingRL">
+                <span class="star ui-message ui-messages-warn ui-corner-all" style="font-size: 14px">
+                    {{lotshrinkageResource.Shrinkagemsg}}
+                </span>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="paddingRL">
+                <label>
+                    <strong>{{lotshrinkageResource.lotno}} :</strong>
+                </label>
+                <label>
+                    {{ LotInfo['GrowerLotNo'] }}
+                </label>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="paddingRL">
+                <label>
+                    <strong>{{lotshrinkageResource.inventorytype}} :</strong>
+                </label>
+                <label>
+                    {{ inventoryType}}
+                </label>
+            </div>
+        </div>
+        <p-table [value]="getLotProgressTrimTasksDetails">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>
+                        {{lotshrinkageResource.employee}}
+                    </th>
+                    <th>
+                        {{lotshrinkageResource.tasktype}}
+                    </th>
+                    <th>
+                        {{lotshrinkageResource.grower}}
+                    </th>
+                    <th>
+                        {{lotshrinkageResource.strain}}
+                    </th>
+                    <th>
+                        {{lotshrinkageResource.taskstatus}}
+                    </th>
+
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-TasklotDetails>
+                <tr>
+                    <td>
+                        {{ TasklotDetails?.EmpName}}
+                    </td>
+                    <td>
+                        {{ TasklotDetails?.TaskTypeName}}
+                    </td>
+                    <td>
+                        {{ TasklotDetails?.RawSupplierName}}
+                    </td>
+                    <td>
+                        {{ TasklotDetails?.StrainName}}
+                    </td>
+                    <td>
+                        {{ TasklotDetails?.TaskStatus | InProcessStatus}}
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+</p-dialog>

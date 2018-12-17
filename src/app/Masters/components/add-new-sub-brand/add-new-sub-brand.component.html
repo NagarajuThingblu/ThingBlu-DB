@@ -1,0 +1,128 @@
+<p-dialog 
+    header="Add New Sub Brand"
+    [(visible)]="SubBrand.showSubBrandModal"
+    modal="modal" 
+    [resizable]="true" 
+    [responsive]="true" 
+    [width]="600" 
+    [minWidth]="200" 
+    class="notecontrol"
+    (onHide)="hideSubBrandPopup()"
+  >
+  <form #SubBrandForm="ngForm" [formGroup]="newSubBrandEntryForm"  (ngSubmit)="saveSubBrandNames(SubBrandForm)" novalidate >
+      <div class="ui-g">
+        <!--Brand -->
+          <div class="ui-g-12 ui-md-12">
+              <div class="paddingRL">
+                  <div class="le-su-12">
+                <label for="selectbrand" class="towlable">{{ newSubBrandResources.selectbrand}}<span class="star">*</span></label>:
+
+                <p-dropdown
+                    [filter] ="true"
+                    id="brand"
+                    [options]="SubBrand.allBrands"
+                    formControlName="brand"
+                    placeholder="-- Select --"
+                    [autoWidth]="false"
+                    class="clsControl"
+                    name="brand">
+                </p-dropdown>
+            
+                <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                  *ngIf="!NewSubBrandEntryForm.controls['brand'].valid&&NewSubBrandEntryForm.controls['brand'].dirty">
+                  <span *ngIf="NewSubBrandEntryForm.controls['brand'].errors['required']">
+                  {{ newSubBrandResources.brandrequired }}
+                </span>
+                </div> -->
+
+                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                            *ngIf="!newSubBrandEntryForm.controls['brand'].valid&&newSubBrandEntryForm.controls['brand'].dirty">
+                            <span *ngIf="newSubBrandEntryForm.controls['brand'].errors['required']">{{newSubBrandResources.brandrequired}}</span>
+                            <span *ngIf="newSubBrandEntryForm.controls['brand'].hasError('brandnotpresent')">
+                                {{ newSubBrandResources.brandnotpresent }} 
+                            </span>
+                    </div>
+              </div>
+            </div>
+           </div>
+        <!--End Brand -->
+        <!-- SubBrand Name -->
+                <div class="ui-g-12 ui-md-12">
+                  <div class="paddingRL">
+                      <div class="le-su-12">
+                        <label for="entersubbrand">{{ newSubBrandResources.entersubbrand}}<span class="star">*</span></label>:
+
+                        <input pInputText
+                          name="subbrand"
+                          id="subbrand"
+                          autocomplete="off"
+                          placeholder="Enter Value"
+                          type="text"
+                          class="clsControl"
+                          formControlName="subbrand"
+                        />
+
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!newSubBrandEntryForm.controls['subbrand'].valid&&newSubBrandEntryForm.controls['subbrand'].dirty">
+
+                            <span *ngIf="newSubBrandEntryForm.controls['subbrand'].errors['required']">
+                              {{newSubBrandResources.subbrandrequired}}
+                            </span>
+                            <span *ngIf="newSubBrandEntryForm.controls['subbrand'].errors['maxlength']">{{newSubBrandResources.subbrandLength}}</span>
+                            <span *ngIf="newSubBrandEntryForm.controls['subbrand'].errors['whitespace']">{{newSubBrandResources.subbrandrequired}}</span>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+          <!-- End SubBrand Name -->
+          <!-- Description -->
+          <div class="ui-g-12 ui-md-12">
+            <div class="paddingRL">
+                <div class="le-su-12">
+                  <label for="enterdescription">
+                    {{ newSubBrandResources.description}}<span class="star"></span>:
+                  </label>
+
+                  <input pInputText
+                    name="description"
+                    id="description"
+                    autocomplete="off"
+                    placeholder="Enter Description"
+                    type="text"
+                    class="clsControl"
+                    formControlName="description"
+                  />
+                </div>
+            </div>
+          </div>
+          <!-- End Description -->
+          <!-- IsActive -->
+          <div class="ui-g-12 ui-md-12">
+              <div class="paddingRL">
+                <label></label>
+                <div class="clear"></div>
+          
+                <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalResource.IsActiveFlag}}" formControlName="chkIsActive" 
+                binary="true"></p-checkbox>
+              </div>
+            </div>
+            <!--End IsActive -->
+
+                <div class="ui-g-12 ui-md-6" style="text-align:left;">
+                    <div class="paddingRL">
+                      <p-button  type="submit" label="Save" id="btnSubBrandSave" name="btnSubBrandSave" ></p-button>
+
+                      <button pButton
+                          (click)="resetForm()"
+                          type="button"
+                          label="Clear"
+                          class="ui-button-secondary"
+                      >
+                      </button>
+                  </div>
+                </div>
+              </div>
+</form>
+</p-dialog>
+
+<p-growl [(value)]="msgs" life='5000'></p-growl>

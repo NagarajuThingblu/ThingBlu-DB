@@ -1,0 +1,169 @@
+<div class="content-section implementation GridDemo">
+    <div class="ui-g">
+        <div class="ui-g-1">
+        </div>
+        <div class="ui-g-10">
+
+            <p-panel header="All Tasks" [toggleable]="true" [style]="{'margin-bottom':'20px'}">
+
+                <form [formGroup]="searchForm" (ngSubmit)="onSubmit(searchForm.value)">                    
+                        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                            
+                          <div class="ui-grid-row">
+                                <div class="ui-grid-col-2">
+                                   {{ globalResource.employee }} :
+                                </div>
+                                <div class="ui-grid-col-6">
+                                  <p-dropdown
+                                    [options]="Employees"                                   
+                                    [autoWidth]="true"
+                                    formControlName="employee"
+                                    id="employee"
+                                    name="employee">
+                                </p-dropdown> 
+                                </div>                                
+                            <!-- </div>
+                            <div class="ui-grid-row"> -->
+                                <div class="ui-grid-col-2">
+                                    {{ globalResource.tasktype }} :
+                                </div>
+                                <div class="ui-grid-col-6">
+                                  <p-dropdown                  
+                                    [options]="tasknames"                                    
+                                    [autoWidth]="true"
+                                    formControlName="taskname"
+                                    id="taskname"
+                                    name="taskname">
+                                  </p-dropdown>
+                                </div>
+                                
+                            </div>
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-2">
+                                    {{ globalResource.brand }} :
+                                </div>
+                                <div class="ui-grid-col-6">
+                                    <p-dropdown                  
+                                      [options]="Brands"                                      
+                                      [autoWidth]="true"
+                                      formControlName="brand"
+                                      id="brand"
+                                      name="brand">
+                                  </p-dropdown>
+                                </div>                               
+                            <!-- </div>
+                            <div class="ui-grid-row"> -->
+                                <div class="ui-grid-col-2">
+                                    {{ globalResource.strain }} :
+                                </div>
+                                <div class="ui-grid-col-6">
+                                    <p-dropdown                  
+                                    [options]="Strains"                                      
+                                    [autoWidth]="true"
+                                    formControlName="strain"
+                                    id="strains"
+                                    name="strains">
+                                </p-dropdown>
+                                </div>                                
+                            </div>
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-2">
+                                    {{ globalResource.startdate }} :
+                                </div>
+                                <div class="ui-grid-col-6">
+                                    <p-calendar                                                                                                    
+                                      [showIcon]="true"
+                                      formControlName="estimatedstartdate"
+                                      id="estimatedstartdate"
+                                      name="estimatedstartdate"                        
+                                      >                      
+                                    </p-calendar>
+                                </div>     
+                                
+                                <div class="ui-grid-col-2">                                    
+                                </div>
+                                <div class="ui-grid-col-6">
+                                  </div>
+                            <!-- </div>
+                            <div class="ui-grid-row"> -->
+                                <div class="ui-grid-col-2">
+                                    {{ globalResource.enddate }} :
+                                </div>
+                                <div class="ui-grid-col-6">
+                                    <p-calendar                                                                                                    
+                                      [showIcon]="true"
+                                      formControlName="estimatedenddate"
+                                      id="estimatedenddate"
+                                      name="estimatedenddate"                        
+                                      >                      
+                                    </p-calendar>
+                                </div>     
+                                
+                                <div class="ui-grid-col-2">                                    
+                                </div>
+                                <div class="ui-grid-col-6">
+                                  </div>
+                            </div>
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-2">
+                                    {{ globalResource.status }} :
+                                </div>
+                                <div class="ui-grid-col-6">
+                                    <p-dropdown                  
+                                      [options]="Status"                                      
+                                      [autoWidth]="true"
+                                      formControlName="status"
+                                      id="status"
+                                      name="status">
+                                    </p-dropdown>
+                                </div>                               
+                            <!-- </div>
+                            <div class="ui-grid-row"> -->
+                                <div class="ui-grid-col-2">
+                                    {{ globalResource.priority }} :
+                                </div>
+                                <div class="ui-grid-col-6">
+                                    <p-dropdown
+                                      [options]="Priorities"                                      
+                                      [autoWidth]="true"
+                                      formControlName="priority"
+                                      id="priority"
+                                      name="priority">
+                                    </p-dropdown>
+                                </div>                               
+                            </div>
+                            <div class="ui-grid-row">                               
+                                <div class="ui-g-12 ui-md-12" style="text-align:right;">
+                                    <button pButton type="submit" label="Search Tasks" style="width:auto !important;" ></button>                      
+                                    <button pButton type="button" label="Clear" style="width:auto !important;"  class="ui-button-secondary" 
+                                    (click)="searchForm.reset();"  ></button>                      
+                                </div>                                
+                            </div>
+                            <div style="text-align:center;margin-top:20px" *ngIf="submitted">
+                                Form Submitted
+                                <br>
+                                {{diagnostic}}
+                            </div>
+                        </div>               
+                </form>
+
+
+                <p-dataTable [value]="tasks">                    
+                    <p-column field="brand" header="{{ globalResource.brand }}"></p-column>
+                    <p-column field="strain" header="{{ globalResource.strain }}"></p-column>
+                    <p-column field="employee" header="{{ globalResource.employee }}"></p-column>
+                    <p-column field="lotno" header="{{ globalResource.lotno }}"></p-column>
+                    <p-column field="task" header="{{ globalResource.tasktype }}"></p-column>
+                    <p-column field="enddatetime" header="{{ globalResource.enddate }}"></p-column>
+                    <p-column styleClass="col-button" header="{{ globalResource.select }}" >                       
+                        <ng-template let-car="rowData" pTemplate="body" >
+                            <button type="button" pButton  icon="fa-edit"></button>
+                        </ng-template>
+                    </p-column>
+                </p-dataTable>
+            </p-panel>                      
+        </div>
+        <div class="ui-g-1">
+        </div>
+    </div>
+</div>
