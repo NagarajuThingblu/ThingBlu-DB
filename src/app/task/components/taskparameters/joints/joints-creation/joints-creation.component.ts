@@ -373,13 +373,13 @@ export class JointsCreationComponent implements OnInit, OnDestroy {
 
   getLotListByTask() {
     // check if task is in edit mode or assign mode
-    let editMode;
-    if (this.taskTypeId > 0) { // In case of edit task
-      editMode = true;
-    } else {
-      editMode = false;
-    }
-    this.dropdownDataService.getLotListByTask(this.TaskModel.task, editMode).subscribe(
+    // let editMode;
+    // if (this.taskTypeId > 0) { // In case of edit task
+    //   editMode = true;
+    // } else {
+    //   editMode = false;
+    // }
+    this.dropdownDataService.getLotListByTask(this.TaskModel.task, this.taskid).subscribe(
       data => {
         this.globalData.lots = data;
 
@@ -728,7 +728,7 @@ export class JointsCreationComponent implements OnInit, OnDestroy {
 
 
     if (Number(assignWt) >   Number(processedWt)) {
-         taskReviewWebApi.TaskDetails['ReturnWt'] = formModel.rreturnwt ? formModel.rreturnwt : 0 ;
+         taskReviewWebApi.TaskDetails['ReturnWt'] = formModel.returnwt ? formModel.returnwt : 0 ;
   // taskReviewWebApi.TaskDetails['ReturnWt'] = Number(this.TaskModel.AssignedWt) - Number(processedWt);
         }
 

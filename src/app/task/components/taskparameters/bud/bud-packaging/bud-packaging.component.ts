@@ -198,8 +198,6 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
       }
     });
 
-    console.log(this.TaskModel);
-
     if (this.PageFlag.page !== 'TaskAction') {
 
       this.TaskModel.BUDPACKAGING = {
@@ -321,8 +319,11 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     this.productTypeQtyMap.clear();
     this.lotMap.clear();
 
-    localStorage.removeItem('selectedMixLotsArray');
-    localStorage.removeItem('selectedLotsArray');
+    // localStorage.removeItem('selectedMixLotsArray');
+    // localStorage.removeItem('selectedLotsArray');
+
+    this.appCommonService.removeItem('selectedMixLotsArray');
+    this.appCommonService.removeItem('selectedLotsArray');
   }
 
   padLeft(text: string, padChar: string, size: number): string {
@@ -389,6 +390,12 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     this.productTypeQtyMap.set(comp.value.ProductTypeId, Number(this.productTypeQtyMap.get(comp.value.ProductTypeId) + 1));
 
     this.mixLotDetailsArr(comp).push(this.createMixItem(comp, 0));
+
+    const packagesCompletedBox = (<FormGroup>comp)
+    .get('completedWt');
+
+    packagesCompletedBox.markAsTouched();
+    packagesCompletedBox.updateValueAndValidity();
   }
 
   deleteItem(comp: FormGroup, parentIndex: number, childIndex: number) {
@@ -930,6 +937,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
       let answerbox;
       const lotSelectedDetails = this.selectedLotsArray[this.selLotBrandStrainRow.selectedRowIndex];
 
+      let isLotPresentInDBData = false;
       if (lotSelectedDetails) {
         const lotRowDetails = [];
         lotSelectedDetails.forEach(data => {
@@ -939,12 +947,28 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
           } else if (data.Index === index) {
             lotRowDetails.push(data);
           }
+          ///// Check if the selected lot is persent in database data In Edit mode
+          if (this.taskId && this.taskId > 0) {
+            this.TaskModel.BudPckgLotDetails.forEach(Lot => {
+              if (question.LotId === Lot.LotId) {
+                isLotPresentInDBData = true;
+              }
+            });
+          }
         });
         if (lotRowDetails.length) {
+          const lotWt = lotRowDetails[0].SelectedWt;
+          if (this.taskId && this.taskId > 0 && isLotPresentInDBData) {
             checkbox = lotRowDetails[0].Selected;
             answerbox = lotRowDetails[0].Selected
-            ? [lotRowDetails[0].SelectedWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+            ? [lotWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt + Number(lotWt))])]
             : null;
+          } else {
+            checkbox = lotRowDetails[0].Selected;
+            answerbox = lotRowDetails[0].Selected
+            ? [lotWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+            : null;
+          }
         } else {
           checkbox = question.selected;
           answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
@@ -955,10 +979,19 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
         answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
           : null;
       }
-      return fb.group({
-        question: checkbox, answer: answerbox, questionNumber: index, LotNo: question.LotId,
-        AvailWt: question.AvailableWt, GrowerLotNo: question.GrowerLotNo, LotNoteCount: question.LotNoteCount
-      });
+      if (this.taskId && this.taskId > 0 && isLotPresentInDBData) {
+        return fb.group({
+          question: checkbox, answer: answerbox, questionNumber: index, LotNo: question.LotId,
+          AvailWt: question.AvailableWt + (answerbox ? Number(answerbox[0]) : 0),
+          GrowerLotNo: question.GrowerLotNo, LotNoteCount: question.LotNoteCount
+        });
+      } else {
+        return fb.group({
+          question: checkbox, answer: answerbox, questionNumber: index, LotNo: question.LotId,
+          AvailWt: question.AvailableWt,
+          GrowerLotNo: question.GrowerLotNo, LotNoteCount: question.LotNoteCount
+        });
+      }
     };
   }
 
@@ -1281,7 +1314,8 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
 
     this.selectedLotsArray = [];
 
-    localStorage.removeItem('selectedLotsArray');
+    // localStorage.removeItem('selectedLotsArray');
+    this.appCommonService.removeItem('selectedLotsArray');
     // localStorage.removeItem('uniqueOrderStrains');
     if (value === 'fmrHTML') {
       this.getSelectedOrderDetails(this.TaskModel.BUDPACKAGING.orderno, false);
@@ -1334,10 +1368,16 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     });
     this.budOrderPackets.value.forEach(result => {
       let totalPkgWt = 0;
-      if ((result.strainid === StrainId || result.GeneticsId === GeneticsId) && Number(result.assignPackageWt) > 0) {
-        totalPkgWt = Number(result.assignPackageWt) * Number(result.packageunit) * Number(result.itemQty);
-
-        this.selLotBrandStrainRow.combinationTotalAssignedWt += Number(totalPkgWt);
+      if (this.taskId && this.taskId > 0) {
+        if ((result.strainid === StrainId || result.geneticsId === GeneticsId) && Number(result.assignPackageWt) > 0) {
+          totalPkgWt = Number(result.assignPackageWt) * Number(result.packageunit) * Number(result.itemQty);
+            this.selLotBrandStrainRow.combinationTotalAssignedWt += Number(totalPkgWt);
+        }
+      } else {
+        if ((result.strainid === StrainId) && Number(result.assignPackageWt) > 0) {
+          totalPkgWt = Number(result.assignPackageWt) * Number(result.packageunit) * Number(result.itemQty);
+            this.selLotBrandStrainRow.combinationTotalAssignedWt += Number(totalPkgWt);
+        }
       }
     });
 
@@ -1407,8 +1447,12 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
               }
             });
           });
-
-          if (Number(totalSelectedLotWt) + Number(result.answer) > result.AvailWt ) {
+          if (Number(totalSelectedLotWt) > 0) {
+            totalSelectedLotWt = Number(totalSelectedLotWt) - Number(result.answer);
+          } else {
+            totalSelectedLotWt = Number(result.answer);
+          }
+          if (Number(totalSelectedLotWt) > result.AvailWt ) {
                 const answerBox = (this.questionForm.get('questions.' + index) as FormGroup).controls['answer'];
 
                 (answerBox as FormControl).setErrors({ 'lotmaxwtexceeded': true });
@@ -1523,6 +1567,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
 
   // Submit Completion Parameters
   submitCompleteParameter(formModel) {
+    let countMisMatch = false;
     let completeLotDetailsForApi;
     const lotProductListArr = [];
    // let thresholdExceed = false;
@@ -1579,9 +1624,15 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
           .get('completedWt');
 
           packagesCompletedBox.setErrors({ pkgqtynotmatched: true });
+          countMisMatch = true;
+          packagesCompletedBox.markAsDirty();
+           return;
         }
       });
 
+      if (countMisMatch) {
+        return;
+       }
       // 4th Object: Product wise all lot list and their entered wt details
       formModel.completeParamArr.forEach((object, index) => {
         object.LotDetails.forEach(LotObject => {
@@ -1609,10 +1660,6 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
       });
 
       // 2nd Object: All Products unique lot id and sum of lot wt
-
-      // const result = _.groupBy(completeLotDetailsForApi.LotProductList , c => {
-      //   return [c.LotId];
-      // });
 
       _.mapValues(_.groupBy(lotProductListArr, 'LotId'),
         (clist, LotId) => {
@@ -1647,8 +1694,6 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
           }
         }
 
-         // LotReturnedWt = Number(LotAssignedWt) - Number(this.lotMap.get(Number(LotId)));
-
           let processedwt = 0;
           let assignWt = 0;
           let thresholdReturnwt = 0;
@@ -1668,14 +1713,12 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
                  this.msgs = [];
                  this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                  detail: this.assignTaskResources.MismatchTotalandassignedwt });
-                // return;
                 isthresholdexceeded = true;
             }
            } else if (Number(thresholdPlus) === 0 )  {
             this.msgs = [];
             this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
             detail: this.assignTaskResources.MismatchTotalandassignedwt  });
-            // return;
             isthresholdexceeded = true;
            }
          }
@@ -1686,68 +1729,16 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
                  this.msgs = [];
                   this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                  detail: this.assignTaskResources.MismatchTotalandassignedwt });
-              // return;
               isthresholdexceeded = true;
               }
-              //  else {
-              //   if (Number(IsReturnWTEnabled) === 0  ) {
-              //     thresholdReturnwt = Number(assignWt) - Number(processedwt);
-              //   } else {
-              //     thresholdReturnwt = LotReturnedWt ? LotReturnedWt : 0 ;
-              //   }
-              // }
            } else if (Number(thresholdMinus) === 0 )  {
                     this.msgs = [];
                     this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                     detail: this.assignTaskResources.MismatchTotalandassignedwt  });
-                  // return;
                   isthresholdexceeded = true;
            }
-          //   else {
-          //         if (Number(IsReturnWTEnabled) === 0  ) {
-          //           thresholdReturnwt = Number(assignWt) - Number(processedwt);
-          //         } else {
-          //           thresholdReturnwt = LotReturnedWt ? LotReturnedWt : 0 ;
-          //         }
-          //  }
         }
-        // if (Number(assignWt) >  Number(processedwt)) {
-        //   if (Number(IsReturnWTEnabled) === 0  ) {
-        //     thresholdReturnwt = Number(assignWt) - Number(processedwt);
-        //   } else {
-        //     thresholdReturnwt = LotReturnedWt ? LotReturnedWt : 0 ;
-        //   }
-        // } else {
-        //   thresholdReturnwt = 0;
-        // }
 
-        // if (Number(assignWt) ===  Number(processedwt) + Number(thresholdReturnwt)) {
-        //   thresholdReturnwt = 0;
-        // }
-
-          // toleranceValue =  (Number(LotAssignedWt) * Number(tolerance)) / 100;
-          // // To check total completion plus return wt is match with tolerance value tolerance is configured in enviroment
-          // if (Number(tolerance) === 0) {
-          //   // LotReturnWt =  Total Lot Assigned Wt - Total Lot Processed Wt
-          //   LotReturnedWt = Number(LotAssignedWt) - Number(this.lotMap.get(Number(LotId)));
-          // } else {
-          //   if (
-          //       (toleranceValue
-          //         -
-          //         Math.abs((LotAssignedWt - (Number(LotReturnedWt) + Number(this.lotMap.get(Number(LotId)))) ))) < 0
-          //     ) {
-          //     this.msgs = [];
-          //     this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-          //       detail: this.assignTaskResources.returnwtnotmatchedwithtolerance });
-
-          //       const returnbox = this.completionForm.get('lotReturnWtArr.' + LotFormIndex).get('lotReturnedWt');
-          //       // returnbox.setErrors({ thresholdExceed: true });
-          //       // returnbox.updateValueAndValidity();
-          //       thresholdExceed = true;
-          //     return;
-          //   }
-          // }
-          // if (LotTotalWt) {
           completeLotDetailsForApi.LotDetails.push({
             LotId: Number(LotId),
             // Weight: LotTotalWt ? LotTotalWt : 0,
@@ -2048,13 +2039,6 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
             // return;
             isthresholdexceeded = true;
             }
-            // else {
-            //   if (Number(IsReturnWTEnabled) === 0  ) {
-            //     thresholdReturnwt = Number(assignWt) - Number(processedwt);
-            //   } else {
-            //     thresholdReturnwt = LotReturnedWt ? LotReturnedWt : 0 ;
-            //   }
-            // }
          } else if (Number(thresholdMinus) === 0 )  {
                   this.msgs = [];
                   this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
@@ -2062,61 +2046,24 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
                 // return;
                 isthresholdexceeded = true;
          }
-        //  else {
-        //         if (Number(IsReturnWTEnabled) === 0  ) {
-        //           thresholdReturnwt = Number(assignWt) - Number(processedwt);
-        //         } else {
-        //           thresholdReturnwt = LotReturnedWt ? LotReturnedWt : 0 ;
-        //         }
-        //  }
       }
 
-      // if (Number(assignWt) ===  Number(processedwt) + Number(thresholdReturnwt)) {
-      //   thresholdReturnwt = 0;
-      // }
-
-      // if (Number(assignWt) >  Number(processedwt)) {
-      //   if (Number(IsReturnWTEnabled) === 0  ) {
-      //     thresholdReturnwt = Number(assignWt) - Number(processedwt);
-      //   } else {
-      //     thresholdReturnwt = LotReturnedWt ? LotReturnedWt : 0 ;
-      //   }
-      // } else {
-      //   thresholdReturnwt = 0;
-      // }
-
-        // toleranceValue =  (Number(LotAssignedWt) * Number(tolerance)) / 100;
-        //   // To check total completion plus return wt is match with tolerance value tolerance is configured in enviroment
-        //   if (Number(tolerance) === 0) {
-        //     LotReturnedWt = Number(LotAssignedWt) - Number(this.lotMap.get(Number(LotId)));
-        //   } else {
-        //     if (
-        //         (toleranceValue
-        //           -
-        //           Math.abs((LotAssignedWt - (Number(LotReturnedWt) + Number(this.lotMap.get(Number(LotId))) ) ))) < 0
-        //       ) {
-        //       this.msgs = [];
-        //       this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-        //         detail: this.assignTaskResources.returnwtnotmatchedwithtolerance });
-
-        //         const returnbox = this.reviewForm.get('lotReturnWtArr.' + LotFormIndex).get('lotReturnedWt');
-        //         // returnbox.setErrors({ thresholdExceed: true });
-        //         // returnbox.updateValueAndValidity();
-        //         thresholdExceed = true;
-        //       return;
-        //     }
-        //   }
-
-        // if (LotTotalWt) {
+        // commmented by sanjay 04012019
         reviewLotDetailsForApi.LotDetails.push({
           LotId: Number(LotId),
           Weight: Number(this.lotMap.get(Number(LotId))) ? Number(this.lotMap.get(Number(LotId))) : 0,
           ReturnWt: thresholdReturnwt
         });
-        // }
-        // return clist.map(car => {
-        //   return _.omit(car, 'LotId');
-        // });
+      });
+
+      this.TaskModel.AssignQtyLotDetails.forEach((object, index) => {
+      if ( reviewLotDetailsForApi.LotDetails.filter(r => r.LotId === object.LotId).length <= 0) {
+          reviewLotDetailsForApi.LotDetails.push({
+            LotId: object.LotId,
+            Weight: 0,
+            ReturnWt: object.ReturnWt
+          });
+        }
       });
 
     // 5th Object: Mix Lot Details
@@ -2273,14 +2220,11 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
 
   // Added by Devdan :: 15-Oct-2018 :: Setting existing lot list
   setSelectedLotDetails(objOrder) {
-    console.log(this.globalData.orderDetails);
-    console.log(this.orderDetailsBS_filteredData);
     this.orderDetailsBS_filteredData.forEach((order, index) => {
       const lotDetails = [];
       this.TaskModel.BudPckgLotDetails.
       forEach((lot, index1) => {
       const availableLots = this.globalData.orderDetails['Table1'].filter(result => result.LotId === lot.LotId);
-      console.log(availableLots);
       if (lot.StrainId === order.StrainId && availableLots.length > 0) {
         lotDetails.push(
           {

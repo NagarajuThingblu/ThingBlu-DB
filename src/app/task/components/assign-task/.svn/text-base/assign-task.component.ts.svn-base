@@ -15,7 +15,7 @@ import { LoadComponentDirective } from '../../directives/load-component.directiv
 import { QuarantineComponent } from '../taskparameters/quarantine/quarantine.component';
 import { DropdownValuesService } from '../../../shared/services/dropdown-values.service';
 
-import { TaskCommonService } from '../../services/task-common.service' ;
+import { TaskCommonService } from '../../services/task-common.service';
 import { Message } from 'primeng/api';
 import { GlobalResources } from '../../../global resource/global.resource';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
@@ -117,7 +117,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
   public readonlyFlag: Boolean = false;
 
-  @Input()  ads: AddComponent[];
+  @Input() ads: AddComponent[];
   @ViewChild(LoadComponentDirective) componentHost: LoadComponentDirective;
 
   initialiseInvites() {
@@ -132,6 +132,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(this.assignTaskResources.title);
 
     if (this.prodDBRouteParams) {
+      console.log(this.prodDBRouteParams);
       this.assignTask.task = this.prodDBRouteParams.TaskTypeId;
 
       this.readonlyFlag = true;
@@ -159,21 +160,21 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
   }
 
   taskTypeChange() {
-      // this.assignTaskForm.removeControl('TRIMMING');
-      // this.assignTaskForm.removeControl('SIFTING');
-      // this.assignTaskForm.removeControl('BUDPACKAGING');
-      // this.assignTaskForm.removeControl('GRINDING');
-      // this.assignTaskForm.removeControl('JOINTSCREATION');
-      // this.assignTaskForm.removeControl('TAMPING');
-      // this.assignTaskForm = this.fb.group({
-      //   'taskname': new FormControl(this.assignTask.task, Validators.required),
-      // });
+    // this.assignTaskForm.removeControl('TRIMMING');
+    // this.assignTaskForm.removeControl('SIFTING');
+    // this.assignTaskForm.removeControl('BUDPACKAGING');
+    // this.assignTaskForm.removeControl('GRINDING');
+    // this.assignTaskForm.removeControl('JOINTSCREATION');
+    // this.assignTaskForm.removeControl('TAMPING');
+    // this.assignTaskForm = this.fb.group({
+    //   'taskname': new FormControl(this.assignTask.task, Validators.required),
+    // });
 
     if (this.assignTask.task !== null) {
       // http call starts
       this.loaderService.display(true);
 
-        this.taskCommonService.getTaskTypeSettings(this.assignTask.task)
+      this.taskCommonService.getTaskTypeSettings(this.assignTask.task)
         .subscribe(
           (data: any) => {
             this.assignTask['IsManagerNotify'] = data[0].IsManagerNotify;
@@ -184,7 +185,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
               this.selectedTaskTypeName = (this.globalData.taskTypes.filter(result => result.TaskTypeId === this.assignTask.task) as any)[0].TaskTypeKey;
             }
 
-            this.assignTask['TaskTypeKey'] =  this.selectedTaskTypeName;
+            this.assignTask['TaskTypeKey'] = this.selectedTaskTypeName;
 
             // if (this.selectedTaskTypeName === 'BUDPACKAGING') {
             //   this.selectedTaskTypeName = 'budPackaging';
@@ -200,7 +201,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
           }
         );
     }
-}
+  }
   // ChangeComponent() {
   //   this.loadComponent(this.assignTask.task);
   // }
@@ -212,23 +213,24 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
         if ((<UserModel>this.appCommonService.getUserProfile()).UserRole === this.userRoles.Manager || this.prodDBRouteParams) {
           if (this.prodDBRouteParams) {
-            this.tasknames = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', '-- Select --', false) ;
+            this.tasknames = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', '-- Select --', false);
           } else {
             this.tasknames = this.dropdwonTransformService.transform(
               data.filter(item =>
                 String(item.TaskTypeKey).toLocaleUpperCase() !== 'GRINDING' &&
                 String(item.TaskTypeKey).toLocaleUpperCase() !== 'JOINTSCREATION' &&
                 String(item.TaskTypeKey).toLocaleUpperCase() !== 'TAMPING' &&
-                String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBING'
+                String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBING' &&
+                String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBELABELING'
               ),
-              'TaskTypeName', 'TaskTypeId', '-- Select --', false) ;
+              'TaskTypeName', 'TaskTypeId', '-- Select --', false);
           }
         } else {
           this.tasknames = this.dropdwonTransformService.transform(
-              data.filter(item => String(item.TaskTypeKey).toLocaleUpperCase() === 'CUSTOMTASK'),
-              'TaskTypeName', 'TaskTypeId', '-- Select --', false) ;
+            data.filter(item => String(item.TaskTypeKey).toLocaleUpperCase() === 'CUSTOMTASK'),
+            'TaskTypeName', 'TaskTypeId', '-- Select --', false);
         }
-      } ,
+      },
       error => { console.log(error); },
       () => {
         if (this.prodDBRouteParams) {
@@ -296,7 +298,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
         if (Number(assignTaskFormValues[this.selectedTaskTypeName].assignwt) > Number(this.assignTask[this.selectedTaskTypeName].lotweight)) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.assignwtgreaterthanlotwt });
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.assignwtgreaterthanlotwt });
           return;
         }
 
@@ -308,7 +310,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
         //// const uniqueOrderStrains = JSON.parse(localStorage.getItem('uniqueOrderStrains'));
         if (lotDetails === null) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotsnotassigned });
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotsnotassigned });
           return;
         }
         assignTaskDetailsForWebApi['LotDetails'] = [];
@@ -337,62 +339,64 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
         // A package each unique brand strain lot details
         let allLotsTotalWeight = 0;
-       const  lotDetailsOrderGroup = [];
+        const lotDetailsOrderGroup = [];
         if (lotDetails !== null) {
           lotDetails = lotDetails
-          .forEach((item, index) => {
-            if (item !== null && item.length) {
-              // tslint:disable-next-line:no-shadowed-variable
-              item.forEach((element, lotIndex) => {
-                lotDetailsOrderGroup.push({ LotId: element.LotNo, Weight: element.SelectedWt});
-              //  assignTaskDetailsForWebApi['LotDetails'].push({ LotId: element.LotNo, Weight: element.SelectedWt});
-                allLotsTotalWeight += Number(element.SelectedWt);
-              });
-            }
-          });
+            .forEach((item, index) => {
+              if (item !== null && item.length) {
+                // tslint:disable-next-line:no-shadowed-variable
+                item.forEach((element, lotIndex) => {
+                  lotDetailsOrderGroup.push({ LotId: element.LotNo, Weight: element.SelectedWt });
+                  //  assignTaskDetailsForWebApi['LotDetails'].push({ LotId: element.LotNo, Weight: element.SelectedWt});
+                  allLotsTotalWeight += Number(element.SelectedWt);
+                });
+              }
+            });
         }
         // Added for grouping same lot wt in singl row on 23-08-2018 by sanjay
         if (lotDetails !== null) {
-        _.mapValues(_.groupBy(lotDetailsOrderGroup, c => {
-          return [c.LotId];
+          _.mapValues(_.groupBy(lotDetailsOrderGroup, c => {
+            return [c.LotId];
           }),
-          (clist, LotObject) => {
-          let lotWeight = 0;
-          const lotNo = Number(String(LotObject).split(',')[0]);
-          clist.map(LotDetails1 => {
-            lotWeight += Number(LotDetails1.Weight);
-          });
-               assignTaskDetailsForWebApi['LotDetails'].push({ LotId: lotNo, Weight: lotWeight});
-          });
+            (clist, LotObject) => {
+              let lotWeight = 0;
+              const lotNo = Number(String(LotObject).split(',')[0]);
+              clist.map(LotDetails1 => {
+                lotWeight += Number(LotDetails1.Weight);
+              });
+              assignTaskDetailsForWebApi['LotDetails'].push({ LotId: lotNo, Weight: lotWeight });
+            });
         } else {
-        assignTaskDetailsForWebApi['LotDetails'] = [];
+          assignTaskDetailsForWebApi['LotDetails'] = [];
         }
-      // End  Added for grouping same lot wt in singl row on 23-08-2018
+        // End  Added for grouping same lot wt in singl row on 23-08-2018
 
         let allProductTypesTotalWeight = 0;
         assignTaskFormValues[this.selectedTaskTypeName].budOrderPackets
-        .forEach(item => {
-          if (item !== null && item.assignPackageWt > 0) {
-            assignTaskDetailsForWebApi['ProductTypeDetails'].push(
-              // { RawSupId: item.brandid, StrainId: item.strainid, PkgTypeId: item.packagetypeid,
-              //      UnitValue: item.packageunit, Qty: item.assignPackageWt}
-              { ProductTypeId: item.productTypeId, Qty: item.assignPackageWt}
-            );
+          .forEach(item => {
+            if (item !== null && item.assignPackageWt > 0) {
+              assignTaskDetailsForWebApi['ProductTypeDetails'].push(
+                // { RawSupId: item.brandid, StrainId: item.strainid, PkgTypeId: item.packagetypeid,
+                //      UnitValue: item.packageunit, Qty: item.assignPackageWt}
+                { ProductTypeId: item.productTypeId, Qty: item.assignPackageWt }
+              );
 
-            allProductTypesTotalWeight += Number(item.assignPackageWt) * Number(item.packageunit) * Number(item.itemQty);
-          }
-        });
+              allProductTypesTotalWeight += Number(item.assignPackageWt) * Number(item.packageunit) * Number(item.itemQty);
+            }
+          });
 
         if (assignTaskDetailsForWebApi['ProductTypeDetails'].length === 0) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
           return;
         }
 
         if (Number(allProductTypesTotalWeight) !== Number(allLotsTotalWeight)) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-            detail: 'Total lot selection weight is not matching with total order assigned weight.'});
+          this.msgs.push({
+            severity: 'warn', summary: this.globalResource.applicationmsg,
+            detail: 'Total lot selection weight is not matching with total order assigned weight.'
+          });
           return;
         }
 
@@ -402,7 +406,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
         if (Number(assignTaskFormValues[this.selectedTaskTypeName].assignwt) > Number(this.assignTask[this.selectedTaskTypeName].lotweight)) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.assignwtgreaterthanlotwt });
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.assignwtgreaterthanlotwt });
           return;
         }
 
@@ -412,7 +416,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
         if (Number(assignTaskFormValues[this.selectedTaskTypeName].assignwt) > Number(this.assignTask[this.selectedTaskTypeName].lotweight)) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.assignwtgreaterthanlotwt });
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.assignwtgreaterthanlotwt });
           return;
         }
 
@@ -436,57 +440,59 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
         let allLotsTotalJoints = 0;
         if (lotDetails !== null) {
           lotDetails = lotDetails
-          .forEach((item, index) => {
-            if (item !== null && item.length) {
-              // tslint:disable-next-line:no-shadowed-variable
-              item.forEach((element, lotIndex) => {
-                assignTaskDetailsForWebApi['LotJointsDetails'].push({ LotId: element.LotNo, UnitValue: element.UnitValue, Qty: element.SelectedQty});
+            .forEach((item, index) => {
+              if (item !== null && item.length) {
+                // tslint:disable-next-line:no-shadowed-variable
+                item.forEach((element, lotIndex) => {
+                  assignTaskDetailsForWebApi['LotJointsDetails'].push({ LotId: element.LotNo, UnitValue: element.UnitValue, Qty: element.SelectedQty });
 
-                allLotsTotalJoints += Number(element.SelectedQty);
-              });
-            }
-          });
+                  allLotsTotalJoints += Number(element.SelectedQty);
+                });
+              }
+            });
         } else {
-            assignTaskDetailsForWebApi['LotJointsDetails'] = [];
+          assignTaskDetailsForWebApi['LotJointsDetails'] = [];
         }
 
         let allProductTypesTotalJoints = 0;
         assignTaskFormValues[this.selectedTaskTypeName].jointsOrderPackets
-        .forEach(item => {
-          if (item !== null && item.assignQty > 0) {
-            assignTaskDetailsForWebApi['TubingProductDetails'].push(
-              // { RawSupId: item.brandid, StrainId: item.strainid, PkgTypeId: item.packagetypeid,
-              //      UnitValue: item.packageunit, Qty: item.assignPackageWt}
-              {
-                // ProductTypeId: item.productTypeId,
-                StrainId: item.strainid,
-                PkgTypeId: item.pkgTypeId,
-                UnitValue: item.packageunit,
-                ItemQty: item.itemQty,
-                Qty: item.assignQty
-              }
-            );
+          .forEach(item => {
+            if (item !== null && item.assignQty > 0) {
+              assignTaskDetailsForWebApi['TubingProductDetails'].push(
+                // { RawSupId: item.brandid, StrainId: item.strainid, PkgTypeId: item.packagetypeid,
+                //      UnitValue: item.packageunit, Qty: item.assignPackageWt}
+                {
+                  // ProductTypeId: item.productTypeId,
+                  StrainId: item.strainid,
+                  PkgTypeId: item.pkgTypeId,
+                  UnitValue: item.packageunit,
+                  ItemQty: item.itemQty,
+                  Qty: item.assignQty
+                }
+              );
 
-            allProductTypesTotalJoints += Number(item.assignQty) * Number(item.itemQty);
-          }
-        });
+              allProductTypesTotalJoints += Number(item.assignQty) * Number(item.itemQty);
+            }
+          });
 
         if (assignTaskDetailsForWebApi['TubingProductDetails'].length === 0) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
           return;
         }
 
         if (lotDetails === null) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotsnotassigned });
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotsnotassigned });
           return;
         }
 
         if (Number(allProductTypesTotalJoints) !== Number(allLotsTotalJoints)) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-            detail: 'Total lot selection joints is not matching with total joints of order.'});
+          this.msgs.push({
+            severity: 'warn', summary: this.globalResource.applicationmsg,
+            detail: 'Total lot selection joints is not matching with total joints of order.'
+          });
           return;
         }
 
@@ -509,67 +515,69 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
         const tempOilPkgCodeDetails = [];
         if (pkgDetails !== null) {
           pkgDetails = pkgDetails
-          .forEach((item, index) => {
-            if (item !== null && item.length) {
-              // tslint:disable-next-line:no-shadowed-variable
-              item.forEach((element, lotIndex) => {
-                tempOilPkgCodeDetails.push({ StrainId: element.StrainId, OilPkgId: element.OilPkgId, OilWt: element.SelectedWt});
-                allPkgsTotalWeight += Number(element.SelectedWt);
-              });
-            }
-          });
+            .forEach((item, index) => {
+              if (item !== null && item.length) {
+                // tslint:disable-next-line:no-shadowed-variable
+                item.forEach((element, lotIndex) => {
+                  tempOilPkgCodeDetails.push({ StrainId: element.StrainId, OilPkgId: element.OilPkgId, OilWt: element.SelectedWt });
+                  allPkgsTotalWeight += Number(element.SelectedWt);
+                });
+              }
+            });
 
           _.mapValues(_.groupBy(tempOilPkgCodeDetails, c => {
             return [c.OilPkgId, c.StrainId];
           }),
-          (clist, OilPkgObject) => {
-            let oilPkgTotalWt = 0;
-            const strainId = Number(String(OilPkgObject).split(',')[1]);
-            const oilPkgId =  Number(String(OilPkgObject).split(',')[0]);
+            (clist, OilPkgObject) => {
+              let oilPkgTotalWt = 0;
+              const strainId = Number(String(OilPkgObject).split(',')[1]);
+              const oilPkgId = Number(String(OilPkgObject).split(',')[0]);
 
-                clist.map(PkgDetails1 => {
-                  oilPkgTotalWt += Number(PkgDetails1.OilWt);
-                });
-                assignTaskDetailsForWebApi['OilPkgCodeDetails'].push({
-                  StrainId: strainId, OilPkgId: oilPkgId, OilWt: oilPkgTotalWt
-                });
-          });
+              clist.map(PkgDetails1 => {
+                oilPkgTotalWt += Number(PkgDetails1.OilWt);
+              });
+              assignTaskDetailsForWebApi['OilPkgCodeDetails'].push({
+                StrainId: strainId, OilPkgId: oilPkgId, OilWt: oilPkgTotalWt
+              });
+            });
 
         } else {
-            assignTaskDetailsForWebApi['OilPkgCodeDetails'] = [];
+          assignTaskDetailsForWebApi['OilPkgCodeDetails'] = [];
         }
         // End C package each unique brand strain pkg details
 
         let allProductTypesTotalWeight = 0;
         assignTaskFormValues[this.selectedTaskTypeName].oilOrderPackets
-        .forEach(item => {
-          if (item !== null && item.assignPackageWt > 0) {
-            assignTaskDetailsForWebApi['ProductTypeDetails'].push(
-              // { RawSupId: item.brandid, StrainId: item.strainid, PkgTypeId: item.packagetypeid,
-              //      UnitValue: item.packageunit, Qty: item.assignPackageWt}
-              { ProductTypeId: item.productTypeId, Qty: item.assignPackageWt}
-            );
+          .forEach(item => {
+            if (item !== null && item.assignPackageWt > 0) {
+              assignTaskDetailsForWebApi['ProductTypeDetails'].push(
+                // { RawSupId: item.brandid, StrainId: item.strainid, PkgTypeId: item.packagetypeid,
+                //      UnitValue: item.packageunit, Qty: item.assignPackageWt}
+                { ProductTypeId: item.productTypeId, Qty: item.assignPackageWt }
+              );
 
-            allProductTypesTotalWeight += Number(item.assignPackageWt) * Number(item.packageunit);
-          }
-        });
+              allProductTypesTotalWeight += Number(item.assignPackageWt) * Number(item.packageunit);
+            }
+          });
 
         if (assignTaskDetailsForWebApi['ProductTypeDetails'].length === 0) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
           return;
         }
 
         if (pkgDetails === null) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.pkgsnotassigned });
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.pkgsnotassigned });
           return;
         }
 
         if (Number(allProductTypesTotalWeight) !== Number(allPkgsTotalWeight)) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-            detail: 'Total pkg selection weight is not matching with total order assigned weight.'});
+          this.msgs.push({
+            severity: 'warn', summary: this.globalResource.applicationmsg,
+            detail: 'Total pkg selection weight is not matching with total order assigned weight.'
+          });
           return;
         }
 
@@ -603,7 +611,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
                 LotId: Number(element5.lotId) ? Number(element5.lotId) : 0,
                 SkewKeyName: element5.skewKeyName,
                 OilPkgId: element5.oilPkgId ? element5.oilPkgId : 0,
-                PackageCode: element5.packageCode ?  element5.packageCode : '',
+                PackageCode: element5.packageCode ? element5.packageCode : '',
                 OrdProdItemId: Number(element5.ordProdItemId),
                 MixPkgId: element5.mixPkgId ? element5.mixPkgId : 0
               }
@@ -613,7 +621,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
         if (assignTaskDetailsForWebApi['ProductTypeDetails'].length === 0) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
           return;
         }
       } else if (this.selectedTaskTypeName === 'REPACK') { // Package Replacement Task
@@ -646,7 +654,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
         if (assignTaskDetailsForWebApi['ProductTypeDetails'].length === 0) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
           return;
         }
       } else if (this.selectedTaskTypeName === 'REBRAND') { // Branding and Label Replacement Task
@@ -679,7 +687,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
         if (assignTaskDetailsForWebApi['ProductTypeDetails'].length === 0) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
           return;
         }
       } else if (this.selectedTaskTypeName === 'TUBELABELING') {  // Tube Brand & Label TASK
@@ -702,78 +710,80 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
         if (lotDetails !== null) {
           lotDetails1 = lotDetails
-          .forEach((item, index) => {
-            if (item !== null && item.lotDetails !== null && item.lotDetails.length) {
-              item.lotDetails.forEach((element2, lotIndex) => {
-                assignTaskDetailsForWebApi['LotTubesDetails'].push({
-                  LotId: element2.LotNo,
-                  StrainId: element2.StrainId,
-                  PkgTypeId: element2.PkgTypeId,
-                  UnitValue: element2.UnitValue,
-                  ItemQty: element2.ItemQty,
-                  Qty: element2.SelectedQty
-                });
+            .forEach((item, index) => {
+              if (item !== null && item.lotDetails !== null && item.lotDetails.length) {
+                item.lotDetails.forEach((element2, lotIndex) => {
+                  assignTaskDetailsForWebApi['LotTubesDetails'].push({
+                    LotId: element2.LotNo,
+                    StrainId: element2.StrainId,
+                    PkgTypeId: element2.PkgTypeId,
+                    UnitValue: element2.UnitValue,
+                    ItemQty: element2.ItemQty,
+                    Qty: element2.SelectedQty
+                  });
 
-                allLotsTotalTubes += Number(element2.SelectedQty);
-              });
-            }
-          });
+                  allLotsTotalTubes += Number(element2.SelectedQty);
+                });
+              }
+            });
 
           lotDetails2 = lotDetails
-          .forEach((item, index) => {
-            if (item !== null && item.mixPkgDetails !== null && item.mixPkgDetails.length) {
-              item.mixPkgDetails.forEach((element1, lotIndex) => {
-                assignTaskDetailsForWebApi['MixPkgDetails'].push({
-                  // ProductTypeId: element.ProductTypeId,
-                  StrainId: element1.StrainId,
-                  PkgTypeId: element1.PkgTypeId,
-                  UnitValue: element1.UnitValue,
-                  ItemQty: element1.ItemQty,
-                  MixPkgId: element1.MixPkgId,
-                  Qty: element1.SelectedQty
-                });
+            .forEach((item, index) => {
+              if (item !== null && item.mixPkgDetails !== null && item.mixPkgDetails.length) {
+                item.mixPkgDetails.forEach((element1, lotIndex) => {
+                  assignTaskDetailsForWebApi['MixPkgDetails'].push({
+                    // ProductTypeId: element.ProductTypeId,
+                    StrainId: element1.StrainId,
+                    PkgTypeId: element1.PkgTypeId,
+                    UnitValue: element1.UnitValue,
+                    ItemQty: element1.ItemQty,
+                    MixPkgId: element1.MixPkgId,
+                    Qty: element1.SelectedQty
+                  });
 
-                allLotsTotalTubes += 1;
-              });
-            }
-          });
+                  allLotsTotalTubes += 1;
+                });
+              }
+            });
         } else {
-            assignTaskDetailsForWebApi['LotTubeDetails'] = [];
+          assignTaskDetailsForWebApi['LotTubeDetails'] = [];
         }
 
         let allProductTypesTotalTubes = 0;
         assignTaskFormValues[this.selectedTaskTypeName].tubeOrderPackets
-        .forEach(item => {
-          if (item !== null && item.assignQty > 0) {
-            assignTaskDetailsForWebApi['ProductTypeDetails'].push(
-              // { RawSupId: item.brandid, StrainId: item.strainid, PkgTypeId: item.packagetypeid,
-              //      UnitValue: item.packageunit, Qty: item.assignPackageWt}
-              {
-                ProductTypeId: item.productTypeId,
-                Qty: item.assignQty
-              }
-            );
+          .forEach(item => {
+            if (item !== null && item.assignQty > 0) {
+              assignTaskDetailsForWebApi['ProductTypeDetails'].push(
+                // { RawSupId: item.brandid, StrainId: item.strainid, PkgTypeId: item.packagetypeid,
+                //      UnitValue: item.packageunit, Qty: item.assignPackageWt}
+                {
+                  ProductTypeId: item.productTypeId,
+                  Qty: item.assignQty
+                }
+              );
 
-            allProductTypesTotalTubes += Number(item.assignQty);
-          }
-        });
+              allProductTypesTotalTubes += Number(item.assignQty);
+            }
+          });
 
         if (assignTaskDetailsForWebApi['ProductTypeDetails'].length === 0) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
           return;
         }
 
         if (lotDetails1 === null && lotDetails2 === null) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotsnotassigned });
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotsnotassigned });
           return;
         }
 
         if (Number(allProductTypesTotalTubes) !== Number(allLotsTotalTubes)) {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-            detail: 'Total lot selection tubes is not matching with total tubes of order.'});
+          this.msgs.push({
+            severity: 'warn', summary: this.globalResource.applicationmsg,
+            detail: 'Total lot selection tubes is not matching with total tubes of order.'
+          });
           return;
         }
 
@@ -786,41 +796,41 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
       // }
       // return;
 
-    // console.log(assignTaskDetailsForWebApi);
-    this.confirmationService.confirm({
-    message: this.globalResource.saveconfirm,
-    header: 'Confirmation',
-    icon: 'fa fa-exclamation-triangle',
-    accept: () => {
+      // console.log(assignTaskDetailsForWebApi);
+      this.confirmationService.confirm({
+        message: this.globalResource.saveconfirm,
+        header: 'Confirmation',
+        icon: 'fa fa-exclamation-triangle',
+        accept: () => {
 
           // http call starts
           this.loaderService.display(true);
           this.taskCommonService.assignTask(assignTaskDetailsForWebApi)
-          .subscribe(
+            .subscribe(
               data => {
                 // this.router.navigate(['']);
 
                 if (String(data[0]['Result']).toLocaleUpperCase() === 'NOBALANCE') {
                   this.msgs = [];
-                  this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.incorrectassignwt });
-                }  if (String(data[0]['Result']).toLocaleUpperCase() === 'NOTASSIGNED') {
+                  this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.incorrectassignwt });
+                } if (String(data[0]['Result']).toLocaleUpperCase() === 'NOTASSIGNED') {
                   this.msgs = [];
                   if (this.selectedTaskTypeName === 'TUBELABELING') {
-                    this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.tasknotassigned });
+                    this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.tasknotassigned });
                   } else {
-                    this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.tasknotassigned });
+                    this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.tasknotassigned });
                   }
-                }  else if (String(data[0]['Result']).toLocaleUpperCase() === 'FAILURE' || String(data[0]['Result']).toLocaleUpperCase() === 'ERROR') {
+                } else if (String(data[0]['Result']).toLocaleUpperCase() === 'FAILURE' || String(data[0]['Result']).toLocaleUpperCase() === 'ERROR') {
                   this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
                 } else if (String(data[0]['Result']).toLocaleUpperCase() === 'TRIMCOMPLETED') {
                   this.msgs = [];
-                  this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.trimcompleted });
+                  this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.trimcompleted });
                 } else if (String(data[0]['Result']).toLocaleUpperCase() === 'LOTDELETED') {
                   this.msgs = [];
-                  this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotdeleted });
+                  this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotdeleted });
                 } else if (String(data[0]['Result']).toLocaleUpperCase() === 'JOINTSHORTAGE') {
                   this.msgs = [];
-                  this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.jointshortage });
+                  this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.jointshortage });
 
                   this.assignTask.task = null;
                   this.selectedTaskTypeName = '';
@@ -833,9 +843,11 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
                   this.taskTypeChange();
                 } else {
                   this.msgs = [];
-                  this.msgs.push({severity: 'success',
-                  summary: this.globalResource.applicationmsg,
-                  detail: this.assignTaskResources.taskassignedsuccessfully });
+                  this.msgs.push({
+                    severity: 'success',
+                    summary: this.globalResource.applicationmsg,
+                    detail: this.assignTaskResources.taskassignedsuccessfully
+                  });
 
                   this.assignTask.task = null;
                   this.selectedTaskTypeName = '';
@@ -845,10 +857,10 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
                   });
 
                   if (this.prodDBRouteParams) {
-                    setTimeout( () => {
-                    // this.router.navigate(['home/jointsproductiondashboard']);
-                    this.router.navigate(['../home/taskaction',
-                            String(data[0]['TaskKeyName']).toLocaleUpperCase(), data[0]['TaskId']]);
+                    setTimeout(() => {
+                      // this.router.navigate(['home/jointsproductiondashboard']);
+                      this.router.navigate(['../home/taskaction',
+                        String(data[0]['TaskKeyName']).toLocaleUpperCase(), data[0]['TaskId']]);
 
                     }, 2000);
                   }
@@ -863,15 +875,15 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
               },
               error => {
                 this.msgs = [];
-                this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
-                  // http call ends
-                  this.loaderService.display(false);
+                this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
+                // http call ends
+                this.loaderService.display(false);
               });
-          },
-          reject: () => {
-              // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
-          }
-        });
+        },
+        reject: () => {
+          // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
+        }
+      });
     } else {
       this.appCommonService.validateAllFields(this.assignTaskForm);
     }
@@ -879,13 +891,13 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
   resetForm() {
     this.assignTask.task = null;
-            this.selectedTaskTypeName = '';
-            this.isServiceCallComplete = false;
-            this.assignTaskForm = this.fb.group({
-              'taskname': new FormControl(null, Validators.required),
-            });
+    this.selectedTaskTypeName = '';
+    this.isServiceCallComplete = false;
+    this.assignTaskForm = this.fb.group({
+      'taskname': new FormControl(null, Validators.required),
+    });
 
-            this.taskTypeChange();
+    this.taskTypeChange();
   }
 
 }

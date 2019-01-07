@@ -125,6 +125,7 @@ export class LotEditComponent implements OnInit {
       message: strMessage,
       header: 'Confirmation',
       icon: 'fa fa-exclamation-triangle',
+      key: 'lotedit',
       accept: () => {
         this.onSubmit('value', 'Yes');
       },
@@ -412,6 +413,7 @@ export class LotEditComponent implements OnInit {
       message: this.globalResource.saveconfirm,
       header: 'Confirmation',
       icon: 'fa fa-exclamation-triangle',
+      key: 'saveconfirm',
       accept: () => {
           // http call starts
           this.loaderService.display(true);

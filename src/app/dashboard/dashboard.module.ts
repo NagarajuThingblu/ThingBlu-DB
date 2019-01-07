@@ -9,6 +9,9 @@ import { EmployeedashboardComponent } from './components/employeedashboard/emplo
 import { JointsProductionDashboardComponent } from './components/joints-production-dashboard/joints-production-dashboard.component';
 import { DashobardService } from './services/dashobard.service';
 import { RefreshService } from './services/refresh.service';
+import { JointsDashboardComponent } from './components/joints-dashboard/joints-dashboard.component';
+import { JointsDashboardDataComponent } from './components/joints-dashboard-data/joints-dashboard-data.component';
+import { JointsDashboardDataPrintComponent } from './components/joints-dashboard-data-print/joints-dashboard-data-print.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +19,10 @@ import { RefreshService } from './services/refresh.service';
     WhiteboardDetailsComponent,
     WhiteboardsComponent,
     EmployeedashboardComponent,
-    JointsProductionDashboardComponent
+    JointsProductionDashboardComponent,
+    JointsDashboardComponent,
+    JointsDashboardDataComponent,
+    JointsDashboardDataPrintComponent
   ],
   imports: [
     SharedModule

@@ -1,17 +1,17 @@
 K 25
 svn:wc:ra_dav:version-url
-V 99
-/svn/thingbluangular5svnv1/!svn/ver/918/thingblusvn/src/app/lot/components/lotlisting/lot-note-icon
+V 100
+/svn/thingbluangular5svnv2/!svn/ver/1333/thingblusvn/src/app/lot/components/lotlisting/lot-note-icon
 END
 lot-note-icon.component.html
 K 25
 svn:wc:ra_dav:version-url
 V 128
-/svn/thingbluangular5svnv1/!svn/ver/286/thingblusvn/src/app/lot/components/lotlisting/lot-note-icon/lot-note-icon.component.html
+/svn/thingbluangular5svnv2/!svn/ver/286/thingblusvn/src/app/lot/components/lotlisting/lot-note-icon/lot-note-icon.component.html
 END
 lot-note-icon.component.ts
 K 25
 svn:wc:ra_dav:version-url
-V 126
-/svn/thingbluangular5svnv1/!svn/ver/918/thingblusvn/src/app/lot/components/lotlisting/lot-note-icon/lot-note-icon.component.ts
+V 127
+/svn/thingbluangular5svnv2/!svn/ver/1333/thingblusvn/src/app/lot/components/lotlisting/lot-note-icon/lot-note-icon.component.ts
 END

@@ -36,6 +36,7 @@ import { BrandLabelReplacementComponent } from './components/taskparameters/bran
 import { OilMaterialsInComponent } from './components/taskparameters/oil/oil-materials-in/oil-materials-in.component';
 import { OilMaterialsOutComponent } from './components/taskparameters/oil/oil-materials-out/oil-materials-out.component';
 import { TubeBrandLabelComponent } from './components/taskparameters/joints/tube-brand-label/tube-brand-label.component';
+import { EmployeeAssignTaskComponent } from './components/employee-assign-task/employee-assign-task.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { TubeBrandLabelComponent } from './components/taskparameters/joints/tube
     OrderFulfilmentQaCheckComponent,
     PackageReplacementComponent,
     BrandLabelReplacementComponent,
-    TubeBrandLabelComponent
+    TubeBrandLabelComponent,
+    EmployeeAssignTaskComponent
   ],
   imports: [
     SharedModule
@@ -70,7 +72,7 @@ import { TubeBrandLabelComponent } from './components/taskparameters/joints/tube
   providers: [GrowerDetailsActionService, TaskCommonService, TaskResolver, SkewListResolver, OilService],
   entryComponents: [ QuarantineComponent ],
   exports: [
-     AssignTaskComponent, LoadComponentDirective
+     AssignTaskComponent, LoadComponentDirective, EmployeeAssignTaskComponent
   ]
 })
 

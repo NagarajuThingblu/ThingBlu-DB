@@ -1,29 +1,29 @@
 K 25
 svn:wc:ra_dav:version-url
 V 88
-/svn/thingbluangular5svnv1/!svn/ver/1273/thingblusvn/src/app/task/components/assign-task
+/svn/thingbluangular5svnv2/!svn/ver/1426/thingblusvn/src/app/task/components/assign-task
 END
 assign-task.component.spec.ts
 K 25
 svn:wc:ra_dav:version-url
 V 115
-/svn/thingbluangular5svnv1/!svn/ver/1/thingblusvn/src/app/task/components/assign-task/assign-task.component.spec.ts
+/svn/thingbluangular5svnv2/!svn/ver/1/thingblusvn/src/app/task/components/assign-task/assign-task.component.spec.ts
 END
 assign-task.component.html
 K 25
 svn:wc:ra_dav:version-url
 V 115
-/svn/thingbluangular5svnv1/!svn/ver/1220/thingblusvn/src/app/task/components/assign-task/assign-task.component.html
+/svn/thingbluangular5svnv2/!svn/ver/1426/thingblusvn/src/app/task/components/assign-task/assign-task.component.html
 END
 assign-task.component.ts
 K 25
 svn:wc:ra_dav:version-url
 V 113
-/svn/thingbluangular5svnv1/!svn/ver/1273/thingblusvn/src/app/task/components/assign-task/assign-task.component.ts
+/svn/thingbluangular5svnv2/!svn/ver/1426/thingblusvn/src/app/task/components/assign-task/assign-task.component.ts
 END
 assign-task.component.css
 K 25
 svn:wc:ra_dav:version-url
 V 111
-/svn/thingbluangular5svnv1/!svn/ver/1/thingblusvn/src/app/task/components/assign-task/assign-task.component.css
+/svn/thingbluangular5svnv2/!svn/ver/1/thingblusvn/src/app/task/components/assign-task/assign-task.component.css
 END

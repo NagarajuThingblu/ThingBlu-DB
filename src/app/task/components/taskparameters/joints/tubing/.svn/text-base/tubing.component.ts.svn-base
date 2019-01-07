@@ -190,8 +190,11 @@ export class TubingComponent implements OnInit, OnDestroy {
     this.productTypeQtyMap.clear();
     this.lotMap.clear();
 
-    localStorage.removeItem('selectedMixLotsArray');
-    localStorage.removeItem('selectedLotsArray');
+    // localStorage.removeItem('selectedMixLotsArray');
+    // localStorage.removeItem('selectedLotsArray');
+
+    this.appCommonService.removeItem('selectedMixLotsArray');
+    this.appCommonService.removeItem('selectedLotsArray');
   }
 
   ngOnInit() {
@@ -393,6 +396,12 @@ export class TubingComponent implements OnInit, OnDestroy {
     this.productTypeQtyMap.set(comp.value.ProductTypeId, Number(this.productTypeQtyMap.get(comp.value.ProductTypeId) + 1));
 
     this.mixLotDetailsArr(comp).push(this.createMixItem(comp, 0));
+
+    const packagesCompletedBox = (<FormGroup>comp)
+    .get('completedQty');
+
+    packagesCompletedBox.markAsTouched();
+    packagesCompletedBox.updateValueAndValidity();
   }
 
   deleteItem(comp: FormGroup, parentIndex: number, childIndex: number) {
@@ -874,6 +883,8 @@ export class TubingComponent implements OnInit, OnDestroy {
       let checkbox;
       let answerbox;
       const lotSelectedDetails = this.selectedLotsArray[this.selLotBrandStrainRow.selectedRowIndex];
+
+      let isLotPresentInDBData = false;
       if (lotSelectedDetails) {
 
       const lotRowDetails = [];
@@ -885,13 +896,29 @@ export class TubingComponent implements OnInit, OnDestroy {
         } else if (data.Index === index) {
           lotRowDetails.push(data);
         }
+        ///// Check if the selected lot is persent in database data In Edit mode
+        if (this.taskId && this.taskId > 0) {
+          this.TaskModel.TubingLotDetails.forEach(Lot => {
+            if (question.LotId === Lot.LotId) {
+              isLotPresentInDBData = true;
+            }
+          });
+        }
       });
 
         if (lotRowDetails.length) {
-              checkbox = lotRowDetails[0].Selected;
-              answerbox = lotRowDetails[0].Selected
-                ? [lotRowDetails[0].SelectedQty, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-                : null;
+          const lotQty = lotRowDetails[0].SelectedQty;
+          if (this.taskId && this.taskId > 0 && isLotPresentInDBData) {
+            checkbox = lotRowDetails[0].Selected;
+            answerbox = lotRowDetails[0].Selected
+            ? [lotQty, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt + Number(lotQty))])]
+            : null;
+          } else {
+            checkbox = lotRowDetails[0].Selected;
+            answerbox = lotRowDetails[0].Selected
+            ? [lotQty, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+            : null;
+          }
         } else {
           checkbox = question.selected;
           answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
@@ -902,10 +929,20 @@ export class TubingComponent implements OnInit, OnDestroy {
          answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
          : null;
       }
-      return fb.group({question: checkbox, answer: answerbox, questionNumber: index, LotNo: question.LotId, UnitValue: question.UnitValue,
-        AvailJointsQty: question.Qty, GrowerLotNo: question.GrowerLotNo, LotNoteCount: question.LotNoteCount,
-          GeneticsId: question.GeneticsId, GeneticsName: question.GeneticsName, StrainId: question.StrainId, StrainName: question.StrainName
+      if (this.taskId && this.taskId > 0 && isLotPresentInDBData) {
+        return fb.group({question: checkbox, answer: answerbox, questionNumber: index, LotNo: question.LotId, UnitValue: question.UnitValue,
+        AvailJointsQty: question.Qty + (answerbox ? Number(answerbox[0]) : 0),
+        GrowerLotNo: question.GrowerLotNo, LotNoteCount: question.LotNoteCount,
+        GeneticsId: question.GeneticsId, GeneticsName: question.GeneticsName, StrainId: question.StrainId, StrainName: question.StrainName
         });
+      } else {
+        return fb.group({question: checkbox, answer: answerbox, questionNumber: index, LotNo: question.LotId, UnitValue: question.UnitValue,
+        AvailJointsQty: question.Qty,
+        GrowerLotNo: question.GrowerLotNo, LotNoteCount: question.LotNoteCount,
+        GeneticsId: question.GeneticsId, GeneticsName: question.GeneticsName, StrainId: question.StrainId, StrainName: question.StrainName
+        });
+      }
+
     };
   }
 
@@ -1126,6 +1163,9 @@ export class TubingComponent implements OnInit, OnDestroy {
       productTypeParam['PkgTypeId'] = this.prodDBRouteParams.PkgTypeId;
       productTypeParam['UnitValue'] = this.prodDBRouteParams.UnitValue;
       productTypeParam['ItemQty'] = this.prodDBRouteParams.ItemQty;
+      productTypeParam['ViewOrdersBy'] = this.prodDBRouteParams.viewOrdersBy;
+      productTypeParam['BeginDate'] = new Date(this.prodDBRouteParams.beginDate).toLocaleDateString().replace(/\u200E/g, '');
+      productTypeParam['EndDate'] = new Date(this.prodDBRouteParams.endDate).toLocaleDateString().replace(/\u200E/g, '');
     }
 
     // Added by Devdan :: 23-Oct-2018 :: In case of Edit mode, Get the values from TaskModel Object
@@ -1134,7 +1174,13 @@ export class TubingComponent implements OnInit, OnDestroy {
       productTypeParam['PkgTypeId'] = this.TaskModel.TubingProductDetails.PkgTypeId;
       productTypeParam['UnitValue'] = this.TaskModel.TubingProductDetails.UnitValue;
       productTypeParam['ItemQty'] = this.TaskModel.TubingProductDetails.ItemQty;
+      if (this.prodDBRouteParams) {
+        productTypeParam['ViewOrdersBy'] = this.prodDBRouteParams.viewOrdersBy;
+        productTypeParam['BeginDate'] = new Date(this.prodDBRouteParams.beginDate).toLocaleDateString().replace(/\u200E/g, '');
+        productTypeParam['EndDate'] = new Date(this.prodDBRouteParams.endDate).toLocaleDateString().replace(/\u200E/g, '');
+        }
     }
+
 
     // End of Populate strain & lot by default. Joint production dashboard functionality
     this.orderService.getSelectedStrainOrderDetails(productTypeParam, 'JOINTS').subscribe(
@@ -1238,7 +1284,7 @@ export class TubingComponent implements OnInit, OnDestroy {
     this.brandStrainLots = [];
     this.selLotBrandStrainRow.pkgSizeRequiredQtyArr = [];
 
-    const selectedStrainUnitValues = this.orderDetails.filter(result =>  result.StrainId === orderDetail.StrainId);
+    const selectedStrainUnitValues = this.orderDetails.filter(result =>  result.GeneticsId === orderDetail.GeneticsId);
 
     this.brandStrainLots = this.globalData.orderDetails['Table1'].filter(result =>
         result.GeneticsId === orderDetail.GeneticsId
@@ -1253,7 +1299,8 @@ export class TubingComponent implements OnInit, OnDestroy {
     this.selLotBrandStrainRow.combinationTotalAssignedQty = 0;
 
     this.orderDetails.filter((value, key) =>
-       value.StrainId === orderDetail.StrainId )
+      //  value.StrainId === orderDetail.StrainId )
+      value.GeneticsId === orderDetail.GeneticsId)
       .map(value => {
           this.selLotBrandStrainRow.RequireWt += value.TotalWt;
           this.selLotBrandStrainRow.BrandName = '';
@@ -1450,7 +1497,7 @@ export class TubingComponent implements OnInit, OnDestroy {
     const lotProductListArr = [];
 
     let duplicateEntry = false;
-
+    let countMisMatch = false;
     if ( this.completionForm.valid === true) {
         completeLotDetailsForApi = {
           TaskDetails: {
@@ -1484,7 +1531,7 @@ export class TubingComponent implements OnInit, OnDestroy {
         // let validateDuplicateFlag = false;
         formModel.completeParamArr.forEach((object, PkgFormIndex) => {
           object.LotDetails.forEach((LotObject, index) => {
-
+            if (LotObject.lotCompletedQty > 0) {
               completeLotDetailsForApi.LotTubeProductList.push({
                 // ProductTypeId: object.ProductTypeId,
                 StrainId: object.StrainId,
@@ -1496,6 +1543,7 @@ export class TubingComponent implements OnInit, OnDestroy {
                 // PackageCode: '',
                 // IndexCode: String(PkgFormIndex + '##' + index)
               });
+            }
 
               lotProductListArr.push({
                 StrainId: object.StrainId,
@@ -1507,7 +1555,23 @@ export class TubingComponent implements OnInit, OnDestroy {
                 Qty: LotObject.lotCompletedQty ? LotObject.lotCompletedQty : 0,
               });
           });
+
+          if (this.productTypeQtyMap.get(object.ProductTypeId) !== object.completedQty) {
+            const packagesCompletedBox = (<FormGroup>this.completionForm.get('completeParamArr.' + PkgFormIndex))
+            .get('completedQty');
+
+            packagesCompletedBox.setErrors({ pkgqtynotmatched: true });
+            countMisMatch = true;
+            packagesCompletedBox.markAsDirty();
+             return;
+          }
         });
+
+
+        if (countMisMatch) {
+          return;
+         }
+
 
         // 2nd Object: All Products unique lot id and sum of product item qty
 
@@ -1691,7 +1755,7 @@ export class TubingComponent implements OnInit, OnDestroy {
         // let validateDuplicateFlag = false;
         formModel.reviewParamArr.forEach((object, PkgFormIndex) => {
           object.LotDetails.forEach((LotObject, index) => {
-
+            if (LotObject.lotCompletedQty > 0) {
             reviewLotDetailsForApi.LotTubeProductList.push({
                 // ProductTypeId: object.ProductTypeId,
                 StrainId: object.StrainId,
@@ -1703,6 +1767,7 @@ export class TubingComponent implements OnInit, OnDestroy {
                 // PackageCode: '',
                 // IndexCode: String(PkgFormIndex + '##' + index)
               });
+            }
 
               lotProductListArr.push({
                 StrainId: object.StrainId,
@@ -1741,6 +1806,16 @@ export class TubingComponent implements OnInit, OnDestroy {
               });
 
           });
+
+          this.TaskModel.AssignQtyLotDetails.forEach((object, index) => {
+            if ( reviewLotDetailsForApi.LotJointsDetails.filter(r => r.LotId === object.LotId).length <= 0) {
+                reviewLotDetailsForApi.LotJointsDetails.push({
+                  LotId: object.LotId,
+                  UnitValue: object.UnitValue,
+                  Qty: object.ProcessedJointsQty
+                });
+              }
+            });
 
           // 5th Object: Mix Lot Details
             formModel.reviewParamArr.forEach((object, index) => {

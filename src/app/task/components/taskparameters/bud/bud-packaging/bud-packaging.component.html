@@ -20,7 +20,6 @@
           <div
             class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
             *ngIf="!BUDPACKAGING.controls['orderno'].valid&&BUDPACKAGING.controls['orderno'].dirty">
-            <i class="fa fa-close"></i>
               <span *ngIf="BUDPACKAGING.controls['orderno'].errors['required']">
                 {{ globalResource.ordernorequired }}
               </span>
@@ -62,7 +61,6 @@
           <div
             class="ui-message ui-messages-error ui-corner-all"
             *ngIf="!BUDPACKAGING.controls['lotno'].valid&&BUDPACKAGING.controls['lotno'].dirty">
-              <i class="fa fa-close"></i>
               <span *ngIf="BUDPACKAGING.controls['lotno'].errors['required']">
                 {{ globalResource.lotnorequired }}
               </span>
@@ -201,7 +199,6 @@
             <div
               class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
               *ngIf="!BUDPACKAGING.controls['employee'].valid&&BUDPACKAGING.controls['employee'].dirty">
-                <i class="fa fa-close"></i>
                 <span *ngIf="BUDPACKAGING.controls['employee'].errors['required']">
                   {{ globalResource.employeerequired }}
                 </span>
@@ -235,7 +232,6 @@
             <div
               class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
               *ngIf="!BUDPACKAGING.controls['estimatedstartdate'].valid&&BUDPACKAGING.controls['estimatedstartdate'].dirty">
-                <i class="fa fa-close"></i>
                 <span *ngIf="BUDPACKAGING.controls['estimatedstartdate'].errors['required']">
                   {{ globalResource.startdaterequired }}
                 </span>
@@ -309,7 +305,6 @@
             <div
               class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
               *ngIf="!BUDPACKAGING.controls['comment'].valid&&BUDPACKAGING.controls['comment'].dirty">
-                <i class="fa fa-close"></i>
                 <span *ngIf="BUDPACKAGING.controls['comment'].errors['maxLength']">
                   {{ assignTaskResources.commentMaxLength }}
                 </span>
@@ -400,7 +395,15 @@
                               ></app-lot-note-icon>
                                                       
                           </td>
-                          <td> {{ brandStrainLots[i].AvailableWt  }} {{globalResource.listgramunit}}</td>
+                          <!-- <td> {{ brandStrainLots[i].AvailableWt  }} {{globalResource.listgramunit}}</td> -->
+                          <td>
+                            <ng-container *ngIf="taskId && taskId > 0">
+                              {{ question.value.AvailWt  }} {{globalResource.listgramunit}}
+                            </ng-container>
+                            <ng-container *ngIf="!taskId">
+                              {{ brandStrainLots[i].AvailableWt }} {{globalResource.listgramunit}}
+                            </ng-container>
+                          </td>
                           <td>
                             <input
                               type="number"
@@ -415,12 +418,17 @@
                           <div
                               class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                               *ngIf="!question.controls['answer'].valid&&question.controls['answer'].dirty">
-                                <i class="fa fa-close"></i>
-                                <span *ngIf="question.controls['answer'].hasError('lotmaxwtexceeded')">
-                                 <!-- max lot wt exceeded -->
+                                <span *ngIf="question.controls['answer'].errors['max'] || question.controls['answer'].errors['min']">
+                                  Select Valid Weight
+                                </span>  
+                                <span *ngIf="question.controls['answer'].errors['required']">
+                                  Required
                                 </span>
+                                <!-- <span *ngIf="question.controls['answer'].hasError('lotmaxwtexceeded')">
+                                 max lot wt exceeded
+                                </span> -->
                           </div>
-                          </td>
+                        </td>
                       </tr>
                   </ng-template>
                   <ng-template pTemplate="emptymessage" let-columns>
@@ -754,7 +762,7 @@
                       </ng-template>
                       <ng-template pTemplate="emptymessage">
                           <tr>
-                              <td [attr.colspan]="5">
+                              <td [attr.colspan]="showToManager ? 5 : 4">
                                   {{ globalResource.norecordsfound }}
                               </td>
                           </tr>
@@ -1369,6 +1377,7 @@
                     <input                    
                       type="number"
                       OnlyNumber="true"
+                      readonly="true"
                       maxlength="10"
                       pKeyFilter="int"
                       pInputText
@@ -1727,6 +1736,12 @@
                         name="answer"
                         style="width:100%;"
                       />
+                      <!-- <div class="ui-message ui-messages-error-Sec ui-corner-all" appErrorTooltip
+                        *ngIf="!questions?.controls['answer'].valid&&questions.controls['answer'].dirty">
+                          <span *ngIf="questions.controls['answer'].errors['required']">
+                            Required
+                          </span>
+                      </div> -->
                       <!-- (change)="CalculateMixLotWt(question, 'SPECIFIC')" -->
                     </td>
                 </tr>

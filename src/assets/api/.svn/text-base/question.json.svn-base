@@ -1,0 +1,38 @@
+[
+  {
+    "controlType": "textbox",
+    "key": "BUD_WT",
+    "label": "Bud Material Weight",
+    "required": true,
+    "type": "text",
+    "order": 1,
+    "value": ""
+  },
+  {
+    "controlType": "textbox",
+    "key": "JOINTS_WT",
+    "label": "Joints Material Weight",
+    "value": "",
+    "required": true,
+    "order": 2,
+    "type": "text"
+  },
+  {
+    "controlType": "textbox",
+    "key": "OIL_WT",
+    "label": "Oil Material Weight",
+    "type": "text",
+    "order": 3,
+    "value": "",
+    "required": true
+  },
+  {
+    "controlType": "textbox",
+    "key": "WASTE_WT",
+    "label": "Waste Material Weight",
+    "type": "text",
+    "order": 4,
+    "value": "",
+    "required": true
+  }
+]

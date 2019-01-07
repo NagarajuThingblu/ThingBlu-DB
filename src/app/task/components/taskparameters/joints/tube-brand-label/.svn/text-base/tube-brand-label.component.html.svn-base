@@ -11,7 +11,6 @@
         ></p-dropdown>
 
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="!TUBELABELING.controls['orderno'].valid&&TUBELABELING.controls['orderno'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="TUBELABELING.controls['orderno'].errors['required']">
           {{ globalResource.ordernorequired }}
         </span>
@@ -56,7 +55,7 @@
           <td>{{orderDetails[i].SubBrandName}}</td>
           <td>{{orderDetails[i].StrainName}}</td>
           <td>{{orderDetails[i].PkgTypeName}}</td>
-          <td>{{orderDetails[i].UnitValue}} {{globalResource.listgramunit}}</td>
+          <td>{{orderDetails[i].UnitValue}} {{globalResource.listgramunits}}</td>
           <td>{{orderDetails[i].ItemQty}}</td>
           <td>{{orderDetails[i].RequiredQty}}</td>
           <!-- <td>{{(orderDetails[i].TotalWt)}}</td> -->
@@ -126,11 +125,11 @@
 
                         <app-lot-note-icon
                           [LotId]="lotDetails?.LotNo"                                                
-                          (NoteIconClicked)="ShowLotNote($event)"
+                          (NoteIconClicked)="showLotNote($event)"
                         ></app-lot-note-icon>
                       </td>
                       <td>{{lotDetails.PkgTypeName}}</td>
-                      <td>{{lotDetails.UnitValue}} {{globalResource.listgramunit}}</td>
+                      <td>{{lotDetails.UnitValue}} {{globalResource.listgramunits}}</td>
                       <td>{{lotDetails.ItemQty}}</td>
                       <td>{{lotDetails.SelectedQty}}</td>
                     </tr>
@@ -187,7 +186,7 @@
                             <!-- Mix Pkg Lot Details -->    
                         </td>
                         <td> {{ mixLotDetails.PkgTypeName }} </td>
-                        <td> {{ mixLotDetails.UnitValue }} {{globalResource.listgramunit}}</td>
+                        <td> {{ mixLotDetails.UnitValue }} {{globalResource.listgramunits}}</td>
                         <td> {{ mixLotDetails.ItemQty }} </td>
                         <!-- <td>{{mixLotDetails?.Qty}}</td> -->
                       </tr>
@@ -220,12 +219,11 @@
       <label for="employee">{{ globalResource.employee }}<span class="star">*</span></label>{{
       globalResource.labelcolon }}
 
-      <p-dropdown [filter]="true" [options]="employees" [(ngModel)]="TaskModel.TUBELABELING.employee" class="clsControl"
+      <p-dropdown [filter]="true" [options]="employees" [(ngModel)]="TaskModel.TUBELABELING.employee"   [readonly]="readonlyEmployeeFlag" class="clsControl"
         formControlName="employee" id="employee" name="employee">
       </p-dropdown>
 
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="!TUBELABELING.controls['employee'].valid&&TUBELABELING.controls['employee'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="TUBELABELING.controls['employee'].errors['required']">
           {{ globalResource.employeerequired }}
         </span>
@@ -247,7 +245,6 @@
         name="estimatedstartdate">
       </p-calendar>
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="!TUBELABELING.controls['estimatedstartdate'].valid&&TUBELABELING.controls['estimatedstartdate'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="TUBELABELING.controls['estimatedstartdate'].errors['required']">
           {{ globalResource.startdaterequired }}
         </span>
@@ -295,7 +292,6 @@
         name="comment" class="clsControl" maxlength="500"></textarea>
 
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="!TUBELABELING.controls['comment'].valid&&TUBELABELING.controls['comment'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="TUBELABELING.controls['comment'].errors['maxLength']">
           {{ assignTaskResources.commentMaxLength }}
         </span>
@@ -344,7 +340,7 @@
                 <tr>
                   <td>{{details.StrainName}}</td>
                   <td>{{details.PkgTypeName}}</td>
-                  <td>{{details.UnitValue}} {{globalResource.listgramunit}}</td>
+                  <td>{{details.UnitValue}} {{globalResource.listgramunits}}</td>
                   <td>{{details.ItemQty}}</td>
                   <td>{{details.RequiredQty}}</td>
                 </tr>
@@ -384,12 +380,39 @@
 
                 </td>
                 <td> {{ brandStrainLots[i].PkgTypeName }} </td>
-                <td> {{ brandStrainLots[i].UnitValue }} {{globalResource.listgramunit}}</td>
+                <td> {{ brandStrainLots[i].UnitValue }} {{globalResource.listgramunits}}</td>
                 <td> {{ brandStrainLots[i].ItemQty }} </td>
-                <td> {{ brandStrainLots[i].Qty }} </td>
+                <td> 
+                  <!-- {{ brandStrainLots[i].Qty }}  -->
+                  <ng-container *ngIf="taskId && taskId > 0">
+                    {{ question.value.AvailTubesQty  }} {{globalResource.listgramunits}}
+                  </ng-container>
+                  <ng-container *ngIf="!taskId">
+                    {{ brandStrainLots[i].Qty }} {{globalResource.listgramunits}}
+                  </ng-container>
+                </td>
                 <td>
-                  <input type="number" pKeyFilter="pint" pInputText autocomplete="off" formControlName="answer" id="answer"
-                    name="answer" style="width:100%;" />
+                  <input type="number" 
+                    pKeyFilter="pint" 
+                    pInputText 
+                    autocomplete="off" 
+                    formControlName="answer" 
+                    id="answer"
+                    name="answer" 
+                    style="width:100%;" />
+                    <div
+                      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!question.controls['answer'].valid&&question.controls['answer'].dirty">
+                      <span *ngIf="question.controls['answer'].errors['max'] || question.controls['answer'].errors['min']">
+                        Select Valid Weight
+                      </span>  
+                      <span *ngIf="question.controls['answer'].errors['required']">
+                        Required
+                      </span>
+                      <span *ngIf="question.controls['answer'].hasError('lotmaxwtexceeded')">
+                        max lot wt exceeded
+                      </span>
+                    </div>
                 </td>
               </tr>
             </ng-template>
@@ -448,7 +471,7 @@
                   <!-- Mix Pkg Lot Details -->    
               </td>
               <td> {{ mixLotDetails?.value.PkgTypeName }} </td>
-              <td> {{ mixLotDetails?.value.UnitValue }} {{globalResource.listgramunit}}</td>
+              <td> {{ mixLotDetails?.value.UnitValue }} {{globalResource.listgramunits}}</td>
               <td> {{ mixLotDetails?.value.ItemQty }} </td>
               <!-- <td>{{mixLotDetails?.Qty}}</td> -->
             </tr>
@@ -631,7 +654,7 @@
             <td>{{details.SubBrandName}}</td>
             <td>{{details.StrainName}}</td>
             <td>{{details.PkgTypeName}}</td>
-            <td>{{details.UnitValue}} {{globalResource.listgramunit}}</td>
+            <td>{{details.UnitValue}} {{globalResource.listgramunits}}</td>
             <td>{{details.ItemQty}}</td>
             <td>{{details.AssignedQty}}</td>
             <td pTooltip="View Completion Details" tooltipPosition="left" *ngIf="(TaskModel?.TaskStatus === taskStatus.Completed||TaskModel?.TaskStatus === taskStatus.ReviewPending)&&TaskModel?.TaskStatus !== ''">
@@ -783,7 +806,7 @@
                       <strong>{{ globalResource.pkgsize  }}: </strong>
                     </label>
                     <label>
-                        {{LotDetails?.UnitValue}}{{globalResource.listgramunit}}
+                        {{LotDetails?.UnitValue}} {{globalResource.listgramunits}}
                     </label>
                   </div>                  
             </div>
@@ -987,7 +1010,7 @@
                     : <span pTooltip="Strain Name">{{ TaskModel.AssignQtyDetails[i].StrainName }}</span>
                     : <span pTooltip="Pkg Type Name">{{ TaskModel.AssignQtyDetails[i].PkgTypeName }}</span>: <span
                       pTooltip="Package Size">{{ TaskModel.AssignQtyDetails[i].UnitValue
-                      }}{{globalResource.listgramunit}}</span>
+                      }} {{globalResource.listgramunits}}</span>
                     : <span pTooltip="Item Qty">{{ TaskModel.AssignQtyDetails[i].ItemQty }}</span>
                   </span>
 
@@ -1180,8 +1203,7 @@
                     : <span pTooltip="Sub-Brand">{{ TaskModel.AssignQtyDetails[i].SubBrandName }}</span>
                     : <span pTooltip="Strain Name">{{ TaskModel.AssignQtyDetails[i].StrainName }}</span>
                     : <span pTooltip="Pkg Type Name">{{ TaskModel.AssignQtyDetails[i].PkgTypeName }}</span>
-                    : <span pTooltip="Package Size">{{ TaskModel.AssignQtyDetails[i].UnitValue }}
-                      {{globalResource.listgramunit}}</span>
+                    : <span pTooltip="Package Size">{{ TaskModel.AssignQtyDetails[i].UnitValue }} {{globalResource.listgramunits}}</span>
                     : <span pTooltip="Item Qty">{{ TaskModel.AssignQtyDetails[i].ItemQty }}</span>
                   </span>
 

@@ -81,6 +81,7 @@ import { ResetPasswordService } from './services/reset-password.service';
 import { RoleGuard } from '../guards/role.guard';
 import { UserRolePermissionService } from '../admin/services/user-role-permission.service';
 import { ErrorAccessDeniededComponent } from './components/error-access-denieded/error-access-denieded.component';
+import { SectionHeaderComponent } from './components/section-header/section-header.component';
 
 
 @NgModule({
@@ -101,7 +102,8 @@ import { ErrorAccessDeniededComponent } from './components/error-access-denieded
       PaginationCountsComponent,
       ErrorAccessDeniededComponent,
       LotCommentComponent,
-      PopupLotCommentComponent
+      PopupLotCommentComponent,
+      SectionHeaderComponent
     ],
   imports: [
     CommonModule,
@@ -201,7 +203,8 @@ import { ErrorAccessDeniededComponent } from './components/error-access-denieded
     PaginationCountsComponent,
     ErrorAccessDeniededComponent,
     LotCommentComponent,
-    PopupLotCommentComponent
+    PopupLotCommentComponent,
+    SectionHeaderComponent
   ]
 })
 // For Shared Services

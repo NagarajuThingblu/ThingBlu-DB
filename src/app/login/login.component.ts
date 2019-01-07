@@ -1,3 +1,4 @@
+import { FieldsetModule } from 'primeng/fieldset';
 import { AppCommonService } from './../shared/services/app-common.service';
 import { AppConstants } from './../shared/models/app.constants';
 import { LoaderService } from './../shared/services/loader.service';
@@ -36,6 +37,7 @@ export class LoginComponent implements OnInit {
   public adusernamepassword: any;
   public model: any = {};
   public returnUrl: string;
+  public menuItems: any = [];
 
   public loginResources: any;
   public token: string;
@@ -218,25 +220,83 @@ export class LoginComponent implements OnInit {
   getLoggedInUserData() {
     this.authenticationService.getUserProfile()
       .subscribe(
-        (data: UserModel) => {
-          this.userModel = data;
-          const expires_in =  this.appCommonService.getCurrentUser().expires_in;
+        (data: any) => {
+          if (String(data).toLocaleUpperCase() !== 'NO DATA FOUND!') {
+            this.userModel = <UserModel>data.Table[0];
+            const expires_in =  this.appCommonService.getCurrentUser().expires_in;
 
-          const expireDate = new Date (new Date().getTime() + (1000 * (expires_in))).toUTCString();
+            const expireDate = new Date (new Date().getTime() + (1000 * (expires_in))).toUTCString();
 
-          this.setCookie('userProfile' + this.appCommonService.getEnvData().clientCode ,
-          this.appCommonService.Encrypt(JSON.stringify(this.userModel)), expireDate);
+            this.setCookie('userProfile' + this.appCommonService.getEnvData().clientCode ,
+            this.appCommonService.Encrypt(JSON.stringify(this.userModel)), expireDate);
 
-          if (this.userModel.UserRole.toString() === this.userRoles.Manager) {
-            this.router.navigate(['home/managerdashboard']);
-          } else  if (this.userModel.UserRole.toString() === this.userRoles.SuperAdmin) {
-            this.router.navigate(['home/managerdashboard']);
-          } else {
-            this.router.navigate(['home/empdashboard']);
+            // Added Employee page access list in localstorage
+            if (data.Table1.length > 0) {
+              this.rolewiseMenuItem(data.Table1);
+            } else {
+              this.addSuperAdminPage();
+            }
+
+            this.menuItems = [];
+            if (this.appCommonService.getRoleAccess()) {
+              this.menuItems = this.appCommonService.getRoleAccess();
+            }
+            if (this.menuItems.length > 0) {
+              this.menuItems = this.menuItems.filter(r => r.IsDefaultPage === 1);
+              let routeName;
+              if (this.menuItems.length > 0) {
+                  routeName = this.menuItems[0].RouterLink;
+                  this.router.navigate(['home/' + routeName]);
+                } else {
+                  this.router.navigate(['home/erroraccessdenieded']);
+              }
+            } else {
+              if (this.userModel.UserRole.toString() === this.userRoles.Manager) {
+                this.router.navigate(['home/managerdashboard']);
+              } else if (this.userModel.UserRole.toString() === this.userRoles.SuperAdmin) {
+                this.router.navigate(['home/managerdashboard']);
+              } else {
+                this.router.navigate(['home/empdashboard']);
+              }
+            }
+
+            this.loaderService.display(false);
           }
+      });
+  }
 
-          this.loaderService.display(false);
-        });
+  rolewiseMenuItem(menuItems) {
+    if (this.appCommonService.getRoleAccess()) {
+      this.appCommonService.removeItem('RoleAccess');
+      this.appCommonService.setLocalStorage('RoleAccess', JSON.stringify(menuItems));
+    } else {
+      this.appCommonService.setLocalStorage('RoleAccess', JSON.stringify(menuItems));
+    }
+  }
+
+  addSuperAdminPage() {
+    if (this.appCommonService.getUserProfile().UserRole === 'SuperAdmin' ) {
+      const roleMenu: any =  {};
+      roleMenu.id = 0;
+      roleMenu.label = 'Master Role Access';
+      roleMenu.icon = 'fa-unlock-alt';
+      roleMenu.routerLink = 'masteruserroleaccess';
+      roleMenu.name = 'Master Role Access';
+      roleMenu.num = 100;
+      roleMenu.items = [];
+      roleMenu.isParent = true ;
+      roleMenu.parentId = 0;
+      roleMenu.subState = 'inactive' ;
+      roleMenu.arrow = 'pull-right-container';
+
+      if (this.appCommonService.getRoleAccess()) {
+        // localStorage.removeItem('RoleAccess' + this.appCommonService.getEnvData().clientCode);
+        this.appCommonService.removeItem('RoleAccess');
+        this.appCommonService.setLocalStorage('RoleAccess', JSON.stringify(roleMenu));
+      } else {
+        this.appCommonService.setLocalStorage('RoleAccess', JSON.stringify(roleMenu));
+      }
+    }
   }
 
   encode64(input) {

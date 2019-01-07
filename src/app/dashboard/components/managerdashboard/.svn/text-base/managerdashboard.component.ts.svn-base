@@ -113,13 +113,13 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
             // localStorage.setItem('refreshedTimeStamp', data);
             this.appCommonService.setLocalStorage('refreshedTimeStamp', data);
             this.updateChange();
-            console.log('refresh');
+            // console.log('refresh');
           } else  if ( this.refreshTimeStamp === '' || this.refreshTimeStamp === null) {
             // localStorage.setItem('refreshedTimeStamp', data);
             this.appCommonService.setLocalStorage('refreshedTimeStamp', data);
           }
-          console.log('new refresh time(Encrypted) : ' + this.refreshTimeStamp);
-          console.log('new refresh time(Decrypted) : ' + this.refreshTimeStamp);
+          // console.log('new refresh time(Encrypted) : ' + this.refreshTimeStamp);
+          // console.log('new refresh time(Decrypted) : ' + this.refreshTimeStamp);
         });
     }, 1000 * 60 * environment.refreshTime );
   }
@@ -131,7 +131,8 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
     if (this.id) {
       clearInterval(this.id);
     }
-    localStorage.removeItem('refreshedTimeStamp');
+
+    this.appCommonService.removeItem('refreshedTimeStamp');
   }
   assignedTasksonPageChange(e1) {
     this.assignedTasksevent = e1;
@@ -214,7 +215,8 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
        this.loaderService.display(false);
       } ,
       error => { console.log(error); this.loaderService.display(false); },
-      () => { console.log('Get all strains complete');  this.loaderService.display(false); });
+      () => { // console.log('Get all strains complete');
+      this.loaderService.display(false); });
   }
 
   getAllTaskTypes() {
@@ -223,21 +225,19 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
       data => {
         // console.log(data);
         this.globalData.taskTypes = data;
-        this.taskTypes = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', '-- Select --', false) ;
+        this.taskTypes = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', 'Show All', false) ;
         this.loaderService.display(false);
       } ,
       error => { console.log(error); this.loaderService.display(false); },
-      () => console.log('sucess'));
+      );
   }
 
   taskTypeChange() {
     let Taskypeid = 0 ;
-    // const SelectValue = this.managerdashboardForm.value.ShowallManager ? this.managerdashboardForm.value.ShowallManager : 1;
-    // const SelectValueCompleted = this.managerdashboardForm.value.ShowallManagerForTskComplete ?
-    //                               this.managerdashboardForm .value.ShowallManagerForTskComplete : 1;
-
-    const SelectValue = 1;
-    const SelectValueCompleted = 1;
+    const SelectValue = this.managerdashboardForm.value.ShowallManager;
+    const SelectValueCompleted = this.managerdashboardForm.value.ShowallManagerForTskComplete;
+    // const SelectValue = 1;
+    // const SelectValueCompleted = 1;
 
    if (!isNaN(Number(this.managerdashboardForm.value.taskTypes))) {
     Taskypeid = Number(this.managerdashboardForm.value.taskTypes);
@@ -323,7 +323,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
        this.loaderService.display(false);
       } ,
       error => { console.log(error); this.loaderService.display(false); },
-      () => { console.log('Get all strains complete'); this.loaderService.display(false);  });
+      () => {  this.loaderService.display(false);  });
   }
 
   getTaskListForCompleted(TaskTypeId, ShowAllForMgr) {
@@ -341,7 +341,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
 
             this.tasks = data.Table.filter(result => result.TaskStatus !== this.taskStatus.ReviewPending && result.TaskTypeId === TaskTypeId);
          } else {
-            this.completedTasks = data.Table.filter(result => String(result.taskStatus).toLocaleUpperCase() === this.taskStatus.Completed);
+            this.completedTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Completed);
 
             this.tasks = data.Table.filter(result => result.TaskStatus !== this.taskStatus.ReviewPending);
          }
@@ -358,7 +358,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
        this.loaderService.display(false);
       } ,
       error => { console.log(error); this.loaderService.display(false); },
-      () => { console.log('Get all strains complete');  this.loaderService.display(false); });
+      () => {   this.loaderService.display(false); });
   }
 
   resetTable(dataTable) {

@@ -33,14 +33,14 @@ export class DropdownValuesService {
       .get(url, {params: params})
       .map(
         data => {
-          console.log('Growers Service success');
+          // console.log('Growers Service success');
           return data;
         }
       );
     //   .get<any>(url)
-    //   // .do(data =>console.log('All : ' + JSON.stringify(data)))
+    // //   // .do(data =>console.log('All : ' + JSON.stringify(data)))
     //  .map(data => {
-    //   console.log('Growers Service success');
+    // //   console.log('Growers Service success');
     //   return data;
     //  })
   }
@@ -54,7 +54,7 @@ export class DropdownValuesService {
     .get(url, {params: params})
 
    .map(data => {
-    console.log('GetAllTask Service success');
+    // console.log('GetAllTask Service success');
     return data;
    });
 }
@@ -68,7 +68,7 @@ getEmployeeListByClient() {
     .get(url, {params: params})
 
   .map(data => {
-    console.log('GetEmployeeListByClient Service success');
+    // console.log('GetEmployeeListByClient Service success');
     return data;
   });
 }
@@ -83,7 +83,7 @@ getEmployeeListByTaskTypeKey(TaskTypeKey: any) {
   .get(url, {params: params})
 
 .map(data => {
-  console.log('GetEmployeeListByTaskTypeKey Service success');
+  // console.log('GetEmployeeListByTaskTypeKey Service success');
   return data;
 });
 }
@@ -100,7 +100,7 @@ getLotListByTask(TaskTypeId, TaskId = 0) {
   .get(url, {params: params})
 
 .map(data => {
-  console.log('GetLotListByTask Service success');
+  // console.log('GetLotListByTask Service success');
   return data;
 });
 }
@@ -115,7 +115,7 @@ getBrands() {
     .get(url, {params: params})
 
    .map(data => {
-    console.log('Brands Service success');
+    // console.log('Brands Service success');
     return data;
    });
 }
@@ -129,7 +129,7 @@ getBrands() {
       return this.http
       .get(url, {params: params})
      .map(data => {
-      console.log('Strains Service success');
+      // console.log('Strains Service success');
       return data;
      });
   }
@@ -143,7 +143,7 @@ getBrands() {
       return this.http
       .get(url, {params: params})
      .map(data => {
-      console.log('Strains Service success');
+      // console.log('Strains Service success');
       return data;
      });
   }
@@ -154,7 +154,7 @@ getBrands() {
     return this.http
     .get(url)
    .map(data => {
-    console.log('Strains Service success');
+    // console.log('Strains Service success');
     return data;
    });
 }
@@ -168,7 +168,7 @@ getSkewListByClient() {
   .get(url, {params: params})
 
  .map(data => {
-  console.log('GetSkewListByClient Service success');
+  // console.log('GetSkewListByClient Service success');
   return data;
  });
 }
@@ -196,7 +196,7 @@ getStrainType() {
     return this.http
     .get(url, {params: params})
    .map(data => {
-    console.log('Strains Service success');
+    // // console.log('Strains Service success');
     return data;
    });
 }
@@ -211,7 +211,7 @@ getPackageTypeList() {
   .get(url, {params: params})
 
  .map(data => {
-  console.log('GetPackagingTypesList Service success');
+  // console.log('GetPackagingTypesList Service success');
   return data;
  });
 }
@@ -223,7 +223,7 @@ getClientList() {
   .get(url)
 
  .map(data => {
-  console.log('GetClientList Service success');
+  // console.log('GetClientList Service success');
   return data;
  });
 }
@@ -235,7 +235,7 @@ getCountryList() {
   .get(url)
 
  .map(data => {
-  console.log('GetCountryList Service success');
+  // console.log('GetCountryList Service success');
   return data;
  });
 }
@@ -247,7 +247,7 @@ getStatesList() {
   .get(url)
 
  .map(data => {
-  console.log('GetStatesList Service success');
+  // console.log('GetStatesList Service success');
   return data;
  });
 }
@@ -259,7 +259,7 @@ getCitiesList() {
   .get(url)
 
  .map(data => {
-  console.log('GetCityList Service success');
+  // console.log('GetCityList Service success');
   return data;
  });
 }
@@ -270,19 +270,19 @@ getRetailerTypeList() {
   .get(url)
 
  .map(data => {
-  console.log('GetRetailerTypeList Service success');
+  // console.log('GetRetailerTypeList Service success');
   return data;
  });
 }
 
 getRoleList() {
   const url = 'api/Role/GetRoleList';
-
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
   return this.http
-  .get(url)
-
+  .get(url, {params: params})
  .map(data => {
-  console.log('GetRoleList Service success');
+  // console.log('GetRoleList Service success');
   return data;
  });
 }

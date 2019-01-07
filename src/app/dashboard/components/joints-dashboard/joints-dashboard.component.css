@@ -1,0 +1,61 @@
+.clsAssignTaskColumn {
+    width: 60px;
+  }
+  td.clsAssignTaskColumn {
+    /* text-align: center; */
+    word-break: keep-all;
+    white-space: nowrap;
+    padding: 2px !important;
+  }
+  .clsTabView{
+    width:100%!important;
+  }
+  .taskCount{
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .clsIconPrint{
+    float: right;
+    margin-right: 30px!important;
+    margin-top: 10px!important;
+    color: #222 !important;
+  }
+
+  :host::ng-deep .mainDiv .clsTabView {
+    border: 1px solid #d9d9d9 !important;
+  }
+
+  .mainDiv {
+    width:100%;
+    position: relative;
+  }
+
+  :host::ng-deep p-card > div.ui-widget-content {
+    border: none !important;
+  }
+
+  :host::ng-deep input[readonly] {
+    background-color: #ffffff;
+  }
+
+  :host::ng-deep #btnSubmitFilter > button.ui-button {
+    height: 31px !important;
+  }
+
+  /* :host::ng-deep div.clsTableWithoutHeaderColorCss .ui-table-thead > tr > th,
+  :host::ng-deep div.clsTableWithoutHeaderColorCss .ui-table-tbody > tr > td
+  {
+    text-align: center !important;
+  } */
+
+  @media only screen and (min-width: 769px) {
+    :host::ng-deep div.clsTabView  ul.ui-tabview-nav  li {
+     width: 15%;
+     text-align: center;
+    }
+    :host::ng-deep div.clsTabView  ul.ui-tabview-nav  li a{
+        width: 100%;
+       }
+  }

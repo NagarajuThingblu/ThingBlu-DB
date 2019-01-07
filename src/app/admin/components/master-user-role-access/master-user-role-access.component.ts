@@ -1,8 +1,7 @@
-import { AuthenticationService } from './../../../shared/services/authentication.service';
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { LoaderService } from '../../../shared/services/loader.service';
-import { CookieService } from 'ngx-cookie-service';
 import { AppCommonService } from '../../../shared/services/app-common.service';
 import { GlobalResources } from '../../../global resource/global.resource';
 import { DropdownValuesService } from '../../../shared/services/dropdown-values.service';
@@ -102,16 +101,22 @@ export class MasterUserRoleAccessComponent implements OnInit {
 
     this.menuItems.forEach(element => {
       const Newmenu: any = {};
-      Newmenu.id = element.id;
-      Newmenu.label = element.label;
+      Newmenu.id = element.Id;
+      Newmenu.label = element.Label;
       Newmenu.icon = '';
-      Newmenu.routerLink = element.routerLink;
-      Newmenu.name = element.name;
-      Newmenu.num = element.num;
+      Newmenu.routerLink = element.RouterLink;
+      Newmenu.name = element.Name;
+      Newmenu.num = element.Num;
       Newmenu.children = [];
-      Newmenu.isParent = element.isParent;
-      Newmenu.parentId = element.parentId;
+      Newmenu.isParent = element.IsParent;
+      Newmenu.parentId = element.ParentId;
       Newmenu.roleMapId = element.RoleMapId;
+
+      if (element.IsDefaultPage === true && element.HasPermission === true) {
+        Newmenu.selectable = false;
+      } else {
+        Newmenu.selectable = true;
+      }
 
       if (element.HasPermission) {
         this.selectedmenuItems.push(Newmenu);
@@ -134,15 +139,16 @@ export class MasterUserRoleAccessComponent implements OnInit {
                 unparentMenu.isParent = unparentelement.isParent;
                 unparentMenu.parentId = unparentelement.parentId;
                 unparentMenu.roleMapId = unparentelement.roleMapId;
+                unparentMenu.selectable = unparentelement.selectable;
                 unparent.children.push(unparentMenu);
               });
             }
           });
         }
-      } else if (element.isParent === false) {
+      } else if (element.IsParent === false) {
         if (this.plottedmenuItems.length) {
           this.plottedmenuItems.forEach(parent => {
-            if (parent.id === element.parentId) {
+            if (parent.id === element.ParentId) {
               parent.children.push(Newmenu);
             } else {
               unparentlist.push(Newmenu);
@@ -233,5 +239,12 @@ export class MasterUserRoleAccessComponent implements OnInit {
     this.selecteduserRoleId = 0;
     this.plottedmenuItems = [];
     this.selectedmenuItems = [];
+  }
+  OnUnSelectNode(e) {
+    if (e.node.isParent === false) {
+      if (e.node.parent.selectable === false) {
+       // this.selectedmenuItems.push(e.node.parent);
+      }
+    }
   }
 }

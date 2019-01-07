@@ -49,7 +49,6 @@
           <div
             class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
             *ngIf="!TUBING.controls['employee'].valid&&TUBING.controls['employee'].dirty">
-              <i class="fa fa-close"></i>
               <span *ngIf="TUBING.controls['employee'].errors['required']">
                 {{ globalResource.employeerequired }}
               </span>
@@ -187,7 +186,6 @@
           <div
             class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
             *ngIf="!TUBING.controls['estimatedstartdate'].valid&&TUBING.controls['estimatedstartdate'].dirty">
-              <i class="fa fa-close"></i>
               <span *ngIf="TUBING.controls['estimatedstartdate'].errors['required']">
                 {{ globalResource.startdaterequired }}
               </span>
@@ -261,7 +259,6 @@
           <div
             class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
             *ngIf="!TUBING.controls['comment'].valid&&TUBING.controls['comment'].dirty">
-              <i class="fa fa-close"></i>
               <span *ngIf="TUBING.controls['comment'].errors['maxLength']">
                 {{ assignTaskResources.commentMaxLength }}
               </span>
@@ -351,7 +348,16 @@
                                                 
                     </td>
                     <td> {{ brandStrainLots[i].UnitValue  }} {{globalResource.listgramunit}}</td>
-                    <td> {{ brandStrainLots[i].Qty  }} </td>
+                    <!-- <td> {{ brandStrainLots[i].Qty  }} </td> -->
+                    <!-- <td> {{ question.value.AvailJointsQty  }} </td> -->
+                    <td>
+                        <ng-container *ngIf="taskId && taskId > 0">
+                            {{ question.value.AvailJointsQty  }}
+                        </ng-container>
+                        <ng-container *ngIf="!taskId">
+                            {{ brandStrainLots[i].Qty }}
+                        </ng-container>
+                    </td>
                     <td>
                       <input
                         type="number"
@@ -363,6 +369,16 @@
                         name="answer"
                         style="width:100%;"
                     />
+                    <div
+                        class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!question.controls['answer'].valid&&question.controls['answer'].dirty">
+                        <span *ngIf="question.controls['answer'].errors['max'] || question.controls['answer'].errors['min']">
+                            Select Valid Weight
+                        </span>  
+                        <span *ngIf="question.controls['answer'].errors['required']">
+                            Required
+                        </span>
+                    </div>
                     </td>
                 </tr>
             </ng-template>

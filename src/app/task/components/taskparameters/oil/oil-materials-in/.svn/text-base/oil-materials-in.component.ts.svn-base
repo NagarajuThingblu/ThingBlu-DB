@@ -87,7 +87,8 @@ export class OilMaterialsInComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    localStorage.removeItem('PkgCodeLotArrays');
+    // localStorage.removeItem('PkgCodeLotArrays');
+    this.appCommonService.removeItem('PkgCodeLotArrays');
   }
 
   ngOnInit() {
@@ -95,7 +96,8 @@ export class OilMaterialsInComponent implements OnInit, OnDestroy {
     this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle(this.oilReturnProcessingResource.title);
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
-    localStorage.removeItem('PkgCodeLotArrays');
+    // localStorage.removeItem('PkgCodeLotArrays');
+    this.appCommonService.removeItem('PkgCodeLotArrays');
     this.oilReturnProcessorForm = this.fb.group({
       processor: new FormControl(null, Validators.compose([Validators.required])),
       oilReturnDate: new FormControl(null, Validators.compose([Validators.required])),
@@ -418,7 +420,8 @@ export class OilMaterialsInComponent implements OnInit, OnDestroy {
   }
   resetForm() {
     // this.oilReturnProcessorForm.reset();
-    localStorage.removeItem('PkgCodeLotArrays');
+    // localStorage.removeItem('PkgCodeLotArrays');
+    this.appCommonService.removeItem('PkgCodeLotArrays');
 
     this.tpPrcsrDetails = {
       expYieldPercent: 0,

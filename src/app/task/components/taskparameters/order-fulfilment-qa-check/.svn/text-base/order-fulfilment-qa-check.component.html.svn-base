@@ -13,7 +13,6 @@
 
       <div class="ui-message ui-messages-error ui-corner-all"  appErrorTooltip
         *ngIf="!QACHECK.controls['orderno'].valid&&QACHECK.controls['orderno'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="QACHECK.controls['orderno'].errors['required']">
           {{ globalResource.ordernorequired }}
         </span>
@@ -491,7 +490,6 @@
 
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
         *ngIf="!QACHECK.controls['employee'].valid&&QACHECK.controls['employee'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="QACHECK.controls['employee'].errors['required']">
           {{ globalResource.employeerequired }}
         </span>
@@ -513,7 +511,6 @@
       </p-calendar>
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
         *ngIf="!QACHECK.controls['estimatedstartdate'].valid&&QACHECK.controls['estimatedstartdate'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="QACHECK.controls['estimatedstartdate'].errors['required']">
           {{ globalResource.startdaterequired }}
         </span>
@@ -563,7 +560,6 @@
 
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
         *ngIf="!QACHECK.controls['comment'].valid&&QACHECK.controls['comment'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="QACHECK.controls['comment'].errors['maxLength']">
           {{ assignTaskResources.commentMaxLength }}
         </span>
@@ -747,10 +743,20 @@
                       <a [routerLink]="" (click)="getPkgsInfo(orderDetails, 'ASSIGN','frmHTML')" ><u>{{orderDetails?.AssignedQty}}</u></a>
                   </td>
                   <td *ngIf="showToManager" pTooltip="Failed Packages Details" tooltipPosition="left">  
-                    <a [routerLink]="" (click)="getPkgsInfo(orderDetails, 'FAIL','frmHTML')" ><u>{{orderDetails?.QAFailedCount}}</u></a>
+                    <a *ngIf="orderDetails?.QAFailedCount > 0" [routerLink]="" (click)="getPkgsInfo(orderDetails, 'FAIL','frmHTML')" >
+                      <u>{{orderDetails?.QAFailedCount}}</u>
+                    </a>
+                    <span *ngIf="orderDetails?.QAFailedCount === 0">
+                        {{orderDetails?.QAFailedCount}}
+                    </span>
                   </td>    
                   <td *ngIf="showToManager" pTooltip="Passed Packages Details" tooltipPosition="left">  
-                    <a [routerLink]="" (click)="getPkgsInfo(orderDetails, 'PASS','frmHTML')" ><u>{{(orderDetails?.QAPassedCount)}}</u></a>
+                    <a *ngIf="orderDetails?.QAPassedCount > 0" [routerLink]="" (click)="getPkgsInfo(orderDetails, 'PASS','frmHTML')" >
+                      <u>{{(orderDetails?.QAPassedCount)}}</u>
+                    </a>
+                    <span *ngIf="orderDetails?.QAPassedCount === 0">
+                        {{orderDetails?.QAPassedCount}}
+                    </span>
                   </td>    
                 </tr>
               </ng-template>
@@ -798,10 +804,20 @@
                         <a [routerLink]="" (click)="getPkgsInfo(orderDetails, 'ASSIGN','frmHTML')" ><u>{{orderDetails?.AssignedQty}}</u></a>
                     </td>   
                     <td *ngIf="showToManager" pTooltip="Failed Packages Details" tooltipPosition="left">  
-                      <a [routerLink]="" (click)="getPkgsInfo(orderDetails, 'FAIL','frmHTML')" ><u>{{orderDetails?.QAFailedCount}}</u></a>
+                      <a *ngIf="orderDetails?.QAFailedCount > 0" [routerLink]="" (click)="getPkgsInfo(orderDetails, 'FAIL','frmHTML')" >
+                        <u>{{orderDetails?.QAFailedCount}}</u>
+                      </a>
+                      <span *ngIf="orderDetails?.QAFailedCount === 0">
+                          {{orderDetails?.QAFailedCount}}
+                      </span>
                     </td>    
                     <td *ngIf="showToManager" pTooltip="Passed Packages Details" tooltipPosition="left">  
-                      <a [routerLink]="" (click)="getPkgsInfo(orderDetails, 'PASS','frmHTML')" ><u>{{(orderDetails?.QAPassedCount)}}</u></a>
+                      <a *ngIf="orderDetails?.QAPassedCount > 0" [routerLink]="" (click)="getPkgsInfo(orderDetails, 'PASS','frmHTML')" >
+                        <u>{{(orderDetails?.QAPassedCount)}}</u>
+                      </a>
+                      <span *ngIf="orderDetails?.QAPassedCount === 0">
+                          {{orderDetails?.QAPassedCount}}
+                      </span>
                     </td>  
                 </tr>
               </ng-template>
@@ -849,10 +865,20 @@
                         <a [routerLink]="" (click)="getPkgsInfo(orderDetails, 'ASSIGN','frmHTML')" ><u>{{orderDetails?.AssignedQty}}</u></a>
                     </td>
                     <td *ngIf="showToManager" pTooltip="Failed Packages Details" tooltipPosition="left">  
-                      <a [routerLink]="" (click)="getPkgsInfo(orderDetails, 'FAIL','frmHTML')" ><u>{{orderDetails?.QAFailedCount}}</u></a>
+                      <a *ngIf="orderDetails?.QAFailedCount > 0" [routerLink]="" (click)="getPkgsInfo(orderDetails, 'FAIL','frmHTML')" >
+                        <u>{{orderDetails?.QAFailedCount}}</u>
+                      </a>
+                      <span *ngIf="orderDetails?.QAFailedCount === 0">
+                          {{orderDetails?.QAFailedCount}}
+                      </span>
                     </td>    
                     <td *ngIf="showToManager" pTooltip="Passed Packages Details" tooltipPosition="left">  
-                      <a [routerLink]="" (click)="getPkgsInfo(orderDetails, 'PASS','frmHTML')" ><u>{{(orderDetails?.QAPassedCount)}}</u></a>
+                      <a *ngIf="orderDetails?.QAPassedCount > 0" [routerLink]="" (click)="getPkgsInfo(orderDetails, 'PASS','frmHTML')" >
+                        <u>{{(orderDetails?.QAPassedCount)}}</u>
+                      </a>
+                      <span *ngIf="orderDetails?.QAPassedCount === 0">
+                          {{orderDetails?.QAPassedCount}}
+                      </span>
                     </td>  
                 </tr>
               </ng-template>
@@ -1420,7 +1446,6 @@
                           <div
                             class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                             *ngIf="!pkgItemDetails?.controls['issueType'].valid&&pkgItemDetails?.controls['issueType'].dirty">
-                              <i class="fa fa-close"></i>
                               <span *ngIf="pkgItemDetails?.controls['issueType'].hasError('required')">
                                 {{ assignTaskResources.issuetyperequired }}
                               </span>

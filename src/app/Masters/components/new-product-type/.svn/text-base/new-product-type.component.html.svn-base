@@ -338,6 +338,7 @@
 
                                     <td>
                                         <input pInputText
+                                          pKeyFilter="pint"
                                           name="packageitemquantity"
                                           id="packageitemquantity"
                                           type="number"                                        

@@ -225,8 +225,12 @@ export class OrderFulfilmentQaCheckComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    localStorage.removeItem('selectedPkgsAssignArray');
-    localStorage.removeItem('selectedFailedPkgsArray');
+    // localStorage.removeItem('selectedPkgsAssignArray');
+    // localStorage.removeItem('selectedFailedPkgsArray');
+
+    this.appCommonService.removeItem('selectedPkgsAssignArray');
+    this.appCommonService.removeItem('selectedFailedPkgsArray');
+
     this.selectedPkgsMap = [];
     this.selectedFailedPkgsMap = [];
     this.selectedProductType = {};
@@ -297,8 +301,15 @@ export class OrderFulfilmentQaCheckComponent implements OnInit, OnDestroy {
 
   // Employee List By Task Type Key
   employeeListByTaskTypeKeay() {
-    this.dropdownDataService.getEmployeeListByTaskTypeKey(this.TaskModel.TaskTypeKey).subscribe(
+    let taskTypeKey;
+    if (this.taskId && this.taskId > 0) {
+      taskTypeKey = this.TaskModel.TaskDetails.TaskTypeKey;
+    } else {
+      taskTypeKey = this.TaskModel.TaskTypeKey;
+    }
+    this.dropdownDataService.getEmployeeListByTaskTypeKey(taskTypeKey).subscribe(
       data => {
+        console.log('Employees', data);
         this.globalData.employees = [];
         this.globalData.employees = data;
         this.employees = this.dropdwonTransformService.transform(data, 'EmpName', 'EmpId', '-- Select --');
@@ -323,7 +334,8 @@ export class OrderFulfilmentQaCheckComponent implements OnInit, OnDestroy {
 
   // On Order Change Bind order details again
   onOrderChange() {
-    localStorage.removeItem('selectedPkgsAssignArray');
+    // localStorage.removeItem('selectedPkgsAssignArray');
+    this.appCommonService.removeItem('selectedPkgsAssignArray');
     this.orderObject = this.globalData.allQAOrders.filter(result => result.OrderId === this.TaskModel.QACHECK.orderno)[0];
     // Added by Devdan :: 19-Oct-2018
     this.getQACheckOrderDetails(this.TaskModel.QACHECK.orderno);

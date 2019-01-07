@@ -1,15 +1,15 @@
 9
 
 dir
-1278
-https://192.169.154.191:8081/svn/thingbluangular5svnv1/thingblusvn/src/app/Masters
-https://192.169.154.191:8081/svn/thingbluangular5svnv1
+1461
+https://192.169.154.191:8081/svn/thingbluangular5svnv2/thingblusvn/src/app/Masters
+https://192.169.154.191:8081/svn/thingbluangular5svnv2
 
 
 
-2018-11-21T13:01:50.651927Z
-1263
-Nita Deshpande
+2019-01-03T12:23:51.695705Z
+1446
+Bharat Tekade
 
 
 svn:special svn:externals svn:needs-lock
@@ -38,10 +38,10 @@ file
 
 
 
-2018-12-17T14:32:03.351792Z
-73a4a5af18ec01fda5b323e9835d7d31
-2018-11-19T09:16:02.924414Z
-1252
+2019-01-07T05:01:06.323287Z
+5fc00b4aec7f6045f775d9458a8dfd11
+2018-12-03T06:00:18.989782Z
+1306
 dotnet
 
 
@@ -64,7 +64,7 @@ dotnet
 
 
 
-40340
+40354
 
 Masters.module.ts
 file
@@ -72,7 +72,7 @@ file
 
 
 
-2018-12-17T14:32:03.360086Z
+2019-01-07T05:01:06.339242Z
 1e0ea2e837e387f59e554e163f34be78
 2018-10-09T06:40:29.274587Z
 1057

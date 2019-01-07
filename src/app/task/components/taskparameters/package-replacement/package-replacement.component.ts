@@ -223,8 +223,12 @@ ngOnInit() {
 }
 
 ngOnDestroy(): void {
-  localStorage.removeItem('selectedPkgsAssignArray');
-  localStorage.removeItem('selectedFailedPkgsArray');
+  // localStorage.removeItem('selectedPkgsAssignArray');
+  // localStorage.removeItem('selectedFailedPkgsArray');
+
+  this.appCommonService.removeItem('selectedPkgsAssignArray');
+  this.appCommonService.removeItem('selectedFailedPkgsArray');
+
   this.selectedPkgsMap = [];
   this.selectedFailedPkgsMap = [];
   this.selectedProductType = {};
@@ -302,7 +306,8 @@ getQAIssueTypes() {
 
 // On Order Change Bind order details again
 onOrderChange() {
-  localStorage.removeItem('selectedPkgsAssignArray');
+  // localStorage.removeItem('selectedPkgsAssignArray');
+  this.appCommonService.removeItem('selectedPkgsAssignArray');
   this.orderObject = this.globalData.allQAOrders.filter(result => result.OrderId === this.TaskModel.REPACK.orderno)[0];
   // this.getRepackOrderDetails(this.REPACK.value.orderno);
   // Added by Devdan :: 20-Oct-2018

@@ -1,0 +1,680 @@
+
+
+<!-- Labeling Task Grid -->
+<div class="ui-g" id="PRINTLABELING" *ngIf="SelectedTabName === 'LABELING'">
+    <div class="ui-g-12">    
+      <div class="ui-g-12 ui-g-nopad">
+        <div class="ui-g-12 ui-md-12 ui-g-nopad">
+            <!-- Available Tasks -->
+            <app-section-header [headerLabel]="prodDashboardResource.lblAvailableTask"></app-section-header>
+            <p-table #dtLabelingAvailableTask
+              [value]="DashboardData.labeling?.availableTasks"
+              styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
+              [responsive]="true"
+              rowHover="true"
+              [rows]="10"
+              >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th [pSortableColumn]="'StrainName'"> 
+                    {{prodDashboardResource.lblStrain}}
+                  </th>
+                  <th>{{prodDashboardResource.lblPkgSize}}</th>
+                  <th [pSortableColumn]="'OrderRefId'"> 
+                    {{prodDashboardResource.lblOrder}}
+                    <p-sortIcon [field]="'OrderRefId'"></p-sortIcon>
+                  </th>
+                  <th [pSortableColumn]="'TubeAvlQty'"> 
+                    {{prodDashboardResource.lblReadyForLabeling}}
+                    <p-sortIcon [field]="'TubeAvlQty'"></p-sortIcon>
+                  </th>
+                  
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-i="rowIndex" >
+                <tr>
+                  <!--Strain -->
+                  <td>
+                    {{rowData?.StrainName}}
+                  </td>
+                  <!--End Strain -->
+                  <!--Order Package Size -->
+                  <td>
+                    {{rowData?.PkgTypeName}}&nbsp;-&nbsp;{{rowData?.ItemQty}}&nbsp;x&nbsp;{{rowData?.UnitValue}} {{prodDashboardResource.unitGrams}}
+                  </td>
+                  <!--Order Package Size -->
+                  <!--OrderNo -->
+                  <td>
+                      {{rowData?.OrderRefId}}
+                  </td>
+                  <!--OrderNo -->
+                  <!--ReadyForLabeling -->
+                  <td>
+                    {{rowData?.TubeAvlQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TubeAvlQty > 1 && rowData?.PkgTypeName.toUpperCase() !== 'JOINTS' ? 's' : ''}}
+                  </td>
+                  <!--ReadyForLabeling -->            
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="4">
+                    {{ globalResource.norecordsfound }}
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft" let-state>
+                <pagination-counts
+                  *ngIf="DashboardData.labeling.availableTasks?.length"
+                  [inputData]="DashboardData.labeling?.availableTasks"
+                  [inputEvent]="dashboardGridEvents.labeling?.availTasksEvent"
+                ></pagination-counts>
+              </ng-template>
+            </p-table>
+            <!--End Available Tasks -->
+            <div>&nbsp;</div>
+            <!-- Upcoming Tasks -->
+            <app-section-header [headerLabel]="prodDashboardResource.lblUpcomingTask"></app-section-header>
+            <p-table #dtLabelingUpcomingTask
+              [value]="DashboardData.labeling?.upcomingTasks"
+              styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
+              [responsive]="true"
+              rowHover="true"
+              [rows]="10"
+              >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th [pSortableColumn]="'StrainName'"> 
+                    {{prodDashboardResource.lblStrain}}
+                    <p-sortIcon [field]="'StrainName'"></p-sortIcon>
+                  </th>
+                  <th>{{prodDashboardResource.lblPkgSize}}</th>
+                  <th [pSortableColumn]="'OrderRefId'"> 
+                    {{prodDashboardResource.lblOrder}}
+                    <p-sortIcon [field]="'OrderRefId'"></p-sortIcon>
+                  </th>
+                  <th [pSortableColumn]="'TubeRequiredForLabelingQty'"> 
+                    {{prodDashboardResource.lblUpcomingUnits}}
+                    <p-sortIcon [field]="'TubeRequiredForLabelingQty'"></p-sortIcon>
+                  </th>
+                  
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-i="rowIndex" >
+                <tr>
+                  <!--Strain -->
+                  <td>
+                    {{rowData?.StrainName}}
+                  </td>
+                  <!--End Strain -->
+                  <!--Order Package Size -->
+                  <td>
+                    {{rowData?.PkgTypeName}}&nbsp;-&nbsp;{{rowData?.ItemQty}}&nbsp;x&nbsp;{{rowData?.UnitValue}} {{prodDashboardResource.unitGrams}}
+                  </td>
+                  <!--Order Package Size -->
+                  <!--OrderNo -->
+                  <td>
+                      {{rowData?.OrderRefId}}
+                  </td>
+                  <!--OrderNo -->
+                  <!--ReadyForLabeling -->
+                  <td>
+                    {{rowData?.TubeRequiredForLabelingQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TubeRequiredForLabelingQty > 1 && rowData?.PkgTypeName.toUpperCase() !== 'JOINTS' ? 's' : ''}}
+                  </td>
+                  <!--ReadyForLabeling -->           
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="4">
+                    {{ globalResource.norecordsfound }}
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft" let-state>
+                <pagination-counts
+                  *ngIf="DashboardData.labeling?.upcomingTasks?.length"
+                  [inputData]="DashboardData.labeling?.upcomingTasks"
+                  [inputEvent]="dashboardGridEvents.labeling?.upcomingTasksEvent"
+                ></pagination-counts>
+              </ng-template>
+            </p-table>
+            <!--End Upcoming Tasks -->
+          </div>
+        </div>
+      </div>
+  </div>
+  <!-- End Labeling Task Grid -->
+  
+  
+  <!-- Tubing Task Grid -->
+  <div class="ui-g" id="PRINTPACKAGING" *ngIf="SelectedTabName === 'PACKAGING'">
+    <div class="ui-g-12">    
+      <div class="ui-g-12 ui-g-nopad">
+        <div class="ui-g-12 ui-md-12 ui-g-nopad">
+            <!-- Available Tasks -->
+            <app-section-header [headerLabel]="prodDashboardResource.lblAvailableTask"></app-section-header>
+            <p-table #dtTubingAvailableTask
+              [value]="DashboardData.tubing?.availableTasks"
+              styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
+              [responsive]="true"
+              rowHover="true"
+              [rows]="10"
+              >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th [pSortableColumn]="'StrainName'"> 
+                    {{prodDashboardResource.lblStrain}}
+                    <p-sortIcon [field]="'StrainName'"></p-sortIcon>
+                  </th>
+                  <th>{{prodDashboardResource.lblPkgSize}}</th>
+                  <th [pSortableColumn]="'TampAvlQty'"> 
+                    {{prodDashboardResource.lblReadyForPackaging}}
+                    <p-sortIcon [field]="'TampAvlQty'"></p-sortIcon>
+                  </th>
+                  
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-i="rowIndex" >
+                <tr>
+                  <!--Strain -->
+                  <td>
+                    {{rowData?.StrainName}}
+                  </td>
+                  <!--End Strain -->
+                  <!--Order Package Size -->
+                  <td>
+                    {{rowData?.PkgTypeName}}&nbsp;-&nbsp;{{rowData?.ItemQty}}&nbsp;x&nbsp;{{rowData?.UnitValue}} {{prodDashboardResource.unitGrams}}
+                  </td>
+                  <!--Order Package Size -->
+                  <!--ReadyForLabeling -->
+                  <td>
+                    {{rowData?.TampAvlQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TampAvlQty > 1 && rowData?.PkgTypeName.toUpperCase() !== 'JOINTS' ? 's' : ''}}
+                  </td>
+                  <!--ReadyForLabeling -->               
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="3">
+                    {{ globalResource.norecordsfound }}
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft" let-state>
+                <pagination-counts
+                  *ngIf="DashboardData.tubing.availableTasks?.length"
+                  [inputData]="DashboardData.tubing?.availableTasks"
+                  [inputEvent]="dashboardGridEvents.tubing?.availTasksEvent"
+                ></pagination-counts>
+              </ng-template>
+            </p-table>
+            <!--End Available Tasks -->
+            <div>&nbsp;</div>
+            <!-- Upcoming Tasks -->
+            <app-section-header [headerLabel]="prodDashboardResource.lblUpcomingTask"></app-section-header>
+            <p-table #dtTubingUpcomingTask
+              [value]="DashboardData.tubing?.upcomingTasks"
+              styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
+              [responsive]="true"
+              rowHover="true"
+              [rows]="10"
+              >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th [pSortableColumn]="'StrainName'"> 
+                    {{prodDashboardResource.lblStrain}}
+                    <p-sortIcon [field]="'StrainName'"></p-sortIcon>
+                  </th>
+                  <th>{{prodDashboardResource.lblPkgSize}}</th>             
+                  <th [pSortableColumn]="'TampRequiredQty'"> 
+                    {{prodDashboardResource.lblUpcomingUnits}}
+                    <p-sortIcon [field]="'TampRequiredQty'"></p-sortIcon>
+                  </th>
+                  
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-i="rowIndex" >
+                <tr>
+                  <!--Strain -->
+                  <td>
+                    {{rowData?.StrainName}}
+                  </td>
+                  <!--End Strain -->
+                  <!--Order Package Size -->
+                  <td>
+                    {{rowData?.PkgTypeName}}&nbsp;-&nbsp;{{rowData?.ItemQty}}&nbsp;x&nbsp;{{rowData?.UnitValue}} {{prodDashboardResource.unitGrams}}
+                  </td>
+                  <!--Order Package Size -->               
+                  <!--ReadyForLabeling -->
+                  <td>
+                    {{rowData?.TampRequiredQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TampRequiredQty > 1 && rowData?.PkgTypeName.toUpperCase() !== 'JOINTS' ? 's' : ''}}
+                  </td>
+                  <!--ReadyForLabeling -->              
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="3">
+                    {{ globalResource.norecordsfound }}
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft" let-state>
+                <pagination-counts
+                  *ngIf="DashboardData.tubing?.upcomingTasks?.length"
+                  [inputData]="DashboardData.tubing?.upcomingTasks"
+                  [inputEvent]="dashboardGridEvents.tubing?.upcomingTasksEvent"
+                ></pagination-counts>
+              </ng-template>
+            </p-table>
+            <!--End Upcoming Tasks -->
+          </div>
+        </div>
+      </div>
+  </div>
+  <!-- End Tubing Task Grid -->
+  
+  
+  <!-- Tamping Task Grid -->
+  <div class="ui-g" id="PRINTTAMPING" *ngIf="SelectedTabName === 'TAMPING'">
+    <div class="ui-g-12">    
+      <div class="ui-g-12 ui-g-nopad">
+        <div class="ui-g-12 ui-md-12 ui-g-nopad">
+            <!-- Available Tasks -->
+            <app-section-header [headerLabel]="prodDashboardResource.lblAvailableTask"></app-section-header>
+            <p-table #dtTampingAvailableTask
+              [value]="DashboardData.tamping?.availableTasks"
+              styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
+              [responsive]="true"
+              rowHover="true"
+              [rows]="10"
+              >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th [pSortableColumn]="'StrainName'"> 
+                    {{prodDashboardResource.lblStrain}}
+                    <p-sortIcon [field]="'StrainName'"></p-sortIcon>
+                  </th>
+                  <th>{{prodDashboardResource.lblSize}}</th>
+                  <th [pSortableColumn]="'JointAvlQty'"> 
+                    {{prodDashboardResource.lblReadyForTamping}}
+                    <p-sortIcon [field]="'JointAvlQty'"></p-sortIcon>
+                  </th>
+                  
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-i="rowIndex" >
+                <tr>
+                  <!--Strain -->
+                  <td>
+                    {{rowData?.StrainName}}
+                  </td>
+                  <!--End Strain -->
+                  <!--Order Package Size -->
+                  <td>
+                    {{rowData?.UnitValue}}&nbsp;{{prodDashboardResource.unitGrams}}
+                  </td>
+                  <!--Order Package Size -->
+                  <!--ReadyForLabeling -->
+                  <td>
+                    {{rowData?.JointAvlQty}}&nbsp;{{prodDashboardResource.lblUnits}}
+                  </td>
+                  <!--ReadyForLabeling -->              
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="3">
+                    {{ globalResource.norecordsfound }}
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft" let-state>
+                <pagination-counts
+                  *ngIf="DashboardData.tamping.availableTasks?.length"
+                  [inputData]="DashboardData.tamping?.availableTasks"
+                  [inputEvent]="dashboardGridEvents.tamping?.availTasksEvent"
+                ></pagination-counts>
+              </ng-template>
+            </p-table>
+            <!--End Available Tasks -->
+            <div>&nbsp;</div>
+            <!-- Upcoming Tasks -->
+            <app-section-header [headerLabel]="prodDashboardResource.lblUpcomingTask"></app-section-header>
+            <p-table #dtTampingUpcomingTask
+              [value]="DashboardData.tamping?.upcomingTasks"
+              styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
+              [responsive]="true"
+              rowHover="true"
+              [rows]="10"
+              >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th [pSortableColumn]="'StrainName'"> 
+                    {{prodDashboardResource.lblStrain}}
+                    <p-sortIcon [field]="'StrainName'"></p-sortIcon>
+                  </th>
+                  <th>{{prodDashboardResource.lblSize}}</th>
+                  <th [pSortableColumn]="'JointRequiredQty'"> 
+                    {{prodDashboardResource.lblUpcomingUnits}}
+                    <p-sortIcon [field]="'JointRequiredQty'"></p-sortIcon>
+                  </th>
+                  
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-i="rowIndex" >
+                <tr>
+                  <!--Strain -->
+                  <td>
+                    {{rowData?.StrainName}}
+                  </td>
+                  <!--End Strain -->
+                   <!--Order Package Size -->
+                   <td>
+                    {{rowData?.UnitValue}}&nbsp;{{prodDashboardResource.unitGrams}}
+                  </td>
+                  <!--Order Package Size -->
+                  <!--ReadyForLabeling -->
+                  <td>
+                    {{rowData?.JointRequiredQty}}&nbsp;{{prodDashboardResource.lblUnits}}
+                  </td>
+                  <!--ReadyForLabeling -->               
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="3">
+                    {{ globalResource.norecordsfound }}
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft">
+                <pagination-counts
+                  *ngIf="DashboardData.tamping?.upcomingTasks?.length"
+                  [inputData]="DashboardData.tamping?.upcomingTasks"
+                  [inputEvent]="dashboardGridEvents.tamping?.upcomingTasksEvent"
+                ></pagination-counts>
+              </ng-template>
+            </p-table>
+            <!--End Upcoming Tasks -->
+          </div>
+        </div>
+      </div>
+  </div>
+  <!-- End Tamping Task Grid -->
+  
+  
+  <!-- Rolling Task Grid -->
+  <div class="ui-g" id="PRINTROLLING" *ngIf="SelectedTabName === 'ROLLING'">
+    <div class="ui-g-12">    
+      <div class="ui-g-12 ui-g-nopad">
+        <div class="ui-g-12 ui-md-12 ui-g-nopad">
+            <!-- Available Tasks -->
+            <app-section-header [headerLabel]="prodDashboardResource.lblAvailableTask"></app-section-header>
+            <p-table #dtRollingAvailableTask
+              [value]="DashboardData.rolling?.availableTasks"
+              styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
+              [responsive]="true"
+              rowHover="true"
+              [rows]="10"
+              >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th [pSortableColumn]="'StrainName'"> 
+                    {{prodDashboardResource.lblStrain}}
+                    <p-sortIcon [field]="'StrainName'"></p-sortIcon>
+                  </th>
+                  <th>{{prodDashboardResource.lblSize}}</th>
+                  <th [pSortableColumn]="'JointRequiredQty'"> 
+                    {{prodDashboardResource.requiredQty}}
+                    <p-sortIcon [field]="'JointRequiredQty'"></p-sortIcon>
+                  </th>
+                  <th [pSortableColumn]="'GrindAvlWt'"> 
+                    {{prodDashboardResource.availMaterial}}
+                    <p-sortIcon [field]="'GrindAvlWt'"></p-sortIcon>
+                  </th>
+                  
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-i="rowIndex" >
+                <tr>
+                  <!--Strain -->
+                  <td>
+                    {{rowData?.StrainName}}
+                  </td>
+                  <!--End Strain -->
+                  <!--Order Package Size -->
+                  <td>
+                    {{rowData?.UnitValue}}&nbsp;{{prodDashboardResource.unitGrams}}
+                  </td>
+                  <!--Order Package Size -->
+                  <!--RequiredQty -->
+                  <td>
+                    {{rowData?.JointRequiredQty}}&nbsp;{{prodDashboardResource.lblUnits}}
+                  </td>
+                  <!--End RequiredQty -->
+                   <!--availMaterial -->
+                   <td>
+                    {{rowData?.GrindAvlWt}}&nbsp;{{prodDashboardResource.unitGrams}}
+                  </td>
+                  <!--End availMaterial -->              
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="4">
+                    {{ globalResource.norecordsfound }}
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft" let-state>
+                <pagination-counts
+                  *ngIf="DashboardData.rolling.availableTasks?.length"
+                  [inputData]="DashboardData.rolling?.availableTasks"
+                  [inputEvent]="dashboardGridEvents.rolling?.availTasksEvent"
+                ></pagination-counts>
+              </ng-template>
+            </p-table>
+            <!--End Available Tasks -->
+            <div>&nbsp;</div>
+            <!-- Upcoming Tasks -->
+            <app-section-header [headerLabel]="prodDashboardResource.lblUpcomingTask"></app-section-header>
+            <p-table #dtRollingUpcomingTask
+              [value]="DashboardData.rolling?.upcomingTasks"
+              styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
+              [responsive]="true"
+              rowHover="true"
+              [rows]="10"
+              >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th [pSortableColumn]="'StrainName'"> 
+                    {{prodDashboardResource.lblStrain}}
+                    <p-sortIcon [field]="'StrainName'"></p-sortIcon>
+                  </th>
+                  <th>{{prodDashboardResource.lblSize}}</th>
+                  <th [pSortableColumn]="'JointRequiredQty'"> 
+                    {{prodDashboardResource.requiredQty}}
+                    <p-sortIcon [field]="'JointRequiredQty'"></p-sortIcon>
+                  </th>
+                  <th [pSortableColumn]="'GrindAvlWt'"> 
+                    {{prodDashboardResource.availMaterial}}
+                    <p-sortIcon [field]="'GrindAvlWt'"></p-sortIcon>
+                  </th>
+                  
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-i="rowIndex" >
+                <tr>
+                  <!--Strain -->
+                  <td>
+                    {{rowData?.StrainName}}
+                  </td>
+                  <!--End Strain -->
+                  <!--Order Package Size -->
+                  <td>
+                    {{rowData?.UnitValue}}&nbsp;{{prodDashboardResource.unitGrams}}
+                  </td>
+                  <!--Order Package Size -->
+                  <!--RequiredQty -->
+                  <td>
+                    {{rowData?.JointRequiredQty}}&nbsp;{{prodDashboardResource.lblUnits}}
+                  </td>
+                  <!--End RequiredQty -->
+                   <!--availMaterial -->
+                   <td>
+                    {{rowData?.GrindAvlWt}}&nbsp;{{prodDashboardResource.unitGrams}}
+                  </td>
+                  <!--End availMaterial -->               
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="4">
+                    {{ globalResource.norecordsfound }}
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft">
+                <pagination-counts
+                  *ngIf="DashboardData.rolling?.upcomingTasks?.length"
+                  [inputData]="DashboardData.rolling?.upcomingTasks"
+                  [inputEvent]="dashboardGridEvents.rolling?.upcomingTasksEvent"
+                ></pagination-counts>
+              </ng-template>
+            </p-table>
+            <!--End Upcoming Tasks -->
+          </div>
+        </div>
+      </div>
+  </div>
+  <!-- End Rolling Task Grid -->
+  
+  
+  <!-- Grinding Task Grid -->
+  <div class="ui-g" id="PRINTGRINDING" *ngIf="SelectedTabName === 'GRINDING'">
+    <div class="ui-g-12">    
+      <div class="ui-g-12 ui-g-nopad">
+        <div class="ui-g-12 ui-md-12 ui-g-nopad">
+            <!-- Available Tasks -->
+            <app-section-header [headerLabel]="prodDashboardResource.lblAvailableTask"></app-section-header>
+            <p-table #dtGrindingAvailableTask
+              [value]="DashboardData.grinding?.availableTasks"
+              styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
+              [responsive]="true"
+              rowHover="true"
+              [rows]="10"
+              >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th [pSortableColumn]="'StrainName'"> 
+                    {{prodDashboardResource.lblStrain}}
+                    <p-sortIcon [field]="'StrainName'"></p-sortIcon>
+                  </th>
+                  <th>{{prodDashboardResource.weightNeeded}}</th>
+                  <th [pSortableColumn]="'RawAvlWt'"> 
+                    {{prodDashboardResource.availSourceMaterial}}
+                    <p-sortIcon [field]="'RawAvlWt'"></p-sortIcon>
+                  </th>
+                  
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-i="rowIndex" >
+                <tr>
+                  <!--Strain -->
+                  <td>
+                    {{rowData?.StrainName}}
+                  </td>
+                  <!--End Strain -->
+                  <!--WeightNeeded -->
+                  <td>
+                    {{rowData?.RawRequiredWt}}&nbsp;{{prodDashboardResource.unitGrams}}
+                  </td>
+                  <!--End WeightNeeded -->
+                  <!--AvailSourceMaterial -->
+                  <td>
+                    {{rowData?.RawAvlWt}}&nbsp;{{prodDashboardResource.unitGrams}}
+                  </td>
+                  <!--AvailSourceMaterial -->                
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="3">
+                    {{ globalResource.norecordsfound }}
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft" let-state>
+                <pagination-counts
+                  *ngIf="DashboardData.grinding.availableTasks?.length"
+                  [inputData]="DashboardData.grinding?.availableTasks"
+                  [inputEvent]="dashboardGridEvents.grinding?.availTasksEvent"
+                ></pagination-counts>
+              </ng-template>
+            </p-table>
+            <!--End Available Tasks -->
+            <div>&nbsp;</div>
+            <!-- Upcoming Tasks -->
+            <app-section-header [headerLabel]="prodDashboardResource.lblUpcomingTask"></app-section-header>
+            <p-table #dtGrindingUpcomingTask
+              [value]="DashboardData.grinding?.upcomingTasks"
+              styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
+              [responsive]="true"
+              rowHover="true" 
+              [rows]="10"
+              >
+              <ng-template pTemplate="header">
+                <tr>
+                  <th [pSortableColumn]="'StrainName'"> 
+                    {{prodDashboardResource.lblStrain}}
+                    <p-sortIcon [field]="'StrainName'"></p-sortIcon>
+                  </th>
+                  <th>{{prodDashboardResource.weightNeeded}}</th>
+                  <th [pSortableColumn]="'RawAvlWt'"> 
+                    {{prodDashboardResource.availSourceMaterial}}
+                    <p-sortIcon [field]="'RawAvlWt'"></p-sortIcon>
+                  </th>
+                  
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-i="rowIndex" >
+                <tr>
+                  <!--Strain -->
+                  <td>
+                    {{rowData?.StrainName}}
+                  </td>
+                  <!--End Strain -->
+                  <!--WeightNeeded -->
+                  <td>
+                    {{rowData?.RawRequiredWt}}&nbsp;{{prodDashboardResource.unitGrams}}
+                  </td>
+                  <!--End WeightNeeded -->
+                  <!--AvailSourceMaterial -->
+                  <td>
+                    {{rowData?.RawAvlWt}}&nbsp;{{prodDashboardResource.unitGrams}}
+                  </td>
+                  <!--AvailSourceMaterial -->               
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="3">
+                    {{ globalResource.norecordsfound }}
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft">
+                <pagination-counts
+                  *ngIf="DashboardData.grinding?.upcomingTasks?.length"
+                  [inputData]="DashboardData.grinding?.upcomingTasks"
+                  [inputEvent]="dashboardGridEvents.grinding?.upcomingTasksEvent"
+                ></pagination-counts>
+              </ng-template>
+            </p-table>
+            <!--End Upcoming Tasks -->
+          </div>
+        </div>
+      </div>
+  </div>
+  <!-- End Grinding Task Grid -->

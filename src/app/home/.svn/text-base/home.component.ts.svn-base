@@ -1,5 +1,5 @@
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
-import { Component, OnInit, ElementRef, Renderer2, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, Renderer2, OnDestroy, HostListener } from '@angular/core';
 import { MenuItem, SelectItem } from 'primeng/api';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Title } from '@angular/platform-browser';
@@ -21,44 +21,51 @@ import { GlobalResources } from '../global resource/global.resource';
     trigger('bodyLeftRight', [
       state('left', style({
 
-        paddingLeft: '0px'
+        paddingLeft:'0px'
         // transform:  'translateX(0px)'
+       
       })),
       state('bigLeft', style({
-        paddingLeft: '50px'
-        // transform: 'translateX(280px)'
+        paddingLeft:'50px'
+       // transform: 'translateX(280px)'
       })),
       state('right', style({
-        paddingLeft: '271px'
-        // transform: 'translateX(280px)'
+        paddingLeft:'271px'
+       // transform: 'translateX(280px)'
       })),
-      transition('left <=> right', animate('500ms ease')),
-      transition('bigLeft => right', animate('500ms ease'))
+      transition('left <=> right', animate('150ms ease')),
+      transition('bigLeft => right', animate('150ms ease'))
     ]),
     trigger('slideInOut', [
       state('in', style({
-        transform: 'translate3d(-216px, 0, 0)'
+        transform: 'translate3d(-230px, 0, 0)'
+        
       })),
       state('out', style({
-        transform: 'translate3d(0, 0, 0)'
+        transform: 'translate3d(0, 0, 0)' 
       })),
-      state('smallin', style({
+      
+      state('smallDeviceIn', style({
         transform: 'translate3d(-101%, 0, 0)'
       })),
-      transition('in <=> out', animate('550ms ease')),
-      transition('smallin <=> out', animate('550ms ease')),
+      transition('in <=> out', animate('250ms ease')),
+      transition('smallDeviceIn <=> out', animate('250ms ease')),
     ])
   ]
 })
 export class HomeComponent implements OnInit, OnDestroy {
   newReloginForm: FormGroup;
-  menuState = 'out';
-  bodystates = 'right';
-
+  menuState:string = 'out';
+  bodystates:string = 'right';
   public inputClass: any = 'big';
+  public windowInnerSize : any;
+  public getMenuStatusOnResize : any;
+  public getMenuClassOnResize : any;
   public username: any;
   heading: any;
-  menustatus = false;
+  menustatus: boolean = false;
+  timer: any;
+  public isOn : any = true;
   showLogoutModal = false;
   public isAuthenticated: boolean;
   public userModel: UserModel;
@@ -113,24 +120,101 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   toggleMenu() {
-    const screenWidth = screen.width;
-    const screenHeight = screen.height;
+     // var screenWidth = screen.width;
+   // var screenHeight = screen.height;
+   this.windowInnerSize = window.innerWidth;
+   this.getMenuStatusOnResize = this.menuState;
+   this.getMenuClassOnResize = this.inputClass;
+   //alert(this.getMenuStatusOnResize + " - " + this.getMenuClassOnResize);
 
-    if (screenWidth < 1024) {
-      this.menuState = this.menuState === 'out' ? 'smallin' : 'out';
-      // this.bodystates = this.bodystates === 'right' ? 'left' : 'right';
 
-    } else {
-      this.menuState = this.menuState === 'out' ? 'in' : 'out';
-      this.bodystates = this.bodystates === 'right' ? 'bigLeft' : 'right';
+    if(this.windowInnerSize < 1024){
+      this.menuState = this.menuState === 'out' ? 'smallDeviceIn' : 'out'; 
+      //this.bodystates = this.bodystates === 'right' ? 'left' : 'right';
+     
+    }else{
 
-      this.menustatus = !this.menustatus;
-      this.inputClass = this.menustatus === true ? 'small' : 'big';
+      if (this.getMenuStatusOnResize == 'out'  && this.getMenuClassOnResize == 'big'){
+        //alert("out and big");
+        this.inputClass = 'small';
+        this.bodystates = 'bigLeft';
+        this.menuState = 'in'
+        }
+      if (this.getMenuStatusOnResize == 'in'  && this.getMenuClassOnResize == 'small'){
+      //alert(" abou 900 = in small ")
+      this.inputClass = 'big';
+      this.bodystates = 'right';
+      this.menuState = 'out'
+
+      }
     }
 
-    const elementResult = document.querySelectorAll('.ui-menuitem-text');
-    // alert(elementResult);
+    var elementResult = document.querySelectorAll('.ui-menuitem-text');
+    //alert(elementResult);
+
+    this.isOn = this.isOn == true ? false : true; 
+   
   }
+// Hide menu on Black Mask
+hideMenu(){
+  this.menuState = 'smallDeviceIn'; 
+  this.isOn = false;
+}
+
+@HostListener('window:resize', ['$event'])
+onResize(event) {
+
+
+  clearTimeout(this.timer);
+ this.timer = setTimeout(() => {
+     this.getMenuStatusOnResize = this.menuState;
+     this.getMenuClassOnResize = this.inputClass;
+    // alert(this.getMenuStatusOnResize + " - " + this.getMenuClassOnResize);
+
+     if(event.target.innerWidth <= 900){
+
+              if (this.getMenuStatusOnResize == 'out'  && this.getMenuClassOnResize == 'big'){
+//                 this.menuState = 'smallDeviceIn'; 
+                  this.inputClass = "big";
+                  this.bodystates = "left";
+              }
+              if (this.getMenuStatusOnResize == 'smallDeviceIn'  && this.getMenuClassOnResize == 'big'){
+               //                 //alert(" ")
+                  this.bodystates = "smallDeviceIn"; 
+                  this.inputClass = "big";
+               }   
+               if (this.getMenuStatusOnResize == 'in'  && this.getMenuClassOnResize == 'small'){
+                // alert(" 900 = in small ")
+                 this.bodystates = "left"; 
+                 this.inputClass = "big";
+                 this.menuState = 'smallDeviceIn';
+                 }  
+
+     
+     }else{
+
+           if (this.getMenuStatusOnResize == 'out'  && this.getMenuClassOnResize == 'big'){
+                         //alert("out and big");
+                         this.inputClass = 'big';
+                         this.bodystates = 'right';
+               }
+           if (this.getMenuStatusOnResize == 'in'  && this.getMenuClassOnResize == 'small'){
+           //  alert(" abou 900 = in small ")
+                  this.inputClass = 'small';
+                  this.bodystates = 'bigLeft';
+               }
+               if (this.getMenuStatusOnResize == 'smallDeviceIn'  && this.getMenuClassOnResize == 'big'){
+                 //                 //alert(" ")
+                 this.inputClass = 'small';
+                 this.bodystates = 'bigLeft';
+                 this.menuState = 'in';
+                 }   
+
+    }
+
+ }, 500);
+ 
+} 
 
   hideMenuBodyClick() {
     const screenWidth = screen.width;
@@ -142,15 +226,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     } else { }
   }
   screenwidthfind() {
-
-    const screenWidth = screen.width;
-    const screenHeight = screen.height;
-    if (screenWidth < 1024) {
-      this.bodystates = 'left';
-    } else {
+    this.windowInnerSize = window.innerWidth;
+    // alert(this.windowInnerSize);
+     if(this.windowInnerSize < 1024){
+      this.bodystates = "left";
+     }else{
       // this.menuState = this.menuState === 'out' ? 'in' : 'out';
-      // this.bodystates = this.bodystates === 'right' ? 'left' : 'right';
-    }
+       //this.bodystates = this.bodystates === 'right' ? 'left' : 'right';
+     }
   }
 
   doLogOut() {

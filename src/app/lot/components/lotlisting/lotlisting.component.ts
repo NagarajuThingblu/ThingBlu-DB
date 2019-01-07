@@ -85,6 +85,7 @@ export class LotlistingComponent implements OnInit {
 
   deleteLot(LotId) {
     this.confirmationService.confirm({
+      key: 'lotdelete',
       message: this.lotListResource.deleteConfirm,
       header: this.globalResource.applicationmsg,
       icon: 'fa fa-trash',

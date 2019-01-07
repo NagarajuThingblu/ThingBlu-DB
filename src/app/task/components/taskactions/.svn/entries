@@ -1,14 +1,14 @@
 9
 
 dir
-1278
-https://192.169.154.191:8081/svn/thingbluangular5svnv1/thingblusvn/src/app/task/components/taskactions
-https://192.169.154.191:8081/svn/thingbluangular5svnv1
+1461
+https://192.169.154.191:8081/svn/thingbluangular5svnv2/thingblusvn/src/app/task/components/taskactions
+https://192.169.154.191:8081/svn/thingbluangular5svnv2
 
 
 
-2018-11-28T04:16:11.249718Z
-1273
+2018-12-20T10:50:26.175717Z
+1397
 Nita Deshpande
 
 
@@ -32,7 +32,7 @@ file
 
 
 
-2018-12-17T14:31:47.780123Z
+2019-01-07T05:00:55.823577Z
 6742978fc5ffc5e89fbc870d63d65716
 2018-05-23T10:27:12.088008Z
 1
@@ -66,11 +66,11 @@ file
 
 
 
-2018-12-17T14:31:47.764499Z
-f8c988774d586acb9602bd29ec0ada3a
-2018-11-21T13:01:50.651927Z
-1263
-Nita Deshpande
+2019-01-07T05:00:55.782812Z
+ed8cffc7782052f46b2479e3409adb9b
+2018-12-10T06:09:10.668947Z
+1330
+dotnet
 
 
 
@@ -92,7 +92,7 @@ Nita Deshpande
 
 
 
-12193
+12202
 
 taskactions.component.ts
 file
@@ -100,10 +100,10 @@ file
 
 
 
-2018-12-17T14:31:47.748657Z
-bf4258f780aa7eb7c36f89966da3bdf1
-2018-11-28T04:16:11.249718Z
-1273
+2019-01-07T05:00:55.742793Z
+5e2d3b11c9a6f27928839efb2fafc50c
+2018-12-20T10:50:26.175717Z
+1397
 Nita Deshpande
 
 
@@ -126,7 +126,7 @@ Nita Deshpande
 
 
 
-19532
+19594
 
 taskactions.component.css
 file
@@ -134,7 +134,7 @@ file
 
 
 
-2018-12-17T14:31:47.773831Z
+2019-01-07T05:00:55.803630Z
 54aa4bbcb2306e1e4a161501e0106194
 2018-11-21T13:01:50.651927Z
 1263

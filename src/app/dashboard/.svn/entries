@@ -1,15 +1,15 @@
 9
 
 dir
-1278
-https://192.169.154.191:8081/svn/thingbluangular5svnv1/thingblusvn/src/app/dashboard
-https://192.169.154.191:8081/svn/thingbluangular5svnv1
+1461
+https://192.169.154.191:8081/svn/thingbluangular5svnv2/thingblusvn/src/app/dashboard
+https://192.169.154.191:8081/svn/thingbluangular5svnv2
 
 
 
-2018-11-21T13:08:41.897134Z
-1265
-Nita Deshpande
+2019-01-04T10:20:03.790751Z
+1460
+Bharat Tekade
 
 
 svn:special svn:externals svn:needs-lock
@@ -32,11 +32,11 @@ file
 
 
 
-2018-12-17T14:31:57.775579Z
-d769ba72530b66b860ace553c1b05acc
-2018-09-17T09:08:20.712926Z
-900
-dotnet
+2019-01-07T05:00:46.719880Z
+cca07ac476c444d2e216fae6b1a45f0c
+2018-12-21T14:34:48.872835Z
+1411
+Nita Deshpande
 
 
 
@@ -58,7 +58,7 @@ dotnet
 
 
 
-1188
+1642
 
 dashboard.resource.ts
 file
@@ -66,10 +66,10 @@ file
 
 
 
-2018-12-17T14:31:57.770068Z
-183ce70abe420197ede589783ccd6640
-2018-10-04T10:28:32.745354Z
-1039
+2019-01-07T05:00:46.708911Z
+85971e583d4cb709473563f628c0bf82
+2018-12-31T06:16:13.471343Z
+1426
 Bharat Tekade
 
 
@@ -92,7 +92,7 @@ Bharat Tekade
 
 
 
-1170
+2791
 
 services
 dir

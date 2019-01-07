@@ -355,13 +355,13 @@ export class GrindingComponent implements OnInit, OnChanges, OnDestroy {
 
   getLotListByTask() {
     // check if task is in edit mode or assign mode
-    let editMode;
-    if (this.taskTypeId > 0) { // In case of edit task
-      editMode = true;
-    } else {
-      editMode = false;
-    }
-    this.dropdownDataService.getLotListByTask(this.TaskModel.task, editMode).subscribe(
+    // let editMode;
+    // if (this.taskTypeId > 0) { // In case of edit task
+    //   editMode = true;
+    // } else {
+    //   editMode = false;
+    // }
+    this.dropdownDataService.getLotListByTask(this.TaskModel.task, this.taskid).subscribe(
       data => {
         this.globalData.lots = data;
         if (data !== 'No data found!') {
@@ -681,7 +681,6 @@ export class GrindingComponent implements OnInit, OnChanges, OnDestroy {
           //   alert(Math.abs(Number(assignWt) -  Number(processedwt) + Number(returnwt) ));
           //   alert(minustoleranceValue);
           if ( Math.abs(Number(assignWt) -  Number(processedwt) + Number(returnwt) ) > minustoleranceValue ) {
-            alert('third');
             this.msgs = [];
                 this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                detail: this.assignTaskResources.MismatchTotalandassignedwt });

@@ -20,7 +20,6 @@
         <div
           class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
           *ngIf="!OILPACKAGING.controls['orderno'].valid&&OILPACKAGING.controls['orderno'].dirty">
-          <i class="fa fa-close"></i>
             <span *ngIf="OILPACKAGING.controls['orderno'].errors['required']">
               {{ globalResource.ordernorequired }}
             </span>
@@ -176,7 +175,6 @@
           <div
             class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
             *ngIf="!OILPACKAGING.controls['employee'].valid&&OILPACKAGING.controls['employee'].dirty">
-              <i class="fa fa-close"></i>
               <span *ngIf="OILPACKAGING.controls['employee'].errors['required']">
                 {{ globalResource.employeerequired }}
               </span>
@@ -210,7 +208,6 @@
           <div
             class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
             *ngIf="!OILPACKAGING.controls['estimatedstartdate'].valid&&OILPACKAGING.controls['estimatedstartdate'].dirty">
-              <i class="fa fa-close"></i>
               <span *ngIf="OILPACKAGING.controls['estimatedstartdate'].errors['required']">
                 {{ globalResource.startdaterequired }}
               </span>
@@ -284,7 +281,6 @@
           <div
             class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
             *ngIf="!OILPACKAGING.controls['comment'].valid&&OILPACKAGING.controls['comment'].dirty">
-              <i class="fa fa-close"></i>
               <span *ngIf="OILPACKAGING.controls['comment'].errors['maxLength']">
                 {{ assignTaskResources.commentMaxLength }}
               </span>
@@ -356,7 +352,15 @@
                             ></p-checkbox>                  
                         </td>
                         <td> {{ brandStrainPkgs[i].TPPkgTypeName  }}</td>
-                        <td> {{ brandStrainPkgs[i].AvailableWt  }} {{globalResource.listgramunit}}</td>
+                        <!-- <td> {{ brandStrainPkgs[i].AvailableWt  }} {{globalResource.listgramunit}}</td> -->
+                        <td> 
+                          <ng-container *ngIf="taskId && taskId > 0">
+                            {{ question.value.AvailWt  }} {{globalResource.listgramunit}}
+                          </ng-container>
+                          <ng-container *ngIf="!taskId">
+                            {{ brandStrainPkgs[i].AvailableWt }} {{globalResource.listgramunit}}
+                          </ng-container>
+                        </td>
                         <td>
                           <input
                             type="number"
@@ -368,7 +372,20 @@
                             name="answer"
                             style="width:100%;"
                         />
-                        </td>
+                        <div
+                          class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!question.controls['answer'].valid&&question.controls['answer'].dirty">
+                            <span *ngIf="question.controls['answer'].errors['max'] || question.controls['answer'].errors['min']">
+                              Select Valid Weight
+                            </span>  
+                            <span *ngIf="question.controls['answer'].errors['required']">
+                              Required
+                            </span>
+                            <span *ngIf="question.controls['answer'].hasError('oilpkgmaxwtexceeded')">
+                              max lot wt exceeded 
+                            </span>
+                        </div>
+                      </td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage" let-columns>
@@ -1135,7 +1152,8 @@
                           <input  
                             pInputText
                             autocomplete="off"                 
-                            type="number"                                                  
+                            type="number" 
+                            readonly="true"                                                 
                             pKeyFilter="int"                                                   
                             (change)="calculateTotalReviewedWt(i, comp, OilPkg)"
                             maxlength="AppConstants.maxLength"
@@ -1479,7 +1497,6 @@
                       <div
                         class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!question.controls['answer'].valid&&question.controls['answer'].dirty">
-                          <i class="fa fa-close"></i>
                           <span *ngIf="question.controls['answer'].hasError('oilpkgmaxwtexceeded')">
                           <!-- max lot wt exceeded -->
                           </span>

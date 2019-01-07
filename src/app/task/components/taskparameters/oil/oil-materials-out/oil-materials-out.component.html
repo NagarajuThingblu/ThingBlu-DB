@@ -26,7 +26,6 @@
                                 <div
                                     class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                                     *ngIf="!oilProcessorForm.controls['processor'].valid&&oilProcessorForm.controls['processor'].dirty">
-                                    <i class="fa fa-close"></i>
                                     <span *ngIf="oilProcessorForm.controls['processor'].errors['required']">
                                             {{ oilmaterialsout.thirdpartyprocessor }} {{globalResource.isrequiredmsg }} 
                                     </span>
@@ -59,7 +58,6 @@
                                     *ngIf="!oilProcessorForm.controls['outwardDate'].valid&&oilProcessorForm.controls['outwardDate'].dirty
                                     &&oilProcessorForm.controls['outwardDate'].hasError('required')
                                     ">
-                                    <i class="fa fa-close"></i>
                                     <span *ngIf="oilProcessorForm.controls['outwardDate'].hasError('required')">
                                         {{ oilmaterialsout.outwarddaterequired }}
                                     </span>                      
@@ -85,7 +83,6 @@
                                 <div
                                         class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                                         *ngIf="!oilProcessorForm.controls['expReturnDate'].valid&&oilProcessorForm.controls['expReturnDate'].dirty">
-                                        <i class="fa fa-close"></i>
                                         <span *ngIf="oilProcessorForm.controls['expReturnDate'].errors['required']">
                                             {{ oilmaterialsout.deliverydateisrequired }}
                                         </span>                      
@@ -146,7 +143,6 @@
                                         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                                             *ngIf="!item.controls['strain'].valid&&item.controls['strain'].dirty">                                      
                                             <div>
-                                                <i class="fa fa-close"></i>
                                                 <span *ngIf="item.controls['strain'].errors['required']">
                                                         {{ globalResource.strain }} {{globalResource.isrequiredmsg }}
                                                 </span>
@@ -170,7 +166,6 @@
                                                 <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                                                 *ngIf="!item.controls['lotno'].valid&&item.controls['lotno'].dirty">                                      
                                                 <div>
-                                                    <i class="fa fa-close"></i>
                                                     <span *ngIf="item.controls['lotno'].errors['required']">
                                                             {{ globalResource.lotno }} {{globalResource.isrequiredmsg }}
                                                     </span>
@@ -211,7 +206,6 @@
                                             <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                                                 *ngIf="!item.controls['processortransferweight'].valid&&item.controls['processortransferweight'].dirty">                                      
                                                 <div>
-                                                    <i class="fa fa-close"></i>
                                                     <span *ngIf="item.controls['processortransferweight'].errors['required']">
                                                             {{ oilmaterialsout.transferwttoprocessor }} {{globalResource.isrequiredmsg }}
                                                     </span>
@@ -242,7 +236,6 @@
                                         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                                             *ngIf="!item.controls['uniquecode'].valid&&item.controls['uniquecode'].dirty">
                                             <div>
-                                                <i class="fa fa-close"></i>
                                                 <span *ngIf="item.controls['uniquecode'].errors['required']">
                                                         {{ globalResource.uniqueid }} {{globalResource.isrequiredmsg }}
                                                 </span>

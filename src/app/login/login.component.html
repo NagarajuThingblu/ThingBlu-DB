@@ -76,7 +76,6 @@
 
                             <input id="username" autocomplete="off" formControlName="username" type="text" pInputText />
                             <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="!loginForm.controls['username'].valid&&loginForm.controls['username'].dirty">
-                                <i class="fa fa-close"></i>
                                 {{loginResources.usernameRequired}}
                             </div>
                         </div>
@@ -91,7 +90,6 @@
                             <input type="password" pPassword formControlName="password" [feedback]="false" />
 
                             <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="!loginForm.controls['password'].valid&&loginForm.controls['password'].dirty">
-                                <i class="fa fa-close"></i>
                                 <span *ngIf="loginForm.controls['password'].errors['required']">{{loginResources.passwordRequired}}</span>
                                 <span *ngIf="loginForm.controls['password'].errors['minlength']">{{loginResources.passwordLength}}</span>
                                 <span *ngIf="loginForm.controls['password'].hasError('maxlength')">{{loginResources.passwordMaxLength}}</span>
@@ -108,7 +106,6 @@
                             <!-- [disabled]="!loginForm.valid" -->
                             <div class="ui-message ui-messages-error ui-corner-all" *ngIf="isAuthenticated==false"
                                 appErrorTooltip>
-                                <i class="fa fa-close"></i>
                                 <span>{{adusernamepassword}}</span>
                             </div>
                         </div>

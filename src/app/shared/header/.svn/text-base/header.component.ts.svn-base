@@ -122,13 +122,13 @@ export class HeaderComponent implements OnInit {
                 this.logOut();
             }
         },
-        {
-            label: 'Reset password',
-            icon: 'fa-sign-out',
-            command: () => {
-                this.ShowForgotPasswordPopup();
-            }
-        }
+        // {
+        //     label: 'Reset password',
+        //     icon: 'fa-sign-out',
+        //     command: () => {
+        //         this.ShowForgotPasswordPopup();
+        //     }
+        // }
     ];
 
     this.note = [

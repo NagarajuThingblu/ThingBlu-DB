@@ -191,14 +191,18 @@ calcUTCTime(date1, offset) {
   // ######### CODE ADDED BY DEVDAN ::: 27-SEP-2018 ::: Common Methods to get and set Local Storage
   // Encrypt and decrypt local storage
   getLocalStorage(key: string): string {
-    if (localStorage.getItem(key) === null) {
+    if (localStorage.getItem(key + String(this.getEnvData().clientCode)) === null) {
       return null;
     } else {
-      return this.Decrypt(localStorage.getItem(key));
+      return this.Decrypt(localStorage.getItem(key + String(this.getEnvData().clientCode)));
     }
   }
   setLocalStorage(key: string, value: string) {
-      localStorage.setItem(key, this.Encrypt(value));
+      localStorage.setItem(key + String(this.getEnvData().clientCode), this.Encrypt(value));
+  }
+
+  removeItem(key: string) {
+    localStorage.removeItem(key + String(this.getEnvData().clientCode));
   }
 
   setCookie(cname, cvalue, expiretime) {
@@ -337,9 +341,17 @@ encode64(input) {
   document.cookie = 'userProfile' + environment.clientCode + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   this.cookieService.delete('currentUser' + environment.clientCode, './');
   this.cookieService.delete('userProfile' + environment.clientCode, './');
+
+  this.removeItem('RoleAccess');
+  this.removeItem('JPDFilters');
+  this.removeItem('JPDTabIndex');
  }
 
   getEnvData() {
     return JSON.parse(JSON.stringify(environment));
+  }
+
+  getRoleAccess() {
+   return JSON.parse(this.getLocalStorage('RoleAccess'));
   }
 }

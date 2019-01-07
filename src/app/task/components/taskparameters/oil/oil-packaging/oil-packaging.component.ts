@@ -179,6 +179,8 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
       }
     });
 
+    console.log(this.TaskModel);
+
     if (this.PageFlag.page !== 'TaskAction') {
 
       this.TaskModel.OILPACKAGING = {
@@ -304,8 +306,11 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
     this.productTypeQtyMap.clear();
     this.pkgMap.clear();
 
-    localStorage.removeItem('selectedMixPkgsArray');
-    localStorage.removeItem('selectedPkgsArray');
+    // localStorage.removeItem('selectedMixPkgsArray');
+    // localStorage.removeItem('selectedPkgsArray');
+
+    this.appCommonService.removeItem('selectedMixPkgsArray');
+    this.appCommonService.removeItem('selectedPkgsArray');
   }
 
   padLeft(text: string, padChar: string, size: number): string {
@@ -965,6 +970,7 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
       let answerbox;
       const pkgSelectedDetails = this.selectedPkgsArray[this.selPkgBrandStrainRow.selectedRowIndex];
 
+      let isLotPresentInDBData = false;
       if (pkgSelectedDetails) {
 
         const pkgRowDetails = [];
@@ -976,13 +982,29 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
           } else if (data.Index === index) {
             pkgRowDetails.push(data);
           }
+          ///// Check if the selected lot is persent in database data In Edit mode
+          if (this.taskId && this.taskId > 0) {
+            this.TaskModel.OilPckgDetails.forEach(pkg => {
+              if (question.OilPkgId === pkg.OilPkgId) {
+                isLotPresentInDBData = true;
+              }
+            });
+          }
         });
 
         if (pkgRowDetails.length) {
-          checkbox = pkgRowDetails[0].Selected;
-          answerbox = pkgRowDetails[0].Selected
-            ? [pkgRowDetails[0].SelectedWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+          const pkgWt = pkgRowDetails[0].SelectedWt;
+          if (this.taskId && this.taskId > 0) {
+            checkbox = pkgRowDetails[0].Selected;
+            answerbox = pkgRowDetails[0].Selected
+            ? [pkgWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt + Number(pkgWt))])]
             : null;
+          } else {
+            checkbox = pkgRowDetails[0].Selected;
+            answerbox = pkgRowDetails[0].Selected
+            ? [pkgWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+            : null;
+          }
         } else {
           checkbox = question.selected;
           answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
@@ -993,12 +1015,24 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
         answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
           : null;
       }
-      return fb.group({
-        questionNumber: index, question: checkbox, OilPkgCode: question.OilPkgCode,
-        TPPkgTypeName: question.TPPkgTypeName, AvailWt: question.AvailableWt, answer: answerbox,
-        StrainId: question.StrainId, StrainName: question.StrainName, GeneticsId: question.GeneticsId, GeneticsName: question.GeneticsName,
-        OilPkgId: question.OilPkgId
-      });
+
+      if (this.taskId && this.taskId > 0) {
+        return fb.group({
+          questionNumber: index, question: checkbox, OilPkgCode: question.OilPkgCode,
+          TPPkgTypeName: question.TPPkgTypeName, answer: answerbox,
+          AvailWt: question.AvailableWt + (answerbox ? Number(answerbox[0]) : 0),
+          StrainId: question.StrainId, StrainName: question.StrainName, GeneticsId: question.GeneticsId, GeneticsName: question.GeneticsName,
+          OilPkgId: question.OilPkgId
+        });
+      } else {
+        return fb.group({
+          questionNumber: index, question: checkbox, OilPkgCode: question.OilPkgCode,
+          TPPkgTypeName: question.TPPkgTypeName, answer: answerbox,
+          AvailWt: question.AvailableWt,
+          StrainId: question.StrainId, StrainName: question.StrainName, GeneticsId: question.GeneticsId, GeneticsName: question.GeneticsName,
+          OilPkgId: question.OilPkgId
+        });
+      }
     };
   }
 
@@ -1278,7 +1312,8 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
 
     this.selectedPkgsArray = [];
 
-    localStorage.removeItem('selectedPkgsArray');
+    // localStorage.removeItem('selectedPkgsArray');
+    this.appCommonService.removeItem('selectedPkgsArray');
     // localStorage.removeItem('uniqueOrderStrains');
     this.getSelectedOrderDetails(this.TaskModel.OILPACKAGING.orderno);
   }
@@ -1323,10 +1358,16 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
 
     this.oilOrderPackets.value.forEach(result => {
       let totalPkgWt = 0;
-      if ((result.strainid === StrainId  || result.GeneticsId === GeneticsId) && Number(result.assignPackageWt) > 0) {
-        totalPkgWt = Number(result.assignPackageWt) * Number(result.packageunit);
-
-        this.selPkgBrandStrainRow.combinationTotalAssignedWt += Number(totalPkgWt);
+      if (this.taskId && this.taskId > 0) {
+        if ((result.strainid === StrainId  || result.geneticsId === GeneticsId) && Number(result.assignPackageWt) > 0) {
+          totalPkgWt = Number(result.assignPackageWt) * Number(result.packageunit);
+            this.selPkgBrandStrainRow.combinationTotalAssignedWt += Number(totalPkgWt);
+        }
+      } else {
+        if ((result.strainid === StrainId) && Number(result.assignPackageWt) > 0) {
+          totalPkgWt = Number(result.assignPackageWt) * Number(result.packageunit);
+            this.selPkgBrandStrainRow.combinationTotalAssignedWt += Number(totalPkgWt);
+        }
       }
     });
 
@@ -1389,8 +1430,12 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
               }
             });
           });
-
-          if (Number(totalSelectedOilPkgWt) + Number(result.answer) > result.AvailWt ) {
+          if (Number(totalSelectedOilPkgWt) > 0) {
+            totalSelectedOilPkgWt = Number(totalSelectedOilPkgWt) - Number(result.answer);
+          } else {
+            totalSelectedOilPkgWt = Number(result.answer);
+          }
+          if (Number(totalSelectedOilPkgWt) > result.AvailWt ) {
                 const answerBox = (this.questionForm.get('questions.' + index) as FormGroup).controls['answer'];
 
                 (answerBox as FormControl).setErrors({ 'oilpkgmaxwtexceeded': true });
@@ -1561,13 +1606,14 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
           // 4th Object: Product wise all lot list and their entered wt details
           formModel.completeParamArr.forEach((object, index) => {
             object.PkgDetails.forEach(PkgObject => {
-
+              if (PkgObject.pkgCompletedQty > 0) {
               completeOilDetailsForApi.OilPkgCodeProductList.push({
                 ProductTypeId: object.ProductTypeId,
                 OilPkgId: PkgObject.oilPkgId,
                 PackageCode: object.packageCode ? object.packageCode : '',
                 Qty: PkgObject.pkgCompletedQty ? PkgObject.pkgCompletedQty : 0
               });
+            }
 
               oilPkgCodeProductListArr.push({
                 StrainId: object.StrainId,
@@ -1887,12 +1933,13 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
                 this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.duplicatePackageCode });
                 duplicateEntry = true;
               }
-
+              if (PkgObject.pkgCompletedQty > 0) {
               reviewPkgDetailsForApi.OilPkgCodeProductList.push({
                 ProductTypeId: object.ProductTypeId,
                 OilPkgId: PkgObject.oilPkgId,
                 Qty: PkgObject.pkgReviewedQty ? PkgObject.pkgReviewedQty : 0
               });
+            }
               oilPkgCodeProductListArr.push({
                 StrainId: object.StrainId,
                 PkgTypeId: object.PkgTypeId,
@@ -2022,6 +2069,7 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
             //   }
             // }
             // if (LotTotalWt) {
+
               reviewPkgDetailsForApi.OilPkgDetails.push({
                 OilPkgId: Number(OilPkgId),
                 // UnitValue: Number(String(PkgObject).split(',')[1]),
@@ -2030,10 +2078,19 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
               });
           });
 
+          this.TaskModel.AssignQtyPkgDetails.forEach((object, index) => {
+            if ( reviewPkgDetailsForApi.OilPkgDetails.filter(r => r.OilPkgId === object.OilPkgId).length <= 0) {
+              reviewPkgDetailsForApi.OilPkgDetails.push({
+                OilPkgId: object.OilPkgId,
+                OilWt: 0,
+                ReturnWt: object.ReturnWt
+                });
+              }
+            });
+
           if (duplicateEntry) { return; }
 
       // thresholdExceed;
-
       if ( Isthresholdexceeded) {
         Isthresholdexceeded = false;
         return; }
@@ -2144,6 +2201,7 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
 
   // Added by Devdan :: 15-Oct-2018 :: Setting existing lot list
   setSelectedLotDetails(objOrder) {
+    console.log(this.globalData.orderDetails);
     this.orderDetailsBS_filteredData.forEach((element, index) => {
       const pkgDetails = [];
       this.TaskModel.OilPckgDetails
@@ -2157,7 +2215,7 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
                 OilPkgCode: OilPkg.OilPkgCode,
                 TPPkgTypeName: OilPkg.TPPkgTypeName,
                 // AvailWt: OilPkg.AssignedOilWt,
-                AvailWt: availablePkg[0].AvailableWt,
+                AvailWt: (availablePkg ? availablePkg[0].AvailableWt : 0),
                 SelectedWt: OilPkg.AssignedOilWt,
                 Selected: true,
                 Index: '',

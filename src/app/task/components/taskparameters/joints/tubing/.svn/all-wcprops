@@ -1,23 +1,23 @@
 K 25
 svn:wc:ra_dav:version-url
 V 105
-/svn/thingbluangular5svnv1/!svn/ver/1273/thingblusvn/src/app/task/components/taskparameters/joints/tubing
+/svn/thingbluangular5svnv2/!svn/ver/1457/thingblusvn/src/app/task/components/taskparameters/joints/tubing
 END
 tubing.component.spec.ts
 K 25
 svn:wc:ra_dav:version-url
 V 127
-/svn/thingbluangular5svnv1/!svn/ver/1/thingblusvn/src/app/task/components/taskparameters/joints/tubing/tubing.component.spec.ts
+/svn/thingbluangular5svnv2/!svn/ver/1/thingblusvn/src/app/task/components/taskparameters/joints/tubing/tubing.component.spec.ts
 END
 tubing.component.html
 K 25
 svn:wc:ra_dav:version-url
 V 127
-/svn/thingbluangular5svnv1/!svn/ver/1263/thingblusvn/src/app/task/components/taskparameters/joints/tubing/tubing.component.html
+/svn/thingbluangular5svnv2/!svn/ver/1318/thingblusvn/src/app/task/components/taskparameters/joints/tubing/tubing.component.html
 END
 tubing.component.ts
 K 25
 svn:wc:ra_dav:version-url
 V 125
-/svn/thingbluangular5svnv1/!svn/ver/1273/thingblusvn/src/app/task/components/taskparameters/joints/tubing/tubing.component.ts
+/svn/thingbluangular5svnv2/!svn/ver/1457/thingblusvn/src/app/task/components/taskparameters/joints/tubing/tubing.component.ts
 END

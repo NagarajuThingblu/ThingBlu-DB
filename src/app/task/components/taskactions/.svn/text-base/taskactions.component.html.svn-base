@@ -185,7 +185,7 @@
                 </button>
     
                 <span *ngIf="_cookieService.UserRole == userRoles.Manager" >
-                  <button 
+                  <!-- <button 
                     pButton 
                     type="button" 
                     label="Edit" 
@@ -193,7 +193,7 @@
                     (click)="editTask();"
                     *ngIf="taskActionDetails?.TaskStatus==''||taskActionDetails?.TaskStatus==TaskStatus.Assigned"
                     >
-                  </button>
+                  </button> -->
       
                   <button 
                     pButton 

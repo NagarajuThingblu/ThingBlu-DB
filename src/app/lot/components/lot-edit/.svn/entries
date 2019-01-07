@@ -1,15 +1,15 @@
 9
 
 dir
-1278
-https://192.169.154.191:8081/svn/thingbluangular5svnv1/thingblusvn/src/app/lot/components/lot-edit
-https://192.169.154.191:8081/svn/thingbluangular5svnv1
+1461
+https://192.169.154.191:8081/svn/thingbluangular5svnv2/thingblusvn/src/app/lot/components/lot-edit
+https://192.169.154.191:8081/svn/thingbluangular5svnv2
 
 
 
-2018-11-14T07:16:01.621164Z
-1214
-Nita Deshpande
+2018-11-28T10:24:06.084610Z
+1283
+Bharat Tekade
 
 
 svn:special svn:externals svn:needs-lock
@@ -32,11 +32,11 @@ file
 
 
 
-2018-12-17T14:31:58.341441Z
-4abc5ee8ae39d2e0910e2b76846bb706
-2018-11-14T07:16:01.621164Z
-1214
-Nita Deshpande
+2019-01-07T05:01:15.907343Z
+4b8b37ce6ebbe32e05ae536fe28edbbd
+2018-11-28T10:24:06.084610Z
+1283
+Bharat Tekade
 
 
 
@@ -58,7 +58,7 @@ Nita Deshpande
 
 
 
-20967
+21141
 
 lot-edit.component.ts
 file
@@ -66,11 +66,11 @@ file
 
 
 
-2018-12-17T14:31:58.360921Z
-7894704d930c427318caeeed5852cd78
-2018-11-14T07:16:01.621164Z
-1214
-Nita Deshpande
+2019-01-07T05:01:15.935271Z
+13a829a3fd89a8db010db90ae93a7d19
+2018-11-28T10:24:06.084610Z
+1283
+Bharat Tekade
 
 
 
@@ -92,5 +92,5 @@ Nita Deshpande
 
 
 
-20715
+20763
 

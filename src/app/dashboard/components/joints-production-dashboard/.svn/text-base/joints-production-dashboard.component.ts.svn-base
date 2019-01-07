@@ -7,6 +7,8 @@ import { GlobalResources } from '../../../global resource/global.resource';
 import { LoaderService } from '../../../shared/services/loader.service';
 import { Router } from '@angular/router';
 import { AppConstants } from '../../../shared/models/app.constants';
+import { SelectItem } from 'primeng/api';
+import { UserModel } from '../../../shared/models/user.model';
 
 @Component({
   moduleId: module.id,
@@ -36,11 +38,25 @@ export class JointsProductionDashboardComponent implements OnInit {
   jointsCreationevent: any;
   tampingevent: any;
   tubingevent: any;
+  public userRoles: any;
 
   paginationValuesgrinding: any;
   paginationValuesjointsCreation: any;
   paginationValuestamping: any;
   PaginationValuestubing: any;
+  public _cookieService: UserModel;
+
+  public viewOrdersByValues: SelectItem[] = [];
+
+  public defaultDate: Date;
+  public endDate: Date;
+
+  public filterSectionModels: any = {
+    viewOrdersBy: 'DD',
+    deliveryDate: null,
+    beginDate: null,
+    endDate: null
+  };
 
   public dashboardObject = {
     grinding: [],
@@ -61,8 +77,39 @@ export class JointsProductionDashboardComponent implements OnInit {
     this.prodDashboardResource = DashboardResource.getResources().en.jointsproductiondashobard;
     this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle(this.prodDashboardResource.title);
+    this._cookieService = this.appCommonService.getUserProfile();
+    this.userRoles = AppConstants.getUserRoles;
 
-    this.getJointsProductionDashboardDetails();
+    this.defaultDate = this.appCommonService.calcTime(this.appCommonService.getUserProfile().UTCTime);
+    this.endDate = this.appCommonService.calcTime(this.appCommonService.getUserProfile().UTCTime);
+
+    this.endDate.setDate( this.endDate.getDate() + 2 );
+    this.defaultDate.setDate( this.defaultDate.getDate() + 1 );
+
+    if (this.appCommonService.getLocalStorage('JPDFilters')) {
+      const filterObjectDetails = JSON.parse(this.appCommonService.getLocalStorage('JPDFilters'));
+
+      // console.log(filterObjectDetails);
+      this.filterSectionModels.viewOrdersBy = filterObjectDetails.viewOrdersBy;
+
+      this.filterSectionModels.deliveryDate = new Date(filterObjectDetails.deliveryDate);
+      this.filterSectionModels.beginDate = new Date(filterObjectDetails.beginDate);
+
+      this.filterSectionModels.endDate = new Date(filterObjectDetails.endDate);
+    } else {
+      this.filterSectionModels.deliveryDate = this.defaultDate;
+      this.filterSectionModels.beginDate = this.defaultDate;
+
+      this.filterSectionModels.endDate = this.endDate;
+    }
+
+    this.viewOrdersByValues = [
+      { label: 'Delivery Date', value: 'DD' },
+      { label: 'Delivery Date Range', value: 'DDR' },
+      { label: 'All Pending', value: 'AP' }
+    ];
+
+    this.getJointsProductionDashboardDetails(this.filterSectionModels);
   }
 
   claimTask(rowData: any) {
@@ -91,11 +138,15 @@ export class JointsProductionDashboardComponent implements OnInit {
     // }, 500);
 
     this.appCommonService.prodDBRouteParams = rowData;
-    this.router.navigate(['../home/assigntask']);
+    if (String(this._cookieService.UserRole) === String(this.userRoles.Employee)) {
+      this.router.navigate(['../home/empassigntask']);
+    } else {
+      this.router.navigate(['../home/assigntask']);
+    }
   }
 
   refreshData() {
-    this.getJointsProductionDashboardDetails();
+    this.getJointsProductionDashboardDetails(this.filterSectionModels);
   }
 
   grindingonPageChange(e1) {
@@ -110,10 +161,10 @@ export class JointsProductionDashboardComponent implements OnInit {
   tubingonPageChange(e4) {
     this.tubingevent = e4;
   }
-  getJointsProductionDashboardDetails() {
+  getJointsProductionDashboardDetails(filterSectionModels) {
     this.loaderService.display(true);
 
-    this.dashboardService.getJointsProductionDashboardDetails()
+    this.dashboardService.getJointsProductionDashboardDetails(filterSectionModels)
     .subscribe((data: any) => {
 
       if (data !== 'No data found!') {
@@ -183,4 +234,9 @@ export class JointsProductionDashboardComponent implements OnInit {
     );
   }
 
+  submitFilters() {
+    this.appCommonService.setLocalStorage('JPDFilters', JSON.stringify(this.filterSectionModels));
+
+    this.getJointsProductionDashboardDetails(this.filterSectionModels);
+  }
 }

@@ -1,23 +1,23 @@
 K 25
 svn:wc:ra_dav:version-url
 V 100
-/svn/thingbluangular5svnv1/!svn/ver/1273/thingblusvn/src/app/task/components/taskparameters/trimming
+/svn/thingbluangular5svnv2/!svn/ver/1273/thingblusvn/src/app/task/components/taskparameters/trimming
 END
 trimming.component.spec.ts
 K 25
 svn:wc:ra_dav:version-url
 V 124
-/svn/thingbluangular5svnv1/!svn/ver/1/thingblusvn/src/app/task/components/taskparameters/trimming/trimming.component.spec.ts
+/svn/thingbluangular5svnv2/!svn/ver/1/thingblusvn/src/app/task/components/taskparameters/trimming/trimming.component.spec.ts
 END
 trimming.component.html
 K 25
 svn:wc:ra_dav:version-url
 V 124
-/svn/thingbluangular5svnv1/!svn/ver/1263/thingblusvn/src/app/task/components/taskparameters/trimming/trimming.component.html
+/svn/thingbluangular5svnv2/!svn/ver/1263/thingblusvn/src/app/task/components/taskparameters/trimming/trimming.component.html
 END
 trimming.component.ts
 K 25
 svn:wc:ra_dav:version-url
 V 122
-/svn/thingbluangular5svnv1/!svn/ver/1273/thingblusvn/src/app/task/components/taskparameters/trimming/trimming.component.ts
+/svn/thingbluangular5svnv2/!svn/ver/1273/thingblusvn/src/app/task/components/taskparameters/trimming/trimming.component.ts
 END

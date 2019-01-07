@@ -20,7 +20,91 @@
 <div class="content-section implementation">  
   <div class="ui-g">     
     <!-- Grinding Tasks Inventory Details -->
-    <div class="ui-g-12">      
+    <div class="ui-g-12">
+      <!-- Filter Section -->
+      <p-card>
+          <div class="ui-g"> 
+               <!-- View Order By  -->
+               <div class="ui-g-12 ui-md-3">                 
+                  <label for="viewOrdersBy">{{ prodDashboardResource.viewOrdersBy }}</label>:
+
+                  <p-dropdown
+                    id="viewOrdersBy"
+                    [(ngModel)]="filterSectionModels.viewOrdersBy"
+                    [options]="viewOrdersByValues"                    
+                    [autoWidth]="false"
+                    class="clsControl"
+                    name="viewOrdersBy">
+                  </p-dropdown>
+              </div>
+              <!--End View Order By  -->
+              <!-- Delivery Date  -->
+              <div class="ui-g-12 ui-md-3" *ngIf="filterSectionModels.viewOrdersBy === 'DD'">                 
+                  <label for="deliveryDate">{{ prodDashboardResource.deliveryDate }}</label>:
+
+                  <p-calendar                                                            
+                    [showIcon]="true"
+                    readonlyInput="true"
+                    showButtonBar="true"
+                    [(ngModel)]="filterSectionModels.deliveryDate"
+                    class="clsControl"
+                    id="deliveryDate"
+                    name="deliveryDate" 
+                  >
+                </p-calendar>
+              </div>
+              <!--End Delivery Date -->
+
+              <!-- Begin Date  -->
+              <div class="ui-g-12 ui-md-3" *ngIf="filterSectionModels.viewOrdersBy === 'DDR'">                 
+                  <label for="beginDate">{{ prodDashboardResource.beginDate }}</label>:
+
+                  <p-calendar                                                            
+                    [showIcon]="true"
+                    readonlyInput="true"
+                    showButtonBar="true"
+                    [(ngModel)]="filterSectionModels.beginDate"
+                    [maxDate]="filterSectionModels.endDate" 
+                    class="clsControl"
+                    id="beginDate"
+                    name="beginDate" 
+                  >
+                </p-calendar>
+              </div>
+              <!--End Begin Date -->
+
+              <!-- End Date  -->
+              <div class="ui-g-12 ui-md-3" *ngIf="filterSectionModels.viewOrdersBy === 'DDR'">                 
+                  <label for="endDate">{{ prodDashboardResource.endDate }}</label>:
+
+                  <p-calendar                                                            
+                    [showIcon]="true"
+                    readonlyInput="true"
+                    showButtonBar="true"
+                    [(ngModel)]="filterSectionModels.endDate"
+                    [minDate]="filterSectionModels.beginDate" 
+                    class="clsControl"
+                    id="endDate"
+                    name="endDate" 
+                  >
+                </p-calendar>
+              </div>
+              <!--End End Date -->
+          </div>
+          <div class="ui-g"> 
+              <!-- Save default view checkbox  -->
+              <div class="ui-g-12 ui-md-6">
+                  <p-button  type="button" 
+                    (click)="submitFilters()"
+                    label="Submit" 
+                    id="btnSubmitFilter" 
+                    name="btnSubmitFilter" >
+                  </p-button>
+              </div>
+              <!-- End Save default view checkbox -->
+          </div>
+      </p-card>
+      <!-- End Filter Section -->
       <p-panel header="Grinding Inventory Details" [toggleable]="true" [style]="{'margin-bottom':'20px'}">
         <p-table #dtGrinding 
           [value]="dashboardObject?.grinding" 

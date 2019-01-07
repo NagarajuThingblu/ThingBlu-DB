@@ -37,7 +37,8 @@ export class AuthenticationService {
     const url = 'token';
     const data = 'username=' + model.username + '&password=' + model.password +
                 '&grant_type=password&IpAddress=' + model.IpAddress;
-    const reqHeaders = new HttpHeaders({ 'Content-Type': 'application/x-www-urlencoded', 'No-Auth': 'true' });
+    const reqHeaders = new HttpHeaders({ 'Content-Type': 'application/x-www-urlencoded', 'No-Auth': 'true'
+        , 'ClientKey': this.appCommonService.getEnvData().clientKey });
 
     return this.http.post(url, data, {headers: reqHeaders})
     // .do(data =>console.log('All : ' + JSON.stringify(data)))

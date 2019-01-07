@@ -151,7 +151,7 @@ export class SiftingComponent implements OnInit, OnChanges {
       }
     });
 
-    console.log(this.TaskModel);
+    // console.log(this.TaskModel);
 
     if (this.PageFlag.page !== 'TaskAction') {
       this.TaskModel.SIFTING = {
@@ -366,12 +366,12 @@ export class SiftingComponent implements OnInit, OnChanges {
 
   getLotListByTask() {
     // check if task is in edit mode or assign mode
-    let editMode;
-    if (this.taskTypeId > 0) { // In case of edit task
-      editMode = true;
-    } else {
-      editMode = false;
-    }
+    // let editMode;
+    // if (this.taskTypeId > 0) { // In case of edit task
+    //   editMode = true;
+    // } else {
+    //   editMode = false;
+    // }
     this.dropdownDataService.getLotListByTask(this.TaskModel.task, this.taskid).subscribe(
       data => {
         this.globalData.lots = [];
@@ -393,10 +393,9 @@ export class SiftingComponent implements OnInit, OnChanges {
           // set the selected lot
           let selectedLot;
           // selectedLot = this.newLotListbyStrain.filter(x => x.lotValue.substr(0, x.lotValue.indexOf('_')) === this.TaskModel.SIFTING.lotno);
-          console.log(this.globalData.lots);
-          console.log(this.TaskModel.TaskDetails.LotId);
-          selectedLot = this.globalData.lots.filter(x => x.LotId === this.TaskModel.TaskDetails.LotId)[0];
-          console.log(selectedLot);
+
+          selectedLot = this.globalData.lots.filter(x => x.LotId === this.TaskModel.TaskDetails.LotId
+                          && x.SkewType === this.TaskModel.TaskDetails.SkewType)[0];
           this.setFormInEditMode(selectedLot);
         }
       } ,
@@ -430,7 +429,6 @@ export class SiftingComponent implements OnInit, OnChanges {
       // this.TaskModel.SIFTING.strain = selectedLot.StrainName;
 
       // Modified by Devdan :: 11-Oct-2018
-      console.log(selectedLot);
       if (this.taskTypeId > 0 && selectedLot.LotId ===  this.TaskModel.TaskDetails.LotId
             && selectedLot.GrowerLotNo === this.TaskModel.TaskDetails.GrowerLotNo) { // In case of edit task
         this.TaskModel.SIFTING.lotweight  = selectedLot.LotWeight + this.TaskModel.SiftingTaskDetails.AssignedWt;
@@ -1045,4 +1043,14 @@ export class SiftingComponent implements OnInit, OnChanges {
       this.lotInfo.LotNoteCount = lot.LotNoteCount;
     }
 
+  commentIconClicked(LotId) {
+    if (this.taskTypeId !== undefined || String(LotId).includes('_')) {
+      this.lotInfo.lotId = LotId.substr(0, LotId.indexOf('_'));
+    } else {
+      this.lotInfo.lotId = LotId;
+    }
+    // this.lotInfo.lotId = LotId.substr(0, LotId.indexOf('_'));
+    this.lotInfo.showLotCommentModal = true;
+    this.loaderService.display(false);
+  }
 }

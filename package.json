@@ -11,6 +11,7 @@
     "e2e": "ng e2e"
   },
   "private": true,
+  "aot": "node --max-old-space-size=8192 ./node_modules/gulp/bin/gulp.js serve.prod.aot",
   "dependencies": {
     "@angular/animations": "^5.2.11",
     "@angular/common": "^5.2.11",
@@ -21,6 +22,8 @@
     "@angular/platform-browser": "^5.2.11",
     "@angular/platform-browser-dynamic": "^5.2.11",
     "@angular/router": "^5.2.11",
+    "@ng-idle/core": "^2.0.0-beta.15",
+    "@ng-idle/keepalive": "^2.0.0-beta.15",
     "@ngx-loading-bar/http": "^1.6.0",
     "angular2-jwt": "^0.2.3",
     "bootstrap": "^4.1.1",
@@ -35,6 +38,7 @@
     "primeng": "^5.2.7",
     "promise-polyfill": "7.1.2",
     "rxjs": "^5.5.11",
+    "ua-parser-js": "^0.7.18",
     "web-animations-js": "^2.3.1",
     "whatwg-fetch": "^2.0.4",
     "zone.js": "^0.8.26"

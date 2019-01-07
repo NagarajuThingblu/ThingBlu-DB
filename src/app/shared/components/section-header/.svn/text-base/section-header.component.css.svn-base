@@ -1,0 +1,24 @@
+.clsSectionHeader .clsHeaderTitlebar {
+    padding: .1em .75em;
+    background: linear-gradient(to bottom, #f6f7f9 0%, #ebedf0 100%);
+    border: 1px solid #d9d9d9;
+    font-weight: normal;
+}
+
+.clsHeaderTitlebar {
+    background-image: none !important;
+    background-color: #0C59CF !important;
+    color: white !important;
+    zoom: 1;
+}
+
+.clsSectionHeader * {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+span.clsTextTitle {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 18px;
+}

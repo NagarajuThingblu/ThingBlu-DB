@@ -153,7 +153,6 @@ export class OrderService {
      } else if (Flag === 'TUBE') {
         url = 'api/Task/TaskJointsTubeBrandingGetDetailsForAssignTask';
      }
-
       let params = new HttpParams();
       params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
       params = params.append('OrderId', OrderId);
@@ -170,9 +169,37 @@ export class OrderService {
       );
     }
 
+    getSelectedTubeLabelingOrderDetails(selectedOrderDetails: any) {
+      let url;
+        url = 'api/Task/TaskJointsTubeBrandingGetDetailsForAssignTask';
+        let params = new HttpParams();
+        params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+        params = params.append('OrderId', selectedOrderDetails.OrderId);
+        params = params.append('EditMode', String(selectedOrderDetails.EditMode));
+        params = params.append('TaskId', String(selectedOrderDetails.TaskId));
+        params = params.append('StrainId', String(selectedOrderDetails.StrainId));
+        params = params.append('PkgTypeId', String(selectedOrderDetails.PkgTypeId));
+        params = params.append('UnitValue', String(selectedOrderDetails.UnitValue));
+        params = params.append('ItemQty', String(selectedOrderDetails.ItemQty));
+
+        // Added By Bharat Extra Params for Joint Team Dashborad Changes
+        params = params.append('ViewOrdersBy', String(selectedOrderDetails.ViewOrdersBy));
+        params = params.append('BeginDate', selectedOrderDetails.BeginDate);
+        params = params.append('EndDate', selectedOrderDetails.EndDate);
+        // Ended Added By Bharat  Extra Params for Joint Team Dashborad Changes
+
+        return this.http
+        .get(url, {params: params})
+        .map(
+          data => {
+            console.log('Get Selected Order Details Service success');
+            return data;
+          }
+        );
+     }
+
     getSelectedStrainOrderDetails(productTypeParam: any, Flag) {
       let url;
-
       url = 'api/Task/TaskJointsTubingGetDetailsForAssignTask';
 
       productTypeParam['ClientId'] = String(this.appCommonService.getUserProfile().ClientId);
@@ -186,7 +213,6 @@ export class OrderService {
       // params = params.append('PkgTypeId', productTypeParam.PkgTypeId);
       // params = params.append('UnitValue', productTypeParam.UnitValue);
       // params = params.append('ItemQty', productTypeParam.ItemQty);
-
       return this.http
       .post(url, tubingParams, this.headers)
       .map(

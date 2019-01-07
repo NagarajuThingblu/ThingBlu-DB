@@ -1,15 +1,15 @@
 9
 
 dir
-1278
-https://192.169.154.191:8081/svn/thingbluangular5svnv1/thingblusvn/src/app/task/components/taskparameters/joints/tubing
-https://192.169.154.191:8081/svn/thingbluangular5svnv1
+1461
+https://192.169.154.191:8081/svn/thingbluangular5svnv2/thingblusvn/src/app/task/components/taskparameters/joints/tubing
+https://192.169.154.191:8081/svn/thingbluangular5svnv2
 
 
 
-2018-11-28T04:16:11.249718Z
-1273
-Nita Deshpande
+2019-01-04T09:48:19.387082Z
+1457
+dotnet
 
 
 svn:special svn:externals svn:needs-lock
@@ -32,7 +32,7 @@ file
 
 
 
-2018-12-17T14:31:50.992789Z
+2019-01-07T05:00:50.090871Z
 1af1ad20e62ffef78345651f84dece42
 2018-05-23T10:27:12.088008Z
 1
@@ -66,10 +66,10 @@ file
 
 
 
-2018-12-17T14:31:50.982327Z
-f68b3985bc7a949c52e6081d860d59ee
-2018-11-21T13:01:50.651927Z
-1263
+2019-01-07T05:00:50.070927Z
+8a2d3d90b1e3beca793ee7fc90c9eada
+2018-12-05T12:19:41.258536Z
+1318
 Nita Deshpande
 
 
@@ -92,7 +92,7 @@ Nita Deshpande
 
 
 
-69971
+70916
 
 tubing.component.ts
 file
@@ -100,11 +100,11 @@ file
 
 
 
-2018-12-17T14:31:50.969200Z
-1d7f01d2c0672b48870028da6dc25150
-2018-11-28T04:16:11.249718Z
-1273
-Nita Deshpande
+2019-01-07T05:00:50.033265Z
+b70c559af2ea2001e46179c8a96eb8be
+2019-01-04T09:48:19.387082Z
+1457
+dotnet
 
 
 
@@ -126,5 +126,5 @@ Nita Deshpande
 
 
 
-78883
+82316
 

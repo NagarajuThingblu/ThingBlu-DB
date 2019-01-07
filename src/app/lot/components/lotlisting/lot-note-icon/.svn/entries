@@ -1,15 +1,15 @@
 9
 
 dir
-1278
-https://192.169.154.191:8081/svn/thingbluangular5svnv1/thingblusvn/src/app/lot/components/lotlisting/lot-note-icon
-https://192.169.154.191:8081/svn/thingbluangular5svnv1
+1461
+https://192.169.154.191:8081/svn/thingbluangular5svnv2/thingblusvn/src/app/lot/components/lotlisting/lot-note-icon
+https://192.169.154.191:8081/svn/thingbluangular5svnv2
 
 
 
-2018-09-17T09:33:06.833346Z
-918
-dotnet
+2018-12-10T06:16:58.890937Z
+1333
+Bharat Tekade
 
 
 svn:special svn:externals svn:needs-lock
@@ -32,7 +32,7 @@ file
 
 
 
-2018-12-17T14:31:58.063147Z
+2019-01-07T05:01:15.442656Z
 6c4b6f31163d393c06ec10d5a2fa0e8c
 2018-07-20T13:48:27.044791Z
 286
@@ -66,11 +66,11 @@ file
 
 
 
-2018-12-17T14:31:58.054736Z
-609737cc3d24edc68b5d40b2b08c12ff
-2018-09-17T09:33:06.833346Z
-918
-dotnet
+2019-01-07T05:01:15.430663Z
+6e519ca75787c2c4196058aee7042936
+2018-12-10T06:16:58.890937Z
+1333
+Bharat Tekade
 
 
 
@@ -92,5 +92,5 @@ dotnet
 
 
 
-892
+895
 

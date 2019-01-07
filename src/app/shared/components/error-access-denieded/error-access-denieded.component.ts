@@ -19,11 +19,11 @@ export class ErrorAccessDeniededComponent implements OnInit {
   accessdeniedResources: any;
   globalResource: any;
 
-  constructor(  private router: Router,
+  constructor(private router: Router,
     private cookieService: CookieService,
     private loaderService: LoaderService,
     private appCommonService: AppCommonService,
-    ) { }
+  ) { }
 
   ngOnInit() {
     this.accessdeniedResources = MastersResource.getResources().en.erroraccessdenied;
@@ -33,14 +33,21 @@ export class ErrorAccessDeniededComponent implements OnInit {
     this.loaderService.display(false);
   }
   redirectClick() {
-    if (this.cookieuserRole.toString() === this.userRoles.Manager) {
-       this.router.navigate(['home/managerdashboard']);
-     }  else  if (this.cookieuserRole.toString() === this.userRoles.SuperAdmin) {
-      this.router.navigate(['home/managerdashboard']);
-    } else {
-       this.router.navigate(['home/empdashboard']);
-     }
-  }
 
+    let menuItems = [];
+    if ( this.appCommonService.getRoleAccess()) {
+      menuItems = this.appCommonService.getRoleAccess();
+    }
+    if (menuItems.length > 0) {
+      menuItems = menuItems.filter(r => r.IsDefaultPage === 1);
+      let routeName;
+      if (menuItems.length > 0) {
+        routeName = menuItems[0].RouterLink;
+        this.router.navigate(['home/' + routeName]);
+      } else {
+        this.router.navigate(['home/erroraccessdenieded']);
+      }
+    }
+  }
 }
 

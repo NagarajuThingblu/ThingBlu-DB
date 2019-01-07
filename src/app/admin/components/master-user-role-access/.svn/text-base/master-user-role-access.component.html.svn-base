@@ -25,7 +25,7 @@
 
                   <!-- <div>Selected Nodes: <span *ngFor="let file of selectedmenuItems">{{file.roleMapId}} </span></div> -->
                   <p-tree [value]="files"  styleClass="clsRoleAccessTree" selectionMode="checkbox" [(selection)]="selectedmenuItems"
-                    [propagateSelectionUp]="true" [propagateSelectionDown]="true"></p-tree>
+                  [propagateSelectionUp]="false" (onNodeUnselect) = "OnUnSelectNode($event)" [propagateSelectionDown]="true"></p-tree>
                 </div>
               </div>
             </div>

@@ -107,7 +107,6 @@ export class TaskactionsComponent implements OnInit {
   }
 
   getTaskDetaisByTask() {
-     // http call starts
      this.loaderService.display(true);
      this.taskActionDetails.TaskTypeKey = null;
     this.taskCommonService.getTaskDetailsByTask(this.taskid).subscribe(
@@ -283,10 +282,9 @@ export class TaskactionsComponent implements OnInit {
               }, 2000);
             } else {
               this.taskActionDetails.TaskStatus = this.TaskStatus.InProcess;
+              this.getTaskDetaisByTask();
               this.msgs = [];
               this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskstarted });
-
-              this.getTaskDetaisByTask();
             }
             // Commented by DEVDAN :: 26-Sep2018 :: Optimizing API Calls
             // this.refreshService.PushChange().subscribe(
@@ -378,20 +376,20 @@ export class TaskactionsComponent implements OnInit {
             detail: this.taskActionResource.taskActionCannotEditStarted });
         } else if (data[0].IsTrimmedCompleted) {
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-            detail: this.taskActionResource.lottrimcompletedmsg });
+            detail: this.taskActionResource.lottrimcompletedmsgForEdit });
         } else {
           this.router.navigate(['home/assigntask', this.taskid]);
           return;
         }
-        setTimeout( () => {
-          if (this._cookieService.UserRole === this.userRoles.Manager) {
-            this.router.navigate(['home/managerdashboard']);
-          } else {
-            this.router.navigate(['home/empdashboard']);
-          }
+        // setTimeout( () => {
+        //   if (this._cookieService.UserRole === this.userRoles.Manager) {
+        //     this.router.navigate(['home/managerdashboard']);
+        //   } else {
+        //     this.router.navigate(['home/empdashboard']);
+        //   }
 
-          this.loaderService.display(false);
-        }, 2000);
+        this.loaderService.display(false);
+        // }, 2000);
       }
     });
   }
@@ -419,18 +417,20 @@ export class TaskactionsComponent implements OnInit {
             this.msgs = [];
             this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
               detail: this.taskActionResource.taskDeletedSuccessfully });
+
+            setTimeout( () => {
+              if (this._cookieService.UserRole === this.userRoles.Manager) {
+                this.router.navigate(['home/managerdashboard']);
+              } else {
+                this.router.navigate(['home/empdashboard']);
+              }
+              this.loaderService.display(false);
+            }, 2000);
           } else if (data === 'Failure') {
             this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
               detail: 'Error Occured' });
           }
-          setTimeout( () => {
-            if (this._cookieService.UserRole === this.userRoles.Manager) {
-              this.router.navigate(['home/managerdashboard']);
-            } else {
-              this.router.navigate(['home/empdashboard']);
-            }
-            this.loaderService.display(false);
-          }, 2000);
+          this.loaderService.display(false);
         });
       },
       reject: () => {

@@ -1,15 +1,15 @@
 9
 
 dir
-1278
-https://192.169.154.191:8081/svn/thingbluangular5svnv1/thingblusvn/src/app/task/components/assign-task
-https://192.169.154.191:8081/svn/thingbluangular5svnv1
+1461
+https://192.169.154.191:8081/svn/thingbluangular5svnv2/thingblusvn/src/app/task/components/assign-task
+https://192.169.154.191:8081/svn/thingbluangular5svnv2
 
 
 
-2018-11-28T04:16:11.249718Z
-1273
-Nita Deshpande
+2018-12-31T06:16:13.471343Z
+1426
+Bharat Tekade
 
 
 svn:special svn:externals svn:needs-lock
@@ -32,7 +32,7 @@ file
 
 
 
-2018-12-17T14:31:47.983266Z
+2019-01-07T05:00:55.306958Z
 8643134dd24b6e75188c2163480f37d8
 2018-05-23T10:27:12.088008Z
 1
@@ -66,11 +66,11 @@ file
 
 
 
-2018-12-17T14:31:47.974369Z
-4fbae842be1f28e7855edb2703dc1d85
-2018-11-14T07:25:28.039307Z
-1220
-Nita Deshpande
+2019-01-07T05:00:55.221217Z
+9673efeeff74ce784050ca12d0e266b1
+2018-12-31T06:16:13.471343Z
+1426
+Bharat Tekade
 
 
 
@@ -92,7 +92,7 @@ Nita Deshpande
 
 
 
-15274
+18033
 
 assign-task.component.ts
 file
@@ -100,11 +100,11 @@ file
 
 
 
-2018-12-17T14:31:47.961688Z
-3043eac81c7022750d5e25e8675b5985
-2018-11-28T04:16:11.249718Z
-1273
-Nita Deshpande
+2019-01-07T05:00:55.291004Z
+f564ba02561726802e213f078599eec7
+2018-12-31T06:16:13.471343Z
+1426
+Bharat Tekade
 
 
 
@@ -126,7 +126,7 @@ Nita Deshpande
 
 
 
-40659
+41118
 
 assign-task.component.css
 file
@@ -134,7 +134,7 @@ file
 
 
 
-2018-12-17T14:31:47.991438Z
+2019-01-07T05:00:55.324015Z
 4c719011f3057d9dbc612348358461fb
 2018-05-23T10:27:12.088008Z
 1

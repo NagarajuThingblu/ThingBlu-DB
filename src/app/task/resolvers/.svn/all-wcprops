@@ -1,17 +1,17 @@
 K 25
 svn:wc:ra_dav:version-url
 V 75
-/svn/thingbluangular5svnv1/!svn/ver/1220/thingblusvn/src/app/task/resolvers
+/svn/thingbluangular5svnv2/!svn/ver/1220/thingblusvn/src/app/task/resolvers
 END
 skew-list.resolver.ts
 K 25
 svn:wc:ra_dav:version-url
 V 94
-/svn/thingbluangular5svnv1/!svn/ver/1/thingblusvn/src/app/task/resolvers/skew-list.resolver.ts
+/svn/thingbluangular5svnv2/!svn/ver/1/thingblusvn/src/app/task/resolvers/skew-list.resolver.ts
 END
 task.resolvers.ts
 K 25
 svn:wc:ra_dav:version-url
 V 93
-/svn/thingbluangular5svnv1/!svn/ver/1220/thingblusvn/src/app/task/resolvers/task.resolvers.ts
+/svn/thingbluangular5svnv2/!svn/ver/1220/thingblusvn/src/app/task/resolvers/task.resolvers.ts
 END

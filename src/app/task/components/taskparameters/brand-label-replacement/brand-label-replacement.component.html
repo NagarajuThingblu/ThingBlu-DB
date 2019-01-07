@@ -12,7 +12,6 @@
 
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
         *ngIf="!REBRAND.controls['orderno'].valid&&REBRAND.controls['orderno'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="REBRAND.controls['orderno'].errors['required']">
           {{ globalResource.ordernorequired }}
         </span>
@@ -414,7 +413,6 @@
 
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
         *ngIf="!REBRAND.controls['employee'].valid&&REBRAND.controls['employee'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="REBRAND.controls['employee'].errors['required']">
           {{ globalResource.employeerequired }}
         </span>
@@ -436,7 +434,6 @@
       </p-calendar>
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
         *ngIf="!REBRAND.controls['estimatedstartdate'].valid&&REBRAND.controls['estimatedstartdate'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="REBRAND.controls['estimatedstartdate'].errors['required']">
           {{ globalResource.startdaterequired }}
         </span>
@@ -488,7 +485,6 @@
 
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
         *ngIf="!REBRAND.controls['comment'].valid&&REBRAND.controls['comment'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="REBRAND.controls['comment'].errors['maxLength']">
           {{ assignTaskResources.commentMaxLength }}
         </span>

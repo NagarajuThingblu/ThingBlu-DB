@@ -656,7 +656,7 @@ export class MastersResource {
                     ubiRequired: 'UBI No required'
                 } ,
                 roleAccessPermisssion: {
-                    roleaddedsuccs: 'Role addded successfuly.',
+                    roleaddedsuccs: 'Access permission updated successfuly.',
                     atlistoneRole: 'Please select at least on page to give permission.',
                     selectRole: 'Please select User Role.',
                     roleaccesspermossion: 'Role Access Permission',

@@ -164,7 +164,7 @@ export class GlobalResources {
                     genetics: 'Genetics',
                     pkgSize: 'Pkg. Size',
                     pkgQty: 'Pkg. Qty',
-                    order: 'Order#',
+                    order: 'Order #',
                     assignedtubeqty: 'Assigned Tube Qty.',
                     completedtubeqty: 'Completed Tube Qty.',
                     balancedtubeqty: 'Balanced Tube Qty.',
@@ -196,7 +196,15 @@ export class GlobalResources {
                      // Added by Devdan :: 13-Nov-2018 :: Resource for Minute and Second value error
                      maxMinSecValue: 'Value should not be greater than 59',
                      usablewt: 'Usable Wt',
-                     elapsedtimewithformat: 'Elapsed Time (HH:MM:SS)'
+                     elapsedtimewithformat: 'Elapsed Time (HH:MM:SS)',
+                     packageSize: 'Package Size',
+                     readyforlabeling: 'Ready for Labeling',
+                     strainDetails: 'Strain Details',
+                     sufixS: '(s)',
+                     listgramunits: 'g',
+                     size: 'Size',
+                     units: 'Units',
+                     gramUnit: 'g'
                 }
             };
     }

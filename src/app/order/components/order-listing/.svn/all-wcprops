@@ -1,29 +1,29 @@
 K 25
 svn:wc:ra_dav:version-url
 V 91
-/svn/thingbluangular5svnv1/!svn/ver/1218/thingblusvn/src/app/order/components/order-listing
+/svn/thingbluangular5svnv2/!svn/ver/1445/thingblusvn/src/app/order/components/order-listing
 END
 order-listing.component.spec.ts
 K 25
 svn:wc:ra_dav:version-url
 V 120
-/svn/thingbluangular5svnv1/!svn/ver/1/thingblusvn/src/app/order/components/order-listing/order-listing.component.spec.ts
+/svn/thingbluangular5svnv2/!svn/ver/1/thingblusvn/src/app/order/components/order-listing/order-listing.component.spec.ts
 END
 order-listing.component.html
 K 25
 svn:wc:ra_dav:version-url
 V 120
-/svn/thingbluangular5svnv1/!svn/ver/1218/thingblusvn/src/app/order/components/order-listing/order-listing.component.html
+/svn/thingbluangular5svnv2/!svn/ver/1445/thingblusvn/src/app/order/components/order-listing/order-listing.component.html
 END
 order-listing.component.ts
 K 25
 svn:wc:ra_dav:version-url
 V 118
-/svn/thingbluangular5svnv1/!svn/ver/1218/thingblusvn/src/app/order/components/order-listing/order-listing.component.ts
+/svn/thingbluangular5svnv2/!svn/ver/1218/thingblusvn/src/app/order/components/order-listing/order-listing.component.ts
 END
 order-listing.component.css
 K 25
 svn:wc:ra_dav:version-url
 V 117
-/svn/thingbluangular5svnv1/!svn/ver/54/thingblusvn/src/app/order/components/order-listing/order-listing.component.css
+/svn/thingbluangular5svnv2/!svn/ver/54/thingblusvn/src/app/order/components/order-listing/order-listing.component.css
 END

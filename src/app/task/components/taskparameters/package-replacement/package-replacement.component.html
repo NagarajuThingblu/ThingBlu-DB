@@ -12,7 +12,6 @@
 
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
         *ngIf="!REPACK.controls['orderno'].valid&&REPACK.controls['orderno'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="REPACK.controls['orderno'].errors['required']">
           {{ globalResource.ordernorequired }}
         </span>
@@ -410,7 +409,6 @@
 
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
         *ngIf="!REPACK.controls['employee'].valid&&REPACK.controls['employee'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="REPACK.controls['employee'].errors['required']">
           {{ globalResource.employeerequired }}
         </span>
@@ -432,7 +430,6 @@
       </p-calendar>
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
         *ngIf="!REPACK.controls['estimatedstartdate'].valid&&REPACK.controls['estimatedstartdate'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="REPACK.controls['estimatedstartdate'].errors['required']">
           {{ globalResource.startdaterequired }}
         </span>
@@ -482,7 +479,6 @@
 
       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
         *ngIf="!REPACK.controls['comment'].valid&&REPACK.controls['comment'].dirty">
-        <i class="fa fa-close"></i>
         <span *ngIf="REPACK.controls['comment'].errors['maxLength']">
           {{ assignTaskResources.commentMaxLength }}
         </span>

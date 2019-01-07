@@ -107,7 +107,6 @@ export class CustomTaskComponent implements OnInit {
 
 
     if (this.PageFlag.page !== 'TaskAction') {
-      alert(this.taskTypeId);
       this.TaskModel.CUSTOMTASK = {
         startdate: this.TaskModel.startdate,
         employee: '',

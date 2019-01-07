@@ -84,7 +84,6 @@
 
                                 <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip 
                                 *ngIf="!newReloginForm.controls['password'].valid&&newReloginForm.controls['password'].dirty">
-                                    <i class="fa fa-close"></i>
                                     {{loginResources.passwordRequired}}
                                     <span *ngIf="newReloginForm.controls['password'].errors['required']"></span>
                                 </div>  
@@ -95,7 +94,6 @@
                                         <!-- <button pButton type="submit" name="btnLogin" label="Sign In" ></button> -->
                                         <!-- [disabled]="!loginForm.valid" -->
                                         <div class="ui-message ui-messages-error ui-corner-all" *ngIf="isAuthenticated==false" appErrorTooltip>
-                                            <i class="fa fa-close"></i>
                                             <span>{{loginResources.badusernamepassword}}</span>                         
                                         </div> 
                                     </div>  

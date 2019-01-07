@@ -22,7 +22,7 @@ export class LotNoteIconComponent implements OnInit {
   // }
 
   ngOnInit() {
-console.log('icon lot', this.LotId);
+// console.log('icon lot', this.LotId);
 // console.log('icon LotCommentsCount', this.LotCommentsCount);
   }
 

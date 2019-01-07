@@ -144,7 +144,8 @@ export class EmployeedashboardComponent implements OnInit, OnDestroy {
     if (this.id) {
       clearInterval(this.id);
     }
-    localStorage.removeItem('refreshedTimeStamp');
+    // localStorage.removeItem('refreshedTimeStamp');
+    this.appCommonService.removeItem('refreshedTimeStamp');
   }
   todaysDataonPageChange(e1) {
     this.todaysDataevent = e1;

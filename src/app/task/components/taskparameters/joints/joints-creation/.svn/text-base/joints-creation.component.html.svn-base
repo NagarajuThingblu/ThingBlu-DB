@@ -806,13 +806,13 @@
                   autocomplete="off" 
                   [(ngModel)]="taskReviewModel.rreturnwt"                         
                   formControlName="returnwt"
-                  id="returnwt"
-                  name="returnwt"      
+                  id="rreturnwt"
+                  name="rreturnwt"      
                 />                   
                 <div
                   class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                  *ngIf="!completionForm.controls['returnwt'].valid&&completionForm.controls['returnwt'].dirty
-                  && completionForm.controls['returnwt'].errors['required']"
+                  *ngIf="!reviewForm.controls['returnwt'].valid&&reviewForm.controls['returnwt'].dirty
+                  && reviewForm.controls['returnwt'].errors['required']"
                   >
                     
                     <span>

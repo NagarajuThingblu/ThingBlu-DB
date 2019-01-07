@@ -1,0 +1,25 @@
+
+div.clsRemoveTableInnerBorders .ui-table-tbody > tr > td:not(:last-child) {
+  border-right-color: transparent !important;
+}
+
+div.clsRemoveTableInnerBorders .ui-table-thead > tr > th:not(:last-child) {
+  border-right-color: transparent !important;
+}
+
+div.clsTableWithoutHeaderColorCss .ui-table-thead > tr > th {
+  background: none;
+}
+
+.ui-tabview .ui-tabview-nav > li.ui-state-active{
+  /* box-shadow: 0 -1px 10px -2px #000; */
+  border-bottom: 1px solid #fff!important;
+}
+.ui-tabview.ui-tabview-top>.ui-tabview-nav li {
+  border-bottom: 0;
+  top: 2px !important;
+}
+
+.ui-tabview.ui-tabview-top>.ui-tabview-nav {
+  border-bottom: 1px solid #d6d6d6!important;
+}

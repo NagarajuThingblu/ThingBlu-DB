@@ -43,7 +43,6 @@
  <div class="ui-g-12 ui-md-6">
    <div class="paddingRL">
        <label for="comment">{{ assignTaskResources.comment }}</label>{{ globalResource.labelcolon }}
-                     {{TaskModel.CUSTOMTASK.usercomment}}     
          <textarea                        
            pInputTextarea                        
            [(ngModel)]="TaskModel.CUSTOMTASK.usercomment"
