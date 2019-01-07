@@ -1,7 +1,0 @@
-<div class="clsSectionHeader">
-  <div class="clsHeaderTitlebar">
-    <span class="clsTextTitle">
-      {{ headerLabel }}
-    </span>
-  </div>
-</div>

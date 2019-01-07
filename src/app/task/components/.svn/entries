@@ -1,46 +1,0 @@
-9
-
-dir
-1461
-https://192.169.154.191:8081/svn/thingbluangular5svnv2/thingblusvn/src/app/task/components
-https://192.169.154.191:8081/svn/thingbluangular5svnv2
-
-
-
-2019-01-04T09:48:19.387082Z
-1457
-dotnet
-
-
-svn:special svn:externals svn:needs-lock
-
-
-
-
-
-
-
-
-
-
-
-74955651-3036-764b-982b-f4a8a0658a00
-
-employee-assign-task
-dir
-
-taskactions
-dir
-
-assign-task
-dir
-
-edit-task
-dir
-
-taskparameters
-dir
-
-searchtask
-dir
-

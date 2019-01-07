@@ -1,9 +1,0 @@
-<span *ngIf="formControl.hasError('zeronotallowed')">
-    {{ globalResource.zeronotallow}}
-  </span>
-  <span *ngIf="formControl.hasError('maxlengthexceed')">
-      {{ globalResource.maxlengthexceed}}
-  </span>
-  <span *ngIf="formControl.hasError('invalidinput')">
-    {{ globalResource.invalidinput}}
-  </span>

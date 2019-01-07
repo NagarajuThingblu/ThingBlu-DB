@@ -1,3 +1,0 @@
-.ui-inputgroup .ui-inputtext:not(:last-child) {
-    border-right: 1px solid #d6d6d6 !important;
-}

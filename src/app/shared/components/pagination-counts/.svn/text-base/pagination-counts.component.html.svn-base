@@ -1,6 +1,0 @@
-
-
-
-
-
-{{'Showing ' + (inputEvent?.first < 0 ? 1 : (inputEvent?.first + 1)) + ' to '+ ((inputEvent?.first + inputEvent?.rows) > inputData?.length ? inputData?.length : (inputEvent?.first + inputEvent?.rows)) + ' of ' + inputData?.length + ' entries '}}
