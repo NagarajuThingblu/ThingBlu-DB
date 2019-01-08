@@ -1,0 +1,1 @@
+[{"__symbolic":"module","version":4,"metadata":{"SimpleExpiry":{"__symbolic":"class","extends":{"__symbolic":"reference","module":"./idleexpiry","name":"IdleExpiry"},"members":{"__ctor__":[{"__symbolic":"constructor"}],"last":[{"__symbolic":"method"}]}}}}]

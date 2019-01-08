@@ -1,0 +1,1 @@
+[{"__symbolic":"module","version":4,"metadata":{"MockExpiry":{"__symbolic":"class","extends":{"__symbolic":"reference","module":"@ng-idle/core","name":"IdleExpiry"},"members":{"last":[{"__symbolic":"method"}],"now":[{"__symbolic":"method"}]}}}}]
