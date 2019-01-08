@@ -1137,6 +1137,7 @@
                   pKeyFilter="int" 
                   pInputText
                   autocomplete="off"
+                  readonly="true"
                   [ngModel]="disableCompletedQtyArr[i]"
                   placeholder="Reviewed Qty"
                   formControlName="reviewedQty"                                            
@@ -1187,6 +1188,7 @@
                   autocomplete="off"                 
                   type="number"
                   pKeyFilter="int"
+                  readonly="true"
                   (change)="calculateTotalReviewedQty(i, comp, lot)"
                   maxlength="AppConstants.maxLength"
                   placeholder="Packages Completed"

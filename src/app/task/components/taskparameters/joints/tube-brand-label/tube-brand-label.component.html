@@ -1216,7 +1216,7 @@
                       Pkg Code: {{ TaskModel.AssignQtyDetails[i].PackageCode }} 
                   </span>
                 </p>
-                <input type="number" pKeyFilter="int" pInputText autocomplete="off" [ngModel]="disableCompletedQtyArr[i]"
+                <input type="number" pKeyFilter="int" pInputText autocomplete="off" readonly="true" [ngModel]="disableCompletedQtyArr[i]"
                   placeholder="Reviewed Qty" formControlName="reviewedQty" id="reviewedqty" name="reviewedqty"
                   class="reviewedQty" />
               </div>
@@ -1253,7 +1253,7 @@
                       <label>{{ lot.value.AssignedTubeQty || 0 }}</label>
                     </td>
                     <td>
-                      <input pInputText autocomplete="off" type="number" pKeyFilter="int" (change)="calculateTotalReviewedQty(i, comp, lot)"
+                      <input pInputText autocomplete="off" type="number" readonly="true" pKeyFilter="int" (change)="calculateTotalReviewedQty(i, comp, lot)"
                         maxlength="AppConstants.maxLength" placeholder="Packages Completed" formControlName="lotReviewedQty"
                         id="{{ 'lotReviewedQty' + j }}" name="lotReviewedQty" />
 
