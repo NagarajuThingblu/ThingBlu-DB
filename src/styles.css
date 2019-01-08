@@ -679,7 +679,8 @@ p-dropdown{display: block;}
     right: 25px;
     top: 4px;
 }
-.ui-table .ui-table-tbody>tr>td{word-break: break-word;}
+.ui-table .ui-table-tbody>tr>td{word-break: break-word; height: 51px; }
+.ui-table .ui-table-thead>tr>th{height: 51px; }
 .ui-table .ui-table-tbody>tr>td>span{white-space: nowrap;}
 .lotNum{width:170px;}
 .links .ui-button{
