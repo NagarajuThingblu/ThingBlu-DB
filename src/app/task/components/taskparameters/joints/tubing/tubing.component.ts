@@ -512,7 +512,7 @@ export class TubingComponent implements OnInit, OnDestroy {
         this.TaskModel.ReviewQtyLotDetails
        .filter(result =>
         // result.ProductTypeId === object.ProductTypeId
-        result.StrainId === object.StrainId &&
+        // result.StrainId === object.StrainId &&
         result.PkgTypeId === object.PkgTypeId &&
         result.UnitValue === object.UnitValue &&
         result.ItemQty === object.ItemQty
@@ -534,7 +534,7 @@ export class TubingComponent implements OnInit, OnDestroy {
                   this.TaskModel.ReviewQtyLotDetails
                   .filter(result =>
                     // result.ProductTypeId === object.ProductTypeId
-                    result.StrainId === object.StrainId &&
+                    // result.StrainId === object.StrainId &&
                     result.PkgTypeId === object.PkgTypeId &&
                     result.UnitValue === object.UnitValue &&
                     result.ItemQty === object.ItemQty
@@ -552,7 +552,7 @@ export class TubingComponent implements OnInit, OnDestroy {
                   _.uniqBy(this.TaskModel.MixedLotPkgDetails, 'MixPkgId')
                   .filter(result =>
                     // result.ProductTypeId === object.ProductTypeId
-                    result.StrainId === object.StrainId &&
+                    //  result.StrainId === object.StrainId &&
                     result.PkgTypeId === object.PkgTypeId &&
                     result.UnitValue === object.UnitValue &&
                     result.ItemQty === object.ItemQty
@@ -854,7 +854,7 @@ export class TubingComponent implements OnInit, OnDestroy {
       lotCompletedBox = [null];
       return fb.group({
         LotId: object.LotId, lotCompletedQty: lotCompletedBox, GrowerLotNo: object.GrowerLotNo,
-        AssignedJointsQty: object.AssignedJointsQty, LotNoteCount: object.LotNoteCount
+        AssignedJointsQty: object.AssignedJointsQty, LotNoteCount: object.LotNoteCount, StrainId: object.StrainId
       });
     } else {
       const assignedQty = this.TaskModel.AssignQtyLotDetails.filter(data =>
@@ -865,7 +865,7 @@ export class TubingComponent implements OnInit, OnDestroy {
 
       lotCompletedBox = [object.ProcessedQty ? object.ProcessedQty : 0];
       return fb.group({
-        LotId: object.LotId, lotReviewedQty: lotCompletedBox, GrowerLotNo: object.GrowerLotNo,
+        LotId: object.LotId, lotReviewedQty: lotCompletedBox, GrowerLotNo: object.GrowerLotNo, StrainId: object.StrainId,
         AssignedJointsQty: object.AssignedJointsQty, ProcessedJointsQty: object.ProcessedQty, LotNoteCount: object.LotNoteCount
       });
     }
@@ -1028,16 +1028,17 @@ export class TubingComponent implements OnInit, OnDestroy {
 
   // To show completion or review details of selected product type on action details page
   getLotsInfo(details) {
+    console.log(this.TaskModel.AssignQtyDetails, 'test');
     this.orderLotDetails = this.TaskModel.AssignQtyDetails.filter(result =>
       // result.ProductTypeId === details.ProductTypeId
-      result.StrainId === details.StrainId &&
+      // result.StrainId === details.StrainId &&
       result.PkgTypeId === details.PkgTypeId &&
       result.UnitValue === details.UnitValue &&
       result.ItemQty === details.ItemQty
     )[0];
 
     this.LotDetails = this.TaskModel.AssignQtyDetails.filter(r =>
-      r.StrainId === details.StrainId &&
+      // r.StrainId === details.StrainId &&
       r.PkgTypeId === details.PkgTypeId &&
       r.UnitValue === details.UnitValue &&
       r.ItemQty === details.ItemQty
@@ -1047,7 +1048,7 @@ export class TubingComponent implements OnInit, OnDestroy {
     this.productTypeLotDetails = this.TaskModel.ReviewQtyLotDetails
     .filter(result =>
       // result.ProductTypeId === details.ProductTypeId
-      result.StrainId === details.StrainId &&
+      // result.StrainId === details.StrainId &&
       result.PkgTypeId === details.PkgTypeId &&
       result.UnitValue === details.UnitValue &&
       result.ItemQty === details.ItemQty
@@ -1532,9 +1533,10 @@ export class TubingComponent implements OnInit, OnDestroy {
         formModel.completeParamArr.forEach((object, PkgFormIndex) => {
           object.LotDetails.forEach((LotObject, index) => {
             if (LotObject.lotCompletedQty > 0) {
+              // console.log(LotObject);
               completeLotDetailsForApi.LotTubeProductList.push({
                 // ProductTypeId: object.ProductTypeId,
-                StrainId: object.StrainId,
+                StrainId: LotObject.StrainId,
                 PkgTypeId: object.PkgTypeId,
                 UnitValue: object.UnitValue,
                 ItemQty: object.ItemQty,
@@ -1546,7 +1548,7 @@ export class TubingComponent implements OnInit, OnDestroy {
             }
 
               lotProductListArr.push({
-                StrainId: object.StrainId,
+                StrainId: LotObject.StrainId,
                 PkgTypeId: object.PkgTypeId,
                 UnitValue: object.UnitValue,
                 ItemQty: object.ItemQty,
@@ -1625,6 +1627,8 @@ export class TubingComponent implements OnInit, OnDestroy {
           // duplicateEntry = true;
           if (duplicateEntry) { return; }
           duplicateEntry = false;
+
+          // console.log(completeLotDetailsForApi);
       // return;
 
       this.confirmationService.confirm({
@@ -1755,10 +1759,9 @@ export class TubingComponent implements OnInit, OnDestroy {
         // let validateDuplicateFlag = false;
         formModel.reviewParamArr.forEach((object, PkgFormIndex) => {
           object.LotDetails.forEach((LotObject, index) => {
-            if (LotObject.lotCompletedQty > 0) {
             reviewLotDetailsForApi.LotTubeProductList.push({
                 // ProductTypeId: object.ProductTypeId,
-                StrainId: object.StrainId,
+                StrainId: LotObject.StrainId,
                 PkgTypeId: object.PkgTypeId,
                 UnitValue: object.UnitValue,
                 ItemQty: object.ItemQty,
@@ -1767,10 +1770,9 @@ export class TubingComponent implements OnInit, OnDestroy {
                 // PackageCode: '',
                 // IndexCode: String(PkgFormIndex + '##' + index)
               });
-            }
 
               lotProductListArr.push({
-                StrainId: object.StrainId,
+                StrainId: LotObject.StrainId,
                 PkgTypeId: object.PkgTypeId,
                 UnitValue: object.UnitValue,
                 ItemQty: object.ItemQty,
