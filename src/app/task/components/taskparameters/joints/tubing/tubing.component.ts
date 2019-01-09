@@ -1028,7 +1028,6 @@ export class TubingComponent implements OnInit, OnDestroy {
 
   // To show completion or review details of selected product type on action details page
   getLotsInfo(details) {
-    console.log(this.TaskModel.AssignQtyDetails, 'test');
     this.orderLotDetails = this.TaskModel.AssignQtyDetails.filter(result =>
       // result.ProductTypeId === details.ProductTypeId
       // result.StrainId === details.StrainId &&
@@ -1336,8 +1335,9 @@ export class TubingComponent implements OnInit, OnDestroy {
 
   openMixLotSelection(mixLotRow, rowIndex, ParentRowIndex) {
     const mixLotDetails = this.TaskModel.AssignQtyLotDetails.filter(result =>
-      result.StrainId === this.TaskModel.AssignQtyDetails[ParentRowIndex].StrainId
-      && result.UnitValue === this.TaskModel.AssignQtyDetails[ParentRowIndex].UnitValue
+     // result.StrainId === this.TaskModel.AssignQtyDetails[ParentRowIndex].StrainId
+     // &&
+      result.UnitValue === this.TaskModel.AssignQtyDetails[ParentRowIndex].UnitValue
     );
 
     this.selMixLotPkgRow.BrandId = 0;

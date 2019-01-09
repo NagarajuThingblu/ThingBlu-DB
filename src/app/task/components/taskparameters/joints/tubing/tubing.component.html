@@ -1209,7 +1209,7 @@
           </div>
      
           <!-- Lot Mixing -->
-          <div class="divLotMixing panel-content" formArrayName="MixLotDetails" *ngIf="comp.value.reviewedQty > 0 && lotInnerFormArray(comp).controls.length > 1">
+          <div class="divLotMixing panel-content" formArrayName="MixLotDetails" *ngIf="comp.value.reviewedQty > 0 && mixLotDetailsArr(comp)?.controls.length > 0">
             <strong><span class="ui-dialog-title">{{ assignTaskResources.mixlotdetails }}</span></strong>
             <hr>
 
