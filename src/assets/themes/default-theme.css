@@ -23,3 +23,8 @@ div.clsTableWithoutHeaderColorCss .ui-table-thead > tr > th {
 .ui-tabview.ui-tabview-top>.ui-tabview-nav {
   border-bottom: 1px solid #d6d6d6!important;
 }
+
+ul.ui-tabview-nav li span.ui-tabview-title {
+  font-weight: bold;
+  color: #1B1D1F;
+}

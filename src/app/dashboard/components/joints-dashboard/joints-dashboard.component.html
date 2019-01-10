@@ -26,7 +26,7 @@
           <div class="ui-g"> 
                <!-- View Order By  -->
                <div class="ui-g-12 ui-md-3">                 
-                  <label for="viewOrdersBy">{{ prodDashboardResource.viewOrdersBy }}</label>:
+                  <label for="viewOrdersBy"><strong>{{ prodDashboardResource.viewOrdersBy }}</strong></label>:
 
                   <p-dropdown
                     id="viewOrdersBy"
@@ -40,7 +40,7 @@
               <!--End View Order By  -->
               <!-- Delivery Date  -->
               <div class="ui-g-12 ui-md-3" *ngIf="filterSectionModels.viewOrdersBy === 'DD'">                 
-                  <label for="deliveryDate">{{ prodDashboardResource.deliveryDate }}</label>:
+                  <label for="deliveryDate"><strong>{{ prodDashboardResource.deliveryDate }}</strong></label>:
 
                   <p-calendar                                                            
                     [showIcon]="true"
@@ -57,7 +57,7 @@
 
               <!-- Begin Date  -->
               <div class="ui-g-12 ui-md-3" *ngIf="filterSectionModels.viewOrdersBy === 'DDR'">                 
-                  <label for="beginDate">{{ prodDashboardResource.beginDate }}</label>:
+                  <label for="beginDate"><strong>{{ prodDashboardResource.beginDate }}</strong></label>:
 
                   <p-calendar                                                            
                     [showIcon]="true"
@@ -75,7 +75,7 @@
 
               <!-- End Date  -->
               <div class="ui-g-12 ui-md-3" *ngIf="filterSectionModels.viewOrdersBy === 'DDR'">                 
-                  <label for="endDate">{{ prodDashboardResource.endDate }}</label>:
+                  <label for="endDate"><strong>{{ prodDashboardResource.endDate }}</strong></label>:
 
                   <p-calendar                                                            
                     [showIcon]="true"

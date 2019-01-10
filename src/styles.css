@@ -839,3 +839,7 @@ td.clsAssignTaskColumn .ui-button-text {
 div.clsTableWithoutCss .ui-table-tbody > td {
     border: none!important;
 }
+
+b, strong {
+    color: #1B1D1F !important;
+}
