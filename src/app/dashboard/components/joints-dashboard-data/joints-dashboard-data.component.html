@@ -76,7 +76,8 @@
                 <!--ReadyForLabeling -->
                 <td>
                   <span class="ui-column-title">{{prodDashboardResource.lblReadyForLabeling}}</span>
-                  {{rowData?.TubeAvlQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TubeAvlQty > 1 && rowData?.PkgTypeName.toUpperCase() !== 'JOINTS' ? 's' : ''}}
+                  {{rowData?.TubeAvlQty}}
+                  <!-- &nbsp;{{rowData?.PkgTypeName}}{{rowData?.TubeAvlQty > 1 && rowData?.PkgTypeName?.toUpperCase() !== 'JOINTS' ? 's' : ''}} -->
                 </td>
                 <!--ReadyForLabeling -->
                 <!--Claim Button -->
@@ -179,7 +180,8 @@
                 <!--ReadyForLabeling -->
                 <td>
                   <span class="ui-column-title">{{prodDashboardResource.lblReadyForLabeling}}</span>
-                  {{rowData?.TubeRequiredForLabelingQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TubeRequiredForLabelingQty > 1 && rowData?.PkgTypeName.toUpperCase() !== 'JOINTS' ? 's' : ''}}
+                  {{rowData?.TubeRequiredForLabelingQty}}
+                  <!-- &nbsp;{{rowData?.PkgTypeName}}{{rowData?.TubeRequiredForLabelingQty > 1 && rowData?.PkgTypeName?.toUpperCase() !== 'JOINTS' ? 's' : ''}} -->
                 </td>
                 <!--ReadyForLabeling -->
                 <!--Claim Button -->
@@ -278,7 +280,10 @@
                 <!--ReadyForLabeling -->
                 <td>
                   <span class="ui-column-title">{{prodDashboardResource.lblReadyForPackaging}}</span>
-                  {{rowData?.TampAvlQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TampAvlQty > 1 && rowData?.PkgTypeName.toUpperCase() !== 'JOINTS' ? 's' : ''}}
+                  <!-- {{rowData?.TampAvlQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TampAvlQty > 1 && rowData?.PkgTypeName?.toUpperCase() !== 'JOINTS' ? 's' : ''}} -->
+
+                  {{rowData?.TampAvlQty }}&nbsp;{{rowData?.TampAvlQty > 1 
+                    ? prodDashboardResource.lblPreroll + 's' : prodDashboardResource.lblPreroll }}
                 </td>
                 <!--ReadyForLabeling -->
                 <!--Claim Button -->
@@ -366,7 +371,10 @@
                 <!--ReadyForLabeling -->
                 <td>
                   <span class="ui-column-title">{{prodDashboardResource.lblUpcomingUnits}}</span>
-                  {{rowData?.TampRequiredQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TampRequiredQty > 1 && rowData?.PkgTypeName.toUpperCase() !== 'JOINTS' ? 's' : ''}}
+                  <!-- {{rowData?.TampRequiredQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TampRequiredQty > 1 && rowData?.PkgTypeName?.toUpperCase() !== 'JOINTS' ? 's' : ''}} -->
+
+                  {{rowData?.TampRequiredQty }}&nbsp;{{rowData?.TampRequiredQty > 1 
+                    ? prodDashboardResource.lblPreroll + 's' : prodDashboardResource.lblPreroll }}
                 </td>
                 <!--ReadyForLabeling -->
                 <!--Claim Button -->
@@ -468,7 +476,9 @@
                 <!--ReadyForLabeling -->
                 <td>
                   <span class="ui-column-title">{{prodDashboardResource.lblReadyForTamping}}</span>
-                  {{rowData?.JointAvlQty}}&nbsp;{{prodDashboardResource.lblUnits}}
+                  <!-- {{rowData?.JointAvlQty}}&nbsp;{{prodDashboardResource.lblUnits}} -->
+                  {{rowData?.JointAvlQty }}&nbsp;{{rowData?.JointAvlQty > 1 
+                    ? prodDashboardResource.lblPreroll + 's' : prodDashboardResource.lblPreroll }}
                 </td>
                 <!--ReadyForLabeling -->
                 <!--Claim Button -->
@@ -559,7 +569,9 @@
                 <!--Upcoming Units -->
                 <td>
                   <span class="ui-column-title">{{prodDashboardResource.lblUpcomingUnits}}</span>
-                  {{rowData?.JointRequiredQty}}&nbsp;{{prodDashboardResource.lblUnits}}
+                  <!-- {{rowData?.JointRequiredQty}}&nbsp;{{prodDashboardResource.lblUnits}} -->
+                  {{rowData?.JointRequiredQty }}&nbsp;{{rowData?.JointRequiredQty > 1 
+                    ? prodDashboardResource.lblPreroll + 's' : prodDashboardResource.lblPreroll }}
                 </td>
                 <!--End Upcoming Units -->
                 <!--Claim Button -->
@@ -668,7 +680,8 @@
                 <!--RequiredQty -->
                 <td>
                   <span class="ui-column-title">{{prodDashboardResource.requiredQty}}</span>
-                  {{rowData?.JointRequiredQty}}&nbsp;{{prodDashboardResource.lblUnits}}
+                  {{rowData?.JointRequiredQty }}&nbsp;{{rowData?.JointRequiredQty > 1 
+                    ? prodDashboardResource.lblPreroll + 's' : prodDashboardResource.lblPreroll }}
                 </td>
                 <!--End RequiredQty -->
                  <!--availMaterial -->
@@ -772,7 +785,8 @@
                 <!--RequiredQty -->
                 <td>
                   <span class="ui-column-title">{{prodDashboardResource.requiredQty}}</span>
-                  {{rowData?.JointRequiredQty}}&nbsp;{{prodDashboardResource.lblUnits}}
+                  {{rowData?.JointRequiredQty }}&nbsp;{{rowData?.JointRequiredQty > 1 
+                    ? prodDashboardResource.lblPreroll + 's' : prodDashboardResource.lblPreroll }}
                 </td>
                 <!--End RequiredQty -->
                  <!--availMaterial -->

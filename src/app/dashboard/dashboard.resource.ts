@@ -54,7 +54,8 @@ export class DashboardResource {
                     requiredQty: 'Required Qty.',
                     availMaterial: 'Available Material',
                     lblAvailableStrains: 'Available Strains',
-                    lblUnits: 'units'
+                    lblUnits: 'units',
+                    lblPreroll: 'pre-roll'
                 }
             }
         };

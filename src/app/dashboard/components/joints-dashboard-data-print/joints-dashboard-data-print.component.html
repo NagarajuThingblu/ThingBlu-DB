@@ -50,7 +50,8 @@
                   <!--OrderNo -->
                   <!--ReadyForLabeling -->
                   <td>
-                    {{rowData?.TubeAvlQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TubeAvlQty > 1 && rowData?.PkgTypeName.toUpperCase() !== 'JOINTS' ? 's' : ''}}
+                    {{rowData?.TubeAvlQty}}
+                    <!-- &nbsp;{{rowData?.PkgTypeName}}{{rowData?.TubeAvlQty > 1 && rowData?.PkgTypeName?.toUpperCase() !== 'JOINTS' ? 's' : ''}} -->
                   </td>
                   <!--ReadyForLabeling -->            
                 </tr>
@@ -118,7 +119,8 @@
                   <!--OrderNo -->
                   <!--ReadyForLabeling -->
                   <td>
-                    {{rowData?.TubeRequiredForLabelingQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TubeRequiredForLabelingQty > 1 && rowData?.PkgTypeName.toUpperCase() !== 'JOINTS' ? 's' : ''}}
+                    {{rowData?.TubeRequiredForLabelingQty}}
+                    <!-- &nbsp;{{rowData?.PkgTypeName}}{{rowData?.TubeRequiredForLabelingQty > 1 && rowData?.PkgTypeName?.toUpperCase() !== 'JOINTS' ? 's' : ''}} -->
                   </td>
                   <!--ReadyForLabeling -->           
                 </tr>
@@ -188,7 +190,9 @@
                   <!--Order Package Size -->
                   <!--ReadyForLabeling -->
                   <td>
-                    {{rowData?.TampAvlQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TampAvlQty > 1 && rowData?.PkgTypeName.toUpperCase() !== 'JOINTS' ? 's' : ''}}
+                    <!-- {{rowData?.TampAvlQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TampAvlQty > 1 && rowData?.PkgTypeName?.toUpperCase() !== 'JOINTS' ? 's' : ''}} -->
+                    {{rowData?.TampAvlQty }}&nbsp;{{rowData?.TampAvlQty > 1 
+                      ? prodDashboardResource.lblPreroll + 's' : prodDashboardResource.lblPreroll }}
                   </td>
                   <!--ReadyForLabeling -->               
                 </tr>
@@ -247,7 +251,9 @@
                   <!--Order Package Size -->               
                   <!--ReadyForLabeling -->
                   <td>
-                    {{rowData?.TampRequiredQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TampRequiredQty > 1 && rowData?.PkgTypeName.toUpperCase() !== 'JOINTS' ? 's' : ''}}
+                    <!-- {{rowData?.TampRequiredQty}}&nbsp;{{rowData?.PkgTypeName}}{{rowData?.TampRequiredQty > 1 && rowData?.PkgTypeName?.toUpperCase() !== 'JOINTS' ? 's' : ''}} -->
+                    {{rowData?.TampRequiredQty }}&nbsp;{{rowData?.TampRequiredQty > 1 
+                      ? prodDashboardResource.lblPreroll + 's' : prodDashboardResource.lblPreroll }}
                   </td>
                   <!--ReadyForLabeling -->              
                 </tr>
@@ -317,7 +323,9 @@
                   <!--Order Package Size -->
                   <!--ReadyForLabeling -->
                   <td>
-                    {{rowData?.JointAvlQty}}&nbsp;{{prodDashboardResource.lblUnits}}
+                    <!-- {{rowData?.JointAvlQty}}&nbsp;{{prodDashboardResource.lblUnits}} -->
+                    {{rowData?.JointAvlQty }}&nbsp;{{rowData?.JointAvlQty > 1 
+                      ? prodDashboardResource.lblPreroll + 's' : prodDashboardResource.lblPreroll }}
                   </td>
                   <!--ReadyForLabeling -->              
                 </tr>
@@ -376,7 +384,9 @@
                   <!--Order Package Size -->
                   <!--ReadyForLabeling -->
                   <td>
-                    {{rowData?.JointRequiredQty}}&nbsp;{{prodDashboardResource.lblUnits}}
+                      {{rowData?.JointRequiredQty }}&nbsp;{{rowData?.JointRequiredQty > 1 
+                        ? prodDashboardResource.lblPreroll + 's' : prodDashboardResource.lblPreroll }}
+                    <!-- {{rowData?.JointRequiredQty}}&nbsp;{{prodDashboardResource.lblUnits}} -->
                   </td>
                   <!--ReadyForLabeling -->               
                 </tr>
@@ -450,7 +460,8 @@
                   <!--Order Package Size -->
                   <!--RequiredQty -->
                   <td>
-                    {{rowData?.JointRequiredQty}}&nbsp;{{prodDashboardResource.lblUnits}}
+                    {{rowData?.JointRequiredQty }}&nbsp;{{rowData?.JointRequiredQty > 1 
+                      ? prodDashboardResource.lblPreroll + 's' : prodDashboardResource.lblPreroll }}
                   </td>
                   <!--End RequiredQty -->
                    <!--availMaterial -->
@@ -518,7 +529,8 @@
                   <!--Order Package Size -->
                   <!--RequiredQty -->
                   <td>
-                    {{rowData?.JointRequiredQty}}&nbsp;{{prodDashboardResource.lblUnits}}
+                    {{rowData?.JointRequiredQty }}&nbsp;{{rowData?.JointRequiredQty > 1 
+                      ? prodDashboardResource.lblPreroll + 's' : prodDashboardResource.lblPreroll }}
                   </td>
                   <!--End RequiredQty -->
                    <!--availMaterial -->
