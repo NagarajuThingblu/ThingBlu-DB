@@ -75,7 +75,9 @@
                                   </td>
                                   <td>
                                       <span class="ui-column-title">{{assignTaskResources.requiredqty}}</span>
-                                    {{rowData?.JointRequiredQty}}&nbsp;{{globalResource.units}}
+                                    <!-- {{rowData?.JointRequiredQty}}&nbsp;{{globalResource.units}} -->
+                                    {{rowData?.JointRequiredQty }}&nbsp;{{rowData?.JointRequiredQty > 1 
+                                      ? assignTaskResources.lblPreroll + 's' : assignTaskResources.lblPreroll }}
                                   </td>
                                   <td>
                                       <span class="ui-column-title">{{assignTaskResources.availMaterial}}</span>
@@ -111,7 +113,9 @@
                                   </td>
                                   <td>
                                     <span class="ui-column-title">{{assignTaskResources.readyForTamping}}</span>
-                                    {{rowData?.JointAvlQty}}&nbsp;{{globalResource.units}}
+                                    <!-- {{rowData?.JointAvlQty}}&nbsp;{{globalResource.units}} -->
+                                    {{rowData?.JointAvlQty }}&nbsp;{{rowData?.JointAvlQty > 1 
+                                      ? assignTaskResources.lblPreroll + 's' : assignTaskResources.lblPreroll }}
                                   </td>
                               </tr>
                           </ng-template>
@@ -144,7 +148,9 @@
                                   </td>
                                   <td>
                                       <span class="ui-column-title">{{assignTaskResources.readyForPackaging}}</span>
-                                    {{rowData?.TampAvlQty}}&nbsp;{{rowData?.PkgTypeName}}
+                                    <!-- {{rowData?.TampAvlQty}}&nbsp;{{rowData?.PkgTypeName}} -->
+                                    {{rowData?.TampAvlQty }}&nbsp;{{rowData?.TampAvlQty > 1 
+                                      ? assignTaskResources.lblPreroll + 's' : assignTaskResources.lblPreroll }}
                                   </td>
                               </tr>
                           </ng-template>
@@ -170,7 +176,7 @@
                                   <td>{{rowData?.StrainName}}</td>
                                   <td>{{rowData?.PkgTypeName}} - {{rowData?.ItemQty}} x {{rowData?.UnitValue}} {{ globalResource.listgramunits }} </td>
                                   <td>{{rowData?.OrderRefId}}</td>
-                                  <td>{{rowData?.TubeAvlQty}} {{rowData?.PkgTypeName}}</td>                                  
+                                  <td>{{rowData?.TubeAvlQty}}</td>                                  
                               </tr>
                           </ng-template>
                       </p-table>

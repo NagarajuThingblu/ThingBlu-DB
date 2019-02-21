@@ -268,7 +268,8 @@ export class TaskResources {
                     requiredQtyDot: 'Required Qty.',
                     availMaterial: 'Available Material',
                     weightNeeded: 'Weight Needed',
-                    availSourceMaterial: 'Available Source Material'
+                    availSourceMaterial: 'Available Source Material',
+                    lblPreroll: 'pre-roll'
                 },
                 searchtask: {
                     pageheading: 'All Tasks',
