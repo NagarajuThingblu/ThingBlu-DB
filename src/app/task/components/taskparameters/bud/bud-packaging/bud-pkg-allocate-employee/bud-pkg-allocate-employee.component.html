@@ -1,0 +1,295 @@
+<form [formGroup]="BudPkgForm" >
+<!-- <p-dialog header="Allocate Employees" [(visible)]="AllocateEmpData.showDialog" modal="modal" [resizable]="true"
+  (onHide)="onDialogHide()" [responsive]="true" [width]="1000" [minWidth]="300"> -->
+  <div class="ui-g">
+    <!-- <div class="ui-g-12">
+        <a class="pull-right anchor" href="javascript:void(0)"><span>< Back</span></a>
+    </div> -->
+    <div class="ui-g-12 ui-md-12">
+        <!-- Order Label -->
+      <!-- <div class="ui-g-12 ui-md-4">
+            <div class="paddingRL">
+              <label>
+                <strong>Order </strong>
+              </label>
+              <div>
+                <label>              
+                  DS-1246
+                </label>
+              </div>
+            </div>
+          </div> -->
+
+          <!-- Delivery Date -->
+          <!-- <div class="ui-g-12 ui-md-4">
+              <div class="paddingRL">
+                <label>
+                  <strong>Delivery Date </strong>
+                </label>
+                <div>
+                  <label>              
+                    03/31/2019
+                  </label>
+                </div>
+              </div>
+            </div> -->
+
+            <!-- Assign To All Dropdown -->
+          <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label>
+                  <strong>Assign To All </strong>
+                </label>
+                <div>
+                  <p-dropdown
+                    [filter] ="true"
+                    [options]="employees"
+                    (onChange)="assignToAllChange()"
+                    formControlName="assignToAll"
+                    defaultLabel="-- Select --"
+                    class="clsControl"
+                    id="allocateEmp"
+                    name="allocateEmp"
+                  ></p-dropdown>
+                </div>
+              </div>
+            </div>
+    </div>
+
+    <div class="ui-g-12 ui-md-12">
+        <app-section-header headerLabel="Order Items"></app-section-header>
+
+        <div class="ui-g" formArrayName="allocateEmpArr">
+            <div class="ui-g-12 ui-md-12">
+                <p-table #dtAllocateEmp
+                [value]="allocateEmpArr?.controls"
+                styleClass="clsTableWithoutCss"
+                responsive="true"
+              >
+              <ng-template pTemplate="header" class="header-tab">
+                <tr>                                   
+                  <th style="width: 20%;"> {{globalResource.strain}} </th>
+                  <th style="width: 5%;"> {{globalResource.size}} </th>
+                  <th style="width: 15%;"> {{globalResource.lot + '(s)'}} </th>
+                  <th style="width: 10%;"> {{globalResource.total}} </th>
+                  <th style="width: 11%;"> {{globalResource.assignqty}} </th>
+                  <th style="width: 15%;"> {{globalResource.employee}} </th>
+                  <th style="width: 14%;"> </th>
+                  <th style="width: 10%;"> </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-rowData let-i="rowIndex" >
+                <tr [formGroupName]="i">
+                  <td  
+                    title="{{rowData.value.toolTip}}" 
+                    tooltipPosition="top" >
+                    <span class="ui-column-title">{{globalResource.strain}}</span>
+                    {{rowData.value.strainName}}
+                  </td>
+                  <td>
+                    <span class="ui-column-title">{{globalResource.size}}</span>
+                    {{rowData.value.pkgSize}}
+                  </td>
+                  <td>
+                      <span class="ui-column-title">{{globalResource.lot + '(s)'}}</span>
+
+                      <span  *ngIf="rowData.value.lotCount > 0" >
+                        <a 
+                          class="btn-link anchor"
+                          [class.clsLotSelected]="selectedLotsArray[i]?.length > 0"
+                          [routerLink]="" 
+                          (click)="openLotSelection(rowData, i)"
+                        > Select Lots
+                        </a>
+                      </span>
+                      <span class="star"  *ngIf="rowData.value.lotCount === 0" >
+                        {{ globalResource.lotnotavailable }}  
+                      </span>
+                      <!-- <a class="anchor" href="javascript:void(0)"><span>Select Lots</span></a> -->
+                    </td>
+                  <td>
+                      <span class="ui-column-title">{{globalResource.total}}</span>
+                      {{rowData.value.requiedQty}}
+                    </td>
+                    <td>
+                        <span class="ui-column-title">{{globalResource.assignqty}}</span>
+                        
+                        <input pInputText 
+                          autocomplete="off"
+                          (change)="assignQtyChange(i)"
+                          name="assignQty"
+                          type="number"
+                          pKeyFilter="pint"
+                          formControlName="assignQty"
+                          class="clsControl"
+                         />
+                    </td>
+
+                  <td class="text-center"> 
+                      <span class="ui-column-title">{{globalResource.employee}}</span>
+                      <p-dropdown
+                        [filter] ="true"
+                        [options]="employees"
+                        formControlName="employee"
+                        defaultLabel="-- Select --"
+                        class="clsControl"
+                        id="employee"
+                        name="employee"
+                      ></p-dropdown>
+                  </td>  
+                  <td class="text-center"> 
+                      <button pButton type="button" (click)="splitTask(rowData, i)" label="Split Task"></button>
+                  </td>  
+                  <td class="text-center" *ngIf="rowData.value.parentUniqueId"> 
+                      <button pButton type="button" (click)="undoTask(rowData, i)" label="Undo"  class="ui-button-danger"></button>
+                  </td>              
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="0">
+                    {{ globalResource.norecordsfound }}
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- <div class="ui-g-12 ui-md-12 marginTop-15" >
+        <button pButton type="submit"  label="Create Task" ></button>
+        <a class="anchor" (click)="resetForm()" href="javascript:void(0)"><span>Clear</span></a>
+    </div> -->
+    
+  </div>
+
+
+  <p-dialog header="Select Lots"
+  [(visible)]="showLotSelectionModel"
+  modal="modal"
+  [resizable]="true"
+  [responsive]="true" [width]="600" [minWidth]="300" [blockScroll]="true" >
+
+  <form [formGroup]="questionForm" (ngSubmit)="submit(questionForm)" formSubmit >
+        
+  <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+
+    <div class="ui-g">
+            <div class="ui-g-12 ui-md-6">
+              <label>
+                  <strong>Genetics:</strong>
+                </label>
+
+                <label>
+                  {{ selLotBrandStrainRow?.GeneticsName }}
+                </label>
+            </div>
+
+              <div class="ui-g-12 ui-md-6">
+                  <label>
+                    <strong>Required Weight:</strong>
+                  </label>
+
+                  <label>
+                    {{ selLotBrandStrainRow?.combinationTotalAssignedWt }} {{globalResource.measure}}
+                  </label>
+                </div>
+
+      </div>
+      <div formArrayName="questions">
+      <p-table [value]="questions?.controls" id="tblLotSelection">
+          <ng-template pTemplate="header">
+              <tr>
+                  <th style="width:150px">Strain</th>
+                  <th style="width:170px">Lot No</th>
+                  <th style="width:33.33333333%">Available Weight</th>
+                  <th style="width:33.33333333%">Selected Weight</th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-question let-i="rowIndex" >
+              <tr [formGroupName]="i">
+                  <td style="width: 150px"> {{ brandStrainLots[i].StrainName  }}</td>
+                  <td style="width: 170px">
+                      <p-checkbox
+                        label="{{ brandStrainLots[i].GrowerLotNo  }}"
+                        formControlName="question"
+                        (ngModelChange)="changeValidator($event, i)"
+                        binary="true"
+                      ></p-checkbox>
+
+                      <app-lot-comment
+                          [LotId]="question.value.LotNo"
+                          [LotCommentsCount]="brandStrainLots[i].LotNoteCount"
+                          (CommentIconClicked)="commentIconClicked($event)"
+                      ></app-lot-comment>
+
+                      <app-lot-note-icon
+                        [LotId]="question.value.LotNo"                                
+                        (NoteIconClicked)="showLotNote($event)"
+                      ></app-lot-note-icon>
+                                              
+                  </td>
+
+                  <td>
+                    <ng-container *ngIf="taskId && taskId > 0">
+                      {{ question.value.AvailWt  }} {{globalResource.listgramunit}}
+                    </ng-container>
+                    
+                    <ng-container *ngIf="!taskId">
+                      <!-- {{ lotSyncWtArr.get(parseInt(brandStrainLots[i].LotId)) || 0 }} {{globalResource.listgramunit}} -->
+                      {{ getLotSyncWt(brandStrainLots[i].LotId) || 0}} {{globalResource.listgramunit}}
+                    </ng-container>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      OnlyNumber="true"
+                      pInputText
+                      autocomplete="off"
+                      formControlName="answer"
+                      id="answer"
+                      name="answer"
+                      style="width:100%;"
+                  />                          
+                  <div
+                      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!question.controls['answer'].valid&&question.controls['answer'].dirty">
+                        <span *ngIf="question.controls['answer'].errors['max'] || question.controls['answer'].errors['min']">
+                          Select Valid Weight
+                        </span>  
+                        <span *ngIf="question.controls['answer'].errors['required']">
+                          Required
+                        </span>
+
+                  </div>
+                </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+                <td [attr.colspan]="3">
+                  {{ assignTaskResources.nolotpresent }} "{{ selLotBrandStrainRow?.StrainName }}".
+                </td>
+            </tr>
+          </ng-template>
+      </p-table>
+      </div>
+    </div>
+    <p-footer class="text-right">
+
+      <button type="submit"  pButton icon="fa-check"  label="Confirm" id="btnLotSelectionConfirm" name="btnLotSelectionConfirm" ></button>
+      
+      <button type="button" pButton icon="fa-close" (click)="showLotSelectionModel=false" label="Cancel"></button>
+  </p-footer>
+</form>
+</p-dialog>
+<!-- </p-dialog> -->
+<app-lot-note [Lot]="lotInfo" *ngIf="lotInfo?.showLotNoteModal" (NoteSaved)="onNoteSave($event)" ></app-lot-note> 
+
+<app-popup-lot-comment [Lot]="lotInfo" *ngIf="lotInfo?.showLotCommentModal" (CommentSaved)="OnCommentSaved($event)">
+</app-popup-lot-comment>
+
+<p-growl [(value)]="msgs" life='5000' ></p-growl>
+</form>

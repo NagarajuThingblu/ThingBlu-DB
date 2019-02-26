@@ -1,4 +1,3 @@
-import { forEach } from '@angular/router/src/utils/collection';
 import { AppConstants } from './../../../../../shared/models/app.constants';
 import { GlobalResources } from './../../../../../global resource/global.resource';
 import { Component, OnInit, Input, ChangeDetectorRef, Output, EventEmitter, OnDestroy } from '@angular/core';
@@ -16,9 +15,7 @@ import { UserModel } from '../../../../../shared/models/user.model';
 import { CookieService } from 'ngx-cookie-service';
 import { LoaderService } from '../../../../../shared/services/loader.service';
 import { AppCommonService } from '../../../../../shared/services/app-common.service';
-import { environment } from './../../../../../../environments/environment';
 import { Title } from '@angular/platform-browser';
-import { DISABLED } from '@angular/forms/src/model';
 import { RefreshService } from '../../../../../dashboard/services/refresh.service';
 
 // const tolerance = environment.tolerance;
@@ -107,6 +104,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   @Input() PageFlag: any;
   @Input() ParentFormGroup: FormGroup;
   @Output() TaskCompleteOrReviewed: EventEmitter<any> = new EventEmitter<any>();
+  @Output() ResetForm: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(
     private fb: FormBuilder,
@@ -137,7 +135,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   public globalResource: any;
   public taskStatus: any;
 
-  private globalData = {
+  public globalData = {
     employees: [],
     orderDetails: []
   };
@@ -149,19 +147,6 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   public selectedMixLotsArray: any[] = [];
   public completedLotArray: any[] = [];
   public userRoles: any;
-
-  // Commented by Devdan ::: 25-Oct-2018 :: UnUsed Code
-  // TaskCompletionModel = {
-  //   wastematerialwt: '',
-  //   oilmaterialwt: '',
-  //   jointmaterialwt: '',
-  //   usablebudwt: '',
-  //   processedwt: '',
-  //   assignedwt: ''
-  // };
-
-  // Commented by Devdan ::: 25-Oct-2018 :: UnUsed Code
-  // public TaskActionDetails: any;
 
   public selectedLots = [];
 
@@ -181,6 +166,12 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   // Added by Devdan :: 12-Oct-2018
   taskTypeId: any;
   readOnlyFlag: boolean;
+
+  allocateEmpData = {
+    showDialog: false,
+    orderDetails: {}
+  };
+
   ngOnInit() {
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
@@ -329,24 +320,6 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   padLeft(text: string, padChar: string, size: number): string {
     return (String(padChar).repeat(size) + text).substr((size * -1), size);
   }
-  // setCompanies() {
-  //   const control = <FormArray>this.completionForm.controls.companies;
-  //   this.data.companies.forEach(x => {
-  //     control.push(this.fb.group({
-  //       company: x.company,
-  //       projects: this.setProjects(x) }));
-  //   });
-  // }
-
-  // setProjects(x) {
-  //   const arr = new FormArray([]);
-  //   x.projects.forEach(y => {
-  //     arr.push(this.fb.group({
-  //       projectName: y.projectName
-  //     }));
-  //   });
-  //   return arr;
-  // }
 
   get questions(): FormArray {
     return this.questionForm.get('questions') as FormArray;
@@ -858,16 +831,6 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     // (formArrayObj.get('LotDetails') as FormArray).reset();
 
     if (formArrayObj.get('completedWt').valid) {
-        // this.strainLots[index] =   _.uniqWith(this.dropdwonTransformService.transform(
-        //      this.TaskModel.AssignQtyLotDetails
-        //     .filter(result =>  result.StrainId === this.TaskModel.AssignQtyDetails[index].StrainId),
-        //       'GrowerLotNo', 'LotId', '-- Select --')
-        //   , _.isEqual);
-
-        // if ( this.strainLots[index].length === 2) {
-        //   defaultLotId = (this.strainLots[index])[1].value;
-        // } else { defaultLotId = null; }
-
         if (this.disableCompletedWtArr[index] !== 0) {
           formArrayObj.setControl('LotDetails', this.fb.array([]));
           formArrayObj.setControl('MixLotDetails', this.fb.array([]));
@@ -1179,11 +1142,14 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     } else {
       editmode = false;
     }
+
     this.orderService.getSelectedOrderDetails(OrderId, 'BUD', editmode, this.taskId).subscribe(
       data => {
         if (data !== 'No data found!') {
           this.globalData.orderDetails = data;
           this.orderDetails = data.Table;
+          this.allocateEmpData.orderDetails = data;
+
           const newArr = [];
           // To get unique record according brand and strain :: By Devdan 22-Nov-2018
           if (this.taskTypeId > 0) {
@@ -1317,6 +1283,8 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     // localStorage.removeItem('selectedLotsArray');
     this.appCommonService.removeItem('selectedLotsArray');
     // localStorage.removeItem('uniqueOrderStrains');
+    this.globalData.orderDetails = [];
+
     if (value === 'fmrHTML') {
       this.getSelectedOrderDetails(this.TaskModel.BUDPACKAGING.orderno, false);
     } else {
@@ -2254,5 +2222,17 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     this.lotInfo.showLotCommentModal = true;
     this.loaderService.display(false);
   }
+
+  resetForm() {
+   this.ResetForm.emit();
+  }
+
+  // btnAllocateEmpClick() {
+  //   if (this.ParentFormGroup.valid) {
+  //     this.allocateEmpData.showDialog = true;
+  //   } else {
+  //     this.appCommonService.validateAllFields(this.ParentFormGroup);
+  //   }
+  // }
 
 }

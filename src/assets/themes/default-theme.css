@@ -11,6 +11,33 @@ div.clsTableWithoutHeaderColorCss .ui-table-thead > tr > th {
   background: none;
 }
 
+/* Table Without Css Formattting */
+div.clsTableWithoutCss .ui-table-thead > tr:first-child > th {
+  background-image: none !important;
+  background-color: transparent !important;
+  color: #000000 !important;
+  border: none!important;
+  font-weight: bold!important;
+  word-break: break-word !important
+}
+
+
+div.clsTableWithoutCss .ui-table-tbody > tr > td {
+  border: none!important;
+  word-break: break-word !important;
+  vertical-align: top;
+}
+
+.noSpanWrap {
+  white-space: normal !important;
+  word-break: break-word;
+}
+
+div.clsTableWithoutCss .ui-table-tbody > tr {
+  background: none !important;
+}
+/* End Table Without Css Formattting */
+
 .ui-tabview .ui-tabview-nav > li.ui-state-active{
   /* box-shadow: 0 -1px 10px -2px #000; */
   border-bottom: 1px solid #fff!important;
@@ -27,4 +54,10 @@ div.clsTableWithoutHeaderColorCss .ui-table-thead > tr > th {
 ul.ui-tabview-nav li span.ui-tabview-title {
   font-weight: bold;
   color: #1B1D1F;
+}
+
+.anchor {
+  color: #007bff !important;
+  text-decoration: underline;
+  background-color: transparent;
 }

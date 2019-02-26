@@ -204,7 +204,8 @@ export class GlobalResources {
                      listgramunits: 'g',
                      size: 'Size',
                      units: 'Units',
-                     gramUnit: 'g'
+                     gramUnit: 'g',
+                     total: 'Total',
                 }
             };
     }
