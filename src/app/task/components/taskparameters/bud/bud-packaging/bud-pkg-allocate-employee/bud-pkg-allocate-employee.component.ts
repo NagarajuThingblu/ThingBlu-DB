@@ -1,3 +1,4 @@
+import { validateConfig } from '@angular/router/src/config';
 import { LoaderService } from './../../../../../../shared/services/loader.service';
 import { AppCommonService } from './../../../../../../shared/services/app-common.service';
 import { TaskResources } from './../../../../../task.resources';
@@ -7,6 +8,8 @@ import { FormGroup, FormArray, FormControl, FormBuilder, Validators } from '@ang
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { SelectItem, Message } from 'primeng/api';
 
+import * as _ from 'lodash';
+
 @Component({
   moduleId: module.id,
   selector: 'app-bud-pkg-allocate-employee',
@@ -14,6 +17,11 @@ import { SelectItem, Message } from 'primeng/api';
   styles: [`
     .clsLotSelected {
       color: #25bb25 !important;
+    }
+
+    .disableGrayButton {
+      background: grey !important;
+      cursor: not-allowed;
     }
   `]
 })
@@ -33,7 +41,9 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
   public showLotSelectionModel = false;
   public brandStrainLots: any;
 
-  public selectedLotsArray: any[] = [];
+  // public selectedLotsArray: any = [];
+  public selectedLotsArray = new Map<any, any>();
+
   public assignTaskResources: any;
 
   public lotSyncWtArr = new Map<any, any>();
@@ -49,7 +59,9 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
     GeneticsId: null,
     GeneticsName: null,
     // Added by Devdan :: 15-Oct-2018
-    LotListId: null
+    LotListId: null,
+    ProductTypeId: null,
+    UniqueId: null
   };
 
   public lotInfo: any = {
@@ -124,15 +136,22 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
     return this.fb.group({
       uniqueId: this.appCommonService.randomNumber(),
       productTypeId: object.ProductTypeId || null,
+      brandId: object.BrandId || null,
+      brandName: object.BrandName || null,
+      subBrandId: object.SubBrandId || null,
+      subBrandName: object.SubBrandName || null,
       strainId: object.StrainId || null,
       geneticsId: object.GeneticsId || null,
       geneticsName: object.GeneticsName || null,
       strainName: object.StrainName || null,
+      pkgTypId: object.PkgTypId || null,
+      pkgTypeName: object.PkgTypeName || null,
       pkgSize: object.UnitValue || null,
       requiedQty: object.RequiredQty || null,
       itemQty: object.ItemQty || null,
-      assignQty: new FormControl(parentUniqueId ? object.splitQty : object.RequiredQty || null),
-      employee: new FormControl(null),
+      assignQty: new FormControl(parentUniqueId ? object.splitQty : object.RequiredQty || null,
+        Validators.compose([Validators.max(object.RequiredQty)])),
+      employee: new FormControl(null, Validators.compose([Validators.required])),
       lotCount: lotCount || null,
       parentUniqueId: parentUniqueId,
       toolTip: object.ProductTypeId ?
@@ -160,6 +179,9 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
 
     this.selLotBrandStrainRow.RequireWt = 0;
     this.selLotBrandStrainRow.combinationTotalAssignedWt = 0;
+
+    this.selLotBrandStrainRow.ProductTypeId = rowData.value.productTypeId;
+    this.selLotBrandStrainRow.UniqueId = rowData.value.uniqueId;
 
     this.AllocateEmpData.orderDetails['Table'].filter((value, key) => {
         // return value.StrainId === rowData.value.strainId;
@@ -200,7 +222,9 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
     return (question, index) => {
       let checkbox;
       let answerbox;
-      const lotSelectedDetails = this.selectedLotsArray[this.selLotBrandStrainRow.selectedRowIndex];
+      const lotSelectedDetails = this.selectedLotsArray.get(this.selLotBrandStrainRow.UniqueId);
+
+      console.log(lotSelectedDetails);
 
       if (!this.lotSyncWtArr.has(question.LotId)) {
         this.setLotSyncWt(question.LotId, question.AvailableWt);
@@ -305,7 +329,9 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
               StrainName: this.selLotBrandStrainRow.StrainName,
               BrandId: this.selLotBrandStrainRow.BrandId,
               GeneticsId:  this.selLotBrandStrainRow.GeneticsId,
-              GeneticsName:  this.selLotBrandStrainRow.GeneticsName
+              GeneticsName:  this.selLotBrandStrainRow.GeneticsName,
+              ProductTypeId: this.selLotBrandStrainRow.ProductTypeId,
+              UniqueId: this.selLotBrandStrainRow.UniqueId
             }
           );
 
@@ -315,9 +341,10 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
             );
         }
       });
-      this.selectedLotsArray[this.selLotBrandStrainRow.selectedRowIndex] = lotDetails;
 
-      this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(this.selectedLotsArray));
+      this.selectedLotsArray.set(this.selLotBrandStrainRow.UniqueId, lotDetails);
+      // this.selectedLotsArray[String(this.selLotBrandStrainRow.UniqueId)] = lotDetails;
+      this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
 
       if (loMaxWtFlag) {
         this.showLotSelectionModel = true;
@@ -334,37 +361,97 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
     this.allocateEmpArr.controls.forEach((element: FormGroup) => {
       element.controls['employee'].patchValue(assignToAllEmp ? assignToAllEmp : null);
     });
+
+    this.validateDuplicateRows();
   }
 
-  assignQtyChange(rowIndex) {
-    this.selectedLotsArray[rowIndex].forEach(rowItem => {
-      this.setLotSyncWt(rowItem.LotNo,
-          this.getLotSyncWt(rowItem.LotNo) + Number(rowItem.SelectedWt)
-        // Number(result.AvailWt) - (totalSelectedLotWt1 + Number(result.answer))
-        );
+  validateDuplicateRows(): Boolean {
+    let isError = false;
+    const result = _.groupBy( this.allocateEmpArr.controls , c => {
+      return [
+              c.value.brandId,
+              c.value.subBrandId,
+              c.value.strainId,
+              c.value.pkgTypeId,
+              c.value.pkgSize,
+              c.value.itemQty,
+              c.value.employee
+            ];
     });
-    this.selectedLotsArray[rowIndex] = [];
-    this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(this.selectedLotsArray));
+
+    for (const prop in result) {
+        if (result[prop].length > 1 && (result[prop][0].controls['employee'].value !== '')) {
+            isError = true;
+            _.forEach(result[prop], function (item: any, index) {
+              item._status = 'INVALID';
+              result[prop][index].controls['employee'].setErrors({ 'duplicateProductEmployee': true});
+            });
+        } else {
+            result[prop][0]._status = 'VALID';
+            result[prop][0].controls['employee'].updateValueAndValidity();
+        }
+    }
+
+    return isError;
+  }
+
+  rowEmpChange(rowIndex) {
+    this.validateDuplicateRows();
+  }
+
+  assignQtyChange(formRowGroup, rowIndex) {
+
+    const allocateEmpArrControls = this.allocateEmpArr.controls;
+    let totalAssigedQty = 0;
+
+    for (const control in allocateEmpArrControls) {
+      if (allocateEmpArrControls[control].value.productTypeId === formRowGroup.value.productTypeId) {
+        totalAssigedQty += Number(allocateEmpArrControls[control].value.assignQty);
+      }
+    }
+
+    if (totalAssigedQty > Number(formRowGroup.value.requiedQty)) {
+      formRowGroup.controls['assignQty'].setErrors({ 'greaterQty': { totalAssigedQty: totalAssigedQty, totalRequiredQty: formRowGroup.value.requiedQty } });
+    } else {
+      if (this.selectedLotsArray.get(formRowGroup.value.uniqueId)) {
+        this.selectedLotsArray.get(formRowGroup.value.uniqueId).forEach(rowItem => {
+          this.setLotSyncWt(rowItem.LotNo,
+              this.getLotSyncWt(rowItem.LotNo) + Number(rowItem.SelectedWt)
+            // Number(result.AvailWt) - (totalSelectedLotWt1 + Number(result.answer))
+            );
+        });
+      }
+
+      this.selectedLotsArray.set(formRowGroup.value.uniqueId, []);
+      this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(this.selectedLotsArray));
+    }
   }
 
   splitTask(formRow: FormGroup, index: number): void {
-    const parentUniqueId = formRow.value.uniqueId;
-    const splitObject =  this.allocateEmpArr.value.filter(item => item.uniqueId === parentUniqueId)[0];
+    // if (!this.validateDuplicateRows()) {
+      this.validateDuplicateRows();
+      if (formRow.controls['assignQty'].valid) {
+        const parentUniqueId = formRow.value.uniqueId;
+        const splitObject =  this.allocateEmpArr.value.filter(item => item.uniqueId === parentUniqueId)[0];
 
-    const splitObj = this.AllocateEmpData.orderDetails.Table
-    .filter(data => data.ProductTypeId === splitObject.productTypeId)[0];
+        const splitObj = this.AllocateEmpData.orderDetails.Table
+        .filter(data => data.ProductTypeId === splitObject.productTypeId)[0];
 
-    const results: number[] = [];
+        const results: number[] = [];
 
-    results[0] = Math.floor(Number(formRow.value.assignQty) / 2);
-    results[1] = Number(formRow.value.assignQty) % 2;
+        results[0] = Math.floor(Number(formRow.value.assignQty) / 2);
+        results[1] = Number(formRow.value.assignQty) % 2;
 
-    formRow.controls['assignQty'].patchValue(results[0] + results[1] );
-    splitObj['splitQty'] = results[0];
+        formRow.controls['assignQty'].patchValue(results[0] + results[1] );
+        splitObj['splitQty'] = results[0];
 
-    const formGroup = this.createItem(splitObj, parentUniqueId);
+        const formGroup = this.createItem(splitObj, parentUniqueId);
 
-    this.allocateEmpArr.insert((index + 1), formGroup);
+        this.allocateEmpArr.insert((index + 1), formGroup);
+        this.selectedLotsArray.set(parentUniqueId, []);
+        this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(this.selectedLotsArray));
+      }
+    // }
   }
 
   undoTask(formRow: FormGroup, index: number) {
@@ -381,6 +468,11 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
 
     (<FormGroup>splitObject).controls['assignQty'].patchValue(Number(formRow.value.assignQty) + Number(splitObject.value.assignQty));
     this.allocateEmpArr.removeAt(index);
+
+    this.selectedLotsArray.set(parentUniqueId, []);
+    this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(this.selectedLotsArray));
+
+    this.validateDuplicateRows();
   }
 
 }

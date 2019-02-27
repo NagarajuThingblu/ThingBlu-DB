@@ -320,85 +320,81 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
         assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'A-PACKAGE';
 
-        // Validation Start
-        // UniqueOrderStrains.forEach(element => {
-        //   let strainTotalRequireWt = 0;
-
-        //   assignTaskFormValues[this.selectedTaskTypeName].budOrderPackets.value.forEach(item => {
-        //     let totalPkgWt = 0;
-        //     if (item.strainid === element.StrainId && Number(item.assignPackageWt) > 0) {
-        //       totalPkgWt = Number(item.assignPackageWt) * Number(item.packageunit);
-
-        //       strainTotalRequireWt += Number(totalPkgWt);
-        //     }
-        //   });
-
-        //   UniqueOrderStrains['TotalRequiredWeight'] = strainTotalRequireWt;
-        // });
-        // Validation End
-
         // A package each unique brand strain lot details
-        let allLotsTotalWeight = 0;
         const lotDetailsOrderGroup = [];
         if (lotDetails !== null) {
-          lotDetails = lotDetails
+            lotDetails
             .forEach((item, index) => {
               if (item !== null && item.length) {
                 // tslint:disable-next-line:no-shadowed-variable
                 item.forEach((element, lotIndex) => {
-                  lotDetailsOrderGroup.push({ LotId: element.LotNo, Weight: element.SelectedWt });
-                  //  assignTaskDetailsForWebApi['LotDetails'].push({ LotId: element.LotNo, Weight: element.SelectedWt});
-                  allLotsTotalWeight += Number(element.SelectedWt);
+                  assignTaskDetailsForWebApi['LotDetails'].push(
+                    {
+                      LotId: element.LotNo,
+                      Weight: element.SelectedWt,
+                      ProductTypeId: element.ProductTypeId,
+                      UniqueId: element.UniqueId
+                    }
+                  );
                 });
               }
             });
         }
         // Added for grouping same lot wt in singl row on 23-08-2018 by sanjay
-        if (lotDetails !== null) {
-          _.mapValues(_.groupBy(lotDetailsOrderGroup, c => {
-            return [c.LotId];
-          }),
-            (clist, LotObject) => {
-              let lotWeight = 0;
-              const lotNo = Number(String(LotObject).split(',')[0]);
-              clist.map(LotDetails1 => {
-                lotWeight += Number(LotDetails1.Weight);
-              });
-              assignTaskDetailsForWebApi['LotDetails'].push({ LotId: lotNo, Weight: lotWeight });
-            });
-        } else {
-          assignTaskDetailsForWebApi['LotDetails'] = [];
-        }
+        // // if (lotDetails !== null) {
+        // //   _.mapValues(_.groupBy(lotDetailsOrderGroup, c => {
+        // //     return [c.LotId];
+        // //   }),
+        // //     (clist, LotObject) => {
+        // //       let lotWeight = 0;
+        // //       const lotNo = Number(String(LotObject).split(',')[0]);
+        // //       clist.map(LotDetails1 => {
+        // //         lotWeight += Number(LotDetails1.Weight);
+        // //       });
+        // //       assignTaskDetailsForWebApi['LotDetails'].push({ LotId: lotNo, Weight: lotWeight });
+        // //     });
+        // // } else {
+        // //   assignTaskDetailsForWebApi['LotDetails'] = [];
+        // // }
         // End  Added for grouping same lot wt in singl row on 23-08-2018
 
-        let allProductTypesTotalWeight = 0;
-        assignTaskFormValues[this.selectedTaskTypeName].budOrderPackets
-          .forEach(item => {
-            if (item !== null && item.assignPackageWt > 0) {
+        assignTaskFormValues[this.selectedTaskTypeName].allocateEmpArr
+          .forEach((item, rowIndex) => {
+            if (item !== null && item.assignQty > 0) {
               assignTaskDetailsForWebApi['ProductTypeDetails'].push(
                 // { RawSupId: item.brandid, StrainId: item.strainid, PkgTypeId: item.packagetypeid,
                 //      UnitValue: item.packageunit, Qty: item.assignPackageWt}
-                { ProductTypeId: item.productTypeId, Qty: item.assignPackageWt }
+                {
+                  ProductTypeId: item.productTypeId,
+                  Qty: item.assignQty,
+                  EmployeeId: item.employee,
+                  UniqueId: item.uniqueId,
+                  IndexCode: rowIndex
+                }
               );
-
-              allProductTypesTotalWeight += Number(item.assignPackageWt) * Number(item.packageunit) * Number(item.itemQty);
             }
           });
 
         if (assignTaskDetailsForWebApi['ProductTypeDetails'].length === 0) {
           this.msgs = [];
-          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.productassignqtywarning });
+          this.msgs.push(
+                          {
+                            severity: 'warn',
+                            summary: this.globalResource.applicationmsg,
+                            detail: this.assignTaskResources.productassignqtywarning
+                          }
+                        );
           return;
         }
 
-        if (Number(allProductTypesTotalWeight) !== Number(allLotsTotalWeight)) {
-          this.msgs = [];
-          this.msgs.push({
-            severity: 'warn', summary: this.globalResource.applicationmsg,
-            detail: 'Total lot selection weight is not matching with total order assigned weight.'
-          });
-          return;
-        }
+        // if (Number(allProductTypesTotalWeight) !== Number(allLotsTotalWeight)) {
+        //   this.msgs = [];
+        //   this.msgs.push({
+        //     severity: 'warn', summary: this.globalResource.applicationmsg,
+        //     detail: 'Total lot selection weight is not matching with total order assigned weight.'
+        //   });
+        //   return;
+        // }
 
       } else if (this.selectedTaskTypeName === 'GRINDING') {  // GRINDING TASK
         assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = assignTaskFormValues[this.selectedTaskTypeName].assignwt;
