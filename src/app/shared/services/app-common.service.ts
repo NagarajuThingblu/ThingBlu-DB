@@ -354,4 +354,17 @@ encode64(input) {
   getRoleAccess() {
    return JSON.parse(this.getLocalStorage('RoleAccess'));
   }
+
+  /**
+ * generate a random integer between min and max
+ * @param {Number} min
+ * @param {Number} max
+ * @return {Number} random generated integer
+ */
+ randomNumber(min?: number, max?: number) {
+  min = min ? min : 1000;
+  max = max ? max : 900000;
+
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 }
