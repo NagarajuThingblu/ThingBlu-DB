@@ -23,7 +23,6 @@ import { TubingComponent } from './components/taskparameters/joints/tubing/tubin
 import { TaskResolver } from './resolvers/task.resolvers';
 import { EditTaskComponent } from './components/edit-task/edit-task.component';
 import { SkewListResolver } from './resolvers/skew-list.resolver';
-import { BrandStrainLotsComponent } from './components/taskparameters/bud/bud-packaging/brand-strain-lots.component';
 import { JointsCreationComponent } from './components/taskparameters/joints/joints-creation/joints-creation.component';
 import { OilService } from './services/oil.service';
 import { OilPackagingComponent } from './components/taskparameters/oil/oil-packaging/oil-packaging.component';
@@ -37,6 +36,7 @@ import { OilMaterialsInComponent } from './components/taskparameters/oil/oil-mat
 import { OilMaterialsOutComponent } from './components/taskparameters/oil/oil-materials-out/oil-materials-out.component';
 import { TubeBrandLabelComponent } from './components/taskparameters/joints/tube-brand-label/tube-brand-label.component';
 import { EmployeeAssignTaskComponent } from './components/employee-assign-task/employee-assign-task.component';
+import { BudPkgAllocateEmployeeComponent } from './components/taskparameters/bud/bud-packaging/bud-pkg-allocate-employee/bud-pkg-allocate-employee.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +54,6 @@ import { EmployeeAssignTaskComponent } from './components/employee-assign-task/e
     OilMaterialsOutComponent,
     OilMaterialsInComponent,
     EditTaskComponent,
-    BrandStrainLotsComponent,
     JointsCreationComponent,
     OilPackagingComponent,
     OilOutwordListingComponent,
@@ -64,7 +63,8 @@ import { EmployeeAssignTaskComponent } from './components/employee-assign-task/e
     PackageReplacementComponent,
     BrandLabelReplacementComponent,
     TubeBrandLabelComponent,
-    EmployeeAssignTaskComponent
+    EmployeeAssignTaskComponent,
+    BudPkgAllocateEmployeeComponent
   ],
   imports: [
     SharedModule

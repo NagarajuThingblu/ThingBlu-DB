@@ -42,34 +42,6 @@
     </div>
     <!--End Delivery Date-->
 
-      <!--Lot No -->
-    <!-- <div class="ui-g-12 ui-md-6">
-        <div class="ui-g-8">
-          <label for="lotno">{{ globalResource.lotno }} *</label>
-        </div>
-        <div class="ui-g-8">
-          <p-multiSelect
-            [options]="Lots"
-            [(ngModel)]="TaskModel.BUDPACKAGING.lotno"
-            defaultLabel="-- Select --"
-            (onChange)="onLotSelectionChange()"
-            formControlName="lotno"
-            id="lotno"
-            name="lotno"
-          ></p-multiSelect>
-
-          <div
-            class="ui-message ui-messages-error ui-corner-all"
-            *ngIf="!BUDPACKAGING.controls['lotno'].valid&&BUDPACKAGING.controls['lotno'].dirty">
-              <span *ngIf="BUDPACKAGING.controls['lotno'].errors['required']">
-                {{ globalResource.lotnorequired }}
-              </span>
-          </div>
-
-        </div>
-      </div> -->
-      <!--End Lot No -->
-
       <!-- Order Details -->
       <div class="ui-g-12" *ngIf="TaskModel.BUDPACKAGING.orderno" formArrayName="budOrderPackets">
         <h5>Order Details</h5>
@@ -84,7 +56,7 @@
                     <!-- <th style="width:15%">{{globalResource.itemqty}}</th> -->
                     <th style="width:15%">{{globalResource.orderqty}}</th>
                     <th style="width:15%">{{globalResource.requirewt}}</th>
-                    <th style="width:15%">{{globalResource.assignqty}}</th>
+                    <!-- <th style="width:15%">{{globalResource.assignqty}}</th> -->
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-budOrderPacket let-i="rowIndex" >
@@ -97,7 +69,7 @@
                     <!-- <td>{{orderDetails[i].ItemQty}}</td> -->
                     <td>{{orderDetails[i].RequiredQty}}</td>
                     <td>{{(orderDetails[i].TotalWt)}}</td>
-                    <td>
+                    <!-- <td>
                       <input
                         type="number"                                               
                         pKeyFilter="pint"                     
@@ -107,9 +79,9 @@
                         id="answer"
                         name="answer" 
                         style="width:100%;"
-                      />
+                      /> -->
                       <!-- (change)="assignWtOnChange(budOrderPacket)" -->
-                    </td>
+                    <!-- </td> -->
                 </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage" let-columns>
@@ -127,62 +99,16 @@
       </div>
       <!--End Order Details -->
 
-      <div class="ui-g-12" *ngIf="TaskModel.BUDPACKAGING.orderno" >
-          <h5>Select Lots For Order</h5>
-
-          <p-table [value]="orderDetailsBS_filteredData" id="tblStrainTable">
-              <ng-template pTemplate="header">
-                  <tr>
-                      <!-- <th style="width:20%">{{globalResource.brand}}</th> -->
-                      <th style="width:20%">{{globalResource.strain}}</th>
-                      <!-- <th style="width:20%">Lot Ids</th> -->
-                      <th style="width:80%">{{globalResource.lotdetails}}</th>
-                      <!-- <th style="width:20%">Selected Weight</th> -->
-                  </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-orderDetail let-rowIndex="rowIndex">
-                  <tr>
-                      <!-- <td>{{orderDetail?.BrandName}}</td> -->
-                      <td>{{orderDetail?.StrainName}}</td>
-                      <!-- <td> <a [routerLink]="" (click)="openLotSelection(orderDetail?.BrandId, orderDetail?.StrainId, rowIndex)" >Select Lots</a> </td> -->
-                      <td>
-                          <p-table [value]="selectedLotsArray[rowIndex]" id="tblStrainLotTable">
-                              <ng-template pTemplate="header">
-                                  <tr>
-                                      <th  class="lotNum">Lot No</th>
-                                      <th>Available Wt</th>
-                                      <th>Selected Wt</th>
-                                  </tr>
-                              </ng-template>
-                              <ng-template pTemplate="body" let-lotDetails >
-                                  <tr>
-                                      <td  class="lotNum"><span>{{lotDetails.GrowerLotNo}}</span></td>
-                                      <td>{{lotDetails.AvailWt}} {{globalResource.listgramunit}}</td>
-                                      <td>{{lotDetails.SelectedWt}}</td>
-                                  </tr>
-                              </ng-template>
-                              <ng-template pTemplate="emptymessage" let-columns>
-                                <tr>
-                                    <td [attr.colspan]="3">
-                                      {{ globalResource.norecordsfound }}
-                                    </td>
-                                </tr>
-                              </ng-template>
-                          </p-table>
-                          <span  *ngIf="orderDetail.LotCount > 0" >
-                          <a class="btn-link" [routerLink]="" (click)="openLotSelection(orderDetail?.StrainId, orderDetail?.GeneticsId, rowIndex)" >Select Lots</a>
-                        </span>
-                        <span class="star"  *ngIf="orderDetail.LotCount === 0" >
-                            {{ globalResource.lotnotavailable }}  
-                          </span>
-                        </td>
-                  </tr>
-              </ng-template>
-          </p-table>
-      </div>
+      <!-- Allocate multiple employee for bud packaging task -->
+      <!-- {{ globalData.orderDetail | json  }} -->
+      <app-bud-pkg-allocate-employee 
+        *ngIf="TaskModel.BUDPACKAGING.orderno&&globalData.orderDetails?.Table?.length"
+        [AllocateEmpData]="globalData"
+        [BudPkgForm]="BUDPACKAGING"
+      ></app-bud-pkg-allocate-employee>
 
       <!--Employee-->
-      <div class="ui-g-12 ui-md-6">
+      <!-- <div class="ui-g-12 ui-md-6">
           <div class="paddingRL">
             <label for="employee">{{ globalResource.employee }}<span class="star">*</span></label>:
 
@@ -204,7 +130,7 @@
                 </span>
             </div>
           </div>
-      </div>
+      </div> -->
       <!--End Employee-->
 
     <!--Estimated Start Date-->
@@ -482,13 +408,26 @@
         </p-dialog>
     </div>
     <!--End Comment-->
-    </div>
 
-    <app-lot-note [Lot]="lotInfo" *ngIf="lotInfo?.showLotNoteModal" (NoteSaved)="onNoteSave($event)" ></app-lot-note> 
-    <app-popup-lot-comment [Lot]="lotInfo" *ngIf="lotInfo?.showLotCommentModal" (CommentSaved)="OnCommentSaved($event)">
-      </app-popup-lot-comment>
+    <!-- <div class="ui-g-12 ui-md-12 marginTop-15" style="text-align:right;" >
+        <button pButton type="button" (click)="btnAllocateEmpClick()" label="Allocate Employees" ></button>
+        
+        <button pButton 
+          type="button"  
+          label="Clear" 
+          class="ui-button-secondary" 
+          (ResetForm)="resetForm()" 
+        ></button>
+    </div> -->
 
-    <div *ngIf="PageFlag.page =='TaskAction'">
+</div>
+
+<app-lot-note [Lot]="lotInfo" *ngIf="lotInfo?.showLotNoteModal" (NoteSaved)="onNoteSave($event)" ></app-lot-note> 
+
+<app-popup-lot-comment [Lot]="lotInfo" *ngIf="lotInfo?.showLotCommentModal" (CommentSaved)="OnCommentSaved($event)">
+</app-popup-lot-comment>
+
+<div *ngIf="PageFlag.page =='TaskAction'">
       <div class="ui-g">
         <!--Employee -->
      <div class="ui-g-12 ui-md-6">
