@@ -435,7 +435,7 @@
                     <p-sortIcon [field]="'StrainName'"></p-sortIcon>
                   </th>
                   <th>{{prodDashboardResource.lblSize}}</th>
-                  <th [pSortableColumn]="'JointRequiredQty'"> 
+                  <th style="width: 35%" [pSortableColumn]="'JointRequiredQty'"> 
                     {{prodDashboardResource.requiredQty}}
                     <p-sortIcon [field]="'JointRequiredQty'"></p-sortIcon>
                   </th>
@@ -459,8 +459,8 @@
                   </td>
                   <!--Order Package Size -->
                   <!--RequiredQty -->
-                  <td>
-                    {{rowData?.JointRequiredQty }}&nbsp;{{rowData?.JointRequiredQty > 1 
+                  <td  style="width: 35%">
+                    {{rowData?.JointRequiredQty }} / {{rowData?.RequiredQty }} &nbsp;{{rowData?.JointRequiredQty > 1 
                       ? prodDashboardResource.lblPreroll + 's' : prodDashboardResource.lblPreroll }}
                   </td>
                   <!--End RequiredQty -->
@@ -503,8 +503,8 @@
                     {{prodDashboardResource.lblStrain}}
                     <p-sortIcon [field]="'StrainName'"></p-sortIcon>
                   </th>
-                  <th>{{prodDashboardResource.lblSize}}</th>
-                  <th [pSortableColumn]="'JointRequiredQty'"> 
+                  <th >{{prodDashboardResource.lblSize}}</th>
+                  <th  style="width: 35%" [pSortableColumn]="'JointRequiredQty'"> 
                     {{prodDashboardResource.requiredQty}}
                     <p-sortIcon [field]="'JointRequiredQty'"></p-sortIcon>
                   </th>
@@ -528,8 +528,8 @@
                   </td>
                   <!--Order Package Size -->
                   <!--RequiredQty -->
-                  <td>
-                    {{rowData?.JointRequiredQty }}&nbsp;{{rowData?.JointRequiredQty > 1 
+                  <td  style="width: 35%">
+                    {{rowData?.JointRequiredQty }} / {{rowData?.RequiredQty }}&nbsp;{{rowData?.JointRequiredQty > 1 
                       ? prodDashboardResource.lblPreroll + 's' : prodDashboardResource.lblPreroll }}
                   </td>
                   <!--End RequiredQty -->
@@ -600,7 +600,7 @@
                   <!--End Strain -->
                   <!--WeightNeeded -->
                   <td>
-                    {{rowData?.RawRequiredWt}}&nbsp;{{prodDashboardResource.unitGrams}}
+                    {{rowData?.RawRequiredWt}} / {{rowData?.RequiredWt}}&nbsp;{{prodDashboardResource.unitGrams}}
                   </td>
                   <!--End WeightNeeded -->
                   <!--AvailSourceMaterial -->
@@ -659,7 +659,7 @@
                   <!--End Strain -->
                   <!--WeightNeeded -->
                   <td>
-                    {{rowData?.RawRequiredWt}}&nbsp;{{prodDashboardResource.unitGrams}}
+                    {{rowData?.RawRequiredWt}} / {{rowData?.RequiredWt}}&nbsp;{{prodDashboardResource.unitGrams}}
                   </td>
                   <!--End WeightNeeded -->
                   <!--AvailSourceMaterial -->
