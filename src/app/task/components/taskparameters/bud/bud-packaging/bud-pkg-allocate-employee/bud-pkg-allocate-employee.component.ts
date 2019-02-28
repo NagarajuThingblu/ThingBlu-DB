@@ -23,6 +23,9 @@ import * as _ from 'lodash';
       background: grey !important;
       cursor: not-allowed;
     }
+    .pkgInfo.clsInvalidRow{
+      border:1px solid red;
+    }
   `]
 })
 export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
@@ -68,6 +71,23 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
     lotId: 0,
     showLotNoteModal: false,
     showLotCommentModal: false
+  };
+
+  public showProductInfoModel = false;
+  public productData = {
+    BrandId: null,
+    StrainId: null,
+    BrandName: null,
+    StrainName: null,
+    RequireWt: null,
+    selectedRowIndex: null,
+    combinationTotalAssignedWt: null,
+    GeneticsId: null,
+    GeneticsName: null,
+    // Added by Devdan :: 15-Oct-2018
+    LotListId: null,
+    ProductTypeId: null,
+    UniqueId: null
   };
 
   constructor(
@@ -149,8 +169,7 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
       pkgSize: object.UnitValue || null,
       requiedQty: object.RequiredQty || null,
       itemQty: object.ItemQty || null,
-      assignQty: new FormControl(parentUniqueId ? object.splitQty : object.RequiredQty || null,
-        Validators.compose([Validators.max(object.RequiredQty)])),
+      assignQty: new FormControl(parentUniqueId ? object.splitQty : object.RequiredQty || null),
       employee: new FormControl(null, Validators.compose([Validators.required])),
       lotCount: lotCount || null,
       parentUniqueId: parentUniqueId,
@@ -263,6 +282,7 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
   }
 
   submit(form) {
+   // console.log(this.selectedLotsArray.get(form.id.uniqueId));
     const lotDetails = [];
     let totalLotWt = 0;
     let loMaxWtFlag = false;
@@ -378,14 +398,16 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
               c.value.employee
             ];
     });
-
     for (const prop in result) {
-        if (result[prop].length > 1 && (result[prop][0].controls['employee'].value !== '')) {
+        if (result[prop].length > 1 && (result[prop][0].controls['employee'].value )) {
             isError = true;
             _.forEach(result[prop], function (item: any, index) {
               item._status = 'INVALID';
-              result[prop][index].controls['employee'].setErrors({ 'duplicateProductEmployee': true});
+              (<FormControl>result[prop][index].controls['employee']).setErrors({ 'duplicateProductEmployee': true});
+              (<FormControl>result[prop][index].controls['employee']).markAsDirty();
             });
+
+            console.log(result);
         } else {
             result[prop][0]._status = 'VALID';
             result[prop][0].controls['employee'].updateValueAndValidity();
@@ -412,6 +434,10 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
 
     if (totalAssigedQty > Number(formRowGroup.value.requiedQty)) {
       formRowGroup.controls['assignQty'].setErrors({ 'greaterQty': { totalAssigedQty: totalAssigedQty, totalRequiredQty: formRowGroup.value.requiedQty } });
+    }
+    // added for less than Qty
+    if (totalAssigedQty < Number(formRowGroup.value.requiedQty)) {
+      formRowGroup.controls['assignQty'].setErrors({ 'lessQty': { totalAssigedQty: totalAssigedQty, totalRequiredQty: formRowGroup.value.requiedQty } });
     } else {
       if (this.selectedLotsArray.get(formRowGroup.value.uniqueId)) {
         this.selectedLotsArray.get(formRowGroup.value.uniqueId).forEach(rowItem => {
@@ -423,7 +449,7 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
       }
 
       this.selectedLotsArray.set(formRowGroup.value.uniqueId, []);
-      this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(this.selectedLotsArray));
+      this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
     }
   }
 
@@ -449,7 +475,7 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
 
         this.allocateEmpArr.insert((index + 1), formGroup);
         this.selectedLotsArray.set(parentUniqueId, []);
-        this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(this.selectedLotsArray));
+        this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
       }
     // }
   }
@@ -470,9 +496,14 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
     this.allocateEmpArr.removeAt(index);
 
     this.selectedLotsArray.set(parentUniqueId, []);
-    this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(this.selectedLotsArray));
+    this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
 
     this.validateDuplicateRows();
   }
 
+  // Product Information pop up
+  getSelectedProduct(rowdata) {
+    this.productData = rowdata.value;
+    this.showProductInfoModel = true;
+  }
 }

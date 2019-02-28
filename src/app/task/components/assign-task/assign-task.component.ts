@@ -6,7 +6,7 @@ import { TrimmingComponent } from './../taskparameters/trimming/trimming.compone
 import { CookieService } from 'ngx-cookie-service';
 import { SelectItem, ConfirmationService } from 'primeng/api';
 import { Component, OnInit, Input, ComponentFactoryResolver, ViewChild, OnDestroy } from '@angular/core';
-import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, Validators, FormGroup, FormArray } from '@angular/forms';
 import { TaskResources } from '../../task.resources';
 import { DateValidators } from '../../../shared/validators/dateCheck.validator';
 import { AddComponent } from '../../models/add-component';
@@ -342,7 +342,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
         }
         // Added for grouping same lot wt in singl row on 23-08-2018 by sanjay
         // // if (lotDetails !== null) {
-        // //   _.mapValues(_.groupBy(lotDetailsOrderGroup, c => {
+        // //   _.mapValues(_.groupBy(assignTaskDetailsForWebApi['LotDetails'], c => {
         // //     return [c.LotId];
         // //   }),
         // //     (clist, LotObject) => {
@@ -351,13 +351,14 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
         // //       clist.map(LotDetails1 => {
         // //         lotWeight += Number(LotDetails1.Weight);
         // //       });
-        // //       assignTaskDetailsForWebApi['LotDetails'].push({ LotId: lotNo, Weight: lotWeight });
+        // //       assignTaskDetailsForWebApi['LotWeightDetails'].push({ LotId: lotNo, Weight: lotWeight });
         // //     });
         // // } else {
-        // //   assignTaskDetailsForWebApi['LotDetails'] = [];
+        // //   assignTaskDetailsForWebApi['LotWeightDetails'] = [];
         // // }
         // End  Added for grouping same lot wt in singl row on 23-08-2018
 
+        let lotNotExists = false;
         assignTaskFormValues[this.selectedTaskTypeName].allocateEmpArr
           .forEach((item, rowIndex) => {
             if (item !== null && item.assignQty > 0) {
@@ -372,9 +373,23 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
                   IndexCode: rowIndex
                 }
               );
+
+            // console.log(assignTaskDetailsForWebApi['LotDetails'], item.uniqueId);
+
+                if (!assignTaskDetailsForWebApi['LotDetails']
+                .filter(rowItem => rowItem.UniqueId === item.uniqueId).length) {
+                  lotNotExists = true;
+
+                  (<FormGroup>(<FormArray>(<FormGroup>this.assignTaskForm.controls[this.selectedTaskTypeName])
+                  .controls['allocateEmpArr'])
+                  .controls[rowIndex])
+                  .setErrors({ 'INVALIDROW': true });
+                  // item._status = 'INVALID';
+                  this.msgs = [];
+                  this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotsnotassigned });
+                }
             }
           });
-
         if (assignTaskDetailsForWebApi['ProductTypeDetails'].length === 0) {
           this.msgs = [];
           this.msgs.push(
@@ -395,7 +410,9 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
         //   });
         //   return;
         // }
-
+        if (lotNotExists) {
+          return false;
+        }
       } else if (this.selectedTaskTypeName === 'GRINDING') {  // GRINDING TASK
         assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = assignTaskFormValues[this.selectedTaskTypeName].assignwt;
         assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'B-GRIND';
