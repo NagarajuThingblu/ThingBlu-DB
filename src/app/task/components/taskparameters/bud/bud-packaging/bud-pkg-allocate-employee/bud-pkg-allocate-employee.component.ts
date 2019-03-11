@@ -23,6 +23,11 @@ import * as _ from 'lodash';
       background: grey !important;
       cursor: not-allowed;
     }
+
+    ::ng-deep .clsBackgroundGrey > .ui-dropdown-label, ::ng-deep .clsBackgroundGrey > .ui-state-default {
+      background-color: #E6E6E6 !important;
+    }
+
     .pkgInfo.clsInvalidRow{
       border:1px solid red;
     }
@@ -74,6 +79,9 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
   };
 
   public showProductInfoModel = false;
+
+  public productTypeData: any;
+
   public productData = {
     BrandId: null,
     StrainId: null,
@@ -118,6 +126,8 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.allocateEmpArr.controls = [];
+    this.selectedLotsArray.clear();
+    this.appCommonService.removeSessionItem('selectedLotsArray');
   }
 
   getLotSyncWt(lotId): number {
@@ -167,9 +177,10 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
       pkgTypId: object.PkgTypId || null,
       pkgTypeName: object.PkgTypeName || null,
       pkgSize: object.UnitValue || null,
-      requiedQty: object.RequiredQty || null,
+      requiredQty: object.RequiredQty || null,
       itemQty: object.ItemQty || null,
       assignQty: new FormControl(parentUniqueId ? object.splitQty : object.RequiredQty || null),
+      previousQty: new FormControl(parentUniqueId ? object.splitQty : object.RequiredQty || null),
       employee: new FormControl(null, Validators.compose([Validators.required])),
       lotCount: lotCount || null,
       parentUniqueId: parentUniqueId,
@@ -225,6 +236,8 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
         }
     });
 
+    this.syncAllLotWeight();
+
     this.showLotSelectionModel = true;
   }
 
@@ -235,6 +248,8 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
     const validators = selected ? Validators.compose([Validators.required, Validators.min(0.1), Validators.max(availablewt.value)]) : null;
     answerbox.setValidators(validators);
     answerbox.updateValueAndValidity();
+
+    this.questionForm.get('questions.' + index).updateValueAndValidity();
   }
 
   createQuestionControl(fb: FormBuilder) {
@@ -243,12 +258,13 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
       let answerbox;
       const lotSelectedDetails = this.selectedLotsArray.get(this.selLotBrandStrainRow.UniqueId);
 
-      console.log(lotSelectedDetails);
+      // console.log(lotSelectedDetails);
 
-      if (!this.lotSyncWtArr.has(question.LotId)) {
-        this.setLotSyncWt(question.LotId, question.AvailableWt);
-      }
+      // if (!this.lotSyncWtArr.has(question.LotId)) {
+      //   this.setLotSyncWt(question.LotId, question.AvailableWt);
+      // }
 
+      let previousWt = 0;
       if (lotSelectedDetails) {
         const lotRowDetails = [];
         lotSelectedDetails.forEach(data => {
@@ -259,6 +275,7 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
         });
         if (lotRowDetails.length) {
           const lotWt = lotRowDetails[0].SelectedWt;
+            previousWt = lotWt;
             checkbox = lotRowDetails[0].Selected;
             answerbox = lotRowDetails[0].Selected
             ? [lotWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
@@ -275,7 +292,7 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
       }
         return fb.group({
           question: checkbox, answer: answerbox, questionNumber: index, LotNo: question.LotId,
-          AvailWt: question.AvailableWt,
+          AvailWt: question.AvailableWt, previousValue: previousWt || 0,
           GrowerLotNo: question.GrowerLotNo, LotNoteCount: question.LotNoteCount
         });
     };
@@ -287,17 +304,35 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
     let totalLotWt = 0;
     let loMaxWtFlag = false;
 
+    let lotSelectFlag = false;
+    let noLotSelected = false;
+
     if (this.questionForm.valid) {
       // In edit mode, skip this validation on submit and checking this validations on update tasks
       /// condition added by Devdan :: 23-Nov-2018
         form.value.questions.forEach(result => {
           totalLotWt += result.question ? Number(result.answer) : 0;
+
+          if (result.question) {
+            noLotSelected = true;
+          }
+
+          if (Number(result.answer) > 0 && !result.question) {
+            lotSelectFlag = true;
+            return;
+          }
         });
 
-        if (totalLotWt !== Number(this.selLotBrandStrainRow.combinationTotalAssignedWt)) {
+        if (lotSelectFlag || !noLotSelected) {
           this.msgs = [];
           this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg,
-            detail: 'Sum of all lot weight is not equal to total assigned weight.' });
+            detail: 'Please select lot.' });
+
+          return;
+        } else if (totalLotWt !== Number(this.selLotBrandStrainRow.combinationTotalAssignedWt)) {
+          this.msgs = [];
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg,
+            detail: 'Selected Weight does not equal Required Weight' });
 
           return;
         }
@@ -356,15 +391,17 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
           );
 
           // Added by bharat for bud packaing new changes
-          this.setLotSyncWt(result.LotNo,
-            Number(result.AvailWt) - (totalSelectedLotWt1 + Number(result.answer))
-            );
+          // this.setLotSyncWt(result.LotNo,
+          //   Number(result.AvailWt) - (totalSelectedLotWt1 + Number(result.answer))
+          //   );
         }
       });
 
+      this.allocateEmpArr.controls[this.selLotBrandStrainRow.selectedRowIndex].updateValueAndValidity();
+
       this.selectedLotsArray.set(this.selLotBrandStrainRow.UniqueId, lotDetails);
       // this.selectedLotsArray[String(this.selLotBrandStrainRow.UniqueId)] = lotDetails;
-      this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
+      this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
 
       if (loMaxWtFlag) {
         this.showLotSelectionModel = true;
@@ -379,7 +416,9 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
   assignToAllChange() {
     const assignToAllEmp =  this.BudPkgForm.value.assignToAll;
     this.allocateEmpArr.controls.forEach((element: FormGroup) => {
-      element.controls['employee'].patchValue(assignToAllEmp ? assignToAllEmp : null);
+      if (element.value.assignQty) {
+        element.controls['employee'].patchValue(assignToAllEmp ? assignToAllEmp : null);
+      }
     });
 
     this.validateDuplicateRows();
@@ -407,7 +446,7 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
               (<FormControl>result[prop][index].controls['employee']).markAsDirty();
             });
 
-            console.log(result);
+            // console.log(result);
         } else {
             result[prop][0]._status = 'VALID';
             result[prop][0].controls['employee'].updateValueAndValidity();
@@ -418,6 +457,7 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
   }
 
   rowEmpChange(rowIndex) {
+    this.BudPkgForm.controls['assignToAll'].patchValue(null);
     this.validateDuplicateRows();
   }
 
@@ -425,36 +465,64 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
 
     const allocateEmpArrControls = this.allocateEmpArr.controls;
     let totalAssigedQty = 0;
+    let splitCount = 0;
 
     for (const control in allocateEmpArrControls) {
       if (allocateEmpArrControls[control].value.productTypeId === formRowGroup.value.productTypeId) {
         totalAssigedQty += Number(allocateEmpArrControls[control].value.assignQty);
+        splitCount += 1;
       }
     }
 
-    if (totalAssigedQty > Number(formRowGroup.value.requiedQty)) {
-      formRowGroup.controls['assignQty'].setErrors({ 'greaterQty': { totalAssigedQty: totalAssigedQty, totalRequiredQty: formRowGroup.value.requiedQty } });
-    }
     // added for less than Qty
-    if (totalAssigedQty < Number(formRowGroup.value.requiedQty)) {
-      formRowGroup.controls['assignQty'].setErrors({ 'lessQty': { totalAssigedQty: totalAssigedQty, totalRequiredQty: formRowGroup.value.requiedQty } });
-    } else {
-      if (this.selectedLotsArray.get(formRowGroup.value.uniqueId)) {
-        this.selectedLotsArray.get(formRowGroup.value.uniqueId).forEach(rowItem => {
-          this.setLotSyncWt(rowItem.LotNo,
-              this.getLotSyncWt(rowItem.LotNo) + Number(rowItem.SelectedWt)
-            // Number(result.AvailWt) - (totalSelectedLotWt1 + Number(result.answer))
-            );
-        });
-      }
+    // if (totalAssigedQty < Number(formRowGroup.value.requiredQty)) {
+    //   formRowGroup.controls['assignQty'].setErrors({ 'lessQty': { totalAssigedQty: totalAssigedQty, totalRequiredQty: formRowGroup.value.requiredQty } });
+    // }
 
+    if (totalAssigedQty > Number(formRowGroup.value.requiredQty)) {
+      formRowGroup.controls['assignQty'].setErrors(
+          {
+              'greaterQty':
+                {
+                    isSplitted: splitCount > 1 ? true : false,
+                    totalAssigedQty: totalAssigedQty,
+                    totalRequiredQty: formRowGroup.value.requiredQty
+                }
+          });
+    } else {
+      // if (this.selectedLotsArray.get(formRowGroup.value.uniqueId)) {
+      //   this.selectedLotsArray.get(formRowGroup.value.uniqueId).forEach(rowItem => {
+      //     this.setLotSyncWt(rowItem.LotNo,
+      //         this.getLotSyncWt(rowItem.LotNo) + Number(rowItem.SelectedWt)
+      //       );
+      //   });
+      // }
       this.selectedLotsArray.set(formRowGroup.value.uniqueId, []);
-      this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
+
+      const employeeBox = formRowGroup.controls['employee'];
+      const validators = formRowGroup.value.assignQty ? Validators.compose([Validators.required]) : null;
+      employeeBox.setValidators(validators);
+      employeeBox.updateValueAndValidity();
+
+      this.syncAllLotWeight();
+
+      this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
     }
   }
 
   splitTask(formRow: FormGroup, index: number): void {
     // if (!this.validateDuplicateRows()) {
+      if (Number(formRow.value.assignQty) <= 1) {
+        this.msgs = [];
+
+        this.msgs.push({
+          severity: 'warn',
+          summary: this.globalResource.applicationmsg,
+          detail: 'Assign qty should be greater than 1.'
+       });
+       return;
+      }
+
       this.validateDuplicateRows();
       if (formRow.controls['assignQty'].valid) {
         const parentUniqueId = formRow.value.uniqueId;
@@ -469,20 +537,21 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
         results[1] = Number(formRow.value.assignQty) % 2;
 
         formRow.controls['assignQty'].patchValue(results[0] + results[1] );
+        formRow.controls['previousQty'].patchValue(results[0] + results[1] );
         splitObj['splitQty'] = results[0];
 
         const formGroup = this.createItem(splitObj, parentUniqueId);
 
         this.allocateEmpArr.insert((index + 1), formGroup);
         this.selectedLotsArray.set(parentUniqueId, []);
-        this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
+        this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
       }
     // }
   }
 
   undoTask(formRow: FormGroup, index: number) {
     const parentUniqueId = formRow.value.parentUniqueId;
-
+    let undoValue = 0;
     // Find Parent Row of current row to add current assign qty to parent assign qty
     const splitObject =  this.allocateEmpArr.controls.filter(item => item.value.uniqueId === parentUniqueId)[0];
 
@@ -492,18 +561,74 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
       filteredControl.controls['parentUniqueId'].patchValue(formRow.value.parentUniqueId);
     });
 
-    (<FormGroup>splitObject).controls['assignQty'].patchValue(Number(formRow.value.assignQty) + Number(splitObject.value.assignQty));
+    // if (formRow.controls['assignQty'].hasError('greaterQty')) {
+    //     const errorValue = formRow.controls['assignQty'].errors['greaterQty'];
+
+    //     undoValue = (Number(formRow.value.assignQty) + Number(splitObject.value.assignQty))
+    //     - Number(errorValue.totalAssigedQty - errorValue.totalRequiredQty);
+    // } else {
+    //     undoValue = (Number(formRow.value.assignQty) + Number(splitObject.value.assignQty));
+    // }
+    undoValue = (Number(formRow.value.previousQty) + Number(splitObject.value.previousQty));
+
+    (<FormGroup>splitObject).controls['assignQty'].patchValue(undoValue);
+    (<FormGroup>splitObject).controls['previousQty'].patchValue(undoValue);
     this.allocateEmpArr.removeAt(index);
 
     this.selectedLotsArray.set(parentUniqueId, []);
-    this.appCommonService.setLocalStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
+    this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
 
     this.validateDuplicateRows();
   }
 
   // Product Information pop up
   getSelectedProduct(rowdata) {
-    this.productData = rowdata.value;
+    this.productTypeData = rowdata.value;
     this.showProductInfoModel = true;
+  }
+
+  syncAllLotWeight() {
+    const selectedLots = Array.from(this.selectedLotsArray.values());
+
+    if (selectedLots !== null) {
+      this.lotSyncWtArr.clear();
+
+      selectedLots
+      .forEach((item, index) => {
+        if (item !== null && item.length) {
+          item.forEach((element, lotIndex) => {
+            if (this.lotSyncWtArr.has(element.LotNo)) {
+              this.lotSyncWtArr.set(element.LotNo ,
+                Number(this.lotSyncWtArr.get(element.LotNo)) -
+                Number(element.SelectedWt) );
+            } else {
+              this.lotSyncWtArr.set(element.LotNo ,
+                Number(element.AvailWt) - Number(element.SelectedWt));
+            }
+          });
+        }
+      });
+    }
+  }
+
+  lotWeightOnChange(rowItem) {
+    let updatedWt = 0;
+    if (this.lotSyncWtArr.has(rowItem.value.LotNo)) {
+
+      updatedWt = (Number(this.lotSyncWtArr.get(rowItem.value.LotNo)) + Number(rowItem.value.previousValue) )
+      - Number(rowItem.value.answer);
+
+      if (updatedWt <= 0) { updatedWt = 0; }
+      this.lotSyncWtArr.set(rowItem.value.LotNo , updatedWt);
+
+        rowItem.controls['previousValue'].patchValue(rowItem.value.answer);
+    } else {
+      updatedWt = Number(rowItem.value.AvailWt) - Number(rowItem.value.answer);
+
+      if (updatedWt <= 0) { updatedWt = 0; }
+      this.lotSyncWtArr.set(rowItem.value.LotNo , updatedWt);
+
+        rowItem.controls['previousValue'].patchValue(rowItem.value.answer);
+    }
   }
 }

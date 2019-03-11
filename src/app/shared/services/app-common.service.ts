@@ -201,6 +201,22 @@ calcUTCTime(date1, offset) {
       localStorage.setItem(key + String(this.getEnvData().clientCode), this.Encrypt(value));
   }
 
+  getSessionStorage(key: string): string {
+    if (sessionStorage.getItem(key + String(this.getEnvData().clientCode)) === null) {
+      return null;
+    } else {
+      return this.Decrypt(sessionStorage.getItem(key + String(this.getEnvData().clientCode)));
+    }
+  }
+
+  setSessionStorage(key: string, value: string) {
+    sessionStorage.setItem(key + String(this.getEnvData().clientCode), this.Encrypt(value));
+  }
+
+  removeSessionItem(key: string) {
+    sessionStorage.removeItem(key + String(this.getEnvData().clientCode));
+  }
+
   removeItem(key: string) {
     localStorage.removeItem(key + String(this.getEnvData().clientCode));
   }

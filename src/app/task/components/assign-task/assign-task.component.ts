@@ -132,7 +132,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
     this.titleService.setTitle(this.assignTaskResources.title);
 
     if (this.prodDBRouteParams) {
-      console.log(this.prodDBRouteParams);
+      // console.log(this.prodDBRouteParams);
       this.assignTask.task = this.prodDBRouteParams.TaskTypeId;
 
       this.readonlyFlag = true;
@@ -306,13 +306,14 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
         // Changed added by Devdan :: Calling common methods to get n set local storage :: 27-Sep-2018
         // let lotDetails = JSON.parse(localStorage.getItem('selectedLotsArray'));
         let lotDetails = null;
-        lotDetails = JSON.parse(this.appCommonService.getLocalStorage('selectedLotsArray'));
+        lotDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
         //// const uniqueOrderStrains = JSON.parse(localStorage.getItem('uniqueOrderStrains'));
-        if (lotDetails === null) {
-          this.msgs = [];
-          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotsnotassigned });
-          return;
-        }
+
+        // if (lotDetails === null) {
+        //   this.msgs = [];
+        //   this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotsnotassigned });
+        //   return;
+        // }
         assignTaskDetailsForWebApi['LotDetails'] = [];
         assignTaskDetailsForWebApi['ProductTypeDetails'] = [];
         assignTaskDetailsForWebApi.TaskDetails['LotId'] = 0;
@@ -378,15 +379,18 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
                 if (!assignTaskDetailsForWebApi['LotDetails']
                 .filter(rowItem => rowItem.UniqueId === item.uniqueId).length) {
+                  if (!lotNotExists) {
+                    (<FormGroup>(<FormArray>(<FormGroup>this.assignTaskForm.controls[this.selectedTaskTypeName])
+                    .controls['allocateEmpArr'])
+                    .controls[rowIndex])
+                    .setErrors({ 'INVALIDROW': true });
+                  }
+
                   lotNotExists = true;
 
-                  (<FormGroup>(<FormArray>(<FormGroup>this.assignTaskForm.controls[this.selectedTaskTypeName])
-                  .controls['allocateEmpArr'])
-                  .controls[rowIndex])
-                  .setErrors({ 'INVALIDROW': true });
                   // item._status = 'INVALID';
-                  this.msgs = [];
-                  this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotsnotassigned });
+                  // this.msgs = [];
+                  // this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotsnotassigned });
                 }
             }
           });
@@ -810,11 +814,11 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
       // return;
 
       // console.log(assignTaskDetailsForWebApi);
-      this.confirmationService.confirm({
-        message: this.globalResource.saveconfirm,
-        header: 'Confirmation',
-        icon: 'fa fa-exclamation-triangle',
-        accept: () => {
+      // this.confirmationService.confirm({
+      //   message: this.globalResource.saveconfirm,
+      //   header: 'Confirmation',
+      //   icon: 'fa fa-exclamation-triangle',
+      //   accept: () => {
 
           // http call starts
           this.loaderService.display(true);
@@ -854,6 +858,43 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
                   });
 
                   this.taskTypeChange();
+                } else if (String(data[0]['Result']).toLocaleUpperCase() === 'A-PACKAGE') {
+                  this.msgs = [];
+                  this.msgs.push({
+                    severity: 'warn',
+                    summary: this.globalResource.applicationmsg,
+                    detail: data[0]['ErrMsg']
+                 });
+
+                 let deleteRowIndex = 0;
+                 let deleteItemCount = 0;
+                  if (String(data[0]['ErrName']).toLocaleUpperCase() === 'REQUIREDQTYNOTAVAILABLE') {
+                    (<FormArray>(<FormGroup>this.assignTaskForm.controls[this.selectedTaskTypeName])
+                          .controls['allocateEmpArr']).controls
+                    .forEach((item, rowIndex) => {
+                      if (item !== null && Number(item.value.productTypeId) === Number(data[0]['ErrRowIndex'])) {
+                        if (item.value.parentUniqueId) {
+                          deleteItemCount += 1;
+                          // (<FormArray>(<FormGroup>this.assignTaskForm.controls[this.selectedTaskTypeName])
+                          // .controls['allocateEmpArr']).removeAt(rowIndex);
+
+                        } else {
+                          deleteRowIndex = rowIndex + 1;
+                          (<FormGroup>(<FormArray>(<FormGroup>this.assignTaskForm.controls[this.selectedTaskTypeName])
+                          .controls['allocateEmpArr'])
+                          .controls[rowIndex]).controls['assignQty'].patchValue(item.value.requiredQty);
+                        }
+                      }
+                    });
+
+                    for (let i = 0; i < deleteItemCount; i++) {
+                      (<FormArray>(<FormGroup>this.assignTaskForm.controls[this.selectedTaskTypeName])
+                      .controls['allocateEmpArr']).removeAt(deleteRowIndex);
+
+                      // (<FormArray>(<FormGroup>this.assignTaskForm.controls[this.selectedTaskTypeName])
+                      // .controls['allocateEmpArr']).removeAt(i);
+                    }
+                  }
                 } else {
                   this.msgs = [];
                   this.msgs.push({
@@ -892,11 +933,11 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
                 // http call ends
                 this.loaderService.display(false);
               });
-        },
-        reject: () => {
-          // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
-        }
-      });
+      //   },
+      //   reject: () => {
+      //     // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
+      //   }
+      // });
     } else {
       this.appCommonService.validateAllFields(this.assignTaskForm);
     }

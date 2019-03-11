@@ -956,7 +956,7 @@
                     <input
                       pTooltip="Completed Qty"           
                       type="number"
-                      pKeyFilter="int"
+                      pKeyFilter="pint"
                       pInputText
                       autocomplete="off"
                       (change)="compQtyOnChange(i, comp)"
@@ -976,6 +976,9 @@
                       </span>
                       <span *ngIf="comp.controls['completedWt'].hasError('max')">
                           {{ assignTaskResources.compqtygreaterassignqty }}
+                      </span>
+                      <span *ngIf="comp.controls['completedWt'].hasError('min')">
+                          Qty less than 0 not allowed.
                       </span>
                   </div>
                     </div>
@@ -1023,14 +1026,20 @@
                               pInputText
                               autocomplete="off"                 
                               type="number"                                                  
-                              pKeyFilter="int"                                                   
+                              pKeyFilter="pint"                                                   
                               (change)="calculateTotalCompletedWt(i, comp, lot)"
                               maxlength="AppConstants.maxLength"
                               placeholder="Packages Completed"
                               formControlName="lotCompletedWt"                                            
                               id="lotcompletedwt"
                               name="lotcompletedwt"                      
-                            />                     
+                            /> 
+                            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                            *ngIf="!lot.controls['lotCompletedWt'].valid&&lot.controls['lotCompletedWt'].dirty"> 
+                              <span *ngIf="lot.controls['lotCompletedWt'].hasError('min')">
+                                  Qty less than 0 not allowed.
+                              </span> 
+                            </div>                  
                         
                           </td>   
                           <td pTooltip="Completed Weight" >    
@@ -1271,7 +1280,7 @@
                 </p>
                   <input                    
                     type="number"
-                    OnlyNumber="true"            
+                    pKeyFilter="pint"
                     pInputText
                     autocomplete="off"
                     [ngModel]="disableCompletedWtArr[i]"
@@ -1283,6 +1292,12 @@
                     class="reviewedQty"
 
                   />
+                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                  *ngIf="!comp.controls['reviewedWt'].valid&&comp.controls['reviewedWt'].dirty"> 
+                    <span *ngIf="comp.controls['reviewedWt'].hasError('min')">
+                        Qty less than 0 not allowed.
+                    </span> 
+                  </div>
               </div>
             </p-header>
             
@@ -1315,7 +1330,7 @@
                   <td> 
                     <input                    
                       type="number"
-                      OnlyNumber="true"
+                      pKeyFilter="pint"
                       readonly="true"
                       maxlength="10"
                       pKeyFilter="int"
@@ -1326,7 +1341,14 @@
                       formControlName="lotReviewedWt"
                       id="lotcompletedwt"
                       name="lotcompletedwt"
-                    />                     
+                    />  
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!lot.controls['lotReviewedWt'].valid&&lot.controls['lotReviewedWt'].dirty"> 
+                    <span *ngIf="lot.controls['lotReviewedWt'].hasError('min')">
+                        Qty less than 0 not allowed.
+                    </span> 
+                  </div>
                
               </td>                
             </tr>

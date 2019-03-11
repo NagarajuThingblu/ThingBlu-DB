@@ -247,11 +247,11 @@ export class TaskactionsComponent implements OnInit {
       taskStatus: this.TaskStatus.InProcess
     };
 
-  this.confirmationService.confirm({
-    message: this.globalResource.saveconfirm,
-    header: 'Confirmation',
-    icon: 'fa fa-exclamation-triangle',
-    accept: () => {
+  // this.confirmationService.confirm({
+  //   message: this.globalResource.saveconfirm,
+  //   header: 'Confirmation',
+  //   icon: 'fa fa-exclamation-triangle',
+  //   accept: () => {
           // http call starts
           this.loaderService.display(true);
           this.taskCommonService.startTask(taskStatusParameters)
@@ -291,11 +291,11 @@ export class TaskactionsComponent implements OnInit {
             //       msg => {
             //       });
           });
-      },
-      reject: () => {
-          // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
-      }
-    });
+    //   },
+    //   reject: () => {
+    //       // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
+    //   }
+    // });
 
   }
   resumeOrPauseTask(flag) {

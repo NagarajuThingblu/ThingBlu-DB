@@ -5,40 +5,12 @@
     <!-- <div class="ui-g-12">
         <a class="pull-right anchor" href="javascript:void(0)"><span>< Back</span></a>
     </div> -->
-    <div class="ui-g-12 ui-md-12">
-        <!-- Order Label -->
-      <!-- <div class="ui-g-12 ui-md-4">
-            <div class="paddingRL">
-              <label>
-                <strong>Order </strong>
-              </label>
-              <div>
-                <label>              
-                  DS-1246
-                </label>
-              </div>
-            </div>
-          </div> -->
-
-          <!-- Delivery Date -->
-          <!-- <div class="ui-g-12 ui-md-4">
+    <div class="ui-g-12 ui-md-12 ui-g-nopad">
+          <!-- Assign To All Dropdown -->
+          <div class="ui-g-12 ui-md-6 ">
               <div class="paddingRL">
                 <label>
-                  <strong>Delivery Date </strong>
-                </label>
-                <div>
-                  <label>              
-                    03/31/2019
-                  </label>
-                </div>
-              </div>
-            </div> -->
-
-            <!-- Assign To All Dropdown -->
-          <div class="ui-g-12 ui-md-6">
-              <div class="paddingRL">
-                <label>
-                  <strong>Assign To All </strong>
+                  {{ assignTaskResources.lblAssignToAll }}
                 </label>
                 <div>
                   <p-dropdown
@@ -69,31 +41,33 @@
               <ng-template pTemplate="header" class="header-tab">
                 <tr>                                   
                   <th style="width: 20%;"> {{globalResource.strain}} </th>
-                  <th style="width: 5%;"> {{globalResource.size}} </th>
-                  <th style="width: 10%;"> {{globalResource.total}} </th>
-                  <th style="width: 11%;"> {{globalResource.assignqty}} <span class="star">*</span> </th>
-                  <th style="width: 12%;"> {{globalResource.lot + '(s)'}} </th>
-                  <th style="width: 18%;"> {{globalResource.employee}} <span class="star">*</span> </th>
-                  <th style="width: 14%;"> </th>
-                  <th style="width: 10%;"> </th>
+                  <th style="width: 12%;"> {{globalResource.pkgsize}} </th>
+                  <th style="width: 8%;"> {{globalResource.total}} </th>
+                  <th style="width: 15%;"> {{globalResource.assignqty}} <span class="star">*</span> </th>
+                  <th style="width: 15%;"> {{globalResource.lot + '(s)'}} </th>
+                  <th style="width: 20%;"> {{globalResource.employee}} <span class="star">*</span> </th>
+                  <th style="width: 5%;"> </th>
+                  <th style="width: 5%;"> </th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-rowData let-i="rowIndex" >
-                <tr [formGroupName]="i" class="pkgInfo" [class.clsInvalidRow]="rowData?.errors?.INVALIDROW">
+                <tr [formGroupName]="i" class="pkgInfo">
                   <td  
                     title="{{rowData.value.toolTip}}" 
                     tooltipPosition="top" >
-                <span class="ui-column-title">{{globalResource.strain}}</span>
-                    <a [routerLink]="" 
-                    (click)="getSelectedProduct(rowData)" class="btn-link anchor">{{rowData.value.strainName}} </a>
+                    <span class="ui-column-title">{{globalResource.strain}}</span>
+                    {{rowData.value.strainName}}
                   </td>
                   <td>
-                    <span class="ui-column-title">{{globalResource.size}}</span>
-                    {{rowData.value.pkgSize}}
+                    <span class="ui-column-title">{{globalResource.pkgsize}}</span>
+                    <a [routerLink]="" 
+                      (click)="getSelectedProduct(rowData)" class="btn-link anchor">
+                      {{rowData.value.pkgSize}} {{globalResource.listgramunits}}
+                    </a>                    
                   </td>
                   <td>
                       <span class="ui-column-title">{{globalResource.total}}</span>
-                      {{rowData.value.requiedQty}}
+                      {{rowData.value.requiredQty}}
                     </td>
                     <td>
                         <span class="ui-column-title">{{globalResource.assignqty}}</span>
@@ -112,86 +86,122 @@
                               class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                               *ngIf="!rowData.controls['assignQty'].valid&&rowData.controls['assignQty'].dirty">
                                 <span *ngIf="rowData.controls['assignQty'].hasError('greaterQty')">
-                                 <!-- Total assigned qty({{ rowData.controls['assignQty'].errors['greaterQty'].totalAssigedQty }}) 
-                                  is greater than total required qty({{ rowData.controls['assignQty'].errors['greaterQty'].totalRequiredQty }}).-->
-                                   Sum must equal Total(-{{rowData.controls['assignQty'].errors['greaterQty'].totalAssigedQty - rowData.controls['assignQty'].errors['greaterQty'].totalRequiredQty }})
-                                </span>
-                                <span *ngIf="rowData.controls['assignQty'].hasError('lessQty')">
-                                  <!-- Total assigned qty({{ rowData.controls['assignQty'].errors['greaterQty'].totalAssigedQty }}) 
-                                   is greater than total required qty({{ rowData.controls['assignQty'].errors['greaterQty'].totalRequiredQty }}).-->
-                                   Sum must equal Total(+{{rowData.controls['assignQty'].errors['lessQty'].totalRequiredQty - rowData.controls['assignQty'].errors['lessQty'].totalAssigedQty}})
-                                 </span>
+                                   <!-- Sum must equal Total(-{{rowData.controls['assignQty'].errors['greaterQty'].totalAssigedQty - rowData.controls['assignQty'].errors['greaterQty'].totalRequiredQty }}) -->
+                                  <span *ngIf="!rowData.controls['assignQty'].errors['greaterQty']?.isSplitted">
+                                    Assign Qty cannot be more than the Total
+                                  </span>
+                                    <span *ngIf="rowData.controls['assignQty'].errors['greaterQty']?.isSplitted">
+                                      Assign Qty's cannot be more than the Total when task is split
+                                    </span>
+                                  </span>
                                  <!-- comment max qty validation -->
                                <span *ngIf="rowData.controls['assignQty'].errors['max']">
                                     Max value is {{ rowData.controls['assignQty'].errors['max'].max }}
-                                </span>
-
-                               <!-- <span *ngIf="rowData.controls['assignQty'].errors['required']">
-                                 Assign qty Required
-                              </span>-->  
+                                </span> 
                           </div>
                     </td>
                   <td>
                       <span class="ui-column-title">{{globalResource.lot + '(s)'}}</span>
 
-                      <span  *ngIf="rowData.value.lotCount > 0" >
-                        <a 
-                          class="btn-link anchor"
-                          [class.clsLotSelected]="selectedLotsArray.get(rowData.value.uniqueId)?.length > 0"
-                          [routerLink]="" 
-                          (click)="openLotSelection(rowData, i)"
-                        > Select Lots
-                        </a>
-                      </span>
-                      <span class="star"  *ngIf="rowData.value.lotCount === 0" >
-                        {{ globalResource.lotnotavailable }}  
-                      </span>
+                      <div>
+                        <span  *ngIf="rowData.value.lotCount > 0&&rowData.value.assignQty > 0" >
+                          <a 
+                            class="btn-link anchor"
+                            [class.clsLotSelected]="selectedLotsArray.get(rowData.value.uniqueId)?.length > 0"
+                            [routerLink]="" 
+                            (click)="openLotSelection(rowData, i)"
+                          > 
+                            <span *ngIf="selectedLotsArray.get(rowData.value.uniqueId)?.length <= 0">
+                              {{assignTaskResources.lnkSelectLots}}
+                            </span>
+                            <span *ngIf="selectedLotsArray.get(rowData.value.uniqueId)?.length > 0">
+                              {{assignTaskResources.viewChangeLots}}
+                            </span>
+                          </a>
+                        </span>
+                        <span  *ngIf="rowData.value.assignQty == 0" >
+                           {{assignTaskResources.lnkSelectLots}}
+                        </span>
+                        <span class="star"  *ngIf="!rowData.value.lotCount" >
+                          {{assignTaskResources.lblNoLotPresent}}
+                        </span>
+                      </div>
+
+                      <div
+                        class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="rowData.value.lotCount > 0 && selectedLotsArray.get(rowData.value.uniqueId)?.length <= 0 && rowData?.errors?.INVALIDROW">                       
+                          <span>
+                           <!--Duplicate tasks for same employee.--> 
+                           {{assignTaskResources.lotsnotassigned}}
+                          </span>
+                      </div>
                       <!-- <a class="anchor" href="javascript:void(0)"><span>Select Lots</span></a> -->
                     </td>
                   <td class="text-center"> 
                       <span class="ui-column-title">{{globalResource.employee}}</span>
-                      <p-dropdown
-                        [filter] ="true"
-                        [options]="employees"
-                        (onChange)="rowEmpChange(i)"
-                        formControlName="employee"
-                        defaultLabel="-- Select --"
-                        class="clsControl"
-                        id="employee"
-                        name="employee"
-                      ></p-dropdown>
+                      <div>
+                        <p-dropdown
+                          [filter] ="true"
+                          [options]="employees"
+                          [readonly]="rowData.value.assignQty == 0"
+                          [styleClass]="rowData.value.assignQty == 0 ? 'clsBackgroundGrey' : ''"
+                          (onChange)="rowEmpChange(i)"
+                          formControlName="employee"
+                          defaultLabel="-- Select --"
+                          class="clsControl"
+                          id="employee"
+                          name="employee"
+                        ></p-dropdown>
+                      </div>
                       <div
-                        class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        class="ui-message ui-messages-error ui-corner-all" appErrorTooltip tooltipPosition="left"
                         *ngIf="!rowData.controls['employee'].valid&&rowData.controls['employee'].dirty">
                         <span *ngIf="rowData.controls['employee'].errors['required']">
-                            <!--Select employee-->
-                            Employee Required
+                          {{globalResource.employeerequired}}
                           </span>
                           <span *ngIf="rowData.controls['employee'].hasError('duplicateProductEmployee')">
-                           <!--Duplicate tasks for same employee.--> 
-                           Same Employee for Split Task 
+                           {{assignTaskResources.errSameEmpForTask}}
                           </span>
                       </div>
                       
                   </td>  
                   <td class="text-center"> 
-                      <ng-container *ngIf="rowData.value.assignQty > 1">
-                        <button pButton 
+                      <ng-container *ngIf="rowData.value.lotCount">
+                        <a 
+                          pTooltip="{{assignTaskResources.tpSplitTask}}"
+                          tooltipPosition="left"
+                          [routerLink]="" 
+                          (click)="splitTask(rowData, i)"
+                          style="font-size: 24px"
+                        > <span class="fa fa-share-alt"></span>
+                        </a>
+                        <!-- <button pButton 
                           type="button" 
                           (click)="splitTask(rowData, i)" 
                           label="Split Task">
-                        </button>
+                        </button> -->
                       </ng-container>
-                      <ng-container *ngIf="rowData.value.assignQty <= 1">
-                        <button pButton 
+                      <!-- <ng-container *ngIf="rowData.value.assignQty <= 1||!rowData.value.lotCount">
+                         <button pButton 
                           type="button"
                           class="ui-button-rounded disableGrayButton"
                           label="Split Task">
-                        </button>
-                      </ng-container>
+                        </button> 
+                        <span style="font-size: 20px" pTooltip="{{assignTaskResources.tpSplitTask}}"
+                        tooltipPosition="left" class="fa fa-clone mt-1"></span>
+                      </ng-container> -->
                   </td>  
-                  <td class="text-center"> 
-                      <button  *ngIf="rowData.value.parentUniqueId" pButton type="button" (click)="undoTask(rowData, i)" label="Undo"  class="ui-button-danger"></button>
+                  <td> 
+                      <!-- <button  *ngIf="rowData.value.parentUniqueId" pButton type="button" (click)="undoTask(rowData, i)" label="Undo"  class="ui-button-danger"></button> -->
+                      <ng-container *ngIf="rowData.value.parentUniqueId">
+                        <a style="font-size: 24px"
+                          pTooltip="{{assignTaskResources.tpUndoTask}}"
+                          tooltipPosition="left"
+                          [routerLink]="" 
+                          (click)="undoTask(rowData, i)"
+                        > <span class="fa fa-undo star"></span>
+                        </a>
+                      </ng-container>
                   </td>              
                 </tr>
               </ng-template>
@@ -229,7 +239,7 @@
     <div class="ui-g">
             <div class="ui-g-12 ui-md-6">
               <label>
-                  <strong>Genetics:</strong>
+                  <strong>{{globalResource.genetics}}:</strong>
                 </label>
 
                 <label>
@@ -239,7 +249,7 @@
 
               <div class="ui-g-12 ui-md-6">
                   <label>
-                    <strong>Required Weight:</strong>
+                    <strong>{{assignTaskResources.lblRequiredWeight}}:</strong>
                   </label>
 
                   <label>
@@ -252,10 +262,10 @@
       <p-table [value]="questions?.controls" id="tblLotSelection">
           <ng-template pTemplate="header">
               <tr>
-                  <th style="width:150px">Strain</th>
-                  <th style="width:170px">Lot No</th>
-                  <th style="width:33.33333333%">Available Weight</th>
-                  <th style="width:33.33333333%">Selected Weight</th>
+                  <th style="width:150px">{{globalResource.strain}}</th>
+                  <th style="width:170px">{{globalResource.lotno}}</th>
+                  <th style="width:33.33333333%">{{assignTaskResources.lblAvailWeight}}</th>
+                  <th style="width:33.33333333%">{{assignTaskResources.lblSelectedWeight}}</th>
               </tr>
           </ng-template>
           <ng-template pTemplate="body" let-question let-i="rowIndex" >
@@ -289,12 +299,15 @@
                     
                     <ng-container *ngIf="!taskId">
                       <!-- {{ lotSyncWtArr.get(parseInt(brandStrainLots[i].LotId)) || 0 }} {{globalResource.listgramunit}} -->
-                      {{ getLotSyncWt(brandStrainLots[i].LotId) || 0}} {{globalResource.listgramunit}}
+                      {{ lotSyncWtArr.has(brandStrainLots[i].LotId) 
+                          ? getLotSyncWt(brandStrainLots[i].LotId)
+                          :  question.value.AvailWt }} {{globalResource.listgramunit}}
                     </ng-container>
                   </td>
                   <td>
                     <input
                       type="number"
+                      (change)="lotWeightOnChange(question)"
                       OnlyNumber="true"
                       pInputText
                       autocomplete="off"
@@ -304,13 +317,13 @@
                       style="width:100%;"
                   />                          
                   <div
-                      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip tooltipPosition="left"
                       *ngIf="!question.controls['answer'].valid&&question.controls['answer'].dirty">
                         <span *ngIf="question.controls['answer'].errors['max'] || question.controls['answer'].errors['min']">
-                          Select Valid Weight
+                          {{assignTaskResources.errSelectValidWeight}}
                         </span>  
                         <span *ngIf="question.controls['answer'].errors['required']" style="width:120px">
-                          Weight Required
+                          {{assignTaskResources.errWeightRequired}}
                         </span>
 
                   </div>
@@ -349,47 +362,47 @@
     <div class="ui-g">
             <div class="ui-g-12 ui-md-6">
                  <label>
-                  <strong>Brand</strong>
+                  <strong>{{globalResource.brand}}</strong>
                  </label>
                 <br>
                 <label>
-                   {{productData.brandName}}
+                   {{productTypeData?.brandName}}
                 </label>
             </div>
             <div class="ui-g-12 ui-md-6">                
                   <label>
-                    <strong>Sub-Brand</strong>
+                    <strong>{{globalResource.subbrand}}</strong>
                   </label>
                   <br>
                   <label>
-                    {{productData.subBrandName}}
+                    {{productTypeData?.subBrandName}}
                   </label>                   
             </div>
             <div class="ui-g-12 ui-md-6">                
                 <label>
-                  <strong>Package Type</strong>
+                  <strong>{{globalResource.pkgtype}}</strong>
                 </label>
                 <br>
                 <label>
-                   {{productData.pkgTypeName}}
+                   {{productTypeData?.pkgTypeName}}
                 </label>                   
         </div>
         <div class="ui-g-12 ui-md-6">                
               <label>
-                 <strong>Package Size</strong>
+                 <strong>{{globalResource.pkgsize}}</strong>
               </label>
             <br>
               <label>
-                 {{productData.pkgSize}}
+                 {{productTypeData?.pkgSize}}  {{globalResource.listgramunit}}
               </label>                   
     </div>
     <div class="ui-g-12 ui-md-6">                
           <label>
-            <strong>Strain</strong>
+            <strong>{{globalResource.strain}}</strong>
           </label>
         <br>
           <label>
-             {{productData.strainName}}
+             {{productTypeData?.strainName}}
           </label>                   
 </div>
     </div>

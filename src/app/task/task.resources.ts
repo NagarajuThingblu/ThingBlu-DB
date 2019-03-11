@@ -269,7 +269,20 @@ export class TaskResources {
                     availMaterial: 'Available Material',
                     weightNeeded: 'Weight Needed',
                     availSourceMaterial: 'Available Source Material',
-                    lblPreroll: 'pre-roll'
+                    lblPreroll: 'pre-roll',
+                    lblAssignToAll: 'Assign To All',
+                    lnkSelectLots: 'Select Lots',
+                    lblNoLotPresent: 'No lot available.',
+                    errSameEmpForTask: 'Same Employee for Split Task',
+                    lblRequiredWeight: 'Required Weight',
+                    lblAvailWeight: 'Available Weight',
+                    lblSelectedWeight: 'Selected Weight',
+                    errSelectValidWeight: 'Select valid weight.',
+                    errWeightRequired: 'Weight is required.',
+                    tpSplitTask: 'Split Task',
+                    tpUndoTask: 'Undo Task',
+                    viewChangeLots: 'View/Change Lots'
+
                 },
                 searchtask: {
                     pageheading: 'All Tasks',

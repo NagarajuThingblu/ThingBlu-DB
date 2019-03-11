@@ -406,7 +406,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     return (object, index) => {
       let completedBox, packageCodeBox;
 
-      completedBox = [null, Validators.max(object.AssignedQty)];
+      completedBox = [null, Validators.compose([Validators.min(0), Validators.max(object.AssignedQty)])];
       packageCodeBox = [null];
       this.disableCompletedWtArr[index] = object.AssignedQty;
 
@@ -498,8 +498,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
       //     });
 
       // this.disableCompletedWtArr[index] = object.CompletedQty;
-
-      reviewBox = [this.disableCompletedWtArr[index]];
+      reviewBox = [this.disableCompletedWtArr[index], Validators.compose([Validators.min(0)])];
       return fb.group({
         uniqueId: index,
         reviewedWt: reviewBox,
@@ -880,13 +879,13 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
       let checkbox;
 
       if (flag === 'Complete') {
-        checkbox = [null];
+        checkbox = [null, Validators.compose([Validators.min(0)])];
         return fb.group({
           LotId: object.LotId, lotCompletedWt: checkbox, GrowerLotNo: object.GrowerLotNo,
           AssignedWt: object.AssignedWt, LotNoteCount: object.LotNoteCount
         });
       } else {
-        checkbox = [object.ProcessedQty ? object.ProcessedQty : 0];
+        checkbox = [object.ProcessedQty ? object.ProcessedQty : 0, Validators.compose([Validators.min(0)])];
         return fb.group({
           LotId: object.LotId, lotReviewedWt: checkbox, GrowerLotNo: object.GrowerLotNo,
           AssignedWt: object.AssignedWt, ProcessedQty: object.ProcessedQty, LotNoteCount: object.LotNoteCount
