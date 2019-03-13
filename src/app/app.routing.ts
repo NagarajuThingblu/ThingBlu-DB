@@ -71,6 +71,8 @@ const appRoutes: Routes = [
         { path: 'whiteboards', component: WhiteboardsComponent, canActivate: [AuthGuard] },
         { path: 'whiteboard/:flag', component: WhiteboardDetailsComponent },
         { path: 'orderrequestform', component: OrderRequestFormComponent, canActivate: [AuthGuard, RoleGuard]},
+        // draft order page routing
+        { path: 'orderrequestform/:draftOrderId', component: OrderRequestFormComponent, canActivate: [AuthGuard, RoleGuard]},
         { path: 'orderreturn', component: OrderReturnComponent, canActivate: [AuthGuard]},
         { path: 'oilmaterialsout', component: OilMaterialsOutComponent, canActivate: [AuthGuard, RoleGuard]},
         { path: 'oilmaterialsin', component: OilMaterialsInComponent, canActivate: [AuthGuard, RoleGuard]},

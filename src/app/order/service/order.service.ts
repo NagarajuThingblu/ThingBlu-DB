@@ -443,4 +443,57 @@ export class OrderService {
       //   }
       // );
     }
+
+    // order draft api
+    saveOrderDraft(draftOrderApi) {
+        const url = 'api/Order/DraftOrderAddupdate?' + this.ClientVirtual;
+        return this.http.post(url, draftOrderApi, this.headers)
+        .map(data =>  data );
+
+    }
+
+    // get all order draft details
+   /* getAllDraftOrders(): Observable<any> {
+      const url = 'api/Order/DraftOrderGetListByClient';
+      let params = new HttpParams();
+      params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+      params = params.append('DraftOrderId', String(0));
+      params = params.append('GetAll', String(1));
+      return this.http
+      .get(url, {params: params})
+      .map(
+        data => {
+          return data;
+        });
+    }*/
+
+    removeOrderDraft(removeOrderApi) {
+      const url = 'api/Order/DraftOrderDeleteActive';
+      return this.http.post(url, removeOrderApi, this.headers)
+      .map(data =>  data );
+  }
+
+  getDraftOrdersByClient(): Observable<any> {
+    const url = 'api/Order/DraftOrderGetListByClient';
+    let params = new HttpParams();
+    params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+    return this.http
+    .get(url, {params: params})
+    .map(
+      data => {
+        return data;
+      });
+  }
+  getDraftOrdersByDraftId(DraftOrderId): Observable<any> {
+    const url = 'api/Order/DraftOrderGetListById';
+    let params = new HttpParams();
+    params = params.append('DraftOrderId', String(DraftOrderId));
+    return this.http
+    .get(url, {params: params})
+    .map(
+      data => {
+        return data;
+      });
+  }
+
 }

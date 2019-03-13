@@ -8,6 +8,9 @@
                     <!-- A Bud -->
                     <div class="ui-g" style="margin: 10px 0px">
 
+                            <div class="ui-g-12 ui-md-12">
+                                <a [routerLink]="" *ngIf="DraftOrderId > 0" (click)="BackOrderList()" style="text-decoration: underline;float: right;color: #337ab7">Back</a>
+                            </div>
                       
                             <div class="ui-g-12 ui-md-3">
                                 <div class="paddingRL">
@@ -304,9 +307,7 @@
                                             <!-- *ngIf="orderRequestForm.get('aBudItems').controls.length > 1"" -->
                                             <span class="fa fa-minus-circle">
                                             </span>
-                                        </a>
-                                       
-
+                                        </a>                                       
                                   </div>
                                   <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
                                         {{ orderRequestResource.prodtypenotpresent }}
@@ -316,10 +317,13 @@
                                 </div>                               
                             </div>
                         </div>
-                            <a class="addbtn" [routerLink]="" (click)="addItem('aBudItems')" *ngIf="orderRequestForm.get('aBudItems').valid">
+                           <!-- <a class="addbtn" [routerLink]="" (click)="addItem('aBudItems')" *ngIf="orderRequestForm.get('aBudItems').valid">
                                 <span class="fa fa-plus-circle">
                                 </span>
-                            </a>                       
+                            </a>-->  
+                             <a class="addLink" [routerLink]="" (click)="addItem('aBudItems')" *ngIf="orderRequestForm.get('aBudItems').valid">
+                                 <span>Add Another Product</span>
+                            </a>                      
                         </div>
 
                         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="getABudItems.hasError('duplicate')">
@@ -329,8 +333,8 @@
                     </p-fieldset>
                     <!-- End A Bud -->
 
-                    <!-- B Joints -->
-                    <p-fieldset legend="Joints Order Details">
+                    <!-- B Joints --> <!-- Joints Order Details -->
+                    <p-fieldset legend="Pre-roll Order Details">
                         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid childpadding" style="margin: 10px 0px;" formArrayName="bJointsItems">
                             <!-- <div class="ui-grid-row">
                           <div class="ui-grid-col-12">
@@ -542,10 +546,14 @@
                                  </div>                                 
                             </div>
                         </div>
-                            <a class="addbtn"  style="margin-right: -14px;" (click)="addItem('bJointsItems')" *ngIf="orderRequestForm.get('bJointsItems').valid">
+                           <!-- <a class="addbtn"  style="margin-right: -14px;" (click)="addItem('bJointsItems')" *ngIf="orderRequestForm.get('bJointsItems').valid">
                                 <span class="fa fa-plus-circle">
                                 </span>
-                            </a>
+                            </a>-->
+                            <a class="addLink" [routerLink]="" (click)="addItem('bJointsItems')" *ngIf="orderRequestForm.get('bJointsItems').valid">
+                                    <span>Add Another Product</span>
+                               </a> 
+                            
 
                         </div>
                         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="getBJointsItems.hasError('duplicate')">
@@ -768,10 +776,15 @@
                             </div>
 
                             </div>
-                            <a class="addbtn" (click)="addItem('cOilItems')" id="addbtn" *ngIf="orderRequestForm.get('cOilItems').valid">
+                           <!-- <a class="addbtn" (click)="addItem('cOilItems')" id="addbtn" *ngIf="orderRequestForm.get('cOilItems').valid">
                                 <span class="fa fa-plus-circle">
                                 </span>
-                            </a>
+                            </a>-->
+
+                            <a class="addLink" [routerLink]="" (click)="addItem('cOilItems')" *ngIf="orderRequestForm.get('cOilItems').valid">
+                                    <span>Add Another Product</span>
+                               </a>
+                             
                         </div>
                         
                         <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="getCOilItems.hasError('duplicate')">
@@ -780,7 +793,11 @@
                     </p-fieldset>
                     <!-- End C Oil -->
                     <div class="ui-g-12 ui-md-12" style="text-align:right;">
-                        <button pButton type="submit" label="Save" ></button>
+                        <button pButton type="submit" label="Create Order" ></button>
+                        <!-- add draft button to save order in draft -->
+                        <button pButton *ngIf="!DraftOrderId" type="button" label="{{orderRequestResource.savedraft}}" (click)="saveDraftOrder(orderRequestForm.value)" style="background-color:#c0c0c0" ></button>
+                        <button pButton *ngIf="DraftOrderId > 0" type="button" label="Save" (click)="saveDraftOrder(orderRequestForm.value)" style="background-color:#c0c0c0" ></button>
+                        <button pButton *ngIf="DraftOrderId > 0" type="button" label="Discard" (click)="removeOrderDraft()" style="background-color:#c0c0c0" ></button>
                         <!-- [disabled]="!orderRequestForm.valid" -->
                         <button pButton (click)="resetForm()" type="button" label="Clear" class="ui-button-secondary">
                         </button>
@@ -801,3 +818,19 @@
 </div>
 
 <p-confirmDialog class="clsConfirmBox" header="Confirmation" icon="fa fa-question-circle" width="425"></p-confirmDialog> 
+
+
+<p-confirmDialog  class="clsConfirmBox" header="Confirmation" key="draftconfirm" icon="fa fa-question-circle" width="425" #cd>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" label="Ok" (click)="cd.accept()"></button>
+    </p-footer>
+</p-confirmDialog>
+
+<!-- delete order draft -->
+<p-confirmDialog 
+key="draftdelete"
+class="clsConfirmBox" 
+header="Confirmation" 
+icon="fa fa-question-circle" 
+width="425">
+</p-confirmDialog> 
