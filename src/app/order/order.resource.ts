@@ -12,8 +12,10 @@ export class OrderResource {
                     retailerisrequired: 'Retailer name is required.',
                     deliverydateisrequired: 'Delivery date is required.',
                     filloneorderdetails: 'Please fill order details first.',
-                    s2systemidrequire: 'S2 order number is required.',
-                    s2systemid: 'S2 Order Number',
+                   // s2systemidrequire: 'S2 order number is required.',
+                    s2systemidrequire: 'Order ID is required.',
+                   // s2systemid: 'S2 Order Number',
+                   s2systemid: 'Order ID',
                     duplicates2number: 'Duplicate S2 order number.',
                     itemqtyrequired: 'Item qty is required.',
                     orderid: 'Order Id',
@@ -30,7 +32,13 @@ export class OrderResource {
                     ubicode: 'UBI Code',
                     prodtypenotpresent: 'product type is deleted or inactive.',
                     // Added by DEVDAN :: 03-Oct-2018 :: Error Message for Inactive Retailer
-                    inactiveretailer: 'Selected Retailer might be deleted or inactive.'
+                    inactiveretailer: 'Selected Retailer might be deleted or inactive.',
+                    orderdreaft: 'Order CheckOut',
+                    savedraft: 'Save as Draft',
+                    updatesuccessfully: 'Draft order updated successfully.',
+                    draftsave1: 'Order',
+                    draftsave2: 'has been saved',
+                    deleteconfirm: 'Are you sure you’d like to discard this draft?'
                 }
             }
         };

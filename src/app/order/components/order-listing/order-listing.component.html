@@ -2,95 +2,182 @@
     <div class="ui-g">
         <div class="ui-g-12">
             <!-- Order Listing -->
-    <p-panel header="All Orders" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-        <p-table #dtOrderListing [value]="allOrders" 
-            sortMode="single"                      
-            [responsive]="true" 
-            [paginator]="true" 
-            [rows]="10" 
-            sortField="OrderDate"
-            sortOrder="-1"
-            [rowsPerPageOptions]="paginationValues"
-            (onPage)="onPageChange($event)"
-            [globalFilterFields]="['OrderRefId','RetailerName','OrderDate','DeliveryDate', 'OrderStatus']"            
-            >                    
-            <ng-template pTemplate="caption">
-                <div style="text-align: right">
-                    <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
-                    <input type="text" pInputText autocomplete="off" size="50" placeholder="Global Filter" (input)="dtOrderListing.filterGlobal($event.target.value, 'contains')" style="width:auto;">
-                </div>
-            </ng-template>
-            <ng-template pTemplate="header">
-                <tr>
-                    <th [pSortableColumn]="'OrderRefId'">{{orderrequestResource.orderid}} 
-                        <p-sortIcon [field]="'OrderRefId'"></p-sortIcon>                                
-                    </th>
-                    <th [pSortableColumn]="'RetailerName'">{{orderrequestResource.retailername}}
-                        <p-sortIcon [field]="'RetailerName'"></p-sortIcon></th>
-                    <th class="datewidth" [pSortableColumn]="'OrderDate1'">{{orderrequestResource.orderrequestdate}} 
-                        <p-sortIcon [field]="'OrderDate1'"></p-sortIcon>
-                    </th>
-                    <th class="datewidth" [pSortableColumn]="'DeliveryDate1'">{{orderrequestResource.deliverydate}} 
-                        <p-sortIcon [field]="'DeliveryDate1'"></p-sortIcon>
-                    </th>              
-                    <th>{{orderrequestResource.packagingsatus}}</th>
-                    <th class="datewidth">{{orderrequestResource.orderstatus}}</th>
-                    <th class="iconwidth">
-                        <!-- {{orderrequestResource.orderdetails}} --> 
-                    </th>
-                </tr>
-      
-                <tr>
-                    <th>
-                        <input pInputText autocomplete="off" type="text" (input)="dtOrderListing.filter($event.target.value, 'OrderRefId', 'contains')" class="clsControl">
-                    </th>
-                    <th>
-                        <input pInputText autocomplete="off" type="text" (input)="dtOrderListing.filter($event.target.value, 'RetailerName', 'contains')" class="clsControl">
-                    </th>
-                    <th>
-                        <input pInputText autocomplete="off" type="text" (input)="dtOrderListing.filter($event.target.value, 'OrderDate', 'contains')" class="clsControl">
-                    </th>
-                    <th>
-                        <input pInputText autocomplete="off" type="text" (input)="dtOrderListing.filter($event.target.value, 'DeliveryDate', 'contains')" class="clsControl">
-                    </th>
-                    <th>
-                        <input pInputText autocomplete="off" type="text" (input)="dtOrderListing.filter($event.target.value, 'OrderCompleted', 'contains')" class="clsControl">
-                    </th>
-                    <th>
-                        <input pInputText autocomplete="off" type="text" (input)="dtOrderListing.filter($event.target.value, 'OrderStatus', 'contains')" class="clsControl">
-                    </th>
-                    <th rowspan="2"></th>                        
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-order let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-                    <!-- <td>
-                        <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
-                    </td> -->
-                    <td>{{order?.OrderRefId}}</td>
-                    <td>{{order?.RetailerName}}</td>
-                    <td class="datewidth">{{order?.OrderDate | date:'MM/dd/yyyy' }}</td>
-                    <td class="datewidth">{{order?.DeliveryDate | date:'MM/dd/yyyy' }}</td>
-                    <td>
-                        <p-progressBar [value]="order?.OrderCompleted" class="progress-bar-success progress-bar-striped">
+            <p-panel header="All Orders" styleClass="clsTabWidth" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+            <p-tabView  styleClass="clsTabView">
+                <!-- Order tab -->
+                <p-tabPanel header="All Orders" [selected] = "orderTabSelected">
+                    <p-table #dtOrderListing [value]="allOrders" 
+                    sortMode="single"                      
+                    [responsive]="true" 
+                    [paginator]="true" 
+                    [rows]="10" 
+                    sortField="OrderDate"
+                    sortOrder="-1"
+                    [rowsPerPageOptions]="paginationValues"
+                    (onPage)="onPageChange($event)"
+                    [globalFilterFields]="['OrderRefId','RetailerName','OrderDate','DeliveryDate', 'OrderStatus']"            
+                    >                    
+                    <ng-template pTemplate="caption">
+                        <div style="text-align: right">
+                            <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                            <input type="text" pInputText autocomplete="off" size="50" placeholder="Global Filter" (input)="dtOrderListing.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th [pSortableColumn]="'OrderRefId'">{{orderrequestResource.orderid}} 
+                                <p-sortIcon [field]="'OrderRefId'"></p-sortIcon>                                
+                            </th>
+                            <th [pSortableColumn]="'RetailerName'">{{orderrequestResource.retailername}}
+                                <p-sortIcon [field]="'RetailerName'"></p-sortIcon></th>
+                            <th class="datewidth" [pSortableColumn]="'OrderDate1'">{{orderrequestResource.orderrequestdate}} 
+                                <p-sortIcon [field]="'OrderDate1'"></p-sortIcon>
+                            </th>
+                            <th class="datewidth" [pSortableColumn]="'DeliveryDate1'">{{orderrequestResource.deliverydate}} 
+                                <p-sortIcon [field]="'DeliveryDate1'"></p-sortIcon>
+                            </th>              
+                            <th>{{orderrequestResource.packagingsatus}}</th>
+                            <th class="datewidth">{{orderrequestResource.orderstatus}}</th>
+                            <th class="iconwidth">
+                                <!-- {{orderrequestResource.orderdetails}} --> 
+                            </th>
+                        </tr>
+              
+                        <tr>
+                            <th>
+                                <input pInputText autocomplete="off" type="text" (input)="dtOrderListing.filter($event.target.value, 'OrderRefId', 'contains')" class="clsControl">
+                            </th>
+                            <th>
+                                <input pInputText autocomplete="off" type="text" (input)="dtOrderListing.filter($event.target.value, 'RetailerName', 'contains')" class="clsControl">
+                            </th>
+                            <th>
+                                <input pInputText autocomplete="off" type="text" (input)="dtOrderListing.filter($event.target.value, 'OrderDate', 'contains')" class="clsControl">
+                            </th>
+                            <th>
+                                <input pInputText autocomplete="off" type="text" (input)="dtOrderListing.filter($event.target.value, 'DeliveryDate', 'contains')" class="clsControl">
+                            </th>
+                            <th>
+                                <input pInputText autocomplete="off" type="text" (input)="dtOrderListing.filter($event.target.value, 'OrderCompleted', 'contains')" class="clsControl">
+                            </th>
+                            <th>
+                                <input pInputText autocomplete="off" type="text" (input)="dtOrderListing.filter($event.target.value, 'OrderStatus', 'contains')" class="clsControl">
+                            </th>
+                            <th rowspan="2"></th>                        
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-order let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+                            <!-- <td>
+                                <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
+                            </td> -->
+                            <td>{{order?.OrderRefId}}</td>
+                            <td>{{order?.RetailerName}}</td>
+                            <td class="datewidth">{{order?.OrderDate | date:'MM/dd/yyyy' }}</td>
+                            <td class="datewidth">{{order?.DeliveryDate | date:'MM/dd/yyyy' }}</td>
+                            <td>
+                                <p-progressBar [value]="order?.OrderCompleted" class="progress-bar-success progress-bar-striped">
+        
+                                </p-progressBar>
+                            </td>
+                            <td>{{order?.OrderStatus}}</td>
+                            <td class="iconwidth">
+                              <u><a [routerLink]="" (click)="getOrderInfo(order?.OrderId,order)" ><i class='fa fa-info-circle'></i></a></u>
+                          </td>         
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft" let-state>
+                        <pagination-counts
+                            *ngIf="allOrders?.length"
+                            [inputData]="allOrders"
+                            [inputEvent]="event"
+                        ></pagination-counts>
+                    </ng-template>
+                </p-table>
+                </p-tabPanel>
+                <!-- End order tab -->
 
-                        </p-progressBar>
-                    </td>
-                    <td>{{order?.OrderStatus}}</td>
-                    <td class="iconwidth">
-                      <u><a [routerLink]="" (click)="getOrderInfo(order?.OrderId,order)" ><i class='fa fa-info-circle'></i></a></u>
-                  </td>         
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="paginatorleft" let-state>
-                <pagination-counts
-                    *ngIf="allOrders?.length"
-                    [inputData]="allOrders"
-                    [inputEvent]="event"
-                ></pagination-counts>
-            </ng-template>
-        </p-table>
-      </p-panel>
+                <!-- Draft order tab -->
+                <p-tabPanel header="Drafts" [selected] = "draftTabSelected">
+                    <p-table #dtDraftOrderListing [value]="allDraftOrders" 
+                        sortMode="single"                      
+                        [responsive]="true" 
+                        [paginator]="true" 
+                        [rows]="10" 
+                        sortField="CreatedDate"
+                        sortOrder="-1"
+                        [rowsPerPageOptions]="paginationValues"
+                        selectionMode="single"
+                        (onRowSelect)="onDraftOrderSelect($event)"
+                        [globalFilterFields]="['DraftOrderNo','RetailerName','CreatedDate','DeliveryDate']"            
+                        >                    
+                        <ng-template pTemplate="caption">
+                            <div style="text-align: right">
+                                <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                                <input type="text" pInputText autocomplete="off" size="50" placeholder="Global Filter" (input)="dtDraftOrderListing.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width:20%" [pSortableColumn]="'DraftOrderNo'">{{orderrequestResource.orderid}} 
+                                    <p-sortIcon [field]="'DraftOrderNo'"></p-sortIcon>                                
+                                </th>
+                                <th style="width:25%" [pSortableColumn]="'RetailerName'">{{orderrequestResource.retailername}}
+                                    <p-sortIcon [field]="'RetailerName'"></p-sortIcon></th>
+                                <th style="width:25%" [pSortableColumn]="'OrderDate1'"><!--{{orderrequestResource.orderrequestdate}} --> Draft Creation Date
+                                    <p-sortIcon [field]="'OrderDate1'"></p-sortIcon>
+                                </th>
+                                <th style="width:25%" [pSortableColumn]="'DeliveryDate'">{{orderrequestResource.deliverydate}} 
+                                    <p-sortIcon [field]="'DeliveryDate1'"></p-sortIcon>
+                                </th>          
+                                <th style="width:5%" class="text-center"></th>
+        
+                            </tr>
+                            <tr>
+                                <th>
+                                    <input pInputText autocomplete="off" type="text" (input)="dtDraftOrderListing.filter($event.target.value, 'DraftOrderNo', 'contains')" class="clsControl">
+                                </th>
+                                <th>
+                                    <input pInputText autocomplete="off" type="text" (input)="dtDraftOrderListing.filter($event.target.value, 'RetailerName', 'contains')" class="clsControl">
+                                </th>
+                                <th>
+                                    <input pInputText autocomplete="off" type="text" (input)="dtDraftOrderListing.filter($event.target.value, 'OrderDate', 'contains')" class="clsControl">
+                                </th>
+                                <th>
+                                    <input pInputText autocomplete="off" type="text" (input)="dtDraftOrderListing.filter($event.target.value, 'DeliveryDate', 'contains')" class="clsControl">
+                                </th>
+                                
+                                <th>
+                                  
+                                </th>
+                                            
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-order let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+                                    <td>{{order?.DraftOrderNo}}</td>
+                                    <td> <span *ngIf="order?.RetailerName">{{order?.RetailerName}}</span>
+                                      
+                                    </td>
+                                    <td class="datewidth">{{order?.CreatedDate | date:'MM/dd/yyyy' }}</td>
+                                    <td class="datewidth">{{order?.DeliveryDate | date:'MM/dd/yyyy' }}</td>
+                                    <td class="text-center"> 
+                                        <a  [routerLink]="" aria-hidden="true" (click)="deleteDraft( $event, order?.DraftOrderId)"  pTooltip="Delete draft order" tooltipPosition="left">
+                                        <span style="font-size: 1.4rem;" class="fa fa-trash"></span>
+                                    </a> 
+                                   <!-- <button pButton type="submit" label="Discard"  style="background-color:#a93939" (click)="removeOrderDraft(order?.DraftOrderId)" ></button>-->
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-tabPanel>
+                <!-- End draft order tab -->
+            </p-tabView>
+        </p-panel>
+
+
+
+
+   
       
       <p-dialog header="Order Details" [(visible)]="showOrderDetailsModel" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
             <!--RetailerName -->
@@ -213,10 +300,27 @@
               </p-footer>
               <div class="clear"></div>
       </p-dialog>
+      <p-growl [(value)]="msgs" life='5000'></p-growl>
 
       <!--End Order Listing  -->
             </div>
         </div>
     </div>
+    <p-confirmDialog 
+    header="Confirmation" 
+    icon="fa fa-question-circle" 
+    width="425" 
+    *ngIf="true"
+    class="clsConfirmBox" >
+  </p-confirmDialog> 
+
+  <!-- delete order draft -->
+  <p-confirmDialog 
+    key="draftdelete"
+    class="clsConfirmBox" 
+    header="Confirmation" 
+    icon="fa fa-question-circle" 
+    width="425">
+</p-confirmDialog> 
 
 

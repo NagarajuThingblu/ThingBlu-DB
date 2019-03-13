@@ -44,12 +44,16 @@ export class AppCommonService implements OnChanges, OnInit {
   // private headers = new Headers({ 'Content-Type': 'application/json' });
   stringEscapeRegex: any = /[^A-Za-z0-9\+\/\=\!]/g;
 
+  public navDraftOrder = {
+    isBackClicked: false,
+  } ;
   constructor(
     private cookieService: CookieService
   ) {
     this.firstInvalidFieldFocus = false;
     // this.encryptDecryptKey = this.getLocalStorage('EncryptDecryptKey');
     // this._cookieService = <UserModel>this.appCommonService.getUserProfile();
+
   }
 
   ngOnChanges(): void {
@@ -383,4 +387,6 @@ encode64(input) {
 
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+
 }
