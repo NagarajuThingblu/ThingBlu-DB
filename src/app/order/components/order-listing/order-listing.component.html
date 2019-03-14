@@ -72,7 +72,7 @@
                             </td> -->
                             <td>{{order?.OrderRefId}}</td>
                             <td>{{order?.RetailerName}}</td>
-                            <td class="datewidth">{{order?.OrderDate | date:'MM/dd/yyyy' }}</td>
+                            <td class="datewidth">{{order?.CreatedDate | date:'MM/dd/yyyy' }}</td>
                             <td class="datewidth">{{order?.DeliveryDate | date:'MM/dd/yyyy' }}</td>
                             <td>
                                 <p-progressBar [value]="order?.OrderCompleted" class="progress-bar-success progress-bar-striped">
@@ -103,7 +103,6 @@
                         [responsive]="true" 
                         [paginator]="true" 
                         [rows]="10" 
-                        sortField="CreatedDate"
                         sortOrder="-1"
                         [rowsPerPageOptions]="paginationValues"
                         selectionMode="single"
@@ -236,7 +235,7 @@
             
             <p-table [value]="jointsOrderDetails" *ngIf="jointsOrderDetails.length">
                 <ng-template pTemplate="caption">
-                        <h6><b>Joints Order Details</b></h6>
+                        <h6><b>Pre-roll Order Details</b></h6>
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>

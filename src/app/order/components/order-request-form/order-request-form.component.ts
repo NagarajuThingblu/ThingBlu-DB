@@ -813,7 +813,7 @@ resetForm() {
       data => {
         if (String(data[0].ResultKey).toLocaleUpperCase() === 'FAILURE') {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.orderRequestResource.servererror });
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.orderRequestResource.servererror });
         } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'ALREADYEXISTSORDERNO') {
           this.msgs = [];
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.orderRequestResource.orderidexist });
