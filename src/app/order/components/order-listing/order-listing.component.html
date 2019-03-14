@@ -175,6 +175,13 @@
                                 [inputEvent]="eventdraft"
                             ></pagination-counts>
                         </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                              <td [attr.colspan]="6">
+                                {{ globalResource.norecordsfound }}
+                              </td>
+                            </tr>
+                          </ng-template>
                     </p-table>
                 </p-tabPanel>
                 <!-- End draft order tab -->

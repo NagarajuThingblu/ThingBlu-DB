@@ -206,9 +206,9 @@ export class OrderRequestFormComponent implements OnInit {
     if (this.DraftOrderId > 0) {
       // this.getRetailers();
      // this.getBrandStrainPackageByClient();
+      this.loaderService.display(true);
       const observable1 = this.orderService.getRetailers(true);
       const observable2 = this.orderService.getBrandStrainPackageByClient();
-
       forkJoin([observable1, observable2]).subscribe(result => {
         this.retailers = this.dropdwonTransformService.transform(result[0], 'RetailerName', 'RetailerId', '-- Select --') ;
         this.retailersNew = result[0];
