@@ -16,7 +16,7 @@ export class OrderResource {
                     s2systemidrequire: 'Order ID is required.',
                    // s2systemid: 'S2 Order Number',
                    s2systemid: 'Order ID',
-                    duplicates2number: 'Duplicate S2 order number.',
+                    duplicates2number: 'Duplicate Order ID.',
                     itemqtyrequired: 'Item qty is required.',
                     orderid: 'Order Id',
                     retailername: 'Retailer Name',
@@ -37,8 +37,11 @@ export class OrderResource {
                     savedraft: 'Save as Draft',
                     updatesuccessfully: 'Draft order updated successfully.',
                     draftsave1: 'Order',
-                    draftsave2: 'has been saved',
-                    deleteconfirm: 'Are you sure you’d like to discard this draft?'
+                    draftsave2: 'has been saved.',
+                    deleteconfirm: 'Are you sure you’d like to discard this draft?',
+                    s2systemidrequiredraft: 'Order ID Required to Save as Draft.',
+                    orderidexist: 'Order id already exists.',
+                    servererror: 'Something went wrong.'
                 }
             }
         };

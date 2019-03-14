@@ -93,7 +93,7 @@
                                         *ngIf="!orderRequestForm.controls['orderrefid'].valid&&orderRequestForm.controls['orderrefid'].dirty">
                                         <i class="fa fa-close"></i>
                                         <span *ngIf="orderRequestForm.controls['orderrefid'].errors['required']">
-                                            {{ orderRequestResource.s2systemidrequire }}
+                                            {{ draftMsg }}
                                         </span> 
                                         <span *ngIf="orderRequestForm.controls['orderrefid'].errors['maxlength']">
                                                 Max length of s2 order number should be {{ orderRequestForm.controls['orderrefid'].errors['maxlength'].requiredLength  }} characters.
@@ -321,12 +321,12 @@
                                 <span class="fa fa-plus-circle">
                                 </span>
                             </a>-->  
-                             <a class="addLink" [routerLink]="" (click)="addItem('aBudItems')" *ngIf="orderRequestForm.get('aBudItems').valid">
+                             <a class="addLink" [routerLink]="" (click)="addItem('aBudItems')" *ngIf="orderRequestForm.get('aBudItems').valid || this.aBudItems.controls.length == 1">
                                  <span>Add Another Product</span>
                             </a>                      
                         </div>
 
-                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="getABudItems.hasError('duplicate')">
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="getABudItems.hasError('duplicate')" style="position: sticky;">
                                 duplicate entries
                         </div>
                         
@@ -550,8 +550,8 @@
                                 <span class="fa fa-plus-circle">
                                 </span>
                             </a>-->
-                            <a class="addLink" [routerLink]="" (click)="addItem('bJointsItems')" *ngIf="orderRequestForm.get('bJointsItems').valid">
-                                    <span>Add Another Product</span>
+                            <a class="addLink" [routerLink]="" (click)="addItem('bJointsItems')" *ngIf="orderRequestForm.get('bJointsItems').valid || this.bJointsItems.controls.length == 1">
+                                    <span>Add Another Pre-roll Product</span>
                                </a> 
                             
 
@@ -781,8 +781,8 @@
                                 </span>
                             </a>-->
 
-                            <a class="addLink" [routerLink]="" (click)="addItem('cOilItems')" *ngIf="orderRequestForm.get('cOilItems').valid">
-                                    <span>Add Another Product</span>
+                            <a class="addLink" [routerLink]="" (click)="addItem('cOilItems')" *ngIf="orderRequestForm.get('cOilItems').valid || this.bJointsItems.controls.length == 1">
+                                    <span>Add Another Oil Product</span>
                                </a>
                              
                         </div>
@@ -795,12 +795,13 @@
                     <div class="ui-g-12 ui-md-12" style="text-align:right;">
                         <button pButton type="submit" label="Create Order" ></button>
                         <!-- add draft button to save order in draft -->
-                        <button pButton *ngIf="!DraftOrderId" type="button" label="{{orderRequestResource.savedraft}}" (click)="saveDraftOrder(orderRequestForm.value)" style="background-color:#c0c0c0" ></button>
-                        <button pButton *ngIf="DraftOrderId > 0" type="button" label="Save" (click)="saveDraftOrder(orderRequestForm.value)" style="background-color:#c0c0c0" ></button>
-                        <button pButton *ngIf="DraftOrderId > 0" type="button" label="Discard" (click)="removeOrderDraft()" style="background-color:#c0c0c0" ></button>
+                        <button pButton *ngIf="!DraftOrderId" type="button" label="{{orderRequestResource.savedraft}}" (click)="saveDraftOrder(orderRequestForm.value)" style="background-color:#c0c0c0;color:black" ></button>
+                        <button pButton *ngIf="DraftOrderId > 0" type="button" label="Save" (click)="saveDraftOrder(orderRequestForm.value)" style="background-color:#c0c0c0;color:black" ></button>
+                        <button pButton *ngIf="DraftOrderId > 0" type="button" label="Discard" (click)="removeOrderDraft()" style="background-color:#c0c0c0;color:black" ></button>
                         <!-- [disabled]="!orderRequestForm.valid" -->
-                        <button pButton (click)="resetForm()" type="button" label="Clear" class="ui-button-secondary">
-                        </button>
+                       <!-- <button pButton (click)="resetForm()" type="button" label="Clear" class="ui-button-secondary">
+                        </button>-->
+                       &nbsp;&nbsp; <a [routerLink]=""  style="text-decoration: underline;float: right;color: #337ab7"  (click)="resetForm()" >Clear</a>
                     </div>
                     <div class="clear"></div>
 

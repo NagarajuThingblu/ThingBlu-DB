@@ -71,6 +71,7 @@ export class OrderRequestFormComponent implements OnInit {
   submitted = false;
   public DraftOrderId: number;
   public draftList: any;
+  public draftMsg: string;
   constructor(
     private fb: FormBuilder,
     private orderService: OrderService,
@@ -184,6 +185,7 @@ export class OrderRequestFormComponent implements OnInit {
 
   ngOnInit() {
     this.DraftOrderId = 0;
+    this.draftMsg = 'Order ID Required';
     this.orderRequestResource = OrderResource.getResources().en.orderrequest;
     this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle(this.orderRequestResource.orderrequesttitle);
@@ -199,8 +201,6 @@ export class OrderRequestFormComponent implements OnInit {
       cOilItems: this.cOilItems
     });
 
-   // this.getRetailers();
-   // this.getBrandStrainPackageByClient();
     // bind redirection draft data
     this.DraftOrderId = this.route.snapshot.params.draftOrderId;
     if (this.DraftOrderId > 0) {
@@ -235,15 +235,13 @@ export class OrderRequestFormComponent implements OnInit {
         });
         brands = this.removeDuplicatesById(this.CData);
         this.CBrands = this.dropdwonTransformService.transform(brands, 'BrandName', 'BrandId', '-- Select --');
-
-
         // assign data
         this.loaderService.display(true);
       this.orderService.getDraftOrdersByDraftId(this.DraftOrderId).subscribe(data => {
         this.getRetailers();
         this.getBrandStrainPackageByClient();
          this.orderRequestForm.controls['orderrefid'].patchValue(data.Table[0].DraftOrderNo);
-         this.orderRequestForm.controls['retailers'].patchValue(data.Table[0].RetailerId);
+         this.orderRequestForm.controls['retailers'].patchValue(data.Table[0].RetailerId ? data.Table[0].RetailerId : null);
          if (data.Table[0].RetailerId > 0) { this.getUBICode(); }
          this.draftList = data.Table1;
             data.Table1.map((object, index) => {
@@ -258,15 +256,60 @@ export class OrderRequestFormComponent implements OnInit {
               this.items.push(this.createdraftItem(object));
             }
             });
+
+            if (this.aBudItems.controls.length === 0) {
+              this.addItem('aBudItems');
+              }
+              if (this.bJointsItems.controls.length === 0) {
+                this.addItem('bJointsItems');
+                }
+                if (this.cOilItems.controls.length === 0) {
+                  this.addItem('cOilItems');
+                  }
         });
       });
-
-   // setTimeout(() => {
         this.loaderService.display(false);
-     // } , 500);
     } else {
-      this.getRetailers();
-    this.getBrandStrainPackageByClient();
+       const observable1 = this.orderService.getRetailers(true);
+       const observable2 = this.orderService.getBrandStrainPackageByClient();
+      forkJoin([observable1, observable2]).subscribe(result => {
+        this.retailers = this.dropdwonTransformService.transform(result[0], 'RetailerName', 'RetailerId', '-- Select --') ;
+        this.retailersNew = result[0];
+        this.globalData.brandStrainDetails = result[1];
+        let brands;
+
+        // For A Bud
+        this.AData = result[1].Table.filter(item => {
+          return item.SkewKeyName === 'BUD';
+        });
+        brands = this.removeDuplicatesById(this.AData);
+        this.ABrands = this.dropdwonTransformService.transform(brands, 'BrandName', 'BrandId', '-- Select --');
+
+        // For B Joints
+        this.BData = result[1].Table.filter(item => {
+          return item.SkewKeyName === 'JOINTS';
+        });
+        brands = this.removeDuplicatesById(this.BData);
+        this.BBrands = this.dropdwonTransformService.transform(brands, 'BrandName', 'BrandId', '-- Select --');
+
+        // For C Oil
+        this.CData = result[1].Table.filter(item => {
+          return item.SkewKeyName === 'OIL';
+        });
+        brands = this.removeDuplicatesById(this.CData);
+        this.CBrands = this.dropdwonTransformService.transform(brands, 'BrandName', 'BrandId', '-- Select --');
+        if (this.getCOilItems.controls.length === 0) {
+          this.addItem('aBudItems');
+          this.addItem('bJointsItems');
+          this.addItem('cOilItems');
+          }
+          this.loaderService.display(false);
+      });
+
+
+     // this.getRetailers();
+     // this.getBrandStrainPackageByClient();
+
     }
 
   }
@@ -547,6 +590,7 @@ resetForm() {
           }
       });
     } else {
+      this.draftMsg = 'Order ID Required';
       this.appCommonService.validateAllFields(this.orderRequestForm);
     }
   }
@@ -632,7 +676,7 @@ resetForm() {
           DraftOrderId: this.DraftOrderId ,
           ClientId: this.appCommonService.getUserProfile().ClientId,
           VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
-          RetailerId: DraftModel.retailers,
+          RetailerId: DraftModel.retailers ? DraftModel.retailers : 0,
           DeliveryDate: new Date(DraftModel.deliverydate).toLocaleDateString().replace(/\u200E/g, ''),
           DraftOrderNo: DraftModel.orderrefid,
         },
@@ -682,13 +726,17 @@ resetForm() {
       this.orderService.saveOrderDraft(draftOrderApi)
       .subscribe(
         data => {
-          if (String(data[0].ResulrKey).toLocaleUpperCase() === 'FAILURE') {
+          if (String(data[0].ResultKey).toLocaleUpperCase() === 'FAILURE') {
             this.msgs = [];
-            this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: 'Something wnt wrong' });
-          } else {
+            this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.orderRequestResource.servererror });
+          } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'ALREADYEXISTSORDERNO') {
+            this.msgs = [];
+            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.orderRequestResource.orderidexist });
+          }  else {
             setTimeout(() => {
             this.confirmationService.confirm({
-              message: this.orderRequestResource.updatesuccessfully,
+              message: this.orderRequestResource.draftsave1 + ' ' + DraftModel.orderrefid +
+              ' ' + this.orderRequestResource.draftsave2,
               key: 'draftconfirm',
               accept: () => {
                 if (this.DraftOrderId > 0) {
@@ -697,12 +745,13 @@ resetForm() {
                 }
               }
           });
-          this.loaderService.display(false);
         }, 1000);
           }
-          this.resetForm();
+          this.loaderService.display(false);
+         // this.resetForm();
         });
     } else {
+      this.draftMsg = 'Order ID Required to Save as Draft';
       this.orderRequestForm.controls['orderrefid'].markAsDirty();
         }
      } else { // new item insert
@@ -764,8 +813,11 @@ resetForm() {
       data => {
         if (String(data[0].ResultKey).toLocaleUpperCase() === 'FAILURE') {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Something wnt wrong' });
-        } else {
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.orderRequestResource.servererror });
+        } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'ALREADYEXISTSORDERNO') {
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.orderRequestResource.orderidexist });
+        }  else {
             this.confirmationService.confirm({
                 message: this.orderRequestResource.draftsave1 + ' ' + this.orderRequestForm.controls['orderrefid'].value +
                                                                  ' ' + this.orderRequestResource.draftsave2,
@@ -776,11 +828,12 @@ resetForm() {
                 }
             });
         }
-        this.resetForm();
+      //  this.resetForm();
 
       });
 
     } else {
+      this.draftMsg = 'Order ID Required to Save as Draft';
         this.orderRequestForm.controls['orderrefid'].markAsDirty();
       }
      }
