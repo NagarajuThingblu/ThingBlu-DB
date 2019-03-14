@@ -530,6 +530,8 @@ resetForm() {
         if (this.cOilItems.controls.length === 0) {
           this.addItem('cOilItems');
           }
+          this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
+          this.defaultDate.setDate( this.defaultDate.getDate() + 1 );
 }
 
   onSubmit(formModel) {
@@ -916,7 +918,7 @@ discardDraftOrder() {
      data => {
        if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
          this.msgs = [];
-         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Drafted order deleted successfully' });
+         this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: 'Draft deleted successfully' });
          setTimeout(() => {
          this.loaderService.display(false);
          this.appCommonService.navDraftOrder.isBackClicked = true;

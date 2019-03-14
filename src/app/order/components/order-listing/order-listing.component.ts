@@ -181,7 +181,7 @@ export class OrderListingComponent implements OnInit, OnDestroy {
       data => {
         if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Drafted order deleted successfully' });
+          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: 'Draft deleted successfully' });
           this.getAllDreaftOrders();
         }
      });
