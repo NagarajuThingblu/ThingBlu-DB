@@ -104,7 +104,8 @@
                         [paginator]="true" 
                         [rows]="10" 
                         sortOrder="-1"
-                        [rowsPerPageOptions]="paginationValues"
+                        (onPage)="onDraftPageChange($event)"
+                        [rowsPerPageOptions]="draftpaginationValues"
                         selectionMode="single"
                         (onRowSelect)="onDraftOrderSelect($event)"
                         [globalFilterFields]="['DraftOrderNo','RetailerName','CreatedDate','DeliveryDate']"            
@@ -120,12 +121,12 @@
                                 <th style="width:20%" [pSortableColumn]="'DraftOrderNo'">{{orderrequestResource.orderid}} 
                                     <p-sortIcon [field]="'DraftOrderNo'"></p-sortIcon>                                
                                 </th>
-                                <th style="width:25%" [pSortableColumn]="'RetailerName'">{{orderrequestResource.retailername}}
+                                <th style="width:35%" [pSortableColumn]="'RetailerName'">{{orderrequestResource.retailername}}
                                     <p-sortIcon [field]="'RetailerName'"></p-sortIcon></th>
-                                <th style="width:25%" [pSortableColumn]="'OrderDate1'"><!--{{orderrequestResource.orderrequestdate}} --> Draft Creation Date
+                                <th style="width:20%" [pSortableColumn]="'OrderDate1'"><!--{{orderrequestResource.orderrequestdate}} --> Draft Creation Date
                                     <p-sortIcon [field]="'OrderDate1'"></p-sortIcon>
                                 </th>
-                                <th style="width:25%" [pSortableColumn]="'DeliveryDate'">{{orderrequestResource.deliverydate}} 
+                                <th style="width:20%" [pSortableColumn]="'DeliveryDate'">{{orderrequestResource.deliverydate}} 
                                     <p-sortIcon [field]="'DeliveryDate1'"></p-sortIcon>
                                 </th>          
                                 <th style="width:5%" class="text-center"></th>
@@ -160,12 +161,19 @@
                                     <td class="datewidth">{{order?.CreatedDate | date:'MM/dd/yyyy' }}</td>
                                     <td class="datewidth">{{order?.DeliveryDate | date:'MM/dd/yyyy' }}</td>
                                     <td class="text-center"> 
-                                        <a  [routerLink]="" aria-hidden="true" (click)="deleteDraft( $event, order?.DraftOrderId)"  pTooltip="Delete draft order" tooltipPosition="left">
+                                        <a  [routerLink]="" aria-hidden="true" (click)="deleteDraft( $event, order?.DraftOrderId)"  pTooltip="Discard draft order" tooltipPosition="left">
                                         <span style="font-size: 1.4rem;" class="fa fa-trash"></span>
                                     </a> 
                                    <!-- <button pButton type="submit" label="Discard"  style="background-color:#a93939" (click)="removeOrderDraft(order?.DraftOrderId)" ></button>-->
                                 </td>
                             </tr>
+                        </ng-template>
+                        <ng-template pTemplate="paginatorleft" let-state>
+                            <pagination-counts
+                                *ngIf="allDraftOrders?.length"
+                                [inputData]="allDraftOrders"
+                                [inputEvent]="eventdraft"
+                            ></pagination-counts>
                         </ng-template>
                     </p-table>
                 </p-tabPanel>

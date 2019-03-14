@@ -821,10 +821,13 @@
 <p-confirmDialog class="clsConfirmBox" header="Confirmation" icon="fa fa-question-circle" width="425"></p-confirmDialog> 
 
 
-<p-confirmDialog  class="clsConfirmBox" header="Confirmation" key="draftconfirm" icon="fa fa-question-circle" width="425" #cd>
-    <p-footer>
-        <button type="button" pButton icon="fa-close" label="Ok" (click)="cd.accept()"></button>
-    </p-footer>
+<p-confirmDialog  
+    class="clsConfirmBox" 
+    header="Confirmation" 
+    key="draftconfirm" 
+    icon="fa fa-question-circle" 
+    acceptIcon="fa-close"
+    width="425" #cd>
 </p-confirmDialog>
 
 <!-- delete order draft -->

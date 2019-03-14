@@ -24,7 +24,10 @@ export class OrderListingComponent implements OnInit, OnDestroy {
   ordReqDate: any;
   delvryDate: any;
   event: any;
+  eventdraft: any;
   paginationValues: any;
+  draftpaginationValues: any;
+
   public allOrders: any;
   public showOrderDetailsModel = false;
 
@@ -68,6 +71,9 @@ export class OrderListingComponent implements OnInit, OnDestroy {
   onPageChange(e) {
     this.event = e;
   }
+  onDraftPageChange(e) {
+    this.eventdraft = e;
+  }
   getAllOrders() {
     this.loaderService.display(true);
     this.orderService.getAllOrders().subscribe(
@@ -94,12 +100,12 @@ export class OrderListingComponent implements OnInit, OnDestroy {
       data => {
        if (data !== 'No data found!') {
           this.allDraftOrders = data.Table;
-          this.paginationValues = AppConstants.getPaginationOptions;
+          this.draftpaginationValues = AppConstants.getPaginationOptions;
           if (this.allDraftOrders.length > 20) {
-            this.paginationValues[AppConstants.getPaginationOptions.length] = this.allDraftOrders.length;
+            this.draftpaginationValues[AppConstants.getPaginationOptions.length] = this.allDraftOrders.length;
           }
        } else {
-        this.allOrders = [];
+        this.allDraftOrders = [];
        }
        this.loaderService.display(false);
       } ,

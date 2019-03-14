@@ -497,25 +497,44 @@ export class OrderRequestFormComponent implements OnInit {
     if (isError) { return {'duplicate': 'duplicate entries'}; }
 }
 
+clearFormArray = (formArray: FormArray) => {
+  while (formArray.length !== 0) {
+    formArray.removeAt(0);
+  }
+}
+
 resetForm() {
+
+   this.UBICode = null;
+    // this.orderRequestForm = this.fb.group({
+    //   retailers: new FormControl(null, Validators.required),
+    //   ubicode: new FormControl(null),
+    //   deliverydate: new FormControl(null, Validators.required),
+    //   orderrefid: new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
+    //   aBudItems: this.aBudItems,
+    //   bJointsItems: this.bJointsItems,
+    //   cOilItems: this.cOilItems
+    // });
     this.orderRequestForm.reset();
-    this.UBICode = null;
-        this.orderRequestForm = this.fb.group({
-          retailers: new FormControl(null, Validators.required),
-          deliverydate: new FormControl(null, Validators.required),
-          orderrefid: new FormControl(null, Validators.required),
-          aBudItems: new FormArray([], this.customGroupValidation ),
-          bJointsItems: new FormArray([], this.customGroupValidation ),
-          cOilItems: new FormArray([], this.customGroupValidation )
-        });
+    this.items.reset();
+
+    this.clearFormArray(this.getABudItems);
+    this.clearFormArray(this.getBJointsItems);
+    this.clearFormArray(this.getCOilItems);
+    if (this.aBudItems.controls.length === 0) {
+      this.addItem('aBudItems');
+      }
+      if (this.bJointsItems.controls.length === 0) {
+        this.addItem('bJointsItems');
+        }
+        if (this.cOilItems.controls.length === 0) {
+          this.addItem('cOilItems');
+          }
 }
 
   onSubmit(formModel) {
     this.submitted = true;
 
-    // console.log(this.customGroupValidation(this.getABudItems));
-
-    // return;
     if (this.orderRequestForm.valid) {
         const orderDetailsForApi: any = {
           OrderDetails: {
@@ -738,6 +757,8 @@ resetForm() {
               message: this.orderRequestResource.draftsave1 + ' ' + DraftModel.orderrefid +
               ' ' + this.orderRequestResource.draftsave2,
               key: 'draftconfirm',
+              rejectVisible: false,
+              acceptLabel: 'Ok',
               accept: () => {
                 if (this.DraftOrderId > 0) {
                   this.appCommonService.navDraftOrder.isBackClicked = true;
@@ -822,6 +843,8 @@ resetForm() {
                 message: this.orderRequestResource.draftsave1 + ' ' + this.orderRequestForm.controls['orderrefid'].value +
                                                                  ' ' + this.orderRequestResource.draftsave2,
                 key: 'draftconfirm',
+                rejectVisible: false,
+                acceptLabel: 'Ok',
                 accept: () => {
                   this.appCommonService.navDraftOrder.isBackClicked = true;
                   this.router.navigate(['../home/orderlisting']);
