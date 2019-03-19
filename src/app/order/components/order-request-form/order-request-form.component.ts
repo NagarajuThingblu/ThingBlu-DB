@@ -257,7 +257,7 @@ export class OrderRequestFormComponent implements OnInit {
             }
             });
 
-            if (this.aBudItems.controls.length === 0) {
+         /*   if (this.aBudItems.controls.length === 0) {
               this.addItem('aBudItems');
               }
               if (this.bJointsItems.controls.length === 0) {
@@ -265,7 +265,7 @@ export class OrderRequestFormComponent implements OnInit {
                 }
                 if (this.cOilItems.controls.length === 0) {
                   this.addItem('cOilItems');
-                  }
+                  }*/
         });
       });
         this.loaderService.display(false);
@@ -298,11 +298,11 @@ export class OrderRequestFormComponent implements OnInit {
         });
         brands = this.removeDuplicatesById(this.CData);
         this.CBrands = this.dropdwonTransformService.transform(brands, 'BrandName', 'BrandId', '-- Select --');
-        if (this.getCOilItems.controls.length === 0) {
+       /* if (this.getCOilItems.controls.length === 0) {
           this.addItem('aBudItems');
           this.addItem('bJointsItems');
           this.addItem('cOilItems');
-          }
+          } */
           this.loaderService.display(false);
       });
 
@@ -521,7 +521,7 @@ resetForm() {
     this.clearFormArray(this.getABudItems);
     this.clearFormArray(this.getBJointsItems);
     this.clearFormArray(this.getCOilItems);
-    if (this.aBudItems.controls.length === 0) {
+   /* if (this.aBudItems.controls.length === 0) {
       this.addItem('aBudItems');
       }
       if (this.bJointsItems.controls.length === 0) {
@@ -529,7 +529,7 @@ resetForm() {
         }
         if (this.cOilItems.controls.length === 0) {
           this.addItem('cOilItems');
-          }
+          } */
           this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
           this.defaultDate.setDate( this.defaultDate.getDate() + 1 );
 }

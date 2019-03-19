@@ -12,3 +12,13 @@ legend {
     color:#006ce5;
     display: block;
 }
+.list-inline>li {
+    display: inline-block;
+    margin-right: 10px;
+    } 
+a.btn-link {
+    text-decoration: underline;
+    color: #337ab7;
+    border-radius: 0;
+    font-weight: 400;
+}

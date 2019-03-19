@@ -37,11 +37,16 @@ export class OrderResource {
                     savedraft: 'Save as Draft',
                     updatesuccessfully: 'Draft order updated successfully.',
                     draftsave1: 'Order',
-                    draftsave2: 'has been saved.',
+                    draftsave2: 'has been saved as a draft.',
                     deleteconfirm: 'Are you sure you’d like to discard this draft?',
                     s2systemidrequiredraft: 'Order ID Required to Save as Draft.',
                     orderidexist: 'Order id already exists.',
-                    servererror: 'Something went wrong.'
+                    servererror: 'Something went wrong.',
+                    clear: 'Clear',
+                    oilproduct: 'Add Oil Product',
+                    prerollproduct: 'Add Pre-roll Product',
+                    flowerproduct: 'Add Flower Product',
+
                 }
             }
         };

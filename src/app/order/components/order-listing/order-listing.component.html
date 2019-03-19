@@ -11,7 +11,7 @@
                     [responsive]="true" 
                     [paginator]="true" 
                     [rows]="10" 
-                    sortField="OrderDate"
+                    sortField="OrderDate1"
                     sortOrder="-1"
                     [rowsPerPageOptions]="paginationValues"
                     (onPage)="onPageChange($event)"
@@ -30,8 +30,8 @@
                             </th>
                             <th [pSortableColumn]="'RetailerName'">{{orderrequestResource.retailername}}
                                 <p-sortIcon [field]="'RetailerName'"></p-sortIcon></th>
-                            <th class="datewidth" [pSortableColumn]="'OrderDate1'">{{orderrequestResource.orderrequestdate}} 
-                                <p-sortIcon [field]="'OrderDate1'"></p-sortIcon>
+                            <th class="datewidth" [pSortableColumn]="'OrderDate'">{{orderrequestResource.orderrequestdate}} 
+                                <p-sortIcon [field]="'OrderDate'" class="icon-sort"></p-sortIcon>
                             </th>
                             <th class="datewidth" [pSortableColumn]="'DeliveryDate1'">{{orderrequestResource.deliverydate}} 
                                 <p-sortIcon [field]="'DeliveryDate1'"></p-sortIcon>
@@ -219,7 +219,7 @@
 
             <p-table [value]="budOrderDetails" *ngIf="budOrderDetails.length">
                 <ng-template pTemplate="caption">
-                        <h6><b>Bud Order Details</b></h6>
+                        <h6><b>Flower Order Details</b></h6>
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
