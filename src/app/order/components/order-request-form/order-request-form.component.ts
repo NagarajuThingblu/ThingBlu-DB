@@ -707,6 +707,7 @@ resetForm() {
       });
       DraftModel.bJointsItems.forEach((element, index) => {
         draftOrderApi.DraftOrderSkewDetails.push({
+          'ProductItemId': element.productItemId ? element.productItemId : 0,
           'SkewKeyName': 'JOINTS',
           'BrandId': Number(element.brand),
           'SubBrandId': Number(element.subbrand),
@@ -720,6 +721,7 @@ resetForm() {
       });
       DraftModel.cOilItems.forEach((element, index) => {
         draftOrderApi.DraftOrderSkewDetails.push({
+          'ProductItemId': element.productItemId ? element.productItemId : 0,
           'SkewKeyName': 'OIL',
           'BrandId': Number(element.brand),
           'SubBrandId': Number(element.subbrand),
@@ -862,7 +864,8 @@ createdraftItem(element): FormGroup {
       packageType: new FormControl(element.PkgTypeId, Validators.required),
       packageSize: new FormControl(element.UnitValue, Validators.required),
       itemQty: new FormControl(element.ItemQty, Validators.required),
-      orderQty: new FormControl(element.RequiredQty, Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger])),
+      orderQty: new FormControl(element.RequiredQty ? element.RequiredQty : null,
+                   Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger])),
       productItemId: element.ProductItemId
 
     });
@@ -874,7 +877,8 @@ createdraftItem(element): FormGroup {
       packageType: new FormControl(element.PkgTypeId, Validators.required),
       packageSize: new FormControl(element.UnitValue, Validators.required),
       itemQty: new FormControl(element.ItemQty, Validators.required),
-      orderQty: new FormControl(element.RequiredQty, Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger])),
+      orderQty: new FormControl(element.RequiredQty ? element.RequiredQty : null,
+                     Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger])),
       productItemId: element.ProductItemId
     });
   } else if (element.SkewKeyName === 'OIL') {
@@ -885,7 +889,8 @@ createdraftItem(element): FormGroup {
       packageType: new FormControl(element.PkgTypeId, Validators.required),
       packageSize: new FormControl(element.UnitValue, Validators.required),
       itemQty: new FormControl(element.ItemQty, Validators.required),
-      orderQty: new FormControl(element.RequiredQty, Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger])),
+      orderQty: new FormControl(element.RequiredQty ? element.RequiredQty : null,
+                     Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger])),
       productItemId: element.ProductItemId
     });
   }
