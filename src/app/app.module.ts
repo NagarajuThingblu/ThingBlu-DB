@@ -33,7 +33,7 @@ import { NgIdleModule } from '@ng-idle/core';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,

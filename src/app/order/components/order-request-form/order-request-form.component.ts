@@ -504,7 +504,8 @@ resetForm() {
     //   cOilItems: this.cOilItems
     // });
     this.orderRequestForm.reset();
-    this.items.reset();
+
+   // this.items.reset();
 
     this.clearFormArray(this.getABudItems);
     this.clearFormArray(this.getBJointsItems);
@@ -855,7 +856,7 @@ resetForm() {
 }
 
 // bind draft values to formarray
-createdraftItem(element): FormGroup {
+/*createdraftItem(element): FormGroup {
   if (element.SkewKeyName === 'BUD') {
     return this.fb.group({
       brand: new FormControl(element.BrandId, Validators.required),
@@ -894,8 +895,47 @@ createdraftItem(element): FormGroup {
       productItemId: element.ProductItemId
     });
   }
-}
+}*/
+createdraftItem(element): FormGroup {
+  if (element.SkewKeyName === 'BUD') {
+    return this.fb.group({
+      brand: new FormControl(element.BrandId ? element.BrandId : null, Validators.required),
+      subbrand: new FormControl(element.SubBrandId ? element.SubBrandId : null),
+      strain: new FormControl(element.StrainId ? element.StrainId : null, Validators.required),
+      packageType: new FormControl(element.PkgTypeId ? element.PkgTypeId : null, Validators.required),
+      packageSize: new FormControl(element.UnitValue ? element.UnitValue : null, Validators.required),
+      itemQty: new FormControl(element.ItemQty ? element.ItemQty : null, Validators.required),
+      orderQty: new FormControl(element.RequiredQty ? element.RequiredQty : null,
+                   Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger])),
+      productItemId: element.ProductItemId
 
+    });
+  } else if (element.SkewKeyName === 'JOINTS') {
+    return this.fb.group({
+      brand: new FormControl(element.BrandId ? element.BrandId : null, Validators.required),
+      subbrand: new FormControl(element.SubBrandId ? element.SubBrandId : null),
+      strain: new FormControl(element.StrainId ? element.StrainId : null, Validators.required),
+      packageType: new FormControl(element.PkgTypeId ? element.PkgTypeId : null, Validators.required),
+      packageSize: new FormControl(element.UnitValue ? element.UnitValue : null, Validators.required),
+      itemQty: new FormControl(element.ItemQty ? element.ItemQty : null, Validators.required),
+      orderQty: new FormControl(element.RequiredQty ? element.RequiredQty : null,
+                     Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger])),
+      productItemId: element.ProductItemId
+    });
+  } else if (element.SkewKeyName === 'OIL') {
+    return this.fb.group({
+      brand: new FormControl(element.BrandId ? element.BrandId : null, Validators.required),
+      subbrand: new FormControl(element.SubBrandId ? element.SubBrandId : null),
+      strain: new FormControl(element.StrainId ? element.StrainId : null, Validators.required),
+      packageType: new FormControl(element.PkgTypeId ? element.PkgTypeId : null, Validators.required),
+      packageSize: new FormControl(element.UnitValue ? element.UnitValue : null, Validators.required),
+      itemQty: new FormControl(element.ItemQty ? element.ItemQty : null, Validators.required),
+      orderQty: new FormControl(element.RequiredQty ? element.RequiredQty : null,
+                     Validators.compose([Validators.required, PositiveIntegerValidator.allowOnlyPositiveInteger])),
+      productItemId: element.ProductItemId
+    });
+  }
+}
 // discard order
 discardDraftOrder() {
   const  orderdeleteapi: any = {

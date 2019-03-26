@@ -44,6 +44,8 @@ export class AppCommonService implements OnChanges, OnInit {
   // private headers = new Headers({ 'Content-Type': 'application/json' });
   stringEscapeRegex: any = /[^A-Za-z0-9\+\/\=\!]/g;
 
+  public empAssignKey: string;
+
   public navDraftOrder = {
     isBackClicked: false,
   } ;

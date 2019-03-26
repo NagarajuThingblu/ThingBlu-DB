@@ -713,7 +713,7 @@ export class EmployeeAssignTaskComponent implements OnInit {
                     setTimeout(() => {
                       this.router.navigate(['../home/taskaction',
                         String(data[0]['TaskKeyName']).toLocaleUpperCase(), data[0]['TaskId']]);
-
+                        this.appCommonService.empAssignKey = 'Employee';
                     }, 2000);
                   }
                   this.taskTypeChange();

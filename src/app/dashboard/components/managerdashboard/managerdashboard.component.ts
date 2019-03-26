@@ -13,7 +13,17 @@ import { RefreshService } from '../../services/refresh.service';
 import { environment } from './../../../../environments/environment';
 import { AppCommonService } from '../../../shared/services/app-common.service';
 import { Router } from '@angular/router';
+import { DashboardResource } from '../../dashboard.resource';
+import { Table } from 'primeng/table';
 
+// create enum for managerdashboard tabs :: swapnil :: 22-Mar-2019
+enum TabIndexName {
+'REVIEWPENDING',
+'ASSIGNED',
+'INPROCESS',
+'PAUSED',
+'COMPLETED'
+}
 
 @Component({
   moduleId: module.id,
@@ -58,6 +68,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
   };
   public loadingStatus = false;
   public globalResource: any;
+  public managerResources: any;
   public showAllManagerForCompleteModel: any;
 
   // Added by Devdan :: 21-Nov-2018 :: Adding Lot Note Comment
@@ -66,6 +77,31 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
     showLotNoteModal: false,
     showLotCommentModal: false
   };
+
+  // add for tab
+  public selectedTabIndex = null;
+  public selectedTabName: string;
+  tabIndexName = TabIndexName;
+  public selectedTaskTypeId = 0;
+  public reviewCount: number;
+  public assignCount: number;
+  public inProcessCount: number;
+  public pauseCount: number;
+  public completeCount: number;
+  public showMgr: boolean;
+  public selectedShowMgr: number;
+  public taskCount: any;
+  public isPrintClicked = false;
+  public dashboardObject = {
+      reviewPending: [],
+      assigned: [],
+      inProcess: [],
+      paused: [],
+      completed: [],
+  };
+
+
+
 
   constructor(
     private taskCommonService: TaskCommonService,
@@ -83,12 +119,15 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
   ngOnInit() {
     // this.startTimer();
     this.globalResource = GlobalResources.getResources().en;
+    this.managerResources = DashboardResource.getResources().en.managerdashboard;
     this.titleService.setTitle(this.globalResource.ManagerDashboard);
     this.showAllManagerOption = [
       {label: 'Only Me', value: '1'},
       {label: 'Show All', value: '2'},
   ];
-      this.getTaskList(0);
+    //  this.getTaskList(0);
+    this.selectedShowMgr = 2;
+     this.loaderService.display(true);
       this.getAllTaskTypes();
       this.taskStatus =  AppConstants.getStatusList;
       this.managerdashboardForm = this.fb.group({
@@ -101,6 +140,15 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
      //   this.getAllTaskTypes();
     //  } ,
     //  error => { console.log('sms'); console.log(error); this.loaderService.display(false); });
+
+    // tab selected
+   // this.getCount(true);
+    if (this.appCommonService.getLocalStorage('MDTabIndex')) {
+      this.selectedTabIndex = Number(this.appCommonService.getLocalStorage('MDTabIndex'));
+      this.onTabChange(null);
+    } else {
+    this.selectedTabIndex = TabIndexName.REVIEWPENDING;
+    this.onTabChange(null); }
   }
   startTimer() {
     this.id = setInterval(() => {
@@ -123,6 +171,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
         });
     }, 1000 * 60 * environment.refreshTime );
   }
+
   updateChange() {
     this.getTaskList(0);
     this.getAllTaskTypes();
@@ -152,7 +201,8 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
   getTaskList(TaskTypeId) {
     this.loaderService.display(true);
     // this.loadingStatus = false;
-    this.taskCommonService.getTasksList(true, 'DEFAULT').subscribe(
+   // this.loaderService.display(true);
+    this.taskCommonService.getTasksList(this.selectedTaskTypeId, true, 'DEFAULT').subscribe(
       data => {
         // this.tasks = data;
        if (data !== 'No data found!') {
@@ -176,38 +226,39 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
             this.tasks = data.Table.filter(result => result.TaskStatus !== this.taskStatus.ReviewPending && result.TaskTypeId === TaskTypeId);
          } else {
           this.reviewPendingTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.ReviewPending);
-          this.assignedTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Assigned);
-          this.inProcessTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.InProcess);
-          this.pausedTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Paused);
-          this.completedTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Completed);
+        //  this.assignedTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Assigned);
+        //  this.inProcessTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.InProcess);
+        //  this.pausedTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Paused);
+        //  this.completedTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Completed);
 
             this.tasks = data.Table.filter(result => result.TaskStatus !== this.taskStatus.ReviewPending);
-         }
+            this.paginationValuesreviewPendingTasks = AppConstants.getPaginationOptions;
+            if (this.reviewPendingTasks.length > 20) {
+              this.paginationValuesreviewPendingTasks[AppConstants.getPaginationOptions.length] = this.reviewPendingTasks.length;
+            }
+            this.loaderService.display(false);
+          }
 
-         this.paginationValuesassignedTasks = AppConstants.getPaginationOptions;
-         if (this.assignedTasks.length > 20) {
-           this.paginationValuesassignedTasks[AppConstants.getPaginationOptions.length] = this.assignedTasks.length;
-         }
+        //  this.paginationValuesassignedTasks = AppConstants.getPaginationOptions;
+        //  if (this.assignedTasks.length > 20) {
+        //    this.paginationValuesassignedTasks[AppConstants.getPaginationOptions.length] = this.assignedTasks.length;
+        //  }
 
-         this.paginationValuesinProcessTasks = AppConstants.getPaginationOptions;
-         if (this.inProcessTasks.length > 20) {
-           this.paginationValuesinProcessTasks[AppConstants.getPaginationOptions.length] = this.inProcessTasks.length;
-         }
+        //  this.paginationValuesinProcessTasks = AppConstants.getPaginationOptions;
+        //  if (this.inProcessTasks.length > 20) {
+        //    this.paginationValuesinProcessTasks[AppConstants.getPaginationOptions.length] = this.inProcessTasks.length;
+        //  }
 
-         this.paginationValuespausedTasks = AppConstants.getPaginationOptions;
-         if (this.pausedTasks.length > 20) {
-           this.paginationValuespausedTasks[AppConstants.getPaginationOptions.length] = this.pausedTasks.length;
-         }
+        //  this.paginationValuespausedTasks = AppConstants.getPaginationOptions;
+        //  if (this.pausedTasks.length > 20) {
+        //    this.paginationValuespausedTasks[AppConstants.getPaginationOptions.length] = this.pausedTasks.length;
+        //  }
 
-         this.paginationValuesreviewPendingTasks = AppConstants.getPaginationOptions;
-         if (this.reviewPendingTasks.length > 20) {
-           this.paginationValuesreviewPendingTasks[AppConstants.getPaginationOptions.length] = this.reviewPendingTasks.length;
-         }
 
-         this.paginationValuescompletedTasks = AppConstants.getPaginationOptions;
-         if (this.completedTasks.length > 20) {
-           this.paginationValuescompletedTasks[AppConstants.getPaginationOptions.length] = this.completedTasks.length;
-         }
+        //  this.paginationValuescompletedTasks = AppConstants.getPaginationOptions;
+        //  if (this.completedTasks.length > 20) {
+        //    this.paginationValuescompletedTasks[AppConstants.getPaginationOptions.length] = this.completedTasks.length;
+        //  }
           // this.loadingStatus = false;
           this.loaderService.display(false);
        }
@@ -220,13 +271,13 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
   }
 
   getAllTaskTypes() {
-    this.loaderService.display(true);
+   // this.loaderService.display(true);
     this.dropdownDataService.getAllTask().subscribe(
       data => {
         // console.log(data);
         this.globalData.taskTypes = data;
         this.taskTypes = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', 'Show All', false) ;
-        this.loaderService.display(false);
+       // this.loaderService.display(false);
       } ,
       error => { console.log(error); this.loaderService.display(false); },
       );
@@ -238,24 +289,29 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
     const SelectValueCompleted = this.managerdashboardForm.value.ShowallManagerForTskComplete;
     // const SelectValue = 1;
     // const SelectValueCompleted = 1;
-
    if (!isNaN(Number(this.managerdashboardForm.value.taskTypes))) {
     Taskypeid = Number(this.managerdashboardForm.value.taskTypes);
+    this.selectedTabName = TabIndexName[this.selectedTabIndex];
   }
-
     // this.getTaskList(Taskypeid);
 
     if ( Number(SelectValue) === 1) {
       this.getTaskListForOther( Taskypeid, false);
+     // this.getCount(false);
     } else if (  Number(SelectValue) === 2) {
         this.getTaskListForOther( Taskypeid, true);
+     // this.getCount(true);
+
      }
 
-      if ( Number(SelectValueCompleted) === 1) {
+     /* if ( Number(SelectValueCompleted) === 1) {
         this.getTaskListForCompleted( Taskypeid, false);
+        this.getCount(false);
       } else if (  Number(SelectValueCompleted) === 2) {
           this.getTaskListForCompleted( Taskypeid, true);
-      }
+          this.getCount(true);
+      } */
+        // get count of taskas when task type select
  }
 
   showAllManagerChange() {
@@ -264,13 +320,17 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
    if (!isNaN(Number(this.managerdashboardForm.value.taskTypes))) {
     Taskypeid = Number(this.managerdashboardForm.value.taskTypes);
   }
+
    if ( Number(SelectValue) === 1) {
         this.getTaskListForOther( Taskypeid, false);
+       // this.getCount(false);
       } else if (  Number(SelectValue) === 2) {
           this.getTaskListForOther( Taskypeid, true);
+        //  this.getCount(true);
        } else {
-        this.getTaskList(Taskypeid);
+      //  this.getTaskList(Taskypeid);
    }
+   this.selectedShowMgr = Number(SelectValue);
   }
 
   showAllManagerCompleteTskChange( ) {
@@ -280,38 +340,106 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
      Taskypeid = Number(this.managerdashboardForm.value.taskTypes);
    }
     if ( Number(SelectValue) === 1) {
-         this.getTaskListForCompleted( Taskypeid, false);
+       //  this.getTaskListForCompleted( Taskypeid, false);
        } else if (  Number(SelectValue) === 2) {
-           this.getTaskListForCompleted( Taskypeid, true);
+        //   this.getTaskListForCompleted( Taskypeid, true);
         }
   }
 
   getTaskListForOther(TaskTypeId, ShowAllForMgr) {
     this.loaderService.display(true);
-    // this.loadingStatus = false;
-    this.taskCommonService.getTasksList(ShowAllForMgr, 'OTHER').subscribe(
+    this.selectedTabName = TabIndexName[this.selectedTabIndex];
+    const TaskId = TaskTypeId ? TaskTypeId : 0;
+
+    this.reviewPendingTasks = [];
+    this.assignedTasks = [];
+    this.pausedTasks = [];
+    this.completedTasks = [];
+    this.inProcessTasks = [];
+
+    this.taskCommonService.getTasksList(ShowAllForMgr, this.selectedTabName, TaskId).subscribe(
       data => {
-        // this.tasks = data;
        if (data !== 'No data found!') {
-        this.tasklotDetails = data.Table1;
+         this.taskCount = data.Table[0];
+        this.tasklotDetails = data.Table2;
          if (TaskTypeId) {
-            this.reviewPendingTasks = data.Table.filter(result =>
-              String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.ReviewPending && result.TaskTypeId === TaskTypeId);
-            this.assignedTasks = data.Table.filter(result =>
-              String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Assigned && result.TaskTypeId === TaskTypeId);
-            this.inProcessTasks = data.Table.filter(result =>
-              String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.InProcess && result.TaskTypeId === TaskTypeId);
-            this.pausedTasks = data.Table.filter(result =>
-              String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Paused && result.TaskTypeId === TaskTypeId);
-            this.tasks = data.Table.filter(result => result.TaskStatus !== this.taskStatus.ReviewPending && result.TaskTypeId === TaskTypeId);
-         } else {
-          this.reviewPendingTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.ReviewPending);
-          this.assignedTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Assigned);
-          this.inProcessTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.InProcess);
-          this.pausedTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Paused);
-            this.tasks = data.Table.filter(result => result.TaskStatus !== this.taskStatus.ReviewPending);
+          if (this.selectedTabIndex === TabIndexName.REVIEWPENDING) {
+           this.reviewPendingTasksevent = null;
+            this.reviewPendingTasks = data.Table1;
+            this.paginationValuesreviewPendingTasks = AppConstants.getPaginationOptions;
+            if (this.reviewPendingTasks.length > 20) {
+              this.paginationValuesreviewPendingTasks[AppConstants.getPaginationOptions.length] = this.reviewPendingTasks.length;
+            }
+           } else if (this.selectedTabIndex === TabIndexName.ASSIGNED) {
+            this.assignedTasksevent = null;
+              this.assignedTasks = data.Table1;
+              this.paginationValuesassignedTasks = AppConstants.getPaginationOptions;
+            if (this.assignedTasks.length1 > 20) {
+              this.paginationValuesassignedTasks[AppConstants.getPaginationOptions.length] = this.assignedTasks.length;
+            }
+             } else if (this.selectedTabIndex === TabIndexName.INPROCESS) {
+               this.inProcessTasksevent = null;
+              this.inProcessTasks = data.Table1;
+              this.paginationValuesinProcessTasks = AppConstants.getPaginationOptions;
+            if (this.inProcessTasks.length > 20) {
+              this.paginationValuesinProcessTasks[AppConstants.getPaginationOptions.length] = this.inProcessTasks.length;
+            }
+             } else if (this.selectedTabIndex === TabIndexName.PAUSED) {
+              this.pausedTasksevent = null;
+              this.pausedTasks = data.Table1;
+              this.paginationValuespausedTasks = AppConstants.getPaginationOptions;
+              if (this.pausedTasks.length > 20) {
+                this.paginationValuespausedTasks[AppConstants.getPaginationOptions.length] = this.pausedTasks.length;
+              }
+             } else if (this.selectedTabIndex === TabIndexName.COMPLETED) {
+              this.completedTasksevent = null;
+              this.completedTasks = data.Table1;
+              this.paginationValuescompletedTasks = AppConstants.getPaginationOptions;
+            if (this.completedTasks.length > 20) {
+              this.paginationValuescompletedTasks[AppConstants.getPaginationOptions.length] = this.completedTasks.length;
+            }
+             }
+              this.tasks = data.Table.filter(result => result.TaskStatus !== this.taskStatus.ReviewPending && result.TaskTypeId === TaskTypeId);
+
+        } else {
+          if (this.selectedTabIndex === TabIndexName.REVIEWPENDING) {
+            this.reviewPendingTasksevent = null;
+          this.reviewPendingTasks = data.Table1;
+          this.paginationValuesreviewPendingTasks = AppConstants.getPaginationOptions;
+          if (this.reviewPendingTasks.length > 20) {
+            this.paginationValuesreviewPendingTasks[AppConstants.getPaginationOptions.length] = this.reviewPendingTasks.length;
+          }
+        } else if (this.selectedTabIndex === TabIndexName.ASSIGNED) {
+          this.assignedTasksevent = null;
+          this.assignedTasks = data.Table1;
+          this.paginationValuesassignedTasks = AppConstants.getPaginationOptions;
+            if (this.assignedTasks.length1 > 20) {
+              this.paginationValuesassignedTasks[AppConstants.getPaginationOptions.length] = this.assignedTasks.length;
+            }
+         } else if (this.selectedTabIndex === TabIndexName.INPROCESS) {
+           this.inProcessTasksevent = null;
+          this.inProcessTasks = data.Table1;
+          this.paginationValuesinProcessTasks = AppConstants.getPaginationOptions;
+            if (this.inProcessTasks.length > 20) {
+              this.paginationValuesinProcessTasks[AppConstants.getPaginationOptions.length] = this.inProcessTasks.length;
+            }
+         } else if (this.selectedTabIndex === TabIndexName.PAUSED) {
+           this.pausedTasksevent = null;
+          this.pausedTasks = data.Table1;
+          this.paginationValuespausedTasks = AppConstants.getPaginationOptions;
+          if (this.pausedTasks.length > 20) {
+            this.paginationValuespausedTasks[AppConstants.getPaginationOptions.length] = this.pausedTasks.length;
+          }
+         } else if (this.selectedTabIndex === TabIndexName.COMPLETED) {
+          this.completedTasksevent = null;
+          this.completedTasks = data.Table1;
+          this.paginationValuescompletedTasks = AppConstants.getPaginationOptions;
+            if (this.completedTasks.length > 20) {
+              this.paginationValuescompletedTasks[AppConstants.getPaginationOptions.length] = this.completedTasks.length;
+            }
          }
-          // this.loadingStatus = false;
+          this.tasks = data.Table.filter(result => result.TaskStatus !== this.taskStatus.ReviewPending);
+         }
           this.loaderService.display(false);
        } else {
         this.reviewPendingTasks = null;
@@ -326,40 +454,39 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
       () => {  this.loaderService.display(false);  });
   }
 
-  getTaskListForCompleted(TaskTypeId, ShowAllForMgr) {
-    this.loaderService.display(true);
-    // this.loadingStatus = false;
-    this.taskCommonService.getTasksList(ShowAllForMgr, 'COMPLETED').subscribe(
-      data => {
-        // this.tasks = data;
-       if (data !== 'No data found!') {
-        // this.tasklotDetails = data.Table1;
-        this.completetasklotDetails = data.Table1.filter(Result =>  String(Result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Completed);
-         if (TaskTypeId) {
-         this.completedTasks = data.Table.filter(result =>
-              String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Completed && result.TaskTypeId === TaskTypeId);
+  // getTaskListForCompleted(TaskTypeId, ShowAllForMgr) {
+  //   this.loaderService.display(true);
+  //   this.taskCommonService.getTasksList(ShowAllForMgr, 'COMPLETED').subscribe(
+  //     data => {
+  //      if (data !== 'No data found!') {
+  //       this.completetasklotDetails = data.Table1.filter(Result =>  String(Result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Completed);
+  //        if (TaskTypeId) {
 
-            this.tasks = data.Table.filter(result => result.TaskStatus !== this.taskStatus.ReviewPending && result.TaskTypeId === TaskTypeId);
-         } else {
-            this.completedTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Completed);
+  //        this.completedTasks = data.Table.filter(result =>
+  //             String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Completed && result.TaskTypeId === TaskTypeId);
+  //        this.completeCount = this.completedTasks.length;
+  //           this.tasks = data.Table.filter(result => result.TaskStatus !== this.taskStatus.ReviewPending && result.TaskTypeId === TaskTypeId);
+  //        } else {
+  //           this.completedTasks = data.Table.filter(result => String(result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Completed);
+  //           this.completeCount = this.completedTasks.length;
 
-            this.tasks = data.Table.filter(result => result.TaskStatus !== this.taskStatus.ReviewPending);
-         }
-         this.paginationValuescompletedTasks = AppConstants.getPaginationOptions;
-         if (this.completedTasks.length > 20) {
-           this.paginationValuescompletedTasks[AppConstants.getPaginationOptions.length] = this.completedTasks.length;
-         }
-          // this.loadingStatus = false;
-          this.loaderService.display(false);
-       } else {
-        this.completedTasks = null;
-        this.tasks = null;
-       }
-       this.loaderService.display(false);
-      } ,
-      error => { console.log(error); this.loaderService.display(false); },
-      () => {   this.loaderService.display(false); });
-  }
+  //           this.tasks = data.Table.filter(result => result.TaskStatus !== this.taskStatus.ReviewPending);
+  //        }
+  //        this.paginationValuescompletedTasks = AppConstants.getPaginationOptions;
+  //        if (this.completedTasks.length > 20) {
+  //          this.paginationValuescompletedTasks[AppConstants.getPaginationOptions.length] = this.completedTasks.length;
+  //        }
+
+  //         this.loaderService.display(false);
+  //      } else {
+  //       this.completedTasks = null;
+  //       this.tasks = null;
+  //      }
+  //      this.loaderService.display(false);
+  //     } ,
+  //     error => { console.log(error); this.loaderService.display(false); },
+  //     () => {   this.loaderService.display(false); });
+  // }
 
   resetTable(dataTable) {
     dataTable.reset();
@@ -400,4 +527,269 @@ closeDailog() {
     this.lotInfo.showLotCommentModal = true;
     this.loaderService.display(false);
   }
+
+  // Tab change load data
+  onTabChange(e) {
+    if (e) {
+      this.selectedTabIndex = e.index;
+    }
+    this.reviewPendingTasks = [];
+    this.assignedTasks = [];
+    this.pausedTasks = [];
+    this.completedTasks = [];
+    this.inProcessTasks = [];
+    this.reviewPendingTasksevent = null;
+    this.assignedTasksevent = null;
+    this.inProcessTasksevent = null;
+    this.pausedTasksevent = null;
+    this.completedTasksevent = null;
+
+    this.selectedTaskTypeId = this.managerdashboardForm.value.taskTypes;
+    this.selectedTabName = TabIndexName[this.selectedTabIndex];
+    this.showMgr = this.selectedShowMgr === 1 ? false : true;
+    const TaskTypeId = this.selectedTaskTypeId ? this.selectedTaskTypeId : 0;
+    this.appCommonService.setLocalStorage('MDTabIndex', JSON.stringify(this.selectedTabIndex));
+    this.loaderService.display(true);
+    this.taskCommonService.getTasksList(this.showMgr, this.selectedTabName, TaskTypeId).subscribe(
+    data => {
+      console.log(data);
+        this.taskCount = data.Table[0];
+        this.tasklotDetails = data.Table2;
+    if (this.selectedTaskTypeId) {
+      if (this.selectedTabIndex === TabIndexName.REVIEWPENDING) {
+        this.dashboardObject.reviewPending = data.Table1;
+        this.reviewPendingTasks = data.Table1;
+        this.paginationValuesreviewPendingTasks = AppConstants.getPaginationOptions;
+         if (this.reviewPendingTasks.length > 20) {
+           this.paginationValuesreviewPendingTasks[AppConstants.getPaginationOptions.length] = this.reviewPendingTasks.length;
+         }
+         this.loaderService.display(false);
+      } else if (this.selectedTabIndex === TabIndexName.ASSIGNED) {
+        this.dashboardObject.assigned = data.Table1;
+        this.assignedTasks = data.Table1;
+        this.paginationValuesassignedTasks = AppConstants.getPaginationOptions;
+         if (this.assignedTasks.length > 20) {
+           this.paginationValuesassignedTasks[AppConstants.getPaginationOptions.length] = this.assignedTasks.length;
+         }
+         this.loaderService.display(false);
+      } else if (this.selectedTabIndex === TabIndexName.INPROCESS) {
+        this.dashboardObject.inProcess = data.Table1;
+        this.inProcessTasks = data.Table1;
+        this.paginationValuesinProcessTasks = AppConstants.getPaginationOptions;
+         if (this.inProcessTasks.length > 20) {
+           this.paginationValuesinProcessTasks[AppConstants.getPaginationOptions.length] = this.inProcessTasks.length;
+         }
+         this.loaderService.display(false);
+      } else if (this.selectedTabIndex === TabIndexName.PAUSED) {
+        this.dashboardObject.paused = data.Table1;
+        this.pausedTasks = data.Table1 ;
+        this.paginationValuespausedTasks = AppConstants.getPaginationOptions;
+         if (this.pausedTasks.length > 20) {
+           this.paginationValuespausedTasks[AppConstants.getPaginationOptions.length] = this.pausedTasks.length;
+         }
+         this.loaderService.display(false);
+      } else if (this.selectedTabIndex === TabIndexName.COMPLETED) {
+        this.dashboardObject.completed = data.Table1;
+        this.completedTasks = data.Table1;
+        this.paginationValuescompletedTasks = AppConstants.getPaginationOptions;
+          if (this.completedTasks.length > 20) {
+            this.paginationValuescompletedTasks[AppConstants.getPaginationOptions.length] = this.completedTasks.length;
+          }
+          this.loaderService.display(false);
+    }
+
+    } else {
+        if (this.selectedTabIndex === TabIndexName.REVIEWPENDING) {
+          this.dashboardObject.reviewPending = data.Table1;
+            this.reviewPendingTasks = data.Table1;
+            this.paginationValuesreviewPendingTasks = AppConstants.getPaginationOptions;
+            if (this.reviewPendingTasks.length > 20) {
+              this.paginationValuesreviewPendingTasks[AppConstants.getPaginationOptions.length] = this.reviewPendingTasks.length;
+            }
+            this.loaderService.display(false);
+        } else if (this.selectedTabIndex === TabIndexName.ASSIGNED) {
+          this.dashboardObject.assigned = data.Table1;
+            this.assignedTasks = data.Table1;
+            this.paginationValuesassignedTasks = AppConstants.getPaginationOptions;
+            if (this.assignedTasks.length1 > 20) {
+              this.paginationValuesassignedTasks[AppConstants.getPaginationOptions.length] = this.assignedTasks.length;
+            }
+            this.loaderService.display(false);
+        } else if (this.selectedTabIndex === TabIndexName.INPROCESS) {
+          this.dashboardObject.inProcess = data.Table1;
+            this.inProcessTasks = data.Table1;
+            this.paginationValuesinProcessTasks = AppConstants.getPaginationOptions;
+            if (this.inProcessTasks.length > 20) {
+              this.paginationValuesinProcessTasks[AppConstants.getPaginationOptions.length] = this.inProcessTasks.length;
+            }
+            this.loaderService.display(false);
+        } else if (this.selectedTabIndex === TabIndexName.PAUSED) {
+          this.dashboardObject.paused = data.Table1;
+            this.pausedTasks = data.Table1;
+            this.paginationValuespausedTasks = AppConstants.getPaginationOptions;
+            if (this.pausedTasks.length > 20) {
+              this.paginationValuespausedTasks[AppConstants.getPaginationOptions.length] = this.pausedTasks.length;
+            }
+            this.loaderService.display(false);
+        } else if (this.selectedTabIndex === TabIndexName.COMPLETED) {
+          this.dashboardObject.completed = data.Table1;
+            this.completedTasks = data.Table1;
+            this.paginationValuescompletedTasks = AppConstants.getPaginationOptions;
+            if (this.completedTasks.length > 20) {
+              this.paginationValuescompletedTasks[AppConstants.getPaginationOptions.length] = this.completedTasks.length;
+            }
+            this.loaderService.display(false);
+        }
+      }
+  });
+  }
+
+  // print
+
+  //  print(): void {
+  //   let popupWin;
+  //   let printContents: string;
+  //   this.isPrintClicked = true;
+  //   printContents = document.getElementById('PRINT' + this.selectedTabName).innerHTML;
+  //     popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
+  //     popupWin.document.open();
+  //     popupWin.document.write(`
+  //     <html>
+  //       <head>
+  //         <style type = "text/css">
+  //         .ui-widget, body {
+  //           font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+  //           font-size: 0.94rem;
+  //         }
+  //         .ui-widget, .ui-widget * {
+  //           -webkit-box-sizing: border-box;
+  //           box-sizing: border-box;
+  //         }
+  //           .ui-g-12 {
+  //             width: 100%;
+  //         }
+  //         b, strong {
+  //           font-weight: bolder;
+  //         }
+  //         .ui-md-2 {
+  //           width: 16.6667%;
+  //         }
+  //         .ui-md-5 {
+  //         width: 41.6667%;
+  //         }
+  //         .ui-md-3 {
+  //           width: 25%;
+  //         }
+  //         .ui-md-4 {
+  //           width: 33.3333%;
+  //         }
+  //         .ui-md-1, .ui-md-2, .ui-md-3, .ui-md-4, .ui-md-5, .ui-md-6, .ui-md-7, .ui-md-8, .ui-md-9, .ui-md-10, .ui-md-11, .ui-md-12 {
+  //           padding: .5em;
+  //         }
+  //         .ui-g-1, .ui-g-2, .ui-g-3, .ui-g-4, .ui-g-5, .ui-g-6, .ui-g-7, .ui-g-8, .ui-g-9, .ui-g-10, .ui-g-11, .ui-g-12 {
+  //           float: left;
+  //           -webkit-box-sizing: border-box;
+  //           box-sizing: border-box;
+  //           padding: .5em;
+  //         }
+  //         .paddingRL {
+  //           padding: 0em .8em;
+  //           position: relative;
+  //         }
+  //         label {
+  //           display: inline-block;
+  //           margin-bottom: .1rem ;
+  //         }
+  //         .ui-table .ui-table-tbody>tr>td {
+  //           word-break: break-word;
+  //         }
+
+  //         .clsWrapText div.paddingRL div label{
+  //           word-break: break-word;
+  //         }
+  //         @media print {
+  //           body {-webkit-print-color-adjust: exact;}
+
+  //           .ui-table .ui-table-tbody>tr>td {
+  //             word-break: break-word;
+  //           }
+
+  //           .clsSectionHeader .clsHeaderTitlebar {
+  //             padding: .1em .75em;
+  //             border: 1px solid #d9d9d9;
+  //             font-weight: normal;
+  //           }
+  //           .clsHeaderTitlebar {
+  //               background-image: none;
+  //               background-color: #0C59CF ;
+  //               color: white;
+  //           }
+  //           .clsSectionHeader * {
+  //               -webkit-box-sizing: border-box;
+  //               box-sizing: border-box;
+  //           }
+  //           span.clsTextTitle {
+  //               margin-top: 10px;
+  //               margin-bottom: 5px;
+  //               font-size: 18px;
+  //           }
+  //           .ui-md-12 {
+  //             width: 100%;
+  //           }
+  //           .ui-md-6 {
+  //             width: 50%;
+  //           }
+  //           .ui-widget, .ui-widget * {
+  //             -webkit-box-sizing: border-box;
+  //             box-sizing: border-box;
+  //           }
+  //           .ui-corner-all {
+  //             border-radius: 0px !important;
+  //           }
+  //           .marginBottom {
+  //           margin-bottom: 10px;
+  //           }
+  //           .ui-card-body {
+  //             padding: 15px;
+  //             border: 1px solid #D5D5D5;
+  //           }
+  //           .ui-table table {
+  //             border-collapse: collapse;
+  //             width: 100%;
+  //             table-layout: fixed;
+  //           }
+  //           .ui-table .ui-table-thead>tr>th, .ui-table .ui-table-tbody>tr>td, .ui-table .ui-table-tfoot>tr>td {
+  //             padding: .25em .5em;
+  //           }
+  //           .ui-table .ui-table-tbody > tr
+  //             .marginBottom {
+  //               margin-bottom: 10px;
+  //           }
+  //           .ui-table .ui-table-thead > tr:first-child {
+  //             /*background-image: none !important;
+  //             background-color: #0C59CF !important;
+  //             color: #FFFFFF !important;
+  //             background: -webkit-gradient(linear, left top, left bottom, from(#f6f7f9), to(#ebedf0));
+  //             background: linear-gradient(to bottom, #f6f7f9 0%, #ebedf0 100%);
+  //             */
+  //             font-weight: bold;
+  //             text-align:left;
+  //             border: 1px solid #D5D5D5;
+  //           }
+  //           .ui-table .ui-table-tbody > tr {
+  //             border: 1px solid #D5D5D5;
+  //             background: inherit;
+  //           }
+  //           .clsRemoveFrmPrint {
+  //             display:none!important;
+  //           }
+  //       }
+  //       </style>
+  //     </head>
+  //     <body onload="window.print();">${printContents}</body>
+  //   </html>`
+  //   );
+  //   popupWin.document.close();
+  // }
+
 }

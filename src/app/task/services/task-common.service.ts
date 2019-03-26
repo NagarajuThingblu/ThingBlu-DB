@@ -119,7 +119,7 @@ export class TaskCommonService {
    });
   }
     // Get all tasks list
-    getTasksList(ShowForAllMgr, TaskDataKey) {
+    getTasksList(ShowForAllMgr, TaskDataKey, TaskTypeId) {
       const url = 'api/Task/TaskGetListByUserRole';
       let params = new HttpParams();
       // params = params.append('ClientId', this._cookieService.ClientId);
@@ -127,6 +127,7 @@ export class TaskCommonService {
       params = params.append('VirtualRoleId', String(this.appCommonService.getUserProfile().VirtualRoleId));
       params = params.append('ShowForAllMgr', ShowForAllMgr) ;
       params = params.append('TaskDataKey', TaskDataKey) ;
+      params = params.append('TaskTypeId', TaskTypeId) ;
 
       return this.http
       .get(url, {params: params})

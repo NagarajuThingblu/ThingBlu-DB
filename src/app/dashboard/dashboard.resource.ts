@@ -56,6 +56,15 @@ export class DashboardResource {
                     lblAvailableStrains: 'Available Strains',
                     lblUnits: 'units',
                     lblPreroll: 'pre-roll'
+                },
+                managerdashboard: {
+                    paused: 'Paused',
+                    inprocess: 'In-Process',
+                    completed: 'Completed',
+                    assigned: 'Assigned',
+                    reviewpending: 'Review Pending',
+                    print: 'Print',
+                    elipsedtime: 'Time Elapsed (hh/mm/ss)'
                 }
             }
         };

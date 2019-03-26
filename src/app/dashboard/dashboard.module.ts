@@ -12,6 +12,7 @@ import { RefreshService } from './services/refresh.service';
 import { JointsDashboardComponent } from './components/joints-dashboard/joints-dashboard.component';
 import { JointsDashboardDataComponent } from './components/joints-dashboard-data/joints-dashboard-data.component';
 import { JointsDashboardDataPrintComponent } from './components/joints-dashboard-data-print/joints-dashboard-data-print.component';
+import { ManagerdashboardPrintComponent } from './components/managerdashboard-print/managerdashboard-print.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { JointsDashboardDataPrintComponent } from './components/joints-dashboard
     JointsProductionDashboardComponent,
     JointsDashboardComponent,
     JointsDashboardDataComponent,
-    JointsDashboardDataPrintComponent
+    JointsDashboardDataPrintComponent,
+    ManagerdashboardPrintComponent
   ],
   imports: [
     SharedModule

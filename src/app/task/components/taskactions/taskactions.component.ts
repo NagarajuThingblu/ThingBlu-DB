@@ -78,7 +78,7 @@ export class TaskactionsComponent implements OnInit {
   public userRoles: any;
   // Added by Devdan
   taskTypeId: any;
-
+  public AssignRole: any;
   constructor(
     private route: ActivatedRoute,
     private http: DataService,
@@ -216,8 +216,8 @@ export class TaskactionsComponent implements OnInit {
           this.taskActionDetails = Object.assign(this.taskActionDetails, this.taskActionDetails1);
           this.taskStatusHistory =  data.Table2 ? data.Table2 : [];
         }
-
-          // http call starts
+        this.AssignRole = this.taskStatusHistory.filter(d => d.RoleName === 'Employee' && d.TaskStatus === 'ASSIGNED' );
+       // http call starts
           this.loaderService.display(false);
       } ,
       error => { console.log(error); },

@@ -34,6 +34,7 @@ export class GrindingComponent implements OnInit, OnChanges, OnDestroy {
   @Input() PageFlag: any;
   @Input() ParentFormGroup: FormGroup;
   @Output() TaskCompleteOrReviewed: EventEmitter<any> = new EventEmitter<any>();
+  @Input() AssignRole: any;
 
   questions: QuestionBase<any>[];
   public _cookieService: UserModel;
@@ -57,7 +58,7 @@ export class GrindingComponent implements OnInit, OnChanges, OnDestroy {
 
   // Added by Devdan :: Sec to Min change :: 06-Nov-2018 :: Variable to Enable/Disable Second Text Box
   isRActSecsDisabled: boolean;
-
+  public assignRole: any;
   constructor(
     private fb: FormBuilder,
     private dropdownDataService: DropdownValuesService,
@@ -118,6 +119,9 @@ export class GrindingComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnInit() {
+    // for navigate joint dashboard if employee assign task :: 20-Mar-2019 :: swapnil
+    this.assignRole = this.AssignRole ? this.AssignRole : null;
+
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
     this.taskStatus =  AppConstants.getStatusList;
@@ -590,9 +594,19 @@ export class GrindingComponent implements OnInit, OnChanges, OnDestroy {
 
                   setTimeout( () => {
                     if (this._cookieService.UserRole === this.userRoles.Manager) {
-                      this.router.navigate(['home/managerdashboard']);
+                     // this.router.navigate(['home/managerdashboard']);
+                     // change navigation to joint dashboard
+                      this.router.navigate(['home/jointsproductiondashboard']);
+
                     } else {
-                      this.router.navigate(['home/empdashboard']);
+
+                      // if employee assign task to self then redirect to joint dashboard else employee dashboard
+                      if (this.assignRole.length !== 0) {
+                      if (this.assignRole[0].RoleName === 'Employee') {
+                        this.router.navigate(['home/jointsproductiondashboard']);
+                      }
+                     } else {
+                      this.router.navigate(['home/empdashboard']);  }
                     }
                   }, 2000);
                 }

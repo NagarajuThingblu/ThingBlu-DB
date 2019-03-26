@@ -22,3 +22,55 @@ tr.clsTableRow:nth-child(even).ui-state-highlight{
 .clsElpTime {
     width: 125px;
 }
+
+.clsTabView{
+    width:100%!important;
+    border-bottom: 0px !important;
+    
+  }
+  .clsTabView > div > ul {
+    padding-left: 0px !important;
+  }
+
+  .clsIconPrint{
+    float: right;
+    margin-right: 30px!important;
+    margin-top: 10px!important;
+    color: #222 !important;
+  }
+
+  :host::ng-deep .mainDiv .clsTabView {
+    border: 1px solid #d9d9d9 !important;
+  }
+
+  .mainDiv {
+    width:100%;
+    position: relative;
+  }
+
+  .ui-table-caption {
+    border-top: 0 none !important;
+}
+
+tr.rowBorder>td {
+  border-left: 0px;
+  border-right: 0px;
+}
+tr.rowBorder>th {
+  border-left: 0px;
+  border-right: 0px;
+  border-top: none;
+}
+.ui-tabview.ui-tabview-top>.ui-tabview-nav {
+  border-bottom: 0px solid #d6d6d6!important; 
+}
+
+@media only screen and (min-width: 769px) {
+  :host::ng-deep div.clsTabView  ul.ui-tabview-nav  li {
+   width: 17%;
+   text-align: center;
+  }
+  :host::ng-deep div.clsTabView  ul.ui-tabview-nav  li a{
+      width: 100%;
+     }
+}

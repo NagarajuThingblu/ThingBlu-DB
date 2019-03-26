@@ -35,9 +35,13 @@ import { RefreshService } from '../../../../../dashboard/services/refresh.servic
   `]
 })
 export class TubingComponent implements OnInit, OnDestroy {
+
   TUBING: FormGroup;
   completionForm: FormGroup;
   reviewForm: FormGroup;
+
+  @Input() AssignRole: any;
+
   public orderDetails: any;
   public orderDetailsBS: any;
   public orderDetailsBS_filteredData: any = [];
@@ -46,6 +50,8 @@ export class TubingComponent implements OnInit, OnDestroy {
   public showLotSelectionModel = false;
   public showLotCompletiionModal = false;
   public showMixLotSelectionModel = false;
+
+  public assignRole: any;
 
   public taskId: any;
   public taskType: any;
@@ -198,6 +204,9 @@ export class TubingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+
+    // for navigate joint dashboard if employee assign task :: 20-Mar-2019 :: swapnil
+    this.assignRole = this.AssignRole ? this.AssignRole : null;
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
     this.taskStatus = AppConstants.getStatusList;
@@ -1674,13 +1683,25 @@ export class TubingComponent implements OnInit, OnDestroy {
                   this.msgs = [];
                   this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
                     detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
-
                   setTimeout( () => {
-                    if (this._cookieService.UserRole === this.userRoles.Manager) {
-                      this.router.navigate(['home/managerdashboard']);
-                    } else {
-                      this.router.navigate(['home/empdashboard']);
-                    }
+                   // if (this._cookieService.UserRole === this.userRoles.Manager) {
+                   //   this.router.navigate(['home/managerdashboard']);
+                   // } else {
+                   //   this.router.navigate(['home/empdashboard']);
+                   // }
+
+                    // for navigate joint dashboard if employee assign task :: 20-Mar-2019 :: swapnil
+                  if (this._cookieService.UserRole === this.userRoles.Manager) {
+                          this.router.navigate(['home/jointsproductiondashboard']);
+                        } else {
+                          // if employee assign task to self then redirect to joint dashboard else employee dashboard
+                          if (this.assignRole.length !== 0) {
+                          if (this.assignRole[0].RoleName === 'Employee') {
+                            this.router.navigate(['home/jointsproductiondashboard']);
+                          }
+                         } else {
+                          this.router.navigate(['home/empdashboard']);  }
+                        }
                   }, 2000);
                 }
               },
@@ -1902,11 +1923,12 @@ export class TubingComponent implements OnInit, OnDestroy {
                     detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
 
                   setTimeout( () => {
-                    if (this._cookieService.UserRole === this.userRoles.Manager) {
+                   if (this._cookieService.UserRole === this.userRoles.Manager) {
                       this.router.navigate(['home/managerdashboard']);
                     } else {
                       this.router.navigate(['home/empdashboard']);
                     }
+
                   }, 2000);
                 }
               },
