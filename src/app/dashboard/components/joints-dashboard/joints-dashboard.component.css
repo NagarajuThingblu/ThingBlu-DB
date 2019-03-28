@@ -59,3 +59,7 @@
         width: 100%;
        }
   }
+
+  .ui-tabview.ui-tabview-top>.ui-tabview-nav {
+    border-bottom: 1px solid #d6d6d6!important;
+  }

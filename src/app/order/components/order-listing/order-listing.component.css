@@ -5,7 +5,35 @@
         transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,
         transparent 75%,transparent) !important;
 }
-.ui-tabview-nav li{
+/* .ui-tabview-nav li{
     width: 160px !important;
-}
+} */
+
+.clsTabView{
+    width:100%!important;
+    border-bottom: 0px !important;
+    
+  }
+  .clsTabView > div > ul {
+    padding-left: 0px !important;
+  }
+
+
+
+  :host::ng-deep .mainDiv .clsTabView {
+    border: 1px solid #d9d9d9 !important;
+  }
+.ui-tabview.ui-tabview-top>.ui-tabview-nav {
+    border-bottom: 0px solid #d6d6d6!important; 
+  }
+  
+  @media only screen and (min-width: 769px) {
+    :host::ng-deep div.clsTabView  ul.ui-tabview-nav  li {
+     width: 17%;
+     text-align: center;
+    }
+    :host::ng-deep div.clsTabView  ul.ui-tabview-nav  li a{
+        width: 100%;
+       }
+  }
 

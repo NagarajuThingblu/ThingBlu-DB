@@ -287,31 +287,16 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
     let Taskypeid = 0 ;
     const SelectValue = this.managerdashboardForm.value.ShowallManager;
     const SelectValueCompleted = this.managerdashboardForm.value.ShowallManagerForTskComplete;
-    // const SelectValue = 1;
-    // const SelectValueCompleted = 1;
+
    if (!isNaN(Number(this.managerdashboardForm.value.taskTypes))) {
     Taskypeid = Number(this.managerdashboardForm.value.taskTypes);
     this.selectedTabName = TabIndexName[this.selectedTabIndex];
   }
-    // this.getTaskList(Taskypeid);
-
     if ( Number(SelectValue) === 1) {
       this.getTaskListForOther( Taskypeid, false);
-     // this.getCount(false);
     } else if (  Number(SelectValue) === 2) {
         this.getTaskListForOther( Taskypeid, true);
-     // this.getCount(true);
-
      }
-
-     /* if ( Number(SelectValueCompleted) === 1) {
-        this.getTaskListForCompleted( Taskypeid, false);
-        this.getCount(false);
-      } else if (  Number(SelectValueCompleted) === 2) {
-          this.getTaskListForCompleted( Taskypeid, true);
-          this.getCount(true);
-      } */
-        // get count of taskas when task type select
  }
 
   showAllManagerChange() {
@@ -323,7 +308,6 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
 
    if ( Number(SelectValue) === 1) {
         this.getTaskListForOther( Taskypeid, false);
-       // this.getCount(false);
       } else if (  Number(SelectValue) === 2) {
           this.getTaskListForOther( Taskypeid, true);
         //  this.getCount(true);
@@ -362,9 +346,11 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
        if (data !== 'No data found!') {
          this.taskCount = data.Table[0];
         this.tasklotDetails = data.Table2;
+        this.completetasklotDetails = data.Table2;
          if (TaskTypeId) {
           if (this.selectedTabIndex === TabIndexName.REVIEWPENDING) {
            this.reviewPendingTasksevent = null;
+           this.dashboardObject.reviewPending = data.Table1;
             this.reviewPendingTasks = data.Table1;
             this.paginationValuesreviewPendingTasks = AppConstants.getPaginationOptions;
             if (this.reviewPendingTasks.length > 20) {
@@ -372,6 +358,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
             }
            } else if (this.selectedTabIndex === TabIndexName.ASSIGNED) {
             this.assignedTasksevent = null;
+            this.dashboardObject.assigned = data.Table1;
               this.assignedTasks = data.Table1;
               this.paginationValuesassignedTasks = AppConstants.getPaginationOptions;
             if (this.assignedTasks.length1 > 20) {
@@ -379,6 +366,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
             }
              } else if (this.selectedTabIndex === TabIndexName.INPROCESS) {
                this.inProcessTasksevent = null;
+               this.dashboardObject.inProcess = data.Table1;
               this.inProcessTasks = data.Table1;
               this.paginationValuesinProcessTasks = AppConstants.getPaginationOptions;
             if (this.inProcessTasks.length > 20) {
@@ -386,6 +374,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
             }
              } else if (this.selectedTabIndex === TabIndexName.PAUSED) {
               this.pausedTasksevent = null;
+              this.dashboardObject.paused = data.Table1;
               this.pausedTasks = data.Table1;
               this.paginationValuespausedTasks = AppConstants.getPaginationOptions;
               if (this.pausedTasks.length > 20) {
@@ -393,6 +382,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
               }
              } else if (this.selectedTabIndex === TabIndexName.COMPLETED) {
               this.completedTasksevent = null;
+              this.dashboardObject.completed = data.Table1;
               this.completedTasks = data.Table1;
               this.paginationValuescompletedTasks = AppConstants.getPaginationOptions;
             if (this.completedTasks.length > 20) {
@@ -405,12 +395,14 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
           if (this.selectedTabIndex === TabIndexName.REVIEWPENDING) {
             this.reviewPendingTasksevent = null;
           this.reviewPendingTasks = data.Table1;
+          this.dashboardObject.reviewPending = data.Table1;
           this.paginationValuesreviewPendingTasks = AppConstants.getPaginationOptions;
           if (this.reviewPendingTasks.length > 20) {
             this.paginationValuesreviewPendingTasks[AppConstants.getPaginationOptions.length] = this.reviewPendingTasks.length;
           }
         } else if (this.selectedTabIndex === TabIndexName.ASSIGNED) {
           this.assignedTasksevent = null;
+          this.dashboardObject.assigned = data.Table1;
           this.assignedTasks = data.Table1;
           this.paginationValuesassignedTasks = AppConstants.getPaginationOptions;
             if (this.assignedTasks.length1 > 20) {
@@ -418,6 +410,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
             }
          } else if (this.selectedTabIndex === TabIndexName.INPROCESS) {
            this.inProcessTasksevent = null;
+           this.dashboardObject.inProcess = data.Table1;
           this.inProcessTasks = data.Table1;
           this.paginationValuesinProcessTasks = AppConstants.getPaginationOptions;
             if (this.inProcessTasks.length > 20) {
@@ -425,6 +418,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
             }
          } else if (this.selectedTabIndex === TabIndexName.PAUSED) {
            this.pausedTasksevent = null;
+           this.dashboardObject.paused = data.Table1;
           this.pausedTasks = data.Table1;
           this.paginationValuespausedTasks = AppConstants.getPaginationOptions;
           if (this.pausedTasks.length > 20) {
@@ -432,6 +426,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
           }
          } else if (this.selectedTabIndex === TabIndexName.COMPLETED) {
           this.completedTasksevent = null;
+          this.dashboardObject.completed = data.Table1;
           this.completedTasks = data.Table1;
           this.paginationValuescompletedTasks = AppConstants.getPaginationOptions;
             if (this.completedTasks.length > 20) {
@@ -552,9 +547,9 @@ closeDailog() {
     this.loaderService.display(true);
     this.taskCommonService.getTasksList(this.showMgr, this.selectedTabName, TaskTypeId).subscribe(
     data => {
-      console.log(data);
         this.taskCount = data.Table[0];
         this.tasklotDetails = data.Table2;
+        this.completetasklotDetails = data.Table2;
     if (this.selectedTaskTypeId) {
       if (this.selectedTabIndex === TabIndexName.REVIEWPENDING) {
         this.dashboardObject.reviewPending = data.Table1;
@@ -565,6 +560,7 @@ closeDailog() {
          }
          this.loaderService.display(false);
       } else if (this.selectedTabIndex === TabIndexName.ASSIGNED) {
+        this.dashboardObject.assigned = data.Table1;
         this.dashboardObject.assigned = data.Table1;
         this.assignedTasks = data.Table1;
         this.paginationValuesassignedTasks = AppConstants.getPaginationOptions;
@@ -646,150 +642,154 @@ closeDailog() {
 
   // print
 
-  //  print(): void {
-  //   let popupWin;
-  //   let printContents: string;
-  //   this.isPrintClicked = true;
-  //   printContents = document.getElementById('PRINT' + this.selectedTabName).innerHTML;
-  //     popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
-  //     popupWin.document.open();
-  //     popupWin.document.write(`
-  //     <html>
-  //       <head>
-  //         <style type = "text/css">
-  //         .ui-widget, body {
-  //           font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
-  //           font-size: 0.94rem;
-  //         }
-  //         .ui-widget, .ui-widget * {
-  //           -webkit-box-sizing: border-box;
-  //           box-sizing: border-box;
-  //         }
-  //           .ui-g-12 {
-  //             width: 100%;
-  //         }
-  //         b, strong {
-  //           font-weight: bolder;
-  //         }
-  //         .ui-md-2 {
-  //           width: 16.6667%;
-  //         }
-  //         .ui-md-5 {
-  //         width: 41.6667%;
-  //         }
-  //         .ui-md-3 {
-  //           width: 25%;
-  //         }
-  //         .ui-md-4 {
-  //           width: 33.3333%;
-  //         }
-  //         .ui-md-1, .ui-md-2, .ui-md-3, .ui-md-4, .ui-md-5, .ui-md-6, .ui-md-7, .ui-md-8, .ui-md-9, .ui-md-10, .ui-md-11, .ui-md-12 {
-  //           padding: .5em;
-  //         }
-  //         .ui-g-1, .ui-g-2, .ui-g-3, .ui-g-4, .ui-g-5, .ui-g-6, .ui-g-7, .ui-g-8, .ui-g-9, .ui-g-10, .ui-g-11, .ui-g-12 {
-  //           float: left;
-  //           -webkit-box-sizing: border-box;
-  //           box-sizing: border-box;
-  //           padding: .5em;
-  //         }
-  //         .paddingRL {
-  //           padding: 0em .8em;
-  //           position: relative;
-  //         }
-  //         label {
-  //           display: inline-block;
-  //           margin-bottom: .1rem ;
-  //         }
-  //         .ui-table .ui-table-tbody>tr>td {
-  //           word-break: break-word;
-  //         }
+   print(): void {
+    let popupWin;
+    let printContents: string;
+    this.isPrintClicked = true;
+    printContents = document.getElementById('PRINT' + this.selectedTabName).innerHTML;
+      popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
+      popupWin.document.open();
+      popupWin.document.write(`
+      <html>
+        <head>
+          <style type = "text/css">
+          @page {
+            size: auto;
+            margin: 10mm 0 10mm 0;
+        }
+          .ui-widget, body {
+            font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+            font-size: 0.94rem;
+          }
+          .ui-widget, .ui-widget * {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+          }
+            .ui-g-12 {
+              width: 100%;
+          }
+          b, strong {
+            font-weight: bolder;
+          }
+          .ui-md-2 {
+            width: 16.6667%;
+          }
+          .ui-md-5 {
+          width: 41.6667%;
+          }
+          .ui-md-3 {
+            width: 25%;
+          }
+          .ui-md-4 {
+            width: 33.3333%;
+          }
+          .ui-md-1, .ui-md-2, .ui-md-3, .ui-md-4, .ui-md-5, .ui-md-6, .ui-md-7, .ui-md-8, .ui-md-9, .ui-md-10, .ui-md-11, .ui-md-12 {
+            padding: .5em;
+          }
+          .ui-g-1, .ui-g-2, .ui-g-3, .ui-g-4, .ui-g-5, .ui-g-6, .ui-g-7, .ui-g-8, .ui-g-9, .ui-g-10, .ui-g-11, .ui-g-12 {
+            float: left;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: .5em;
+          }
+          .paddingRL {
+            padding: 0em .8em;
+            position: relative;
+          }
+          label {
+            display: inline-block;
+            margin-bottom: .1rem ;
+          }
+          .ui-table .ui-table-tbody>tr>td {
+            word-break: break-word;
+          }
 
-  //         .clsWrapText div.paddingRL div label{
-  //           word-break: break-word;
-  //         }
-  //         @media print {
-  //           body {-webkit-print-color-adjust: exact;}
+          .clsWrapText div.paddingRL div label{
+            word-break: break-word;
+          }
+          @media print {
+            body {-webkit-print-color-adjust: exact;}
 
-  //           .ui-table .ui-table-tbody>tr>td {
-  //             word-break: break-word;
-  //           }
+            .ui-table .ui-table-tbody>tr>td {
+              word-break: break-word;
+            }
 
-  //           .clsSectionHeader .clsHeaderTitlebar {
-  //             padding: .1em .75em;
-  //             border: 1px solid #d9d9d9;
-  //             font-weight: normal;
-  //           }
-  //           .clsHeaderTitlebar {
-  //               background-image: none;
-  //               background-color: #0C59CF ;
-  //               color: white;
-  //           }
-  //           .clsSectionHeader * {
-  //               -webkit-box-sizing: border-box;
-  //               box-sizing: border-box;
-  //           }
-  //           span.clsTextTitle {
-  //               margin-top: 10px;
-  //               margin-bottom: 5px;
-  //               font-size: 18px;
-  //           }
-  //           .ui-md-12 {
-  //             width: 100%;
-  //           }
-  //           .ui-md-6 {
-  //             width: 50%;
-  //           }
-  //           .ui-widget, .ui-widget * {
-  //             -webkit-box-sizing: border-box;
-  //             box-sizing: border-box;
-  //           }
-  //           .ui-corner-all {
-  //             border-radius: 0px !important;
-  //           }
-  //           .marginBottom {
-  //           margin-bottom: 10px;
-  //           }
-  //           .ui-card-body {
-  //             padding: 15px;
-  //             border: 1px solid #D5D5D5;
-  //           }
-  //           .ui-table table {
-  //             border-collapse: collapse;
-  //             width: 100%;
-  //             table-layout: fixed;
-  //           }
-  //           .ui-table .ui-table-thead>tr>th, .ui-table .ui-table-tbody>tr>td, .ui-table .ui-table-tfoot>tr>td {
-  //             padding: .25em .5em;
-  //           }
-  //           .ui-table .ui-table-tbody > tr
-  //             .marginBottom {
-  //               margin-bottom: 10px;
-  //           }
-  //           .ui-table .ui-table-thead > tr:first-child {
-  //             /*background-image: none !important;
-  //             background-color: #0C59CF !important;
-  //             color: #FFFFFF !important;
-  //             background: -webkit-gradient(linear, left top, left bottom, from(#f6f7f9), to(#ebedf0));
-  //             background: linear-gradient(to bottom, #f6f7f9 0%, #ebedf0 100%);
-  //             */
-  //             font-weight: bold;
-  //             text-align:left;
-  //             border: 1px solid #D5D5D5;
-  //           }
-  //           .ui-table .ui-table-tbody > tr {
-  //             border: 1px solid #D5D5D5;
-  //             background: inherit;
-  //           }
-  //           .clsRemoveFrmPrint {
-  //             display:none!important;
-  //           }
-  //       }
-  //       </style>
-  //     </head>
-  //     <body onload="window.print();">${printContents}</body>
-  //   </html>`
-  //   );
-  //   popupWin.document.close();
-  // }
+            .clsSectionHeader .clsHeaderTitlebar {
+              padding: .1em .75em;
+              border: 1px solid #d9d9d9;
+              font-weight: normal;
+            }
+            .clsHeaderTitlebar {
+                background-image: none;
+                background-color: #0C59CF ;
+                color: white;
+            }
+            .clsSectionHeader * {
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+            span.clsTextTitle {
+                margin-top: 10px;
+                margin-bottom: 5px;
+                font-size: 18px;
+            }
+            .ui-md-12 {
+              width: 100%;
+            }
+            .ui-md-6 {
+              width: 50%;
+            }
+            .ui-widget, .ui-widget * {
+              -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+            }
+            .ui-corner-all {
+              border-radius: 0px !important;
+            }
+            .marginBottom {
+            margin-bottom: 10px;
+            }
+            .ui-card-body {
+              padding: 15px;
+              border: 1px solid #D5D5D5;
+            }
+            .ui-table table {
+              border-collapse: collapse;
+              width: 100%;
+              table-layout: fixed;
+            }
+            .ui-table .ui-table-thead>tr>th, .ui-table .ui-table-tbody>tr>td, .ui-table .ui-table-tfoot>tr>td {
+              padding: .25em .5em;
+            }
+            .ui-table .ui-table-tbody > tr
+              .marginBottom {
+                margin-bottom: 10px;
+            }
+            .ui-table .ui-table-thead > tr:first-child {
+              /*background-image: none !important;
+              background-color: #0C59CF !important;
+              color: #FFFFFF !important;
+              background: -webkit-gradient(linear, left top, left bottom, from(#f6f7f9), to(#ebedf0));
+              background: linear-gradient(to bottom, #f6f7f9 0%, #ebedf0 100%);
+              */
+              font-weight: bold;
+              text-align:left;
+              border: 1px solid #D5D5D5;
+            }
+            .ui-table .ui-table-tbody > tr {
+              border: 1px solid #D5D5D5;
+              background: inherit;
+            }
+            .clsRemoveFrmPrint {
+              display:none!important;
+            }
+        }
+        </style>
+      </head>
+      <body onload="window.print();">${printContents}</body>
+    </html>`
+    );
+    popupWin.document.close();
+  }
 
 }

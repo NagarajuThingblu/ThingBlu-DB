@@ -1,67 +1,43 @@
-<!--<div class="ui-g" id="PRINTREVIEWPENDING" *ngIf="SelectedTabName === 'REVIEWPENDING'">
+<div class="ui-g" id="PRINTREVIEWPENDING" *ngIf="SelectedTabName === 'REVIEWPENDING'">
   <div class="ui-g-12">
     <div class="ui-g-12 ui-g-nopad">
       <div class="ui-g-12 ui-md-12 ui-g-nopad">
-
-        <app-section-header [headerLabel]="prodDashboardResource.lblAvailableTask"></app-section-header>-->
-         <!-- <p-table #dtReviewPending [value]="reviewPendingTasks" 
-        sortMode="single"                       
+        <app-section-header headerLabel="Review Pending"></app-section-header>
+        <p-table #dtReviewPending [value]="DashboardData.reviewPending"                     
         [responsive]="true" 
         [rows]="10" 
         rowHover='true'
         styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
-        >
+        >                        
         <ng-template pTemplate="header">
-            <br>
+           
             <tr class="rowBorder">
-                <th [pSortableColumn]="'EmpName'">{{globalResource.employee}} 
+                <th style="width:14%" [pSortableColumn]="'EmpName'">{{globalResource.employee}} 
                     <p-sortIcon [field]="'EmpName'"></p-sortIcon>                                
                 </th>
-                <th class="taskwidth" [pSortableColumn]="'TaskTypeName'">{{globalResource.task}}  
+                <th style="width:14%" class="taskwidth" [pSortableColumn]="'TaskTypeName'">{{globalResource.task}}  
                     <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon></th>
-                <th [pSortableColumn]="'GrowerName'">{{globalResource.order}} <p-sortIcon [field]="'OrderRefId'"></p-sortIcon></th>
+                <th style="width:14%" [pSortableColumn]="'GrowerName'">{{globalResource.order}} <p-sortIcon [field]="'OrderRefId'"></p-sortIcon></th>
                 <th [pSortableColumn]="'StrainName'">{{globalResource.strain}}  <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>
-                <th [pSortableColumn]="'TotalWorkhrs'" class="clsElpTime">{{managerResources.elipsedtime}}  <p-sortIcon [field]="'TotalWorkhrs'"></p-sortIcon></th>
-                <th [pSortableColumn]="'ManagerName'" class="assignby">{{globalResource.assignby}}  <p-sortIcon [field]="'ManagerName'"></p-sortIcon></th>
-                <th class="datewidth" [pSortableColumn]="'LastActionDate'">{{globalResource.lastactiondate}} 
+      
+                <th style="width:15%" [pSortableColumn]="'TotalWorkhrs'" class="clsElpTime">{{managerResources.elipsedtime}}  <p-sortIcon [field]="'TotalWorkhrs'"></p-sortIcon></th>
+                <th style="width:14%" [pSortableColumn]="'ManagerName'" class="assignby">{{globalResource.assignby}}  <p-sortIcon [field]="'ManagerName'"></p-sortIcon></th>
+                <th style="width:16%" class="datewidth" [pSortableColumn]="'LastActionDate'">{{globalResource.lastactiondate}} 
                     <p-sortIcon [field]="'LastActionDate'"></p-sortIcon>
                 </th>                                                  
-            </tr>
-
-            <tr class="rowBorder">
-                <th>
-                    <input pInputText type="text" (input)="dtReviewPending.filter($event.target.value, 'EmpName', 'contains')" class="clsControl">
-                </th>
-                <th class="taskwidth">
-                    <input pInputText type="text" (input)="dtReviewPending.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
-                </th>
-                <th class="orderrefwidth">
-                    <input pInputText type="text" (input)="dtReviewPending.filter($event.target.value, 'OrderRefId', 'contains')" class="clsControl">
-                </th>
-                <th class="orderrefwidth">
-                    <input pInputText type="text" (input)="dtReviewPending.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
-                </th>               
-                <th>
-                    <input pInputText type="text" (input)="dtReviewPending.filter($event.target.value, 'TotalWorkhrs', 'contains')" class="clsControl">
-            </th>
-                <th>
-                    <input pInputText type="text" (input)="dtReviewPending.filter($event.target.value, 'ManagerName', 'contains')" class="clsControl">
-                </th>
-                <th class="datewidth">
-                    <input pInputText type="text" (input)="dtReviewPending.filter($event.target.value, 'LastActionDate', 'contains')" class="clsControl">
-                </th>                            
-            </tr>
+            </tr>         
         </ng-template>
         <ng-template pTemplate="body" let-task let-rowData let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="clsTableRow rowBorder" (click)= "onRowSelect(task)">
                 <td>
                         {{task?.EmpName}}
+                  
                 </td>
                 <td class="taskwidth">{{task?.TaskTypeName}}</td>
                 <td class="orderrefwidth">{{task?.OrderRefId}}</td>
                 <td class="orderrefwidth">{{task?.StrainName}}
-                         <span *ngIf="task?.LotCounts > 1"> 
-                    <a class="btn-link" (click)="showDialog(task?.TaskId,task?.TaskStatus)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span></td>
+                  <!--<span *ngIf="task?.LotCounts > 1"> 
+                    <a class="btn-link" (click)="showDialog(task?.TaskId,task?.TaskStatus)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span></td>--> 
                 <td class="taskwidth"><span>{{task?.TotalWorkhrs | minutesToTime}}</span></td>
                 <td class="assignby" ><span>{{task?.ManagerName}}</span></td>
                 <td class="datewidth"><span> {{task?.LastActionDate | date: 'MM/dd/yyyy' }} <br>{{task?.LastActionDate | date: 'hh:mm a' }}</span></td>                             
@@ -81,10 +57,256 @@
               [inputEvent]="reviewPendingTasksevent"
             ></pagination-counts>
           </ng-template>
-    </p-table> -->
+    </p-table>
 
-     <!-- </div>
+      </div>
     </div>
   </div>
-</div>-->
-        
+</div>
+
+<!-- Assigned Print -->
+<div class="ui-g" id="PRINTASSIGNED" *ngIf="SelectedTabName === 'ASSIGNED'">
+  <div class="ui-g-12">
+    <div class="ui-g-12 ui-g-nopad">
+      <div class="ui-g-12 ui-md-12 ui-g-nopad">
+        <app-section-header headerLabel="Assigned" style="margin-top: 10px"></app-section-header>
+        <p-table #dt [value]="DashboardData.assigned" 
+                                class="clsTableSelection"                  
+                                    [responsive]="true"
+                                    [rows]="10"
+                                    rowHover='true'
+                                    styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
+                                    >                    
+                                    <ng-template pTemplate="header">
+                                        
+                                        <tr class="rowBorder">
+                                            <th style="width:14%">{{globalResource.employee}}</th>
+                                             <th style="width:14%" class="taskwidth">{{globalResource.task}}</th>
+                                             <th style="width:14%">{{globalResource.order}}</th>
+                                             <th style="width:14%">{{globalResource.strain}}</th>
+                                             <!-- <th style="width:14%" class="clsElpTime">{{managerResources.elipsedtime}}</th>                      -->
+                                             <th style="width:14%" class="assignby">{{globalResource.assignby}}</th>
+                                             <th style="width:16%" class="datewidth">{{globalResource.lastactiondate}}</th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-task let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                                        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="clsTableRow rowBorder" (click)= "onRowSelect(task)" >
+                                                <td>
+                                                        {{task?.EmpName}}
+                                                </td>
+                                                <td class="taskwidth">{{task?.TaskTypeName}}</td>
+                                                <td class="orderrefwidth">{{task?.OrderRefId}}</td>
+                                                <td class="orderrefwidth">{{task?.StrainName}}
+                                                  <!--<span *ngIf="task?.LotCounts > 1"> 
+                                                    <a class="btn-link" (click)="showDialog(task?.TaskId,task?.TaskStatus)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span></td>-->
+                                                <!-- <td class="taskwidth"><span>{{task?.TotalWorkhrs | minutesToTime}}</span></td> -->
+                                                <td  class="assignby"><span>{{task?.ManagerName}}</span></td>
+                                                <td class="datewidth">{{task?.LastActionDate | date: 'MM/dd/yyyy' }} <br> {{task?.LastActionDate | date: 'hh:mm a' }}</td>
+                                                
+                                        </tr>
+                                    </ng-template>
+                                   <ng-template pTemplate="emptymessage" let-columns>
+                                        <tr>
+                                            <td [attr.colspan]="6">
+                                              {{ globalResource.norecordsfound }}
+                                            </td>
+                                        </tr>
+                                      </ng-template>
+                                      <ng-template pTemplate="paginatorleft" let-state>
+                                            <pagination-counts
+                                              *ngIf="assignedTasks?.length"
+                                              [inputData]="assignedTasks"
+                                              [inputEvent]="assignedTasksevent"
+                                            ></pagination-counts>
+                                          </ng-template>
+                                </p-table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- InProcess Print -->
+<div class="ui-g" id="PRINTINPROCESS" *ngIf="SelectedTabName === 'INPROCESS'">
+  <div class="ui-g-12">
+    <div class="ui-g-12 ui-g-nopad">
+      <div class="ui-g-12 ui-md-12 ui-g-nopad">
+        <app-section-header headerLabel="In-Process" style="margin-top: 10px"></app-section-header>
+        <p-table #dtInProcess [value]="DashboardData.inProcess"                     
+        [responsive]="true"  
+        [rows]="10" 
+        rowHover='true'                   
+        styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
+        > 
+        <ng-template pTemplate="header">
+            
+            <tr class="rowBorder">
+                <th style="width:14%">{{globalResource.employee}}</th>
+                <th style="width:14%" class="taskwidth">{{globalResource.task}}</th>
+                <th style="width:14%">{{globalResource.order}}</th>
+                <th style="width:14%">{{globalResource.strain}}</th>
+                <th style="width:14%" class="clsElpTime">{{managerResources.elipsedtime}}</th>                     
+                <th style="width:14%" class="assignby">{{globalResource.assignby}}</th>
+                <th style="width:16%" class="datewidth">{{globalResource.lastactiondate}}</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-task let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="clsTableRow rowBorder" (click)= "onRowSelect(task)">
+                <td>
+                        {{task?.EmpName}}
+                </td>
+                <td class="taskwidth">{{task?.TaskTypeName}}</td>
+                <td class="orderrefwidth">{{task?.OrderRefId}}</td>
+                <td class="orderrefwidth">{{task?.StrainName}}
+                   <!--<span *ngIf="task?.LotCounts > 1"> 
+                    <a class="btn-link" (click)="showDialog(task?.TaskId,task?.TaskStatus)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span></td>--> 
+                <td class="taskwidth"><span>{{task?.TotalWorkhrs | minutesToTime}}</span></td>
+                <td  class="assignby"><span>{{task?.ManagerName}}</span></td>
+                <td class="datewidth">{{task?.LastActionDate | date: 'MM/dd/yyyy' }} <br> {{task?.LastActionDate | date: 'hh:mm a' }}</td>
+            </tr>
+        </ng-template>
+       <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+                <td [attr.colspan]="7">
+                  {{ globalResource.norecordsfound }}
+                </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft" let-state>
+            <pagination-counts
+              *ngIf="inProcessTasks?.length"
+              [inputData]="inProcessTasks"
+              [inputEvent]="inProcessTasksevent"
+            ></pagination-counts>
+          </ng-template>
+    </p-table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Paused Print -->
+<div class="ui-g" id="PRINTPAUSED" *ngIf="SelectedTabName === 'PAUSED'">
+  <div class="ui-g-12">
+    <div class="ui-g-12 ui-g-nopad">
+      <div class="ui-g-12 ui-md-12 ui-g-nopad">
+        <app-section-header headerLabel="Paused" style="margin-top: 10px"></app-section-header>
+        <p-table #dtPaused [value]="DashboardData.paused"                   
+                                    [responsive]="true"
+                                    [rows]="10"
+                                    rowHover='true'
+                                    styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
+                                    >                    
+                                    <ng-template pTemplate="header">
+                                        
+                                        <tr class="rowBorder">
+                                            <th style="width:14%" >{{globalResource.employee}}</th>
+                                            <th style="width:14%" class="taskwidth">{{globalResource.task}}</th>
+                                            <th style="width:14%" >{{globalResource.order}}</th>
+                                            <th style="width:14%">{{globalResource.strain}}</th>
+                                            <th style="width:14%" class="clsElpTime">{{managerResources.elipsedtime}}</th>
+                                            <th style="width:14%" class="assignby">{{globalResource.assignby}}</th>
+                                            <th style="width:16%" class="datewidth">{{globalResource.lastactiondate}}</th>
+                                        </tr>
+                
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-task let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                                        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="clsTableRow rowBorder" (click)= "onRowSelect(task)">
+                                            <td>
+                                                    {{task?.EmpName}}
+                                            </td>
+                                            <td class="taskwidth">{{task?.TaskTypeName}}</td>
+                                            <td class="orderrefwidth">{{task?.OrderRefId}}</td>
+                                            <td class="orderrefwidth">{{task?.StrainName}}
+                                              <!--<span *ngIf="task?.LotCounts > 1"> 
+                                              <a class="btn-link" (click)="showDialog(task?.TaskId,task?.TaskStatus)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span></td>--> 
+                                            <td class="taskwidth"><span>{{task?.TotalWorkhrs | minutesToTime}}</span></td>
+                                            <td class="assignby" ><span>{{task?.ManagerName}}</span></td>
+                                            <td class="datewidth">{{task?.LastActionDate | date: 'MM/dd/yyyy' }}  <br> {{task?.LastActionDate | date: 'hh:mm a' }} </td>
+                                        </tr>
+                                    </ng-template>
+                                   <ng-template pTemplate="emptymessage" let-columns>
+                                        <tr>
+                                            <td [attr.colspan]="7">
+                                              {{ globalResource.norecordsfound }}
+                                            </td>
+                                        </tr>
+                                      </ng-template>
+                                      <ng-template pTemplate="paginatorleft" let-state>
+                                        <pagination-counts
+                                          *ngIf="pausedTasks?.length"
+                                          [inputData]="pausedTasks"
+                                          [inputEvent]="pausedTasksevent"
+                                        ></pagination-counts>
+                                      </ng-template>
+                                </p-table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Completed -->
+
+<div class="ui-g" id="PRINTCOMPLETED" *ngIf="SelectedTabName === 'COMPLETED'">
+  <div class="ui-g-12">
+    <div class="ui-g-12 ui-g-nopad">
+      <div class="ui-g-12 ui-md-12 ui-g-nopad">
+          <app-section-header headerLabel="Completed" style="margin-top: 10px"></app-section-header>
+          <p-table #dtCompleted [value]="DashboardData.completed"                    
+          [responsive]="true"                   
+          [rows]="10"
+          rowHover='true'
+          styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
+          >                   
+          <ng-template pTemplate="header">
+            
+              <tr class="rowBorder">
+                  <th style="width:14%">{{globalResource.employee}}</th>
+                  <th style="width:14%" class="taskwidth">{{globalResource.task}}</th>
+                  <th style="width:14%">{{globalResource.order}}</th>
+                  <th style="width:14%">{{globalResource.strain}}</th>
+                  <th style="width:14%" class="clsElpTime">{{managerResources.elipsedtime}}</th>
+                  <th style="width:14%" class="assignby">{{globalResource.assignby}}</th>
+                  <th style="width:16%" class="datewidth">{{globalResource.lastactiondate}}</th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-task let-rowData let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="clsTableRow rowBorder" (click)= "onRowSelect(task)">
+                  <td>
+                          {{task?.EmpName}}
+                  </td>
+                  <td class="taskwidth">{{task?.TaskTypeName}}</td>
+                  <td class="orderrefwidth">{{task?.OrderRefId}}</td>
+                  <td class="orderrefwidth">{{task?.StrainName}}
+                         <!-- <span *ngIf="task?.LotCounts > 1"> 
+                      <a class="btn-link" (click)="showDialog(task?.TaskId,task?.TaskStatus)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span>--> 
+                  </td>
+                  <td class="taskwidth"><span>{{task?.TotalWorkhrs | minutesToTime}}</span></td>
+                  <td class="assignby" ><span>{{task?.ManagerName}}</span></td>
+                  <td class="datewidth">{{task?.LastActionDate | date: 'MM/dd/yyyy' }} <br> {{task?.LastActionDate | date: 'hh:mm a' }}</td>
+              </tr>
+          </ng-template>
+         <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                  <td [attr.colspan]="7">
+                    {{ globalResource.norecordsfound }}
+                  </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="paginatorleft" let-state>
+              <pagination-counts
+                *ngIf="completedTasks?.length"
+                [inputData]="completedTasks"
+                [inputEvent]="completedTasksevent"
+              ></pagination-counts>
+            </ng-template>
+      </p-table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

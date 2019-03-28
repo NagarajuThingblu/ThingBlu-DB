@@ -762,6 +762,7 @@ p-dropdown{display: block;}
     background-color: #1C3C93 !important;
     color: #FFFFFF;
 }
+.ui-table.tablelayout table{table-layout: auto !important;}
 
 /* Confirm Box Styles By Bharat On 6th-Aug-2018 */
 .clsConfirmBox .ui-confirmdialog, .clsConfirmBox .ui-dialog-titlebar, .clsConfirmBox .ui-dialog-footer {
