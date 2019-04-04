@@ -43,7 +43,13 @@ export class MastersResource {
                     pkgtypenotpresent: 'Package type is deleted or is inactive.',
                     skewnotpresent: 'Skew is deleted or is inactive.',
                     packageunitval: 'Package unit qty should be greater than zero.',
-                    packageitemqtyval: 'Package item qty should be greater than zero.'
+                    packageitemqtyval: 'Package item qty should be greater than zero.',
+
+                    // add swapnil 01-April-2019 for view links
+                    viewbrands: 'View All Brands',
+                    viewsubbrands: 'View All Sub-Brands',
+                    viewstrain: 'View All Strains',
+                    viewpackagetype: 'View All Package Types',
                 },
 
 
@@ -150,7 +156,8 @@ export class MastersResource {
                     notinactivated: 'Can not inactivate this strain. Might be it does not exist.',
                     cannotinsert: 'Can not save strain details. Might be strain type is not available now. Please check.',
                     straintypeOrGeneticsIsInactive: 'Can not activate this strain. Might be strain type or genetics is inactive.',
-                    straintypedeleted: 'Can not perform action, Strain type is deleted.'
+                    straintypedeleted: 'Can not perform action, Strain type is deleted.',
+                    viewaddgenetic: 'View/Add Genetics',
                 },
 
                 addnewstraintype: {
@@ -518,9 +525,11 @@ export class MastersResource {
                 },
                 tppPackageType: {
                     pageheading: 'Add New TPP Package Type',
-                    tpp: 'TP Processor Name',
+                    // tpp: 'TP Processor Name',
+                    tpp: 'TP Processor',
                     tpprequired: 'Select TP Processor',
-                    packagetype: 'Package Type Name',
+                    // packagetype: 'Package Type Name',
+                    packagetype: 'Package Type',
                     packagetyperequired: 'Package Type Required',
                     packagetypeLength: 'Must not more than 50 charachters',
                     description: 'Package Type Description',

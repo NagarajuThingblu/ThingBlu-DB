@@ -9,7 +9,13 @@
           </p-header>
           <form
             [formGroup]="strainmasterForm"
-            (ngSubmit)="onSubmit(strainmasterForm.value)">             
+            (ngSubmit)="onSubmit(strainmasterForm.value)"> 
+            <div class="ui-g">
+            <div class="ui-g-12 ui-md-12" style="padding: 0">
+    
+                <a [routerLink]="" *ngIf="backUrl" class="btn-link" (click)="backToLot()" style="float: right;padding-right: 21px;text-decoration: underline" ><< Back</a>
+               </div>
+            </div>            
                 <div class="ui-g">
                     <!--Strain Types -->
                     <div class="ui-g-12 ui-md-6">
@@ -50,6 +56,7 @@
                           <label for="genetics">
                               {{ newStrainResources.genetics}}<span class="star">*</span>:
                           </label>
+                          <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ newStrainResources.viewaddgenetic}}" id="btn_geneticshow" (click)="viewGeneticList()"  name="btnviewGenetics" ></p-button>
 
                           <p-dropdown
                             [filter] ="true"
@@ -72,6 +79,7 @@
                               {{ newStrainResources.geneticsnotpresent }} 
                            </span>
                           </div>
+                         
                         </div>
                     </div>
                   </div>

@@ -713,6 +713,45 @@ p-dropdown{display: block;}
     padding: .25em 1em .25em 1em;
 }
 
+ /* add class toplinks for top links */
+.toplinks .ui-button{
+    font-weight: 400;
+    color: #337ab7 !important;
+    border-radius: 0;
+    display: inline-block;
+    padding: 0px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent !important;
+    margin-top: -4px;
+}
+
+.toplinks .ui-button.ui-button-text-icon-left .ui-button-text {
+    padding: .25em 1em .25em 1em;
+    text-decoration: underline;
+}
+
+.viewLinks .ui-button.ui-button-text-icon-left .ui-button-text {
+    padding: .25em 1em .25em 1em;
+    text-decoration: underline;
+}
+
+
 .link .ui-button, .link .ui-button:active, .link .ui-button:focus, .link .ui-button:hover {
     border-color: transparent !important;
 }

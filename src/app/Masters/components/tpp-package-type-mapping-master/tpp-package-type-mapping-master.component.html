@@ -19,7 +19,7 @@
                       <div class="le-su-12">
                     <label for="selecttpp" class="towlable">
                       {{ tppPackageTypeResources.tpp}}<span class="star">*</span></label>:
-
+                      <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="View/Add TPP's" id="btn_geneticshow" (click)="viewTPProcessorList()"  name="btnviewTP" ></p-button>
                     <p-dropdown
                         [filter] ="true"
                         id="tpp"
@@ -50,7 +50,7 @@
                       <div class="paddingRL">
                           <div class="le-su-12">
                             <label for="entersubbrand">{{ tppPackageTypeResources.packagetype}}<span class="star">*</span></label>:
-
+                            <!-- <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="View/Add Package Types" id="btn_geneticshow" (click)="viewTPPackageList()"  name="btnviewTP" ></p-button> -->
                             <input pInputText
                               name="packagetype"
                               id="packagetype"

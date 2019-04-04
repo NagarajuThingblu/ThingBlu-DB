@@ -16,7 +16,7 @@ import { QuestionService } from '../../../shared/services/question.service';
 import { forEach } from '@angular/router/src/utils/collection';
 import { CookieService } from 'ngx-cookie-service';
 import { DropdwonTransformService } from '../../../shared/services/dropdown-transform.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TaskResources } from '../../../task/task.resources';
 import { GrowerDetailsActionService } from '../../../task/services/grower-details-action.service';
 import { LotResources } from '../../lot.resource';
@@ -24,6 +24,8 @@ import { LoaderService } from '../../../shared/services/loader.service';
 import { LotService } from '../../services/lot.service';
 import { Title } from '@angular/platform-browser';
 import { UserModel } from '../../../shared/models/user.model';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+
 
 @Component({
   moduleId: module.id,
@@ -101,7 +103,8 @@ export class LotEntryFormComponent implements OnInit {
       private loaderService: LoaderService,
       private appCommonService: AppCommonService,
       private confirmationService: ConfirmationService,
-      private titleService: Title
+      private titleService: Title,
+      private router: Router
     ) {
       // http call starts
       this.loaderService.display(true);
@@ -200,6 +203,7 @@ export class LotEntryFormComponent implements OnInit {
     this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle(this.lotEntryResources.Title);
 
+
     this._cookieService = this.appCommonService.getUserProfile();
 
     this.lottypes = [
@@ -256,6 +260,19 @@ export class LotEntryFormComponent implements OnInit {
      setTimeout(() => {
       this.loaderService.display(false);
     }, 500);
+
+    // load data when click on back link of grower and strain :: swapnil :: 02-april-2019
+    if ( this.appCommonService.lotFormDetail && this.appCommonService.lotPageBackLink) {
+      const observable1 = this.dropdownDataService.getGrowers(0);
+      const observable2 =  this.dropdownDataService.getStrains();
+      forkJoin([observable1, observable2]).subscribe(result => {
+      this.lotEntryForm = this.appCommonService.lotFormDetail;
+      this.appCommonService.lotPageBackLink = false;
+      this.appCommonService.lotFormDetail = null;
+      this.lotDetails.lottype = this.lotEntryForm.value.lottype;
+      this.lotDetails.trimmed = this.lotEntryForm.value.trimmed;
+    });
+    }
   }
 
   initSkewTypeGroup() {
@@ -503,5 +520,19 @@ export class LotEntryFormComponent implements OnInit {
     if (Number(this.lotDetails.startweight) !== 0 && Number(this.lotDetails.startweight) !== 0) {
       this.lotDetails.shortageoverage =  parseFloat((Number(this.lotDetails.startweight) - Number(this.lotDetails.biotfweight)).toString()).toFixed(2);
     }
+  }
+
+  // view links changes
+  viewGrowerList() {
+    this.appCommonService.lotFormDetail = this.lotEntryForm;
+    this.appCommonService.lotPageBackLink = true;
+    this.router.navigate(['../home/grower']);
+  }
+
+
+  viewStrainList() {
+    this.appCommonService.lotFormDetail = this.lotEntryForm;
+    this.appCommonService.lotPageBackLink = true;
+    this.router.navigate(['../home/strainmaster']);
   }
 }

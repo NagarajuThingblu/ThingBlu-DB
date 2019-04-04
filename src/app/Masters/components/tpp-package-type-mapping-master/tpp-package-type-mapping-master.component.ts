@@ -15,6 +15,7 @@ import { DropdwonTransformService } from '../../../shared/services/dropdown-tran
 import { TPPPackageTypeActionService } from '../../../task/services/tpp-package-type-action.service';
 import { TPPPackageTypeService } from '../../services/tpp-package-type.service';
 import { AppConstants } from '../../../shared/models/app.constants';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-tpp-package-type-mapping-master',
@@ -60,6 +61,7 @@ export class TppPackageTypeMappingMasterComponent implements OnInit {
     private scrolltopservice: ScrollTopService,
     private oilService: OilService,
     private dropdwonTransformService: DropdwonTransformService,
+    private router: Router
   ) {
     this.getTPPPackageTypeDetails();
     this.getProcessors();
@@ -362,5 +364,23 @@ export class TppPackageTypeMappingMasterComponent implements OnInit {
     'description': new FormControl(null),
     'chkIsActive': new FormControl(null)
     });
+
+    if ( this.appCommonService.TPProcessorBackLink && this.appCommonService.TPProcessorFormDetail) {
+      this.tppPackageTypeForm = this.appCommonService.TPProcessorFormDetail;
+      this.appCommonService.TPProcessorBackLink = false;
+      this.appCommonService.TPProcessorFormDetail = null;
+    }
+  }
+
+  // link changes
+  viewTPProcessorList() {
+    this.appCommonService.TPProcessorBackLink = true;
+    this.appCommonService.TPProcessorFormDetail = this.tppPackageTypeForm;
+    this.router.navigate(['../home/tpprocessor']);
+  }
+  viewTPPackageList() {
+    this.appCommonService.TPProcessorBackLink = true;
+    this.appCommonService.TPProcessorFormDetail = this.tppPackageTypeForm;
+    this.router.navigate(['../home/addnewpackagetype']);
   }
 }

@@ -7,6 +7,12 @@
           <form
             [formGroup]="tpprocessorForm"
             (ngSubmit)="onSubmit(tpprocessorForm.value)">
+            <div class="ui-g">
+                <div class="ui-g-12 ui-md-12" style="padding: 0">
+        
+                    <a [routerLink]="" *ngIf="backUrl" class="btn-link" (click)="backToTPPackage()" style="float: right;padding-right: 21px;text-decoration: underline" ><< Back</a>
+                   </div>
+                </div>     
              <div class="ui-g">                     
                         <!-- tpprocessor Name -->
                         <div class="ui-g-12 ui-md-6">

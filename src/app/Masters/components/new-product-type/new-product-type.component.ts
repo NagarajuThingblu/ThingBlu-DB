@@ -14,6 +14,9 @@ import { AppComponent } from '../../../app.component';
 import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { AppConstants } from '../../../shared/models/app.constants';
 import * as _ from 'lodash';
+import { routing } from '../../../app.routing';
+import { Router } from '@angular/router';
+import { routerNgProbeToken } from '@angular/router/src/router_module';
 
 @Component({
   moduleId: module.id,
@@ -114,7 +117,8 @@ export class NewProductTypeComponent implements OnInit {
     private appCommonService: AppCommonService,
     private newProductTypeService: NewProductTypeService,
     private appComponentData: AppComponent,
-    private scrolltopservice: ScrollTopService
+    private scrolltopservice: ScrollTopService,
+    private router: Router
   ) {
     this.getAllBrands();
     this.getAllStrains();
@@ -192,7 +196,7 @@ export class NewProductTypeComponent implements OnInit {
         this.globalData.skewtypes = [];
         this.skewtypes = [];
       }
-      this.loaderService.display(false);
+     // this.loaderService.display(false);
     },
       error => { console.log(error); },
       () => console.log('Get all skew types complete'));
@@ -283,7 +287,7 @@ export class NewProductTypeComponent implements OnInit {
        } else {
         this.allProductTypeList = [];
        }
-       this.loaderService.display(false);
+      //  this.loaderService.display(false);
       } ,
       error => { console.log(error);  this.loaderService.display(false); },
       () => console.log('Get All  New Product Type List By Client complete'));
@@ -347,7 +351,7 @@ export class NewProductTypeComponent implements OnInit {
        } else {
         this.allProductTypeList = [];
        }
-       this.loaderService.display(false);
+     //  this.loaderService.display(false);
       } ,
       error => { console.log(error);  this.loaderService.display(false); },
       () => console.log('Get All  Employee List complete'));
@@ -612,7 +616,7 @@ export class NewProductTypeComponent implements OnInit {
          } else {
           this.allProductTypeList = [];
          }
-         this.loaderService.display(false);
+       //  this.loaderService.display(false);
     }
 
   ngOnInit() {
@@ -623,10 +627,9 @@ export class NewProductTypeComponent implements OnInit {
     this.globalResource = GlobalResources.getResources().en;
     this.appComponentData.setTitle('Product Type');
     this._cookieService = this.appCommonService.getUserProfile();
-
+    setTimeout(() => {this.loaderService.display(true);
+    }, 0);
     this.getAllProductTypeListByClient();
-
-
   // new product type form defination(reactive form)
   this.newProductTypeEntryForm = this.fb.group({
     'brand': new FormControl(null, Validators.required),
@@ -643,7 +646,22 @@ export class NewProductTypeComponent implements OnInit {
   });
   // this.items.controls['chkSelectAll'] = 1;
   this.addItem();
-  this.loaderService.display(false);
+  // redirection code :: swapnil :: 02-april-2019
+  if (this.appCommonService.ProductTypeBackLink && this.appCommonService.ProductTypeFormDetail) {
+        this.newProductTypeEntryForm = this.appCommonService.ProductTypeFormDetail;
+        this.appCommonService.ProductTypeFormDetail = null;
+  } else if (this.appCommonService.TPProcessorBackLink && this.appCommonService.ProductTypeFormDetail) {
+        this.newProductTypeEntryForm = this.appCommonService.ProductTypeFormDetail;
+        this.appCommonService.ProductTypeFormDetail = null;
+  } else if (this.appCommonService.lotPageBackLink && this.appCommonService.ProductTypeFormDetail) {
+        this.newProductTypeEntryForm = this.appCommonService.ProductTypeFormDetail;
+        this.appCommonService.ProductTypeFormDetail = null;
+  }
+
+  setTimeout(() => {
+    this.loaderService.display(false);
+  }, 500);
+
   }
 
   get productTypeDetailsArr(): FormArray {
@@ -695,6 +713,38 @@ export class NewProductTypeComponent implements OnInit {
   }
 
   skewType_InChange() {
+    if (this.appCommonService.ProductTypeBackLink || this.appCommonService.TPProcessorBackLink || this.appCommonService.lotPageBackLink) {
+      this.appCommonService.ProductTypeBackLink = false;
+      this.appCommonService.lotPageBackLink = false;
+      this.appCommonService.TPProcessorBackLink = false;
+      if (this.newProductTypeEntryForm.value.skewType) {
+        this.skewTypeID = this.newProductTypeEntryForm.value.skewType;
+      } else {
+        this.skewTypeID = 0;
+      }
+      this.skewTypesDetail =  this.skewTypesDetails.filter(r => r.SkwTypeId === this.skewTypeID);
+        if ( this.skewTypesDetail.length > 0) {
+            this.skewKeyName = this.skewTypesDetail[0].SkewKeyName;
+            } else {
+            this.skewKeyName = '';
+        }
+      if (this.skewKeyName !== 'JointMaterialWt') {
+        this.productTypeDetailsArr.controls.forEach((element, index) => {
+          // this.changeValidator(false, index);
+          (element as FormGroup).controls['packageItemQty'].clearValidators();
+          (element as FormGroup).controls['packageItemQty'].updateValueAndValidity();
+          (element as FormControl).markAsPristine();
+          (element as FormGroup).controls['packageItemQty'].patchValue(1);
+          (element as FormGroup).controls['packageItemQty'].disable();
+        });
+      } else {
+        this.productTypeDetailsArr.controls.forEach((element, index) => {
+          (element as FormGroup).controls['packageItemQty'].enable();
+          this.changeValidator(true, index);
+         // (element as FormGroup).controls['packageItemQty'].patchValue(0);
+        });
+    }
+    } else {
     if (this.newProductTypeEntryForm.value.skewType) {
       this.skewTypeID = this.newProductTypeEntryForm.value.skewType;
     } else {
@@ -722,5 +772,32 @@ export class NewProductTypeComponent implements OnInit {
         (element as FormGroup).controls['packageItemQty'].patchValue(0);
       });
     }
+  }
+  }
+
+
+  // add methods to view links
+  viewAllBrands() {
+    this.appCommonService.ProductTypeBackLink = true;
+    this.appCommonService.ProductTypeFormDetail = this.newProductTypeEntryForm;
+    this.router.navigate(['../home/addnewbrand']);
+  }
+
+  viewAllSubBrands() {
+    this.appCommonService.ProductTypeBackLink = true;
+    this.appCommonService.ProductTypeFormDetail = this.newProductTypeEntryForm;
+    this.router.navigate(['../home/addnewsubbrand']);
+  }
+
+  viewAllStrains() {
+  this.appCommonService.ProductTypeBackLink = true;
+  this.appCommonService.ProductTypeFormDetail = this.newProductTypeEntryForm;
+    this.router.navigate(['../home/strainmaster']);
+  }
+
+  viewAllPackageType() {
+  this.appCommonService.ProductTypeBackLink = true;
+  this.appCommonService.ProductTypeFormDetail = this.newProductTypeEntryForm;
+    this.router.navigate(['../home/addnewpackagetype']);
   }
 }

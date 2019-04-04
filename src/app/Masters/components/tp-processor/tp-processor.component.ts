@@ -12,6 +12,7 @@ import { AppComponent } from '../../../app.component';
 import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { ConfirmationService } from 'primeng/api';
 import { AppConstants } from '../../../shared/models/app.constants';
+import { Router } from '@angular/router';
 
 @Component({
   moduleId: module.id,
@@ -66,6 +67,8 @@ export class TpProcessorComponent implements OnInit {
   selectedTPProcessor: any;
   displayInfoDialog: boolean;
 
+  public backUrl: boolean;
+
   constructor(private loaderService: LoaderService,
     private fb: FormBuilder,
     private appCommonService: AppCommonService,
@@ -76,6 +79,7 @@ export class TpProcessorComponent implements OnInit {
     private appComponentData: AppComponent,
     private scrolltopservice: ScrollTopService,
     private confirmationService: ConfirmationService,
+    private router: Router
   ) {
     this.getAllClients();
     this.getAllCountries();
@@ -83,6 +87,7 @@ export class TpProcessorComponent implements OnInit {
 
   }
   ngOnInit() {
+    this.backUrl = this.appCommonService.TPProcessorBackLink;
     this.chkIsActive = true;
     this.pageheading = 'Add New TP Processor';
     this.clear = 'Clear';
@@ -491,4 +496,9 @@ export class TpProcessorComponent implements OnInit {
     }
   }
 
+
+  // link changes
+  backToTPPackage() {
+    this.router.navigate(['../home/addtpppackagetype']);
+  }
 }

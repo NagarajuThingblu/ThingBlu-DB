@@ -52,6 +52,7 @@ import { TPPPackageTypeService } from './services/tpp-package-type.service';
 import { ForgotPasswordService } from '../task/services/forgot-password.service';
 import { TaskSettingComponent } from './components/task-setting/task-setting.component';
 import { TaskSettingService } from './services/tasksetting.service';
+import { EmployeesComponent } from './components/employees/employees.component';
 
 
 @NgModule({
@@ -82,7 +83,8 @@ import { TaskSettingService } from './services/tasksetting.service';
     NewPackageTypeFormComponent,
     AddNewSubBrandFormComponent,
     TppPackageTypeMappingMasterComponent,
-    TaskSettingComponent
+    TaskSettingComponent,
+    EmployeesComponent
   ],
   imports: [
     SharedModule

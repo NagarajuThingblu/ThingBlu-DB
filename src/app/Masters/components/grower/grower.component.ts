@@ -12,6 +12,7 @@ import { GrowerDetailsActionService } from '../../../task/services/grower-detail
 import { AppComponent } from '../../../app.component';
 import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { AppConstants } from '../../../shared/models/app.constants';
+import { Router } from '@angular/router';
 
 @Component({
   moduleId: module.id,
@@ -66,6 +67,7 @@ export class GrowerComponent implements OnInit {
 
   selectedGrower: any;
   displayInfoDialog: boolean;
+  public backUrl: boolean;
 
   constructor(private loaderService: LoaderService,
   private fb: FormBuilder,
@@ -76,7 +78,8 @@ export class GrowerComponent implements OnInit {
   private dropdownDataService: DropdownValuesService, // For common used dropdown service
   private confirmationService: ConfirmationService,
   private appComponentData: AppComponent,
-  private scrolltopservice: ScrollTopService
+  private scrolltopservice: ScrollTopService,
+  private router: Router
   ) {
     this.getAllClients();
     this.getAllCountries();
@@ -85,6 +88,7 @@ export class GrowerComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.backUrl = this.appCommonService.lotPageBackLink;
     this.chkIsActive = true;
     this.appComponentData.setTitle('Grower');
     this.clear = 'Clear';
@@ -481,5 +485,10 @@ export class GrowerComponent implements OnInit {
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
             this.loaderService.display(false);
           });
+  }
+
+  // back link changes
+  backToLot() {
+    this.router.navigate(['../home/lotentry']);
   }
 }

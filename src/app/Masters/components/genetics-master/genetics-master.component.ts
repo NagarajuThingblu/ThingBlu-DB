@@ -12,6 +12,7 @@ import { StrainTypeService } from '../../services/strain-type.service';
 import { AddGeneticsActionService } from '../../../task/services/add-genetics-action.service';
 import { GeneticsService } from '../../services/genetics.service';
 import { AppConstants } from '../../../shared/models/app.constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-genetics-master',
@@ -46,6 +47,7 @@ export class GeneticsMasterComponent implements OnInit {
   pageHeader: any;
   strainForm: any;
   strain: any;
+  public backUrl: boolean;
   constructor(  private fb: FormBuilder,
     private loaderService: LoaderService,
     private cookieService: CookieService,
@@ -54,9 +56,11 @@ export class GeneticsMasterComponent implements OnInit {
     // tslint:disable-next-line:no-shadowed-variable
     private addGeneticsActionService: AddGeneticsActionService,
     private confirmationService: ConfirmationService,
-    private appCommonService: AppCommonService) { }
+    private appCommonService: AppCommonService,
+    private router: Router ) { }
 
   ngOnInit() {
+    this.backUrl = this.appCommonService.strainPageBackLink;
     this.chkIsActive = 1;
     this.pageHeader = 'Add New Genetics';
     this.appComponentData.setTitle('Genetics');
@@ -313,5 +317,10 @@ export class GeneticsMasterComponent implements OnInit {
             genetics.IsActive = !genetics.IsActive;
           }
       });
+    }
+
+    // back link redirect to strain page
+    backToStrain() {
+      this.router.navigate(['../home/strainmaster']);
     }
   }

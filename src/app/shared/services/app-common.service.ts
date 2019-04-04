@@ -46,6 +46,17 @@ export class AppCommonService implements OnChanges, OnInit {
 
   public empAssignKey: string;
 
+
+  public strainFormDetail: FormGroup; // add by :: swapnil :: 02-april-2019
+  public strainPageBackLink = false; // add by :: swapnil :: 02-april-2019
+  public lotPageBackLink = false;
+  public lotFormDetail: FormGroup;
+  public TPProcessorBackLink = false;
+  public TPProcessorFormDetail: FormGroup;
+  public ProductTypeBackLink = false;
+  public ProductTypeFormDetail: FormGroup;
+
+
   public navDraftOrder = {
     isBackClicked: false,
   } ;

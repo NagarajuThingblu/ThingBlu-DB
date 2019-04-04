@@ -13,6 +13,7 @@ import { NewBrandService } from '../../services/brand.service';
 import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { Alert } from 'selenium-webdriver';
 import { AppConstants } from '../../../shared/models/app.constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-new-brand-form',
@@ -43,6 +44,7 @@ export class AddNewBrandFormComponent implements OnInit {
   public globalResource: any;
 
   public event: any;
+  public backUrl = false;
   constructor(
     private fb: FormBuilder,
     private loaderService: LoaderService,
@@ -52,7 +54,8 @@ export class AddNewBrandFormComponent implements OnInit {
     // private cookieService: CookieService, :: unused
     private newBrandService: NewBrandService,
     private confirmationService: ConfirmationService,
-    private scrolltopservice: ScrollTopService
+    private scrolltopservice: ScrollTopService,
+    private router: Router,
   ) {
     this.getBrandDetails();
     this.saveButtonText = 'Save';
@@ -68,6 +71,7 @@ export class AddNewBrandFormComponent implements OnInit {
   };
 
   ngOnInit() {
+    this.backUrl = this.appCommonService.ProductTypeBackLink;
     this.brandResources = MastersResource.getResources().en.addnewbrand;
     this.globalResource = GlobalResources.getResources().en;
     this.newEmployeeResources = MastersResource.getResources().en.addnewemployee;
@@ -346,5 +350,10 @@ export class AddNewBrandFormComponent implements OnInit {
       description: null,
       chkIsActive: 1
     };
+  }
+
+  // Link changes
+  backPackageType() {
+    this.router.navigate(['../home/newproducttype']);
   }
 }

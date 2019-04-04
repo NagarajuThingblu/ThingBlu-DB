@@ -14,6 +14,7 @@ import { NewBrandService } from '../../services/brand.service';
 import { NewSubBrandActionService } from '../../../task/services/new-sub-brand-action.service';
 import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { AppConstants } from '../../../shared/models/app.constants';
+import { Router } from '@angular/router';
 declare function unescape(s: string): string;
 @Component({
   selector: 'app-add-new-sub-brand-form',
@@ -50,6 +51,7 @@ export class AddNewSubBrandFormComponent implements OnInit {
   public newSubBrandResources: any;
   public newEmployeeResources: any;
   public globalResource: any;
+  public backUrl =  false;
   constructor(
     private fb: FormBuilder,
     private loaderService: LoaderService,
@@ -61,7 +63,8 @@ export class AddNewSubBrandFormComponent implements OnInit {
     // private cookieService: CookieService,
     private newBrandService: NewBrandService,
     private confirmationService: ConfirmationService,
-    private scrolltopservice: ScrollTopService
+    private scrolltopservice: ScrollTopService,
+    private router: Router,
   ) {
     this.getBrandList();
     this.getAllBrands();
@@ -362,6 +365,7 @@ export class AddNewSubBrandFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.backUrl = this.appCommonService.ProductTypeBackLink;
     this.newSubBrandResources = MastersResource.getResources().en.addnewsubbrand;
     this.brandResources = MastersResource.getResources().en.addnewbrand;
     this.globalResource = GlobalResources.getResources().en;
@@ -382,5 +386,11 @@ export class AddNewSubBrandFormComponent implements OnInit {
     'description': new FormControl(null, Validators.compose([Validators.maxLength(100)])),
     'chkIsActive': new FormControl(null)
     });
+  }
+
+  // link changes
+
+  backPackageType() {
+    this.router.navigate(['../home/newproducttype']);
   }
 }

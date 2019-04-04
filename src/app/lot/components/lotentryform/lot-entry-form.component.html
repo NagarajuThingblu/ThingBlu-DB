@@ -31,6 +31,7 @@
                       <label for="grower" class="towlable">
                           {{ globalResource.grower}}<span class="star">*</span>:
                         </label>
+                       <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="View/Add Growers" id="btn_geneticshow" (click)="viewGrowerList()"  name="btnviewGenetics" ></p-button>
                         <div class="clear"></div>
                       
                     <p-dropdown
@@ -92,6 +93,7 @@
                 <div class="ui-g-12 ui-md-6">
                     <div class="paddingRL">
                     <label for="strain">{{ globalResource.strain }}<span class="star">*</span></label>:
+                    <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="View/Add Strains" id="btn_geneticshow" (click)="viewStrainList()"  name="btnviewGenetics" ></p-button>
 
                     <p-dropdown
                       [(ngModel)]="lotDetails.strain"

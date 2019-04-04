@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { LoaderService } from '../../../shared/services/loader.service';
 import { CookieService } from 'ngx-cookie-service';
@@ -12,12 +12,13 @@ import { StrainMasterService } from '../../services/strain-master.service';
 import { ConfirmationService } from 'primeng/api';
 import { AppComponent } from '../../../app.component';
 import { AppConstants } from '../../../shared/models/app.constants';
+import { Router } from '@angular/router';
 
 @Component({
   moduleId: module.id,
   selector: 'app-strain-master',
   templateUrl: './strain-master.component.html',
-})
+  })
 export class StrainMasterComponent implements OnInit {
   pageheading: any;
   strainmasterForm: FormGroup;
@@ -61,6 +62,7 @@ export class StrainMasterComponent implements OnInit {
     strainTypeDisabled: any;
     geneticsDisabled: any;
     submitted: boolean;
+    public backUrl: boolean;
   // StrainForm: any; // Commented by Devdan :: 31-Oct-2018 :: Unused
   // strain: any; // Commented by Devdan :: 31-Oct-2018 :: Unused
   constructor( private fb: FormBuilder,
@@ -73,11 +75,17 @@ export class StrainMasterComponent implements OnInit {
     private strainMasterAppService: StrainMasterService,
     private confirmationService: ConfirmationService,
     private appComponentData: AppComponent,
-    private appCommonService: AppCommonService
+    private appCommonService: AppCommonService,
+    private router: Router
   ) { }
 
     ngOnInit() {
-
+      if (this.appCommonService.lotPageBackLink) {
+      this.backUrl = this.appCommonService.lotPageBackLink;
+      }
+      if (this.appCommonService.ProductTypeBackLink) {
+        this.backUrl = this.appCommonService.ProductTypeBackLink;
+      }
       this.strainmasterForm = this.fb.group({
         'straintype': new FormControl(null, Validators.required),
         'genetics': new FormControl(null, [Validators.required]),
@@ -105,8 +113,14 @@ export class StrainMasterComponent implements OnInit {
       this.chkIsActive = true;
       this.strainTypeDisabled = false;
       this.geneticsDisabled = false;
-    // New Strain form defination(reactive form)
 
+      // check click on back link of Genetics :: swapnil :: 02-april-2019
+      if (this.appCommonService.strainPageBackLink && this.appCommonService.strainFormDetail) {
+        this.strainmasterForm = this.appCommonService.strainFormDetail;
+        this.appCommonService.strainPageBackLink = false;
+        this.appCommonService.strainFormDetail = null;
+      }
+    // New Strain form defination(reactive form)
     }
 
     resetForm() {
@@ -446,5 +460,21 @@ export class StrainMasterComponent implements OnInit {
             Strain.IsActive = !Strain.IsActive;
           }
       });
+    }
+
+    // Add view link changes
+    viewGeneticList() {
+      this.appCommonService.strainFormDetail = this.strainmasterForm;
+      this.appCommonService.strainPageBackLink = true;
+      this.router.navigate(['../home/addnewsgenetics']);
+    }
+
+    backToLot() {
+      if (this.appCommonService.lotPageBackLink) {
+        this.router.navigate(['../home/lotentry']);
+        }
+        if (this.appCommonService.ProductTypeBackLink) {
+          this.router.navigate(['../home/newproducttype']);
+        }
     }
 }

@@ -47,6 +47,7 @@ import { ErrorAccessDeniededComponent } from './shared/components/error-access-d
 import { RoleGuard } from './guards/role.guard';
 import { EmployeeAssignTaskComponent } from './task/components/employee-assign-task/employee-assign-task.component';
 import { JointsDashboardComponent } from './dashboard/components/joints-dashboard/joints-dashboard.component';
+import { EmployeesComponent } from './Masters/components/employees/employees.component';
 // import { HomeComponent } from './home/index';
 // import { LoginComponent } from './login/index';
 // import { RegisterComponent } from './register/index';
@@ -107,6 +108,9 @@ const appRoutes: Routes = [
          { path: 'empassigntask', component: EmployeeAssignTaskComponent , canActivate: [AuthGuard, RoleGuard] },
         // { path: 'lotedit/:LotId', component: LotEditComponent, resolve: { data: SkewListResolver}, canActivate: [AuthGuard] },
         // End of  Added By Bharat T on 13th-July-2018
+
+        // Add Employees page :: Swapnil :: 02-april-2019
+        { path: 'addemployees', component: EmployeesComponent, canActivate: [AuthGuard, RoleGuard] },
       ]
     }
 ];

@@ -10,6 +10,16 @@
           </p-header>
 <form
   [formGroup]="geneticsMasterForm"  (ngSubmit)="onSubmit(geneticsMasterForm)" >
+
+  <div class="ui-g">
+    <!-- StrainType Name -->
+    <div class="ui-g-12 ui-md-12" style="padding: 0">
+          <!-- <p-button *ngIf="backUrl" class="links" style="float:right" type="button" label="<< Back" id="btn_backToStrain" (click)="backToStrain()"  name="btnback" ></p-button>       -->
+         <a [routerLink]="" *ngIf="backUrl" class="btn-link" (click)="backToStrain()" style="float: right;padding-right: 21px;text-decoration: underline" ><< Back</a>
+        </div>
+  </div>
+
+
   <div class="ui-g">
     <!-- StrainType Name -->
             <div class="ui-g-12 ui-md-6">

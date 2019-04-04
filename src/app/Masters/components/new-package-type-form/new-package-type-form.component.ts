@@ -17,6 +17,7 @@ import { NewPackageTypeActionService } from '../../../task/services/new-package-
 import { PackagingTypesService } from '../../services/packagingtypes.service';
 import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { AppConstants } from '../../../shared/models/app.constants';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-package-type-form',
@@ -50,6 +51,7 @@ export class NewPackageTypeFormComponent implements OnInit {
   public newEmployeeResources: any;
   public globalResource: any;
   event: any;
+  public backUrl: boolean;
   constructor(
     private fb: FormBuilder,
     private loaderService: LoaderService,
@@ -59,7 +61,8 @@ export class NewPackageTypeFormComponent implements OnInit {
     private cookieService: CookieService,
     private packagingTypesService: PackagingTypesService,
     private confirmationService: ConfirmationService,
-    private scrolltopservice: ScrollTopService
+    private scrolltopservice: ScrollTopService,
+    private router: Router
   ) {
     this.getPackageTypeDetails();
     this.saveButtonText = 'Save';
@@ -306,6 +309,12 @@ export class NewPackageTypeFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.appCommonService.TPProcessorBackLink) {
+    this.backUrl = this.appCommonService.TPProcessorBackLink;
+      }
+    if (this.appCommonService.ProductTypeBackLink) {
+        this.backUrl = this.appCommonService.ProductTypeBackLink;
+      }
     this.saveButtonText = 'Save';
     this.clear = 'Clear';
     this.chkIsActive = 1;
@@ -322,5 +331,15 @@ export class NewPackageTypeFormComponent implements OnInit {
     'description': new FormControl(null),
     'chkIsActive': new FormControl(null)
     });
+  }
+
+   // link changes
+   backToTPPackage() {
+    if (this.appCommonService.TPProcessorBackLink) {
+      this.router.navigate(['../home/addtpppackagetype']);
+        }
+    if (this.appCommonService.ProductTypeBackLink) {
+        this.router.navigate(['../home/newproducttype']);
+        }
   }
 }

@@ -41,6 +41,9 @@
                     
                       <p-button class="links" type="button" icon="fa fa-plus" label="{{ newProductTypeResources.addnewbrand}}" id="btn_brandshow" (click)="showBrandPopup()" name="btnshow" ></p-button>
                        <a href="#"></a>
+
+                       <p-button class="links viewLinks" type="button" icon="fa fa-list-ul" label="{{ newProductTypeResources.viewbrands}}" id="btn_brandshow" (click)="viewAllBrands()"  name="btnshow" ></p-button>
+                       <a href="#"></a>
                     </div>
                 </div>
                 <!--End Brand -->
@@ -67,7 +70,9 @@
                     </div>
 
                       <p-button class="links"  type="button" icon="fa fa-plus" label="{{ newProductTypeResources.addsubbrand}}" id="btn_subbrandshow" (click)="showSubBrandPopup()" name="subbrandshow" ></p-button>
-                  </div>
+                      <p-button class="links viewLinks" type="button" icon="fa fa-list-ul" label="{{ newProductTypeResources.viewsubbrands}}" id="btn_brandshow" (click)="viewAllSubBrands()"  name="btnshow" ></p-button>
+                      <!-- <a href="#"></a> -->
+                    </div>
                 </div>
                 <!--End Sub Brand  -->
                 <!-- Starin  -->
@@ -97,6 +102,8 @@
                     </div>
 
                       <p-button class="links"  type="button" icon="fa fa-plus" label="{{ newProductTypeResources.addstrain}}" id="btn_starinshow" (click)="showStrainPopup()" name="btnshow" ></p-button>
+                      <p-button class="links viewLinks" type="button" icon="fa fa-list-ul" label="{{ newProductTypeResources.viewstrain}}" id="btn_brandshow" (click)="viewAllStrains()"  name="btnviewStrain" ></p-button>
+                    
                     </div>
                   </div>
                 <!--End  Starin  -->
@@ -156,7 +163,8 @@
                       </span>
                     </div>
                       <p-button class="links"  type="button" icon="fa fa-plus" label="{{ newProductTypeResources.addpackagetype}}" id="btn_packagetypeshow" (click)="showPackageTypePopup()" name="btn_packagetypeshow" ></p-button>
-
+                      <p-button class="links viewLinks" type="button" icon="fa fa-list-ul" label="{{ newProductTypeResources.viewpackagetype}}" id="btn_brandshow" (click)="viewAllPackageType()"  name="btnviewPkgType" ></p-button>
+                      
                     </div>
                   </div>
                   <!-- End Package Type -->

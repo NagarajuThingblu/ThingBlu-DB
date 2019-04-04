@@ -12,6 +12,11 @@
         <form
           [formGroup]="newBrandForm"
           (ngSubmit)="onSubmit(newBrandForm.value)">
+          <div class="ui-g">
+              <div class="ui-g-12 ui-md-12" style="padding: 0">
+                  <a [routerLink]="" *ngIf="backUrl" class="btn-link" (click)="backPackageType()" style="float: right;padding-right: 21px;text-decoration: underline" ><< Back</a>
+                 </div>
+              </div>
               <div class="ui-g ">
                 <!--Brand name -->
                 <div class="ui-g-12 ui-md-6">
