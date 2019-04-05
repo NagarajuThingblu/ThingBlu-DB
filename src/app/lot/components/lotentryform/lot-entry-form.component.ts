@@ -533,6 +533,7 @@ export class LotEntryFormComponent implements OnInit {
   viewStrainList() {
     this.appCommonService.lotFormDetail = this.lotEntryForm;
     this.appCommonService.lotPageBackLink = true;
-    this.router.navigate(['../home/strainmaster']);
+   // this.router.navigate(['../home/strainmaster']);
+    this.router.navigate([]).then(result => {  window.open('../home/strainmaster', '_blank'); });
   }
 }
