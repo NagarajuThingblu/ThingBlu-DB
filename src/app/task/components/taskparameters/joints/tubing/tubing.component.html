@@ -267,7 +267,7 @@
     </div>
     <!--End Comment-->
 
-    <p-dialog header="Select Lots"
+    <p-dialog header="Select Lotss"
     [(visible)]="showLotSelectionModel"
     modal="modal"
     [resizable]="true"
@@ -328,12 +328,14 @@
                 <tr [formGroupName]="i">
                     <td> {{ brandStrainLots[i].StrainName  }} </td>
                     <td style="width:230px">
-                        <p-checkbox
+                      <!-- comment checkbox :: swapnil :: 05-april-2019 -->
+                        <!-- <p-checkbox
                           label="{{ brandStrainLots[i].GrowerLotNo  }}"
                           formControlName="question"
                           (ngModelChange)="changeValidator($event, i)"
                           binary="true"
-                        ></p-checkbox>
+                        ></p-checkbox> -->
+                        <label>{{ brandStrainLots[i].GrowerLotNo  }}</label>
 
                         <app-lot-comment
                             [LotId]="question.value.LotNo"
@@ -361,6 +363,7 @@
                     <td>
                       <input
                         type="number"
+                        (change) = "changeValidator($event, i)"
                         pKeyFilter="pint"
                         pInputText
                         autocomplete="off"
@@ -950,12 +953,13 @@
               <td pTooltip="Assigned Qty" >    
                 <label>{{ lot.value.AssignedJointsQty }}</label>
               </td>
-                <td>    
+                <td> 
+                   <!-- pKeyFilter="int"   change int >  pint :: 08-april-2019-->   
                 <input  
                   pInputText
                   autocomplete="off"                 
                   type="number"
-                  pKeyFilter="int"
+                  pKeyFilter="pint"
                   (change)="calculateTotalCompletedQty(i, comp, lot)"
                   maxlength="AppConstants.maxLength"
                   placeholder="Packages Completed"
@@ -1465,12 +1469,13 @@
             <ng-template pTemplate="body" let-question let-i="rowIndex" >
                 <tr [formGroupName]="i">
                     <td style="width:230px">
-                        <p-checkbox
+                        <!-- <p-checkbox
                           label="{{ question?.value.GrowerLotNo  }}"
                           formControlName="question"
                           (ngModelChange)="changeValidator($event, i)"
                           binary="true"
-                        ></p-checkbox>
+                        ></p-checkbox> -->
+                        <label>{{ question?.value.GrowerLotNo  }}</label>
 
                         <app-lot-comment
                             [LotId]="question?.value.LotId"

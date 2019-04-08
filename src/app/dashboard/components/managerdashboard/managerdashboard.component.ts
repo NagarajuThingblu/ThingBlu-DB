@@ -547,6 +547,7 @@ closeDailog() {
     this.loaderService.display(true);
     this.taskCommonService.getTasksList(this.showMgr, this.selectedTabName, TaskTypeId).subscribe(
     data => {
+      if (data !== 'No data found!') {
         this.taskCount = data.Table[0];
         this.tasklotDetails = data.Table2;
         this.completetasklotDetails = data.Table2;
@@ -637,6 +638,14 @@ closeDailog() {
             this.loaderService.display(false);
         }
       }
+    } else {
+      this.reviewPendingTasks = null;
+      this.assignedTasks = null;
+      this.inProcessTasks = null;
+      this.pausedTasks = null;
+      this.tasks = null;
+     }
+
   });
   }
 

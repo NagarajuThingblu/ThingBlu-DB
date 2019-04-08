@@ -179,8 +179,6 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
       }
     });
 
-    console.log(this.TaskModel);
-
     if (this.PageFlag.page !== 'TaskAction') {
 
       this.TaskModel.OILPACKAGING = {
@@ -996,24 +994,29 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
           const pkgWt = pkgRowDetails[0].SelectedWt;
           if (this.taskId && this.taskId > 0) {
             checkbox = pkgRowDetails[0].Selected;
-            answerbox = pkgRowDetails[0].Selected
-            ? [pkgWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt + Number(pkgWt))])]
-            : null;
+            // comment if checkbox true
+            // answerbox = pkgRowDetails[0].Selected
+            // ? [pkgWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt + Number(pkgWt))])]
+            // : null;
+            answerbox = [pkgWt, Validators.compose([Validators.max(question.AvailableWt + Number(pkgWt))])];
           } else {
             checkbox = pkgRowDetails[0].Selected;
-            answerbox = pkgRowDetails[0].Selected
-            ? [pkgWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-            : null;
+            // answerbox = pkgRowDetails[0].Selected
+            // ? [pkgWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+            // : null;
+            answerbox = [pkgWt, Validators.compose([ Validators.max(question.AvailableWt)])];
           }
         } else {
           checkbox = question.selected;
-          answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-            : null;
+          // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+          //   : null;
+          answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
         }
       } else {
         checkbox = question.selected;
-        answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-          : null;
+        // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+        //   : null;
+        answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
       }
 
       if (this.taskId && this.taskId > 0) {
@@ -1058,18 +1061,24 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
 
         if (pkgRowDetails.length) {
           checkbox = pkgRowDetails[0].Selected;
-          answerbox = pkgRowDetails[0].Selected
-            ? [pkgRowDetails[0].selectedOilWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-            : null;
+
+          // comment if checkbox checked condition to validation :: swapnil :: 05-april-2019
+          // answerbox = pkgRowDetails[0].Selected
+          //   ? [pkgRowDetails[0].selectedOilWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+          //   : null;
+          answerbox = [pkgRowDetails[0].selectedOilWt, Validators.compose([Validators.max(question.AvailableWt)])];
+
         } else {
           checkbox = question.selected;
-          answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-            : null;
+          // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+          //   : null;
+          answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
         }
       } else {
         checkbox = question.selected;
-        answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-          : null;
+        // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+        //   : null;
+        answerbox = [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])];
       }
       return fb.group({
         question: checkbox, answer: answerbox, questionNumber: index, oilPkgCode: question.OilPkgCode, assignedOilWt: question.AssignedOilWt,
@@ -1407,7 +1416,7 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
       /// condition added by Devdan :: 23-Nov-2018
       if (!this.taskTypeId) {
         form.value.questions.forEach(result => {
-          totalPkgWt += result.question ? Number(result.answer) : 0;
+          totalPkgWt +=  Number(result.answer) ? Number(result.answer) : 0;
         });
 
         if (totalPkgWt !== Number(this.selPkgBrandStrainRow.combinationTotalAssignedWt)) {
@@ -1420,8 +1429,8 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
       }
 
       form.value.questions.forEach((result, index) => {
-        if (result.question === true) {
-
+       // if (result.question === true) {  // change checkbox true condition add on weight
+          if (result.answer >= 1) {
           let totalSelectedOilPkgWt = 0;
           this.selectedPkgsArray.forEach(result1 => {
             result1.forEach(result3 => {
@@ -1489,7 +1498,7 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
 
     if (this.questionForm.valid) {
       form.value.questions.forEach(result => {
-        totalPkgWt += result.question ? Number(result.answer) : 0;
+        totalPkgWt +=  Number(result.answer) ? Number(result.answer) : 0;
       });
 
       if (totalPkgWt !== Number(this.selMixPkgPkgRow.combinationTotalAssignedWt)) {
@@ -1501,6 +1510,7 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
       }
 
       form.value.questions.forEach(result => {
+       // if (result.question === true) { //change condition to checkbox to lot weight :: swapnil :: 05-april-2019
         if (result.question === true) {
           mixPkgDetails.push(
             {
@@ -2201,7 +2211,6 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
 
   // Added by Devdan :: 15-Oct-2018 :: Setting existing lot list
   setSelectedLotDetails(objOrder) {
-    console.log(this.globalData.orderDetails);
     this.orderDetailsBS_filteredData.forEach((element, index) => {
       const pkgDetails = [];
       this.TaskModel.OilPckgDetails

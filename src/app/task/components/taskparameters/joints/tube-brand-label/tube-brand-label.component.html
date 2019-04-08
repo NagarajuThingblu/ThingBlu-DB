@@ -367,8 +367,12 @@
               <tr [formGroupName]="i">
                 <td> {{ brandStrainLots[i].StrainName }} </td>
                 <td style="width:230px">
-                  <p-checkbox label="{{ brandStrainLots[i].GrowerLotNo  }}" formControlName="question" (ngModelChange)="changeValidator($event, i)"
-                    binary="true"></p-checkbox>
+
+                  <!-- remove checkbox :: 08-april-2019 -->
+                  <!-- <p-checkbox label="{{ brandStrainLots[i].GrowerLotNo  }}" formControlName="question" (ngModelChange)="changeValidator($event, i)"
+                    binary="true"></p-checkbox> -->
+
+                    <label>{{ brandStrainLots[i].GrowerLotNo  }}</label>
 
                   <app-lot-comment
                       [LotId]="question.value.LotNo"
@@ -399,6 +403,7 @@
                     formControlName="answer" 
                     id="answer"
                     name="answer" 
+                    (change)="changeValidator($event, i)"
                     style="width:100%;" />
                     <div
                       class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
@@ -1079,7 +1084,8 @@
                       <label>{{ lot.value.AssignedTubeQty || 0 }}</label>
                     </td>
                     <td>
-                      <input pInputText autocomplete="off" type="number" pKeyFilter="int" (change)="calculateTotalCompletedQty(i, comp, lot)"
+                      <!-- pKeyFilter="int"   change int >  pint :: 08-april-2019-->
+                      <input pInputText autocomplete="off" type="number" pKeyFilter="pint"  (change)="calculateTotalCompletedQty(i, comp, lot)"
                         maxlength="AppConstants.maxLength" placeholder="Packages Completed" formControlName="lotCompletedQty"
                         id="{{ 'lotCompletedQty' + j }}" name="lotCompletedQty" />                       
                     </td>
@@ -1120,7 +1126,8 @@
                         <label>{{ mixLot.value.AssignedTubeQty || 0 }}</label>
                       </td>
                       <td>
-                        <input pInputText autocomplete="off" type="number" pKeyFilter="int" (change)="calculateTotalCompletedQty(i, comp, mixLot)"
+                         <!-- pKeyFilter="int"   change int >  pint :: 08-april-2019-->
+                        <input pInputText autocomplete="off" type="number" pKeyFilter="pint" (change)="calculateTotalCompletedQty(i, comp, mixLot)"
                           maxlength="AppConstants.maxLength" placeholder="Packages Completed" formControlName="mixPkgCompletedQty"
                           id="{{ 'mixPkgCompletedQty' + j }}" name="mixPkgCompletedQty" />
   

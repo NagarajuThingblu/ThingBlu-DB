@@ -320,7 +320,9 @@ export class GrindingComponent implements OnInit, OnChanges, OnDestroy {
     if (value === 'frmHTML') {
       this.TaskModel.GRINDING.lotno = null;
       this.TaskModel.GRINDING.lotweight = null;
-      this.TaskModel.GRINDING.assignwt = 0;
+
+      // comment reset assigned weight :: swapnil :: 08-april-2019
+      // this.TaskModel.GRINDING.assignwt = 0;
     }
   }
 
@@ -399,14 +401,17 @@ export class GrindingComponent implements OnInit, OnChanges, OnDestroy {
         this.TaskModel.GRINDING.lotweight  = selectedLot.LotWeight;
       }
 
-      this.TaskModel.GRINDING.assignwt = 0;
+      // comment reset assigned weight :: swapnil :: 08-april-2019
+      // this.TaskModel.GRINDING.assignwt = 0;
+
       this.lotInfo.lotId = this.TaskModel.GRINDING.lotno;
       this.lotInfo.LotNoteCount = selectedLot.LotNoteCount;
 
       this.assignWtOnChnage();
       this.getLotNotes();
     } else {
-      this.TaskModel.GRINDING.assignwt = 0;
+      // comment reset assigned weight :: swapnil :: 08-april-2019
+      // this.TaskModel.GRINDING.assignwt = 0;
       this.lotInfo.lotId = this.TaskModel.GRINDING.lotno;
     }
   }

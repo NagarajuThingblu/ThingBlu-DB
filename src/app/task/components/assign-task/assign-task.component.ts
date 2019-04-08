@@ -115,6 +115,9 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
     showmodal: false
   };
 
+  public tampQty: any;
+  public labelQty: any;
+
   public readonlyFlag: Boolean = false;
 
   @Input() ads: AddComponent[];
@@ -130,10 +133,17 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
     this.globalResource = GlobalResources.getResources().en;
     this.userRoles = AppConstants.getUserRoles;
     this.titleService.setTitle(this.assignTaskResources.title);
-
     if (this.prodDBRouteParams) {
       // console.log(this.prodDBRouteParams);
       this.assignTask.task = this.prodDBRouteParams.TaskTypeId;
+
+      // add pre value :: 08-april-2019
+      if (this.prodDBRouteParams.TampAvlQty) {
+      this.tampQty = this.prodDBRouteParams.TampAvlQty;
+        }
+      if (this.prodDBRouteParams.TubeAvlQty) {
+        this.labelQty = this.prodDBRouteParams.TubeAvlQty;
+      }
 
       this.readonlyFlag = true;
       this.assignTaskForm = this.fb.group({

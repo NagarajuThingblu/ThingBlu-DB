@@ -423,14 +423,17 @@ export class JointsCreationComponent implements OnInit, OnDestroy {
         this.TaskModel.JOINTSCREATION.lotweight  = selectedLot.LotWeight;
       }
 
-      this.TaskModel.JOINTSCREATION.assignwt = 0;
+      // comment reset assigned weight :: swapnil :: 08-april-2019
+      // this.TaskModel.JOINTSCREATION.assignwt = 0;
+
       this.lotInfo.lotId = this.TaskModel.JOINTSCREATION.lotno;
       this.lotInfo.LotNoteCount = selectedLot.LotNoteCount;
 
       this.assignWtOnChnage();
       this.getLotNotes();
     } else {
-      this.TaskModel.JOINTSCREATION.assignwt = 0;
+      // comment reset assigned weight :: swapnil :: 08-april-2019
+     // this.TaskModel.JOINTSCREATION.assignwt = 0;
       this.lotInfo.lotId = this.TaskModel.JOINTSCREATION.lotno;
     }
   }

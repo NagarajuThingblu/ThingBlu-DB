@@ -407,7 +407,9 @@ export class SiftingComponent implements OnInit, OnChanges {
     if (value === 'frmHTML') {
       this.TaskModel.SIFTING.lotno = null;
       this.TaskModel.SIFTING.lotweight = null;
-      this.TaskModel.SIFTING.assignwt = 0;
+
+      // comment reset assigned weight :: swapnil :: 08-april-2019
+     // this.TaskModel.SIFTING.assignwt = 0;
     }
     this.getLotListByTask();
   }
@@ -438,16 +440,21 @@ export class SiftingComponent implements OnInit, OnChanges {
 
       this.TaskModel.SIFTING.skewtype = selectedLot.SkewType;
 
-      this.TaskModel.SIFTING.assignwt = 0;
+       // comment reset assigned weight :: swapnil :: 08-april-2019
+      // this.TaskModel.SIFTING.assignwt = 0;
+
       // Commented by Dev :: 10-Oct-2018
       // this.lotInfo.lotId = this.TaskModel.SIFTING.lotno;
       this.lotInfo.lotId = lotid;
       this.lotInfo.LotNoteCount = selectedLot.LotNoteCount;
 
       this.assignWtOnChnage();
-      this.getLotNotes();
+
+     this.getLotNotes();
     } else {
-      this.TaskModel.SIFTING.assignwt = 0;
+      // comment reset assigned weight :: swapnil :: 08-april-2019
+      // this.TaskModel.SIFTING.assignwt = 0;
+
       // Commented by Dev :: 10-Oct-2018
       // this.lotInfo.lotId = this.TaskModel.SIFTING.lotno;
       this.lotInfo.lotId = lotid;

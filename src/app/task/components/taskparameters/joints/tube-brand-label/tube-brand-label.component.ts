@@ -32,6 +32,7 @@ export class TubeBrandLabelComponent implements OnInit, OnDestroy {
   @Input() ParentFormGroup: FormGroup;
   @Output() TaskCompleteOrReviewed: EventEmitter<any> = new EventEmitter<any>();
   @Input() AssignRole: any;
+  @Input() LabelQty: any; // add ready for pkg qty :: 08-april-2019
 
   public assignTaskResources: any;
   public globalResource: any;
@@ -125,6 +126,8 @@ export class TubeBrandLabelComponent implements OnInit, OnDestroy {
   public lotListForm: FormGroup;
 
   public selectedProductTypeDetails: any;
+
+  public tempLabelQty = 0;
 
   // Added by Devdan :: 12-Oct-2018
   taskTypeId: any;
@@ -949,8 +952,9 @@ export class TubeBrandLabelComponent implements OnInit, OnDestroy {
     const answerbox = this.questionForm.get('questions.' + index).get('answer');
     const availableqty = this.questionForm.get('questions.' + index).get('AvailTubesQty');
 
-    const validators = selected ? Validators.compose([Validators.required, Validators.min(0.1), Validators.max(availableqty.value)]) : null;
-    answerbox.setValidators(validators);
+   // const validators = selected ? Validators.compose([Validators.required, Validators.min(0.1), Validators.max(availableqty.value)]) : null;
+    const validators = Validators.compose([Validators.max(availableqty.value)]);
+   answerbox.setValidators(validators);
     answerbox.updateValueAndValidity();
   }
 
@@ -986,9 +990,22 @@ export class TubeBrandLabelComponent implements OnInit, OnDestroy {
       object.TotalWt = (eRequiredQty * this.TaskModel.TubeLabelingProductDetails[index].UnitValue);
       eAssignedQty = this.TaskModel.TubeLabelingProductDetails[index].AssignedQty;
     } else {
-      eAssignedQty = object.RequiredQty;
-    }
+      // add code for ready for pkging less than req tubes then assign direct to assign qty :: 08-april-2019 :: swapnil
+      if (this.LabelQty <= object.RequiredQty && this.tempLabelQty === 0) {
 
+            eAssignedQty = this.LabelQty;
+            this.tempLabelQty = this.LabelQty - object.RequiredQty;
+        } else if (this.tempLabelQty <= object.RequiredQty && this.tempLabelQty > 0) {
+            eAssignedQty = this.tempLabelQty;
+        } else if ( this.tempLabelQty < 0) {
+            eAssignedQty = 0;
+        } else {
+            eAssignedQty = object.RequiredQty;
+            this.tempLabelQty = this.LabelQty - eAssignedQty;
+        }
+        // end changes
+        //  eAssignedQty = object.RequiredQty;
+      }
     const counts = this.globalData.orderDetails['Table1'].filter(result => result.GeneticsId === object.GeneticsId).length;
     return this.fb.group({
       assignQty: new FormControl({ value: counts === 0 ? 0 : eAssignedQty, disabled: counts === 0 }, Validators.max(object.RequiredQty)),
@@ -1258,24 +1275,28 @@ export class TubeBrandLabelComponent implements OnInit, OnDestroy {
           const lotQty = lotRowDetails[0].SelectedQty;
           if (this.taskId && this.taskId > 0 && isLotPresentInDBData) {
             checkbox = lotRowDetails[0].Selected;
-            answerbox = lotRowDetails[0].Selected
-              ? [lotQty, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt + Number(lotQty))])]
-              : null;
+            // answerbox = lotRowDetails[0].Selected
+            //   ? [lotQty, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt + Number(lotQty))])]
+            //   : null;
+            answerbox =  [lotQty, Validators.compose([Validators.max(question.AvailableWt + Number(lotQty))])];
           } else {
             checkbox = lotRowDetails[0].Selected;
-            answerbox = lotRowDetails[0].Selected
-              ? [lotQty, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-              : null;
+            // answerbox = lotRowDetails[0].Selected
+            //   ? [lotQty, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+            //   : null;
+            answerbox =  [lotQty, Validators.compose([Validators.max(question.AvailableWt)])];
           }
         } else {
           checkbox = question.selected;
-          answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-            : null;
+          // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+          //   : null;
+            answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
         }
       } else {
         checkbox = question.selected;
-        answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-          : null;
+        // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+        //   : null;
+        answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
       }
 
       if (this.taskId && this.taskId > 0 && isLotPresentInDBData) {
@@ -1320,7 +1341,9 @@ export class TubeBrandLabelComponent implements OnInit, OnDestroy {
 
           form.value.questions.forEach(result => {
             // totalLotWt += result.question ? Number(result.answer) : 0;
-            if (result.question
+
+            // if (result.question   // comment checkboc checked :: 08-april-2019
+            if (result.answer > 0
               && result.PkgTypeId === temp.PkgTypeId
               && result.ItemQty === temp.ItemQty
               && result.UnitValue === temp.UnitValue
@@ -1365,7 +1388,10 @@ export class TubeBrandLabelComponent implements OnInit, OnDestroy {
       }
       form.value.questions.forEach(result => {
         let productTypeId;
-        if (result.question === true) {
+
+        // if (result.question === true) {   // comment checkbox check
+
+           if (result.answer > 0) {
 
           if (this.selLotBrandStrainRow.pkgSizeRequiredQtyArr.filter(data => {
             return data.PkgTypeId === result.PkgTypeId

@@ -922,24 +922,31 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
           const lotWt = lotRowDetails[0].SelectedWt;
           if (this.taskId && this.taskId > 0 && isLotPresentInDBData) {
             checkbox = lotRowDetails[0].Selected;
-            answerbox = lotRowDetails[0].Selected
-            ? [lotWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt + Number(lotWt))])]
-            : null;
+            // comment checkbox then remove condition by swapnil :: 05-april-2019
+            // answerbox = lotRowDetails[0].Selected
+            // ? [lotWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt + Number(lotWt))])]
+            // : null;
+            answerbox = [lotWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt + Number(lotWt))])];
           } else {
             checkbox = lotRowDetails[0].Selected;
-            answerbox = lotRowDetails[0].Selected
-            ? [lotWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-            : null;
+             // comment checkbox then remove condition by swapnil :: 05-april-2019
+            // answerbox = lotRowDetails[0].Selected
+            // ? [lotWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+            // : null;
+             answerbox = [lotWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])];
           }
         } else {
           checkbox = question.selected;
-          answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-            : null;
+           // comment checkbox then remove condition by swapnil :: 05-april-2019
+          // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+          //   : null;
+           answerbox = [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])];
         }
       } else {
         checkbox = question.selected;
-        answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-          : null;
+        // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+        //   : null;
+        answerbox = [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])];
       }
       if (this.taskId && this.taskId > 0 && isLotPresentInDBData) {
         return fb.group({
@@ -978,18 +985,21 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
 
         if (lotRowDetails.length) {
           checkbox = lotRowDetails[0].Selected;
-          answerbox = lotRowDetails[0].Selected
-            ? [lotRowDetails[0].SelectedWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-            : null;
+          // answerbox = lotRowDetails[0].Selected
+          //   ? [lotRowDetails[0].SelectedWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+          //   : null;
+            answerbox =  [lotRowDetails[0].SelectedWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])];
         } else {
           checkbox = question.selected;
-          answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-            : null;
+          // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+          //   : null;
+          answerbox = [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])];
         }
       } else {
         checkbox = question.selected;
-        answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-          : null;
+        // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+        //   : null;
+        answerbox = [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])];
       }
       return fb.group({
         question: checkbox, answer: answerbox, questionNumber: index, LotNo: question.LotId, assignedWt: question.AssignedWt,
@@ -1489,7 +1499,9 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
 
     if (this.questionForm.valid) {
       form.value.questions.forEach(result => {
-        totalLotWt += result.question ? Number(result.answer) : 0;
+        // totalLotWt += result.question ? Number(result.answer) : 0;
+        totalLotWt += Number(result.answer) ? Number(result.answer) : 0;
+
       });
 
       if (totalLotWt !== Number(this.selMixLotPkgRow.combinationTotalAssignedWt)) {
@@ -1501,7 +1513,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
       }
 
       form.value.questions.forEach(result => {
-        if (result.question === true) {
+        if (result.answer >= 1) {
           mixLotDetails.push(
             {
               LotNo: result.LotNo,

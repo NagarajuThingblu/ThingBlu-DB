@@ -263,7 +263,6 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
       // if (!this.lotSyncWtArr.has(question.LotId)) {
       //   this.setLotSyncWt(question.LotId, question.AvailableWt);
       // }
-
       let previousWt = 0;
       if (lotSelectedDetails) {
         const lotRowDetails = [];
@@ -273,22 +272,26 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
             lotRowDetails.push(data);
           }
         });
+
         if (lotRowDetails.length) {
           const lotWt = lotRowDetails[0].SelectedWt;
             previousWt = lotWt;
             checkbox = lotRowDetails[0].Selected;
-            answerbox = lotRowDetails[0].Selected
-            ? [lotWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-            : null;
+            // answerbox = lotRowDetails[0].Selected
+            // ? [lotWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+            // : null;
+            answerbox = [lotWt, Validators.compose([Validators.max(question.AvailableWt)])];
         } else {
           checkbox = question.selected;
-          answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-            : null;
+          // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+          //   : null;
+          answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
         }
       } else {
         checkbox = question.selected;
-        answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-          : null;
+        // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+        //   : null;
+        answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
       }
         return fb.group({
           question: checkbox, answer: answerbox, questionNumber: index, LotNo: question.LotId,
@@ -306,23 +309,29 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
 
     let lotSelectFlag = false;
     let noLotSelected = false;
-
+   // debugger;
     if (this.questionForm.valid) {
+
       // In edit mode, skip this validation on submit and checking this validations on update tasks
       /// condition added by Devdan :: 23-Nov-2018
-        form.value.questions.forEach(result => {
-          totalLotWt += result.question ? Number(result.answer) : 0;
 
-          if (result.question) {
+        form.value.questions.forEach(result => {
+
+          totalLotWt += Number(result.answer) ? Number(result.answer) : 0;
+
+
+         // comment checkbox condition for remove checkbox :: 05-april-2019 :: swapnil
+         // if (result.question) {  //change result.question to result.answer
+          if (result.answer) {
             noLotSelected = true;
           }
 
-          if (Number(result.answer) > 0 && !result.question) {
+         // if (Number(result.answer) > 0 && !result.question) {  //change result.question to result.answer
+          if (Number(result.answer) > 0 && !result.answer) {
             lotSelectFlag = true;
             return;
           }
         });
-
         if (lotSelectFlag || !noLotSelected) {
           this.msgs = [];
           this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg,
@@ -338,7 +347,8 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
         }
 
       form.value.questions.forEach((result, index) => {
-        if (result.question === true) {
+        if (result.answer >= 1) {  // comment checkbox condition for remove checkbox :: 05-april-2019 :: swapnil
+
           let totalSelectedLotWt = 0;
           let totalSelectedLotWt1 = 0;
           this.selectedLotsArray.forEach(result1 => {
@@ -394,6 +404,8 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
           // this.setLotSyncWt(result.LotNo,
           //   Number(result.AvailWt) - (totalSelectedLotWt1 + Number(result.answer))
           //   );
+
+
         }
       });
 
@@ -589,10 +601,8 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
 
   syncAllLotWeight() {
     const selectedLots = Array.from(this.selectedLotsArray.values());
-
     if (selectedLots !== null) {
       this.lotSyncWtArr.clear();
-
       selectedLots
       .forEach((item, index) => {
         if (item !== null && item.length) {

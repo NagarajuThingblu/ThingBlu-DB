@@ -289,6 +289,7 @@
     </div>
     <!--End Comment-->
   
+    <!--Select Packages For Order select package model-->
       <p-dialog header="Select Pkgs"
         [(visible)]="showPkgSelectionModel"
         modal="modal"
@@ -344,12 +345,14 @@
                     <tr [formGroupName]="i">
                         <td> {{ brandStrainPkgs[i].StrainName  }}</td>
                         <td>
-                            <p-checkbox
+                          <!-- comment checkbox -->
+                            <!-- <p-checkbox
                               label="{{ brandStrainPkgs[i].OilPkgCode  }}"
                               formControlName="question"
                               (ngModelChange)="changeValidator($event, i)"
                               binary="true"
-                            ></p-checkbox>                  
+                            ></p-checkbox>-->
+                            <label>{{ brandStrainPkgs[i].OilPkgCode  }}</label>
                         </td>
                         <td> {{ brandStrainPkgs[i].TPPkgTypeName  }}</td>
                         <!-- <td> {{ brandStrainPkgs[i].AvailableWt  }} {{globalResource.listgramunit}}</td> -->
@@ -363,6 +366,7 @@
                         </td>
                         <td>
                           <input
+                            pKeyFilter="pnum"
                             type="number"
                             OnlyNumber="true"
                             pInputText
@@ -1410,6 +1414,7 @@
 </p-dialog>
 <!-- End of Task Review Model -->
 
+<!-- MixPkg Select Pkgs modal -->
 <p-dialog header="Select Pkgs"
     [(visible)]="showMixPkgSelectionModel"
     modal="modal"
@@ -1469,12 +1474,12 @@
                         <label>{{ question?.value.StrainName}}</label>
                     </td>
                     <td style="width:150PX">
-                        <p-checkbox
+                        <!-- <p-checkbox
                           label="{{ question?.value.oilPkgCode  }}"
                           formControlName="question"
                           (ngModelChange)="changeValidator($event, i)"
                           binary="true"
-                        ></p-checkbox> 
+                        ></p-checkbox>  -->
                     </td>
                     <td pTooltip="Completed Weight" >    
                         <label>{{ pkgMap.get(question?.value.oilPkgId) || 0 }}{{globalResource.listgramunit}}</label>

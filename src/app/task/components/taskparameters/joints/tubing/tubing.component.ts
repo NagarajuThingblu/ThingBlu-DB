@@ -112,6 +112,8 @@ export class TubingComponent implements OnInit, OnDestroy {
   public productTypeMixPkgsDetails: any = [];
   public LotDetails: any;
 
+  public tempPkgQty = 0;
+
   // Added by Devdan :: Sec to Min change :: 06-Nov-2018 :: Variable to Enable/Disable Second Text Box
   isRActSecsDisabled: boolean;
 
@@ -119,6 +121,7 @@ export class TubingComponent implements OnInit, OnDestroy {
   @Input() PageFlag: any;
   @Input() ParentFormGroup: FormGroup;
   @Output() TaskCompleteOrReviewed: EventEmitter<any> = new EventEmitter<any>();
+  @Input() TampQty: any; // add ready for pkg qty :: 08-april-2019
 
   constructor(
     private fb: FormBuilder,
@@ -204,7 +207,6 @@ export class TubingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     // for navigate joint dashboard if employee assign task :: 20-Mar-2019 :: swapnil
     this.assignRole = this.AssignRole ? this.AssignRole : null;
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
@@ -919,24 +921,29 @@ export class TubingComponent implements OnInit, OnDestroy {
           const lotQty = lotRowDetails[0].SelectedQty;
           if (this.taskId && this.taskId > 0 && isLotPresentInDBData) {
             checkbox = lotRowDetails[0].Selected;
-            answerbox = lotRowDetails[0].Selected
-            ? [lotQty, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt + Number(lotQty))])]
-            : null;
+            // answerbox = lotRowDetails[0].Selected
+            // ? [lotQty, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt + Number(lotQty))])]
+            // : null;
+            answerbox = [lotQty, Validators.compose([Validators.max(question.AvailableWt + Number(lotQty))])];
           } else {
+
             checkbox = lotRowDetails[0].Selected;
-            answerbox = lotRowDetails[0].Selected
-            ? [lotQty, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-            : null;
+            // answerbox = lotRowDetails[0].Selected
+            // ? [lotQty, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+            // : null;
+            answerbox = [lotQty, Validators.compose([Validators.max(question.AvailableWt)])];
           }
         } else {
           checkbox = question.selected;
-          answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-          : null;
+          // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+          // : null;
+          answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
         }
       } else {
          checkbox = question.selected;
-         answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-         : null;
+        //  answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+        //  : null;
+         answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
       }
       if (this.taskId && this.taskId > 0 && isLotPresentInDBData) {
         return fb.group({question: checkbox, answer: answerbox, questionNumber: index, LotNo: question.LotId, UnitValue: question.UnitValue,
@@ -974,18 +981,21 @@ export class TubingComponent implements OnInit, OnDestroy {
 
         if (lotRowDetails.length) {
           checkbox = lotRowDetails[0].Selected;
-          answerbox = lotRowDetails[0].Selected
-            ? [lotRowDetails[0].SelectedJointsQty, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableJointsQty)])]
-            : null;
+          // answerbox = lotRowDetails[0].Selected
+          // ? [lotRowDetails[0].SelectedJointsQty, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableJointsQty)])]
+          //   : null;
+         answerbox =  [lotRowDetails[0].SelectedJointsQty, Validators.compose([Validators.max(question.AvailableJointsQty)])];
         } else {
           checkbox = question.selected;
-          answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableJointsQty)])]
-            : null;
+          // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableJointsQty)])]
+          //   : null;
+          answerbox = [null, Validators.compose([Validators.max(question.AvailableJointsQty)])];
         }
       } else {
         checkbox = question.selected;
-        answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableJointsQty)])]
-          : null;
+        // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableJointsQty)])]
+        //   : null;
+          answerbox = [null, Validators.compose([Validators.max(question.AvailableJointsQty)])];
       }
       return fb.group({
         question: checkbox, answer: answerbox, questionNumber: index, LotNo: question.LotId, assignedJointsQty: question.AssignedJointsQty,
@@ -997,7 +1007,6 @@ export class TubingComponent implements OnInit, OnDestroy {
 
   createItem(object, index): FormGroup {
     const counts  = this.globalData.orderDetails['Table1'].filter(result => result.StrainId === object.StrainId).length;
-
     // In case of Edit , show assigned qty and available qty together with respective size of package
     let eRequiredQty;
     let eAssignedQty;
@@ -1007,7 +1016,21 @@ export class TubingComponent implements OnInit, OnDestroy {
       object.TotalWt = (eRequiredQty * this.TaskModel.TubingProductDetails.UnitValue);
       eAssignedQty = this.TaskModel.TubingProductDetails.AssignedQty;
     } else {
+
+      // add code for ready for pkging less than req tubes then assign direct to assign aty :: 08-april-2019 :: swapnil
+      if (this.TampQty <= object.RequiredQty) {
+      eAssignedQty = this.TampQty;
+      this.tempPkgQty = this.TampQty - object.RequiredQty;
+      } else if ( this.TampQty < 0) {
+        eAssignedQty = 0;
+    }  else if (this.tempPkgQty <= object.RequiredQty && this.tempPkgQty > 0) {
+        eAssignedQty = this.tempPkgQty;
+    }  else {
       eAssignedQty = object.RequiredQty;
+      this.tempPkgQty = this.TampQty - eAssignedQty;
+      }
+      // end changes
+      // eAssignedQty = object.RequiredQty;
     }
         return this.fb.group({
           assignQty: new FormControl({value : counts === 0 ? 0 : eAssignedQty, disabled: counts === 0 }, Validators.max(object.RequiredQty)),
@@ -1093,7 +1116,9 @@ export class TubingComponent implements OnInit, OnDestroy {
     const answerbox = this.questionForm.get('questions.' + index).get('answer');
     const availableqty = this.questionForm.get('questions.' + index).get('AvailJointsQty');
 
-    const validators = selected ? Validators.compose([Validators.required, Validators.min(0.1), Validators.max(availableqty.value)]) : null;
+    // const validators = selected ? Validators.compose([Validators.required, Validators.min(0.1), Validators.max(availableqty.value)]) : null;
+    const validators = Validators.compose([Validators.max(availableqty.value)]);
+
     answerbox.setValidators(validators);
     answerbox.updateValueAndValidity();
   }
@@ -1376,8 +1401,10 @@ export class TubingComponent implements OnInit, OnDestroy {
 
     if (this.questionForm.valid) {
       form.value.questions.forEach(result => {
+
         // totalLotWt += result.question ? Number(result.answer) : 0;
-        if (result.question) {
+        // if (result.question) { // change condition checkbox chacked :: swapnil :: 05-april-2019
+        if (result.answer > 0) {
           if (pkgSizeReqQtyMap.has(result.UnitValue)) {
             pkgSizeReqQtyMap.set(result.UnitValue,
               Number(pkgSizeReqQtyMap.get(result.UnitValue)) + Number(result.answer)
@@ -1406,7 +1433,8 @@ export class TubingComponent implements OnInit, OnDestroy {
       }
 
       form.value.questions.forEach(result => {
-        if (result.question === true) {
+       // if (result.question === true) {
+        if (result.answer > 0) {
           lotDetails.push(
             {
               LotNo: result.LotNo,
@@ -1446,8 +1474,9 @@ export class TubingComponent implements OnInit, OnDestroy {
 
     if (this.questionForm.valid) {
       form.value.questions.forEach(result => {
-        if (result.question) {
-          totalLotQty += result.question ? Number(result.answer) : 0;
+        // if (result.question) { // change condition checkbox chacked :: swapnil :: 05-april-2019
+         if (result.answer > 0) {
+        totalLotQty += Number(result.answer) ? Number(result.answer) : 0;
           lotUsedCount += 1;
         }
       });
@@ -1469,7 +1498,8 @@ export class TubingComponent implements OnInit, OnDestroy {
       }
 
       form.value.questions.forEach(result => {
-        if (result.question === true) {
+       // if (result.question === true) { // change condition checkbox checked :: swapnil :: 05-april-2019
+        if (result.answer > 0) {
           mixLotDetails.push(
             {
               LotNo: result.LotNo,

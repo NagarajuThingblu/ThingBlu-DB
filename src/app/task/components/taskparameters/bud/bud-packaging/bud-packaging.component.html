@@ -1661,12 +1661,14 @@
                         <label>{{  (question?.value.strainName) }}</label>
                     </td>
                     <td style="width:170px">
-                        <p-checkbox
+                      <!-- comment checkbox :: swapnil 05-april-2019 -->
+                        <!-- <p-checkbox
                           label="{{ question?.value.GrowerLotNo  }}"
                           formControlName="question"
                           (ngModelChange)="changeValidator($event, i)"
                           binary="true"
-                        ></p-checkbox>
+                        ></p-checkbox> -->
+                        <label>{{ question?.value.GrowerLotNo  }}</label>
 
                         <app-lot-comment
                             [LotId]="question?.value.LotNo"
