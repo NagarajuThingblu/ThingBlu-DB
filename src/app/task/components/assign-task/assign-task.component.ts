@@ -54,6 +54,9 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
   // Joint Production Dashboard Redirection Details
   public prodDBRouteParams: any;
 
+  public tampQty: any;
+  public labelQty: any;
+
   constructor(
     private fb: FormBuilder,
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -137,6 +140,14 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
       this.assignTaskForm = this.fb.group({
         'taskname': new FormControl(null, Validators.required),
       });
+
+       // add pre value :: 08-april-2019
+       if (this.prodDBRouteParams.TampAvlQty) {
+        this.tampQty = this.prodDBRouteParams.TampAvlQty;
+          }
+        if (this.prodDBRouteParams.TubeAvlQty) {
+          this.labelQty = this.prodDBRouteParams.TubeAvlQty;
+        }
     } else {
       this.assignTaskForm = this.fb.group({
         'taskname': new FormControl(null, Validators.required),
