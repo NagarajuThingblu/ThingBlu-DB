@@ -430,10 +430,19 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
       } else if (this.selectedTaskTypeName === 'JOINTSCREATION') {  // JOINTSCREATION TASK
         assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = assignTaskFormValues[this.selectedTaskTypeName].assignwt;
         assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'B-JOINT';
+        if (this.prodDBRouteParams) {
+            assignTaskDetailsForWebApi.TaskDetails['UnitValue'] = this.prodDBRouteParams.UnitValue;
+        }
 
         if (Number(assignTaskFormValues[this.selectedTaskTypeName].assignwt) > Number(this.assignTask[this.selectedTaskTypeName].lotweight)) {
           this.msgs = [];
           this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.assignwtgreaterthanlotwt });
+          return;
+        }
+
+        if (Number(assignTaskFormValues[this.selectedTaskTypeName].assignwt) < Number(this.prodDBRouteParams.UnitValue)) {
+          this.msgs = [];
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.preRollSize});
           return;
         }
 

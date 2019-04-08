@@ -241,6 +241,7 @@ export class JointsCreationComponent implements OnInit, OnDestroy {
         assignedwt: this.TaskModel.AssignedWt,
         misccost: this.TaskModel.MiscCost,
         actualcost: this.TaskModel.EmpFinalCost,
+        UnitValue: this.TaskModel.UnitValue,
         misccomment: '',
         islotcomplete: ''
       };
@@ -253,9 +254,10 @@ export class JointsCreationComponent implements OnInit, OnDestroy {
 
       this.completionForm = this.fb.group({
         'assignedwt': new FormControl(null),
-        completeParamArr:  this.fb.array(this.TaskModel['JointPackageSizeDetails'].map(this.generateCompletionParams(this.fb))),
+        // tslint:disable-next-line:max-line-length
+        completeParamArr:  this.fb.array(this.TaskModel['JointPackageSizeDetails'].filter(r => this.taskCompletionModel.UnitValue ? (r.UnitValue === this.taskCompletionModel.UnitValue) : true).map(this.generateCompletionParams(this.fb))),
         'misccomment': new FormControl(null),
-        'returnwt': new FormControl(null, Validators.required),
+        'returnwt': new FormControl(0, Validators.required),
       });
 
       this.reviewForm = this.fb.group({
@@ -423,14 +425,14 @@ export class JointsCreationComponent implements OnInit, OnDestroy {
         this.TaskModel.JOINTSCREATION.lotweight  = selectedLot.LotWeight;
       }
 
-      this.TaskModel.JOINTSCREATION.assignwt = 0;
+      // this.TaskModel.JOINTSCREATION.assignwt = 0;
       this.lotInfo.lotId = this.TaskModel.JOINTSCREATION.lotno;
       this.lotInfo.LotNoteCount = selectedLot.LotNoteCount;
 
       this.assignWtOnChnage();
       this.getLotNotes();
     } else {
-      this.TaskModel.JOINTSCREATION.assignwt = 0;
+      // this.TaskModel.JOINTSCREATION.assignwt = 0;
       this.lotInfo.lotId = this.TaskModel.JOINTSCREATION.lotno;
     }
   }
