@@ -281,7 +281,8 @@ export class TaskResources {
                     errWeightRequired: 'Weight is required.',
                     tpSplitTask: 'Split Task',
                     tpUndoTask: 'Undo Task',
-                    viewChangeLots: 'View/Change Lots'
+                    viewChangeLots: 'View/Change Lots',
+                    preRollSize: 'Assigned weight should be greater or equal to pre-roll size.'
 
                 },
                 searchtask: {

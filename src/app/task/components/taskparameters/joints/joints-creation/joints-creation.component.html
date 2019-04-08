@@ -443,6 +443,15 @@
                {{TaskModel?.AssignedWt}} {{globalResource.measure}}
            </div>
          </div>
+
+         <div class="ui-g-12 ui-md-6"  *ngIf="TaskModel?.TaskStatus != taskStatus.ReviewPending&&TaskModel?.TaskStatus != taskStatus.Completed&&TaskModel?.UnitValue > 0">
+          <div class="paddingRL"  >
+            <label>
+              <strong>Package Size {{ globalResource.labelcolon }}</strong>
+            </label>      
+              {{TaskModel?.UnitValue}} {{globalResource.measure}}
+          </div>
+        </div>
    <hr />
          <!-- completion parameter -->  
          <div 
@@ -528,7 +537,7 @@
              <!-- Assigned Wt -->
              <div class="ui-grid-row">
               <div class="ui-grid-col-6">
-                  <strong>{{ globalResource.assignwt }}:</strong>
+                  <strong>Assigned Wt:</strong> 
               </div>
               <div class="ui-grid-col-6">
                   {{ TaskModel?.AssignedWt  }} {{globalResource.listgramunit}}
@@ -546,7 +555,7 @@
     <tbody formArrayName="completeParamArr">
       <tr  *ngFor="let item of completeParamArr.controls; let i = index;" [formGroupName]="i">
           <td>
-              <span> {{ item.value.packageSize }}</span>
+              <span> {{ item.value.packageSize }} {{globalResource.listgramunit}}</span>
           </td>
           <td>
               <input                    
@@ -564,6 +573,33 @@
         </tr>
       </tbody>
       <tbody>
+          <tr>
+              <td>
+                  <strong>{{ assignTaskResources.returnwt }}:</strong>
+              </td>
+              <td>
+                <input                    
+                  type="number"                          
+                  pInputText
+                  autocomplete="off"                                                      
+                  placeholder="Return Wt"
+                  formControlName="returnwt"                                            
+                  id="returnwt"
+                  name="returnwt"   
+                  class="clsControl"
+                />
+                <div
+                  class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                  *ngIf="!completionForm.controls['returnwt'].valid&&completionForm.controls['returnwt'].dirty
+                  && completionForm.controls['returnwt'].errors['required']"
+                  >
+                    
+                    <span>
+                      {{ assignTaskResources.returnwtrequire }}
+                    </span>                      
+                </div>
+              </td>
+            </tr>
         <tr>
             <td>
                 <strong>{{ assignTaskResources.comment }}:</strong>
@@ -579,33 +615,6 @@
                 class="clsControl"
                 binary="true"
               ></textarea>    
-            </td>
-          </tr>
-          <tr>
-            <td>
-                <strong>{{ assignTaskResources.returnwt }}:</strong>
-            </td>
-            <td>
-              <input                    
-                type="number"                          
-                pInputText
-                autocomplete="off"                                                      
-                placeholder="Return Wt"
-                formControlName="returnwt"                                            
-                id="returnwt"
-                name="returnwt"   
-                class="clsControl"
-              />
-              <div
-                class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                *ngIf="!completionForm.controls['returnwt'].valid&&completionForm.controls['returnwt'].dirty
-                && completionForm.controls['returnwt'].errors['required']"
-                >
-                  
-                  <span>
-                    {{ assignTaskResources.returnwtrequire }}
-                  </span>                      
-              </div>
             </td>
           </tr>
         </tbody>
@@ -672,7 +681,7 @@
           <!-- Assigned Wt -->
           <div class="ui-grid-row">
             <div class="ui-grid-col-4">
-                <strong>{{ globalResource.assignwt }}:</strong>
+                <strong>Assigned Wt:</strong>
             </div>
             <div class="ui-grid-col-4">
                 {{ TaskModel?.AssignedWt  }} {{globalResource.listgramunit}}
