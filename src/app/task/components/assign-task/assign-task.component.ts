@@ -219,6 +219,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
     this.dropdownDataService.getAllTask().subscribe(
       data => {
         this.globalData.taskTypes = data;
+        console.log(data, 'tasks');
 
         if ((<UserModel>this.appCommonService.getUserProfile()).UserRole === this.userRoles.Manager || this.prodDBRouteParams) {
           if (this.prodDBRouteParams) {

@@ -267,7 +267,7 @@
     </div>
     <!--End Comment-->
 
-    <p-dialog header="Select Lotss"
+    <p-dialog header="Select Lots"
     [(visible)]="showLotSelectionModel"
     modal="modal"
     [resizable]="true"
@@ -363,14 +363,14 @@
                     <td>
                       <input
                         type="number"
-                        (change) = "changeValidator($event, i)"
-                        pKeyFilter="pint"
                         pInputText
+                        pKeyFilter="pint"
                         autocomplete="off"
                         formControlName="answer"
                         id="answer"
                         name="answer"
                         style="width:100%;"
+                        (change) = "changeValidator($event, i)"
                     />
                     <div
                         class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
@@ -1498,7 +1498,7 @@
                     <td>
                       <input
                         type="number"
-                        pKeyFilter="int"
+                        pKeyFilter="pint"
                         pInputText
                         autocomplete="off"
                         formControlName="answer"

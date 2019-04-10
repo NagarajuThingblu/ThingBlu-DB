@@ -1430,7 +1430,7 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
 
       form.value.questions.forEach((result, index) => {
        // if (result.question === true) {  // change checkbox true condition add on weight
-          if (result.answer >= 1) {
+          if (result.answer > 0) {
           let totalSelectedOilPkgWt = 0;
           this.selectedPkgsArray.forEach(result1 => {
             result1.forEach(result3 => {
@@ -1511,7 +1511,7 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
 
       form.value.questions.forEach(result => {
        // if (result.question === true) { //change condition to checkbox to lot weight :: swapnil :: 05-april-2019
-        if (result.question === true) {
+        if (result.answer > 0) {
           mixPkgDetails.push(
             {
               oilPkgCode: result.oilPkgCode,

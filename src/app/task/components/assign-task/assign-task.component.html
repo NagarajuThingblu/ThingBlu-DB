@@ -347,15 +347,18 @@
               ></app-tube-brand-label>
 
               <!--End Dynamic Component Contents Depends on whatever the task is selected -->
-              <div class="ui-g-12 ui-md-12 marginTop-15" style="text-align:right;">
+              <div class="ui-g-12 ui-md-12 marginTop-15" style="text-align:right;padding-right: 20px;">
                 <button pButton type="submit" label="Assign Task" ></button>
                 <!-- [disabled]="!assignTaskForm.valid" -->
-                <button pButton 
+               
+                <!-- comment clear button :: 10-april-2019 :: swapnil -->
+                <!-- <button pButton 
                   type="button"  
                   label="Clear" 
                   class="ui-button-secondary" 
                   (click)="resetForm()" 
-                ></button>
+                ></button> -->
+
             </div>
           </div>
           <!-- <div style="text-align:center;margin-top:20px">

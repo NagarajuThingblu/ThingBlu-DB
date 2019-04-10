@@ -347,7 +347,7 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
         }
 
       form.value.questions.forEach((result, index) => {
-        if (result.answer >= 1) {  // comment checkbox condition for remove checkbox :: 05-april-2019 :: swapnil
+        if (result.answer > 0) {  // comment checkbox condition for remove checkbox :: 05-april-2019 :: swapnil
 
           let totalSelectedLotWt = 0;
           let totalSelectedLotWt1 = 0;
