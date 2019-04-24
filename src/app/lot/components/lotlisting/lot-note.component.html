@@ -160,7 +160,18 @@
                         </label>
                       </div>
                 </div>
-                
+
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                      <label>
+                        <strong>{{ lotNoteResource.costpergram }}: </strong>
+                      </label>
+                      <label>
+                        {{Lot?.CostPerGram | currency}}
+                      </label>
+                    </div>
+              </div>
+
                 <div class="ui-g-12 ui-md-6">
                     <div class="paddingRL">
                         <label>
@@ -244,7 +255,10 @@
                         </label>
                       </div>
                 </div>
-                <div class="ui-g-12 ui-md-6">
+
+               
+
+                <div class="ui-g-12 ui-md-12">
                   <div class="paddingRL">
                 <a class="btn-link" [routerLink]="" (click)="openLotInventoryDetails()" >Lot Inventory Details</a>
                 </div>

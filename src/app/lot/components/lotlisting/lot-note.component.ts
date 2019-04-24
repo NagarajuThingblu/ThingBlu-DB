@@ -140,6 +140,7 @@ export class LotNoteComponent implements OnInit {
               this.Lot['CBDA'] = data.Table[0].CBDA;
               this.Lot['TotalTHC'] = data.Table[0].TotalTHC;
               this.Lot['GeneticsName'] = data.Table[0].GeneticsName;
+              this.Lot['CostPerGram'] = data.Table[0].CostPerGram;
             }
           },
           error => { console.log(error); this.loaderService.display(false); },

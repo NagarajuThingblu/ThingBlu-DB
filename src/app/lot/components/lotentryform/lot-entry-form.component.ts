@@ -25,13 +25,20 @@ import { LotService } from '../../services/lot.service';
 import { Title } from '@angular/platform-browser';
 import { UserModel } from '../../../shared/models/user.model';
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import { AppConstants } from '../../../shared/models/app.constants';
 
 
 @Component({
   moduleId: module.id,
   selector: 'app-lot-entry-form',
   templateUrl: 'lot-entry-form.component.html',
-  providers: [ConfirmationService]
+  providers: [ConfirmationService],
+  styles: [`
+  .LPadd{
+    padding-left:0px !important;
+    padding-right:0px !important;
+  }
+  `]
 })
 export class LotEntryFormComponent implements OnInit {
 
@@ -63,6 +70,7 @@ export class LotEntryFormComponent implements OnInit {
     cbd: null,
     cbda: null,
     totalthc: null,
+    costperGram: null // add new field by swapnil ::15-april-2019
   };
 
   submitted: boolean;
@@ -88,6 +96,22 @@ export class LotEntryFormComponent implements OnInit {
   };
   taskActionResource: any;
   taskCommonService: any;
+
+  // add by swapnil for autocomplete grower and strain :: 15-april-2019
+  public filteredSuggestionData = {
+    growers: [],
+    strains: []
+  };
+  public suggestionData = {
+    growers: [],
+    strains: []
+  };
+  public isGrowerSerched = false;
+  public isStrainSerched = false;
+
+  // add to get value of bud and joint weight
+  public budValue: number;
+  public jointsValue: number;
 
   constructor(
       private fb: FormBuilder,
@@ -120,6 +144,12 @@ export class LotEntryFormComponent implements OnInit {
     this.dropdownDataService.getStrains().subscribe(
       data => {
         this.globalData.strains = data;
+        if (data) {
+          this.suggestionData.strains = data;
+          // this.productList = this.dropdwonTransformService.transform(data, 'ProductName', 'ProductId', AppConstants.getDDLDefaultText);
+        } else {
+          this.suggestionData.strains = [];
+        }
         this.strains = this.dropdwonTransformService.transform(data, 'StrainName', 'StrainId', '-- Select --');
       } ,
       error => { console.log(error); },
@@ -131,6 +161,12 @@ export class LotEntryFormComponent implements OnInit {
       data => {
         // this.globalData.push({ growers: data});
         this.globalData.growers = data;
+        if (data) {
+          this.suggestionData.growers = data;
+          // this.productList = this.dropdwonTransformService.transform(data, 'ProductName', 'ProductId', AppConstants.getDDLDefaultText);
+        } else {
+          this.suggestionData.growers = [];
+        }
         // this.growers = data;
         this.growers = this.dropdwonTransformService.transform(data, 'RawSupplierName', 'RawSupId', '-- Select --');
       },
@@ -170,7 +206,6 @@ export class LotEntryFormComponent implements OnInit {
     let tolerance = 0;
     // this.LotService.GetThreasholdForLot().subscribe(
     //   data => {
-    //     console.log(data.Threshold);
     //     tolerance = data.Threshold;
     //   });
     tolerance = Number(this.appCommonService.getUserProfile().LotTresholdValue);
@@ -195,8 +230,6 @@ export class LotEntryFormComponent implements OnInit {
       }
     }
 
-
-
   ngOnInit() {
     // Resource File Object : Do not provide hard coded label anywhere
     this.lotEntryResources = LotResources.getResources().en.lotentryform;
@@ -207,7 +240,7 @@ export class LotEntryFormComponent implements OnInit {
     this._cookieService = this.appCommonService.getUserProfile();
 
     this.lottypes = [
-      { label: '-- Select --', value: null},
+      // { label: '-- Select --', value: null},  // Comment by swapnil
       { label: 'Bud Material', value: 1 },
       { label: 'Other Material', value: 2},
     ];
@@ -241,16 +274,22 @@ export class LotEntryFormComponent implements OnInit {
             Validators.required,
            // CheckSumValidator.validateSum('budweight', 'jointsweight', 'oilweight', 'wasteweight')
           ])),
-      'costoflot': new FormControl(null,  Validators.compose(
+      // 'costoflot': new FormControl(null,  Validators.compose(
+      //   [
+      //     Validators.required,
+      //   ])),
+
+      'costoflot': new FormControl(null),
+      'costperGram': new FormControl(null,  Validators.compose(
         [
           Validators.required,
         ])),
       'shortageoverage': new FormControl(null),
       'trimmed': new FormControl({ value: false}),
-      'unit': new FormControl(1)
+      'unit': new FormControl(1),
+      'notes': new FormControl(null),  // add control notes
     });
     // , {validator: CheckSumValidator.validateSum('startweight', 'budweight', 'jointsweight', 'oilweight', 'wasteweight')}
-    // console.log(this.lotEntryForm.value);
     this.questions = this.questions.filter(result => result.key === 'BUD_WT' || result.key === 'JOINTS_WT' );
     this.lotEntryForm.addControl('skewTypeGroup', this.qcs.toFormGroup(this.questions));
     // To set dynamic validations
@@ -271,6 +310,8 @@ export class LotEntryFormComponent implements OnInit {
       this.appCommonService.lotFormDetail = null;
       this.lotDetails.lottype = this.lotEntryForm.value.lottype;
       this.lotDetails.trimmed = this.lotEntryForm.value.trimmed;
+      this.lotDetails.shortageoverage = this.appCommonService.shortageoverage;
+      this.lotDetails.costoflot = this.appCommonService.costoflot;
     });
     }
   }
@@ -280,13 +321,9 @@ export class LotEntryFormComponent implements OnInit {
     return  this.qcs.toFormGroup(this.questions);
   }
 
-  // To get all form fields values where dynamic or static
-  get diagnostic() { return JSON.stringify(this.lotEntryForm.value); }
-
   // Populate brand on grower changes
   onGrowerChange() {
     // const selectedGrower = this.lotDetails.grower;
-    // console.log(this.globalData.strains);
     this.lotDetails.strain = null;
     // this.lotDetails.brand =  this.globalData.growers.filter(data => data.RawSupId === this.lotEntryForm.get('grower').value)[0].BrandName;
   }
@@ -296,7 +333,6 @@ export class LotEntryFormComponent implements OnInit {
     this.lotEntryForm.get('trimmed').valueChanges.subscribe(
         (mode: any) => {
             if (mode === true) {
-              // console.log(mode);
               // set validation to controls
 
               for (const field in this.lotEntryForm.value.skewTypeGroup) { // 'field' is a string
@@ -314,8 +350,6 @@ export class LotEntryFormComponent implements OnInit {
                 // }
               }
             } else if (mode !== true) {
-              // console.log(mode);
-
               for (const field in this.lotEntryForm.value.skewTypeGroup) { // 'field' is a string
                 if (this.lotEntryForm.value.skewTypeGroup.hasOwnProperty(field)) {
                  // if (field === 'budmaterialwt' || field === 'jointsmaterialwt') {
@@ -344,20 +378,18 @@ export class LotEntryFormComponent implements OnInit {
 }
   // Save the form details
   onSubmit(value: string, SendMail: string) {
-    // console.log('Entered ngSubmit');
+
     this.submitted = true;
     let lotDetailsForApi;
-    // console.log(this.lotEntryForm.value);
-    // console.log(JSON.parse(JSON.stringify(this.lotEntryForm_copy)));
     let budJointsWeight = 0;
     lotDetailsForApi = {
       LotDetails: {
           ClientId: this._cookieService.ClientId,
           VirtualRoleId: this._cookieService.VirtualRoleId,
-          GrowerId: this.lotEntryForm.value.grower,
-          GrowerName: this.growers.filter(x => x.value === this.lotEntryForm.value.grower)[0].label,
-          StrainId: this.lotEntryForm.value.strain,
-          StrainName: this.strains.filter(x => x.value === this.lotEntryForm.value.strain)[0].label,
+          GrowerId: this.lotEntryForm.value.grower.RawSupId,
+          GrowerName: this.filteredSuggestionData.growers.filter(x => x.RawSupplierName === this.lotEntryForm.value.grower.RawSupplierName)[0].RawSupplierName,
+          StrainId: this.lotEntryForm.value.strain.StrainId,
+          StrainName: this.filteredSuggestionData.strains.filter(x => x.StrainName === this.lotEntryForm.value.strain.StrainName)[0].StrainName,
           GrowerLotNo: this.lotEntryForm.value.growerlotno,
           THC: Number(this.lotEntryForm.value.thc),
           THCA: Number(this.lotEntryForm.value.thca),
@@ -368,10 +400,14 @@ export class LotEntryFormComponent implements OnInit {
           LotTypeName: this.lottypes.filter(x => x.value === this.lotEntryForm.value.lottype)[0].label,
           BioTrackWt: this.lotEntryForm.value.biotrweight,
           StartWt: this.lotEntryForm.value.startweight,
-          Cost: Number(this.lotEntryForm.value.costoflot),
+         // Cost: Number(this.lotEntryForm.value.costoflot),
+          Cost: Number(this.lotDetails.costoflot),
           ShortageOverage: Number(this.lotDetails.shortageoverage),
           IsTrimmed: this.lotEntryForm.value.trimmed ? this.lotEntryForm.value.trimmed : false,
-          SendMail: SendMail
+          Note: this.lotEntryForm.value.notes ? this.lotEntryForm.value.notes : '',
+         // CostPerGram: this.lotEntryForm.value.costperGram ? this.lotEntryForm.value.costperGram : 0,
+          CostPerGram: this.lotDetails.costperGram ? this.lotDetails.costperGram : 0,
+         SendMail: SendMail
       },
       SkewDetails: []
     };
@@ -379,7 +415,6 @@ export class LotEntryFormComponent implements OnInit {
     this.lotEntryForm_copy = JSON.parse(JSON.stringify(Object.assign({}, this.lotEntryForm.value)));
 
     // Object.keys(this.lotEntryForm_copy.skewTypeGroup).forEach(function (child) {
-    //   console.log(this.lotEntryForm_copy);
     // });
     if (this.lotEntryForm.value.lottype === 1) {
       for (const key in this.lotEntryForm_copy.skewTypeGroup) {
@@ -401,7 +436,6 @@ export class LotEntryFormComponent implements OnInit {
           //   // lotDetailsForApi.SkewDetails.push({ WasteMaterialWt: Number(this.lotEntryForm_copy.skewTypeGroup[key]) });
           //   lotDetailsForApi.SkewDetails['WasteMaterialWt'] = Number(this.lotEntryForm_copy.skewTypeGroup[key]);
           // }
-          // console.log(this.lotEntryForm_copy.skewTypeGroup[key]);
         }
       }
 
@@ -415,28 +449,19 @@ export class LotEntryFormComponent implements OnInit {
       // lotDetailsForApi.SkewDetails['OIL_WT'] = this.lotEntryForm.value.startweight;
       lotDetailsForApi.SkewDetails.push({ SkewKeyName: 'OIL_WT', Weight: Number(this.lotEntryForm.value.startweight) });
     }
-
-    // console.log(lotDetailsForApi);
-
     if (this.lotEntryForm.valid) {
-    //   alert(this.lotEntryForm.valid);
-
     this.confirmationService.confirm({
       message: this.globalResource.saveconfirm,
       header: 'Confirmation',
       icon: 'fa fa-exclamation-triangle',
       key: 'saveconfirm',
       accept: () => {
-    //     alert('sadf');
           // http call starts
           this.loaderService.display(true);
           this.growerDetailsActionService.addLotEntry(lotDetailsForApi)
           .subscribe(
               data => {
-                // console.log(data);
-
                 this.msgs = [];
-
                 if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
                   this.msgs = [];
                   this.msgs.push({ severity: 'success', summary: this.globalResource.applicationmsg, detail: this.lotEntryResources.lotsavedsuccess });
@@ -492,7 +517,7 @@ export class LotEntryFormComponent implements OnInit {
   }
 
   resetForm() {
-    this.lotEntryForm.reset({trimmedYesNo: false, lottype: 1, trimmed: true });
+    this.lotEntryForm.reset({trimmedYesNo: false, lottype: 1 });
 
     this.lotDetails = {
       grower: null,
@@ -513,14 +538,56 @@ export class LotEntryFormComponent implements OnInit {
       cbd: null,
       cbda: null,
       totalthc: null,
+      costperGram: null // add new field by swapnil ::15-april-2019
     };
   }
   // Calculate Shortage/Overage depend on start wt and bio track wt
   calShortageOverage() {
-    if (Number(this.lotDetails.startweight) !== 0 && Number(this.lotDetails.startweight) !== 0) {
-      this.lotDetails.shortageoverage =  parseFloat((Number(this.lotDetails.startweight) - Number(this.lotDetails.biotfweight)).toString()).toFixed(2);
+    if (Number(this.lotEntryForm.value.startweight !== 0 && Number(this.lotDetails.biotfweight)) !== 0) {
+      this.lotDetails.shortageoverage =  parseFloat((Number(this.lotEntryForm.value.startweight)
+                 - Number(this.lotDetails.biotfweight)).toString()).toFixed(2);
+    }
+
+    // add code for calculate lot cost :: swapnil :: 15-april-2019
+    if (Number(this.lotDetails.biotfweight) !== 0 && Number(this.lotDetails.costperGram) !== 0) {
+      this.lotDetails.costoflot =  parseFloat((Number(this.lotDetails.biotfweight) * Number(this.lotDetails.costperGram)).toString()).toFixed(2);
     }
   }
+
+  // Calculate Lot cost depends on transfer weight and cost per gram
+  // added by swapnil :: 15-april-2019
+  calLotCost() {
+    if (Number(this.lotDetails.biotfweight) !== 0 && Number(this.lotDetails.costperGram) !== 0) {
+      this.lotDetails.costoflot =  parseFloat((Number(this.lotDetails.biotfweight) * Number(this.lotDetails.costperGram)).toString()).toFixed(2);
+    }
+  }
+
+  changevalue() {
+
+        if (this.lotEntryForm.value.lottype === 1) {
+          this.lotEntryForm_copy = JSON.parse(JSON.stringify(Object.assign({}, this.lotEntryForm.value)));
+          for (const key in this.lotEntryForm_copy.skewTypeGroup) {
+            if (this.lotEntryForm_copy.skewTypeGroup.hasOwnProperty(key)) {
+              if (key === 'BUD_WT') {
+                this.budValue = Number(this.lotEntryForm_copy.skewTypeGroup[key]);
+              } else if (key === 'JOINTS_WT') {
+                this.jointsValue = Number(this.lotEntryForm_copy.skewTypeGroup[key]);
+              }
+
+              if (this.jointsValue !== 0 && this.budValue !== 0) {
+                this.lotDetails.startweight = parseFloat((Number(this.budValue) + Number(this.jointsValue)).toString()).toFixed(2);
+              }
+            }
+          }
+        }
+
+        if (Number(this.lotEntryForm.value.startweight) !== 0 && Number(this.lotDetails.biotfweight) !== 0) {
+          this.lotDetails.shortageoverage =  parseFloat((Number(this.lotEntryForm.value.startweight)
+                                             - Number(this.lotDetails.biotfweight)).toString()).toFixed(2);
+        }
+  }
+
+
 
   // view links changes
   viewGrowerList() {
@@ -533,7 +600,53 @@ export class LotEntryFormComponent implements OnInit {
   viewStrainList() {
     this.appCommonService.lotFormDetail = this.lotEntryForm;
     this.appCommonService.lotPageBackLink = true;
+    this.appCommonService.shortageoverage = this.lotDetails.shortageoverage;
+    this.appCommonService.costoflot = this.lotDetails.costoflot;
     this.router.navigate(['../home/strainmaster']);
    // this.router.navigate([]).then(result => {  window.open('../home/strainmaster', '_blank'); });
+  }
+
+
+  filterSuggestionData(flag, event) {
+    if (String(flag).toLocaleUpperCase() === 'GROWER') {
+        this.filteredSuggestionData.growers =
+        this.suggestionData.growers.filter(data =>
+          String(data.RawSupplierName).toLocaleLowerCase().indexOf(String(event.query).toLocaleLowerCase()) >= 0
+          );
+          this.isGrowerSerched = true;
+    } else if (String(flag).toLocaleUpperCase() === 'STRAIN') {
+      this.filteredSuggestionData.strains =
+      this.suggestionData.strains.filter(data =>
+        String(data.StrainName).toLocaleLowerCase().indexOf(String(event.query).toLocaleLowerCase()) >= 0
+      );
+      this.isStrainSerched = true;
+  }
+  }
+
+  // Redirect to grower page
+  addGrower() {
+    this.appCommonService.LotBackLink = true;
+    this.router.navigate(['../home/grower']);
+  }
+
+  canDeactivate(): Promise<boolean> | boolean {
+    if (!this.lotEntryForm.dirty) {
+      return true;
+    }
+    // return this.appCommonService.canDeactivate(this.lotEntryForm);
+    return new Promise((resolve, reject) => {
+      this.confirmationService.confirm({
+          message: 'You have unsaved changes. Are you sure you want to leave this page?',
+          header: 'Confirmation',
+          key: 'leavePageConfirmBox',
+          icon: 'fa fa-exclamation-triangle',
+          accept: () => {
+              resolve(true);
+          },
+          reject: () => {
+            resolve(false);
+          }
+      });
+    });
   }
 }

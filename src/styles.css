@@ -905,7 +905,10 @@ input[ppassword] {
 .clsControl[readonly="true"] .ui-state-default, .clsControl[readonly="true"] .ui-dropdown-label{
     background-color:  #E6E6E6 !important;
 }
-
+ .clsControlAutoComplete .ui-autocomplete, .clsControlAutoComplete input {
+    width: 100%!important;
+    display: block; 
+} 
 td.clsAssignTaskColumn .ui-button-text {
     padding: .25em 0.4em !important;
 }
@@ -944,3 +947,7 @@ b, strong {
     margin-left: -21px;
 }
 /* End Tooltip Css */
+
+.editcontrol > .ui-dialog.ui-widget .ui-dialog-content {
+    padding: 1em 0em !important;
+}

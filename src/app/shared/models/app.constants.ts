@@ -22,6 +22,9 @@ export class AppConstants {
             SuperAdmin: 'SuperAdmin'
         } ;
     }
+    public static get defaultTextAreaLength(): number {
+        return 500;
+    }
     public static get getPaginationOptions(): any {
         return [5, 10, 15, 20];
     }

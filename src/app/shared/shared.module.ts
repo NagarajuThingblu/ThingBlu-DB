@@ -82,6 +82,8 @@ import { RoleGuard } from '../guards/role.guard';
 import { UserRolePermissionService } from '../admin/services/user-role-permission.service';
 import { ErrorAccessDeniededComponent } from './components/error-access-denieded/error-access-denieded.component';
 import { SectionHeaderComponent } from './components/section-header/section-header.component';
+import { CharactersCountComponent } from './components/characters-count/characters-count.component';
+import { CanDeactivateGuard } from '../guards/can-deactivate.guard';
 
 
 @NgModule({
@@ -103,7 +105,8 @@ import { SectionHeaderComponent } from './components/section-header/section-head
       ErrorAccessDeniededComponent,
       LotCommentComponent,
       PopupLotCommentComponent,
-      SectionHeaderComponent
+      SectionHeaderComponent,
+      CharactersCountComponent
     ],
   imports: [
     CommonModule,
@@ -204,7 +207,8 @@ import { SectionHeaderComponent } from './components/section-header/section-head
     ErrorAccessDeniededComponent,
     LotCommentComponent,
     PopupLotCommentComponent,
-    SectionHeaderComponent
+    SectionHeaderComponent,
+    CharactersCountComponent
   ]
 })
 // For Shared Services
@@ -223,6 +227,7 @@ export class SharedModule {
           DataService,
           TaskCommonService,
           AuthGuard,
+          CanDeactivateGuard,
           RoleGuard,
           {
             provide: HTTP_INTERCEPTORS,

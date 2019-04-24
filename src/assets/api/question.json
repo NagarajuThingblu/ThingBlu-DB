@@ -2,7 +2,7 @@
   {
     "controlType": "textbox",
     "key": "BUD_WT",
-    "label": "Bud Material Weight",
+    "label": "Flower Weight",
     "required": true,
     "type": "text",
     "order": 1,
@@ -11,7 +11,7 @@
   {
     "controlType": "textbox",
     "key": "JOINTS_WT",
-    "label": "Joints Material Weight",
+    "label": "Preroll Weight  ",
     "value": "",
     "required": true,
     "order": 2,

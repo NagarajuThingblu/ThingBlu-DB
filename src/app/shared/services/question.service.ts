@@ -79,7 +79,7 @@ export class QuestionService {
 
       new TextboxQuestion({
         key: 'budmaterialwt',
-        label: 'Bud Material Weight',
+        label: 'Bud Material Weight ',
         required: true,
         type: 'text',
         order: 1

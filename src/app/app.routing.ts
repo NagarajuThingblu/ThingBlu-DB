@@ -48,6 +48,7 @@ import { RoleGuard } from './guards/role.guard';
 import { EmployeeAssignTaskComponent } from './task/components/employee-assign-task/employee-assign-task.component';
 import { JointsDashboardComponent } from './dashboard/components/joints-dashboard/joints-dashboard.component';
 import { EmployeesComponent } from './Masters/components/employees/employees.component';
+import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 // import { HomeComponent } from './home/index';
 // import { LoginComponent } from './login/index';
 // import { RegisterComponent } from './register/index';
@@ -62,7 +63,8 @@ const appRoutes: Routes = [
     { path: 'home', component: HomeComponent, canActivate: [AuthGuard] ,
     children: [
         { path: '', redirectTo: 'lotentry', pathMatch: 'full' },
-        { path: 'lotentry', component: LotEntryFormComponent, resolve: { data: SkewListResolver}, canActivate: [AuthGuard, RoleGuard] },
+        { path: 'lotentry', component: LotEntryFormComponent, resolve: { data: SkewListResolver}, canActivate: [AuthGuard, RoleGuard],
+                 canDeactivate: [CanDeactivateGuard]},
         { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
         { path: 'assigntask', component: AssignTaskComponent , canActivate: [AuthGuard, RoleGuard] },
         { path: 'assigntask/:id', component: EditTaskComponent, resolve: { data: TaskResolver } },

@@ -12,16 +12,20 @@
     <div class="ui-g-12">
       <!-- <p-growl [value]="msgs" sticky="sticky"></p-growl> -->
       <!-- <form [formGroup]="lotEntryForm" (ngSubmit)="onSubmit(lotEntryForm.value)"> -->
-      <p-panel header="{{ lotEntryResources.pageheading }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}">
+
+        <!-- Remove Toggale -  [toggleable]="true" -->
+      <p-panel header="{{ lotEntryResources.pageheading }}" [style]="{'margin-bottom':'20px'}">
         <!--Main Lot Entry Form-->
         <form
           [formGroup]="lotEntryForm"
 
           (ngSubmit)="calculate_TreasholdValueByPercentage()"
           >
-              <div class="ui-g ">
+          <app-section-header headerLabel="{{lotEntryResources.basicsection}}">
+          </app-section-header>
+              <div class="ui-g " style="padding-bottom: 10px;padding-top: 10px">
                 <!--Grower -->
-                  <div class="ui-g-12 ui-md-6">
+                  <div class="ui-g-12 ui-md-6 LPadd">
                       <div class="paddingRL">
 
 
@@ -29,13 +33,13 @@
                   <!-- <div class="le-su-6"> -->
                     <!-- <div class="ui-g-12 ui-md-6"> -->
                       <label for="grower" class="towlable">
-                          {{ globalResource.grower}}<span class="star">*</span>:
+                          {{ globalResource.grower}}<span class="star">*</span>
                         </label>
                        <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="View/Add Growers" id="btn_geneticshow" (click)="viewGrowerList(); $event.preventDefault() "  name="btnviewGenetics" ></p-button>
                         <!-- <a [routerLink]="" class="toplinkbutton" (click)="viewGrowerList()" ><i class="fa fa-list-ul"></i> <span>View/Add Growers</span></a> -->
                        <div class="clear"></div>
                       
-                    <p-dropdown
+                    <!-- <p-dropdown
                     [options]="growers"
                     [filter] ="true"
                     placeholder="-- Select --"
@@ -46,26 +50,19 @@
                     id="grower"
                     class="clsControl"
                     name="grower">
-                  </p-dropdown>
-                  <!-- (onChange)="onGrowerChange()" -->
-                  <!-- </div> -->
-                  <!-- <div class="ri-su-6">
-                      <label for="grower" class="towlable">
-                          {{  globalResource.brand }}
-                        </label>
-                        <div class="clear"></div>
-                    <span class="lblText">
-                      {{lotDetails.brand}}
-                    </span>
-                  </div> -->
+                  </p-dropdown> -->
 
-
-
-                        <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                          *ngIf="!lotEntryForm.controls['grower'].valid&&lotEntryForm.controls['grower'].dirty">
-
-                            {{ globalResource.growerrequired }}
-                        </div> -->
+                  <div>
+                  <p-autoComplete 
+                  [suggestions]="filteredSuggestionData.growers"
+                    (completeMethod)="filterSuggestionData('GROWER',$event)" 
+                    field="RawSupplierName"
+                    appAutofocus 
+                    formControlName="grower"
+                    [emptyMessage]="globalResource.noresultfound" 
+                    styleClass="clsControl clsControlAutoComplete" maxlength="100" [minLength]="1">
+                  </p-autoComplete> 
+                 </div>
 
                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!lotEntryForm.controls['grower'].valid&&lotEntryForm.controls['grower'].dirty">
@@ -76,27 +73,30 @@
                             {{ globalResource.growernotpresent }}
                         </span>
                     </div>
-
-                        <!-- <input
-                          pInputText type="text"
-                          style="width:20%;"
-                          formControlName="brand"
-                          class="texttwo"
-                          [(ngModel)]="lotDetails.brand"
-                          readonly="true"
-                      /> -->
-
-                      </div>
+                    
+                     <!-- grower not found code -->
+                    <div *ngIf="isGrowerSerched && filteredSuggestionData.growers.length === 0">
+                      <br>
+                    <strong>Can't find Grower?</strong> &nbsp;&nbsp;
+                    <a [routerLink]="" (click)="viewGrowerList()">
+                      <span style="text-decoration: underline;color:blue">
+                       Add Grower
+                      </span>
+                    </a>
+                  </div>
+                      </div> 
                 </div>
                 <!--End Grower -->
 
+               
+
                 <!-- Strain  -->
-                <div class="ui-g-12 ui-md-6">
+                <div class="ui-g-12 ui-md-6 LPadd">
                     <div class="paddingRL">
-                    <label for="strain">{{ globalResource.strain }}<span class="star">*</span></label>:
+                    <label for="strain">{{ globalResource.strain }}<span class="star">*</span></label>
                     <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="View/Add Strains" id="btn_geneticshow" (click)="viewStrainList()"  name="btnviewGenetics" ></p-button>
 
-                    <p-dropdown
+                    <!-- <p-dropdown
                       [(ngModel)]="lotDetails.strain"
                       [filter] ="true"
                       id="strain"
@@ -106,14 +106,21 @@
                       [autoWidth]="false"
                       class="clsControl"
                       name="strain">
-                    </p-dropdown>
+                    </p-dropdown> -->
 
-                    <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                      *ngIf="!lotEntryForm.controls['strain'].valid&&lotEntryForm.controls['strain'].dirty">
-
-                        {{ globalResource.strainrequired }}
-                    </div> -->
-
+                    <div>
+                    <p-autoComplete 
+                    [suggestions]="filteredSuggestionData.strains"
+                      (completeMethod)="filterSuggestionData('STRAIN',$event)" 
+                      field="StrainName" 
+                      dataKey="StrainId"
+                      appAutofocus
+                      formControlName="strain"
+                      [emptyMessage]="globalResource.noresultfound" 
+                       class="clsControl clsControlAutoComplete">
+                    </p-autoComplete> 
+                  </div>
+                  
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                     *ngIf="!lotEntryForm.controls['strain'].valid&&lotEntryForm.controls['strain'].dirty">
                    <span *ngIf="lotEntryForm.controls['strain'].errors['required']">
@@ -124,305 +131,132 @@
                    </span>
                   </div>
 
+                  <!-- add record not found message -->
+
+                  <div *ngIf="isStrainSerched && filteredSuggestionData.strains.length === 0">
+                      <br>
+                    <strong>Can't find Strain?</strong> &nbsp;&nbsp;
+                    <a (click)="viewStrainList()"   routerLink="">
+                      <span style="text-decoration: underline;color:blue">
+                       Add Strain
+                      </span>
+                    </a>
+                  </div>
 
                   </div>
                 </div>
                 <!--End Strain  -->
 
-                <!--THC  -->
-                <div class="ui-g-12 ui-md-6">
+                 <!-- Grower Lot No  -->
+                 <div class="ui-g-12 ui-md-6 LPadd">
                   <div class="paddingRL">
-                  <label for="thc">{{ globalResource.thc }}<span class="star"></span></label>:
+                  <label for="strain">{{ lotEntryResources.growerlotno }}<span class="star">*</span></label>
 
                   <input
                     pInputText
                     type="text"
                     autocomplete="off"
-                    formControlName="thc"
-                    pKeyFilter="num"
-                    OnlyNumber="true"
+                    formControlName="growerlotno"
                     class="clsControl"
-                    maxlength="6"
-                    id="thc"
-                    name="thc"
-                  />
-
-                  <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                    *ngIf="!lotEntryForm.controls['THC'].valid&&lotEntryForm.controls['THC'].dirty">
-
-                      <span *ngIf="lotEntryForm.controls['THC'].errors['required']">
-                        {{ globalResource.lotnorequired }}
-                      </span>
-                      <span
-                        *ngIf="lotEntryForm.controls['THC'].errors['minlength']">
-                          {{ globalResource.lotminlength }}
-                      </span>
-                  </div> -->
-                </div>
-              </div>
-                <!--End THC  -->
-
-                <!--THCA  -->
-                <div class="ui-g-12 ui-md-6">
-                  <div class="paddingRL">
-                  <label for="thca">{{ globalResource.thca }}<span class="star"></span></label>:
-
-                  <input
-                    pInputText
-                    type="text"
-                    autocomplete="off"
-                    formControlName="thca"
-                    pKeyFilter="num"
-                    OnlyNumber="true"
-                    class="clsControl"
-                    [(ngModel)]="lotDetails.thca"
+                    [(ngModel)]="lotDetails.growerlotno"
                     maxlength="20"
-                    id="thca"
-                    name="thca"
+                    id="growerlotno"
+                    name="growerlotno"
                   />
 
-                  <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                    *ngIf="!lotEntryForm.controls['THCA'].valid&&lotEntryForm.controls['THCA'].dirty">
+                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!lotEntryForm.controls['growerlotno'].valid&&lotEntryForm.controls['growerlotno'].dirty">
 
-                      <span *ngIf="lotEntryForm.controls['THCA'].errors['required']">
+                      <span *ngIf="lotEntryForm.controls['growerlotno'].errors['required']">
                         {{ globalResource.lotnorequired }}
                       </span>
                       <span
-                        *ngIf="lotEntryForm.controls['THCA'].errors['minlength']">
+                        *ngIf="lotEntryForm.controls['growerlotno'].errors['minlength']">
                           {{ globalResource.lotminlength }}
                       </span>
-                  </div> -->
-                </div>
-              </div>
-                <!--End THCA  -->
-
-                <!--CBD  -->
-                <div class="ui-g-12 ui-md-6">
-                  <div class="paddingRL">
-                  <label for="cbd">{{ globalResource.cbd }}<span class="star"></span></label>:
-
-                  <input
-                    pInputText
-                    type="text"
-                    autocomplete="off"
-                    formControlName="cbd"
-                    pKeyFilter="num"
-                    class="clsControl"
-                    OnlyNumber="true"
-                    [(ngModel)]="lotDetails.cbd"
-                    maxlength="20"
-                    id="cbd"
-                    name="cbd"
-                  />
-
-                  <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                    *ngIf="!lotEntryForm.controls['cbd'].valid&&lotEntryForm.controls['cbd'].dirty">
-
-                      <span *ngIf="lotEntryForm.controls['cbd'].errors['required']">
-                        {{ globalResource.lotnorequired }}
-                      </span>
-                      <span
-                        *ngIf="lotEntryForm.controls['cbd'].errors['minlength']">
-                          {{ globalResource.lotminlength }}
-                      </span>
-                  </div> -->
-                </div>
-              </div>
-                <!--End CBD  -->
-
-                <!--CBDA  -->
-                <div class="ui-g-12 ui-md-6">
-                  <div class="paddingRL">
-                  <label for="cbda">{{ globalResource.cbda }}<span class="star"></span></label>:
-
-                  <input
-                    pInputText
-                    type="text"
-                    autocomplete="off"
-                    formControlName="cbda"
-                    pKeyFilter="num"
-                    class="clsControl"
-                    OnlyNumber="true"
-                    [(ngModel)]="lotDetails.cbda"
-                    maxlength="20"
-                    id="cbda"
-                    name="cbda"
-                  />
-
-                  <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                    *ngIf="!lotEntryForm.controls['cbda'].valid&&lotEntryForm.controls['cbda'].dirty">
-
-                      <span *ngIf="lotEntryForm.controls['cbda'].errors['required']">
-                        {{ globalResource.lotnorequired }}
-                      </span>
-                      <span
-                        *ngIf="lotEntryForm.controls['cbda'].errors['minlength']">
-                          {{ globalResource.lotminlength }}
-                      </span>
-                  </div> -->
-                </div>
-              </div>
-                <!--End CBDA  -->
-
-                <!--TotalTHC  -->
-                <div class="ui-g-12 ui-md-6">
-                  <div class="paddingRL">
-                  <label for="totalthc">{{ globalResource.totalthc }}<span class="star"></span></label>:
-
-                  <input
-                    pInputText
-                    type="text"
-                    autocomplete="off"
-                    formControlName="totalthc"
-                    pKeyFilter="num"
-                    class="clsControl"
-                    OnlyNumber="true"
-                    [(ngModel)]="lotDetails.totalthc"
-                    maxlength="20"
-                    id="totalthc"
-                    name="totalthc"
-                  />
-
-                  <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                    *ngIf="!lotEntryForm.controls['totalthc'].valid&&lotEntryForm.controls['totalthc'].dirty">
-
-                      <span *ngIf="lotEntryForm.controls['totalthc'].errors['required']">
-                        {{ globalResource.lotnorequired }}
-                      </span>
-                      <span
-                        *ngIf="lotEntryForm.controls['totalthc'].errors['minlength']">
-                          {{ globalResource.lotminlength }}
-                      </span>
-                  </div> -->
-                </div>
-              </div>
-                <!--End TotalTHC  -->
-
-                <!-- Grower Lot No  -->
-                <div class="ui-g-12 ui-md-6">
-                    <div class="paddingRL">
-                    <label for="strain">{{ lotEntryResources.growerlotno }}<span class="star">*</span></label>:
-
-                    <input
-                      pInputText
-                      type="text"
-                      autocomplete="off"
-                      formControlName="growerlotno"
-                      class="clsControl"
-                      [(ngModel)]="lotDetails.growerlotno"
-                      maxlength="20"
-                      id="growerlotno"
-                      name="growerlotno"
-                    />
-
-                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                      *ngIf="!lotEntryForm.controls['growerlotno'].valid&&lotEntryForm.controls['growerlotno'].dirty">
-
-                        <span *ngIf="lotEntryForm.controls['growerlotno'].errors['required']">
-                          {{ globalResource.lotnorequired }}
-                        </span>
-                        <span
-                          *ngIf="lotEntryForm.controls['growerlotno'].errors['minlength']">
-                            {{ globalResource.lotminlength }}
-                        </span>
-                    </div>
-
                   </div>
+
+                </div>
                 </div>
                 <!--End  Grower Lot No  -->
                 <!-- Lot Type -->
-                <div class="ui-g-12 ui-md-6">
-                    <div class="paddingRL">
-                    <label for="strain">{{ globalResource.lottype }}<span class="star">*</span></label>:
-                    <p-dropdown
-                      [options]="lottypes"
-                      [autoWidth]="false"
-                      [(ngModel)]="lotDetails.lottype"
-                      name="lottype"
-                      id="lottype"
-                      class="clsControl"
-                      formControlName="lottype"
-                    >
-                    </p-dropdown>
+                <div class="ui-g-12 ui-md-6 LPadd">
+                  <div class="paddingRL">
+                  <label for="strain">{{ globalResource.lottype }}</label>
+                  <p-dropdown
+                    [options]="lottypes"
+                    [autoWidth]="false"
+                    [(ngModel)]="lotDetails.lottype"
+                    name="lottype"
+                    id="lottype"
+                    class="clsControl"
+                    formControlName="lottype"
+                  >
+                  </p-dropdown>
 
-                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                      *ngIf="!lotEntryForm.controls['lottype'].valid&&lotEntryForm.controls['lottype'].dirty">
+                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!lotEntryForm.controls['lottype'].valid&&lotEntryForm.controls['lottype'].dirty">
 
-                        {{ globalResource.lottyperequired }}
-                    </div>
-
+                      {{ globalResource.lottyperequired }}
                   </div>
+
+                </div>
                 </div>
                 <!-- End Lot Type -->
 
-                <!-- Bio Track Weight -->
-                <div class="ui-g-12 ui-md-6">
-                    <div class="paddingRL">
+              </div>
+              <app-section-header headerLabel="{{lotEntryResources.weightsection}}">
+              </app-section-header>
+              <div class="ui-g " style="padding-bottom: 10px;padding-top: 10px">
+               <div class="ui-g-12 ui-g-nopad">
+                 <!-- Trimmed -->
+                 <div class="ui-g-12 ui-md-4 LPadd" [style.display]="lotDetails.lottype==1 ? 'block' : 'none'" >
+                  <div class="paddingRL">
+                  <label for="strain">{{ lotEntryResources.lotentrytrimmed }}<span class="star">*</span></label>
 
-                      <div class="le-su-12">
-                        <label for="biotrweight"> {{ lotEntryResources.biotfweight + globalResource.measure }}<span class="star">*</span>:
-                        </label>
+                  <p-dropdown
+                    [(ngModel)]="lotDetails.trimmed"
+                    id="trimmed"
+                    name="trimmed"
+                    [options]="trimmedYesNo"
+                    formControlName="trimmed"
+                    [autoWidth]="false"
+                    id="strain"
+                    class="clsControl"
+                    name="ddlStrain">
+                  </p-dropdown>
+                </div>
+              </div>
+              <!-- End Trimmed -->
 
-                        <input pInputText
-                          (change)="calShortageOverage()"
-                          [(ngModel)]="lotDetails.biotfweight"
-                          name="biotrweight"
-                          id="biotrweight"
-                          type="number"
-                          autocomplete="off"                         
-                          pKeyFilter="num"                               
-                          class="clsControl"
-                          OnlyNumber="true"   
-                          [AllowZero]="false"                       
-                          formControlName="biotrweight"
-                        />
+               <!-- Skewed Controls -->
+             <div  *ngIf="lotDetails.trimmed == true && lotDetails.lottype==1" style="width:100%;">
+              <div class="ui-g-12 ui-md-4 LPadd"
+                *ngFor="let question of questions">
+                  <app-question
+                    [question]="question"
+                    [form]="lotEntryForm.controls['skewTypeGroup']"
+                    (change)="changevalue()"
+                    ></app-question>
+              </div>
+          </div>
+        </div>
 
-                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                          *ngIf="!lotEntryForm.controls['biotrweight'].valid&&lotEntryForm.controls['biotrweight'].dirty">
-
-                            <span *ngIf="lotEntryForm.controls['biotrweight'].errors['required']">
-                              {{ lotEntryResources.biotfweightrequired}}
-                            </span>
-                            <span *ngIf="lotEntryForm.controls['biotrweight'].hasError('zeronotallowed')">
-                                {{ globalResource.zeronotallow }}
-                              </span>
-                              <span *ngIf="lotEntryForm.controls['biotrweight'].hasError('maxlengthexceed')">
-                                  {{ globalResource.maxlengthexceed}}
-                              </span>
-                              <span *ngIf="lotEntryForm.controls['biotrweight'].hasError('invalidinput')">
-                                {{ globalResource.invalidinput}}
-                              </span>
-                        </div>
-                      </div>
-                      <!-- <div class="ri-su-6">
-                        <label for="biotrweight"> {{ globalResource.unit }}
-                            <span class="star">*</span>
-                        </label>
-
-                        <p-dropdown
-                          id="unit"
-                          formControlName="unit"
-                          [options]="clientUnits"
-                          placeholder="-- Select --"
-                          [autoWidth]="false"
-                          class="clsControl"
-                          disabled="true"
-                          name="ddlUnit">
-                        </p-dropdown>
-                      </div> -->
-                    </div>
-                  </div>
-                <!-- End Bio Track Weight -->
+            <!-- End Skewed Controls -->
+            <div class="ui-g-12 ui-g-nopad">
 
                 <!-- Start Weight -->
-                <div class="ui-g-12 ui-md-6">
-                    <div class="paddingRL">
+               
+                <div class="ui-g-12 ui-md-4 LPadd" >
+                  <div class="paddingRL">
                       <div class="le-su-12">
                         <label for="startweight">
-                          {{ lotEntryResources.startweight + globalResource.measure }}<span class="star">*</span>:
+                          <!-- {{ lotEntryResources.startweight + globalResource.measure }}<span class="star">*</span>: -->
+                          {{ lotEntryResources.startweight}}<span *ngIf="lotDetails.trimmed != true || lotDetails.lottype != 1" class="star">*</span>
                         </label>
 
-                        <input pInputText
+                        <!-- <input pInputText
+                        *ngIf="lotDetails.trimmed == false || lotDetails.lottype == 2"
                           (change)="calShortageOverage()"
                           [(ngModel)]="lotDetails.startweight"
                           name="startweight"
@@ -433,8 +267,43 @@
                           class="clsControl"
                           OnlyNumber="true"
                           [AllowZero]="false"
+                          formControlName="startweight"/>
+                      
+                          <input pInputText
+                          *ngIf="lotDetails.trimmed == true && lotDetails.lottype == 1"
+                          [(ngModel)]="lotDetails.startweight"
+                          type="number"
+                          autocomplete="off"
+                          id="startweight"
+                          name="startweight"                     
                           formControlName="startweight"
-                        />
+                          pKeyFilter="num"
+                          OnlyNumber="true"
+                          [AllowZero]="false"
+                          class="clsControl lblText"
+                          [disabled]="disabled" 
+                          style="pointer-events: none;border: none"
+                        /> -->
+
+                        <input pInputText
+                        (change)="calShortageOverage()"
+                        [(ngModel)]="lotDetails.startweight"                        
+                        name="startweight"
+                        id="startweight"
+                        type="number"
+                        autocomplete="off"
+                        pKeyFilter="num"
+                        [ngClass]="lotDetails.lottype== 1 && lotDetails.trimmed == true ?'lblText':'clsControl'"
+                        OnlyNumber="true"
+                        [AllowZero]="false"
+                        formControlName="startweight"
+                        [disabled]= "lotDetails.lottype== 1 && lotDetails.trimmed == true ? 'disabled' : ''"
+                        [style.disabled] = "lotDetails.lottype== 1 && lotDetails.trimmed == true ? 'disabled' : ''"
+                        [style.border]="lotDetails.lottype== 1 && lotDetails.trimmed == true ? 'none' : ''"
+                        [style.width] = "lotDetails.lottype == 1 && lotDetails.trimmed == true ? '100%' : ''"
+                        [style.pointer-events] = "lotDetails.lottype == 1 && lotDetails.trimmed == true ? 'none' : ''"
+                        [readOnly]="lotDetails.lottype == 1 && lotDetails.trimmed == true"
+                      />
 
                         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                           *ngIf="!lotEntryForm.controls['startweight'].valid&&lotEntryForm.controls['startweight'].dirty">
@@ -476,12 +345,147 @@
                 </div>
                 <!--End Start Weight -->
 
-                <!-- Cost Of Lot -->
-                <div class="ui-g-12 ui-md-6">
-                    <div class="paddingRL">
-                    <label for="strain">{{ lotEntryResources.costoflot }}<span class="star">*</span></label>:
+               
+                
+                  <!-- Bio Track Weight -->
+                  <div class="ui-g-12 ui-md-4 LPadd">
+                      <div class="paddingRL">
+  
+                        <div class="le-su-12">
+                          <!-- <label for="biotrweight"> {{ lotEntryResources.biotfweight + globalResource.measure }}<span class="star">*</span>: -->
+                            <label for="biotrweight"> {{ lotEntryResources.biotfweight}}<span class="star">*</span>
+                          </label>
+  
+                          <input pInputText
+                            (change)="calShortageOverage()"
+                            [(ngModel)]="lotDetails.biotfweight"
+                            name="biotrweight"
+                            id="biotrweight"
+                            type="number"
+                            autocomplete="off"                         
+                            pKeyFilter="num"                               
+                            class="clsControl"
+                            OnlyNumber="true"   
+                            [AllowZero]="false"                       
+                            formControlName="biotrweight"
+                          />
+  
+                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                            *ngIf="!lotEntryForm.controls['biotrweight'].valid&&lotEntryForm.controls['biotrweight'].dirty">
+  
+                              <span *ngIf="lotEntryForm.controls['biotrweight'].errors['required']">
+                                {{ lotEntryResources.biotfweightrequired}}
+                              </span>
+                              <span *ngIf="lotEntryForm.controls['biotrweight'].hasError('zeronotallowed')">
+                                  {{ globalResource.zeronotallow }}
+                                </span>
+                                <span *ngIf="lotEntryForm.controls['biotrweight'].hasError('maxlengthexceed')">
+                                    {{ globalResource.maxlengthexceed}}
+                                </span>
+                                <span *ngIf="lotEntryForm.controls['biotrweight'].hasError('invalidinput')">
+                                  {{ globalResource.invalidinput}}
+                                </span>
+                          </div>
+                        </div>
+                        <!-- <div class="ri-su-6">
+                          <label for="biotrweight"> {{ globalResource.unit }}
+                              <span class="star">*</span>
+                          </label>
+  
+                          <p-dropdown
+                            id="unit"
+                            formControlName="unit"
+                            [options]="clientUnits"
+                            placeholder="-- Select --"
+                            [autoWidth]="false"
+                            class="clsControl"
+                            disabled="true"
+                            name="ddlUnit">
+                          </p-dropdown>
+                        </div> -->
+                      </div>
+                    </div>
+                  <!-- End Bio Track Weight -->
+  
+                  <!-- Shortage/Overage -->
+                  <div class="ui-g-12 ui-md-4 LPadd">
+                      <div class="paddingRL">
+                      <label for="strain">
+                        <!-- {{ lotEntryResources.shortageoverage + globalResource.measure }}: -->
+                        {{ lotEntryResources.shortageoverage}}
+                      </label>
+  
+                      <!-- <input pInputText  type="text" [(ngModel)]="shortageoverage" /> -->
+  
+                      <!-- <input
+                        pInputText
+                        [(ngModel)]="lotDetails.shortageoverage"
+                        id="shortageoverage"
+                        type="number"
+                        formControlName="shortageoverage"
+                        readonly="true"
+                        class="clsControl"
+                      > -->
+                      <div class="clear"></div>
+                      <span class="lblText" id="lblShortageOverage">{{lotDetails.shortageoverage}}</span>
+                    </div>
+                  </div>
+                  <!--End Shortage/Overage -->
+                  </div>
 
-                    <input pInputText
+                  <div class="ui-g-12 ui-g-nopad">
+
+                     <!-- Cost per Gram -->
+                   <div class="ui-g-12 ui-md-4 LPadd">
+                      <div class="paddingRL">
+                      <label for="costperGram">Cost Per Gram<span class="star">*</span></label>
+  
+                      <input pInputText
+                        [(ngModel)]="lotDetails.costperGram"
+                        type="number"
+                        autocomplete="off"
+                        id="costperGram"
+                        name="costperGram"                     
+                        formControlName="costperGram"
+                        pKeyFilter="num"
+                        OnlyNumber="true"
+                        [AllowZero]="false"
+                        class="clsControl"
+                        (change)="calLotCost()"
+                      />
+  
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!lotEntryForm.controls['costperGram'].valid&&lotEntryForm.controls['costperGram'].dirty">
+  
+                        <span *ngIf="lotEntryForm.controls['costperGram'].errors['min']">
+                          {{ globalResource.zeronotallow}}
+                        </span>
+                          <span *ngIf="lotEntryForm.controls['costperGram'].errors['required']">
+                            {{ lotEntryResources.costoflotrequired }}
+                          </span>
+                          <span *ngIf="lotEntryForm.controls['costperGram'].errors.allowOnlyPositiveInteger">
+                            {{ lotEntryResources.costoflot + ' ' + globalResource.positiveintegersallowed}}
+                          </span>
+                          <span *ngIf="lotEntryForm.controls['costperGram'].hasError('zeronotallowed')">
+                              {{ globalResource.zeronotallow }}
+                            </span>
+                            <span *ngIf="lotEntryForm.controls['costperGram'].hasError('maxlengthexceed')">
+                                {{ globalResource.maxlengthexceed}}
+                            </span>
+                            <span *ngIf="lotEntryForm.controls['costperGram'].hasError('invalidinput')">
+                              {{ globalResource.invalidinput}}
+                            </span>
+                      </div>
+  
+                    </div>
+                  </div>
+                  <!-- End  per Gram -->
+                   <!-- Cost Of Lot -->
+                   <div class="ui-g-12 ui-md-4 LPadd">
+                    <div class="paddingRL">
+                    <label for="strain">{{ lotEntryResources.costoflot }}</label>
+
+                    <!-- <input pInputText
                       [(ngModel)]="lotDetails.costoflot"
                       type="number"
                       autocomplete="off"
@@ -491,10 +495,13 @@
                       pKeyFilter="num"
                       OnlyNumber="true"
                       [AllowZero]="false"
-                      class="clsControl"
-                    />
+                      class="clsControl lblText"
+                      [disabled]="disabled" 
+                      style="pointer-events: none;border: none"
+                    /> -->
+                    <span class="lblText" id="lblShortageOverage">{{lotDetails.costoflot}}</span>
 
-                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                       *ngIf="!lotEntryForm.controls['costoflot'].valid&&lotEntryForm.controls['costoflot'].dirty">
 
                       <span *ngIf="lotEntryForm.controls['costoflot'].errors['min']">
@@ -515,91 +522,250 @@
                           <span *ngIf="lotEntryForm.controls['costoflot'].hasError('invalidinput')">
                             {{ globalResource.invalidinput}}
                           </span>
-                    </div>
+                    </div> -->
 
                   </div>
                 </div>
                 <!-- End  Cost Of Lot -->
 
-                <!-- Shortage/Overage -->
-                <div class="ui-g-12 ui-md-6">
-                    <div class="paddingRL">
-                    <label for="strain">
-                      {{ lotEntryResources.shortageoverage + globalResource.measure }}:
-                    </label>
-
-                    <!-- <input pInputText  type="text" [(ngModel)]="shortageoverage" /> -->
-
-                    <!-- <input
-                      pInputText
-                      [(ngModel)]="lotDetails.shortageoverage"
-                      id="shortageoverage"
-                      type="number"
-                      formControlName="shortageoverage"
-                      readonly="true"
-                      class="clsControl"
-                    > -->
-                    <div class="clear"></div>
-                    <span class="lblText" id="lblShortageOverage">{{lotDetails.shortageoverage}}</span>
                   </div>
-                </div>
-                <!--End Shortage/Overage -->
 
-                <!-- Trimmed -->
-                <div class="ui-g-12 ui-md-6" [style.display]="lotDetails.lottype==1 ? 'block' : 'none'" >
-                    <div class="paddingRL">
-                    <label for="strain">{{ globalResource.lotentrytrimmed }}</label>
-
-                    <p-dropdown
-                      [(ngModel)]="lotDetails.trimmed"
-                      id="trimmed"
-                      name="trimmed"
-                      [options]="trimmedYesNo"
-                      formControlName="trimmed"
-                      [autoWidth]="false"
-                      id="strain"
-                      class="clsControl"
-                      name="ddlStrain">
-                    </p-dropdown>
-                  </div>
-                </div>
-                <!-- End Trimmed -->
-
-           <!-- Skewed Controls -->
-           <div class="ui-g" *ngIf="lotDetails.trimmed == true&&lotDetails.lottype==1" style="width:100%;">
-              <div
-                class="ui-g-12 ui-md-6"
-                *ngFor="let question of questions"
-              >
-                  <app-question
-                    [question]="question"
-                    [form]="lotEntryForm.controls['skewTypeGroup']"
-                  ></app-question>
+                  <!-- <div style="text-align:center;margin-top:20px" >
+                      Form Submitted
+                      <br>
+                      {{payLoad | json}}
+                  </div> -->
               </div>
-          </div>
-            <!-- End Skewed Controls -->
-                <!-- <div style="text-align:center;margin-top:20px" >
-                    Form Submitted
-                    <br>
-                    {{payLoad | json}}
-                </div> -->
+                <app-section-header headerLabel="{{lotEntryResources.labsection}}">
+                </app-section-header>
+                <div class="ui-g " style="padding-bottom: 10px;padding-top: 10px">
 
-                <div class="ui-g-12 ui-md-12" style="text-align:right;">
+                    <!--TotalTHC  -->
+                <div class="ui-g-12 ui-md-4 LPadd">
+                  <div class="paddingRL">
+                  <label for="totalthc">{{ globalResource.totalthc }}<span class="star"></span></label>
+
+                  <input
+                    pInputText
+                    type="text"
+                    autocomplete="off"
+                    formControlName="totalthc"
+                    pKeyFilter="num"
+                    class="clsControl"
+                    OnlyNumber="true"
+                    [(ngModel)]="lotDetails.totalthc"
+                    maxlength="20"
+                    id="totalthc"
+                    name="totalthc"
+                  />
+
+                  <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!lotEntryForm.controls['totalthc'].valid&&lotEntryForm.controls['totalthc'].dirty">
+
+                      <span *ngIf="lotEntryForm.controls['totalthc'].errors['required']">
+                        {{ globalResource.lotnorequired }}
+                      </span>
+                      <span
+                        *ngIf="lotEntryForm.controls['totalthc'].errors['minlength']">
+                          {{ globalResource.lotminlength }}
+                      </span>
+                  </div> -->
+                </div>
+              </div>
+                <!--End TotalTHC  -->
+                <!--THC  -->
+                <div class="ui-g-12 ui-md-4 LPadd">
+                  <div class="paddingRL">
+                  <label for="thc">{{ globalResource.thc }}<span class="star"></span></label>
+
+                  <input
+                    pInputText
+                    type="text"
+                    autocomplete="off"
+                    formControlName="thc"
+                    pKeyFilter="num"
+                    OnlyNumber="true"
+                    class="clsControl"
+                    maxlength="6"
+                    id="thc"
+                    name="thc"
+                  />
+
+                  <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!lotEntryForm.controls['THC'].valid&&lotEntryForm.controls['THC'].dirty">
+
+                      <span *ngIf="lotEntryForm.controls['THC'].errors['required']">
+                        {{ globalResource.lotnorequired }}
+                      </span>
+                      <span
+                        *ngIf="lotEntryForm.controls['THC'].errors['minlength']">
+                          {{ globalResource.lotminlength }}
+                      </span>
+                  </div> -->
+                </div>
+              </div>
+                <!--End THC  -->
+
+                <!--THCA  -->
+                <div class="ui-g-12 ui-md-4 LPadd">
+                  <div class="paddingRL">
+                  <label for="thca">{{ globalResource.thca }}<span class="star"></span></label>
+
+                  <input
+                    pInputText
+                    type="text"
+                    autocomplete="off"
+                    formControlName="thca"
+                    pKeyFilter="num"
+                    OnlyNumber="true"
+                    class="clsControl"
+                    [(ngModel)]="lotDetails.thca"
+                    maxlength="20"
+                    id="thca"
+                    name="thca"
+                  />
+
+                  <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!lotEntryForm.controls['THCA'].valid&&lotEntryForm.controls['THCA'].dirty">
+
+                      <span *ngIf="lotEntryForm.controls['THCA'].errors['required']">
+                        {{ globalResource.lotnorequired }}
+                      </span>
+                      <span
+                        *ngIf="lotEntryForm.controls['THCA'].errors['minlength']">
+                          {{ globalResource.lotminlength }}
+                      </span>
+                  </div> -->
+                </div>
+              </div>
+                <!--End THCA  -->
+
+              <!-- blank col -->
+              <div class="ui-g-12 ui-md-4 LPadd">
+                <div class="paddingRL">
+                  </div>
+                  </div>
+
+              <!-- end blank column -->
+
+                <!--CBD  -->
+                <div class="ui-g-12 ui-md-4 LPadd">
+                  <div class="paddingRL">
+                  <label for="cbd">{{ globalResource.cbd }}<span class="star"></span></label>
+
+                  <input
+                    pInputText
+                    type="text"
+                    autocomplete="off"
+                    formControlName="cbd"
+                    pKeyFilter="num"
+                    class="clsControl"
+                    OnlyNumber="true"
+                    [(ngModel)]="lotDetails.cbd"
+                    maxlength="20"
+                    id="cbd"
+                    name="cbd"
+                  />
+
+                  <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!lotEntryForm.controls['cbd'].valid&&lotEntryForm.controls['cbd'].dirty">
+
+                      <span *ngIf="lotEntryForm.controls['cbd'].errors['required']">
+                        {{ globalResource.lotnorequired }}
+                      </span>
+                      <span
+                        *ngIf="lotEntryForm.controls['cbd'].errors['minlength']">
+                          {{ globalResource.lotminlength }}
+                      </span>
+                  </div> -->
+                </div>
+              </div>
+                <!--End CBD  -->
+
+                <!--CBDA  -->
+                <div class="ui-g-12 ui-md-4 LPadd">
+                  <div class="paddingRL">
+                  <label for="cbda">{{ globalResource.cbda }}<span class="star"></span></label>
+
+                  <input
+                    pInputText
+                    type="text"
+                    autocomplete="off"
+                    formControlName="cbda"
+                    pKeyFilter="num"
+                    class="clsControl"
+                    OnlyNumber="true"
+                    [(ngModel)]="lotDetails.cbda"
+                    maxlength="20"
+                    id="cbda"
+                    name="cbda"
+                  />
+
+                  <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!lotEntryForm.controls['cbda'].valid&&lotEntryForm.controls['cbda'].dirty">
+
+                      <span *ngIf="lotEntryForm.controls['cbda'].errors['required']">
+                        {{ globalResource.lotnorequired }}
+                      </span>
+                      <span
+                        *ngIf="lotEntryForm.controls['cbda'].errors['minlength']">
+                          {{ globalResource.lotminlength }}
+                      </span>
+                  </div> -->
+                </div>
+              </div>
+                <!--End CBDA  -->
+
+              
+            </div>
+
+
+            <!-- Note section added -->
+            <app-section-header headerLabel="{{lotEntryResources.notesection}}">
+              </app-section-header>
+                  <div class="ui-g " style="padding-bottom: 10px;padding-top: 10px">
+                    <!--Grower -->
+                      <div class="ui-g-12 ui-md-12 LPadd">
+                          <div class="paddingRL">   
+                              <textarea formControlName="notes" maxLength="500" name="notes" formControlName="notes"
+                    placeholder="Add note here" tabindex="2" class="clsControl" #notes>
+                  </textarea>
+                  <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="!newProductLineForm.controls['productlinedescription'].valid&&newProductLineForm.controls['productlinedescription'].dirty">
+                
+                    <span *ngIf="newProductLineForm.controls['productlinedescription'].hasError('whitespace')">
+                      {{globalResource.whitespaceNotAllowed}}
+                    </span>
+                  </div> -->
+                  <app-characters-count [elementRef]="notes"></app-characters-count>
+                
+                           <div class="clear"></div>              
+                          </div> 
+    
+                    </div>
+                  </div>
+            <!-- Note section added -->
+
+            
+            <div class="ui-g ">
+                <div class="ui-g-12 ui-md-12" style="text-align:left;">
                     <div class="paddingRL">
-                      <p-button  type="submit" label="Save" id="btnLotSave" name="btnLotSave" class="ui-button-rounded" ></p-button>
+                      <p-button  type="submit" label="Add Lot" id="btnLotSave" name="btnLotSave" class="ui-button-rounded" ></p-button>
                       <!-- [disabled]="lotEntryForm.invalid" -->
-                      <button pButton
+                      <!-- <button pButton
                         (click)="resetForm()"
                         type="button"
                         label="Clear"
                         class="ui-button-rounded ui-button-secondary"
                       >
-                      </button>
+                      </button> --> &nbsp;
+                      <a (click)="resetForm()" style="text-decoration:underline;color: #337ab7 ;" routerLink="">Cancel</a>
                   </div>
+                  </div>
+
 
                 </div>
 
-              </div>
+             
         </form>
       </p-panel>
     </div>
@@ -621,4 +787,8 @@
   header="Confirmation"
   icon="fa fa-question-circle"
   width="425">
+</p-confirmDialog>
+
+<p-confirmDialog *ngIf="true" class="clsConfirmBox" header="Confirmation" key="leavePageConfirmBox"
+  icon="pi pi-exclamation-triangle" width="425" style="word-break:initial">
 </p-confirmDialog>

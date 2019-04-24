@@ -4,6 +4,8 @@ import { environment } from './../../../environments/environment';
 import * as crypto from 'crypto-js';
 import { CookieService } from '../../../../node_modules/ngx-cookie-service';
 import { UserModel } from '../models/user.model';
+import { ConfirmationService } from 'primeng/api';
+
 const originFormControlNameNgOnChanges = FormControlName.prototype.ngOnChanges;
 const originFormControlNgOnChanges = FormControlDirective.prototype.ngOnChanges;
 
@@ -56,12 +58,17 @@ export class AppCommonService implements OnChanges, OnInit {
   public ProductTypeBackLink = false;
   public ProductTypeFormDetail: FormGroup;
 
+  public LotBackLink = false;
+  public costoflot: any;
+  public shortageoverage: any;
+
 
   public navDraftOrder = {
     isBackClicked: false,
   } ;
   constructor(
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private confirmationService: ConfirmationService
   ) {
     this.firstInvalidFieldFocus = false;
     // this.encryptDecryptKey = this.getLocalStorage('EncryptDecryptKey');
@@ -401,5 +408,25 @@ encode64(input) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-
+canDeactivate(customForm: FormGroup): Promise<boolean> | boolean {
+  if (!customForm.dirty) {
+    return true;
+  }
+  return new Promise((resolve, reject) => {
+    this.confirmationService.confirm({
+        message: 'You have unsaved changes. Are you sure you want to leave this page?',
+        header: 'Confirmation',
+        key: 'leavePageConfirmBox',
+        icon: 'fa fa-exclamation-triangle',
+        accept: () => {
+            resolve(true);
+            // return true;
+        },
+        reject: () => {
+          resolve(false);
+          // return false;
+        }
+    });
+  });
+}
 }
