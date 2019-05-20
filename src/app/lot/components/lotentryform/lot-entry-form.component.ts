@@ -108,6 +108,7 @@ export class LotEntryFormComponent implements OnInit {
   };
   public isGrowerSerched = false;
   public isStrainSerched = false;
+  public checkIsDirty = true;
 
   // add to get value of bud and joint weight
   public budValue: number;
@@ -246,8 +247,8 @@ export class LotEntryFormComponent implements OnInit {
     ];
 
     this.trimmedYesNo = [
-      { label: 'No', value: false},
       { label: 'Yes', value: true},
+      { label: 'No', value: false},
     ];
 
     this.clientUnits = [
@@ -285,7 +286,7 @@ export class LotEntryFormComponent implements OnInit {
           Validators.required,
         ])),
       'shortageoverage': new FormControl(null),
-      'trimmed': new FormControl({ value: false}),
+      'trimmed': new FormControl({ value: true}),
       'unit': new FormControl(1),
       'notes': new FormControl(null),  // add control notes
     });
@@ -312,6 +313,12 @@ export class LotEntryFormComponent implements OnInit {
       this.lotDetails.trimmed = this.lotEntryForm.value.trimmed;
       this.lotDetails.shortageoverage = this.appCommonService.shortageoverage;
       this.lotDetails.costoflot = this.appCommonService.costoflot;
+      if (this.lotEntryForm.value.grower) {
+      this.backPagefilterSuggestionData('GROWER', this.lotEntryForm.value.grower.RawSupplierName);
+      }
+      if (this.lotEntryForm.value.strain) {
+        this.backPagefilterSuggestionData('STRAIN', this.lotEntryForm.value.strain.StrainName);
+      }
     });
     }
   }
@@ -378,7 +385,6 @@ export class LotEntryFormComponent implements OnInit {
 }
   // Save the form details
   onSubmit(value: string, SendMail: string) {
-
     this.submitted = true;
     let lotDetailsForApi;
     let budJointsWeight = 0;
@@ -517,8 +523,7 @@ export class LotEntryFormComponent implements OnInit {
   }
 
   resetForm() {
-    this.lotEntryForm.reset({trimmedYesNo: false, lottype: 1 });
-
+    this.lotEntryForm.reset({trimmedYesNo: true, lottype: 1 });
     this.lotDetails = {
       grower: null,
       biotfweight: null,
@@ -529,8 +534,8 @@ export class LotEntryFormComponent implements OnInit {
       lottype: 1,
       costoflot: null,
       trimmed: true,
-      budweight: null,
-      jointsweight: null,
+      budweight: 0,
+      jointsweight: 0,
       oilweight: null,
       wasteweight: null,
       thc: null,
@@ -538,7 +543,7 @@ export class LotEntryFormComponent implements OnInit {
       cbd: null,
       cbda: null,
       totalthc: null,
-      costperGram: null // add new field by swapnil ::15-april-2019
+      costperGram: null // add new field by swapnil ::15-april-2019,
     };
   }
   // Calculate Shortage/Overage depend on start wt and bio track wt
@@ -591,13 +596,16 @@ export class LotEntryFormComponent implements OnInit {
 
   // view links changes
   viewGrowerList() {
+    this.checkIsDirty = false;
     this.appCommonService.lotFormDetail = this.lotEntryForm;
     this.appCommonService.lotPageBackLink = true;
+    this.appCommonService.shortageoverage = this.lotDetails.shortageoverage;
+    this.appCommonService.costoflot = this.lotDetails.costoflot;
     this.router.navigate(['../home/grower']);
   }
 
-
   viewStrainList() {
+    this.checkIsDirty = false;
     this.appCommonService.lotFormDetail = this.lotEntryForm;
     this.appCommonService.lotPageBackLink = true;
     this.appCommonService.shortageoverage = this.lotDetails.shortageoverage;
@@ -605,7 +613,6 @@ export class LotEntryFormComponent implements OnInit {
     this.router.navigate(['../home/strainmaster']);
    // this.router.navigate([]).then(result => {  window.open('../home/strainmaster', '_blank'); });
   }
-
 
   filterSuggestionData(flag, event) {
     if (String(flag).toLocaleUpperCase() === 'GROWER') {
@@ -623,6 +630,22 @@ export class LotEntryFormComponent implements OnInit {
   }
   }
 
+  backPagefilterSuggestionData(flag, event) {
+    if (String(flag).toLocaleUpperCase() === 'GROWER') {
+        this.filteredSuggestionData.growers =
+        this.suggestionData.growers.filter(data =>
+          String(data.RawSupplierName).toLocaleLowerCase().indexOf(String(event).toLocaleLowerCase()) >= 0
+          );
+          this.isGrowerSerched = true;
+    } else if (String(flag).toLocaleUpperCase() === 'STRAIN') {
+      this.filteredSuggestionData.strains =
+      this.suggestionData.strains.filter(data =>
+        String(data.StrainName).toLocaleLowerCase().indexOf(String(event).toLocaleLowerCase()) >= 0
+      );
+      this.isStrainSerched = true;
+  }
+  }
+
   // Redirect to grower page
   addGrower() {
     this.appCommonService.LotBackLink = true;
@@ -630,6 +653,11 @@ export class LotEntryFormComponent implements OnInit {
   }
 
   canDeactivate(): Promise<boolean> | boolean {
+    if (!this.checkIsDirty) {
+      this.checkIsDirty = true;
+      return true;
+    }
+
     if (!this.lotEntryForm.dirty) {
       return true;
     }

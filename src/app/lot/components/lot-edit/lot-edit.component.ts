@@ -207,7 +207,6 @@ export class LotEditComponent implements OnInit {
       { label: 'Kg', value: 1 }
     ];
     // Lotentry form defination(reactive form)
-    console.log(this.LotEditDetails, 'editlot');
     this.lotDetails.costoflot =  this.LotEditDetails.Cost;
     this.lotEntryForm = this.fb.group({
       'grower': new FormControl({ value: this.LotEditDetails.RawSupId, disabled: !this.LotEditDetails.FlagRawSupId }, Validators.required),

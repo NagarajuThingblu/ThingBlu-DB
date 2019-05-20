@@ -1,3 +1,4 @@
+import { ReportsModule } from './reports/reports.module';
 import { AdminModule } from './admin/admin.module';
 import { HomeModule } from './home/home.module';
 import { BrowserModule } from '@angular/platform-browser';
@@ -56,7 +57,8 @@ import { NgIdleModule } from '@ng-idle/core';
     // Default values: `idle` is 600 (10 minutes), `timeout` is 300 (5 minutes)
     // and `ping` is 120 (2 minutes).
     // UserIdleModule.forRoot({idle: 300, timeout: 300, ping: 100})
-    AdminModule
+    AdminModule,
+    ReportsModule
   ],
   exports: [NgIdleModule],
   providers: [
