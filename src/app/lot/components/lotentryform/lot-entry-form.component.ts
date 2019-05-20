@@ -312,6 +312,7 @@ export class LotEntryFormComponent implements OnInit {
       this.lotDetails.lottype = this.lotEntryForm.value.lottype;
       this.lotDetails.trimmed = this.lotEntryForm.value.trimmed;
       this.lotDetails.shortageoverage = this.appCommonService.shortageoverage;
+      this.lotDetails.costperGram = this.lotEntryForm.value.costperGram;
       this.lotDetails.costoflot = this.appCommonService.costoflot;
       if (this.lotEntryForm.value.grower) {
       this.backPagefilterSuggestionData('GROWER', this.lotEntryForm.value.grower.RawSupplierName);
