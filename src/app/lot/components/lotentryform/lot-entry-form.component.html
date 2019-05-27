@@ -35,7 +35,7 @@
                       <label for="grower" class="towlable">
                           {{ globalResource.grower}}<span class="star">*</span>
                         </label>
-                       <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="View/Add Growers" id="btn_geneticshow" (click)="viewGrowerList(); $event.preventDefault() "  name="btnviewGenetics" ></p-button>
+                       <p-button class="toplinks" type="button" tabindex="1" icon="fa fa-list-ul" label="View/Add Growers" id="btn_geneticshow" (click)="viewGrowerList(); $event.preventDefault() "  name="btnviewGenetics" ></p-button>
                         <!-- <a [routerLink]="" class="toplinkbutton" (click)="viewGrowerList()" ><i class="fa fa-list-ul"></i> <span>View/Add Growers</span></a> -->
                        <div class="clear"></div>
                       
@@ -57,6 +57,8 @@
                   [suggestions]="filteredSuggestionData.growers"
                     (completeMethod)="filterSuggestionData('GROWER',$event)" 
                     field="RawSupplierName"
+                    dataKey="RawSupId"
+                    [tabindex]="2"
                     appAutofocus 
                     formControlName="grower"
                     [emptyMessage]="globalResource.noresultfound" 
@@ -71,6 +73,9 @@
                         </span>
                         <span *ngIf="lotEntryForm.controls['grower'].hasError('growernotpresent')">
                             {{ globalResource.growernotpresent }}
+                        </span>
+                        <span *ngIf="lotEntryForm.controls['grower'].hasError('invalidgrower')">
+                         Invalid grower.
                         </span>
                     </div>
                     
@@ -94,7 +99,7 @@
                 <div class="ui-g-12 ui-md-6 LPadd">
                     <div class="paddingRL">
                     <label for="strain">{{ globalResource.strain }}<span class="star">*</span></label>
-                    <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="View/Add Strains" id="btn_geneticshow" (click)="viewStrainList()"  name="btnviewGenetics" ></p-button>
+                    <p-button class="toplinks" type="button" tabindex="3" icon="fa fa-list-ul" label="View/Add Strains" id="btn_geneticshow" (click)="viewStrainList()"  name="btnviewGenetics" ></p-button>
 
                     <!-- <p-dropdown
                       [(ngModel)]="lotDetails.strain"
@@ -115,6 +120,7 @@
                       field="StrainName" 
                       dataKey="StrainId"
                       appAutofocus
+                      [tabindex]="4"
                       formControlName="strain"
                       [emptyMessage]="globalResource.noresultfound" 
                        class="clsControl clsControlAutoComplete">
@@ -128,6 +134,9 @@
                     </span>
                    <span *ngIf="lotEntryForm.controls['strain'].hasError('strainnotpresent')">
                       {{ globalResource.strainnotpresent }}
+                   </span>
+                   <span *ngIf="lotEntryForm.controls['strain'].hasError('invalidstrain')">
+                    Invalid strain.
                    </span>
                   </div>
 
@@ -158,6 +167,7 @@
                     autocomplete="off"
                     formControlName="growerlotno"
                     class="clsControl"
+                    tabindex="5"
                     [(ngModel)]="lotDetails.growerlotno"
                     maxlength="20"
                     id="growerlotno"
@@ -188,6 +198,7 @@
                     [autoWidth]="false"
                     [(ngModel)]="lotDetails.lottype"
                     name="lottype"
+                    [tabindex]="6"
                     id="lottype"
                     class="clsControl"
                     formControlName="lottype"
@@ -220,7 +231,9 @@
                     [options]="trimmedYesNo"
                     formControlName="trimmed"
                     [autoWidth]="false"
+                    (onChange) = "trimYesNoChange(lotDetails.trimmed)"
                     id="strain"
+                    [tabindex]="7"
                     class="clsControl"
                     name="ddlStrain">
                   </p-dropdown>
@@ -290,6 +303,7 @@
                         name="startweight"
                         id="startweight"
                         type="number"
+                        tabindex="10"
                         autocomplete="off"
                         pKeyFilter="num"
                         [ngClass]="lotDetails.lottype== 1 && lotDetails.trimmed == true ?'lblText':'clsControl'"
@@ -361,6 +375,7 @@
                             name="biotrweight"
                             id="biotrweight"
                             type="number"
+                            tabindex="11"
                             autocomplete="off"                         
                             pKeyFilter="num"                               
                             class="clsControl"
@@ -444,7 +459,8 @@
                         type="number"
                         autocomplete="off"
                         id="costperGram"
-                        name="costperGram"                     
+                        name="costperGram" 
+                        tabindex="12"                    
                         formControlName="costperGram"
                         pKeyFilter="num"
                         OnlyNumber="true"
@@ -550,6 +566,7 @@
                     autocomplete="off"
                     formControlName="totalthc"
                     pKeyFilter="num"
+                    tabindex="13"
                     class="clsControl"
                     OnlyNumber="true"
                     [(ngModel)]="lotDetails.totalthc"
@@ -582,6 +599,7 @@
                     type="text"
                     autocomplete="off"
                     formControlName="thc"
+                    tabindex="14"
                     pKeyFilter="num"
                     OnlyNumber="true"
                     class="clsControl"
@@ -618,6 +636,7 @@
                     pKeyFilter="num"
                     OnlyNumber="true"
                     class="clsControl"
+                    tabindex="15"
                     [(ngModel)]="lotDetails.thca"
                     maxlength="20"
                     id="thca"
@@ -659,6 +678,7 @@
                     formControlName="cbd"
                     pKeyFilter="num"
                     class="clsControl"
+                    tabindex="16"
                     OnlyNumber="true"
                     [(ngModel)]="lotDetails.cbd"
                     maxlength="20"
@@ -693,6 +713,7 @@
                     formControlName="cbda"
                     pKeyFilter="num"
                     class="clsControl"
+                    tabindex="17"
                     OnlyNumber="true"
                     [(ngModel)]="lotDetails.cbda"
                     maxlength="20"
@@ -714,8 +735,6 @@
                 </div>
               </div>
                 <!--End CBDA  -->
-
-              
             </div>
 
 
@@ -727,7 +746,7 @@
                       <div class="ui-g-12 ui-md-12 LPadd">
                           <div class="paddingRL">   
                               <textarea formControlName="notes" maxLength="500" name="notes" formControlName="notes"
-                    placeholder="Add note here" tabindex="2" class="clsControl" #notes>
+                    placeholder="Add note here" tabindex="18" class="clsControl" #notes>
                   </textarea>
                   <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="!newProductLineForm.controls['productlinedescription'].valid&&newProductLineForm.controls['productlinedescription'].dirty">
                 
@@ -736,10 +755,8 @@
                     </span>
                   </div> -->
                   <app-characters-count [elementRef]="notes"></app-characters-count>
-                
                            <div class="clear"></div>              
                           </div> 
-    
                     </div>
                   </div>
             <!-- Note section added -->
@@ -748,7 +765,7 @@
             <div class="ui-g ">
                 <div class="ui-g-12 ui-md-12" style="text-align:left;">
                     <div class="paddingRL">
-                      <p-button  type="submit" label="Add Lot" id="btnLotSave" name="btnLotSave" class="ui-button-rounded" ></p-button>
+                      <p-button  type="submit" label="Add Lot" id="btnLotSave" tabindex="19" name="btnLotSave" class="ui-button-rounded" ></p-button>
                       <!-- [disabled]="lotEntryForm.invalid" -->
                       <!-- <button pButton
                         (click)="resetForm()"
@@ -757,14 +774,10 @@
                         class="ui-button-rounded ui-button-secondary"
                       >
                       </button> --> &nbsp;
-                      <a (click)="resetForm()" style="text-decoration:underline;color: #337ab7 ;" routerLink="">Cancel</a>
+                      <a (click)="resetForm()" tabindex="20" style="text-decoration:underline;color: #337ab7 ;" routerLink="">Cancel</a>
                   </div>
                   </div>
-
-
                 </div>
-
-             
         </form>
       </p-panel>
     </div>

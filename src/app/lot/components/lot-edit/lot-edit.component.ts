@@ -541,4 +541,23 @@ export class LotEditComponent implements OnInit {
     this.Lot.showLotEditModal = false;
     this.Lot.lotId = 0;
   }
+
+  trimYesNoChange(event) {
+    if (!event.value) {
+
+      for (const key in this.lotEntryForm.value.skewTypeGroup) { // 'field' is a string
+        if (this.lotEntryForm.value.skewTypeGroup.hasOwnProperty(key)) {
+          const control = this.lotEntryForm.controls.skewTypeGroup.get(key);
+          if (key === 'BUD_WT') {
+            control.patchValue(0);
+          } else if (key === 'JOINTS_WT') {
+            control.patchValue(0);
+          }
+        }
+      }
+    } else {
+      this.lotEntryForm.get('startweight').patchValue(0);
+      this.calShortageOverage();
+    }
+  }
 }

@@ -203,7 +203,65 @@ export class LotEntryFormComponent implements OnInit {
       return;
       }
 
+      if (this.lotEntryForm.valid || this.lotEntryForm.value.grower) {
+        if (!this.lotEntryForm.value.grower.RawSupId) {
+          if (this.suggestionData.growers.filter(r => r.RawSupplierName === this.lotEntryForm.value.grower).length > 0) {
+          } else {
+            this.lotEntryForm.controls['grower'].setErrors({ 'invalidgrower': true });
+            return;
+          }
+        }
+      }
+
+      if (this.lotEntryForm.valid ||  this.lotEntryForm.value.strain) {
+        if (!this.lotEntryForm.value.strain.StrainId) {
+          if (this.suggestionData.growers.filter(r => r.StrainName === this.lotEntryForm.value.strain).length > 0) {
+          } else {
+            this.lotEntryForm.controls['strain'].setErrors({ 'invalidstrain': true });
+            return;
+          }
+        }
+      }
+
+      let budValue = 0;
+      let jointValue = 0;
+      for (const key in this.lotEntryForm.value.skewTypeGroup) { // 'field' is a string
+        if (this.lotEntryForm.value.skewTypeGroup.hasOwnProperty(key)) {
+          const control = this.lotEntryForm.controls.skewTypeGroup.get(key);
+          if (key === 'BUD_WT') {
+            budValue = control.value;
+          } else if (key === 'JOINTS_WT') {
+            jointValue = control.value;
+          }
+        }
+      }
+      if ( this.lotEntryForm.controls['grower'].status === 'VALID' && this.lotEntryForm.controls['strain'].status === 'VALID'  &&
+           this.lotEntryForm.controls['growerlotno'].status === 'VALID' && (this.lotDetails.trimmed && (budValue + jointValue) <= 0)) {
+            if ((budValue + jointValue) <= 0) {
+              setTimeout(() => {
+              this.lotEntryForm.controls.skewTypeGroup.get('BUD_WT').setErrors({ zeronotallowed: true });
+              this.lotEntryForm.controls.skewTypeGroup.get('JOINTS_WT').setErrors({ zeronotallowed: true });
+              this.lotEntryForm.controls.skewTypeGroup.get('BUD_WT').markAsDirty();
+              this.lotEntryForm.controls.skewTypeGroup.get('JOINTS_WT').markAsDirty();
+              }, 0);
+              return;
+            } else {
+              this.lotEntryForm.controls.skewTypeGroup.get('BUD_WT').markAsTouched();
+              this.lotEntryForm.controls.skewTypeGroup.get('JOINTS_WT').markAsTouched();
+              this.lotEntryForm.controls.skewTypeGroup.get('BUD_WT').updateValueAndValidity();
+              this.lotEntryForm.controls.skewTypeGroup.get('JOINTS_WT').updateValueAndValidity();
+            }
+        }
+
+        if ( this.lotEntryForm.controls['grower'].status === 'VALID' && this.lotEntryForm.controls['strain'].status === 'VALID'  &&
+        this.lotEntryForm.controls['growerlotno'].status === 'VALID' && (!this.lotDetails.trimmed && this.lotEntryForm.controls['startweight'].value <= 0)) {
+          this.lotEntryForm.controls['startweight'].setErrors({ zeronotallowed: true });
+            this.lotEntryForm.controls['startweight'].markAsDirty();
+            return;
+         }
+
     if (this.lotEntryForm.valid) {
+
     let tolerance = 0;
     // this.LotService.GetThreasholdForLot().subscribe(
     //   data => {
@@ -257,7 +315,7 @@ export class LotEntryFormComponent implements OnInit {
     ];
   // Lotentry form defination(reactive form)
     this.lotEntryForm = this.fb.group({
-      'grower': new FormControl(null, Validators.required),
+      'grower': new FormControl(null, Validators.compose([Validators.required])),
       'strain': new FormControl(null, Validators.required),
       'thc': new FormControl(null),
       'thca': new FormControl(null),
@@ -266,15 +324,11 @@ export class LotEntryFormComponent implements OnInit {
       'totalthc': new FormControl(null),
       'growerlotno': new FormControl(null, Validators.compose([Validators.required])),
       'lottype': new FormControl(null, Validators.required),
-      'biotrweight': new FormControl(null,  Validators.compose(
-          [
-            Validators.required,
-          ])),
-      'startweight': new FormControl(null,  Validators.compose(
-          [
-            Validators.required,
-           // CheckSumValidator.validateSum('budweight', 'jointsweight', 'oilweight', 'wasteweight')
-          ])),
+      'startweight': new FormControl(null, Validators.compose([Validators.required])),
+          'biotrweight': new FormControl(null,  Validators.compose(
+            [
+              Validators.required,
+            ])),
       // 'costoflot': new FormControl(null,  Validators.compose(
       //   [
       //     Validators.required,
@@ -314,6 +368,7 @@ export class LotEntryFormComponent implements OnInit {
       this.lotDetails.shortageoverage = this.appCommonService.shortageoverage;
       this.lotDetails.costperGram = this.lotEntryForm.value.costperGram;
       this.lotDetails.costoflot = this.appCommonService.costoflot;
+      this.lotDetails.biotfweight = this.lotEntryForm.value.biotrweight;
       if (this.lotEntryForm.value.grower) {
       this.backPagefilterSuggestionData('GROWER', this.lotEntryForm.value.grower.RawSupplierName);
       }
@@ -389,6 +444,7 @@ export class LotEntryFormComponent implements OnInit {
     this.submitted = true;
     let lotDetailsForApi;
     let budJointsWeight = 0;
+
     lotDetailsForApi = {
       LotDetails: {
           ClientId: this._cookieService.ClientId,
@@ -456,6 +512,10 @@ export class LotEntryFormComponent implements OnInit {
       // lotDetailsForApi.SkewDetails['OIL_WT'] = this.lotEntryForm.value.startweight;
       lotDetailsForApi.SkewDetails.push({ SkewKeyName: 'OIL_WT', Weight: Number(this.lotEntryForm.value.startweight) });
     }
+
+
+
+
     if (this.lotEntryForm.valid) {
     this.confirmationService.confirm({
       message: this.globalResource.saveconfirm,
@@ -549,13 +609,13 @@ export class LotEntryFormComponent implements OnInit {
   }
   // Calculate Shortage/Overage depend on start wt and bio track wt
   calShortageOverage() {
-    if (Number(this.lotEntryForm.value.startweight !== 0 && Number(this.lotDetails.biotfweight)) !== 0) {
+    if (Number(this.lotEntryForm.value.startweight >= 0 && Number(this.lotDetails.biotfweight)) >= 0) {
       this.lotDetails.shortageoverage =  parseFloat((Number(this.lotEntryForm.value.startweight)
                  - Number(this.lotDetails.biotfweight)).toString()).toFixed(2);
     }
 
     // add code for calculate lot cost :: swapnil :: 15-april-2019
-    if (Number(this.lotDetails.biotfweight) !== 0 && Number(this.lotDetails.costperGram) !== 0) {
+    if (Number(this.lotDetails.biotfweight) >= 0 && Number(this.lotDetails.costperGram) >= 0) {
       this.lotDetails.costoflot =  parseFloat((Number(this.lotDetails.biotfweight) * Number(this.lotDetails.costperGram)).toString()).toFixed(2);
     }
   }
@@ -563,12 +623,12 @@ export class LotEntryFormComponent implements OnInit {
   // Calculate Lot cost depends on transfer weight and cost per gram
   // added by swapnil :: 15-april-2019
   calLotCost() {
-    if (Number(this.lotDetails.biotfweight) !== 0 && Number(this.lotDetails.costperGram) !== 0) {
+    if (Number(this.lotDetails.biotfweight) >= 0 && Number(this.lotDetails.costperGram) >= 0) {
       this.lotDetails.costoflot =  parseFloat((Number(this.lotDetails.biotfweight) * Number(this.lotDetails.costperGram)).toString()).toFixed(2);
     }
   }
 
-  changevalue() {
+  changevalue(changevalue) {
 
         if (this.lotEntryForm.value.lottype === 1) {
           this.lotEntryForm_copy = JSON.parse(JSON.stringify(Object.assign({}, this.lotEntryForm.value)));
@@ -580,17 +640,36 @@ export class LotEntryFormComponent implements OnInit {
                 this.jointsValue = Number(this.lotEntryForm_copy.skewTypeGroup[key]);
               }
 
-              if (this.jointsValue !== 0 && this.budValue !== 0) {
+              if (this.jointsValue >= 0 && this.budValue >= 0) {
                 this.lotDetails.startweight = parseFloat((Number(this.budValue) + Number(this.jointsValue)).toString()).toFixed(2);
+
+                this.lotDetails.shortageoverage = parseFloat(((Number(this.budValue) + Number(this.jointsValue))
+                                                      - Number(this.lotDetails.biotfweight)).toString()).toFixed(2);
               }
             }
           }
+
+          if ((this.budValue + this.jointsValue) <= 0) {
+            setTimeout(() => {
+            this.lotEntryForm.controls.skewTypeGroup.get('BUD_WT').setErrors({ zeronotallowed: true });
+            this.lotEntryForm.controls.skewTypeGroup.get('JOINTS_WT').setErrors({ zeronotallowed: true });
+            this.lotEntryForm.controls.skewTypeGroup.get('BUD_WT').markAsDirty();
+            this.lotEntryForm.controls.skewTypeGroup.get('JOINTS_WT').markAsDirty();
+            }, 0);
+          } else {
+            this.lotEntryForm.controls.skewTypeGroup.get('BUD_WT').markAsTouched();
+            this.lotEntryForm.controls.skewTypeGroup.get('JOINTS_WT').markAsTouched();
+            this.lotEntryForm.controls.skewTypeGroup.get('BUD_WT').updateValueAndValidity();
+            this.lotEntryForm.controls.skewTypeGroup.get('JOINTS_WT').updateValueAndValidity();
+          }
+
+
         }
 
-        if (Number(this.lotEntryForm.value.startweight) !== 0 && Number(this.lotDetails.biotfweight) !== 0) {
-          this.lotDetails.shortageoverage =  parseFloat((Number(this.lotEntryForm.value.startweight)
-                                             - Number(this.lotDetails.biotfweight)).toString()).toFixed(2);
-        }
+       // if (Number(this.lotEntryForm.value.startweight) >= 0 && Number(this.lotDetails.biotfweight) >= 0) {
+       //   this.lotDetails.shortageoverage =  parseFloat((Number(this.lotEntryForm.value.startweight)
+       //                                      - Number(this.lotDetails.biotfweight)).toString()).toFixed(2);
+      //  }
   }
 
 
@@ -677,5 +756,25 @@ export class LotEntryFormComponent implements OnInit {
           }
       });
     });
+  }
+
+  trimYesNoChange(event) {
+    if (!event) {
+      // debugger;
+      this.lotEntryForm_copy = JSON.parse(JSON.stringify(Object.assign({}, this.lotEntryForm.value)));
+      for (const key in this.lotEntryForm.value.skewTypeGroup) { // 'field' is a string
+        if (this.lotEntryForm.value.skewTypeGroup.hasOwnProperty(key)) {
+          const control = this.lotEntryForm.controls.skewTypeGroup.get(key);
+          if (key === 'BUD_WT') {
+            control.patchValue(0);
+          } else if (key === 'JOINTS_WT') {
+            control.patchValue(0);
+          }
+        }
+      }
+    } else {
+      this.lotEntryForm.get('startweight').patchValue(0);
+      this.calShortageOverage();
+    }
   }
 }

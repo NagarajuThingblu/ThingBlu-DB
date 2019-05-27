@@ -23,7 +23,12 @@
           >
           <div
             class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="isValid">
-            {{question.label}} is required.
+            <span *ngIf="form.controls[question.key].errors['required']">
+              {{question.label}} is required.
+            </span> 
+            <span *ngIf="form.controls[question.key].hasError('zeronotallowed')">
+              Value should be greater than 0.
+            </span>            
         </div>
         
         <!-- <select [id]="question.key" *ngSwitchCase="'dropdown'" [formControlName]="question.key">

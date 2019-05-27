@@ -1,3 +1,5 @@
+import { PrerollReportComponent } from './reports/preroll-report/preroll-report.component';
+import { FlowerReportComponent } from './reports/flower-report/flower-report.component';
 import { OrderReportComponent } from './reports/order-report/order-report.component';
 import { TppPackageTypeMappingMasterComponent } from './Masters/components/tpp-package-type-mapping-master/tpp-package-type-mapping-master.component';
 import { JointsProductionDashboardComponent } from './dashboard/components/joints-production-dashboard/joints-production-dashboard.component';
@@ -114,7 +116,9 @@ const appRoutes: Routes = [
 
         // Add Employees page :: Swapnil :: 02-april-2019
         { path: 'addemployees', component: EmployeesComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'reporting', component: OrderReportComponent, canActivate: [AuthGuard, RoleGuard] },
+        { path: 'report/order', component: OrderReportComponent, canActivate: [AuthGuard, RoleGuard] },
+        { path: 'report/preroll', component: PrerollReportComponent, canActivate: [AuthGuard, RoleGuard] },
+        { path: 'report/flower', component: FlowerReportComponent, canActivate: [AuthGuard, RoleGuard] },
       ]
     }
 ];

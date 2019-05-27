@@ -127,9 +127,16 @@ calcUTCTime(date1, offset) {
     (<any>Object).values(formGroup.controls).forEach((control, index) => {
       // control.markAsTouched();
 
-      if (control.nativeElement && !control.valid && this.firstInvalidFieldFocus === false && control.enabled) {
+      if (!control.valid && this.firstInvalidFieldFocus === false && control.enabled ) {
         control.markAsDirty();
-        control.nativeElement.focus();
+       //  control.nativeElement.focus();
+        this.firstInvalidFieldFocus = true;
+        return false;
+      }
+
+      if (control.nativeElement && !control.valid && this.firstInvalidFieldFocus === false && control.enabled ) {
+        control.markAsDirty();
+         control.nativeElement.focus();
         this.firstInvalidFieldFocus = true;
         return false;
       } else if (control instanceof FormGroup ) {
