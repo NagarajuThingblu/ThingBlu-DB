@@ -43,7 +43,8 @@ export class OrderReportComponent implements OnInit {
     //  }, 5000);
     this.userName = this.appCommonService.getUserProfile().UserName;
     if (this.userName) {
-         this.iFrameUrl = 'https://demo.navizanalytics.com/NavizUICW/DashboardEmbed/Home.aspx?DashboardName=Order&UserName=' + this.userName;
+      this.iFrameUrl = ' https://demo.navizanalytics.com/Thingblu/DashboardEmbed/Home.aspx?DashboardName=Order&UserName=' + this.userName;
+       // this.iFrameUrl = 'https://demo.navizanalytics.com/NavizUICW/DashboardEmbed/Home.aspx?DashboardName=Order&UserName=' + this.userName;
        // this.iFrameUrl = 'https://demo.navizanalytics.com/NavizUICW/DashboardEmbed/Home.aspx?DashboardName=Order&UserName=' + this.value;
         this.iFrameUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.iFrameUrl);
         this.reportUrl.rptUrl = this.iFrameUrl;
