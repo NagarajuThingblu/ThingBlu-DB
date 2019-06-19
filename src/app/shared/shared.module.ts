@@ -1,3 +1,4 @@
+import { HttpMethodsService } from './services/http-methods.service';
 import { IdleUserService } from './../idle-user.service';
 import { AppCommonService } from './services/app-common.service';
 import { NgModule, ModuleWithProviders, ErrorHandler, APP_INITIALIZER } from '@angular/core';
@@ -225,6 +226,7 @@ export class SharedModule {
           AuthenticationService,
           DropdownValuesService,
           DataService,
+          HttpMethodsService,
           TaskCommonService,
           AuthGuard,
           CanDeactivateGuard,

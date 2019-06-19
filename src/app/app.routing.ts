@@ -1,3 +1,4 @@
+import { AddEmployeeComponent } from './employee/components/add-employee/add-employee.component';
 import { PrerollReportComponent } from './reports/preroll-report/preroll-report.component';
 import { FlowerReportComponent } from './reports/flower-report/flower-report.component';
 import { OrderReportComponent } from './reports/order-report/order-report.component';
@@ -50,8 +51,12 @@ import { ErrorAccessDeniededComponent } from './shared/components/error-access-d
 import { RoleGuard } from './guards/role.guard';
 import { EmployeeAssignTaskComponent } from './task/components/employee-assign-task/employee-assign-task.component';
 import { JointsDashboardComponent } from './dashboard/components/joints-dashboard/joints-dashboard.component';
-import { EmployeesComponent } from './Masters/components/employees/employees.component';
 import { CanDeactivateGuard } from './guards/can-deactivate.guard';
+import { ResetPasswordComponent } from './azureb2c/reset-password/reset-password.component';
+import { AppSignupComponent } from './azureb2c/app-signup/app-signup.component';
+import { InviteNewEmployeeComponent } from './employee/components/invite-new-employee/invite-new-employee.component';
+import { UpdateEmployeeComponent } from './employee/components/update-employee/update-employee.component';
+import { EmployeesComponent } from './employee/components/employees/employees.component';
 // import { HomeComponent } from './home/index';
 // import { LoginComponent } from './login/index';
 // import { RegisterComponent } from './register/index';
@@ -62,6 +67,7 @@ const appRoutes: Routes = [
     { path: 'login', component: LoginComponent},
     { path: 'forgotpassword', component: ForgotPasswordComponent },
     { path: 'forgotpassword/:token', component: ForgotPasswordComponent, canActivate: [] },
+    { path: 'resetpassword', component: ResetPasswordComponent, canActivate: [AuthGuard]},
     { path: 'convertpwd', component: EncDecPwdComponent, canActivate: [AuthGuard] },
     { path: 'home', component: HomeComponent, canActivate: [AuthGuard] ,
     children: [
@@ -69,6 +75,7 @@ const appRoutes: Routes = [
         { path: 'lotentry', component: LotEntryFormComponent, resolve: { data: SkewListResolver}, canActivate: [AuthGuard, RoleGuard],
                  canDeactivate: [CanDeactivateGuard]},
         { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+        { path: 'signup', component: AppSignupComponent },
         { path: 'assigntask', component: AssignTaskComponent , canActivate: [AuthGuard, RoleGuard] },
         { path: 'assigntask/:id', component: EditTaskComponent, resolve: { data: TaskResolver } },
         { path: 'managerdashboard', component: ManagerdashboardComponent, canActivate: [AuthGuard, RoleGuard] },
@@ -115,12 +122,16 @@ const appRoutes: Routes = [
         // End of  Added By Bharat T on 13th-July-2018
 
         // Add Employees page :: Swapnil :: 02-april-2019
-        { path: 'addemployees', component: EmployeesComponent, canActivate: [AuthGuard, RoleGuard] },
+     // { path: 'addemployees', component: EmployeesComponent, canActivate: [AuthGuard, RoleGuard] },
         { path: 'report/order', component: OrderReportComponent, canActivate: [AuthGuard, RoleGuard] },
         { path: 'report/preroll', component: PrerollReportComponent, canActivate: [AuthGuard, RoleGuard] },
         { path: 'report/flower', component: FlowerReportComponent, canActivate: [AuthGuard, RoleGuard] },
+        { path: 'userlist', component: EmployeesComponent },
+        { path: 'inviteemployee', component: InviteNewEmployeeComponent },
+         { path: 'updateuser', component: UpdateEmployeeComponent  },
+        { path: 'adduser', component: AddEmployeeComponent  },
       ]
     }
 ];
 
-export const routing = RouterModule.forRoot(appRoutes, {useHash: true, onSameUrlNavigation: 'reload'});
+export const routing = RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload'});

@@ -1,3 +1,4 @@
+import { MsalService } from './../azureb2c/msal.service';
 import { FieldsetModule } from 'primeng/fieldset';
 import { AppCommonService } from './../shared/services/app-common.service';
 import { AppConstants } from './../shared/models/app.constants';
@@ -62,6 +63,7 @@ export class LoginComponent implements OnInit {
     private cookieService: CookieService,
     private appCommonService: AppCommonService,
     private loaderService: LoaderService,
+    private msalService: MsalService,
     private titleService: Title
   ) {
     this.loaderService.display(true);
@@ -139,7 +141,12 @@ export class LoginComponent implements OnInit {
               // return false to indicate failed login
               this.isAuthenticated = false;
               this.isUnAuthenticatedLogin = false;
-              this.router.navigate(['/login']);
+              if (this.msalService.isOnline()) {
+                this.msalService.logout();
+              } else {
+                this.msalService.login();
+              }
+              // this.router.navigate(['/login']);
             }
 
           },

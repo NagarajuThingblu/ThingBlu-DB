@@ -31,4 +31,18 @@ export class AppConstants {
     public static get defaultPageRows(): any {
         return 10;
     }
+    public static get getPageConstants(): any {
+        return {
+            NoDataFound: 'No data found!'
+        };
+    }
+
+    public static get maxPageValue(): any {
+        const pageValues = this.getPaginationOptions;
+        if (pageValues.length) {
+            return pageValues[pageValues.length - 1];
+        } else {
+            return 0;
+        }
+    }
 }

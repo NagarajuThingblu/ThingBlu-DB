@@ -61,6 +61,7 @@ export class AppCommonService implements OnChanges, OnInit {
   public LotBackLink = false;
   public costoflot: any;
   public shortageoverage: any;
+  public AzureEmpData: any;
 
 
   public navDraftOrder = {
@@ -413,6 +414,10 @@ encode64(input) {
   max = max ? max : 900000;
 
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+getDefaultPageSize() {
+  return 10; // this.getUserProfile().DefaultPageSize;
 }
 
 canDeactivate(customForm: FormGroup): Promise<boolean> | boolean {

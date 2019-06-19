@@ -1,38 +1,27 @@
-
 <!-- <app-lot-entry-form></app-lot-entry-form> -->
-<app-header>
-  
-</app-header>
-<div class="ui-g">
-                <button (click)="toggleMenu()" class="hamburger btn">
-                                <i class="fa fa-bars" aria-hidden="true"></i>
-                              </button>
-                              <div class="mask" (click)="hideMenu()"  *ngIf="isOn"></div>
+<ng-container *ngIf="userModel?.VirtualRoleId">
+    <app-header>
+
+    </app-header>
+    <div class="ui-g">
+        <button (click)="toggleMenu()" class="hamburger btn">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+        </button>
+        <div class="mask" (click)="hideMenu()" *ngIf="isOn"></div>
         <!-- <app-sidebar  [@slideInOut]="menuState" [inputClass]="inputClass" ></app-sidebar> -->
-        <app-sidebar  [@slideInOut]="menuState" [inputClass]="inputClass" (toggle)="hideMenu()"></app-sidebar>
+        <app-sidebar [@slideInOut]="menuState" [inputClass]="inputClass" (toggle)="hideMenu()"></app-sidebar>
 
-<div class="ui-g-12 topPaddingZero sideisthere"  [@bodyLeftRight]="bodystates" >
-                
-<router-outlet>
+        <div class="ui-g-12 topPaddingZero sideisthere" [@bodyLeftRight]="bodystates">
 
-</router-outlet>
-</div>
-</div>  
+            <router-outlet>
 
+            </router-outlet>
+        </div>
+    </div>
 
-<p-dialog 
-
-    header="{{globalResource.sessiontimeoutwarning}}"
-    [(visible)]="showLogoutModal"
-    modal="false"
-    [resizable]="true" 
-    [responsive]="true" 
-    [width]="600" 
-    [minWidth]="200" 
-    class="notecontrol"
-    [closable]="false"
-    >
-        <form  [formGroup]="newReloginForm" (ngSubmit)="onSubmit(newReloginForm.value)" novalidate>
+    <p-dialog header="{{globalResource.sessiontimeoutwarning}}" [(visible)]="showLogoutModal" modal="false"
+        [resizable]="true" [responsive]="true" [width]="600" [minWidth]="200" class="notecontrol" [closable]="false">
+        <form [formGroup]="newReloginForm" (ngSubmit)="onSubmit(newReloginForm.value)" novalidate>
             <div class="modal-content">
                 <div class="modal-body">
                     <div style="width:100%;height:100%;margin: 0px; padding:0px">
@@ -42,46 +31,41 @@
                         <div style="width:70%;margin: 0px; padding:0px;float:right;padding-top: 10px;padding-left: 3%;">
 
                             <h4>{{globalResource.sessionabouttoexpire}}</h4>
-                            <p style="font-size: 15px;">You will be logged out in 
+                            <p style="font-size: 15px;">You will be logged out in
                                 <span id="timer" style="display: inline;font-size: 30px;font-style: bold">
                                     {{(logoutModalObject?.countMinutes !== 0 ? + logoutModalObject?.countMinutes+' Minute'+(logoutModalObject?.countMinutes > 1 ? 's ' : ' ') : '') + logoutModalObject?.countSeconds+' Seconds'}}
                                 </span>
                             </p>
                             <!-- <p>
-                                <p-progressBar [value]="logoutModalObject?.progressCount" class="progress-bar-success progress-bar-striped">
-                                </p-progressBar>
-                            </p>		 -->
+                                    <p-progressBar [value]="logoutModalObject?.progressCount" class="progress-bar-success progress-bar-striped">
+                                    </p-progressBar>
+                                </p>		 -->
 
                             <p style="font-size: 15px;">{{globalResource.staysignin}}</p>
 
-                            <input pPassword
-                                    name="password"
-                                    autofocus="true"
-                                    id="password"
-                                    [feedback]="false"
-                                    autocomplete="off"
-                                    placeholder="Enter password"
+                            <input pPassword name="password" autofocus="true" id="password" [feedback]="false"
+                                autocomplete="off" placeholder="Enter password" type="password" class="clsControl"
+                                formControlName="password" />
 
-                                    type="password"
-                                    class="clsControl"
-                                    formControlName="password"
-                                />  
-
-                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip 
+                            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                                 *ngIf="!newReloginForm.controls['password'].valid&&newReloginForm.controls['password'].dirty">
-                                    <span *ngIf="newReloginForm.controls['password'].errors['required']">{{globalResource.passwordRequired}}</span>
-                                    <span *ngIf="newReloginForm.controls['password'].errors['badpassword']&&isAuthenticated==false">{{globalResource.badpassword}}</span>  
-                                </div>
+                                <span
+                                    *ngIf="newReloginForm.controls['password'].errors['required']">{{globalResource.passwordRequired}}</span>
+                                <span
+                                    *ngIf="newReloginForm.controls['password'].errors['badpassword']&&isAuthenticated==false">{{globalResource.badpassword}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="clearfix"></div>
                 <div style="margin-left: 30%;margin-bottom: 20px;margin-top: 20px;">
                     <!-- <a href="javascript:;" onclick="resetTimer()" class="btn btn-primary" aria-hidden="true">Yes, Keep me signed in</a>
-                    <a href="<?php echo BASE_PATH.'logout.php';?>" class="btn btn-danger" aria-hidden="true">No, Sign me out</a> -->
+                        <a href="<?php echo BASE_PATH.'logout.php';?>" class="btn btn-danger" aria-hidden="true">No, Sign me out</a> -->
                     <button type="submit" pButton icon="pi pi-check" label="Yes, Signed in"></button>
-                    <button type="button" pButton icon="pi pi-times" class="ui-button-raised ui-button-danger"  label="No, Sign me out"  (click)="doLogOut()"></button>
+                    <button type="button" pButton icon="pi pi-times" class="ui-button-raised ui-button-danger"
+                        label="No, Sign me out" (click)="doLogOut()"></button>
                 </div>
             </div>
         </form>
-</p-dialog>
+    </p-dialog>
+</ng-container>

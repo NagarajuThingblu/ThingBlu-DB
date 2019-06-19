@@ -19,7 +19,7 @@ export class RoleGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    this.cookieuserRole = this.appCommonService.getUserProfile().UserRole;
+      this.cookieuserRole = this.appCommonService.getUserProfile() ? this.appCommonService.getUserProfile().UserRole : '';
     this.userRoles = AppConstants.getUserRoles;
     this.menuItems = [];
     if (this.appCommonService.getRoleAccess()) {

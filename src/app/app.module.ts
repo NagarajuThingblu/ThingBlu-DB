@@ -1,3 +1,6 @@
+import { EmployeeModule } from './employee/employee.module';
+import { Azureb2cModule } from './azureb2c/azureb2c.module';
+import { AppLoadService } from './azureb2c/app-load.service';
 import { ReportsModule } from './reports/reports.module';
 import { AdminModule } from './admin/admin.module';
 import { HomeModule } from './home/home.module';
@@ -25,12 +28,18 @@ import { MastersModule } from './Masters/Masters.module';
 
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import { NgIdleModule } from '@ng-idle/core';
+import { MsalService } from './azureb2c/msal.service';
+import { ResetPasswordMsalService } from './azureb2c/reset-password-msal.service';
 
 // import { UserIdleModule } from 'angular-user-idle/user-idle.module';
 
 // export function startupServiceFactory(startupService: StartupService): Function {
 //   return () => startupService.load();
 // }
+
+export function init_app(appLoadService: AppLoadService) {
+  return () => appLoadService.initializeApp();
+}
 
 @NgModule({
   declarations: [
@@ -58,12 +67,18 @@ import { NgIdleModule } from '@ng-idle/core';
     // and `ping` is 120 (2 minutes).
     // UserIdleModule.forRoot({idle: 300, timeout: 300, ping: 100})
     AdminModule,
-    ReportsModule
+    ReportsModule,
+    Azureb2cModule,
+    EmployeeModule
   ],
   exports: [NgIdleModule],
   providers: [
     StartupService,
-    LoaderService
+    LoaderService,
+    MsalService,
+    ResetPasswordMsalService,
+    AppLoadService,
+    { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppLoadService], multi: true }
     // {
     //   provide: LOCALE_ID,
     //   useValue: 'en-US'

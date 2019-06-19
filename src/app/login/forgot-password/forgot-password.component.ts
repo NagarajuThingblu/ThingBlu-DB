@@ -1,3 +1,4 @@
+import { MsalService } from './../../azureb2c/msal.service';
 import { Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../shared/services/loader.service';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
@@ -32,7 +33,8 @@ export class ForgotPasswordComponent implements OnInit {
     private forgotPasswordService: ForgotPasswordService,
     private route: ActivatedRoute,
     private router: Router,
-    private appComponentData: AppComponent
+    private appComponentData: AppComponent,
+    private msalService: MsalService,
   ) {
 
   }
@@ -250,7 +252,12 @@ export class ForgotPasswordComponent implements OnInit {
               detail: this.forgotpasswordResources.passwordchangesuccess });
               this.resetForm();
               setTimeout(() => {
-                this.router.navigate(['/login']);
+                if (this.msalService.isOnline()) {
+                  this.msalService.logout();
+                } else {
+                  this.msalService.login();
+                }
+               // this.router.navigate(['/login']);
               }, 5000);
               this.loaderService.display(false);
             } else if (data === 'LinkExpired') {

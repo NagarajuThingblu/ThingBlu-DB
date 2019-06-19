@@ -67,7 +67,7 @@ export class AuthenticationService {
             'UserLog': {
                      'Id': 1,
                      'VirtualRoleId': String(this.appCommonService.getUserProfile().VirtualRoleId),
-                     'TokenKey': String(this.appCommonService.getCurrentUser().access_token)
+                     'TokenKey': ''
                }
         };
 

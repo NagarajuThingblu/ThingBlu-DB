@@ -1,0 +1,130 @@
+<div class="content-section implementation GridDemo">
+
+    <div class="ui-g">
+      <div class="ui-g-12  ui-g-nopad">
+        <p-panel header="Add new user" >
+            <form #addEmpForm="ngForm" (ngSubmit)="sendAddEmp()" novalidate formSubmit autocomplete="off">
+              <div class="ui-g">
+                    <div class="ui-g-12 ui-md-12 ui-g-nopad">
+                        <div class="paddingRL" style="text-align: right;">
+                          <u> 
+                            <a  class="btn-link anchor"   [routerLink]="" (click)="backToList()"><< Back</a>
+                          </u>
+                    </div>
+                </div>
+
+                <div class="ui-g-12 ui-md-12 ui-g-nopad">
+                  <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <div class="le-su-12">
+                        <label for="strain" class="towlable fwLabelBold">First Name<span class="star"> *</span></label>
+                      
+                        <input id="input" type="text" name="firstName" class="clsControl" pInputText required [(ngModel)]="model.firstName"
+                          #firstName="ngModel">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="ui-g">
+                <div class="ui-g-12 ui-md-6">
+                  <label class="lblForm">
+                    <strong>Last Name </strong>
+                  </label>
+  
+                  <input 
+                    id="input" 
+                    type="text"
+                    name="lastName"
+                    class="clsControl" 
+                    pInputText
+                    required
+                    [(ngModel)]="model.lastName"
+                    #lastName="ngModel">
+                </div>
+              </div>
+  
+              <div class="ui-g">
+                <div class="ui-g-12 ui-md-6">
+                  <label class="lblForm">
+                    <strong>Email Address </strong>
+                  </label>
+  
+                  <input 
+                    id="input" 
+                    type="email"
+                    name="email"
+                    class="clsControl" 
+                    pInputText
+                    required
+                    [(ngModel)]="model.email"
+                    pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                    #email="ngModel">
+  
+                  <div
+                      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="email.errors&&!email.valid && email.dirty"
+                      >
+                      <i class="fa fa-close"></i>
+                      <span *ngIf="email.errors?.required">
+                        Email is required
+                      </span>
+                      <span *ngIf="email.errors?.pattern">
+                        Email is invalid
+                      </span>                   
+                  </div>
+                </div>
+              </div>
+              <div class="ui-g">
+                <div class="ui-g-12 ui-md-4">
+                  <label class="lblForm">
+                    <strong>Hire Date </strong>
+                  </label>
+  
+                  <p-calendar 
+                    required
+                    [(ngModel)]="model.hireDate"
+                    #hireDate="ngModel"
+                    [showIcon]="true" 
+                    readonlyInput="true" 
+                    showButtonBar="true" 
+                    class="clsControl" 
+                    id="hireDate"
+                    name="hireDate"
+                  >
+                  </p-calendar>
+                  <div
+                      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="hireDate.errors&&!hireDate.valid && hireDate.dirty"
+                      >
+                      <i class="fa fa-close"></i>
+                      <span *ngIf="hireDate.errors?.required">
+                          Hire Date is required.
+                      </span>                      
+                  </div>
+                </div>
+              </div>
+              <div class="ui-g">
+                    <div class="ui-g-12 ui-md-4">
+              <ul class="list-inline"  >
+                <li>
+                  <p-button type="submit" styleClass="ui-button-rounded" label="Add" id="btnSendInvite"
+                    name="btnSendInvite">
+                  </p-button>
+                </li>
+                <li style="vertical-align: bottom;">
+                  <a class="btn-link anchor" [routerLink]="" (click)="onCancel()">
+                    Cancel
+                  </a>
+                </li>
+              </ul>
+            </div>
+              </div>
+            </form>
+        </p-panel>
+      </div>
+  
+    </div>
+  
+    <p-growl [(value)]="msgs" life='5000'></p-growl>

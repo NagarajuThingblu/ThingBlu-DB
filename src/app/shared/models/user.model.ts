@@ -14,4 +14,5 @@ export class UserModel {
     // Added by DEVDAN :: Added variables to get the value from server side
     EncryptDecryptKey: string;
     RefreshInterval: string;
+    IsFirstTimeSignIn: any;
   }

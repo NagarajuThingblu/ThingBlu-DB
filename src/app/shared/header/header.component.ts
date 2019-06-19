@@ -1,3 +1,4 @@
+import { HttpParams } from '@angular/common/http';
 import { IdleUserService } from './../../idle-user.service';
 import { AppCommonService } from './../services/app-common.service';
 import { UserModel } from './../models/user.model';
@@ -16,6 +17,8 @@ import { GlobalResources } from '../../global resource/global.resource';
 import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
 import { LoginResources } from '../../login/login.resources';
 import { ResetPasswordService } from '../services/reset-password.service';
+import { MsalService } from '../../azureb2c/msal.service';
+import { HttpMethodsService } from '../services/http-methods.service';
 // import { UserIdleService } from 'angular-user-idle/src/lib/user-idle.service';
 declare function unescape(s: string): string;
 
@@ -38,7 +41,9 @@ export class HeaderComponent implements OnInit {
     //   private userIdle: UserIdleService,
       private appCommonService: AppCommonService,
       private resetPasswordService: ResetPasswordService,
-      private idleUserService: IdleUserService
+      private idleUserService: IdleUserService,
+      private msalService: MsalService,
+      private httpMethodsService: HttpMethodsService
     ) {
         // this.autoLogoutService.clearInterval();
         // this.autoLogoutService.initVariables((<UserModel>this.appCommonService.getUserProfile()).IdleLogoutValue,
@@ -120,6 +125,7 @@ export class HeaderComponent implements OnInit {
             icon: 'fa-sign-out',
             command: () => {
                 this.logOut();
+                this.msalLogout();
             }
         },
         // {
@@ -608,21 +614,49 @@ encode64(input) {
             this.appCommonService.clearUserSession();
 
             this.idleUserService.logout();
+            this.msalService.logout();
 
             // console.log( this.cookieService.get('currentUser'));
             console.log('logout api success');
             // this.AppComponentData.setTitle('Th!ngblu');
           },
           error => {
-            this.router.navigate(['/login']);
+          //  this.router.navigate(['/login']);
+          if (this.msalService.isOnline()) {
+            this.msalService.logout();
+          } else {
+            this.msalService.login();
+          }
             this.loaderService.display(false);
               console.log(error);
           },
           () => {
-            this.router.navigate(['/login']);
+            if (this.msalService.isOnline()) {
+              this.msalService.logout();
+            } else {
+              this.msalService.login();
+            }
+           // this.router.navigate(['/login']);
           }
       );
 
       this.loaderService.display(false);
   }
+
+  msalLogout() {
+    this.msalService.logout();
+  }
+
+  managerSignUp() {
+    let params = new HttpParams();
+    params = params.append('AzureUserId', this.msalService.getUser().userIdentifier);
+
+    this.httpMethodsService.post('api/Login/AddAzureLocalUser', null)
+      .subscribe(
+        (data: any) => {
+          if (data) {
+            alert('ok');
+          }
+        });
+      }
 }

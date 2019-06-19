@@ -1,0 +1,136 @@
+<div class="content-section implementation GridDemo">
+
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header="New Employee Invite" [toggleable]="true">
+        <div>
+          <div>
+            <p>We'll invite your new employee to the site and onboard them. During Sign-up they'll create their account
+              and enter their full name and contact information.</p>
+
+            <p>Once the new employee has created their account, we'll notify you to activae the new user account and
+              update the employment information such as role, hourly rate, shift hours.</p>
+          </div>
+
+          <form #inviteForm="ngForm" (ngSubmit)="sendInvite()" novalidate formSubmit autocomplete="off">
+            <div class="ui-g">
+              <div class="ui-g-12 ui-md-4">
+                <label class="lblForm">
+                  <strong>Hire Date </strong>
+                </label>
+
+                <p-calendar 
+                  required
+                  [(ngModel)]="model.hireDate"
+                  #hireDate="ngModel"
+                  [showIcon]="true" 
+                  readonlyInput="true" 
+                  showButtonBar="true" 
+                  class="clsControl" 
+                  id="hireDate"
+                  name="hireDate"
+                >
+                </p-calendar>
+                <div
+                    class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="hireDate.errors&&!hireDate.valid && hireDate.dirty"
+                    >
+                    <i class="fa fa-close"></i>
+                    <span *ngIf="hireDate.errors?.required">
+                        Hire Date is required.
+                    </span>                      
+                </div>
+              </div>
+            </div>
+            <div class="ui-g">
+              <div class="ui-g-12 ui-md-6">
+                <label class="lblForm">
+                  <strong>First Name </strong>
+                </label>
+
+                <input 
+                  id="input" 
+                  type="text"
+                  name="firstName"
+                  class="clsControl" 
+                  pInputText
+                  required
+                  [(ngModel)]="model.firstName"
+                  #firstName="ngModel">
+              </div>
+            </div>
+
+            <div class="ui-g">
+              <div class="ui-g-12 ui-md-6">
+                <label class="lblForm">
+                  <strong>Last Name </strong>
+                </label>
+
+                <input 
+                  id="input" 
+                  type="text"
+                  name="LastName"
+                  class="clsControl" 
+                  pInputText
+                  required
+                  [(ngModel)]="model.lastName"
+                  #lastName="ngModel">
+              </div>
+            </div>
+
+            <div class="ui-g">
+              <div class="ui-g-12 ui-md-6">
+                <label class="lblForm">
+                  <strong>Email Address </strong>
+                </label>
+
+                <input 
+                  id="input" 
+                  type="email"
+                  name="email"
+                  class="clsControl" 
+                  pInputText
+                  required
+                  [(ngModel)]="model.email"
+                  pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                  #email="ngModel"
+                >
+
+                <div
+                    class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="email.errors&&!email.valid && email.dirty"
+                    >
+                    <i class="fa fa-close"></i>
+                    <span *ngIf="email.errors?.required">
+                      Email is required
+                    </span>
+                    <span *ngIf="email.errors?.pattern">
+                      Email is invalid
+                    </span>                   
+                </div>
+              </div>
+            </div>
+            <p></p>
+            <p>Note: The link will expire in 24 hours. Once expired,
+              the manager / company administrator will be required to resend the invite.</p>
+
+            <ul class="list-inline" style="margin-top: 50px;">
+              <li>
+                <p-button type="submit" styleClass="ui-button-rounded" label="Send Invite" id="btnSendInvite"
+                  name="btnSendInvite">
+                </p-button>
+              </li>
+              <li style="vertical-align: bottom;">
+                <a class="btn-link anchor" [routerLink]="" (click)="onCancel()">
+                  Cancel
+                </a>
+              </li>
+            </ul>
+          </form>
+        </div>
+      </p-panel>
+    </div>
+
+  </div>
+
+  <p-growl [(value)]="msgs" life='5000'></p-growl>

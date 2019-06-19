@@ -1,0 +1,142 @@
+<div class="content-section implementation GridDemo">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header="Update Info" [toggleable]="true">
+        <form #updateEmpForm="ngForm" (ngSubmit)="updateEmpInfo()" novalidate formSubmit autocomplete="off">
+          <div class="ui-g">
+                  <div class="ui-g-12">
+                    <div class="ui-g-12 ui-md-3"></div>
+                    <div class="ui-g-12 ui-md-3"></div>
+                    <div class="ui-g-12 ui-md-3"></div>
+                    <div style="text-align: right" class="ui-g-12 ui-md-3">
+                  <p-button (click)= "backToList()"  styleClass="ui-button-rounded" label="Back" id="btnBack"
+                    name="btnBack">
+                  </p-button>
+                </div>
+              </div>
+            <div class="ui-g-12"> 
+              <div class="ui-g-12 ui-md-3">
+                <label class="lblForm">
+                  <strong>First Name </strong>
+                </label>
+                <input id="input" type="text" name="firstName" class="clsControl" pInputText required
+                  [(ngModel)]="model.firstName" #firstName="ngModel">
+              </div>
+                <div class="ui-g-12 ui-md-3">
+                  <label class="lblForm">
+                    <strong>Middle Name </strong>
+                  </label>
+                  <input id="input" type="text" name="middleName" class="clsControl" pInputText
+                    [(ngModel)]="model.middleName" #firstName="ngModel">
+                </div>
+              <div class="ui-g-12 ui-md-3">
+                <label class="lblForm">
+                  <strong>Last Name </strong>
+                </label>
+                <input id="input" type="text" name="lastName" class="clsControl" pInputText required
+                  [(ngModel)]="model.lastName" #firstName="ngModel">
+                 
+              </div>
+            </div>
+              <div class="ui-g-12">
+              <div class="ui-g-12 ui-md-3">
+                  <label class="lblForm">
+                    <strong>Gender </strong>
+                  </label>
+                    <p-dropdown
+                    [filter] ="true"
+                    id="gender"
+                    [options]="genders"
+                    placeholder="-- Select --"
+                    [autoWidth]="false"
+                    class="clsControl"
+                    name="gender"
+                    [(ngModel)]="model.gender"
+                    #gender="ngModel" >
+                  </p-dropdown>
+                </div>
+
+                <div class="ui-g-12 ui-md-3">
+                    <label class="lblForm">
+                      <strong>Birth Date </strong>
+                    </label>
+                    <p-calendar 
+                    [(ngModel)]="model.birthDate"
+                    #birthDate="ngModel"
+                    [showIcon]="true" 
+                    readonlyInput="true" 
+                    showButtonBar="true" 
+                    class="clsControl" 
+                    id="birthDate"
+                    name="birthDate"
+                  >
+                  </p-calendar>
+                  </div>
+                  <div class="ui-g-12 ui-md-3">
+                      <label class="lblForm">
+                        <strong>Email Address</strong>
+                      </label>
+                      <input id="input" type="text" name="email" class="clsControl" pInputText required
+                        [(ngModel)]="model.email" #email="ngModel">
+                    </div>
+              </div>
+
+              <div class="ui-g-12">
+                  <div class="ui-g-12 ui-md-3">
+                      <label class="lblForm">
+                        <strong>Hire Date </strong>
+                      </label>
+                      <p-calendar 
+                      required
+                      [(ngModel)]="model.hireDate"
+                      #hireDate="ngModel"
+                      [showIcon]="true" 
+                      readonlyInput="true" 
+                      showButtonBar="true" 
+                      class="clsControl" 
+                      id="hireDate"
+                      name="hireDate"
+                    >
+                    </p-calendar>
+                    </div>
+                  <div class="ui-g-12 ui-md-3">
+                      <label class="lblForm">
+                        <strong>User Role </strong>
+                      </label>
+                        <p-dropdown
+                        [filter] ="true"
+                        id="userRole"
+                        [options]="userRoles"
+                        placeholder="-- Select --"
+                        [autoWidth]="false"
+                        class="clsControl"
+                        name="userRole"
+                        [(ngModel)]="model.userRole"
+                        #userRole="ngModel" >
+                      </p-dropdown>
+                    </div>
+                      <div class="ui-g-12 ui-md-3">
+                          <label class="lblForm">
+                            <strong>Hourly Rate</strong>
+                          </label>
+                          <input id="input" type="text" name="hourlyRate" class="clsControl" pInputText required
+                            [(ngModel)]="model.hourlyRate" #hourlyRate="ngModel">
+                        </div>
+                  </div>
+
+              <div class="ui-g-12">
+            <div class="ui-g-12 ui-md-12">
+              <p-button type="submit" styleClass="ui-button-rounded" label="Update" id="btnUpdateEmp"
+                name="btnUpdateEmp">
+              </p-button> &nbsp; &nbsp; &nbsp;
+              <a class="btn-link anchor" [routerLink]="" (click)="onCancel()">
+                  Cancel
+                </a>
+          </div>
+          </div>
+        </div>
+        </form>
+      </p-panel>
+    </div>
+  </div>
+  <p-growl [(value)]="msgs" life='5000'></p-growl>
