@@ -1,3 +1,4 @@
+import { DefaultComponent } from './default/default.component';
 import { AddEmployeeComponent } from './employee/components/add-employee/add-employee.component';
 import { PrerollReportComponent } from './reports/preroll-report/preroll-report.component';
 import { FlowerReportComponent } from './reports/flower-report/flower-report.component';
@@ -63,19 +64,24 @@ import { EmployeesComponent } from './employee/components/employees/employees.co
 // import { AuthGuard } from './_guards/index';
 
 const appRoutes: Routes = [
-    { path: '', redirectTo: 'home', pathMatch: 'full'  },
+    { path: '', redirectTo: 'default', pathMatch: 'full'  },
     { path: 'login', component: LoginComponent},
     { path: 'forgotpassword', component: ForgotPasswordComponent },
     { path: 'forgotpassword/:token', component: ForgotPasswordComponent, canActivate: [] },
     { path: 'resetpassword', component: ResetPasswordComponent, canActivate: [AuthGuard]},
     { path: 'convertpwd', component: EncDecPwdComponent, canActivate: [AuthGuard] },
+    { path: 'default', component: DefaultComponent, canActivate: [AuthGuard],
+      children: [
+        { path: '', redirectTo: 'home/lotentry', pathMatch: 'full' },
+        { path: 'signup', component: AppSignupComponent }
+      ]
+    },
     { path: 'home', component: HomeComponent, canActivate: [AuthGuard] ,
     children: [
         { path: '', redirectTo: 'lotentry', pathMatch: 'full' },
         { path: 'lotentry', component: LotEntryFormComponent, resolve: { data: SkewListResolver}, canActivate: [AuthGuard, RoleGuard],
                  canDeactivate: [CanDeactivateGuard]},
         { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-        { path: 'signup', component: AppSignupComponent },
         { path: 'assigntask', component: AssignTaskComponent , canActivate: [AuthGuard, RoleGuard] },
         { path: 'assigntask/:id', component: EditTaskComponent, resolve: { data: TaskResolver } },
         { path: 'managerdashboard', component: ManagerdashboardComponent, canActivate: [AuthGuard, RoleGuard] },

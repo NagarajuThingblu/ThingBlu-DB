@@ -35,7 +35,7 @@ export class AppSignupComponent implements OnInit {
   updateEmpInfo(iD) {
     let updateUserApiDetails: any;
     updateUserApiDetails = {
-      AzureUserIs: iD
+      AzureUserId: iD
     };
     this.httpMethodsService.post('api/Employee/UpdateAzureUserFlag', updateUserApiDetails)
       .subscribe((result: any) => {

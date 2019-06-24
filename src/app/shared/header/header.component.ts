@@ -622,20 +622,21 @@ encode64(input) {
           },
           error => {
           //  this.router.navigate(['/login']);
-          if (this.msalService.isOnline()) {
+         // if (this.msalService.isOnline()) {
             this.msalService.logout();
-          } else {
-            this.msalService.login();
-          }
+         // } else {
+           // this.msalService.login();
+         // }
             this.loaderService.display(false);
               console.log(error);
           },
           () => {
-            if (this.msalService.isOnline()) {
+          //  if (this.msalService.isOnline()) {
               this.msalService.logout();
-            } else {
-              this.msalService.login();
-            }
+           // } else {
+          //    this.msalService.login();
+          //
+        //  }
            // this.router.navigate(['/login']);
           }
       );

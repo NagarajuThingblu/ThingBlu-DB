@@ -1,130 +1,230 @@
 <div class="content-section implementation GridDemo">
-
-    <div class="ui-g">
-      <div class="ui-g-12  ui-g-nopad">
-        <p-panel header="Add new user" >
-            <form #addEmpForm="ngForm" (ngSubmit)="sendAddEmp()" novalidate formSubmit autocomplete="off">
-              <div class="ui-g">
-                    <div class="ui-g-12 ui-md-12 ui-g-nopad">
-                        <div class="paddingRL" style="text-align: right;">
-                          <u> 
-                            <a  class="btn-link anchor"   [routerLink]="" (click)="backToList()"><< Back</a>
-                          </u>
-                    </div>
-                </div>
-
-                <div class="ui-g-12 ui-md-12 ui-g-nopad">
-                  <div class="ui-g-12 ui-md-6">
-                    <div class="paddingRL">
-                      <div class="le-su-12">
-                        <label for="strain" class="towlable fwLabelBold">First Name<span class="star"> *</span></label>
-                      
-                        <input id="input" type="text" name="firstName" class="clsControl" pInputText required [(ngModel)]="model.firstName"
-                          #firstName="ngModel">
-                      </div>
-                    </div>
-                  </div>
-                </div>
+  <div class="ui-g">
+    <div class="ui-g-12  ui-g-nopad">
+      <p-panel header="Add new user">
+        <form [formGroup]="addEmpForm" (ngSubmit)="onSubmit(addEmpForm.value)" autocomplete="off">
+          <div class="ui-g">
+            <div class="ui-g-12 ui-md-12 ui-g-nopad">
+              <div class="paddingRL" style="text-align: right;">
+                <u>
+                  <a class="btn-link anchor" [routerLink]="" tabindex="1" (click)="backToList()"> Back</a> </u>
               </div>
-  
-              <div class="ui-g">
-                <div class="ui-g-12 ui-md-6">
-                  <label class="lblForm">
-                    <strong>Last Name </strong>
-                  </label>
-  
-                  <input 
-                    id="input" 
-                    type="text"
-                    name="lastName"
-                    class="clsControl" 
-                    pInputText
-                    required
-                    [(ngModel)]="model.lastName"
-                    #lastName="ngModel">
-                </div>
-              </div>
-  
-              <div class="ui-g">
-                <div class="ui-g-12 ui-md-6">
-                  <label class="lblForm">
-                    <strong>Email Address </strong>
-                  </label>
-  
-                  <input 
-                    id="input" 
-                    type="email"
-                    name="email"
-                    class="clsControl" 
-                    pInputText
-                    required
-                    [(ngModel)]="model.email"
-                    pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
-                    #email="ngModel">
-  
-                  <div
-                      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                      *ngIf="email.errors&&!email.valid && email.dirty"
-                      >
-                      <i class="fa fa-close"></i>
-                      <span *ngIf="email.errors?.required">
-                        Email is required
-                      </span>
-                      <span *ngIf="email.errors?.pattern">
-                        Email is invalid
-                      </span>                   
-                  </div>
-                </div>
-              </div>
-              <div class="ui-g">
-                <div class="ui-g-12 ui-md-4">
-                  <label class="lblForm">
-                    <strong>Hire Date </strong>
-                  </label>
-  
-                  <p-calendar 
-                    required
-                    [(ngModel)]="model.hireDate"
-                    #hireDate="ngModel"
-                    [showIcon]="true" 
-                    readonlyInput="true" 
-                    showButtonBar="true" 
-                    class="clsControl" 
-                    id="hireDate"
-                    name="hireDate"
-                  >
-                  </p-calendar>
-                  <div
-                      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                      *ngIf="hireDate.errors&&!hireDate.valid && hireDate.dirty"
-                      >
-                      <i class="fa fa-close"></i>
-                      <span *ngIf="hireDate.errors?.required">
-                          Hire Date is required.
-                      </span>                      
-                  </div>
-                </div>
-              </div>
-              <div class="ui-g">
-                    <div class="ui-g-12 ui-md-4">
-              <ul class="list-inline"  >
-                <li>
-                  <p-button type="submit" styleClass="ui-button-rounded" label="Add" id="btnSendInvite"
-                    name="btnSendInvite">
-                  </p-button>
-                </li>
-                <li style="vertical-align: bottom;">
-                  <a class="btn-link anchor" [routerLink]="" (click)="onCancel()">
-                    Cancel
-                  </a>
-                </li>
-              </ul>
             </div>
+            <div class="ui-g-12 ui-md-12 ui-g-nopad">
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="strain" class="towlable fwLabelBold">First Name<span class="star">
+                        *</span></label>
+
+                    <input id="input" type="text" tabindex="2" name="firstName" class="clsControl" pInputText
+                      formControlName="firstName">
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!addEmpForm.controls['firstName'].valid&&addEmpForm.controls['firstName'].dirty">
+                      <span *ngIf="addEmpForm.controls['firstName'].errors['required']">
+                        First Name required.
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </form>
-        </p-panel>
-      </div>
-  
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="strain" class="towlable fwLabelBold">Last Name<span class="star">
+                        *</span></label>
+
+                    <input id="input" type="text" name="lastName" tabindex="3" class="clsControl" pInputText
+                      formControlName="lastName">
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!addEmpForm.controls['lastName'].valid&&addEmpForm.controls['lastName'].dirty">
+                      <span *ngIf="addEmpForm.controls['lastName'].errors['required']">
+                        Last Name required.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-12 ui-g-nopad">
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="strain" class="towlable fwLabelBold">Gender<span class="star"> *</span></label>
+
+                    <p-dropdown [filter]="true" id="gender" [options]="genders" placeholder="-- Select --"
+                      [autoWidth]="false" class="clsControl" [tabindex]="4" name="gender" formControlName="gender">
+                    </p-dropdown>
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!addEmpForm.controls['gender'].valid&&addEmpForm.controls['gender'].dirty">
+                      <span *ngIf="addEmpForm.controls['gender'].errors['required']">
+                        Select Gender.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="strain" class="towlable fwLabelBold">Birth Date </label>
+
+                    <p-calendar [showIcon]="true" [tabindex]="5" showButtonBar="true" class="clsControl" id="birthDate"
+                      name="birthDate" formControlName="birthDate">
+                    </p-calendar>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-12 ui-g-nopad">
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="cellPhone" class="towlable fwLabelBold">Phone No<span class="star">
+                        *</span></label>
+
+                    <input id="input" type="text" name="cellPhone" tabindex="6" class="clsControl" pInputText
+                      formControlName="cellPhone">
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!addEmpForm.controls['cellPhone'].valid&&addEmpForm.controls['cellPhone'].dirty">
+                      <span *ngIf="addEmpForm.controls['cellPhone'].errors['required']">
+                        Phone No required.
+                      </span>
+                      <span *ngIf="addEmpForm.controls['cellPhone'].errors['maxlength']">
+                        Invalid Phone No.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="strain" class="towlable fwLabelBold">Email Id<span class="star"> *</span></label>
+                    <input id="input" type="emailId" name="emailId" class="clsControl" pInputText tabindex="7"
+                      pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" formControlName="emailId">
+
+
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!addEmpForm.controls['emailId'].valid&&addEmpForm.controls['emailId'].dirty">
+                      <span *ngIf="addEmpForm.controls['emailId'].errors['required']">
+                        Email Id required.
+                      </span>
+                      <span *ngIf="addEmpForm.controls['emailId'].errors['pattern']">
+                        Email is invalid
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-12 ui-g-nopad">
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="strain" class="towlable fwLabelBold">User Name<span class="star"> *</span></label>
+                    <input id="input" type="text" name="userName" class="clsControl" pInputText tabindex="8"
+                      formControlName="userName">
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!addEmpForm.controls['userName'].valid&&addEmpForm.controls['userName'].dirty">
+                      <span *ngIf="addEmpForm.controls['userName'].errors['required']">
+                        User Name required.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="strain" class="towlable fwLabelBold">Hire Date</label>
+
+                    <p-calendar [showIcon]="true" [defaultDate]="defaultDate" [tabindex]="9" showButtonBar="true"
+                      class="clsControl" id="hireDate" name="hireDate" formControlName="hireDate">
+                    </p-calendar>
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!addEmpForm.controls['hireDate'].valid&&addEmpForm.controls['hireDate'].dirty">
+                      <span *ngIf="addEmpForm.controls['hireDate'].errors['required']">
+                        Hire Date required.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-12 ui-g-nopad">
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="strain" class="towlable fwLabelBold">User Role<span class="star"> *</span></label>
+                    <p-dropdown [filter]="true" id="userRole" [options]="userRoles" placeholder="-- Select --"
+                      [autoWidth]="false" [tabindex]="10" class="clsControl" name="userRole" formControlName="userRole">
+                    </p-dropdown>
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!addEmpForm.controls['userRole'].valid&&addEmpForm.controls['userRole'].dirty">
+                      <span *ngIf="addEmpForm.controls['userRole'].errors['required']">
+                        Select User Role.
+                      </span>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="strain" class="towlable fwLabelBold">Hourly Rate<span class="star"> *</span></label>
+                    <input id="input" tabindex="11" type="text" name="hourlyRate" class="clsControl" pInputText
+                      formControlName="hourlyRate">
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!addEmpForm.controls['hourlyRate'].valid&&addEmpForm.controls['hourlyRate'].dirty">
+                      <span *ngIf="addEmpForm.controls['hourlyRate'].errors['required']">
+                        Hourly Rate required.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-12 ui-g-nopad">
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="le-su-12">
+                    <ul class="list-inline">
+                      <li>
+                        <p-button type="submit" tabindex="12" styleClass="ui-button-rounded" label="Add User"
+                          id="btnAdduser" name="btnAdduser">
+                        </p-button>
+                      </li>
+                      <li style="vertical-align: bottom;">
+                        <a class="btn-link anchor" tabindex="13" (click)="onCancel()">
+                          Cancel
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </p-panel>
     </div>
-  
-    <p-growl [(value)]="msgs" life='5000'></p-growl>
+  </div>
+
+  <p-growl [(value)]="msgs" life='5000'></p-growl>
+  <p-confirmDialog class="clsConfirmBox" header="Confirmation" key="draftdelete" icon="fa fa-question-circle"
+    acceptIcon="fa-close" width="425" #cd>
+  </p-confirmDialog>

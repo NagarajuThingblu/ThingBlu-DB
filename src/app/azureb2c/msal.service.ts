@@ -78,4 +78,7 @@ export class MsalService {
                 return Promise.resolve('');
             });
     }
+    public getAllUsers() {
+        return this.clientApplication.getAllUsers();
+    }
 }

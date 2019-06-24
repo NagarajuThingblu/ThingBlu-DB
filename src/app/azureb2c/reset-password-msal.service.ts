@@ -33,7 +33,7 @@ export class ResetPasswordMsalService {
             {
                 cacheLocation: 'localStorage',
                 logger: this.logger,
-                redirectUri: 'http://localhost:8000/home/signup/',
+                redirectUri: 'http://localhost:8000/default/signup/',
                 state: '12345'
             }
         );

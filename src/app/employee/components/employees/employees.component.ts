@@ -1,3 +1,4 @@
+import { GlobalResources } from './../../../global resource/global.resource';
 import { AppConstants } from './../../../shared/models/app.constants';
 import { MsalService } from './../../../azureb2c/msal.service';
 import { AppCommonService } from './../../../shared/services/app-common.service';
@@ -10,6 +11,11 @@ import { Route, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../../shared/services/loader.service';
 import { Title } from '@angular/platform-browser';
+import { CookieService } from 'ngx-cookie-service';
+import { ConfirmationService, Message } from 'primeng/api';
+import { AppComponent } from '../../../app.component';
+import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
+import { UserModel } from '../../../shared/models/user.model';
 
 @Component({
   moduleId: module.id,
@@ -25,7 +31,15 @@ public defaultPageSize: number;
 public getPageConstants: any;
 paginationValues: any;
 public chkStatusBox: any;
+public rowcheckboxcheckdisplay = false;
 public filterInActiveData: any  = false;
+
+public msgs: Message[] = [];
+public globalResource: any;
+public cookie_clientId: number;
+public defaultDate: Date;
+public _cookieService: UserModel;
+public cookie_virtualRoleId: any;
 
   constructor(
     private loaderService: LoaderService,
@@ -36,15 +50,23 @@ public filterInActiveData: any  = false;
     private httpMethodsService: HttpMethodsService,
     private dropdownDataService: DropdownValuesService,
     private dropdwonTransformService: DropdwonTransformService,
-    private appCommonService: AppCommonService
+    private appCommonService: AppCommonService,
+
+
+    private cookieService: CookieService,
+    private confirmationService: ConfirmationService,
+    private appComponentData: AppComponent,
+    private scrolltopservice: ScrollTopService,
   ) {
    }
 
   ngOnInit() {
     this.loaderService.display(false);
+    this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle('User List');
     this.defaultPageSize  = this.appCommonService.getDefaultPageSize();
     this.getPageConstants = AppConstants.getPageConstants;
+    this.cookie_virtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
     this.getEmployeeList(false);
     this. getAllRoles();
   }
@@ -92,8 +114,10 @@ public filterInActiveData: any  = false;
       this.loaderService.display(false);
   }
   onRowSelect(emp) {
-    this.appCommonService.AzureEmpData = emp;
-    this.router.navigate(['/home/updateemployee']);
+    if (!this.rowcheckboxcheckdisplay) {
+      this.appCommonService.AzureEmpData = emp;
+      this.router.navigate(['/home/updateuser']);
+    }
   }
 
   onPageChange(e) {
@@ -109,5 +133,65 @@ public filterInActiveData: any  = false;
       this.getEmployeeList(false);
     }
     this.loaderService.display(false);
+  }
+
+  isActiveCheckboxListChange(event, rowIndex, rowData) {
+    this.rowcheckboxcheckdisplay = true;
+   // event.stopPropagation();
+    let cofirmmsg = '';
+   if (event) {
+    cofirmmsg = 'Are you sure you want to activate this User?';
+   } else {
+    cofirmmsg = 'Are you sure you want to inactivate this User?';
+   }
+
+    let AzureUserDeleteActiveForApi;
+    AzureUserDeleteActiveForApi = {
+      AzureUserDeleteActive: {
+        AzureUserId: rowData.AzureUserId || 0,
+        UserId: rowData.UserId || '',
+        VirtualRoleId: this.cookie_virtualRoleId || 0,
+        IsActive: event,
+        IsDeleted: 0
+      }
+    };
+
+    this.confirmationService.confirm({
+      key: 'draftdelete1',
+      message: cofirmmsg,
+      header: 'Application message',
+      icon: 'fa fa-trash',
+      accept: () => {
+        this.loaderService.display(true);
+        this.httpMethodsService.post('api/Employee/AzureUserDeleteActive', AzureUserDeleteActiveForApi)
+          .subscribe((result: any) => {
+            if (String(result[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
+              this.msgs = [];
+              this.msgs.push({
+                severity: 'success', summary: this.globalResource.applicationmsg,
+                detail: 'User updated successfully.'
+              });
+              this.loaderService.display(false);
+            } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'FAILURE') {
+              rowData.IsActive = !event;
+              this.msgs = [];
+              this.msgs.push({
+                severity: 'error', summary: this.globalResource.applicationmsg,
+                detail: 'Faiure.'
+              });
+              this.loaderService.display(false);
+            }
+          },
+            error => {
+              rowData.IsActive = !event;
+              this.msgs = [];
+              this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
+              this.loaderService.display(false);
+            });
+      },
+      reject: () => {
+        rowData.IsActive = !event;
+      }
+    });
   }
 }

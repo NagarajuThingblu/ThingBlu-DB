@@ -7,7 +7,7 @@
             <div class="ui-g-12">
 
                 <p-table #dtEmpList [value]="employeeList" sortMode="single" [responsive]="true" [paginator]="true"
-                    [rows]="defaultPageSize" dataKey="Id" [rowsPerPageOptions]="paginationValues"
+                    [rows]="defaultPageSize" dataKey="Id" [rowsPerPageOptions]="paginationValues" 
                     (onPage)="onPageChange($event)" rowHover='true'
                     [globalFilterFields]="['EmpName', 'RoleName', 'PrimaryEmail', 'CellPhone']">
 
@@ -58,7 +58,7 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-                        <tr [pSelectableRow]="rowData" (click)="onRowSelect(rowData)" [pSelectableRowIndex]="rowIndex" [pRowToggler]="rowData">
+                        <tr [pSelectableRow]="rowData"   [pSelectableRowIndex]="rowIndex" [pRowToggler]="rowData">
                             <td>
                                 <span class="ui-column-title">Employee</span>
                                 {{rowData?.EmpName}}
@@ -80,7 +80,8 @@
                                 <!-- {{rowData?.IsActive ? 'Active' : 'InActive'}} -->
                                 <p-checkbox name="second" [(ngModel)]="rowData.IsActive"
                                     [ngModelOptions]="{standalone: true}"
-                                    (onChange)="isActiveCheckboxListChange($event, rowIndex,rowData)" binary="true">
+                                    (onChange)="isActiveCheckboxListChange($event, rowIndex,rowData)" 
+                                    binary="true">
                                 </p-checkbox>
                             </td>
                         </tr>
@@ -103,3 +104,13 @@
 
     </p-panel>
 </div>
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+<p-confirmDialog  
+class="clsConfirmBox" 
+header="Confirmation" 
+key="draftdelete1" 
+icon="fa fa-question-circle" 
+acceptIcon="fa-close"
+*ngIf="true"
+width="425" >
+</p-confirmDialog>

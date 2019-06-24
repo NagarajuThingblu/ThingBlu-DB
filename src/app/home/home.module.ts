@@ -1,3 +1,4 @@
+import { DefaultComponent } from './../default/default.component';
 import { SharedModule } from './../shared/shared.module';
 
 import { NgModule } from '@angular/core';
@@ -7,14 +8,15 @@ import { TaskModule } from '../task/task.module';
 
 @NgModule({
   declarations: [
-    HomeComponent
+    HomeComponent,
+    DefaultComponent
   ],
   imports: [
     SharedModule,
     TaskModule
   ],
   exports: [
-    HomeComponent, SharedModule, TaskModule
+    HomeComponent, SharedModule, TaskModule, DefaultComponent
   ]
 })
 

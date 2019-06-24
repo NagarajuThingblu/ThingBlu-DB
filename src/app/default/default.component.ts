@@ -1,5 +1,5 @@
 import { HttpParams } from '@angular/common/http';
-import { MsalService } from './../azureb2c/msal.service';
+import { MsalService } from '../azureb2c/msal.service';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { Component, OnInit, ElementRef, Renderer2, OnDestroy, HostListener } from '@angular/core';
 import { MenuItem, SelectItem } from 'primeng/api';
@@ -13,13 +13,12 @@ import { Router } from '@angular/router';
 import { UserModel } from '../shared/models/user.model';
 import { CookieService } from 'ngx-cookie-service';
 import { GlobalResources } from '../global resource/global.resource';
-import { HttpMethodsService } from './../shared/services/http-methods.service';
+import { HttpMethodsService } from '../shared/services/http-methods.service';
 
 @Component({
   moduleId: module.id,
-  selector: 'app-home',
-  templateUrl: 'home.component.html',
-  styleUrls: ['home.component.css'],
+  selector: 'app-default',
+  templateUrl: 'default.component.html',
   animations: [
     trigger('bodyLeftRight', [
       state('left', style({
@@ -52,7 +51,7 @@ import { HttpMethodsService } from './../shared/services/http-methods.service';
     ])
   ]
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class DefaultComponent implements OnInit, OnDestroy {
   newReloginForm: FormGroup;
   menuState = 'out';
   bodystates = 'right';
@@ -100,7 +99,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // this.msalService.logout();
-    this.titleService.setTitle('Home');
+    this.titleService.setTitle('Default');
     this.globalResource = GlobalResources.getResources().en;
     // this.idleUserService.showLogoutModal.subscribe(data => this.showLogoutModal = data);
     // this.idleUserService.LogoutModalParams.subscribe(data => {
@@ -114,122 +113,122 @@ export class HomeComponent implements OnInit, OnDestroy {
     // this.username = this.appCommonService.getUserProfile().UserName;
     // this.heading = this.username + ' is logged in. Do you want to continue with this?';
     // this.msalService.logout();
-    // // // if (this.msalService.getUser().idToken['newUser']) {
-    // // //   if (this.msalService.isOnline()) {
-    // // //     const userData = this.msalService.getUser();
-    // // //     // this.router.navigate(['/signup']);
-    // // //     let signupDetailsForApi: any;
-    // // //     signupDetailsForApi = {
-    // // //       UserSignupDetails: {
-    // // //         Id: 0,
-    // // //         UserName: userData.idToken['emails'][0],
-    // // //         AzureUserId: userData.userIdentifier,
-    // // //         EmailId: userData.idToken['emails'][0],
-    // // //         IsNewUser: userData.idToken['newUser'],
-    // // //         FirstName: userData.idToken['given_name'],
-    // // //         LastName: userData.idToken['family_name'],
-    // // //         City: userData.idToken['city'],
-    // // //         ClientId: 16
-    // // //       }
-    // // //     };
-    // // //     const url = 'api/Login/UserSignup';
-    // // //     this.httpMethodsService.post(url, signupDetailsForApi).subscribe(
-    // // //       (data: any) => {
-    // // //         this.isNewUser = true;
-    // // //         // this.router.navigate(['/resetpassword']);
-    // // //         // if (String(data).toLocaleUpperCase() !== 'NO DATA FOUND!') {
-    // // //         //   if (String(data[0].ResultKey === 'Success')) {
+    if (this.msalService.getUser().idToken['newUser']) {
+      if (this.msalService.isOnline()) {
+        const userData = this.msalService.getUser();
+        // this.router.navigate(['/signup']);
+        let signupDetailsForApi: any;
+        signupDetailsForApi = {
+          UserSignupDetails: {
+            Id: 0,
+            UserName: userData.idToken['emails'][0],
+            AzureUserId: userData.userIdentifier,
+            EmailId: userData.idToken['emails'][0],
+            IsNewUser: userData.idToken['newUser'],
+            FirstName: userData.idToken['given_name'],
+            LastName: userData.idToken['family_name'],
+            City: userData.idToken['city'],
+            ClientId: 16
+          }
+        };
+        const url = 'api/Login/UserSignup';
+        this.httpMethodsService.post(url, signupDetailsForApi).subscribe(
+          (data: any) => {
+            this.isNewUser = true;
+            // this.router.navigate(['/resetpassword']);
+            // if (String(data).toLocaleUpperCase() !== 'NO DATA FOUND!') {
+            //   if (String(data[0].ResultKey === 'Success')) {
 
-    // // //         //     this.confirmationService.confirm({
-    // // //         //       message: 'You are signed up successfully.',
-    // // //         //       key: 'draftconfirm',
-    // // //         //       rejectVisible: false,
-    // // //         //       acceptLabel: 'Ok',
-    // // //         //       accept: () => {
-    // // //         //         this.msalService.logout();
-    // // //         //       }
-    // // //         //     });
-    // // //         //   }
-    // // //         // }
-    // // //       }
-    // // //     );
-    // // //   }
-    // // //   //  this.msalService.logout();
-    // // // } else {
-    // // //   // if ( this.msalService.clientApplication.validateAuthority) {
-    // // //   //   let abc = '';
-    // // //   //   if (localStorage.getItem('ABC')) {
-    // // //   //   abc =   localStorage.getItem('ABC');
-    // // //   //   if (abc === '1') {
-    // // //   //     abc = '0';
-    // // //   //     this. updateEmpInfo(this.msalService.getUser().idToken['oid']);
-    // // //   //     localStorage.setItem('ABC', abc);
-    // // //   //   }
-    // // //   //   }
-    // // //   // }
-    // // //   if (this.msalService.isOnline()) {
-    // // //     this.loaderService.display(true);
+            //     this.confirmationService.confirm({
+            //       message: 'You are signed up successfully.',
+            //       key: 'draftconfirm',
+            //       rejectVisible: false,
+            //       acceptLabel: 'Ok',
+            //       accept: () => {
+            //         this.msalService.logout();
+            //       }
+            //     });
+            //   }
+            // }
+          }
+        );
+      }
+      //  this.msalService.logout();
+    } else {
+      // if ( this.msalService.clientApplication.validateAuthority) {
+      //   let abc = '';
+      //   if (localStorage.getItem('ABC')) {
+      //   abc =   localStorage.getItem('ABC');
+      //   if (abc === '1') {
+      //     abc = '0';
+      //     this. updateEmpInfo(this.msalService.getUser().idToken['oid']);
+      //     localStorage.setItem('ABC', abc);
+      //   }
+      //   }
+      // }
+      if (this.msalService.isOnline()) {
+        this.loaderService.display(true);
 
-    // // //     let params = new HttpParams();
-    // // //     params = params.append('AzureUserId', this.msalService.getUser().idToken['oid']);
-    // // //     this.httpMethodsService.get('api/Login/GetSignInUserDetails', { params: params })
-    // // //       .subscribe(
-    // // //         (data: any) => {
+        let params = new HttpParams();
+        params = params.append('AzureUserId', this.msalService.getUser().idToken['oid']);
+        this.httpMethodsService.get('api/Login/GetSignInUserDetails', { params: params })
+          .subscribe(
+            (data: any) => {
 
-    // // //           if (String(data).toLocaleUpperCase() !== 'NO DATA FOUND!') {
-    // // //             this.userModel = <UserModel>data.Table[0];
+              if (String(data).toLocaleUpperCase() !== 'NO DATA FOUND!') {
+                this.userModel = <UserModel>data.Table[0];
 
-    // // //             const expires_in = this.msalService.getUser().idToken['exp'];
+                const expires_in = this.msalService.getUser().idToken['exp'];
 
-    // // //             const expireDate = new Date(new Date().getTime() + ((expires_in))).toUTCString();
-    // // //             this.appCommonService.encryptDecryptKey = this.userModel.EncryptDecryptKey;
+                const expireDate = new Date(new Date().getTime() + ((expires_in))).toUTCString();
+                this.appCommonService.encryptDecryptKey = this.userModel.EncryptDecryptKey;
 
-    // // //             localStorage.setItem('EncryptDecryptKey', this.appCommonService.EncryptKey(this.userModel.EncryptDecryptKey));
+                localStorage.setItem('EncryptDecryptKey', this.appCommonService.EncryptKey(this.userModel.EncryptDecryptKey));
 
-    // // //             this.appCommonService.setCookie('userProfile' + this.appCommonService.getEnvData().clientCode,
-    // // //               this.appCommonService.Encrypt(JSON.stringify(this.userModel)), expireDate);
+                this.appCommonService.setCookie('userProfile' + this.appCommonService.getEnvData().clientCode,
+                  this.appCommonService.Encrypt(JSON.stringify(this.userModel)), expireDate);
 
-    // // //             // Added Employee page access list in localstorage
-    // // //             if (data.Table1.length > 0) {
-    // // //               this.rolewiseMenuItem(data.Table1);
-    // // //             } else {
-    // // //               this.addSuperAdminPage();
-    // // //             }
+                // Added Employee page access list in localstorage
+                if (data.Table1.length > 0) {
+                  this.rolewiseMenuItem(data.Table1);
+                } else {
+                  this.addSuperAdminPage();
+                }
 
-    // // //             this.menuItems = [];
-    // // //             if (this.appCommonService.getRoleAccess()) {
-    // // //               this.menuItems = this.appCommonService.getRoleAccess();
-    // // //             }
-    // // //             if (this.userModel.IsFirstTimeSignIn && String(location.href).indexOf('home/signup') > 0) {
-    // // //               this.router.navigate(['home/signup']);
-    // // //             } else if (this.userModel.IsFirstTimeSignIn && String(location.href).indexOf('home/signup') <= 0) {
-    // // //               this.router.navigate(['/resetpassword']);
-    // // //             } else {
-    // // //               if (this.menuItems.length > 0) {
-    // // //                 this.menuItems = this.menuItems.filter(r => r.IsDefaultPage === 1);
-    // // //                 let routeName;
-    // // //                 if (this.menuItems.length > 0) {
-    // // //                   routeName = this.menuItems[0].RouterLink;
-    // // //                   this.router.navigate(['home/' + routeName]);
-    // // //                 } else {
-    // // //                   this.router.navigate(['home/erroraccessdenieded']);
-    // // //                 }
-    // // //               } else {
-    // // //                 if (this.userModel.UserRole.toString() === this.userRoles.Manager) {
-    // // //                   this.router.navigate(['home/managerdashboard']);
-    // // //                 } else if (this.userModel.UserRole.toString() === this.userRoles.SuperAdmin) {
-    // // //                   this.router.navigate(['home/managerdashboard']);
-    // // //                 } else {
-    // // //                   this.router.navigate(['home/empdashboard']);
-    // // //                 }
-    // // //               }
-    // // //             }
+                this.menuItems = [];
+                if (this.appCommonService.getRoleAccess()) {
+                  this.menuItems = this.appCommonService.getRoleAccess();
+                }
+                if (this.userModel.IsFirstTimeSignIn && String(location.href).indexOf('default/signup') > 0) {
+                  this.router.navigate(['default/signup']);
+                } else if (this.userModel.IsFirstTimeSignIn && String(location.href).indexOf('default/signup') <= 0) {
+                  this.router.navigate(['/resetpassword']);
+                } else {
+                  if (this.menuItems.length > 0) {
+                    this.menuItems = this.menuItems.filter(r => r.IsDefaultPage === 1);
+                    let routeName;
+                    if (this.menuItems.length > 0) {
+                      routeName = this.menuItems[0].RouterLink;
+                      this.router.navigate(['home/' + routeName]);
+                    } else {
+                      this.router.navigate(['home/erroraccessdenieded']);
+                    }
+                  } else {
+                    if (this.userModel.UserRole.toString() === this.userRoles.Manager) {
+                      this.router.navigate(['home/managerdashboard']);
+                    } else if (this.userModel.UserRole.toString() === this.userRoles.SuperAdmin) {
+                      this.router.navigate(['home/managerdashboard']);
+                    } else {
+                      this.router.navigate(['home/empdashboard']);
+                    }
+                  }
+                }
 
-    // // //             this.loaderService.display(false);
-    // // //           }
-    // // //         });
-    // // //   }
-    // // // }
+                this.loaderService.display(false);
+              }
+            });
+      }
+    }
 
 
     this.newReloginForm = this.fb.group({
