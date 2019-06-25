@@ -16,6 +16,7 @@ import { ConfirmationService, Message } from 'primeng/api';
 import { AppComponent } from '../../../app.component';
 import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { UserModel } from '../../../shared/models/user.model';
+import { ReturnStatement } from '@angular/compiler';
 
 @Component({
   moduleId: module.id,
@@ -63,7 +64,7 @@ public cookie_virtualRoleId: any;
   ngOnInit() {
     this.loaderService.display(false);
     this.globalResource = GlobalResources.getResources().en;
-    this.titleService.setTitle('User List');
+    this.titleService.setTitle('Employee List');
     this.defaultPageSize  = this.appCommonService.getDefaultPageSize();
     this.getPageConstants = AppConstants.getPageConstants;
     this.cookie_virtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
@@ -113,10 +114,11 @@ public cookie_virtualRoleId: any;
       () => console.log('Get all roles complete'));
       this.loaderService.display(false);
   }
-  onRowSelect(emp) {
+  onRowSelect(event) {
     if (!this.rowcheckboxcheckdisplay) {
-      this.appCommonService.AzureEmpData = emp;
-      this.router.navigate(['/home/updateuser']);
+      if (event.UserId > 0) {
+         this.router.navigate(['../home/adduser/' + event.UserId ]);
+      }
     }
   }
 
@@ -140,9 +142,9 @@ public cookie_virtualRoleId: any;
    // event.stopPropagation();
     let cofirmmsg = '';
    if (event) {
-    cofirmmsg = 'Are you sure you want to activate this User?';
+    cofirmmsg = 'Are you sure you want to activate this Employee?';
    } else {
-    cofirmmsg = 'Are you sure you want to inactivate this User?';
+    cofirmmsg = 'Are you sure you want to inactivate this Employee?';
    }
 
     let AzureUserDeleteActiveForApi;
@@ -169,7 +171,7 @@ public cookie_virtualRoleId: any;
               this.msgs = [];
               this.msgs.push({
                 severity: 'success', summary: this.globalResource.applicationmsg,
-                detail: 'User updated successfully.'
+                detail: 'Employee updated successfully.'
               });
               this.loaderService.display(false);
             } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'FAILURE') {

@@ -136,6 +136,7 @@ const appRoutes: Routes = [
         { path: 'inviteemployee', component: InviteNewEmployeeComponent },
          { path: 'updateuser', component: UpdateEmployeeComponent  },
         { path: 'adduser', component: AddEmployeeComponent  },
+        { path: 'adduser/:UserId', component: AddEmployeeComponent  },
       ]
     }
 ];

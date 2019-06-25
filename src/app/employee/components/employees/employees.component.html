@@ -1,5 +1,5 @@
 <div class="content-section implementation GridDemo">
-    <p-panel header="User List">
+    <p-panel header="Employee List">
         <div class="ui-g">
             <div class="ui-g-12"> <button pButton type="button" (click)="addNewEmployee()" icon="fa fa-plus"
                     label="Add New Employee" style="float:right;">
@@ -8,7 +8,7 @@
 
                 <p-table #dtEmpList [value]="employeeList" sortMode="single" [responsive]="true" [paginator]="true"
                     [rows]="defaultPageSize" dataKey="Id" [rowsPerPageOptions]="paginationValues" 
-                    (onPage)="onPageChange($event)" rowHover='true'
+                    (onPage)="onPageChange($event)" rowHover='true'  
                     [globalFilterFields]="['EmpName', 'RoleName', 'PrimaryEmail', 'CellPhone']">
 
                     <ng-template pTemplate="header">
@@ -58,7 +58,7 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
-                        <tr [pSelectableRow]="rowData"   [pSelectableRowIndex]="rowIndex" [pRowToggler]="rowData">
+                        <tr [pSelectableRow]="rowData" (click)= "onRowSelect(rowData)"  [pSelectableRowIndex]="rowIndex" [pRowToggler]="rowData">
                             <td>
                                 <span class="ui-column-title">Employee</span>
                                 {{rowData?.EmpName}}

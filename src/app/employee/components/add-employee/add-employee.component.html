@@ -1,7 +1,7 @@
 <div class="content-section implementation GridDemo">
   <div class="ui-g">
     <div class="ui-g-12  ui-g-nopad">
-      <p-panel header="Add new user">
+      <p-panel header="{{submitlabel}}">
         <form [formGroup]="addEmpForm" (ngSubmit)="onSubmit(addEmpForm.value)" autocomplete="off">
           <div class="ui-g">
             <div class="ui-g-12 ui-md-12 ui-g-nopad">
@@ -73,8 +73,13 @@
                   <div class="le-su-12">
                     <label for="strain" class="towlable fwLabelBold">Birth Date </label>
 
-                    <p-calendar [showIcon]="true" [tabindex]="5" showButtonBar="true" class="clsControl" id="birthDate"
-                      name="birthDate" formControlName="birthDate">
+                    <p-calendar [showIcon]="true" 
+                    [tabindex]="5" 
+                    showButtonBar="true" 
+                    class="clsControl" 
+                    id="birthDate"
+                    name="birthDate" 
+                    formControlName="birthDate">
                     </p-calendar>
                   </div>
                 </div>
@@ -87,7 +92,14 @@
                     <label for="cellPhone" class="towlable fwLabelBold">Phone No<span class="star">
                         *</span></label>
 
-                    <input id="input" type="text" name="cellPhone" tabindex="6" class="clsControl" pInputText
+                    <input id="input" type="text" name="cellPhone"
+                      OnlyNumberWithoutZero="true" 
+                      pKeyFilter="pint"
+                      OnlyNumber="true" 
+                      tabindex="6"
+                      PositiveIntegers
+                       class="clsControl" 
+                       pInputText
                       formControlName="cellPhone">
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                       *ngIf="!addEmpForm.controls['cellPhone'].valid&&addEmpForm.controls['cellPhone'].dirty">
@@ -129,8 +141,19 @@
                 <div class="paddingRL">
                   <div class="le-su-12">
                     <label for="strain" class="towlable fwLabelBold">User Name<span class="star"> *</span></label>
-                    <input id="input" type="text" name="userName" class="clsControl" pInputText tabindex="8"
-                      formControlName="userName">
+                    <input id="input" 
+                    type="text" 
+                    name="userName" 
+                    class="clsControl" 
+                    pInputText 
+                    tabindex="8"
+                    [disabled]= "isUpdateMode ? 'disabled' : ''"
+                        [style.disabled] = "isUpdateMode ? 'disabled' : ''"
+                        [style.border]="isUpdateMode ? 'none' : ''"
+                        [style.width] = "isUpdateMode ? '100%' : ''"
+                        [style.pointer-events] = "isUpdateMode ? 'none' : ''"
+                        [readOnly]="isUpdateMode"
+                    formControlName="userName">
 
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                       *ngIf="!addEmpForm.controls['userName'].valid&&addEmpForm.controls['userName'].dirty">
@@ -185,7 +208,15 @@
                 <div class="paddingRL">
                   <div class="le-su-12">
                     <label for="strain" class="towlable fwLabelBold">Hourly Rate<span class="star"> *</span></label>
-                    <input id="input" tabindex="11" type="text" name="hourlyRate" class="clsControl" pInputText
+                    <input id="input" 
+                    tabindex="11" 
+                     pKeyFilter="num" 
+                     type="number" 
+                     name="hourlyRate" 
+                     class="clsControl" 
+                     pInputText
+                     pKeyFilter="num"
+                     OnlyNumber="true"
                       formControlName="hourlyRate">
 
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
@@ -204,7 +235,7 @@
                   <div class="le-su-12">
                     <ul class="list-inline">
                       <li>
-                        <p-button type="submit" tabindex="12" styleClass="ui-button-rounded" label="Add User"
+                        <p-button type="submit" tabindex="12" styleClass="ui-button-rounded" label="{{submitlabel}}"
                           id="btnAdduser" name="btnAdduser">
                         </p-button>
                       </li>

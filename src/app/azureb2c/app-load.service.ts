@@ -27,7 +27,6 @@ export class AppLoadService {
     constructor(
         private loaderService: LoaderService
     ) {
-
         this.clientApplicationRef = new Msal.UserAgentApplication(
             this.tenantConfig.clientID, this.authority,
             (errorDesc: any, token: any, error: any, tokenType: any, userState: any) => {
