@@ -81,6 +81,8 @@ export class DefaultComponent implements OnInit, OnDestroy {
   public userRoles: any;
   public menuItems: any = [];
 
+  public isIframe: boolean;
+
   constructor(private fb: FormBuilder,
     private titleService: Title,
     private appCommonService: AppCommonService,
@@ -93,6 +95,8 @@ export class DefaultComponent implements OnInit, OnDestroy {
     private msalService: MsalService,
     private httpMethodsService: HttpMethodsService
   ) {
+    //  This is to avoid reload during acquireTokenSilent() because of hidden iframe
+    this.isIframe = window !== window.parent && !window.opener;
     this.screenwidthfind();
     // this.idleUserService.initiaization(_element);
   }
@@ -101,135 +105,69 @@ export class DefaultComponent implements OnInit, OnDestroy {
     // this.msalService.logout();
     this.titleService.setTitle('Default');
     this.globalResource = GlobalResources.getResources().en;
-    // this.idleUserService.showLogoutModal.subscribe(data => this.showLogoutModal = data);
-    // this.idleUserService.LogoutModalParams.subscribe(data => {
-    //   this.logoutModalObject = data;
 
-    //   if (this.logoutModalObject.loggedOut) {
-    //     this.logOut();
-    //   }
-    // });
+    if (this.msalService.isOnline()) {
+      this.loaderService.display(true);
 
-    // this.username = this.appCommonService.getUserProfile().UserName;
-    // this.heading = this.username + ' is logged in. Do you want to continue with this?';
-    // this.msalService.logout();
-    if (this.msalService.getUser().idToken['newUser']) {
-      if (this.msalService.isOnline()) {
-        const userData = this.msalService.getUser();
-        // this.router.navigate(['/signup']);
-        let signupDetailsForApi: any;
-        signupDetailsForApi = {
-          UserSignupDetails: {
-            Id: 0,
-            UserName: userData.idToken['emails'][0],
-            AzureUserId: userData.userIdentifier,
-            EmailId: userData.idToken['emails'][0],
-            IsNewUser: userData.idToken['newUser'],
-            FirstName: userData.idToken['given_name'],
-            LastName: userData.idToken['family_name'],
-            City: userData.idToken['city'],
-            ClientId: 16
-          }
-        };
-        const url = 'api/Login/UserSignup';
-        this.httpMethodsService.post(url, signupDetailsForApi).subscribe(
+      let params = new HttpParams();
+      params = params.append('AzureUserId', this.msalService.getUser().idToken['oid']);
+      this.httpMethodsService.get('api/Login/GetSignInUserDetails', { params: params })
+        .subscribe(
           (data: any) => {
-            this.isNewUser = true;
-            // this.router.navigate(['/resetpassword']);
-            // if (String(data).toLocaleUpperCase() !== 'NO DATA FOUND!') {
-            //   if (String(data[0].ResultKey === 'Success')) {
 
-            //     this.confirmationService.confirm({
-            //       message: 'You are signed up successfully.',
-            //       key: 'draftconfirm',
-            //       rejectVisible: false,
-            //       acceptLabel: 'Ok',
-            //       accept: () => {
-            //         this.msalService.logout();
-            //       }
-            //     });
-            //   }
-            // }
-          }
-        );
-      }
-      //  this.msalService.logout();
-    } else {
-      // if ( this.msalService.clientApplication.validateAuthority) {
-      //   let abc = '';
-      //   if (localStorage.getItem('ABC')) {
-      //   abc =   localStorage.getItem('ABC');
-      //   if (abc === '1') {
-      //     abc = '0';
-      //     this. updateEmpInfo(this.msalService.getUser().idToken['oid']);
-      //     localStorage.setItem('ABC', abc);
-      //   }
-      //   }
-      // }
-      if (this.msalService.isOnline()) {
-        this.loaderService.display(true);
+            if (String(data).toLocaleUpperCase() !== 'NO DATA FOUND!') {
+              this.userModel = <UserModel>data.Table[0];
 
-        let params = new HttpParams();
-        params = params.append('AzureUserId', this.msalService.getUser().idToken['oid']);
-        this.httpMethodsService.get('api/Login/GetSignInUserDetails', { params: params })
-          .subscribe(
-            (data: any) => {
+              const expires_in = this.msalService.getUser().idToken['exp'];
 
-              if (String(data).toLocaleUpperCase() !== 'NO DATA FOUND!') {
-                this.userModel = <UserModel>data.Table[0];
+              const expireDate = new Date(new Date().getTime() + ((expires_in))).toUTCString();
+              this.appCommonService.encryptDecryptKey = this.userModel.EncryptDecryptKey;
 
-                const expires_in = this.msalService.getUser().idToken['exp'];
+              localStorage.setItem('EncryptDecryptKey', this.appCommonService.EncryptKey(this.userModel.EncryptDecryptKey));
 
-                const expireDate = new Date(new Date().getTime() + ((expires_in))).toUTCString();
-                this.appCommonService.encryptDecryptKey = this.userModel.EncryptDecryptKey;
+              this.appCommonService.setCookie('userProfile' + this.appCommonService.getEnvData().clientCode,
+                this.appCommonService.Encrypt(JSON.stringify(this.userModel)), expireDate);
 
-                localStorage.setItem('EncryptDecryptKey', this.appCommonService.EncryptKey(this.userModel.EncryptDecryptKey));
+              // Added Employee page access list in localstorage
+              if (data.Table1.length > 0) {
+                this.rolewiseMenuItem(data.Table1);
+              } else {
+                this.addSuperAdminPage();
+              }
 
-                this.appCommonService.setCookie('userProfile' + this.appCommonService.getEnvData().clientCode,
-                  this.appCommonService.Encrypt(JSON.stringify(this.userModel)), expireDate);
-
-                // Added Employee page access list in localstorage
-                if (data.Table1.length > 0) {
-                  this.rolewiseMenuItem(data.Table1);
-                } else {
-                  this.addSuperAdminPage();
-                }
-
-                this.menuItems = [];
-                if (this.appCommonService.getRoleAccess()) {
-                  this.menuItems = this.appCommonService.getRoleAccess();
-                }
-                if (this.userModel.IsFirstTimeSignIn && String(location.href).indexOf('default/signup') > 0) {
-                  this.router.navigate(['default/signup']);
-                } else if (this.userModel.IsFirstTimeSignIn && String(location.href).indexOf('default/signup') <= 0) {
-                  this.router.navigate(['/resetpassword']);
-                } else {
+              this.menuItems = [];
+              if (this.appCommonService.getRoleAccess()) {
+                this.menuItems = this.appCommonService.getRoleAccess();
+              }
+              if (this.userModel.IsFirstTimeSignIn && String(location.href).indexOf('resetsuccess') > 0) {
+                this.router.navigate(['/resetsuccess']);
+              } else if (this.userModel.IsFirstTimeSignIn && String(location.href).indexOf('resetsuccess') <= 0) {
+                this.router.navigate(['/resetpassword']);
+              } else {
+                if (this.menuItems.length > 0) {
+                  this.menuItems = this.menuItems.filter(r => r.IsDefaultPage === 1);
+                  let routeName;
                   if (this.menuItems.length > 0) {
-                    this.menuItems = this.menuItems.filter(r => r.IsDefaultPage === 1);
-                    let routeName;
-                    if (this.menuItems.length > 0) {
-                      routeName = this.menuItems[0].RouterLink;
-                      this.router.navigate(['home/' + routeName]);
-                    } else {
-                      this.router.navigate(['home/erroraccessdenieded']);
-                    }
+                    routeName = this.menuItems[0].RouterLink;
+                    this.router.navigate(['home/' + routeName]);
                   } else {
-                    if (this.userModel.UserRole.toString() === this.userRoles.Manager) {
-                      this.router.navigate(['home/managerdashboard']);
-                    } else if (this.userModel.UserRole.toString() === this.userRoles.SuperAdmin) {
-                      this.router.navigate(['home/managerdashboard']);
-                    } else {
-                      this.router.navigate(['home/empdashboard']);
-                    }
+                    this.router.navigate(['home/erroraccessdenieded']);
+                  }
+                } else {
+                  if (this.userModel.UserRole.toString() === this.userRoles.Manager) {
+                    this.router.navigate(['home/managerdashboard']);
+                  } else if (this.userModel.UserRole.toString() === this.userRoles.SuperAdmin) {
+                    this.router.navigate(['home/managerdashboard']);
+                  } else {
+                    this.router.navigate(['home/empdashboard']);
                   }
                 }
-
-                this.loaderService.display(false);
               }
-            });
-      }
-    }
 
+              this.loaderService.display(false);
+            }
+          });
+    }
 
     this.newReloginForm = this.fb.group({
       'password': new FormControl(null, Validators.required)
@@ -452,19 +390,4 @@ export class DefaultComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-  updateEmpInfo(iD) {
-    let updateUserApiDetails: any;
-    updateUserApiDetails = {
-      AzureUserIs: iD
-    };
-    this.httpMethodsService.post('api/Employee/UpdateAzureUserFlag', updateUserApiDetails)
-      .subscribe((result: any) => {
-        if (String(result[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
-        }
-        // this.msalService.logout();
-      });
-
-  }
-
 }

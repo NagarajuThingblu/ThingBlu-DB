@@ -1,4 +1,4 @@
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, Title } from '@angular/platform-browser';
 import { AppCommonService } from './../../shared/services/app-common.service';
 import { LoaderService } from './../../shared/services/loader.service';
 import { Component, OnInit } from '@angular/core';
@@ -31,12 +31,14 @@ export class PrerollReportComponent implements OnInit {
   constructor(
     private loaderService: LoaderService,
     private appCommonService: AppCommonService,
-    public sanitizer: DomSanitizer
+    public sanitizer: DomSanitizer,
+    private titleService: Title,
 
   ) { }
 
   ngOnInit() {
     this.loaderService.display(true);
+    this.titleService.setTitle('Pre-Roll Report');
     //  setTimeout(() => {
     //   this.loaderService.display(false);
     //  }, 5000);

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../shared/services/loader.service';
 import { AppCommonService } from '../../shared/services/app-common.service';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-order-report',
@@ -32,12 +32,14 @@ export class OrderReportComponent implements OnInit {
   constructor(
     private loaderService: LoaderService,
     private appCommonService: AppCommonService,
-    public sanitizer: DomSanitizer
+    public sanitizer: DomSanitizer,
+    private titleService: Title,
 
   ) { }
 
   ngOnInit() {
     this.loaderService.display(true);
+    this.titleService.setTitle('Order Report');
     //  setTimeout(() => {
     //   this.loaderService.display(false);
     //  }, 5000);

@@ -1,5 +1,3 @@
-import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
-import { UpdateEmployeeComponent } from './components/update-employee/update-employee.component';
 
 import { AddEmployeeComponent } from './components/add-employee/add-employee.component';
 
@@ -10,8 +8,6 @@ import { InviteNewEmployeeComponent } from './components/invite-new-employee/inv
 
 @NgModule({
   declarations: [ EmployeesComponent, InviteNewEmployeeComponent, AddEmployeeComponent,
-    UpdateEmployeeComponent,
-    ResetPasswordComponent
    ],
   imports: [
     SharedModule

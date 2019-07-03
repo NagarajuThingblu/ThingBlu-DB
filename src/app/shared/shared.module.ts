@@ -1,3 +1,4 @@
+import { PhoneMaskPipe } from './../order/pipe/phone-mask.pipe';
 import { HttpMethodsService } from './services/http-methods.service';
 import { IdleUserService } from './../idle-user.service';
 import { AppCommonService } from './services/app-common.service';
@@ -107,7 +108,8 @@ import { CanDeactivateGuard } from '../guards/can-deactivate.guard';
       LotCommentComponent,
       PopupLotCommentComponent,
       SectionHeaderComponent,
-      CharactersCountComponent
+      CharactersCountComponent,
+      PhoneMaskPipe,
     ],
   imports: [
     CommonModule,
@@ -209,7 +211,8 @@ import { CanDeactivateGuard } from '../guards/can-deactivate.guard';
     LotCommentComponent,
     PopupLotCommentComponent,
     SectionHeaderComponent,
-    CharactersCountComponent
+    CharactersCountComponent,
+    PhoneMaskPipe,
   ]
 })
 // For Shared Services

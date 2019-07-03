@@ -1,3 +1,4 @@
+import { MsalModule } from './msal.module';
 import { EmployeeModule } from './employee/employee.module';
 import { Azureb2cModule } from './azureb2c/azureb2c.module';
 import { AppLoadService } from './azureb2c/app-load.service';
@@ -30,6 +31,7 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import { NgIdleModule } from '@ng-idle/core';
 import { MsalService } from './azureb2c/msal.service';
 import { ResetPasswordMsalService } from './azureb2c/reset-password-msal.service';
+import { promise } from 'protractor';
 
 // import { UserIdleModule } from 'angular-user-idle/user-idle.module';
 
@@ -69,7 +71,8 @@ export function init_app(appLoadService: AppLoadService) {
     AdminModule,
     ReportsModule,
     Azureb2cModule,
-    EmployeeModule
+    EmployeeModule,
+    MsalModule
   ],
   exports: [NgIdleModule],
   providers: [

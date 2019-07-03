@@ -3,6 +3,7 @@ import { UserModel } from './../shared/models/user.model';
 import { LoaderService } from './../shared/services/loader.service';
 import { Injectable } from '@angular/core';
 import * as Msal from 'msal';
+import { environment } from './../../environments/environment';
 
 @Injectable()
 export class ResetPasswordMsalService {
@@ -12,10 +13,10 @@ export class ResetPasswordMsalService {
     public userRoles: any;
 
     tenantConfig = {
-        tenant: 'thingblub2ctest.onmicrosoft.com',
-        clientID: '00f2482d-33d6-47a8-9639-39be906d926e',
-        resetPolicy: 'B2C_1_ResetPassword',
-        b2cScopes: ['https://thingblub2ctest.onmicrosoft.com/helloAPI/demo.read']
+        tenant: environment.tenant,
+        clientID: environment.tenantClientID,
+        resetPolicy: environment.resetPolicy,
+        b2cScopes: [environment.b2cScopes]
     };
 
     resetPasswordAuthority = 'https://login.microsoftonline.com/tfp/' + this.tenantConfig.tenant + '/' + this.tenantConfig.resetPolicy;
@@ -33,14 +34,14 @@ export class ResetPasswordMsalService {
             {
                 cacheLocation: 'localStorage',
                 logger: this.logger,
-                redirectUri: 'http://localhost:8000/default/signup/',
-                state: '12345'
+                redirectUri: environment.resetPwdRedirectUri,
+                state: '12345',
+                storeAuthStateInCookie: true
             }
         );
     }
 
     loggerCallback(logLevel: any, message: any, piiEnabled: any) {
-        alert('reset password');
     }
 
     public logout(): void {

@@ -24,5 +24,6 @@ export class ResetPasswordComponent implements OnInit {
   }
   redirectClick() {
     this.resetPasswordMsalService.resetPassword();
+    // location.reload();
       }
 }

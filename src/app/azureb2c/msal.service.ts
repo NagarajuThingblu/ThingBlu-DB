@@ -1,3 +1,4 @@
+import { environment } from './../../environments/environment';
 import { UserModel } from './../shared/models/user.model';
 import { LoaderService } from './../shared/services/loader.service';
 import { Injectable } from '@angular/core';
@@ -11,11 +12,11 @@ export class MsalService {
     public userRoles: any;
 
     tenantConfig = {
-        tenant: 'thingblub2ctest.onmicrosoft.com',
-        clientID: '00f2482d-33d6-47a8-9639-39be906d926e',
-        signUpSignInPolicy: 'B2C_1_SignUpInV2',
-        signUpPolicy: 'B2C_1_SignUpV2',
-        b2cScopes: ['https://thingblub2ctest.onmicrosoft.com/helloAPI/demo.read']
+        tenant: environment.tenant,
+        clientID: environment.tenantClientID,
+        signUpSignInPolicy: environment.signUpSignInPolicy,
+        signUpPolicy: environment.signUpPolicy,
+        b2cScopes: [environment.b2cScopes]
     };
 
     // Configure the authority for Azure AD B2C
@@ -36,11 +37,12 @@ export class MsalService {
                 cacheLocation: 'localStorage',
                 logger: this.logger,
                 storeAuthStateInCookie: true,
-                redirectUri: 'http://localhost:8000/',
+                redirectUri:  environment.redirectUri,
                 state: '12345',
                 navigateToLoginRequestUrl: false,
+                postLogoutRedirectUri: environment.redirectUri
                 // validateAuthority: false
-            },
+            }
         );
     }
 
@@ -69,13 +71,25 @@ export class MsalService {
     }
 
     public getAuthenticationToken(): Promise<string> {
+        // return this.clientApplication.acquireTokenSilent(this.tenantConfig.b2cScopes)
+        //     .then(token => {
+        //         return token;
+        //     })
+        //     .catch(error => {
+        //         this.clientApplication.acquireTokenRedirect(this.tenantConfig.b2cScopes);
+        //         return Promise.resolve('');
+        //     });
+
         return this.clientApplication.acquireTokenSilent(this.tenantConfig.b2cScopes)
             .then(token => {
                 return token;
-            })
-            .catch(error => {
-                this.clientApplication.acquireTokenRedirect(this.tenantConfig.b2cScopes);
-                return Promise.resolve('');
+            }).catch(error => {
+                return this.clientApplication.acquireTokenPopup(this.tenantConfig.b2cScopes)
+                    .then(token => {
+                        return token;
+                    }).catch(innererror => {
+                        return  Promise.resolve('');
+                    });
             });
     }
     public getAllUsers() {

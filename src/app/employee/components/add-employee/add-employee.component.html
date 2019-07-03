@@ -78,6 +78,8 @@
                     showButtonBar="true" 
                     class="clsControl" 
                     id="birthDate"
+                    [maxDate]="defaultDate"
+                    [yearNavigator] = "true" yearRange="1900:2030"
                     name="birthDate" 
                     formControlName="birthDate">
                     </p-calendar>
@@ -92,7 +94,15 @@
                     <label for="cellPhone" class="towlable fwLabelBold">Phone No<span class="star">
                         *</span></label>
 
-                    <input id="input" type="text" name="cellPhone"
+                        <p-inputMask name="cellPhone" 
+                        formControlName="cellPhone" id="cellPhone"
+                        autocomplete="off" 
+                        tabindex="6" 
+                        class="clsControl" 
+                        mask="(999) 999-9999">
+                      </p-inputMask>
+
+                    <!-- <input id="input" type="text" name="cellPhone"
                       OnlyNumberWithoutZero="true" 
                       pKeyFilter="pint"
                       OnlyNumber="true" 
@@ -100,15 +110,15 @@
                       PositiveIntegers
                        class="clsControl" 
                        pInputText
-                      formControlName="cellPhone">
+                      formControlName="cellPhone"> -->
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                       *ngIf="!addEmpForm.controls['cellPhone'].valid&&addEmpForm.controls['cellPhone'].dirty">
                       <span *ngIf="addEmpForm.controls['cellPhone'].errors['required']">
                         Phone No required.
                       </span>
-                      <span *ngIf="addEmpForm.controls['cellPhone'].errors['maxlength']">
+                      <!-- <span *ngIf="addEmpForm.controls['cellPhone'].errors['maxlength']">
                         Invalid Phone No.
-                      </span>
+                      </span> -->
                     </div>
                   </div>
                 </div>
@@ -144,7 +154,10 @@
                     <input id="input" 
                     type="text" 
                     name="userName" 
+                    [pKeyFilter]="blockSpace"
+                    (keypress)="omit_special_char($event)"
                     class="clsControl" 
+                    maxlength="64"
                     pInputText 
                     tabindex="8"
                     [disabled]= "isUpdateMode ? 'disabled' : ''"
@@ -240,9 +253,9 @@
                         </p-button>
                       </li>
                       <li style="vertical-align: bottom;">
-                        <a class="btn-link anchor" tabindex="13" (click)="onCancel()">
+                         <a class="btn-link anchor" style="cursor: pointer" tabindex="13" (click)="onCancel()">
                           Cancel
-                        </a>
+                        </a> 
                       </li>
                     </ul>
                   </div>

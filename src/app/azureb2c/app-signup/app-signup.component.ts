@@ -1,8 +1,7 @@
 import { ResetPasswordMsalService } from './../reset-password-msal.service';
 import { MsalService } from './../msal.service';
-import { environment } from './../../../environments/environment.prod';
 import { HttpMethodsService } from './../../shared/services/http-methods.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LoaderService } from './../../shared/services/loader.service';
 
 @Component({
@@ -10,7 +9,8 @@ import { LoaderService } from './../../shared/services/loader.service';
   selector: 'app-app-signup',
   templateUrl: 'app-signup.component.html'
 })
-export class AppSignupComponent implements OnInit {
+export class AppSignupComponent implements OnInit  {
+public isPasswordResetSuccess = false;
 
   constructor(
     private loaderService: LoaderService,
@@ -41,6 +41,7 @@ export class AppSignupComponent implements OnInit {
       .subscribe((result: any) => {
         this.loaderService.display(false);
         this.msalService.logout();
+        this.isPasswordResetSuccess = true;
       });
 
   }

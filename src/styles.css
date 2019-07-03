@@ -239,7 +239,7 @@ border-radius: 3px !important;
 .star{color: red;}
 p-calendar.clsControl > span{width:100%;}
 p-calendar.clsControl > span input{width:calc(100% - 2em);}
-.clsControl{width: 100% !important;display: block;}
+.clsControl, p-inputmask.clsControl input{width: 100% !important;display: block;}
 .clsControl > div{width: 100% !important;}
 .clsControlsmall{width: 80% !important;float: left;}
 .clsControlsmall > div{width: 80% !important;float: left;}

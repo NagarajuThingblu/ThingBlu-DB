@@ -1,3 +1,4 @@
+import { MsalComponent } from './msal.component';
 import { DefaultComponent } from './default/default.component';
 import { AddEmployeeComponent } from './employee/components/add-employee/add-employee.component';
 import { PrerollReportComponent } from './reports/preroll-report/preroll-report.component';
@@ -56,89 +57,79 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { ResetPasswordComponent } from './azureb2c/reset-password/reset-password.component';
 import { AppSignupComponent } from './azureb2c/app-signup/app-signup.component';
 import { InviteNewEmployeeComponent } from './employee/components/invite-new-employee/invite-new-employee.component';
-import { UpdateEmployeeComponent } from './employee/components/update-employee/update-employee.component';
 import { EmployeesComponent } from './employee/components/employees/employees.component';
-// import { HomeComponent } from './home/index';
-// import { LoginComponent } from './login/index';
-// import { RegisterComponent } from './register/index';
-// import { AuthGuard } from './_guards/index';
 
 const appRoutes: Routes = [
-    { path: '', redirectTo: 'default', pathMatch: 'full'  },
-    { path: 'login', component: LoginComponent},
-    { path: 'forgotpassword', component: ForgotPasswordComponent },
-    { path: 'forgotpassword/:token', component: ForgotPasswordComponent, canActivate: [] },
-    { path: 'resetpassword', component: ResetPasswordComponent, canActivate: [AuthGuard]},
-    { path: 'convertpwd', component: EncDecPwdComponent, canActivate: [AuthGuard] },
-    { path: 'default', component: DefaultComponent, canActivate: [AuthGuard],
-      children: [
-        { path: '', redirectTo: 'home/lotentry', pathMatch: 'full' },
-        { path: 'signup', component: AppSignupComponent }
-      ]
-    },
-    { path: 'home', component: HomeComponent, canActivate: [AuthGuard] ,
+  { path: '', redirectTo: 'default', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'forgotpassword', component: ForgotPasswordComponent },
+  { path: 'forgotpassword/:token', component: ForgotPasswordComponent, canActivate: [] },
+  { path: 'resetpassword', component: ResetPasswordComponent, canActivate: [AuthGuard] },
+  { path: 'convertpwd', component: EncDecPwdComponent },
+  { path: 'resetsuccess', component: MsalComponent },
+  {
+    path: 'default', component: DefaultComponent, canActivate: [AuthGuard],
     children: [
-        { path: '', redirectTo: 'lotentry', pathMatch: 'full' },
-        { path: 'lotentry', component: LotEntryFormComponent, resolve: { data: SkewListResolver}, canActivate: [AuthGuard, RoleGuard],
-                 canDeactivate: [CanDeactivateGuard]},
-        { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-        { path: 'assigntask', component: AssignTaskComponent , canActivate: [AuthGuard, RoleGuard] },
-        { path: 'assigntask/:id', component: EditTaskComponent, resolve: { data: TaskResolver } },
-        { path: 'managerdashboard', component: ManagerdashboardComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'searchtask', component: SearchtaskComponent, canActivate: [AuthGuard] },
-        { path: 'taskaction/:taskType/:id', component: TaskactionsComponent, resolve: { data: SkewListResolver}, canActivate: [AuthGuard] },
-        { path: 'whiteboards', component: WhiteboardsComponent, canActivate: [AuthGuard] },
-        { path: 'whiteboard/:flag', component: WhiteboardDetailsComponent },
-        { path: 'orderrequestform', component: OrderRequestFormComponent, canActivate: [AuthGuard, RoleGuard]},
-        // draft order page routing
-        { path: 'orderrequestform/:draftOrderId', component: OrderRequestFormComponent, canActivate: [AuthGuard, RoleGuard]},
-        { path: 'orderreturn', component: OrderReturnComponent, canActivate: [AuthGuard]},
-        { path: 'oilmaterialsout', component: OilMaterialsOutComponent, canActivate: [AuthGuard, RoleGuard]},
-        { path: 'oilmaterialsin', component: OilMaterialsInComponent, canActivate: [AuthGuard, RoleGuard]},
-        { path: 'lottracking', component: LotTrackingComponent, canActivate: [AuthGuard] },
-        { path: 'empdashboard', component: EmployeedashboardComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'orderlisting', component: OrderListingComponent, canActivate: [AuthGuard, RoleGuard]  },
-        { path: 'lotlisting', component: LotlistingComponent, canActivate: [AuthGuard, RoleGuard], resolve: { data: SkewListResolver}  },
-        { path: 'oiloutword', component: OilOutwordListingComponent, canActivate: [AuthGuard, RoleGuard]  },
-        { path: 'oilinword', component: OilInwordListingComponent, canActivate: [AuthGuard, RoleGuard]  },
-        { path: 'newproducttype', component: NewProductTypeComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'grower', component: GrowerComponent, canActivate: [AuthGuard, RoleGuard]},
-        { path: 'city', component: CityComponent, canActivate: [AuthGuard, RoleGuard]},
-        { path: 'tpprocessor', component: TpProcessorComponent, canActivate: [AuthGuard, RoleGuard]},
-        { path: 'retailer', component: RetailerComponent, canActivate: [AuthGuard, RoleGuard]},
-        { path: 'client', component: AddNewClientComponent, canActivate: [AuthGuard, RoleGuard]},
-        { path: 'addemployee', component: AddNewEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'strainmaster', component: StrainMasterComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'straintypemaster', component: StraintypeMasterComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'addnewbrand', component: AddNewBrandFormComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'addnewpackagetype', component: NewPackageTypeFormComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'addnewsubbrand', component: AddNewSubBrandFormComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'addnewsgenetics', component: GeneticsMasterComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'addtpppackagetype', component: TppPackageTypeMappingMasterComponent, canActivate: [AuthGuard, RoleGuard] },
-        // { path: 'jointsproductiondashboard', component: JointsProductionDashboardComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'jointsproductiondashboard', component: JointsDashboardComponent, canActivate: [AuthGuard, RoleGuard] },
-        // Added by Devdan :: 03-Oct-2018 :: Path for Task Setting page
-        { path: 'tasksetting', component: TaskSettingComponent, canActivate: [AuthGuard, RoleGuard]},
-        // End of Added by Devdan
-        { path: 'masteruserroleaccess', component: MasterUserRoleAccessComponent, canActivate: [AuthGuard, RoleGuard]},
-        { path: 'erroraccessdenieded', component: ErrorAccessDeniededComponent, canActivate: [AuthGuard]},
-        // Added By Bharat T on 13th-July-2018
-         { path: 'empassigntask', component: EmployeeAssignTaskComponent , canActivate: [AuthGuard, RoleGuard] },
-        // { path: 'lotedit/:LotId', component: LotEditComponent, resolve: { data: SkewListResolver}, canActivate: [AuthGuard] },
-        // End of  Added By Bharat T on 13th-July-2018
+      { path: '', redirectTo: 'home/lotentry', pathMatch: 'full' },
+      { path: 'signup', component: AppSignupComponent },
+    ]
+  },
+  {
+    path: 'home', component: HomeComponent, canActivate: [AuthGuard],
+    children: [
+      { path: '', redirectTo: 'lotentry', pathMatch: 'full' },
+      {
+        path: 'lotentry', component: LotEntryFormComponent, resolve: { data: SkewListResolver }, canActivate: [AuthGuard, RoleGuard],
+        canDeactivate: [CanDeactivateGuard]
+      },
+      { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+      { path: 'assigntask', component: AssignTaskComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'assigntask/:id', component: EditTaskComponent, resolve: { data: TaskResolver } },
+      { path: 'managerdashboard', component: ManagerdashboardComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'searchtask', component: SearchtaskComponent, canActivate: [AuthGuard] },
+      { path: 'taskaction/:taskType/:id', component: TaskactionsComponent, resolve: { data: SkewListResolver }, canActivate: [AuthGuard] },
+      { path: 'whiteboards', component: WhiteboardsComponent, canActivate: [AuthGuard] },
+      { path: 'whiteboard/:flag', component: WhiteboardDetailsComponent },
+      { path: 'orderrequestform', component: OrderRequestFormComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'orderrequestform/:draftOrderId', component: OrderRequestFormComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'orderreturn', component: OrderReturnComponent, canActivate: [AuthGuard] },
+      { path: 'oilmaterialsout', component: OilMaterialsOutComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'oilmaterialsin', component: OilMaterialsInComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'lottracking', component: LotTrackingComponent, canActivate: [AuthGuard] },
+      { path: 'empdashboard', component: EmployeedashboardComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'orderlisting', component: OrderListingComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'lotlisting', component: LotlistingComponent, canActivate: [AuthGuard, RoleGuard], resolve: { data: SkewListResolver } },
+      { path: 'oiloutword', component: OilOutwordListingComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'oilinword', component: OilInwordListingComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'newproducttype', component: NewProductTypeComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'grower', component: GrowerComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'city', component: CityComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'tpprocessor', component: TpProcessorComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'retailer', component: RetailerComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'client', component: AddNewClientComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'addemployee', component: AddNewEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'strainmaster', component: StrainMasterComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'straintypemaster', component: StraintypeMasterComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'addnewbrand', component: AddNewBrandFormComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'addnewpackagetype', component: NewPackageTypeFormComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'addnewsubbrand', component: AddNewSubBrandFormComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'addnewsgenetics', component: GeneticsMasterComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'addtpppackagetype', component: TppPackageTypeMappingMasterComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'jointsproductiondashboard', component: JointsDashboardComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'tasksetting', component: TaskSettingComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'masteruserroleaccess', component: MasterUserRoleAccessComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'erroraccessdenieded', component: ErrorAccessDeniededComponent, canActivate: [AuthGuard] },
+      { path: 'empassigntask', component: EmployeeAssignTaskComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'report/order', component: OrderReportComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'report/preroll', component: PrerollReportComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'report/flower', component: FlowerReportComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'userlist', component: EmployeesComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'inviteemployee', component: InviteNewEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'adduser', component: AddEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'adduser/:UserId', component: AddEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
 
-        // Add Employees page :: Swapnil :: 02-april-2019
-     // { path: 'addemployees', component: EmployeesComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'report/order', component: OrderReportComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'report/preroll', component: PrerollReportComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'report/flower', component: FlowerReportComponent, canActivate: [AuthGuard, RoleGuard] },
-        { path: 'userlist', component: EmployeesComponent },
-        { path: 'inviteemployee', component: InviteNewEmployeeComponent },
-         { path: 'updateuser', component: UpdateEmployeeComponent  },
-        { path: 'adduser', component: AddEmployeeComponent  },
-        { path: 'adduser/:UserId', component: AddEmployeeComponent  },
-      ]
-    }
+    ]
+  }
 ];
 
-export const routing = RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload'});
+export const routing = RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload' });

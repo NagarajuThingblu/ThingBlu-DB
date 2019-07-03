@@ -2,6 +2,7 @@ import { LoaderService } from './../shared/services/loader.service';
 import { Injectable, Injector } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
 import * as Msal from 'msal';
+import { environment } from './../../environments/environment';
 
 @Injectable()
 export class AppLoadService {
@@ -11,12 +12,12 @@ export class AppLoadService {
     B2CTodoAccessTokenKey = 'b2c.todo.access.token';
 
     tenantConfig = {
-        tenant: 'thingblub2ctest.onmicrosoft.com',
-        clientID: '00f2482d-33d6-47a8-9639-39be906d926e',
-        signUpSignInPolicy: 'B2C_1_SignUpInV2 ',
-        signUpPolicy: 'B2C_1_SignUp',
-        resetPolicy: 'B2C_1_ResetPassword',
-        b2cScopes: ['https://thingblub2ctest.onmicrosoft.com/helloAPI/demo.read']
+        tenant:  environment.tenant,
+        clientID: environment.tenantClientID  ,
+        signUpSignInPolicy: environment.signUpSignInPolicy ,
+        signUpPolicy: environment.signUpPolicy,
+        resetPolicy: environment.resetPolicy,
+        b2cScopes: [environment.b2cScopes]
     };
 
     // Configure the authority for Azure AD B2C
@@ -38,8 +39,9 @@ export class AppLoadService {
                 logger: this.logger,
                 storeAuthStateInCookie: true,
                 state: '12345',
-                redirectUri: 'http://localhost:8000/',
+                redirectUri:  environment.redirectUri,
                 navigateToLoginRequestUrl: false,
+               // postLogoutRedirectUri: environment.redirectUri
                 // validateAuthority: false
             },
         );
@@ -51,27 +53,27 @@ export class AppLoadService {
 
     initializeApp(): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (String(window.location.href).indexOf('register?inviteToken') > 0) {
+            if (window.location.href.toString().indexOf('/resetsuccess/') > 0) {
                 resolve('');
             } else {
                 this.loaderService.display(true);
                 // this.clientApplicationRef.logout();
                 console.log(this.clientApplicationRef.getUser());
-                this.clientApplicationRef.acquireTokenSilent(this.tenantConfig.b2cScopes)
-                    .then(token => {
-                        localStorage.setItem(this.B2CTodoAccessTokenKey, token);
-                        resolve(token);
-                    }).catch(error => {
-                        this.clientApplicationRef.acquireTokenPopup(this.tenantConfig.b2cScopes)
-                            .then(token => {
-                                localStorage.setItem(this.B2CTodoAccessTokenKey, token);
-                                resolve(token);
-                            }).catch(innererror => {
-                                this.clientApplicationRef.acquireTokenRedirect(this.tenantConfig.b2cScopes);
-                                console.error('Could not retrieve token from popup.', innererror);
-                                resolve('');
-                            });
-                    });
+                    this.clientApplicationRef.acquireTokenSilent(this.tenantConfig.b2cScopes)
+                        .then(token => {
+                            localStorage.setItem(this.B2CTodoAccessTokenKey, token);
+                            resolve(token);
+                        }).catch(error => {
+                            this.clientApplicationRef.acquireTokenPopup(this.tenantConfig.b2cScopes)
+                                .then(token => {
+                                    localStorage.setItem(this.B2CTodoAccessTokenKey, token);
+                                    resolve(token);
+                                }).catch(innererror => {
+                                    this.clientApplicationRef.acquireTokenRedirect(this.tenantConfig.b2cScopes);
+                                    console.error('Could not retrieve token from popup.', innererror);
+                                    resolve('');
+                                });
+                        });
             }
         });
     }

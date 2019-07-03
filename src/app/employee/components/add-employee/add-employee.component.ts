@@ -44,7 +44,8 @@ export class AddEmployeeComponent implements OnInit {
   public isUpdateMode = false;
   public userDetails: any;
   public navUserId: any;
-  public submitlabel = 'Add Employee';
+  public submitlabel = 'Add User';
+  blockSpace: RegExp = /[^\s]/;
 
   constructor(
     private loaderService: LoaderService,
@@ -67,11 +68,11 @@ export class AddEmployeeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loaderService.display(true);
     this.globalResource = GlobalResources.getResources().en;
     this.cookie_clientId = this.appCommonService.getUserProfile().ClientId;
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
     this.defaultDate.setDate(this.defaultDate.getDate() + 1);
-    this.loaderService.display(false);
     this.getAllRoles();
 
     this.genders = [
@@ -94,7 +95,7 @@ export class AddEmployeeComponent implements OnInit {
       'lastName': new FormControl(null, Validators.compose([Validators.required])),
       'gender': new FormControl(null, Validators.compose([Validators.required])),
       'birthDate': new FormControl(null),
-      'cellPhone': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
+      'cellPhone': new FormControl(null, Validators.compose([Validators.required])),
       'emailId': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(150)])),
       'userName': new FormControl(null, Validators.compose([Validators.required])),
       'hireDate': new FormControl(this.defaultDate, Validators.compose([Validators.required])),
@@ -103,11 +104,12 @@ export class AddEmployeeComponent implements OnInit {
     });
 
     if (!this.isUpdateMode) {
-      this.titleService.setTitle('Add Employee');
-      this.submitlabel = 'Add Employee';
+      this.titleService.setTitle('Add User');
+      this.submitlabel = 'Add User';
+      this.loaderService.display(false);
     } else {
-      this.titleService.setTitle('Update Employee');
-      this.submitlabel = 'Update Employee';
+      this.titleService.setTitle('Update User');
+      this.submitlabel = 'Update User';
       this.getAzureUserDetailsById();
     }
 
@@ -120,9 +122,9 @@ export class AddEmployeeComponent implements OnInit {
       'userId': new FormControl(this.userDetails[0].UserId),
       'firstName': new FormControl(this.userDetails[0].FirstName, Validators.compose([Validators.required])),
       'lastName': new FormControl(this.userDetails[0].LastName, Validators.compose([Validators.required])),
-      'gender': new FormControl(this.userDetails[0].Gender , Validators.compose([Validators.required])),
+      'gender': new FormControl(this.userDetails[0].Gender, Validators.compose([Validators.required])),
       'birthDate': new FormControl(this.userDetails[0].DOB),
-      'cellPhone': new FormControl(this.userDetails[0].CellPhone, Validators.compose([Validators.required, Validators.maxLength(15)])),
+      'cellPhone': new FormControl(this.userDetails[0].CellPhone, Validators.compose([Validators.required])),
       'emailId': new FormControl(this.userDetails[0].PrimaryEmail, Validators.compose([Validators.required, Validators.maxLength(150)])),
       'userName': new FormControl(this.userDetails[0].Username, Validators.compose([Validators.required])),
       'hireDate': new FormControl(this.userDetails[0].HireDate, Validators.compose([Validators.required])),
@@ -137,7 +139,8 @@ export class AddEmployeeComponent implements OnInit {
         this.userRoles = data;
         this.userRoles = this.dropdwonTransformService.transform(data, 'RoleName', 'RoleId', '-- Select --');
       },
-      error => { console.log(error); },
+      error => { console.log(error);
+        this.loaderService.display(false); },
       () => console.log('Get all roles complete'));
   }
 
@@ -149,15 +152,14 @@ export class AddEmployeeComponent implements OnInit {
       .subscribe(
         (data: any) => {
           this.userDetails = data;
-          if ( this.userDetails) {
+          if (this.userDetails) {
             this.addUserForm();
+            this.loaderService.display(false);
           }
-
-          console.log( this.userDetails );
         });
   }
 
-  onSubmit() {
+  onSubmit(model) {
     if (this.isUpdateMode) {
       this.onUpdateSubmit();
     } else {
@@ -166,17 +168,24 @@ export class AddEmployeeComponent implements OnInit {
   }
   onAddSubmit() {
     let employeeForApi;
+    if (this.addEmpForm.value.cellPhone) {
+      if (this.addEmpForm.value.cellPhone.replace(/\D+/g, '').length !== 10) {
+        this.addEmpForm.controls['cellPhone'].reset();
+      }
+    }
+
     if (this.addEmpForm.valid) {
       employeeForApi = {
         addEmpApiDetails: {
           FirstName: this.addEmpForm.value.firstName || '',
           LastName: this.addEmpForm.value.lastName || '',
           Gender: this.addEmpForm.value.gender,
-          CellPhone: this.addEmpForm.value.cellPhone,
+         // CellPhone: this.addEmpForm.value.cellPhone,
+          CellPhone: this.addEmpForm.value.cellPhone ? this.addEmpForm.value.cellPhone.replace(/\D+/g, '') : null,
           PrimaryEmail: this.addEmpForm.value.emailId || '',
           UserName: this.addEmpForm.value.userName,
-          DOB:   this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.birthDate).toLocaleDateString()) ,
-          HireDate:  this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.hireDate).toLocaleDateString()) ,
+          DOB: this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.birthDate).toLocaleDateString()),
+          HireDate: this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.hireDate).toLocaleDateString()),
           UserRoleId: this.addEmpForm.value.userRole || '',
           HourlyLabourRate: this.addEmpForm.value.hourlyRate || '',
           VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
@@ -187,7 +196,7 @@ export class AddEmployeeComponent implements OnInit {
 
       this.confirmationService.confirm({
         key: 'draftdelete',
-        message: 'Are you sure you want create new Employee?',
+        message: 'Are you sure you want create new User?',
         header: this.globalResource.applicationmsg,
         icon: 'fa fa-trash',
         accept: () => {
@@ -198,7 +207,7 @@ export class AddEmployeeComponent implements OnInit {
                 this.msgs = [];
                 this.msgs.push({
                   severity: 'success', summary: this.globalResource.applicationmsg,
-                  detail: 'Employee added successfully.'
+                  detail: 'User added successfully.'
                 });
                 this.resetForm();
                 this.loaderService.display(false);
@@ -206,14 +215,14 @@ export class AddEmployeeComponent implements OnInit {
                 this.msgs = [];
                 this.msgs.push({
                   severity: 'error', summary: this.globalResource.applicationmsg,
-                  detail: 'Faiure.'
+                  detail: 'Failure.'
                 });
                 this.loaderService.display(false);
               } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'BADREQUEST') {
                 this.msgs = [];
                 this.msgs.push({
-                  severity: 'error', summary: this.globalResource.applicationmsg,
-                  detail: 'Server side error.'
+                  severity: 'warn', summary: this.globalResource.applicationmsg,
+                  detail:  String(result[0].ResultMessage)
                 });
                 this.loaderService.display(false);
               } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'USERNAMEEXISTS') {
@@ -263,18 +272,27 @@ export class AddEmployeeComponent implements OnInit {
 
   onUpdateSubmit() {
     let employeeForApi;
+
+    if (this.addEmpForm.value.cellPhone) {
+      if (this.addEmpForm.value.cellPhone.replace(/\D+/g, '').length !== 10) {
+        this.addEmpForm.controls['cellPhone'].reset();
+      }
+    }
+
     if (this.addEmpForm.valid) {
       employeeForApi = {
         updateEmpApiDetails: {
-          AzureUserId : this.addEmpForm.value.azureUserId || '',
-          UserId : this.addEmpForm.value.userId || '',
+          AzureUserId: this.addEmpForm.value.azureUserId || this.userDetails[0].AzureUserId,
+          UserId: this.addEmpForm.value.userId || '',
           FirstName: this.addEmpForm.value.firstName || '',
           LastName: this.addEmpForm.value.lastName || '',
           Gender: this.addEmpForm.value.gender,
-          CellPhone: this.addEmpForm.value.cellPhone,
+          // CellPhone: this.addEmpForm.value.cellPhone,
+          CellPhone: this.addEmpForm.value.cellPhone ? this.addEmpForm.value.cellPhone.replace(/\D+/g, '') : null,
+          UserName: this.addEmpForm.value.userName,
           PrimaryEmail: this.addEmpForm.value.emailId || '',
-          DOB:   this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.birthDate).toLocaleDateString()) ,
-          HireDate:  this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.hireDate).toLocaleDateString()) ,
+          DOB: this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.birthDate).toLocaleDateString()),
+          HireDate: this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.hireDate).toLocaleDateString()),
           UserRoleId: this.addEmpForm.value.userRole || '',
           HourlyLabourRate: this.addEmpForm.value.hourlyRate || '',
           VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
@@ -283,7 +301,7 @@ export class AddEmployeeComponent implements OnInit {
 
       this.confirmationService.confirm({
         key: 'draftdelete',
-        message: 'Are you sure you want update Employee?',
+        message: 'Are you sure you want update User?',
         header: this.globalResource.applicationmsg,
         icon: 'fa fa-trash',
         accept: () => {
@@ -294,23 +312,25 @@ export class AddEmployeeComponent implements OnInit {
                 this.msgs = [];
                 this.msgs.push({
                   severity: 'success', summary: this.globalResource.applicationmsg,
-                  detail: 'Employee updated successfully.'
+                  detail: 'User updated successfully.'
                 });
                 this.resetForm();
                 this.loaderService.display(false);
+                setTimeout(() => {
                 this.router.navigate(['/home/userlist']);
+              }, 500);
               } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'FAILURE') {
                 this.msgs = [];
                 this.msgs.push({
                   severity: 'error', summary: this.globalResource.applicationmsg,
-                  detail: 'Faiure.'
+                  detail: 'Failure.'
                 });
                 this.loaderService.display(false);
               } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'BADREQUEST') {
                 this.msgs = [];
                 this.msgs.push({
-                  severity: 'error', summary: this.globalResource.applicationmsg,
-                  detail: 'Server side error.'
+                  severity: 'warn', summary: this.globalResource.applicationmsg,
+                  detail:  String(result[0].ResultMessage)
                 });
                 this.loaderService.display(false);
               } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'USERNAMEEXISTS') {
@@ -324,7 +344,7 @@ export class AddEmployeeComponent implements OnInit {
                 this.msgs = [];
                 this.msgs.push({
                   severity: 'warn', summary: this.globalResource.applicationmsg,
-                  detail: 'Email Id already registed.'
+                  detail: 'Email Id already registered.'
                 });
                 this.loaderService.display(false);
               } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'ACCOUNTEXISTS') {
@@ -361,13 +381,32 @@ export class AddEmployeeComponent implements OnInit {
     this.router.navigate(['/home/userlist']);
   }
   onCancel() {
-    console.log(this.msalService.getAllUsers());
-    // this.resetForm();
+    this.resetForm();
   }
 
   resetForm() {
-    this.addEmpForm.reset();
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
     this.defaultDate.setDate(this.defaultDate.getDate() + 1);
+    // this.addEmpForm.reset();
+    this.addEmpForm = this.fb.group({
+      'azureUserId': new FormControl(null),
+      'UserId': new FormControl(null),
+      'firstName': new FormControl(null, Validators.compose([Validators.required])),
+      'lastName': new FormControl(null, Validators.compose([Validators.required])),
+      'gender': new FormControl(null, Validators.compose([Validators.required])),
+      'birthDate': new FormControl(null),
+      'cellPhone': new FormControl(null, Validators.compose([Validators.required])),
+      'emailId': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(150)])),
+      'userName': new FormControl(null, Validators.compose([Validators.required])),
+      'hireDate': new FormControl(this.defaultDate, Validators.compose([Validators.required])),
+      'userRole': new FormControl(null, Validators.compose([Validators.required])),
+      'hourlyRate': new FormControl(null, Validators.compose([Validators.required])),
+    });
   }
+
+  omit_special_char(event) {
+   let k;
+   k = event.charCode;  //         k = event.keyCode;  (Both can be used)
+   return((k > 64 && k < 91) || (k > 96 && k < 123) || k === 8 || k === 32 || (k >= 48 && k <= 57) || (k === 95) || (k === 35));
+}
 }

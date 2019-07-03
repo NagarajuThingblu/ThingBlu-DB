@@ -25,22 +25,22 @@ import { ReturnStatement } from '@angular/compiler';
 })
 export class EmployeesComponent implements OnInit {
   public newCannabisStrainForm: FormGroup;
-public employeeList: any;
-public UserRoleList: any;
-public viewEmployeeEvent: any;
-public defaultPageSize: number;
-public getPageConstants: any;
-paginationValues: any;
-public chkStatusBox: any;
-public rowcheckboxcheckdisplay = false;
-public filterInActiveData: any  = false;
+  public employeeList: any;
+  public UserRoleList: any;
+  public viewEmployeeEvent: any;
+  public defaultPageSize: number;
+  public getPageConstants: any;
+  paginationValues: any;
+  public chkStatusBox: any;
+  public rowcheckboxcheckdisplay = false;
+  public filterInActiveData: any = false;
 
-public msgs: Message[] = [];
-public globalResource: any;
-public cookie_clientId: number;
-public defaultDate: Date;
-public _cookieService: UserModel;
-public cookie_virtualRoleId: any;
+  public msgs: Message[] = [];
+  public globalResource: any;
+  public cookie_clientId: number;
+  public defaultDate: Date;
+  public _cookieService: UserModel;
+  public cookie_virtualRoleId: any;
 
   constructor(
     private loaderService: LoaderService,
@@ -59,17 +59,17 @@ public cookie_virtualRoleId: any;
     private appComponentData: AppComponent,
     private scrolltopservice: ScrollTopService,
   ) {
-   }
+  }
 
   ngOnInit() {
-    this.loaderService.display(false);
+    this.loaderService.display(true);
     this.globalResource = GlobalResources.getResources().en;
-    this.titleService.setTitle('Employee List');
-    this.defaultPageSize  = this.appCommonService.getDefaultPageSize();
+    this.titleService.setTitle('User List');
+    this.defaultPageSize = this.appCommonService.getDefaultPageSize();
     this.getPageConstants = AppConstants.getPageConstants;
     this.cookie_virtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
     this.getEmployeeList(false);
-    this. getAllRoles();
+    this.getAllRoles();
   }
 
   addNewEmployee() {
@@ -91,12 +91,12 @@ public cookie_virtualRoleId: any;
           }
           if (this.employeeList) {
             if (this.employeeList.filter(r => r.IsActive === false).length > 0) {
-             // this.chkStatusBox = 0;
+              // this.chkStatusBox = 0;
             } else {
-             // this.chkStatusBox = true;
+              // this.chkStatusBox = true;
             }
           }
-          console.log(this.employeeList);
+         // console.log(this.employeeList);
         });
   }
 
@@ -105,19 +105,20 @@ public cookie_virtualRoleId: any;
     this.dropdownDataService.getRoleList().subscribe(
       data => {
         if (data !== 'No data found!') {
-        this.UserRoleList = this.dropdwonTransformService.transform(data, 'RoleName', 'RoleId', '-- Select --');
+          this.UserRoleList = this.dropdwonTransformService.transform(data, 'RoleName', 'RoleId', '-- Select --');
         } else {
           this.UserRoleList = [];
         }
+        this.loaderService.display(false);
       },
-      error => { console.log(error); },
+      error => { console.log(error);  this.loaderService.display(false); },
       () => console.log('Get all roles complete'));
-      this.loaderService.display(false);
+    this.loaderService.display(false);
   }
   onRowSelect(event) {
     if (!this.rowcheckboxcheckdisplay) {
       if (event.UserId > 0) {
-         this.router.navigate(['../home/adduser/' + event.UserId ]);
+        this.router.navigate(['../home/adduser/' + event.UserId]);
       }
     }
   }
@@ -139,13 +140,13 @@ public cookie_virtualRoleId: any;
 
   isActiveCheckboxListChange(event, rowIndex, rowData) {
     this.rowcheckboxcheckdisplay = true;
-   // event.stopPropagation();
+    // event.stopPropagation();
     let cofirmmsg = '';
-   if (event) {
-    cofirmmsg = 'Are you sure you want to activate this Employee?';
-   } else {
-    cofirmmsg = 'Are you sure you want to inactivate this Employee?';
-   }
+    if (event) {
+      cofirmmsg = 'Are you sure you want to activate this User?';
+    } else {
+      cofirmmsg = 'Are you sure you want to inactivate this User?';
+    }
 
     let AzureUserDeleteActiveForApi;
     AzureUserDeleteActiveForApi = {
@@ -171,9 +172,10 @@ public cookie_virtualRoleId: any;
               this.msgs = [];
               this.msgs.push({
                 severity: 'success', summary: this.globalResource.applicationmsg,
-                detail: 'Employee updated successfully.'
+                detail: 'User updated successfully.'
               });
               this.loaderService.display(false);
+              this.rowcheckboxcheckdisplay = false;
             } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'FAILURE') {
               rowData.IsActive = !event;
               this.msgs = [];
@@ -182,6 +184,7 @@ public cookie_virtualRoleId: any;
                 detail: 'Faiure.'
               });
               this.loaderService.display(false);
+              this.rowcheckboxcheckdisplay = false;
             }
           },
             error => {
@@ -189,6 +192,7 @@ public cookie_virtualRoleId: any;
               this.msgs = [];
               this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
               this.loaderService.display(false);
+              this.rowcheckboxcheckdisplay = false;
             });
       },
       reject: () => {
