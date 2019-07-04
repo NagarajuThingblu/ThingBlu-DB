@@ -196,7 +196,7 @@ export class AddEmployeeComponent implements OnInit {
 
       this.confirmationService.confirm({
         key: 'draftdelete',
-        message: 'Are you sure you want create new User?',
+        message: 'Are you sure you want create new user?',
         header: this.globalResource.applicationmsg,
         icon: 'fa fa-trash',
         accept: () => {
@@ -301,7 +301,7 @@ export class AddEmployeeComponent implements OnInit {
 
       this.confirmationService.confirm({
         key: 'draftdelete',
-        message: 'Are you sure you want update User?',
+        message: 'Are you sure you want update user?',
         header: this.globalResource.applicationmsg,
         icon: 'fa fa-trash',
         accept: () => {

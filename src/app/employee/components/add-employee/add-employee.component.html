@@ -17,7 +17,13 @@
                     <label for="strain" class="towlable fwLabelBold">First Name<span class="star">
                         *</span></label>
 
-                    <input id="input" type="text" tabindex="2" name="firstName" class="clsControl" pInputText
+                    <input id="input"
+                     type="text"
+                     tabindex="2"
+                      name="firstName" 
+                      class="clsControl" 
+                      pInputText
+                      maxlength="100"
                       formControlName="firstName">
 
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
@@ -35,7 +41,7 @@
                     <label for="strain" class="towlable fwLabelBold">Last Name<span class="star">
                         *</span></label>
 
-                    <input id="input" type="text" name="lastName" tabindex="3" class="clsControl" pInputText
+                    <input id="input" type="text" name="lastName" tabindex="3"  maxlength="100" class="clsControl" pInputText
                       formControlName="lastName">
 
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
@@ -181,10 +187,19 @@
               <div class="ui-g-12 ui-md-4">
                 <div class="paddingRL">
                   <div class="le-su-12">
-                    <label for="strain" class="towlable fwLabelBold">Hire Date</label>
+                    <label for="strain" class="towlable fwLabelBold">Hire Date<span class="star"> *</span></label>
 
-                    <p-calendar [showIcon]="true" [defaultDate]="defaultDate" [tabindex]="9" showButtonBar="true"
-                      class="clsControl" id="hireDate" name="hireDate" formControlName="hireDate">
+                    <p-calendar [showIcon]="true"
+                     [defaultDate]="defaultDate"
+                      [tabindex]="9"
+                       showButtonBar="true"
+                       [maxDate]="defaultDate"
+                       [yearNavigator] = "true" 
+                       yearRange="1900:2030"
+                      class="clsControl" 
+                      id="hireDate" 
+                      name="hireDate" 
+                      formControlName="hireDate">
                     </p-calendar>
 
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
@@ -230,12 +245,16 @@
                      pInputText
                      pKeyFilter="num"
                      OnlyNumber="true"
+                     maxlength="6"
                       formControlName="hourlyRate">
 
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                       *ngIf="!addEmpForm.controls['hourlyRate'].valid&&addEmpForm.controls['hourlyRate'].dirty">
                       <span *ngIf="addEmpForm.controls['hourlyRate'].errors['required']">
                         Hourly Rate required.
+                      </span>
+                      <span *ngIf="addEmpForm.controls['hourlyRate'].errors['maxlength']">
+                        Max length exceeded.
                       </span>
                     </div>
                   </div>

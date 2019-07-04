@@ -143,9 +143,9 @@ export class EmployeesComponent implements OnInit {
     // event.stopPropagation();
     let cofirmmsg = '';
     if (event) {
-      cofirmmsg = 'Are you sure you want to activate this User?';
+      cofirmmsg = 'Are you sure you want to activate this user?';
     } else {
-      cofirmmsg = 'Are you sure you want to inactivate this User?';
+      cofirmmsg = 'Are you sure you want to inactivate this user?';
     }
 
     let AzureUserDeleteActiveForApi;
