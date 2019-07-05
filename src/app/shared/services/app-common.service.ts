@@ -441,4 +441,23 @@ canDeactivate(customForm: FormGroup): Promise<boolean> | boolean {
     });
   });
 }
+
+isForgotPassword() {
+  const errorDesc = localStorage.getItem('msal.error.description');
+  if (errorDesc && errorDesc.indexOf('AADB2C90118') > -1) {
+      return true;
+  } else {
+      return false;
+  }
+}
+
+isForgotPasswordCancel() {
+  const errorDesc = localStorage.getItem('msal.error.description');
+  if (errorDesc && errorDesc.indexOf('AADB2C90091') > -1) {
+      return true;
+  } else {
+      return false;
+  }
+}
+
 }

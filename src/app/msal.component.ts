@@ -1,3 +1,4 @@
+import { AppCommonService } from './shared/services/app-common.service';
 import { Title } from '@angular/platform-browser';
 import { LoaderService } from './shared/services/loader.service';
 import { HttpMethodsService } from './shared/services/http-methods.service';
@@ -17,6 +18,7 @@ export class MsalComponent implements OnInit {
   constructor(private msalService: MsalService,
     private httpMethodsService: HttpMethodsService,
     private loaderService: LoaderService,
+    private appCommonService: AppCommonService,
     private titleService: Title) {
       this.loaderService.display(true);
   }
@@ -27,10 +29,15 @@ export class MsalComponent implements OnInit {
     //   this.showLoader = val;
     // });
 
-    if (this.msalService.isOnline()) {
-      this.updateEmpInfo(this.msalService.getUser().idToken['oid']);
-    } else {
-      this.loaderService.display(false);
+   // if (this.appCommonService.isForgotPasswordCancel()) {
+   //   this.msalService.login();
+   // } else {
+      if (this.msalService.isOnline()) {
+        this.updateEmpInfo(this.msalService.getUser().idToken['oid']);
+      } else {
+     //   this.msalService.logout();
+        this.loaderService.display(false);
+    //  }
     }
   }
 

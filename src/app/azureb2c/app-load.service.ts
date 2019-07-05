@@ -1,3 +1,5 @@
+import { AppCommonService } from './../shared/services/app-common.service';
+import { ResetPasswordMsalService } from './reset-password-msal.service';
 import { LoaderService } from './../shared/services/loader.service';
 import { Injectable, Injector } from '@angular/core';
 import 'rxjs/add/operator/toPromise';
@@ -26,7 +28,9 @@ export class AppLoadService {
     logger = new Msal.Logger(this.loggerCallback, { level: Msal.LogLevel.Verbose, correlationId: '12345' });
 
     constructor(
-        private loaderService: LoaderService
+        private loaderService: LoaderService,
+        private appCommonService: AppCommonService,
+        private resetPasswordMsalService: ResetPasswordMsalService
     ) {
         this.clientApplicationRef = new Msal.UserAgentApplication(
             this.tenantConfig.clientID, this.authority,
@@ -55,6 +59,8 @@ export class AppLoadService {
         return new Promise((resolve, reject) => {
             if (window.location.href.toString().indexOf('/resetsuccess/') > 0) {
                 resolve('');
+           //  } else if (this.appCommonService.isForgotPassword()) {
+           //     this.resetPasswordMsalService.resetPassword();
             } else {
                 this.loaderService.display(true);
                 // this.clientApplicationRef.logout();
