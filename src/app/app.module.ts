@@ -1,3 +1,4 @@
+import { AppLoadFOrgotPasswordService } from './azureb2c/app-load-forgot-password.service';
 import { MsalModule } from './msal.module';
 import { EmployeeModule } from './employee/employee.module';
 import { Azureb2cModule } from './azureb2c/azureb2c.module';
@@ -43,6 +44,10 @@ export function init_app(appLoadService: AppLoadService) {
   return () => appLoadService.initializeApp();
 }
 
+export function init_app_resetpassword(appLoadFOrgotPasswordService: AppLoadFOrgotPasswordService) {
+  return () => appLoadFOrgotPasswordService.initializeApp();
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -81,7 +86,9 @@ export function init_app(appLoadService: AppLoadService) {
     MsalService,
     ResetPasswordMsalService,
     AppLoadService,
-    { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppLoadService], multi: true }
+    AppLoadFOrgotPasswordService,
+    { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppLoadService], multi: true },
+    { provide: APP_INITIALIZER, useFactory: init_app_resetpassword, deps: [AppLoadFOrgotPasswordService], multi: true }
     // {
     //   provide: LOCALE_ID,
     //   useValue: 'en-US'

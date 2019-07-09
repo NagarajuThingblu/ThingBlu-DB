@@ -97,7 +97,7 @@
               <div class="ui-g-12 ui-md-4">
                 <div class="paddingRL">
                   <div class="le-su-12">
-                    <label for="cellPhone" class="towlable fwLabelBold">Phone No<span class="star">
+                    <label for="cellPhone" class="towlable fwLabelBold">{{PhoneNoName}}<span class="star">
                         *</span></label>
 
                         <p-inputMask name="cellPhone" 
@@ -132,7 +132,7 @@
               <div class="ui-g-12 ui-md-4">
                 <div class="paddingRL">
                   <div class="le-su-12">
-                    <label for="strain" class="towlable fwLabelBold">Email Id<span class="star"> *</span></label>
+                    <label for="strain" class="towlable fwLabelBold">{{EmailIdlbName}}<span class="star"> *</span></label>
                     <input id="input" type="emailId" name="emailId" class="clsControl" pInputText tabindex="7"
                       pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" formControlName="emailId">
 
@@ -141,7 +141,7 @@
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                       *ngIf="!addEmpForm.controls['emailId'].valid&&addEmpForm.controls['emailId'].dirty">
                       <span *ngIf="addEmpForm.controls['emailId'].errors['required']">
-                        Email Id required.
+                        {{EmailIdlbName}} Id required.
                       </span>
                       <span *ngIf="addEmpForm.controls['emailId'].errors['pattern']">
                         Email is invalid
@@ -187,7 +187,7 @@
               <div class="ui-g-12 ui-md-4">
                 <div class="paddingRL">
                   <div class="le-su-12">
-                    <label for="strain" class="towlable fwLabelBold">Hire Date<span class="star"> *</span></label>
+                    <label for="strain" class="towlable fwLabelBold">Hire Date </label>
 
                     <p-calendar [showIcon]="true"
                      [defaultDate]="defaultDate"
@@ -202,12 +202,12 @@
                       formControlName="hireDate">
                     </p-calendar>
 
-                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                       *ngIf="!addEmpForm.controls['hireDate'].valid&&addEmpForm.controls['hireDate'].dirty">
                       <span *ngIf="addEmpForm.controls['hireDate'].errors['required']">
                         Hire Date required.
                       </span>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>

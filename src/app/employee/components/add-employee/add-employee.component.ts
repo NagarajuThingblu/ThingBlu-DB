@@ -46,6 +46,8 @@ export class AddEmployeeComponent implements OnInit {
   public navUserId: any;
   public submitlabel = 'Add User';
   blockSpace: RegExp = /[^\s]/;
+  public PhoneNoName = 'Phone No';
+  public EmailIdlbName = 'Email Id';
 
   constructor(
     private loaderService: LoaderService,
@@ -98,7 +100,7 @@ export class AddEmployeeComponent implements OnInit {
       'cellPhone': new FormControl(null, Validators.compose([Validators.required])),
       'emailId': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(150)])),
       'userName': new FormControl(null, Validators.compose([Validators.required])),
-      'hireDate': new FormControl(this.defaultDate, Validators.compose([Validators.required])),
+      'hireDate': new FormControl(this.defaultDate),
       'userRole': new FormControl(null, Validators.compose([Validators.required])),
       'hourlyRate': new FormControl(null, Validators.compose([Validators.required])),
     });
@@ -106,10 +108,14 @@ export class AddEmployeeComponent implements OnInit {
     if (!this.isUpdateMode) {
       this.titleService.setTitle('Add User');
       this.submitlabel = 'Add User';
+      this.PhoneNoName = 'Phone No';
+      this.EmailIdlbName = 'Email Id';
       this.loaderService.display(false);
     } else {
       this.titleService.setTitle('Update User');
       this.submitlabel = 'Update User';
+      this.EmailIdlbName = 'Email Address';
+      this.PhoneNoName = 'Phone Number';
       this.getAzureUserDetailsById();
     }
 
@@ -127,7 +133,7 @@ export class AddEmployeeComponent implements OnInit {
       'cellPhone': new FormControl(this.userDetails[0].CellPhone, Validators.compose([Validators.required])),
       'emailId': new FormControl(this.userDetails[0].PrimaryEmail, Validators.compose([Validators.required, Validators.maxLength(150)])),
       'userName': new FormControl(this.userDetails[0].Username, Validators.compose([Validators.required])),
-      'hireDate': new FormControl(this.userDetails[0].HireDate, Validators.compose([Validators.required])),
+      'hireDate': new FormControl(this.userDetails[0].HireDate),
       'userRole': new FormControl(this.userDetails[0].RoleId, Validators.compose([Validators.required])),
       'hourlyRate': new FormControl(this.userDetails[0].HourlyRate, Validators.compose([Validators.required])),
     });
@@ -185,7 +191,8 @@ export class AddEmployeeComponent implements OnInit {
           PrimaryEmail: this.addEmpForm.value.emailId || '',
           UserName: this.addEmpForm.value.userName,
           DOB: this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.birthDate).toLocaleDateString()),
-          HireDate: this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.hireDate).toLocaleDateString()),
+          // tslint:disable-next-line:max-line-length
+          HireDate: this.addEmpForm.value.hireDate ? this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.hireDate).toLocaleDateString()) : null,
           UserRoleId: this.addEmpForm.value.userRole || '',
           HourlyLabourRate: this.addEmpForm.value.hourlyRate || '',
           VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
@@ -207,7 +214,7 @@ export class AddEmployeeComponent implements OnInit {
                 this.msgs = [];
                 this.msgs.push({
                   severity: 'success', summary: this.globalResource.applicationmsg,
-                  detail: 'User added successfully.'
+                  detail: 'An account creation email has been sent to: ' + this.addEmpForm.value.emailId
                 });
                 this.resetForm();
                 this.loaderService.display(false);
@@ -292,7 +299,8 @@ export class AddEmployeeComponent implements OnInit {
           UserName: this.addEmpForm.value.userName,
           PrimaryEmail: this.addEmpForm.value.emailId || '',
           DOB: this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.birthDate).toLocaleDateString()),
-          HireDate: this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.hireDate).toLocaleDateString()),
+          // tslint:disable-next-line:max-line-length
+          HireDate: this.addEmpForm.value.hireDate ? this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.hireDate).toLocaleDateString()) : null,
           UserRoleId: this.addEmpForm.value.userRole || '',
           HourlyLabourRate: this.addEmpForm.value.hourlyRate || '',
           VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
@@ -381,7 +389,11 @@ export class AddEmployeeComponent implements OnInit {
     this.router.navigate(['/home/userlist']);
   }
   onCancel() {
-    this.resetForm();
+    if (this.isUpdateMode) {
+this.backToList();
+    } else {
+      this.resetForm();
+    }
   }
 
   resetForm() {
@@ -398,7 +410,7 @@ export class AddEmployeeComponent implements OnInit {
       'cellPhone': new FormControl(null, Validators.compose([Validators.required])),
       'emailId': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(150)])),
       'userName': new FormControl(null, Validators.compose([Validators.required])),
-      'hireDate': new FormControl(this.defaultDate, Validators.compose([Validators.required])),
+      'hireDate': new FormControl(this.defaultDate),
       'userRole': new FormControl(null, Validators.compose([Validators.required])),
       'hourlyRate': new FormControl(null, Validators.compose([Validators.required])),
     });

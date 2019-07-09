@@ -28,9 +28,7 @@ export class AppLoadService {
     logger = new Msal.Logger(this.loggerCallback, { level: Msal.LogLevel.Verbose, correlationId: '12345' });
 
     constructor(
-        private loaderService: LoaderService,
-        private appCommonService: AppCommonService,
-        private resetPasswordMsalService: ResetPasswordMsalService
+        private loaderService: LoaderService
     ) {
         this.clientApplicationRef = new Msal.UserAgentApplication(
             this.tenantConfig.clientID, this.authority,
@@ -55,12 +53,30 @@ export class AppLoadService {
         console.log(message);
     }
 
+    isForgotPassword() {
+        const errorDesc = localStorage.getItem('msal.error.description');
+        if (errorDesc && errorDesc.indexOf('AADB2C90118') > -1) {
+            return true;
+        } else {
+            return false;
+        }
+      }
+
+      isForgotPasswordCancel() {
+        const errorDesc = localStorage.getItem('msal.error.description');
+        if (errorDesc && errorDesc.indexOf('AADB2C90091') > -1) {
+            return true;
+        } else {
+            return false;
+        }
+      }
+
     initializeApp(): Promise<any> {
         return new Promise((resolve, reject) => {
             if (window.location.href.toString().indexOf('/resetsuccess/') > 0) {
                 resolve('');
-           //  } else if (this.appCommonService.isForgotPassword()) {
-           //     this.resetPasswordMsalService.resetPassword();
+             } else if (this.isForgotPassword() || this.isForgotPasswordCancel()) {
+                resolve('');
             } else {
                 this.loaderService.display(true);
                 // this.clientApplicationRef.logout();

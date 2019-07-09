@@ -3,6 +3,7 @@ import { UserModel } from './../shared/models/user.model';
 import { LoaderService } from './../shared/services/loader.service';
 import { Injectable } from '@angular/core';
 import * as Msal from 'msal';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable()
 export class MsalService {
@@ -27,7 +28,8 @@ export class MsalService {
     public clientApplication: Msal.UserAgentApplication;
 
     constructor(
-        private loaderService: LoaderService
+        private loaderService: LoaderService,
+        private cookieService: CookieService
     ) {
         /** B2C SignIn SignUp Policy Configuration*/
         this.clientApplication = new Msal.UserAgentApplication(
@@ -59,6 +61,13 @@ export class MsalService {
     }
 
     public logout(): void {
+        document.cookie = 'currentUser' + environment.clientCode + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        document.cookie = 'userProfile' + environment.clientCode + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        this.cookieService.delete('currentUser' + environment.clientCode, './');
+        this.cookieService.delete('userProfile' + environment.clientCode, './');
+        this.cookieService.deleteAll();
+
+        localStorage.clear();
         this.clientApplication.logout();
     }
 
