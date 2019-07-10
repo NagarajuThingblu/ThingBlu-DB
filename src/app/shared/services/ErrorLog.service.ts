@@ -20,14 +20,13 @@ export class ErrorLogService  {
   private headers = new Headers({ 'Content-Type': 'application/json' });
   // Log error method
   logError(error: any) {
-
     const location = this.injector.get(LocationStrategy);
     const componentName = (this.injector as any)._bootstrapComponents[0].__source;
     const message = error.message ? error.message : error.toString();
     let locationUrl = location instanceof PathLocationStrategy
         ? location.path() : '';
 
-    locationUrl =  locationUrl === '' ? location.path() !== '' ? location.path() : location._platformLocation.hash : location._platformLocation._all.URL;
+    locationUrl =  locationUrl === '' ? location.path() !== '' ? location.path() : location._platformLocation.hash : locationUrl;
 
     const exceoptionObject = {
       Exception: {

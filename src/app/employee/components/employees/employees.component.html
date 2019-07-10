@@ -9,23 +9,23 @@
                 <p-table #dtEmpList [value]="employeeList" sortMode="single" [responsive]="true" [paginator]="true"
                     [rows]="defaultPageSize" dataKey="Id" [rowsPerPageOptions]="paginationValues" 
                     (onPage)="onPageChange($event)" rowHover='true'  
-                    [globalFilterFields]="['EmpName', 'RoleName', 'PrimaryEmail', 'CellPhone']">
+                    [globalFilterFields]="['EmpName', 'RoleName', 'PrimaryEmail', 'CellPhone','HireDate']">
 
                     <ng-template pTemplate="header">
                         <tr>
-                            <th [pSortableColumn]="'EmpName'"> User Name
+                            <th style="width: 18%" [pSortableColumn]="'EmpName'"> Employee Name
                                 <p-sortIcon [field]="'EmpName'"></p-sortIcon>
                             </th>
-                            <th style="width: 15%;" [pSortableColumn]="'RoleName'"> User Role
+                            <th style="width: 12%;" [pSortableColumn]="'RoleName'"> User Role
                                 <p-sortIcon [field]="'RoleName'"></p-sortIcon>
                             </th>
-                            <th style="width: 30%" [pSortableColumn]="'PrimaryEmail'"> Email
+                            <th style="width: 27%" [pSortableColumn]="'PrimaryEmail'"> Email Address
                                 <p-sortIcon [field]="'PrimaryEmail'"></p-sortIcon>
                             </th>
                             <th [pSortableColumn]="'CellPhone'"> Phone No
                                 <p-sortIcon [field]="'CellPhone'"></p-sortIcon>
-                            </th> <th [pSortableColumn]="'CellPhone'"> Hire Date
-                                <p-sortIcon [field]="'CellPhone'"></p-sortIcon>
+                            </th> <th  style="width: 11%;" [pSortableColumn]="'HireDate'"> Hire Date
+                                <p-sortIcon [field]="'HireDate'"></p-sortIcon>
                             </th>
                             <th style="width: 15%;"> Status
                             </th>

@@ -190,11 +190,12 @@ export class AddEmployeeComponent implements OnInit {
           CellPhone: this.addEmpForm.value.cellPhone ? this.addEmpForm.value.cellPhone.replace(/\D+/g, '') : null,
           PrimaryEmail: this.addEmpForm.value.emailId || '',
           UserName: this.addEmpForm.value.userName,
-          DOB: this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.birthDate).toLocaleDateString()),
+          // tslint:disable-next-line:max-line-length
+          DOB: this.addEmpForm.value.birthDate ? this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.birthDate).toLocaleDateString()) : null,
           // tslint:disable-next-line:max-line-length
           HireDate: this.addEmpForm.value.hireDate ? this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.hireDate).toLocaleDateString()) : null,
           UserRoleId: this.addEmpForm.value.userRole || '',
-          HourlyLabourRate: this.addEmpForm.value.hourlyRate || '',
+          HourlyLabourRate: this.addEmpForm.value.hourlyRate || 0,
           VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
           ClientId: this.cookie_clientId,
           InviteToken: encodeURIComponent(this.addEmpForm.value.email) || ''
@@ -205,7 +206,7 @@ export class AddEmployeeComponent implements OnInit {
         key: 'draftdelete',
         message: 'Are you sure you want create new user?',
         header: this.globalResource.applicationmsg,
-        icon: 'fa fa-trash',
+        icon: 'fa fa-exclamation-triangle',
         accept: () => {
           this.loaderService.display(true);
           this.httpMethodsService.post('api/Employee/AddNewAzureUser', employeeForApi)
@@ -298,11 +299,12 @@ export class AddEmployeeComponent implements OnInit {
           CellPhone: this.addEmpForm.value.cellPhone ? this.addEmpForm.value.cellPhone.replace(/\D+/g, '') : null,
           UserName: this.addEmpForm.value.userName,
           PrimaryEmail: this.addEmpForm.value.emailId || '',
-          DOB: this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.birthDate).toLocaleDateString()),
+          // tslint:disable-next-line:max-line-length
+          DOB: this.addEmpForm.value.birthDate ? this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.birthDate).toLocaleDateString()) : null,
           // tslint:disable-next-line:max-line-length
           HireDate: this.addEmpForm.value.hireDate ? this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.hireDate).toLocaleDateString()) : null,
           UserRoleId: this.addEmpForm.value.userRole || '',
-          HourlyLabourRate: this.addEmpForm.value.hourlyRate || '',
+          HourlyLabourRate: this.addEmpForm.value.hourlyRate || 0,
           VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
         }
       };
@@ -311,7 +313,7 @@ export class AddEmployeeComponent implements OnInit {
         key: 'draftdelete',
         message: 'Are you sure you want update user?',
         header: this.globalResource.applicationmsg,
-        icon: 'fa fa-trash',
+        icon: 'fa fa-exclamation-triangle',
         accept: () => {
           this.loaderService.display(true);
           this.httpMethodsService.post('api/Employee/updateAzureUser', employeeForApi)
@@ -420,5 +422,87 @@ this.backToList();
    let k;
    k = event.charCode;  //         k = event.keyCode;  (Both can be used)
    return((k > 64 && k < 91) || (k > 96 && k < 123) || k === 8 || k === 32 || (k >= 48 && k <= 57) || (k === 95) || (k === 35));
+}
+
+reSendUserDetails() {
+
+  // this.confirmationService.confirm({
+  //   key: 'draftdelete',
+  //   message: 'This action will send a password reset to: ' + this.addEmpForm.value.emailId  + '. Continue?',
+  //   header: this.globalResource.applicationmsg,
+  //   icon: 'fa fa-exclamation-triangle',
+  //   accept: () => {
+  //   },
+  //   reject: () => {
+  //   }
+  // });
+}
+
+onResetPassword() {
+  let employeeForApi;
+
+
+  if (this.addEmpForm.controls['emailId'].valid) {
+    employeeForApi = {
+      updateEmpApiDetails: {
+        AzureUserId: this.addEmpForm.value.azureUserId || this.userDetails[0].AzureUserId,
+        UserId: this.addEmpForm.value.userId || '',
+        UserName: this.addEmpForm.value.userName,
+        PrimaryEmail: this.addEmpForm.value.emailId || '',
+        VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
+      }
+    };
+
+    this.confirmationService.confirm({
+      key: 'draftdelete',
+      message: 'This action will send a password reset to: ' + this.addEmpForm.value.emailId  + '. Continue?',
+      header: this.globalResource.applicationmsg,
+      icon: 'fa fa-exclamation-triangle',
+      accept: () => {
+        this.loaderService.display(true);
+        this.httpMethodsService.post('api/Employee/ReserAzureUserPassword', employeeForApi)
+          .subscribe((result: any) => {
+            if (String(result[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
+              this.msgs = [];
+              this.msgs.push({
+                severity: 'success', summary: this.globalResource.applicationmsg,
+                detail: 'Reset Password sent successfully.'
+              });
+            } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'FAILURE') {
+              this.msgs = [];
+              this.msgs.push({
+                severity: 'error', summary: this.globalResource.applicationmsg,
+                detail: 'Failure.'
+              });
+              this.loaderService.display(false);
+            } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'BADREQUEST') {
+              this.msgs = [];
+              this.msgs.push({
+                severity: 'warn', summary: this.globalResource.applicationmsg,
+                detail:  String(result[0].ResultMessage)
+              });
+              this.loaderService.display(false);
+            }  else if (String(result[0].ResultKey).toLocaleUpperCase() === 'EMAILADDRESSNOTEXISTS') {
+              this.msgs = [];
+              this.msgs.push({
+                severity: 'warn', summary: 'Email address not matching with this account.',
+                detail:  String(result[0].ResultMessage)
+              });
+              this.loaderService.display(false);
+            }
+          },
+            error => {
+              this.msgs = [];
+              this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
+              this.loaderService.display(false);
+            });
+      },
+      reject: () => {
+      }
+    });
+  } else {
+    this.appCommonService.validateAllFields(this.addEmpForm);
+    this.loaderService.display(false);
+  }
 }
 }

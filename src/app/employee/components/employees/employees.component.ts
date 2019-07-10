@@ -163,7 +163,7 @@ export class EmployeesComponent implements OnInit {
       key: 'draftdelete1',
       message: cofirmmsg,
       header: 'Application message',
-      icon: 'fa fa-trash',
+      icon: 'fa fa-exclamation-triangle',
       accept: () => {
         this.loaderService.display(true);
         this.httpMethodsService.post('api/Employee/AzureUserDeleteActive', AzureUserDeleteActiveForApi)

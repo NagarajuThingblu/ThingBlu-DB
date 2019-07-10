@@ -114,8 +114,7 @@ export class DefaultComponent implements OnInit, OnDestroy {
       this.httpMethodsService.get('api/Login/GetSignInUserDetails', { params: params })
         .subscribe(
           (data: any) => {
-
-            if (String(data).toLocaleUpperCase() !== 'NO DATA FOUND!') {
+            if (String(data.Table[0].ResultMsg).toLocaleUpperCase() !== 'NO DATA FOUND!') {
               this.userModel = <UserModel>data.Table[0];
 
               const expires_in = this.msalService.getUser().idToken['exp'];
@@ -165,6 +164,8 @@ export class DefaultComponent implements OnInit, OnDestroy {
               }
 
               this.loaderService.display(false);
+            } else {
+              this.msalService.logout();
             }
           });
     }

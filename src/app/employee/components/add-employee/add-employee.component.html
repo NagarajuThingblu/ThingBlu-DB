@@ -103,7 +103,7 @@
                         <p-inputMask name="cellPhone" 
                         formControlName="cellPhone" id="cellPhone"
                         autocomplete="off" 
-                        tabindex="6" 
+                        [tabindex]="6" 
                         class="clsControl" 
                         mask="(999) 999-9999">
                       </p-inputMask>
@@ -156,7 +156,8 @@
               <div class="ui-g-12 ui-md-4">
                 <div class="paddingRL">
                   <div class="le-su-12">
-                    <label for="strain" class="towlable fwLabelBold">User Name<span class="star"> *</span></label>
+                    <label for="strain" class="towlable fwLabelBold">User Name<span class="star"> *</span>
+                    </label>
                     <input id="input" 
                     type="text" 
                     name="userName" 
