@@ -22,10 +22,13 @@ div.clsTableWithoutCss .ui-table-thead > tr:first-child > th {
 }
 
 
-div.clsTableWithoutCss .ui-table-tbody > tr > td {
+div.clsTableWithoutCss .ui-table-tbody > tr > td, div.clsTableWithoutCss .ui-table-tfoot > tr > td {
   border: none!important;
   word-break: break-word !important;
   vertical-align: top;
+}
+div.clsTableWithoutCss .ui-table-tfoot > tr > td{
+  background: none !important;
 }
 
 .noSpanWrap {

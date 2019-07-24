@@ -1,0 +1,261 @@
+<div class="content-section implementation GridDemo">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header="Accept Order" [toggleable]="true" [style]="{'margin-bottom':'20px'}">
+          <form [formGroup]="acceptOrderForm" autocomplete="off"
+          (ngSubmit)="onSubmit(acceptOrderForm.value, false)">
+        <div class="ui-g">
+          <div class="ui-g-12 ui-md-12">
+            <span> <a [routerLink]="" (click)="backIncomingOrderList()"
+                style="text-decoration: underline;float: right;color: #337ab7"> Back</a></span>
+          </div>
+          <div class="ui-g-12 ui-md-12">
+            <app-section-header headerLabel="Basic Informaton">
+            </app-section-header>
+          </div>
+          <div class="ui-g-12 ui-md-3">
+            <div class="paddingRL twocnt">
+              <strong> Order ID</strong>
+              <div>
+                   {{acceptOrderForm.controls.s2OrderNo.value}} 
+              </div>
+            </div>
+          </div>
+          <div class="ui-g-12 ui-md-3">
+            <div class="paddingRL twocnt">
+              <strong> Retailer</strong>
+              <div>
+                  {{acceptOrderForm.controls.retailerName.value}}
+              </div>
+            </div>
+          </div>
+          <div class="ui-g-12 ui-md-3">
+            <div class="paddingRL twocnt">
+              <strong>Retailer-UBI</strong>
+              <div>
+                  {{acceptOrderForm.controls.ubiNo.value}}
+              </div>
+            </div>
+          </div>
+          <div class="ui-g-12 ui-md-3">
+
+          </div>
+          <div class="ui-g-12 ui-md-3">
+            <div class="paddingRL twocnt">
+              <strong> Creation Date</strong>
+              <div class="clear"></div>
+              <div>
+                  {{acceptOrderForm.controls.orderdate.value  | date: 'MM/dd/yyyy'}}
+              </div>
+            </div>
+          </div>
+
+          <div class="ui-g-12 ui-md-3">
+            <div class="paddingRL twocnt">
+              <strong> Delivery Date</strong>
+              <div class="clear"></div>
+              <div>
+                  <p-calendar
+                 
+                  [showIcon]="true"
+                  [defaultDate]="defaultDate"
+                  formControlName="deliveryDate"
+                  class="clsControl"
+                  id="deliveryDate"
+                  name="deliveryDate"
+               >
+             </p-calendar>
+              </div>
+            </div>
+          </div>
+
+          <div class="ui-g-12 ui-md-3">
+            <div class="paddingRL twocnt">
+              <strong> Order Total</strong>
+              <div class="clear"></div>
+              <div>
+                  ${{acceptOrderForm.controls.orderTotal.value}}
+              </div>
+            </div>
+          </div>
+          <div class="ui-g-12 ui-md-12" *ngIf="productBudArr.length > 0" >
+            <app-section-header headerLabel="Flower Products">
+            </app-section-header>
+          </div>
+          <div class="ui-g" formArrayName="productBudArr" *ngIf="productBudArr.length > 0" style="position: relative;">     
+          <div class="ui-g-12 ui-md-12">
+              <p-table [value]="productBudArr?.controls"  id="tblBudetails" name="tblBudetails"
+              styleClass="clsTableWithoutCss clsTable noheight" [responsive]="true">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th style="width:7%;">Accept</th>
+                  <th style="width:15%;">Brand</th>
+                  <th style="width:15%;">Sub-Brand</th>
+                  <th style="width:20%;">Strain</th>
+                  <th style="width:20%;">Package Type</th>
+                  <th style="width:10%;">Unit Cost</th>
+                  <th style="width:10%;">Order Qty</th>
+                </tr>
+                <tr>
+                    <td style="width:7%;     padding-left: 8px;">
+                      <span>
+                          <p-checkbox labelStyleClass="fwLabelBold" [(ngModel)]="selectedAllBud" (onChange)="selectAllBud(selectedAllBud)"
+                          label="All" binary="true" [ngModelOptions]="{standalone: true}"   >
+                        </p-checkbox>  
+                      </span>
+                </td>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item let-i="rowIndex">
+                <tr [formGroupName]="i">
+                  <td>
+                      
+                    <span class="ui-column-title">test</span>
+                    <p-checkbox   labelStyleClass="fwLabelBold" label=""  [(ngModel)]="item.controls.chkAcceptProductItem.value" (onChange)="checkIfAllSelectedBud();"
+                    class="clsControl" formControlName="chkAcceptProductItem" binary="true">
+                  </p-checkbox>
+                  </td>
+                  <td> <span>{{item.controls.brandName.value}}</span> </td>
+                  <td> <span>{{item.controls.subBrandName.value}}</span> </td>
+                  <td> <span>{{item.controls.strainName.value}}</span> </td>
+                  <td> <span>{{item.controls.pkgTypeName.value}} - {{item.controls.pkgSize.value}} g</span> </td>
+                  <td> <span>${{item.controls.unitPrice.value}}</span> </td>
+                  <td> <span>{{item.controls.orderedQty.value}}</span> </td>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="6">
+                  No records
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+
+          <div class="ui-g-12 ui-md-12" *ngIf="productJointArr.length > 0">
+              <app-section-header headerLabel="Pre-roll Products">
+              </app-section-header>
+            </div>
+            <div class="ui-g" formArrayName="productJointArr" *ngIf="productJointArr.length > 0" style="position: relative;">     
+                <div class="ui-g-12 ui-md-12">
+                    <p-table [value]="productJointArr?.controls" id="tblBudetails" name="tblBudetails"
+                    styleClass="clsTableWithoutCss clsTable noheight" [responsive]="true">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th style="width:7%;">Accept</th>
+                        <th style="width:15%;">Brand</th>
+                        <th style="width:15%;">Sub-Brand</th>
+                        <th style="width:20%;">Strain</th>
+                        <th style="width:20%;">Package Type</th>
+                        <th style="width:10%;">Unit Cost</th>
+                        <th style="width:10%;">Order Qty</th>
+                      </tr>
+                      <tr>
+                          <td style="width:7%;     padding-left: 8px;">
+                            <span>
+                                <p-checkbox   labelStyleClass="fwLabelBold" [(ngModel)]="selectedAllJoint" (onChange)="selectAllJoint(selectedAllJoint)" 
+                                label="All" binary="true" [ngModelOptions]="{standalone: true}"   >
+                              </p-checkbox>  
+                            </span>
+                      </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-item let-i="rowIndex">
+                      <tr [formGroupName]="i">
+                        <td>
+                            
+                          <span class="ui-column-title">test</span>
+                          <p-checkbox   labelStyleClass="fwLabelBold" label=""  [(ngModel)]="item.controls.chkAcceptProductItem.value" (onChange)="checkIfAllSelectedJoint();"
+                          class="clsControl" formControlName="chkAcceptProductItem" binary="true">
+                        </p-checkbox>
+                        </td>
+                        <td> <span>{{item.controls.brandName.value}}</span> </td>
+                        <td> <span>{{item.controls.subBrandName.value}}</span> </td>
+                        <td> <span>{{item.controls.strainName.value}}</span> </td>
+                        <td> <span>{{item.controls.pkgTypeName.value}} - {{item.controls.itemQty.value}} X {{item.controls.pkgSize.value}} g</span> </td>
+                        <td> <span>${{item.controls.unitPrice.value}}</span> </td>
+                        <td> <span>{{item.controls.orderedQty.value}}</span> </td>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                        <td [attr.colspan]="6">
+                        No records
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </div>
+              </div>
+        <div class="ui-g-12 ui-md-12" *ngIf="productOilArr.length > 0">
+            <app-section-header headerLabel="Other Products">
+            </app-section-header>
+          </div>
+          <div class="ui-g" formArrayName="productOilArr" *ngIf="productOilArr.length > 0" style="position: relative;">     
+              <div class="ui-g-12 ui-md-12">
+                  <p-table [value]="productOilArr?.controls" id="tblBudetails" name="tblBudetails"
+                  styleClass="clsTableWithoutCss clsTable noheight" [responsive]="true">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th style="width:7%;">Accept</th>
+                      <th style="width:15%;">Brand</th>
+                      <th style="width:15%;">Sub-Brand</th>
+                      <th style="width:20%;">Strain</th>
+                      <th style="width:20%;">Package Type</th>
+                      <th style="width:10%;">Unit Cost</th>
+                      <th style="width:10%;">Order Qty</th>
+                    </tr>
+                    <tr>
+                        <td style="width:7%;     padding-left: 8px;">
+                          <span>
+                              <p-checkbox   labelStyleClass="fwLabelBold" [(ngModel)]="selectedAllOil" (onChange)="selectAllOil(selectedAllOil);" 
+                              label="All" binary="true" [ngModelOptions]="{standalone: true}"   >
+                            </p-checkbox>  
+                          </span>
+                    </td>
+                      </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-item let-i="rowIndex">
+                    <tr [formGroupName]="i">
+                      <td>
+                          
+                        <span class="ui-column-title">test</span>
+                        <p-checkbox   labelStyleClass="fwLabelBold" label=""   [(ngModel)]="item.controls.chkAcceptProductItem.value" (onChange)="checkIfAllSelectedOil();"
+                        class="clsControl" formControlName="chkAcceptProductItem" binary="true">
+                      </p-checkbox>
+                      </td>
+                      <td> <span>{{item.controls.brandName.value}}</span> </td>
+                      <td> <span>{{item.controls.subBrandName.value}}</span> </td>
+                      <td> <span>{{item.controls.strainName.value}}</span> </td>
+                      <td> <span>{{item.controls.pkgTypeName.value}} - {{item.controls.itemQty.value}} X {{item.controls.pkgSize.value}} g</span> </td>
+                      <td> <span>${{item.controls.unitPrice.value}}</span> </td>
+                      <td> <span>{{item.controls.orderedQty.value}}</span> </td>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr>
+                      <td [attr.colspan]="6">
+                      No records
+                      </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </div>
+          <div class="ui-g-12 ui-md-12"  >
+              <div class="">
+                <p-button style="font-size: 16px;" type="submit" styleClass="ui-button-rounded" label="Accept Order"
+                  tabindex="94" id="btnCreateProductLine" name="btnCreateProductLine"></p-button>
+                  &nbsp;&nbsp;
+                <u><a class="btn-link" style="color: red" (click)="onSubmit(acceptOrderForm.value, true)" tabindex="">Ignore Order</a></u>
+                &nbsp;&nbsp;
+                <u><a class="btn-link" routerLink="" (click)="backIncomingOrderList()" tabindex="">Cancel</a></u>
+              </div>
+          </div>
+         </div>
+        </form> 
+      </p-panel>
+    </div>
+  </div>
+</div>
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+<p-confirmDialog class="clsConfirmBox" header="Confirmation" icon="fa fa-question-circle" width="425"></p-confirmDialog> 

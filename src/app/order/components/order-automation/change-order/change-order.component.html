@@ -1,0 +1,392 @@
+  <div class="content-section implementation GridDemo">
+    <div class="ui-g">
+      <div class="ui-g-12">
+        <p-panel header="Order Changed - Action Required" [toggleable]="true" [style]="{'margin-bottom':'20px'}">
+          <form [formGroup]="changeOrderForm" autocomplete="off" (ngSubmit)="onSubmit(null, false)">
+            <div class="ui-g">
+              <div class="ui-g-12 ui-md-3">
+                <div class="paddingRL twocnt">
+                  <strong> Order ID</strong>
+                  <div>
+                    {{changeOrderForm.controls.s2OrderNo.value}}
+                  </div>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-md-3">
+                <div class="paddingRL twocnt">
+                  <strong> Retailer</strong>
+                  <div>
+                    {{changeOrderForm.controls.retailerName.value}}
+                  </div>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-md-3">
+                <div class="paddingRL twocnt">
+                  <strong>Retailer-UBI</strong>
+                  <div>
+                    {{changeOrderForm.controls.ubiNo.value}}
+                  </div>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-md-1"></div>
+              <div class="ui-g-12 ui-md-2">
+                <div style="text-align: right">
+                  <a class="btn-link" style="color: red;  cursor: pointer;text-decoration: underline"
+                    (click)="onIgnoreOrderChange( null, true)" tabindex="">Ignore Order</a>
+                  &nbsp;&nbsp; <a class="btn-link anchor" [routerLink]="" (click)="backIncomingOrderList()"> Back</a>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-md-3">
+                <div class="paddingRL twocnt">
+                  <strong> Last Updated</strong>
+                  <div class="clear"></div>
+                  <div>
+                    {{changeOrderForm.controls.updatedDate.value  | date: 'MM/dd/yyyy'}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-md-3">
+                <div class="paddingRL twocnt">
+                  <strong> Change Date</strong>
+                  <div class="clear"></div>
+                  <div>
+                    {{changeOrderForm.controls.modifiedDate.value   | date: 'MM/dd/yyyy'}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="ui-g-12 ui-md-3">
+                <div class="paddingRL twocnt">
+                  <strong> Delivery Date</strong>
+                  <div class="clear"></div>
+                  <div>
+                    <p-calendar [showIcon]="true" [defaultDate]="defaultDate" formControlName="deliveryDate"
+                      class="clsControl" id="deliveryDate" name="deliveryDate">
+                    </p-calendar>
+                  </div>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-md-12">
+                <app-section-header headerLabel="Additions">
+                </app-section-header>
+              </div>
+
+              <div class="ui-g-12">
+                <div class="ui-g-12" formArrayName="productAdditionArr">
+                  <div class="ui-g" *ngFor="let ProductItem of productAdditionArr?.controls; let iA = index"
+                    [formGroupName]="iA">
+                    <div *ngIf="iA>0">
+                      .
+                      <br>
+                    </div>
+
+                    <div style="border: 1px solid black;background-color: #ddd;width: 100%">
+                      <div class="ui-g-12 ui-g-nopad">
+                        <div class="ui-g-12 ui-md-2">
+                          <div class="le-su-2">
+                            <label for="lbBrand" class="towlable fwLabelBold"><strong>Strain</strong></label>
+                            <div>
+                              {{ProductItem.controls.strainName.value}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-2">
+                          <div class="le-su-2">
+                            <label for="lbBrand" class="towlable fwLabelBold"><strong>Type</strong></label>
+                            <div>
+                              {{ProductItem.controls.skewTypeName.value}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-2">
+                          <div class="le-su-2">
+                            <label for="lbBrand" class="towlable fwLabelBold"><strong>Product</strong></label>
+                            <div>
+                              <a class="btn-link" [routerLink]="" (click)="viewProductDetails(ProductItem)">
+                                {{ProductItem.controls.pkgTypeName.value}} - {{ProductItem.controls.pkgSize.value}} g </a>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-2">
+                          <div class="le-su-2">
+                            <label for="lbBrand" class="towlable fwLabelBold"><strong>Change Qty</strong></label>
+                            <div>
+                              <div *ngIf="ProductItem.value.changeOrderQty > 0  ; else changeQty_content">
+                                +{{ProductItem.value.changeOrderQty}} units </div>
+                              <ng-template #changeQty_content>
+                                <div>
+                                  {{ProductItem.value.changeOrderQty}} units
+                                </div>
+                              </ng-template>
+
+                            </div>
+                          </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-2">
+                          <div class="le-su-2">
+                            <label for="lbBrand" class="towlable fwLabelBold"><strong>New Order Total</strong></label>
+                            <div>
+                              {{ProductItem.controls.orderedQty.value}} units
+                            </div>
+                          </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-2">
+                          <div class="le-su-2">
+                            <label for="lbBrand" class="towlable fwLabelBold"><strong>Unassigned</strong></label>
+                            <div>
+                              {{ProductItem.value.unassignedQty}} units
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="ui-g-12">
+                          <app-pkg-allocate-employee [ProductItem]='ProductItem' [ChangeOrderDetails]="changeOrderDetails"
+                            [OtherData]="otherData">
+
+                          </app-pkg-allocate-employee>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+<!-- Start Substraction -->
+                <div class="ui-g-12 ui-md-12">
+                <app-section-header headerLabel="Substractions">
+                </app-section-header>
+                </div>
+
+                <div class="ui-g-12">
+                  <div class="ui-g-12" formArrayName="productSubstractionArr">
+                    <div class="ui-g" *ngFor="let ProductItem of productSubstractionArr?.controls; let iA = index"
+                      [formGroupName]="iA">
+                      <div *ngIf="iA>0">
+                        .
+                        <br>
+                      </div>
+  
+                      <div style="border: 1px solid black;background-color: #ddd;width: 100%">
+                        <div class="ui-g-12 ui-g-nopad">
+                          <div class="ui-g-12 ui-md-2">
+                            <div class="le-su-2">
+                              <label for="lbBrand" class="towlable fwLabelBold"><strong>Strain</strong></label>
+                              <div>
+                                {{ProductItem.controls.strainName.value}}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="ui-g-12 ui-md-2">
+                            <div class="le-su-2">
+                              <label for="lbBrand" class="towlable fwLabelBold"><strong>Type</strong></label>
+                              <div>
+                                {{ProductItem.controls.skewTypeName.value}}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="ui-g-12 ui-md-2">
+                            <div class="le-su-2">
+                              <label for="lbBrand" class="towlable fwLabelBold"><strong>Product</strong></label>
+                              <div>
+                                <a class="btn-link" [routerLink]="" (click)="viewProductDetails(ProductItem)">
+                                  {{ProductItem.controls.pkgTypeName.value}} - {{ProductItem.controls.pkgSize.value}} g </a>
+                              </div>
+                            </div>
+                          </div>
+  
+                          <div class="ui-g-12 ui-md-2">
+                            <div class="le-su-2">
+                              <label for="lbBrand" class="towlable fwLabelBold"><strong>Change Qty</strong></label>
+                              <div>
+                                    {{ProductItem.value.changeOrderQty}} units
+                              </div>
+                            </div>
+                          </div>
+                          <div class="ui-g-12 ui-md-2">
+                            <div class="le-su-2">
+                              <label for="lbBrand" class="towlable fwLabelBold"><strong>New Order Total</strong></label>
+                              <div>
+                                {{ProductItem.controls.orderedQty.value}} units
+                              </div>
+                            </div>
+                          </div>
+                           <div class="ui-g-12">
+                            <app-pkg-allocate-substraction-employee [ProductItem]='ProductItem' [ChangeOrderDetails]="changeOrderDetails"
+                              [OtherData]="otherData">
+  
+                            </app-pkg-allocate-substraction-employee>
+                          </div> 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<!-- End Substraction -->
+
+ <!-- No Action Start -->
+              <div class="ui-g-12 ui-md-12">
+                <app-section-header headerLabel="No Action Required">
+                </app-section-header>
+              </div>
+
+              <div class="ui-g-12">
+                  <div class="ui-g-12" formArrayName="productNoActionArr">
+                    <div class="ui-g" *ngFor="let ProductItem of productNoActionArr?.controls; let iA = index"
+                      [formGroupName]="iA">
+                      <div *ngIf="iA>0">
+                        .
+                        <br>
+                      </div>
+  
+                      <div style="border: 1px solid black;background-color: #ddd;width: 100%">
+                        <div class="ui-g-12 ui-g-nopad">
+                          <div class="ui-g-12 ui-md-2">
+                            <div class="le-su-2">
+                              <label for="lbBrand" class="towlable fwLabelBold"><strong>Strain</strong></label>
+                              <div>
+                                {{ProductItem.controls.strainName.value}}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="ui-g-12 ui-md-2">
+                            <div class="le-su-2">
+                              <label for="lbBrand" class="towlable fwLabelBold"><strong>Type</strong></label>
+                              <div>
+                                {{ProductItem.controls.skewTypeName.value}}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="ui-g-12 ui-md-2">
+                            <div class="le-su-2">
+                              <label for="lbBrand" class="towlable fwLabelBold"><strong>Product</strong></label>
+                              <div>
+                                <a class="btn-link" [routerLink]="" (click)="viewProductDetails(ProductItem)">
+                                  {{ProductItem.controls.pkgTypeName.value}} - {{ProductItem.controls.pkgSize.value}} g </a>
+                              </div>
+                            </div>
+                          </div>
+  
+                          <div class="ui-g-12 ui-md-2">
+                              <div class="le-su-2">
+                                  <label for="lbBrand" class="towlable fwLabelBold"><strong>Change Qty</strong></label>
+                                  <div>
+                                    <div *ngIf="ProductItem.value.changeOrderQty > 0  ; else changeQty_content">
+                                      +{{ProductItem.value.changeOrderQty}} units </div>
+                                    <ng-template #changeQty_content>
+                                      <div>
+                                        {{ProductItem.value.changeOrderQty}} units
+                                      </div>
+                                    </ng-template>
+      
+                                  </div>
+                                </div>
+                          </div>
+                          <div class="ui-g-12 ui-md-2">
+                            <div class="le-su-2">
+                              <label for="lbBrand" class="towlable fwLabelBold"><strong>New Order Total</strong></label>
+                              <div>
+                                {{ProductItem.controls.orderedQty.value}} units
+                              </div>
+                            </div>
+                          </div>
+                           <div class="ui-g-12">
+
+                              <div class="le-su-2">
+                                  <label for="lbBrand" class="towlable fwLabelBold"><strong>Reason</strong></label>
+                                  <div *ngIf="ProductItem.value.skewTypeName === 'JointMaterialWt' && ProductItem.value.taskCount > 0 ; else  reason_content">
+                                      Items will be added to the Preroll Dashboard.
+                                  </div> 
+                                  <ng-template #reason_content>
+                                      <div>
+                                          No associated tasks.
+                                      </div>
+                                    </ng-template> 
+                                </div>
+                            <!-- <app-pkg-allocate-substraction-employee [ProductItem]='ProductItem' [ChangeOrderDetails]="changeOrderDetails"
+                              [OtherData]="otherData">
+  
+                            </app-pkg-allocate-substraction-employee> -->
+                          </div> 
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- No Action End -->
+
+              <div class="ui-g-12 ui-md-12">
+                <div class="">
+                  <p-button style="font-size: 16px;" type="submit" styleClass="ui-button-rounded" label="Accept Changes"
+                    tabindex="94" id="btnAcceptChanges" name="btnCreateProductLine"></p-button>
+                  &nbsp;&nbsp;
+                  <u><a class="btn-link" style="color: red; cursor: pointer;" (click)="onIgnoreOrderChange( null, true)"
+                      tabindex="">Ignore Order</a></u>
+                  &nbsp;&nbsp;
+                  <u><a class="btn-link" routerLink="" (click)="backIncomingOrderList()" tabindex="">Cancel</a></u>
+                </div>
+              </div>
+            </div>
+
+            <p-dialog header="Product Information" [(visible)]="showProductInfoModel" modal="modal" [resizable]="true"
+              [responsive]="true" [width]="400" [minWidth]="300" [blockScroll]="true">
+              <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+
+                <div class="ui-g">
+                  <div class="ui-g-12 ui-md-6">
+                    <label>
+                      <strong>{{globalResource.brand}}</strong>
+                    </label>
+                    <br>
+                    <label>
+                      {{productTypeData?.brandName.value }}
+                    </label>
+                  </div>
+                  <div class="ui-g-12 ui-md-6">
+                    <label>
+                      <strong>{{globalResource.subbrand}}</strong>
+                    </label>
+                    <br>
+                    <label>
+                      {{productTypeData?.subBrandName.value}}
+                    </label>
+                  </div>
+                  <div class="ui-g-12 ui-md-6">
+                    <label>
+                      <strong>{{globalResource.pkgtype}}</strong>
+                    </label>
+                    <br>
+                    <label>
+                      {{productTypeData?.pkgTypeName.value}}
+                    </label>
+                  </div>
+                  <div class="ui-g-12 ui-md-6">
+                    <label>
+                      <strong>{{globalResource.pkgsize}}</strong>
+                    </label>
+                    <br>
+                    <label>
+                      {{productTypeData?.pkgSize.value}} {{globalResource.listgramunit}}
+                    </label>
+                  </div>
+                  <div class="ui-g-12 ui-md-6">
+                    <label>
+                      <strong>{{globalResource.strain}}</strong>
+                    </label>
+                    <br>
+                    <label>
+                      {{productTypeData?.strainName.value}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+            </p-dialog>
+
+          </form>
+        </p-panel>
+      </div>
+    </div>
+  </div>
+  <p-growl [(value)]="msgs" life='5000'></p-growl>
+  <p-confirmDialog class="clsConfirmBox" header="Confirmation" icon="fa fa-question-circle" width="425"></p-confirmDialog>

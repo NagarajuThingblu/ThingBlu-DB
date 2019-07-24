@@ -58,6 +58,9 @@ import { ResetPasswordComponent } from './azureb2c/reset-password/reset-password
 import { AppSignupComponent } from './azureb2c/app-signup/app-signup.component';
 import { InviteNewEmployeeComponent } from './employee/components/invite-new-employee/invite-new-employee.component';
 import { EmployeesComponent } from './employee/components/employees/employees.component';
+import { IdentifyOrderComponent } from './order/components/order-automation/identify-order/identify-order.component';
+import { AcceptOrderComponent } from './order/components/order-automation/accept-order/accept-order.component';
+import { ChangeOrderComponent } from './order/components/order-automation/change-order/change-order.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'default', pathMatch: 'full' },
@@ -127,6 +130,11 @@ const appRoutes: Routes = [
       { path: 'inviteemployee', component: InviteNewEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'adduser', component: AddEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'adduser/:UserId', component: AddEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'identifyorder', component: IdentifyOrderComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'identifyorder/:incomingOrderId', component: IdentifyOrderComponent, canActivate: [AuthGuard]},
+      { path: 'acceptorder', component: AcceptOrderComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'acceptorder/:incomingOrderId', component: AcceptOrderComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'changeOrder/:incomingOrderId', component: ChangeOrderComponent, canActivate: [AuthGuard] },
 
     ]
   }

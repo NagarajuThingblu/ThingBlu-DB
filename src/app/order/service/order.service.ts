@@ -147,7 +147,7 @@ export class OrderService {
       if (Flag === 'BUD') {
          url = 'api/Task/TaskBudPackagingGetDetailsForAssignTask';
       } else if (Flag === 'JOINTS') {
-         url = 'api/Task/TaskJointsTubingGetDetailsForAssignTask';
+         url = 'api/Task/ ';
       } else if (Flag === 'OIL') {
         url = 'api/Task/TaskOilPackagingGetDetailsForAssignTask';
      } else if (Flag === 'TUBE') {
@@ -488,6 +488,93 @@ export class OrderService {
     const url = 'api/Order/DraftOrderGetListById';
     let params = new HttpParams();
     params = params.append('DraftOrderId', String(DraftOrderId));
+    return this.http
+    .get(url, {params: params})
+    .map(
+      data => {
+        return data;
+      });
+  }
+
+  getIncomingOrdersByClient(): Observable<any> {
+    const url = 'api/Order/IncomingOrderGetListByClient';
+    let params = new HttpParams();
+    params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+    return this.http
+    .get(url, {params: params})
+    .map(
+      data => {
+        return data;
+      });
+  }
+
+  getIncomingOrderDetailssById(incomingOrderId): Observable<any> {
+    const url = 'api/Order/IncomingOrderDetailsGetById';
+    let params = new HttpParams();
+    params = params.append('IncomingOrderId', String(incomingOrderId));
+    return this.http
+    .get(url, {params: params})
+    .map(
+      data => {
+        return data;
+      });
+  }
+
+  saveIdentifyOrder(orderDetailsForApi) {
+    const url = 'api/Order/IdentifyOrderAddupdate';
+
+    return this.http.post(url, orderDetailsForApi, this.headers)
+    .map(data =>  data );
+  }
+
+  getIdentifiedOrderDetailssById(incomingOrderId): Observable<any> {
+    const url = 'api/Order/IdentifiedOrderDetailsGetById';
+    let params = new HttpParams();
+    params = params.append('IncomingOrderId', String(incomingOrderId));
+    return this.http
+    .get(url, {params: params})
+    .map(
+      data => {
+        return data;
+      });
+  }
+  saveAcceptOrder(orderDetailsForApi) {
+    const url = 'api/Order/AcceptOrderAddUpdate';
+
+    return this.http.post(url, orderDetailsForApi, this.headers)
+    .map(data =>  data );
+  }
+
+  getChangeOrdersByClient(): Observable<any> {
+    const url = 'api/Order/ChangeOrderGetListByClient';
+    let params = new HttpParams();
+    params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+    return this.http
+    .get(url, {params: params})
+    .map(
+      data => {
+        return data;
+      });
+  }
+
+  getChangeOrderDetailssById(incomingOrderId): Observable<any> {
+    const url = 'api/Order/ChangeOrderDetailsGetById';
+    let params = new HttpParams();
+    params = params.append('IncomingOrderId', String(incomingOrderId));
+    return this.http
+    .get(url, {params: params})
+    .map(
+      data => {
+        return data;
+      });
+  }
+
+  getChangeOrderTasksByProductType(orderId, productTypeId, skewType): Observable<any> {
+    const url = 'api/Order/ChangeOrderTasksGetByProductType';
+    let params = new HttpParams();
+    params = params.append('OrderId', String(orderId));
+    params = params.append('ProductTypeId', String(productTypeId));
+    params = params.append('SkewKeyName', String(skewType));
     return this.http
     .get(url, {params: params})
     .map(

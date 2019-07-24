@@ -27,6 +27,10 @@ export class OrderListingComponent implements OnInit, OnDestroy {
   eventdraft: any;
   paginationValues: any;
   draftpaginationValues: any;
+  eventIncomingOrder: any;
+  incomingpaginationValues: any;
+  ChangeOrderpaginationValues: any;
+  eventChangeOrder: any;
 
   public allOrders: any;
   public showOrderDetailsModel = false;
@@ -37,10 +41,14 @@ export class OrderListingComponent implements OnInit, OnDestroy {
   public globalResource: any;
   public orderrequestResource: any;
   public allDraftOrders: any;
+  public allIncomingOrders: any;
+  public allChangeOrders: any;
   public msgs = [];
   public deleteClick = false;
   public draftTabSelected = false;
   public orderTabSelected = true;
+  public changeTabSelected = false;
+  public incomingTabSelected = false;
 
 
   constructor(
@@ -54,16 +62,35 @@ export class OrderListingComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.draftTabSelected = false;
+    this.changeTabSelected = false;
+    this.incomingTabSelected = false;
     this.orderTabSelected = true;
     this.orderrequestResource = OrderResource.getResources().en.orderrequest;
     this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle(this.orderrequestResource.orderlisttitle);
     this.getAllOrders();
      this.getAllDreaftOrders();
+     this.getAllIncomingOrders();
+     this.getAllChangeOrders();
      if (this.appCommonService.navDraftOrder.isBackClicked) {
-        this.draftTabSelected = true;
-        this.orderTabSelected = false;
-     }
+      this.draftTabSelected = true;
+      this.orderTabSelected = false;
+      this.incomingTabSelected = false;
+      this.changeTabSelected = false;
+   }
+
+   if (this.appCommonService.navIncomingOrder.isBackClicked) {
+      this.draftTabSelected = false;
+      this.orderTabSelected = false;
+      this.incomingTabSelected = true;
+      this.changeTabSelected = false;
+ }
+ if (this.appCommonService.navChangeOrder.isBackClicked) {
+  this.draftTabSelected = false;
+  this.orderTabSelected = false;
+  this.incomingTabSelected = false;
+  this.changeTabSelected = true;
+}
   }
   ngOnDestroy() {
     this.appCommonService.navDraftOrder.isBackClicked = false;
@@ -74,6 +101,16 @@ export class OrderListingComponent implements OnInit, OnDestroy {
   onDraftPageChange(e) {
     this.eventdraft = e;
   }
+
+  _clearNavCookie() {
+    this.draftTabSelected = false;
+    this.orderTabSelected = true;
+    this.incomingTabSelected = false;
+    this.appCommonService.navIncomingOrder.isBackClicked = false;
+    this.appCommonService.navDraftOrder.isBackClicked = false;
+    this.appCommonService.navChangeOrder.isBackClicked = false;
+  }
+
   getAllOrders() {
     this.loaderService.display(true);
     this.orderService.getAllOrders().subscribe(
@@ -208,4 +245,77 @@ export class OrderListingComponent implements OnInit, OnDestroy {
       }
   });
   }
+
+  // get all draft orders
+  getAllIncomingOrders() {
+    this.loaderService.display(true);
+    this.orderService.getIncomingOrdersByClient().subscribe(
+      data => {
+       if (data !== 'No data found!') {
+          this.allIncomingOrders = data.Table;
+          this.incomingpaginationValues = AppConstants.getPaginationOptions;
+          if (this.allIncomingOrders.length > 20) {
+            this.incomingpaginationValues[AppConstants.getPaginationOptions.length] = this.allIncomingOrders.length;
+          }
+       } else {
+        this.allIncomingOrders = [];
+       }
+       this.loaderService.display(false);
+      } ,
+      error => { console.log(error); this.loaderService.display(false); },
+      () => console.log('Get All Order Incoming complete'));
+
+  }
+
+  onIncomingOrderPageChange(e) {
+    this.eventIncomingOrder = e;
+  }
+
+  onIncomingOrderSelect(event) {
+    if (event.data.IncomingOrderId > 0) {
+      this._clearNavCookie();
+        if (event.data.IsIdentified === true) {
+          this.router.navigate(['../home/acceptorder/' +   event.data.IncomingOrderId]);
+        } else {
+          this.router.navigate(['../home/identifyorder/' + event.data.IncomingOrderId]);
+       }
+      }
+  }
+
+  // get all draft orders
+  getAllChangeOrders() {
+    this.loaderService.display(true);
+    this.orderService.getChangeOrdersByClient().subscribe(
+      data => {
+       if (data !== 'No data found!') {
+          this.allChangeOrders = data.Table;
+          this.incomingpaginationValues = AppConstants.getPaginationOptions;
+          if (this.allChangeOrders.length > 20) {
+            this.incomingpaginationValues[AppConstants.getPaginationOptions.length] = this.allChangeOrders.length;
+          }
+       } else {
+        this.allChangeOrders = [];
+       }
+       this.loaderService.display(false);
+      } ,
+      error => { console.log(error); this.loaderService.display(false); },
+      () => console.log('Get All Order Incoming complete'));
+
+  }
+
+  onChangeOrderPageChange(e) {
+    this.eventChangeOrder = e;
+  }
+
+  onChangeOrderSelect(event) {
+    if (event.data.IncomingOrderId > 0) {
+      this._clearNavCookie();
+        if (event.data.IsIdentified === true && event.data.IsChangeOrder === true) {
+          this.router.navigate(['../home/changeOrder/' + event.data.IncomingOrderId]);
+        } else {
+          this.router.navigate(['../home/identifyorder/' + event.data.IncomingOrderId]);
+       }
+      }
+  }
 }
+

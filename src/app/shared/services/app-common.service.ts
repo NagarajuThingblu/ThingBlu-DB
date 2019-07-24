@@ -67,6 +67,15 @@ export class AppCommonService implements OnChanges, OnInit {
   public navDraftOrder = {
     isBackClicked: false,
   } ;
+
+  public navIncomingOrder = {
+    isBackClicked: false,
+  } ;
+
+  public navChangeOrder = {
+    isBackClicked: false,
+  } ;
+
   constructor(
     private cookieService: CookieService,
     private confirmationService: ConfirmationService

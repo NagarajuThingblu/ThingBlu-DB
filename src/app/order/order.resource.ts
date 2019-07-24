@@ -46,7 +46,41 @@ export class OrderResource {
                     oilproduct: 'Add Oil Product',
                     prerollproduct: 'Add Pre-roll Product',
                     flowerproduct: 'Add Flower Product',
+                    retailer: 'Retailer',
+                    orderTotal: 'Order Total',
+                    lastUpdated: 'Last Updated',
+                    changeDate: 'Change Date',
+                    initialDate: 'Initial Date'
 
+                },
+                identifyProduct: {
+                    identifyProducttitle: 'Identify Product',
+                    // tslint:disable-next-line:max-line-length
+                    warnigMsg: 'The following list of products could not be automatically identified. Please fill in the required fields or mark the product as invalid.',
+                    orderId: 'Order Id',
+                    retailer: 'Retailer',
+                    ubiNo: 'Retailer-UBI',
+                    orderDate: 'Order Date',
+                    brand: 'Brand',
+                    subBrand: 'Sub-Brand',
+                    strain: 'Strain',
+                    addNewPkg: ' Add Package Type',
+                    leafProductName: 'Leaf Product Name',
+                    invalidProduct: 'Invalid Product',
+                    skewType: 'Type',
+                    selectSkewType: 'Select Skew Type.',
+                    pkgType: 'Pkg Type',
+                    selectpkgType: 'Select Pkg Type.',
+                    itemSize: 'Item Size',
+                    enteritemSize: 'Enter Package Size.',
+                    itemPkg: 'Items/Pkg',
+                    itemQty: 'Enter Item Qty',
+                    unitPrice: 'Unit Price',
+                    enterunitPrice: 'Enter Unit Price',
+                    identifysave: 'Products has been identified and saved successfully.',
+                },
+                acceptOrder: {
+                    ordersaveconfirm: 'Are you sure that you want to proceed?',
                 }
             }
         };

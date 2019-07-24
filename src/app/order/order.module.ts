@@ -1,3 +1,7 @@
+// tslint:disable-next-line:max-line-length
+import { PkgAllocateSubstractionEmployeeComponent } from './components/order-automation/change-order/pkg-allocate-substraction-employee/pkg-allocate-substraction-employee.component';
+import { PkgAllocateEmployeeComponent } from './components/order-automation/change-order/pkg-allocate-employee/pkg-allocate-employee.component';
+import { MastersModule } from './../Masters/Masters.module';
 
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
@@ -8,6 +12,9 @@ import { OrderReturnComponent } from './components/order-return/order-return.com
 import { OrderListingComponent } from './components/order-listing/order-listing.component';
 import { PackageSizePipe } from './pipe/package-size.pipe';
 import { DynamicValueFilterPipe } from './pipe/dynamic-value-filter.pipe';
+import { IdentifyOrderComponent } from './components/order-automation/identify-order/identify-order.component';
+import { AcceptOrderComponent } from './components/order-automation/accept-order/accept-order.component';
+import { ChangeOrderComponent } from './components/order-automation/change-order/change-order.component';
 
 @NgModule({
   declarations: [
@@ -15,10 +22,16 @@ import { DynamicValueFilterPipe } from './pipe/dynamic-value-filter.pipe';
     OrderReturnComponent,
     OrderListingComponent,
     PackageSizePipe,
-    DynamicValueFilterPipe
+    DynamicValueFilterPipe,
+    IdentifyOrderComponent,
+    AcceptOrderComponent,
+    ChangeOrderComponent,
+    PkgAllocateEmployeeComponent,
+    PkgAllocateSubstractionEmployeeComponent
   ],
   imports: [
-    SharedModule
+    SharedModule,
+    MastersModule
   ],
   providers: [OrderService],
   exports: [

@@ -52,8 +52,8 @@ export class MsalComponent implements OnInit {
     xhr.open('POST', url);
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4 && xhr.status === 200) {
+        this.isPasswordResetSuccess = true;
         setTimeout(() => {
-          this.isPasswordResetSuccess = true;
           this.loaderService.display(false);
           this.msalService.logout();
           success(xhr.responseText);
