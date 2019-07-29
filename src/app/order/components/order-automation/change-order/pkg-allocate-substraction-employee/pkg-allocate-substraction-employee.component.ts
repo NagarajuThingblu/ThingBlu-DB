@@ -52,7 +52,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   public brandStrainLots: any;
   public globalResource: any;
   public msgs: Message[] = [];
-  public addtionAssignedQty  = 0;
+  public addtionAssignedQty = 0;
 
   public lotInfo: any = {
     lotId: 0,
@@ -105,7 +105,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   onChange_Action(productItem) {
     (productItem as FormGroup).setControl('tasksArr', new FormArray([]));
     this.actionType = this.ProductItem.value.taskAction;
-     if (this.actionType === 'ReleaseMaterial') {
+    if (this.actionType === 'ReleaseMaterial') {
       this.addTaskItemForCurrentTask();
     } else {
 
@@ -134,11 +134,12 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       'employeeName': new FormControl(null),
       'assignedQty': new FormControl(null),
       'addedQty': new FormControl(null, Validators.required || null),
-      'releaseQty': new FormControl(0 , Validators.required),
+      'releaseQty': new FormControl(0, Validators.required),
       'pkgType': new FormControl(null),
       'pkgTypeName': new FormControl(null),
       'actiontype': new FormControl(actionType),
       uniqueId: this.appCommonService.randomNumber(),
+      issamelot:  null ,
     });
   }
 
@@ -151,7 +152,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   }
 
   createTaskItemsForCurrentTask(productTypeTaskList): FormGroup {
-
+   const uniqId = this.appCommonService.randomNumber();
     // tslint:disable-next-line:max-line-length
     this.addtionAssignedQty = this.ProductItem.value.taskCount === 1 ? Math.abs(this.ProductItem.value.orderedQty - this.ProductItem.value.totalAssignedQty) : 0;
     return this.fb.group({
@@ -167,7 +168,8 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       'pkgType': new FormControl(productTypeTaskList.PkgtypeId),
       'pkgTypeName': new FormControl(productTypeTaskList.PkgTypeName),
       'actiontype': new FormControl('ReleaseMaterial'),
-      uniqueId: this.appCommonService.randomNumber(),
+      uniqueId: uniqId,
+      isSameLot:   this.lotsPerTask(this.ProductItem, productTypeTaskList, uniqId, 0),
     });
   }
 
@@ -189,35 +191,35 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   deleteItem(taskIndex) {
     const controla = <FormArray>this.ProductItem.get('tasksArr');
     if (controla.length !== 1) {
-      const con =  (controla.controls[taskIndex] as FormGroup);
+      const con = (controla.controls[taskIndex] as FormGroup);
       if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
-          selectedLots1.forEach((item1, index1) => {
-            item1.forEach((p, index2) => {
-              if (p.UniqueId === con.value.uniqueId) {
-                item1.splice(index2, 1);
-              }
+        selectedLots1.forEach((item1, index1) => {
+          item1.forEach((p, index2) => {
+            if (p.UniqueId === con.value.uniqueId) {
+              item1.splice(index2, 1);
+            }
           });
-      });
-      this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
+        });
+        this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
       }
       controla.removeAt(taskIndex);
     }
   }
 
   getChangeOrderTaskByProductType(orderId, productTypeId, skewKeyName) {
+    this.selectedLotDetails = [];
     let productTaskList = [];
     this.loaderService.display(true);
     this.orderService.getChangeOrderTasksByProductType(orderId, productTypeId, skewKeyName).subscribe(
       data => {
         if (data !== 'No data found!') {
-          console.log(data, 's');
           productTaskList = data.Table;
           this.loaderService.display(false);
           if (productTaskList.length > 0) {
             this.productTypeTaskList = productTaskList;
             this.selectedLotDetails = data.Table1;
-            this.actionNameValue.push({label: 'Release Material', value: 'ReleaseMaterial'});
+            this.actionNameValue.push({ label: 'Release Material', value: 'ReleaseMaterial' });
             this.ProductItem.controls['taskAction'].patchValue('ReleaseMaterial');
           } else {
             this.ProductItem.controls['taskAction'].patchValue('None');
@@ -253,17 +255,21 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   }
 
   openLotSelection(parentRowData, rowData, rowIndex) {
-    const strainId =  parentRowData.value.strain;
+
+    let assQty = 0;
+    this.addtionAssignedQty = 0;
+    this.tasksArr.controls.forEach((data) => {
+      assQty = Number(assQty) + Number((data as FormGroup).controls['releaseQty'].value);
+    });
+    if (assQty > Math.abs(Number(parentRowData.value.changeOrderQty))) {
+      return;
+    }
+
+    const strainId = parentRowData.value.strain;
     this.brandStrainLots = [];
-
-    this.brandStrainLots = this.selectedLotDetails.filter(r => r.TaskId = rowData.value.taskId);
-    //  let brandStrainLots1 = this.ChangeOrderDetails.orderDetails['Table1'].filter(result => {
-    //    return result.StrainId === strainId; // strainId;
-    //  });
-
+    this.brandStrainLots = this.selectedLotDetails.filter(r => r.TaskId === rowData.value.taskId);
     this.selLotBrandStrainRow.BrandId = 0;
     this.selLotBrandStrainRow.StrainId = strainId;
-
 
     if (rowData.value.actiontype === 'ReleaseMaterial') {
       const employeeBox = (rowData as FormGroup).controls['releaseQty'];
@@ -274,8 +280,8 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
 
     this.selLotBrandStrainRow.RequireWt = 0;
     if (rowData.value.actiontype === 'ReleaseMaterial') {
-        const totalPkgWt = Number(rowData.value.releaseQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
-        this.selLotBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
+      const totalPkgWt = Number(rowData.value.releaseQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
+      this.selLotBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
       // this.selLotBrandStrainRow.combinationTotalAssignedWt = rowData.value.releaseQty;
     }
 
@@ -305,7 +311,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
     //     }
     // });
 
-   // this.syncAllLotWeight();
+     this.syncAllLotWeight();
 
     this.showLotSelectionModel = true;
   }
@@ -360,7 +366,6 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       let checkbox;
       let answerbox;
       const lotSelectedDetails = this.selectedLotsArray.get(this.selLotBrandStrainRow.UniqueId);
-
       // if (!this.lotSyncWtArr.has(question.LotId)) {
       //   this.setLotSyncWt(question.LotId, question.AvailableWt);
       // }
@@ -481,7 +486,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
               LotNo: result.LotNo,
               GrowerLotNo: result.GrowerLotNo,
               AvailWt: result.AvailWt,
-              SelectedWt: result.answer,
+              SelectedWt: Number(result.answer),
               Selected: true,
               Index: result.questionNumber,
               StrainId: this.selLotBrandStrainRow.StrainId,
@@ -502,18 +507,17 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       // this.allocateEmpArr.controls[this.selLotBrandStrainRow.selectedRowIndex].updateValueAndValidity();
       this.selectedLotsArray.set(this.selLotBrandStrainRow.UniqueId, lotDetails);
       //  this.selectedLotsArray[this.selLotBrandStrainRow.UniqueId] = lotDetails;
-
       if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
         lotDetails.forEach((item, index) => {
           selectedLots1.forEach((item1, index1) => {
             item1.forEach((p, index2) => {
-              if (p.UniqueId === item.UniqueId) {
+              if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
                 item1.splice(index2, 1);
                 // (index2);
                 item1.push(item);
               } else {
-                if (item1.filter(r => r.UniqueId === item.UniqueId).length <= 0) {
+                if (item1.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
                   item1.push(item);
                 }
               }
@@ -539,7 +543,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
     let assQty = 0;
     this.addtionAssignedQty = 0;
     this.tasksArr.controls.forEach((data) => {
-      assQty = Number(assQty ) + Number((data as FormGroup).controls['assignedQty'].value);
+      assQty = Number(assQty) + Number((data as FormGroup).controls['assignedQty'].value);
     });
     const employeeBox = (rowData as FormGroup).controls['assignedQty'];
     if (assQty > unassignedTqty) {
@@ -549,7 +553,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
 
     } else {
       this.tasksArr.controls.forEach((data) => {
-         (data as FormGroup).controls['assignedQty'].setErrors(null);
+        (data as FormGroup).controls['assignedQty'].setErrors(null);
       });
       this.addtionAssignedQty = assQty;
     }
@@ -559,42 +563,71 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
     let assQty = 0;
     this.addtionAssignedQty = 0;
     this.tasksArr.controls.forEach((data) => {
-      assQty = Number(assQty ) + Number((data as FormGroup).controls['releaseQty'].value);
+      assQty = Number(assQty) + Number((data as FormGroup).controls['releaseQty'].value);
     });
     const employeeBox = (rowData as FormGroup).controls['releaseQty'];
     if (assQty > Math.abs(Number(changedOrderqty))) {
       setTimeout(() => {
         employeeBox.setErrors({ 'assignedQtyExceeded': true });
       }, 0);
-
+      return;
     } else {
       this.tasksArr.controls.forEach((data) => {
-         (data as FormGroup).controls['releaseQty'].setErrors(null);
+        (data as FormGroup).controls['releaseQty'].setErrors(null);
       });
       this.addtionAssignedQty = assQty;
+      if (assQty <= 0) {
+        let selectedLots1 =  [];
+        if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
+           selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
+           selectedLots1.forEach((item , index) => {
+
+            for ( let i = 0; i < item.length; i++) {
+              if ( item[i].UniqueId === rowData.value.uniqueId) {
+                item.splice(i, 1);
+                i -- ;
+              }
+           }
+
+          //   item.forEach((p, index2) => {
+          //     if (p.UniqueId === rowData.value.uniqueId) {
+          //       item.slice(index, 1);
+          //     }
+          // });
+        });
+        console.log(this.selectedLotsArray, ' a1');
+        this.selectedLotsArray.clear();
+        console.log(this.selectedLotsArray, ' a2');
+        this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
+        return;
+        }
+      }
+      this.lotsPerTask1(this.ProductItem, rowData, 0);
     }
   }
+
   absValue(value) {
     return Math.abs(Number(value));
   }
 
-  lotsPerTask(productItem, rowData, i) {
-    console.log(rowData, 'te');
+  lotsPerTask(productItem, rowData, uniqId , i) {
     let brandStrainLots = [];
-    brandStrainLots = this.selectedLotDetails.filter(r => r.TaskId = rowData.value.taskId);
-    console.log( brandStrainLots, 's');
+    let unselectedwt = 0;
+    brandStrainLots = this.selectedLotDetails.filter(r => r.TaskId === rowData.TaskId);
+    const releaseQty = productItem.value.taskCount === 1 ? Math.abs(this.ProductItem.value.orderedQty - this.ProductItem.value.totalAssignedQty) : 0;
 
     if (brandStrainLots) {
-      if (brandStrainLots.length === 1 ) {
+      if (brandStrainLots.length === 1) {
         const lotDetails = [];
         const lotListId = 0;
-        lotDetails.push(
+        unselectedwt = Number(releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty);
+      lotDetails.push(
           {
             LotListId: lotListId,
             LotNo: brandStrainLots[0].LotId,
             GrowerLotNo: brandStrainLots[0].GrowerLotNo,
             AvailWt: null,
-            SelectedWt:  Number( rowData.value.releaseQty) * Number( productItem.value.pkgSize) * Number( productItem.value.itemQty),
+            SelectedWt: Number(releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty),
             Selected: true,
             Index: null,
             StrainId: brandStrainLots[0].StrainId,
@@ -602,7 +635,71 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
             BrandId: productItem.value.brand,
             GeneticsId: brandStrainLots[0].GeneticsId,
             GeneticsName: brandStrainLots[0].GeneticsName,
-            ProductTypeId: productItem.value.productType ,
+            ProductTypeId: productItem.value.productType,
+            UniqueId: uniqId,
+          }
+        );
+
+        this.selectedLotsArray.set(uniqId, lotDetails);
+        //  this.selectedLotsArray[this.selLotBrandStrainRow.UniqueId] = lotDetails;
+        let selectedLots1 = [];
+        if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
+          selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
+          lotDetails.forEach((item, index) => {
+            selectedLots1.forEach((item1, index1) => {
+              item1.forEach((p, index2) => {
+                if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
+                  item1.splice(index2, 1);
+                  // (index2);
+                  if (unselectedwt > 0) {
+                  item1.push(item);
+                  }
+                } else {
+                  if (item1.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
+                    if (unselectedwt > 0) {
+                    item1.push(item);
+                    }
+                  }
+                }
+              });
+            });
+          });
+          this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
+        } else {
+          this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  lotsPerTask1(productItem, rowData, i) {
+    let brandStrainLots = [];
+    let unselectedwt = 0;
+    brandStrainLots = this.selectedLotDetails.filter(r => r.TaskId === rowData.value.taskId);
+
+    if (brandStrainLots) {
+      if (brandStrainLots.length === 1) {
+        const lotDetails = [];
+        const lotListId = 0;
+        unselectedwt = Number(rowData.value.releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty);
+        lotDetails.push(
+          {
+            LotListId: lotListId,
+            LotNo: brandStrainLots[0].LotId,
+            GrowerLotNo: brandStrainLots[0].GrowerLotNo,
+            AvailWt: null,
+            SelectedWt: Number(rowData.value.releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty),
+            Selected: true,
+            Index: null,
+            StrainId: brandStrainLots[0].StrainId,
+            StrainName: brandStrainLots[0].StrainName,
+            BrandId: productItem.value.brand,
+            GeneticsId: brandStrainLots[0].GeneticsId,
+            GeneticsName: brandStrainLots[0].GeneticsName,
+            ProductTypeId: productItem.value.productType,
             UniqueId: rowData.value.uniqueId,
           }
         );
@@ -611,16 +708,17 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
         //  this.selectedLotsArray[this.selLotBrandStrainRow.UniqueId] = lotDetails;
         let selectedLots1 = [];
         if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
-            selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
+          selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
           lotDetails.forEach((item, index) => {
             selectedLots1.forEach((item1, index1) => {
               item1.forEach((p, index2) => {
-                if (p.UniqueId === item.UniqueId) {
+                if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
                   item1.splice(index2, 1);
-                  // (index2);
-                  item1.push(item);
+                  if (unselectedwt > 0) {
+                    item1.push(item);
+                  }
                 } else {
-                  if (item1.filter(r => r.UniqueId === item.UniqueId).length <= 0) {
+                  if (item1.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
                     item1.push(item);
                   }
                 }
@@ -630,7 +728,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
           this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
         } else {
           this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
-         }
+        }
         return true;
       } else {
         return false;

@@ -319,6 +319,8 @@ export class ChangeOrderComponent implements OnInit {
       icon: 'fa fa-exclamation-triangle',
       accept: () => {
         console.log(this.changeOrderForm, 'test');
+        console.log(JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray')), 'a');
+        console.log(JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray')), 'b');
       },
       reject: () => {
         // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];

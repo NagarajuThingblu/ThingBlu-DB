@@ -210,27 +210,27 @@
             </td>
 
             <td>
-              <div>
-                <div *ngIf="taskArrayItem.value.taskId  ; else taskSelectLot_content">
-                  <a class="btn-link anchor"  [routerLink]="" (click)="openLotSelection(ProductItem, taskArrayItem, i)">
-                    Select Lots
-                  </a>
-                </div>
-                <ng-template #taskSelectLot_content>
-                  <div>
+              <div> 
                     <span *ngIf="taskArrayItem.controls['addedQty'].value > 0 ; else taskSelectLot1_content">
-                      <a class="btn-link anchor" [routerLink]=""
-                        (click)="openLotSelection(ProductItem, taskArrayItem, i)"> Select Lots
-                      </a>
+                        <a 
+                            class="btn-link anchor"
+                            [class.clsLotSelected]="selectedLotsArray.get(taskArrayItem.value.uniqueId)?.length > 0"
+                            [routerLink]="" 
+                            (click)="openLotSelection(ProductItem, taskArrayItem, i)"
+                          > 
+                            <span *ngIf="selectedLotsArray.get(taskArrayItem.value.uniqueId)?.length <= 0">
+                            Select Lots
+                            </span>
+                            <span *ngIf="selectedLotsArray.get(taskArrayItem.value.uniqueId)?.length > 0">
+                             View/Change Lots
+                            </span>
+                          </a>
                     </span>
                     <ng-template #taskSelectLot1_content>
                       <div>
                         Select Lots
                       </div>
                     </ng-template>
-                  </div>
-                </ng-template>
-
               </div>
             </td>
             <td> <span *ngIf="i>=1">

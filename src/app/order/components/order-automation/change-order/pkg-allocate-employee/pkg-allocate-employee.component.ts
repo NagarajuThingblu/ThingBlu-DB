@@ -188,7 +188,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
           selectedLots1.forEach((item1, index1) => {
             item1.forEach((p, index2) => {
-              if (p.UniqueId === con.value.uniqueId) {
+              if (p.UniqueId === con.value.uniqueId ) {
                 item1.splice(index2, 1);
               }
           });
@@ -249,15 +249,21 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     const strainId = parentRowData.value.strain;
     this.brandStrainLots = [];
     this.brandStrainLots = this.ChangeOrderDetails.orderDetails['Table1'].filter(result => {
-
       if (parentRowData.value.geneticsId) {
         return result.GeneticsId === parentRowData.value.geneticsId;
       } else {
         return result.StrainId === parentRowData.value.strainId;
-    }
-       // result.StrainId === strainId; // strainId;
+      }
     });
 
+    if (this.brandStrainLots.length <= 0) {
+      this.msgs = [];
+      this.msgs.push({
+        severity: 'warn', summary: this.globalResource.applicationmsg,
+        detail: 'Lot(s) not available.'
+      });
+      return;
+    }
     this.selLotBrandStrainRow.BrandId = 0;
     this.selLotBrandStrainRow.StrainId = strainId;
     // this.selLotBrandStrainRow.selectedRowIndex = rowIndex;
@@ -363,8 +369,6 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       let checkbox;
       let answerbox;
       const lotSelectedDetails = this.selectedLotsArray.get(this.selLotBrandStrainRow.UniqueId);
-      // console.log(lotSelectedDetails);
-
       // if (!this.lotSyncWtArr.has(question.LotId)) {
       //   this.setLotSyncWt(question.LotId, question.AvailableWt);
       // }
@@ -512,7 +516,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
         lotDetails.forEach((item, index) => {
           selectedLots1.forEach((item1, index1) => {
             item1.forEach((p, index2) => {
-              if (p.UniqueId === item.UniqueId) {
+              if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
                 item1.splice(index2, 1);
                 // (index2);
                 item1.push(item);

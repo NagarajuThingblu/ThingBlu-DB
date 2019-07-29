@@ -45,50 +45,63 @@
             <td> {{taskArrayItem.value.employeeName}} </td>
             <td> {{taskArrayItem.value.assignedQty}} units </td>
             <td>
-                <span *ngIf="ProductItem.controls.taskCount.value > 1 ; else taskcount_content">
-              <div>
-                 
-                <input pInputText name="releaseQty" maxLength="10" pKeyFilter="num" tabindex="1" id="releaseQty"
-                  OnlyNumber="true" autocomplete="off" type="number"
-                  (change)="addedQty_onChange(taskArrayItem, ProductItem.value.changeOrderQty)" class="clsControl"
-                  formControlName="releaseQty" />
-              </div>
-              <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                *ngIf="!taskArrayItem.controls['releaseQty'].valid&&taskArrayItem.controls['releaseQty'].dirty">
-                <span *ngIf="taskArrayItem.controls['releaseQty'].errors['required']">
-                  required
-                </span>
-                <span *ngIf="taskArrayItem.controls['releaseQty'].hasError('assignedQtyExceeded')">
-                  Weight exceeded.
-                </span>
-              </div>
+              <span *ngIf="ProductItem.controls.taskCount.value > 1 ; else taskcount_content">
+                <div>
+
+                  <input pInputText name="releaseQty" maxLength="10" pKeyFilter="num" tabindex="1" id="releaseQty"
+                    OnlyNumber="true" autocomplete="off" type="number"
+                    (change)="addedQty_onChange(taskArrayItem, ProductItem.value.changeOrderQty)" class="clsControl"
+                    formControlName="releaseQty" />
+                </div>
+                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                  *ngIf="!taskArrayItem.controls['releaseQty'].valid&&taskArrayItem.controls['releaseQty'].dirty">
+                  <span *ngIf="taskArrayItem.controls['releaseQty'].errors['required']">
+                    required
+                  </span>
+                  <span *ngIf="taskArrayItem.controls['releaseQty'].hasError('assignedQtyExceeded')">
+                    Weight exceeded.
+                  </span>
+                </div>
               </span>
               <ng-template #taskcount_content>
-                  <div>
-                      {{ absValue(taskArrayItem.value.releaseQty)}} units
-                  </div>
-                </ng-template>
+                <div>
+                  {{ absValue(taskArrayItem.value.releaseQty)}} units
+                </div>
+              </ng-template>
             </td>
             <td>
               <div>
-                  <!-- <a class="btn-link anchor" [routerLink]="" (click)="openLotSelection(ProductItem, taskArrayItem, i)">
-                      Select Items
-                    </a> -->
-                <span *ngIf="lotsPerTask(ProductItem,taskArrayItem, i) && taskArrayItem.controls['releaseQty'].value > 0 ; else taskSelectLot12_content" >
-                    Same Lot
+                <span
+                  *ngIf="taskArrayItem.value.isSameLot && taskArrayItem.controls['releaseQty'].value > 0 ; else taskSelectLot12_content">
+                  Same Lot
                 </span>
                 <ng-template #taskSelectLot12_content>
-                <span *ngIf="  taskArrayItem.controls['releaseQty'].value > 0 ; else taskSelectLot1_content">
-                  <a class="btn-link anchor" [routerLink]="" (click)="openLotSelection(ProductItem, taskArrayItem, i)">
-                    Select Items
-                  </a>
-                </span>
-                <ng-template #taskSelectLot1_content>
-                  <div>
-                    Select Items
-                  </div>
+                  <span *ngIf="  taskArrayItem.controls['releaseQty'].value > 0 ; else taskSelectLot1_content">
+                      <a 
+                            class="btn-link anchor"
+                            [class.clsLotSelected]="selectedLotsArray.get(taskArrayItem.value.uniqueId)?.length > 0"
+                            [routerLink]="" 
+                            (click)="openLotSelection(ProductItem, taskArrayItem, i)"
+                          > 
+                            <span *ngIf="selectedLotsArray.get(taskArrayItem.value.uniqueId)?.length <= 0">
+                            Select Lots
+                            </span>
+                            <span *ngIf="selectedLotsArray.get(taskArrayItem.value.uniqueId)?.length > 0">
+                             View/Change Lots
+                            </span>
+                          </a>
+
+                    <!-- <a class="btn-link anchor" [routerLink]=""
+                      (click)="openLotSelection(ProductItem, taskArrayItem, i)">
+                      Select Items
+                    </a> -->
+                  </span>
+                  <ng-template #taskSelectLot1_content>
+                    <div>
+                      Select Items
+                    </div>
+                  </ng-template>
                 </ng-template>
-              </ng-template>
               </div>
             </td>
           </tr>
@@ -101,9 +114,10 @@
             <td> </td>
             <td colspan="2">
               <div>
-                <span style="color: salmon" >
+                <span style="color: salmon">
 
-                  {{addtionAssignedQty}}/{{absValue(ProductItem.value.orderedQty - ProductItem.value.totalAssignedQty)}} units released.
+                  {{addtionAssignedQty}}/{{absValue(ProductItem.value.orderedQty - ProductItem.value.totalAssignedQty)}}
+                  units released.
                 </span>
               </div>
             </td>
@@ -176,7 +190,7 @@
 
                 <td>
 
-                    {{ question.value.SelectedWt  }} {{globalResource.listgramunit}}
+                  {{ question.value.SelectedWt  }} {{globalResource.listgramunit}}
                   <!-- <ng-container *ngIf="taskId && taskId > 0">
                   
                     {{ question.value.SelectedWt  }} {{globalResource.listgramunit}}
