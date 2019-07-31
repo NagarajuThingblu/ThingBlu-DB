@@ -122,19 +122,19 @@ export class PkgAllocateEmployeeComponent implements OnInit {
   addTaskItem(actionType): void {
     let arrayItem;
     arrayItem = this.ProductItem.get('tasksArr') as FormArray;
-    arrayItem.push(this.createTaskItems(actionType));
+    arrayItem.push(this.createTaskItems(this.ProductItem, actionType));
   }
 
-  createTaskItems(actionType): FormGroup {
+  createTaskItems(productItem, actionType): FormGroup {
     return this.fb.group({
       'taskId': new FormControl(null),
-      'taskType': new FormControl(null),
-      'taskStatus': new FormControl(null),
+      'taskType': new FormControl(productItem.value.taskType),
+      'taskStatus': new FormControl('ToBeAssigned'),
       'employee': new FormControl(null),
       'employeeName': new FormControl(null),
-      'assignedQty': new FormControl(null),
-      'addedQty': new FormControl(null, Validators.required || null),
-      'pkgType': new FormControl(null),
+      'assignedQty': new FormControl(null, actionType !== 'AddToCurrentTask' ? Validators.required : null),
+      'addedQty': new FormControl(null, actionType === 'AddToCurrentTask' ? Validators.required : null),
+      'pkgType': new FormControl(productItem.value.pkgType),
       'pkgTypeName': new FormControl(null),
       'actiontype': new FormControl(actionType),
       uniqueId: this.appCommonService.randomNumber(),
@@ -187,11 +187,17 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       if (this.appCommonService.getSessionStorage('selectedLotsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
           selectedLots1.forEach((item1, index1) => {
-            item1.forEach((p, index2) => {
-              if (p.UniqueId === con.value.uniqueId ) {
-                item1.splice(index2, 1);
-              }
-          });
+          //   item1.forEach((p, index2) => {
+          //     if (p.UniqueId === con.value.uniqueId ) {
+          //       item1.splice(index2, 1);
+          //     }
+          // });
+          for ( let i = 0; i < item1.length; i++) {
+            if ( item1[i].UniqueId === con.value.uniqueId) {
+              item1.splice(i, 1);
+              i -- ;
+            }
+         }
       });
       this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(selectedLots1));
       }
@@ -521,7 +527,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
                 // (index2);
                 item1.push(item);
               } else {
-                if (item1.filter(r => r.UniqueId === item.UniqueId).length <= 0) {
+                if (item1.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo ).length <= 0) {
                   item1.push(item);
                 }
               }

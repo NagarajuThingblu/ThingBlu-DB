@@ -1,3 +1,4 @@
+import { forEach } from '@angular/router/src/utils/collection';
 import { DropdwonTransformService } from './../../../../shared/services/dropdown-transform.service';
 import { DropdownValuesService } from './../../../../shared/services/dropdown-values.service';
 import { SelectItem } from 'primeng/primeng';
@@ -136,6 +137,7 @@ export class ChangeOrderComponent implements OnInit {
       'skewkeyName': new FormControl(additionOrderItems.SkewKeyName),
       'skewTypeName': new FormControl(additionOrderItems.SkewType),
       'taskName': new FormControl(additionOrderItems.TaskName),
+      'taskType': new FormControl(additionOrderItems.TaskTypeId),
       'brand': new FormControl(additionOrderItems.BrandId),
       'brandName': new FormControl(additionOrderItems.BrandName),
       'subBrand': new FormControl(additionOrderItems.SubBrandId),
@@ -179,6 +181,7 @@ export class ChangeOrderComponent implements OnInit {
       'skewkeyName': new FormControl(substractionOrderItems.SkewKeyName),
       'skewTypeName': new FormControl(substractionOrderItems.SkewType),
       'taskName': new FormControl(substractionOrderItems.TaskName),
+      'taskType': new FormControl(substractionOrderItems.TaskTypeId),
       'brand': new FormControl(substractionOrderItems.BrandId),
       'brandName': new FormControl(substractionOrderItems.BrandName),
       'subBrand': new FormControl(substractionOrderItems.SubBrandId),
@@ -221,6 +224,7 @@ export class ChangeOrderComponent implements OnInit {
       'skewkeyName': new FormControl(noActionOrderItems.SkewKeyName),
       'skewTypeName': new FormControl(noActionOrderItems.SkewType),
       'taskName': new FormControl(noActionOrderItems.TaskName),
+      'taskType': new FormControl(noActionOrderItems.TaskTypeId),
       'brand': new FormControl(noActionOrderItems.BrandId),
       'brandName': new FormControl(noActionOrderItems.BrandName),
       'subBrand': new FormControl(noActionOrderItems.SubBrandId),
@@ -318,15 +322,17 @@ export class ChangeOrderComponent implements OnInit {
       header: 'Confirmation',
       icon: 'fa fa-exclamation-triangle',
       accept: () => {
-        console.log(this.changeOrderForm, 'test');
-        console.log(JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray')), 'a');
-        console.log(JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray')), 'b');
+        this.saveChangeOrder (this.changeOrderForm);
+        // console.log(this.changeOrderForm, 'test');
+        // console.log(JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray')), 'a');
+        // console.log(JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray')), 'b');
       },
       reject: () => {
         // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
       }
     });
   } else {
+    console.log(this.changeOrderForm);
     this.appCommonService.validateAllFields(this.changeOrderForm);
   }
   }
@@ -343,6 +349,138 @@ export class ChangeOrderComponent implements OnInit {
 
       }
     });
+  }
+
+  saveChangeOrder (model) {
+    const draftOrderApi: any = {
+      ChangeOrderDetails: {
+        OrderId:  this.changeOrderForm.value.orderId,
+        IncomingOrderId:  this.changeOrderForm.value.incomingOrderId,
+        ClientId: this.appCommonService.getUserProfile().ClientId,
+        VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
+        RetailerId:  this.changeOrderForm.value.retailerId,
+        DeliveryDate: new Date(this.changeOrderForm.value.deliveryDate).toLocaleDateString().replace(/\u200E/g, ''),
+      },
+      OrderAdditionDetails: [],
+      OrderSubstractionDetails: [],
+      OrderNoActionDetails: [],
+      AddtionLotDetails: [],
+      SubstractionLotDetails: [],
+      AdditionTaskList: [],
+      SubstractionTaskList: []
+    };
+           const AddArray = (this.changeOrderForm.controls['productAdditionArr'] as FormArray);
+           AddArray.controls.forEach((item, index) => {
+             const control = (item as FormGroup);
+             draftOrderApi.OrderAdditionDetails.push({
+              OrderId: this.changeOrderForm.value.orderId,
+              OrderItemId   : control.value.orderItemId,
+              ProductTypeId : control.value.productType,
+              taskAction     : control.value.taskAction,
+           });
+          });
+
+          AddArray.controls.forEach((item, index) => {
+            const control = (item as FormGroup);
+            const taskArraycontrols = <FormArray>control.get('tasksArr');
+            taskArraycontrols.controls.forEach((task, index1) => {
+              draftOrderApi.AdditionTaskList.push({
+                          TaskId      : task.value.taskId,
+                          TaskTypeId  : task.value.taskType ,
+                          TaskStatus  : task.value.taskStatus ,
+                          EmpId       : task.value.employee ,
+                          AssignedQty : task.value.assignedQty,
+                          AddedQty    : task.value.addedQty ,
+                          PkgTypeId   : task.value.pkgType ,
+                          ActionType  : task.value.actiontype ,
+                          UniqueId    : task.value.uniqueId
+              });
+            });
+         });
+
+          const subArray = (this.changeOrderForm.controls['productSubstractionArr'] as FormArray);
+          subArray.controls.forEach((item, index) => {
+            const control = (item as FormGroup);
+            draftOrderApi.OrderSubstractionDetails.push({
+             OrderId: this.changeOrderForm.value.orderId,
+             OrderItemId   : control.value.orderItemId,
+             ProductTypeId : control.value.productType,
+             taskAction     : control.value.taskAction,
+          });
+         });
+
+          subArray.controls.forEach((item, index) => {
+            const control = (item as FormGroup);
+            const taskArraycontrols = <FormArray>control.get('tasksArr');
+            taskArraycontrols.controls.forEach((task, index1) => {
+              draftOrderApi.SubstractionTaskList.push({
+                TaskId: task.value.taskId,
+                TaskTypeId: task.value.taskType,
+                TaskStatus: task.value.taskStatus,
+                EmpId: task.value.employee,
+                AssignedQty: task.value.assignedQty,
+                ReleaseQty: task.value.releaseQty,
+                PkgTypeId: task.value.pkgType,
+                ActionType: task.value.actiontype,
+                UniqueId: task.value.uniqueId
+              });
+            });
+          });
+
+         const noActionArray = (this.changeOrderForm.controls['productNoActionArr'] as FormArray);
+         noActionArray.controls.forEach((item, index) => {
+           const control = (item as FormGroup);
+           draftOrderApi.OrderNoActionDetails.push({
+            OrderId: this.changeOrderForm.value.orderId,
+            OrderItemId   : control.value.orderItemId,
+            ProductTypeId : control.value.productType,
+            taskAction     : control.value.taskAction,
+         });
+        });
+
+        let AddlotDetails = null;
+        AddlotDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
+        if (AddlotDetails !== null) {
+          AddlotDetails
+            .forEach((item, index) => {
+              if (item !== null && item.length) {
+                // tslint:disable-next-line:no-shadowed-variable
+                item.forEach((element, lotIndex) => {
+                  draftOrderApi.AddtionLotDetails.push(
+                    {
+                      LotId: element.LotNo,
+                      Weight: element.SelectedWt,
+                      ProductTypeId: element.ProductTypeId,
+                      UniqueId: element.UniqueId
+                    }
+                  );
+                });
+              }
+            });
+        }
+
+        let subLotDetails = null;
+        subLotDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
+        if (subLotDetails !== null) {
+          subLotDetails
+            .forEach((item, index) => {
+              if (item !== null && item.length) {
+                // tslint:disable-next-line:no-shadowed-variable
+                item.forEach((element, lotIndex) => {
+                  draftOrderApi.SubstractionLotDetails.push(
+                    {
+                      LotId: element.LotNo,
+                      Weight: element.SelectedWt,
+                      ProductTypeId: element.ProductTypeId,
+                      UniqueId: element.UniqueId
+                    }
+                  );
+                });
+              }
+            });
+        }
+
+        console.log(draftOrderApi);
   }
 }
 
