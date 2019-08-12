@@ -61,7 +61,7 @@
             <td>
               <div>
                 <input pInputText name="assignedQty" maxLength="10" pKeyFilter="num" tabindex="1" id="assignedQty"
-                  OnlyNumber="true" autocomplete="off" type="number"
+                  OnlyNumber="true" autocomplete="off" type="number" PositiveIntegers OnlyNumberWithoutZero="true"
                   (change)="assognedQty_onChange(taskArrayItem, ProductItem.value.unassignedQty)" class="clsControl"
                   formControlName="assignedQty" />
               </div>
@@ -80,7 +80,29 @@
             </td>
             <td>
               <div>
-
+                <span  *ngIf="ProductItem.value.skewkeyName !== 'BUD'">
+                  <span  *ngIf="taskArrayItem.controls['assignedQty'].value > 0 ; else taskSelectLotProductItem_content" >
+                      <a 
+                      class="btn-link anchor"
+                      [class.clsLotSelected]="selectedPkgsArray[i]?.length"
+                      [routerLink]="" 
+                      (click)="openPkgSelection(ProductItem, taskArrayItem, i)"
+                       > 
+                        <span *ngIf="!selectedPkgsArray[i]?.length">  
+                          Select Lots
+                           </span>
+                          <span *ngIf="selectedPkgsArray[i]?.length">
+                           View/Change Lots
+                          </span>   
+                        </a>
+              </span>
+              <ng-template #taskSelectLotProductItem_content>
+                  <div>
+                    Select Lots
+                  </div>
+                </ng-template>
+                </span>
+                <span *ngIf="ProductItem.value.skewkeyName === 'BUD' ">
                   <span *ngIf="taskArrayItem.controls['assignedQty'].value > 0 ; else taskSelectLot2_content">
                       <a 
                           class="btn-link anchor"
@@ -101,25 +123,22 @@
                       Select Lots
                     </div>
                   </ng-template>
-
-
-                <!-- <span *ngIf="taskArrayItem.controls['assignedQty'].value > 0 ; else taskSelectLot2_content ">
-                  <a class="btn-link anchor" [routerLink]="" (click)="openLotSelection(ProductItem, taskArrayItem, i)">
-                    Select Lots
-                  </a>
                 </span>
-                <ng-template #taskSelectLot2_content>
-                    <span >
-                      Select Lots
-                    </span>
-                  </ng-template> -->
                 </div>
             </td>
             <td> <span *ngIf="i>=1">
-                <a href="#" [routerLink]="" (click)="deleteItem(i)">
-                  <span style="font-size: 1.4rem;" class="fa fa-trash">
-                  </span>
-                </a>
+                <span  *ngIf="ProductItem.value.skewkeyName === 'BUD'  && taskArrayItem.value.taskStatus === 'ToBeAssigned'"> 
+                    <a href="#" [routerLink]="" (click)="deleteItem(i)">
+                        <span style="font-size: 1.4rem;" class="fa fa-trash">
+                        </span>
+                      </a>
+                </span>
+                <span  *ngIf="ProductItem.value.skewkeyName !== 'BUD'  && taskArrayItem.value.taskStatus === 'ToBeAssigned'"> 
+                    <a href="#" [routerLink]="" (click)="deletePkgItem(i)">
+                        <span style="font-size: 1.4rem;" class="fa fa-trash">
+                        </span>
+                      </a>
+                </span>
               </span> </td>
           </tr>
         </ng-template>
@@ -132,10 +151,8 @@
               </div>
             </td>
             <td>
-
             </td>
             <td>
-
             </td>
             <td colspan="2">
               <div>
@@ -213,8 +230,9 @@
             </td>
             <td>
               <div>
+
                 <input pInputText name="addedQty" maxLength="10" pKeyFilter="num" tabindex="1" id="addedQty"
-                  OnlyNumber="true" autocomplete="off" type="number"
+                  OnlyNumber="true" PositiveIntegers autocomplete="off" type="number"  OnlyNumberWithoutZero="true"
                   (change)="addedQty_onChange(taskArrayItem, ProductItem.value.unassignedQty)" class="clsControl"
                   formControlName="addedQty" />
               </div>
@@ -231,10 +249,32 @@
                 <!-- </span> -->
               </div>
             </td>
-
             <td>
               <div> 
-                    <span *ngIf="taskArrayItem.controls['addedQty'].value > 0 ; else taskSelectLot1_content">
+                  <span  *ngIf="ProductItem.value.skewkeyName !== 'BUD'">
+                      <span  *ngIf="taskArrayItem.controls['addedQty'].value > 0 ; else taskSelectLotProductItem_content" >
+                          <a 
+                          class="btn-link anchor"
+                          [class.clsLotSelected]="selectedPkgsArray[i]?.length"
+                          [routerLink]="" 
+                          (click)="openPkgSelection(ProductItem, taskArrayItem, i)"
+                           > 
+                            <span *ngIf="!selectedPkgsArray[i]?.length">  
+                              Select Lots
+                               </span>
+                              <span *ngIf="selectedPkgsArray[i]?.length">
+                               View/Change Lots
+                              </span>   
+                            </a>
+                  </span>
+                  <ng-template #taskSelectLotProductItem_content>
+                      <div>
+                        Select Lots
+                      </div>
+                    </ng-template>
+                    </span>
+                    <span *ngIf="ProductItem.value.skewkeyName === 'BUD' ">
+                        <span *ngIf="taskArrayItem.controls['addedQty'].value > 0 ; else taskSelectLot1_content">
                         <a 
                             class="btn-link anchor"
                             [class.clsLotSelected]="selectedLotsArray.get(taskArrayItem.value.uniqueId)?.length > 0"
@@ -250,17 +290,28 @@
                           </a>
                     </span>
                     <ng-template #taskSelectLot1_content>
-                      <div>
-                        Select Lots
-                      </div>
-                    </ng-template>
+                        <div>
+                          Select Lots
+                        </div>
+                      </ng-template>
+
+                  </span>
+                    
               </div>
             </td>
             <td> <span *ngIf="i>=1">
-                <a href="#" [routerLink]="" (click)="deleteItem(i)">
-                  <span style="font-size: 1.4rem;" class="fa fa-trash">
-                  </span>
-                </a>
+              <span  *ngIf="ProductItem.value.skewkeyName === 'BUD'  && taskArrayItem.value.taskStatus === 'ToBeAssigned'"> 
+                  <a href="#" [routerLink]="" (click)="deleteItem(i)">
+                      <span style="font-size: 1.4rem;" class="fa fa-trash">
+                      </span>
+                    </a>
+              </span>
+              <span  *ngIf="ProductItem.value.skewkeyName !== 'BUD'   && taskArrayItem.value.taskStatus === 'ToBeAssigned'"> 
+                  <a href="#" [routerLink]="" (click)="deletePkgItem(i)">
+                      <span style="font-size: 1.4rem;" class="fa fa-trash">
+                      </span>
+                    </a>
+              </span>
               </span> </td>
           </tr>
         </ng-template>
@@ -404,6 +455,134 @@
       </p-footer>
     </form>
   </p-dialog>
+
+   <!--Select Packages For Order select package model-->
+   <p-dialog header="Select Pkgs"
+   [(visible)]="showPkgSelectionModel"
+   modal="modal"
+   [resizable]="true"
+   [responsive]="true" [width]="600" [minWidth]="300" [blockScroll]="true" >
+
+     <form [formGroup]="questionPkgForm" (ngSubmit)="submitPkg(questionPkgForm)" formSubmit>
+   <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+
+     <div class="ui-g">
+         <div class="ui-g-12 ui-md-6">
+             <label>
+                 <strong>Genetics</strong>
+               </label>
+
+               <label> 
+                 {{ selPkgBrandStrainRow?.GeneticsName }}
+               </label>
+           </div>
+             <!-- <div class="ui-g-12 ui-md-6">
+                 <label>
+                   <strong>Strain</strong>
+                 </label>
+
+                 <label>
+                   {{ selPkgBrandStrainRow?.StrainName }}
+                 </label>
+               </div> -->
+
+               <div class="ui-g-12 ui-md-6">
+                   <label>
+                     <strong>Required Weight</strong>
+                   </label>
+
+                   <label>
+                     {{ selPkgBrandStrainRow?.combinationTotalAssignedWt }} {{globalResource.measure}}
+                   </label>
+                 </div>
+
+       </div>
+       <div formArrayName="pkgQuestions">
+       <p-table [value]="pkgQuestions?.controls">
+           <ng-template pTemplate="header">
+               <tr>
+                   <th style="width:20%">Strain</th>
+                   <th style="width:20%">Oil Pkg Code</th>
+                   <th style="width:20%">TP Pkg. Type</th>
+                   <th style="width:20%">Avail. Oil Wt.</th>
+                   <th style="width:20%">Selected Weight</th>
+               </tr>
+           </ng-template>
+           <ng-template pTemplate="body" let-question let-i="rowIndex" >
+               <tr [formGroupName]="i">
+                   <td> {{ brandStrainPkgs[i].StrainName  }}</td>
+                   <td>
+                     <!-- comment checkbox -->
+                       <!-- <p-checkbox
+                         label="{{ brandStrainPkgs[i].OilPkgCode  }}"
+                         formControlName="question"
+                         (ngModelChange)="changeValidator($event, i)"
+                         binary="true"
+                       ></p-checkbox>-->
+                       <label>{{ brandStrainPkgs[i].OilPkgCode  }}</label>
+                   </td>
+                   <td> {{ brandStrainPkgs[i].TPPkgTypeName  }}</td>
+                   <!-- <td> {{ brandStrainPkgs[i].AvailableWt  }} {{globalResource.listgramunit}}</td> -->
+                   <td> 
+                     <ng-container *ngIf="taskId && taskId > 0">
+                       {{ question.value.AvailWt  }} {{globalResource.listgramunit}}
+                     </ng-container>
+                     <ng-container *ngIf="!taskId">
+                       <!-- {{ brandStrainPkgs[i].AvailableWt }} {{globalResource.listgramunit}} -->
+                       {{ lotSyncWtPkgArr.has(brandStrainPkgs[i].OilPkgId) 
+                        ? getLotSyncPkgWt(brandStrainPkgs[i].OilPkgId)
+                        :  question.value.AvailWt }} {{globalResource.listgramunit}}
+                     </ng-container>
+                   </td>
+                   
+                   <td>
+                     <input
+                       pKeyFilter="pnum"
+                       type="number"
+                       OnlyNumber="true"
+                       pInputText
+                       autocomplete="off"
+                       formControlName="answer"
+                       id="answer"
+                       name="answer"
+                       (change)= "pkgWeightOnChange(question)"
+                       style="width:100%;"
+                   />
+                   <div
+                     class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                     *ngIf="!question.controls['answer'].valid&&question.controls['answer'].dirty">
+                       <span *ngIf="question.controls['answer'].errors['max'] || question.controls['answer'].errors['min']">
+                         Select Valid Weight
+                       </span>  
+                       <span *ngIf="question.controls['answer'].errors['required']">
+                         Required
+                       </span>
+                       <span *ngIf="question.controls['answer'].hasError('oilpkgmaxwtexceeded')">
+                         max lot wt exceeded 
+                       </span>
+                   </div>
+                 </td>
+               </tr>
+           </ng-template>
+           <ng-template pTemplate="emptymessage" let-columns>
+             <tr>
+                 <td [attr.colspan]="4">
+                     Sorry, No package is present against "{{ selPkgBrandStrainRow?.StrainName }}".
+                 </td>
+             </tr>
+           </ng-template>
+       </p-table>
+       </div>
+       
+     </div>
+     <p-footer class="text-right">
+
+       <button type="submit" pButton icon="fa-check"  label="Confirm" ></button>
+       <!-- [disabled]="questionForm.invalid" -->
+       <button type="button" pButton icon="fa-close" (click)="showPkgSelectionModel=false" label="Cancel"></button>
+   </p-footer>
+ </form>
+ </p-dialog>
 </form>
 <app-lot-note [Lot]="lotInfo" *ngIf="lotInfo?.showLotNoteModal" (NoteSaved)="onNoteSave($event)"></app-lot-note>
 

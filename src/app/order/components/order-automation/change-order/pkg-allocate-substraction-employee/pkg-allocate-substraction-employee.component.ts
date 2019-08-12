@@ -44,6 +44,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   public questionForm: FormGroup;
   public productTypeTaskList = [];
   public selectedLotDetails = [];
+  public selectedPkgDetails = [];
   public actionType: any;
   public productTypeId: number;
   public employees: any;
@@ -79,6 +80,27 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   };
   public actionNameValue: SelectItem[];
 
+  // Start OIL
+  public questionPkgForm: FormGroup;
+  public brandStrainPkgs: any ;
+  public showPkgSelectionModel = false;
+  public selectedPkgsArray: any[] = [];
+  public lotSyncWtPkgArr = new Map<any, any>();
+  public selPkgBrandStrainRow = {
+    BrandId: null,
+    StrainId: null,
+    BrandName: null,
+    StrainName: null,
+    RequireWt: null,
+    selectedRowIndex: null,
+    combinationTotalAssignedWt: null,
+    GeneticsId: null,
+    GeneticsName: null,
+    ProductTypeId: null,
+    UniqueId: null
+  };
+  // END OIl
+
   constructor(
     private fb: FormBuilder,
     private dropdwonTransformService: DropdwonTransformService,
@@ -99,7 +121,11 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
     this.questionForm = this.fb.group({
       questions: new FormArray([])
     });
-    this.getChangeOrderTaskByProductType(this.OtherData.orderId, this.productTypeId, this.ProductItem.get('skewkeyName').value);
+
+    this.questionPkgForm = this.fb.group({
+      pkgQuestions: new FormArray([])
+    });
+    this.getChangeOrderTaskByProductType(this.OtherData.orderId, this.productTypeId, this.ProductItem.get('skewkeyName').value, 'Substraction');
   }
 
   onChange_Action(productItem) {
@@ -115,6 +141,11 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   get questions(): FormArray {
     return this.questionForm.get('questions') as FormArray;
   }
+
+  get pkgQuestions(): FormArray {
+    return this.questionPkgForm.get('pkgQuestions') as FormArray;
+  }
+
   get tasksArr(): FormArray {
     return this.ProductItem.get('tasksArr') as FormArray;
   }
@@ -129,6 +160,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
     return this.fb.group({
       'taskId': new FormControl(null),
       'taskType': new FormControl(null),
+      'taskTypeName': new FormControl(null),
       'taskStatus': new FormControl(null),
       'employee': new FormControl(null),
       'employeeName': new FormControl(null),
@@ -147,17 +179,18 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
     let arrayItem;
     arrayItem = this.ProductItem.get('tasksArr') as FormArray;
     this.productTypeTaskList.forEach((item) => {
-      arrayItem.push(this.createTaskItemsForCurrentTask(item));
+      arrayItem.push(this.createTaskItemsForCurrentTask(this.ProductItem.value.skewkeyName, item));
     });
   }
 
-  createTaskItemsForCurrentTask(productTypeTaskList): FormGroup {
+  createTaskItemsForCurrentTask(skewkeyname, productTypeTaskList): FormGroup {
    const uniqId = this.appCommonService.randomNumber();
     // tslint:disable-next-line:max-line-length
     this.addtionAssignedQty = this.ProductItem.value.taskCount === 1 ? Math.abs(this.ProductItem.value.orderedQty - this.ProductItem.value.totalAssignedQty) : 0;
     return this.fb.group({
       'taskId': new FormControl(productTypeTaskList.TaskId),
       'taskType': new FormControl(productTypeTaskList.TaskTypeId),
+      'taskTypeName': new FormControl(productTypeTaskList.TaskTypeName),
       'taskStatus': new FormControl(productTypeTaskList.TaskStatus),
       'employee': new FormControl(productTypeTaskList.EmpId),
       'employeeName': new FormControl(productTypeTaskList.EmpName),
@@ -169,7 +202,8 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       'pkgTypeName': new FormControl(productTypeTaskList.PkgTypeName),
       'actiontype': new FormControl('ReleaseMaterial'),
       uniqueId: uniqId,
-      isSameLot:   this.lotsPerTask(this.ProductItem, productTypeTaskList, uniqId, 0),
+      // tslint:disable-next-line:max-line-length
+      isSameLot: skewkeyname === 'OIL' ? this.PkgPerTask(this.ProductItem, productTypeTaskList, uniqId, 0) : this.lotsPerTask(this.ProductItem, productTypeTaskList, uniqId, 0),
     });
   }
 
@@ -207,18 +241,22 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
     }
   }
 
-  getChangeOrderTaskByProductType(orderId, productTypeId, skewKeyName) {
+  getChangeOrderTaskByProductType(orderId, productTypeId, skewKeyName, actionType) {
     this.selectedLotDetails = [];
     let productTaskList = [];
     this.loaderService.display(true);
-    this.orderService.getChangeOrderTasksByProductType(orderId, productTypeId, skewKeyName).subscribe(
+    this.orderService.getChangeOrderTasksByProductType(orderId, productTypeId, skewKeyName, actionType).subscribe(
       data => {
         if (data !== 'No data found!') {
           productTaskList = data.Table;
           this.loaderService.display(false);
           if (productTaskList.length > 0) {
             this.productTypeTaskList = productTaskList;
-            this.selectedLotDetails = data.Table1;
+            if (this.ProductItem.get('skewkeyName').value === 'BUD' ) {
+              this.selectedLotDetails = data.Table1;
+            } else {
+              this.selectedPkgDetails = data.Table1;
+            }
             this.actionNameValue.push({ label: 'Release Material', value: 'ReleaseMaterial' });
             this.ProductItem.controls['taskAction'].patchValue('ReleaseMaterial');
           } else {
@@ -489,7 +527,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
               SelectedWt: Number(result.answer),
               Selected: true,
               Index: result.questionNumber,
-              StrainId: this.selLotBrandStrainRow.StrainId,
+              StrainId: result.StrainId,
               StrainName: this.selLotBrandStrainRow.StrainName,
               BrandId: this.selLotBrandStrainRow.BrandId,
               GeneticsId: this.selLotBrandStrainRow.GeneticsId,
@@ -538,35 +576,15 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       this.appCommonService.validateAllFields(this.questionForm);
     }
   }
-  assognedQty_onChange(rowData, unassignedTqty) {
 
-    let assQty = 0;
-    this.addtionAssignedQty = 0;
-    this.tasksArr.controls.forEach((data) => {
-      assQty = Number(assQty) + Number((data as FormGroup).controls['assignedQty'].value);
-    });
-    const employeeBox = (rowData as FormGroup).controls['assignedQty'];
-    if (assQty > unassignedTqty) {
-      setTimeout(() => {
-        employeeBox.setErrors({ 'assignedQtyExceeded': true });
-      }, 0);
-
-    } else {
-      this.tasksArr.controls.forEach((data) => {
-        (data as FormGroup).controls['assignedQty'].setErrors(null);
-      });
-      this.addtionAssignedQty = assQty;
-    }
-  }
-
-  addedQty_onChange(rowData, changedOrderqty) {
+  addedQty_onChange(rowData, changedOrderqty, orderQty) {
     let assQty = 0;
     this.addtionAssignedQty = 0;
     this.tasksArr.controls.forEach((data) => {
       assQty = Number(assQty) + Number((data as FormGroup).controls['releaseQty'].value);
     });
     const employeeBox = (rowData as FormGroup).controls['releaseQty'];
-    if (assQty > Math.abs(Number(changedOrderqty))) {
+    if (assQty > Math.abs(Number(changedOrderqty)) || assQty > Number(orderQty)) {
       setTimeout(() => {
         employeeBox.setErrors({ 'assignedQtyExceeded': true });
       }, 0);
@@ -576,34 +594,61 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
         (data as FormGroup).controls['releaseQty'].setErrors(null);
       });
       this.addtionAssignedQty = assQty;
-      if (assQty <= 0) {
-        let selectedLots1 =  [];
-        if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
-           selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
-           selectedLots1.forEach((item , index) => {
 
-            for ( let i = 0; i < item.length; i++) {
-              if ( item[i].UniqueId === rowData.value.uniqueId) {
-                item.splice(i, 1);
-                i -- ;
+      if (this.ProductItem.value.skewkeyName === 'BUD') {
+        if (assQty <= 0) {
+          let selectedLots1 = [];
+          if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
+            selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
+            selectedLots1.forEach((item, index) => {
+
+              for (let i = 0; i < item.length; i++) {
+                if (item[i].UniqueId === rowData.value.uniqueId) {
+                  item.splice(i, 1);
+                  i--;
+                }
               }
-           }
 
-          //   item.forEach((p, index2) => {
-          //     if (p.UniqueId === rowData.value.uniqueId) {
-          //       item.slice(index, 1);
-          //     }
-          // });
-        });
-        console.log(this.selectedLotsArray, ' a1');
-        this.selectedLotsArray.clear();
-        console.log(this.selectedLotsArray, ' a2');
-        this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
-        return;
+              //   item.forEach((p, index2) => {
+              //     if (p.UniqueId === rowData.value.uniqueId) {
+              //       item.slice(index, 1);
+              //     }
+              // });
+            });
+            this.selectedLotsArray.clear();
+            this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
+            return;
+          }
+        }
+        this.lotsPerTask1(this.ProductItem, rowData, 0);
+      } else {
+      if (assQty <= 0) {
+        let selectedLots1 = [];
+        if (this.appCommonService.getSessionStorage('selectedReleasePkgsArray')) {
+          selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleasePkgsArray'));
+          selectedLots1.forEach((item, index) => {
+
+            for (let i = 0; i < item.length; i++) {
+              if (item[i].UniqueId === rowData.value.uniqueId) {
+                item.splice(i, 1);
+                i--;
+              }
+            }
+
+            //   item.forEach((p, index2) => {
+            //     if (p.UniqueId === rowData.value.uniqueId) {
+            //       item.slice(index, 1);
+            //     }
+            // });
+          });
+          this.selectedPkgsArray = [];
+          this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(selectedLots1));
+          return;
         }
       }
-      this.lotsPerTask1(this.ProductItem, rowData, 0);
+      this.pkgPerTask1(this.ProductItem, rowData, 0);
     }
+  }
   }
 
   absValue(value) {
@@ -675,6 +720,71 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
     }
   }
 
+  PkgPerTask(productItem, rowData, uniqId , i) {
+    let brandStrainPkgs = [];
+    let unselectedwt = 0;
+    brandStrainPkgs = this.selectedPkgDetails.filter(r => r.TaskId === rowData.TaskId);
+    const releaseQty = productItem.value.taskCount === 1 ? Math.abs(this.ProductItem.value.orderedQty - this.ProductItem.value.totalAssignedQty) : 0;
+
+    if (brandStrainPkgs) {
+      if (brandStrainPkgs.length === 1) {
+        const pkgDetails = [];
+        const lotListId = 0;
+        unselectedwt = Number(releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty);
+        pkgDetails.push(
+          {
+            LotListId: lotListId,
+            OilPkgId: brandStrainPkgs[0].OilPkgId,
+            GrowerLotNo: brandStrainPkgs[0].GrowerLotNo,
+            AvailWt: null,
+            SelectedWt: Number(releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty),
+            Selected: true,
+            Index: null,
+            StrainId: brandStrainPkgs[0].StrainId,
+            StrainName: brandStrainPkgs[0].StrainName,
+            BrandId: productItem.value.brand,
+            GeneticsId: brandStrainPkgs[0].GeneticsId,
+            GeneticsName: brandStrainPkgs[0].GeneticsName,
+            ProductTypeId: productItem.value.productType,
+            UniqueId: uniqId,
+          }
+        );
+
+        this.selectedPkgsArray[i] = pkgDetails;
+        //  this.selectedLotsArray[this.selLotBrandStrainRow.UniqueId] = lotDetails;
+        let selectedLots1 = [];
+        if (this.appCommonService.getSessionStorage('selectedReleasePkgsArray')) {
+          selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleasePkgsArray'));
+          pkgDetails.forEach((item, index) => {
+            selectedLots1.forEach((item1, index1) => {
+              item1.forEach((p, index2) => {
+                if (p.UniqueId === item.UniqueId && p.OilPkgId === item.OilPkgId) {
+                  item1.splice(index2, 1);
+                  // (index2);
+                  if (unselectedwt > 0) {
+                  item1.push(item);
+                  }
+                } else {
+                  if (item1.filter(r => r.UniqueId === item.UniqueId && r.OilPkgId === item.OilPkgId).length <= 0) {
+                    if (unselectedwt > 0) {
+                    item1.push(item);
+                    }
+                  }
+                }
+              });
+            });
+          });
+          this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(selectedLots1));
+        } else {
+          this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(Array.from(this.selectedPkgsArray)));
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
   lotsPerTask1(productItem, rowData, i) {
     let brandStrainLots = [];
     let unselectedwt = 0;
@@ -735,4 +845,364 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       }
     }
   }
+
+  // OIl
+
+  openPkgSelection(parentRowData, rowData, rowIndex) {
+
+    let assQty = 0;
+    this.tasksArr.controls.forEach((data) => {
+      assQty = Number(assQty) + Number((data as FormGroup).controls['releaseQty'].value);
+    });
+    if (assQty > Math.abs(Number(parentRowData.value.changeOrderQty))) {
+      return;
+    }
+
+    const strainId = parentRowData.value.strain;
+    this.brandStrainLots = [];
+    this.brandStrainPkgs =  this.selectedPkgDetails.filter(r => r.TaskId === rowData.value.taskId);
+    this.selPkgBrandStrainRow.BrandId = 0;
+    this.selPkgBrandStrainRow.StrainId = strainId;
+    this.selPkgBrandStrainRow.selectedRowIndex = rowIndex;
+    this.selPkgBrandStrainRow.ProductTypeId = parentRowData.value.productType;
+    this.selPkgBrandStrainRow.UniqueId = rowData.value.uniqueId;
+
+    if (rowData.value.actiontype === 'ReleaseMaterial') {
+      const employeeBox = (rowData as FormGroup).controls['releaseQty'];
+      const validators = !rowData.value.releaseQty ? Validators.compose([Validators.required]) : null;
+      employeeBox.setValidators(validators);
+      employeeBox.updateValueAndValidity();
+    }
+
+    this.selPkgBrandStrainRow.RequireWt = 0;
+    if (rowData.value.actiontype === 'ReleaseMaterial') {
+      const totalPkgWt = Number(rowData.value.releaseQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
+      this.selPkgBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
+      // this.selLotBrandStrainRow.combinationTotalAssignedWt = rowData.value.releaseQty;
+    }
+    this.selectedPkgDetails.filter((value, key) => {
+      return value.TaskId === rowData.value.taskId;
+    })
+      .map(value => {
+        this.selPkgBrandStrainRow.RequireWt += value.TotalWt;
+        this.selPkgBrandStrainRow.BrandName = '';
+        this.selPkgBrandStrainRow.StrainName = value.StrainName;
+        this.selPkgBrandStrainRow.GeneticsId = value.GeneticsId;
+        this.selPkgBrandStrainRow.GeneticsName = value.GeneticsName;
+
+      });
+
+    this.questionPkgForm = this.fb.group({
+      pkgQuestions: this.fb.array(this.brandStrainPkgs.map(this.createQuestionPkgControl(this.fb)))
+    });
+
+    if (rowData.value.actiontype === 'AddToCurrentTask') {
+      const employeeBox = (rowData as FormGroup).controls['addedQty'];
+      const validators = !rowData.value.addedQty ? Validators.compose([Validators.required]) : null;
+      employeeBox.setValidators(validators);
+      employeeBox.updateValueAndValidity();
+    } else if (rowData.value.actiontype === 'CreateTask') {
+    const employeeBox = (rowData as FormGroup).controls['assignedQty'];
+    const validators = !rowData.value.assignedQty ? Validators.compose([Validators.required]) : null;
+    employeeBox.setValidators(validators);
+    employeeBox.updateValueAndValidity();
+  }
+    this.selPkgBrandStrainRow.RequireWt = 0;
+    if (rowData.value.actiontype === 'AddToCurrentTask') {
+    const totalPkgWt = Number(rowData.value.addedQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
+    this.selPkgBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
+    // this.selLotBrandStrainRow.combinationTotalAssignedWt = rowData.value.addedQty;
+    } else if (rowData.value.actiontype === 'CreateTask') {
+      const totalPkgWt = Number(rowData.value.assignedQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
+      this.selPkgBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
+      // this.selLotBrandStrainRow.combinationTotalAssignedWt = rowData.value.assignedQty;
+    }
+    // this.selPkgBrandStrainRow.ProductTypeId = parentRowData.value.productType
+
+
+    // this.oilOrderPackets.value.forEach(result => {
+    //   let totalPkgWt = 0;
+    //   if (this.taskId && this.taskId > 0) {
+    //     if ((result.strainid === StrainId  || result.geneticsId === GeneticsId) && Number(result.assignPackageWt) > 0) {
+    //       totalPkgWt = Number(result.assignPackageWt) * Number(result.packageunit);
+    //         this.selPkgBrandStrainRow.combinationTotalAssignedWt += Number(totalPkgWt);
+    //     }
+    //   } else {
+    //     if ((result.strainid === StrainId) && Number(result.assignPackageWt) > 0) {
+    //       totalPkgWt = Number(result.assignPackageWt) * Number(result.packageunit);
+    //         this.selPkgBrandStrainRow.combinationTotalAssignedWt += Number(totalPkgWt);
+    //     }
+    //   }
+    // });
+
+    this.syncAllPkgWeight();
+    this.showPkgSelectionModel = true;
+  }
+
+  createQuestionPkgControl(fb: FormBuilder) {
+    return (question, index) => {
+      let checkbox;
+      let answerbox;
+      let previousWt = 0;
+      const pkgSelectedDetails = this.selectedPkgsArray[this.selPkgBrandStrainRow.selectedRowIndex];
+      if (pkgSelectedDetails) {
+        const pkgRowDetails = [];
+        pkgSelectedDetails.forEach(data => {
+          if (data.Index === index) {
+            pkgRowDetails.push(data);
+          }
+        });
+        if (pkgRowDetails.length) {
+          const pkgWt = pkgRowDetails[0].SelectedWt;
+          previousWt = pkgWt;
+            checkbox = pkgRowDetails[0].Selected;
+            // answerbox = pkgRowDetails[0].Selected
+            // ? [pkgWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+            // : null;
+            answerbox = [pkgWt, Validators.compose([ Validators.max(question.AvailableWt)])];
+        } else {
+          checkbox = question.selected;
+          // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+          //   : null;
+          answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
+        }
+      } else {
+        checkbox = question.selected;
+        // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+        //   : null;
+        answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
+      }
+        return fb.group({
+          questionNumber: index, question: checkbox, OilPkgCode: question.OilPkgCode,
+          TPPkgTypeName: question.TPPkgTypeName, answer: answerbox,
+          AvailWt: question.AssignedOilWt,  previousValue: previousWt || 0, SelectedWt : question.AssignedOilWt,
+          StrainId: question.StrainId, StrainName: question.StrainName, GeneticsId: question.GeneticsId, GeneticsName: question.GeneticsName,
+          OilPkgId: question.OilPkgId
+        });
+    };
+  }
+
+  submitPkg(form) {
+    const pkgDetails = [];
+    let totalPkgWt = 0;
+    let loMaxWtFlag = false;
+
+    if (this.questionPkgForm.valid) {
+      // In edit mode, skip this validation on submit and checking this validations on update tasks
+      /// condition added by Devdan :: 23-Nov-2018
+        form.value.pkgQuestions.forEach(result => {
+          totalPkgWt +=  Number(result.answer) ? Number(result.answer) : 0;
+        });
+        if (totalPkgWt !== Number(this.selPkgBrandStrainRow.combinationTotalAssignedWt)) {
+          this.msgs = [];
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg,
+            detail: 'Sum of all pkg weight is not equal to total assigned weight.' });
+          return;
+        }
+      form.value.pkgQuestions.forEach((result, index) => {
+       // if (result.question === true) {  // change checkbox true condition add on weight
+          if (result.answer > 0) {
+          let totalSelectedOilPkgWt = 0;
+          this.selectedPkgsArray.forEach(result1 => {
+            result1.forEach(result3 => {
+              if (result3.OilPkgId ===  result.OilPkgId ) {
+                totalSelectedOilPkgWt += Number(result3.SelectedWt);
+              }
+            });
+          });
+          if (Number(totalSelectedOilPkgWt) > 0) {
+            totalSelectedOilPkgWt = Number(totalSelectedOilPkgWt) - Number(result.answer);
+          } else {
+            totalSelectedOilPkgWt = Number(result.answer);
+          }
+          if (Number(totalSelectedOilPkgWt) > result.AvailWt ) {
+                const answerBox = (this.questionPkgForm.get('pkgQuestions.' + index) as FormGroup).controls['answer'];
+
+                (answerBox as FormControl).setErrors({ 'oilpkgmaxwtexceeded': true });
+
+                loMaxWtFlag = true;
+                this.msgs = [];
+                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg,
+                  detail: (Number(result.AvailWt) - Number(totalSelectedOilPkgWt)) + ' (gms) weight available for oil pkg ' + result.OilPkgCode });
+                  return;
+          }
+
+          pkgDetails.push(
+            {
+              OilPkgId: result.OilPkgId,
+              OilPkgCode: result.OilPkgCode,
+              TPPkgTypeName: result.TPPkgTypeName,
+              AvailWt: result.AvailWt,
+              SelectedWt: result.answer,
+              Selected: true,
+              Index: result.questionNumber,
+              StrainId: result.StrainId,
+              BrandId: this.selPkgBrandStrainRow.BrandId,
+              GeneticsId:  this.selPkgBrandStrainRow.GeneticsId,
+              ProductTypeId: this.selPkgBrandStrainRow.ProductTypeId,
+              UniqueId: this.selPkgBrandStrainRow.UniqueId,
+            }
+          );
+        }
+      });
+      if (loMaxWtFlag) {
+        return;
+      }
+      this.selectedPkgsArray[this.selPkgBrandStrainRow.selectedRowIndex] = pkgDetails;
+      // Changed added by Devdan :: Calling common methods to get n set local storage :: 27-Sep-2018
+      // localStorage.setItem('selectedPkgsArray', JSON.stringify(this.selectedPkgsArray));
+
+      if (this.appCommonService.getSessionStorage('selectedReleasePkgsArray')) {
+        const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleasePkgsArray'));
+        pkgDetails.forEach((item, index) => {
+          selectedLots1.forEach((item1, index1) => {
+            item1.forEach((p, index2) => {
+              if (p.UniqueId === item.UniqueId && p.OilPkgId === item.OilPkgId) {
+                item1.splice(index2, 1);
+                // (index2);
+                item1.push(item);
+              } else {
+                if (item1.filter(r => r.UniqueId === item.UniqueId && r.OilPkgId === item.OilPkgId ).length <= 0) {
+                  item1.push(item);
+                }
+              }
+            });
+          });
+        });
+        this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(selectedLots1));
+      } else {
+        this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(this.selectedPkgsArray));
+      }
+      // this.appCommonService.setLocalStorage('selectedPkgsArray', JSON.stringify(this.selectedPkgsArray));
+      this.showPkgSelectionModel = false;
+    } else {
+      this.appCommonService.validateAllFields(this.questionForm);
+    }
+  }
+
+  deletePkgItem(taskIndex) {
+    const controla = <FormArray>this.ProductItem.get('tasksArr');
+    if (controla.length !== 1) {
+      const con =  (controla.controls[taskIndex] as FormGroup);
+      if (this.appCommonService.getSessionStorage('selectedPkgsArray')) {
+        const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
+          selectedLots1.forEach((item1, index1) => {
+          for ( let i = 0; i < item1.length; i++) {
+            if ( item1[i].UniqueId === con.value.uniqueId) {
+              item1.splice(i, 1);
+              i -- ;
+            }
+         }
+      });
+      this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(selectedLots1));
+      }
+      controla.removeAt(taskIndex);
+    }
+  }
+
+  syncAllPkgWeight() {
+    // const selectedLots = Array.from(this.selectedLotsArray.values());
+    const selectedPkg = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
+    if (selectedPkg !== null) {
+      this.lotSyncWtPkgArr.clear();
+      selectedPkg
+        .forEach((item, index) => {
+          if (item !== null && item.length) {
+            item.forEach((element, lotIndex) => {
+              if (this.lotSyncWtPkgArr.has(element.OilPkgId)) {
+                this.lotSyncWtPkgArr.set(element.OilPkgId,
+                  Number(this.lotSyncWtPkgArr.get(element.OilPkgId)) -
+                  Number(element.SelectedWt));
+              } else {
+                this.lotSyncWtPkgArr.set(element.OilPkgId,
+                  Number(element.AvailWt) - Number(element.SelectedWt));
+              }
+            });
+          }
+        });
+    }
+  }
+
+  pkgWeightOnChange(rowItem) {
+    let updatedWt = 0;
+    if (this.lotSyncWtPkgArr.has(rowItem.value.OilPkgId)) {
+
+      updatedWt = (Number(this.lotSyncWtPkgArr.get(rowItem.value.OilPkgId)) + Number(rowItem.value.previousValue))
+        - Number(rowItem.value.answer);
+
+      if (updatedWt <= 0) { updatedWt = 0; }
+      this.lotSyncWtPkgArr.set(rowItem.value.OilPkgId, updatedWt);
+
+      rowItem.controls['previousValue'].patchValue(rowItem.value.answer);
+    } else {
+      updatedWt = Number(rowItem.value.AvailWt) - Number(rowItem.value.answer);
+
+      if (updatedWt <= 0) { updatedWt = 0; }
+      this.lotSyncWtPkgArr.set(rowItem.value.OilPkgId, updatedWt);
+
+      rowItem.controls['previousValue'].patchValue(rowItem.value.answer);
+    }
+  }
+
+  pkgPerTask1(productItem, rowData, i) {
+    let brandStrainPkgs = [];
+    let unselectedwt = 0;
+    brandStrainPkgs = this.selectedPkgDetails.filter(r => r.TaskId === rowData.value.taskId);
+
+    if (brandStrainPkgs) {
+      if (brandStrainPkgs.length === 1) {
+        const PkgDetails = [];
+        const lotListId = 0;
+        unselectedwt = Number(rowData.value.releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty);
+        PkgDetails.push(
+          {
+            LotListId: lotListId,
+            OilPkgId: brandStrainPkgs[0].OilPkgId,
+            GrowerLotNo: brandStrainPkgs[0].GrowerLotNo,
+            AvailWt: null,
+            SelectedWt: Number(rowData.value.releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty),
+            Selected: true,
+            Index: null,
+            StrainId: brandStrainPkgs[0].StrainId,
+            StrainName: brandStrainPkgs[0].StrainName,
+            BrandId: productItem.value.brand,
+            GeneticsId: brandStrainPkgs[0].GeneticsId,
+            GeneticsName: brandStrainPkgs[0].GeneticsName,
+            ProductTypeId: productItem.value.productType,
+            UniqueId: rowData.value.uniqueId,
+          }
+        );
+
+        this.selectedLotsArray.set(i, PkgDetails);
+        //  this.selectedLotsArray[this.selLotBrandStrainRow.UniqueId] = lotDetails;
+        let selectedLots1 = [];
+        if (this.appCommonService.getSessionStorage('selectedReleasePkgsArray')) {
+          selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleasePkgsArray'));
+          PkgDetails.forEach((item, index) => {
+            selectedLots1.forEach((item1, index1) => {
+              item1.forEach((p, index2) => {
+                if (p.UniqueId === item.UniqueId && p.OilPkgId === item.OilPkgId) {
+                  item1.splice(index2, 1);
+                  if (unselectedwt > 0) {
+                    item1.push(item);
+                  }
+                } else {
+                  if (item1.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.OilPkgId).length <= 0) {
+                    item1.push(item);
+                  }
+                }
+              });
+            });
+          });
+          this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(selectedLots1));
+        } else {
+          this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(Array.from(this.selectedPkgsArray )));
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
 }

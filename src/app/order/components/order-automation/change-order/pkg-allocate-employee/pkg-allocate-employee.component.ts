@@ -42,6 +42,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
   @Output() CancelTask: EventEmitter<any> = new EventEmitter<any>();
 
   public questionForm: FormGroup;
+  public questionPkgForm: FormGroup;
   public productTypeTaskList = [];
   public actionType: any;
   public productTypeId: number;
@@ -59,9 +60,23 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     showLotCommentModal: false
   };
 
+  private globalData = {
+    employees: [],
+    orderDetails: []
+  };
+  public selectedPkgsArray: any[] = [];
+  public completedLotArray: any[] = [];
+
+  public orderDetailsBS: any;
+  public orderDetailsBS_filteredData: any = [];
+
   public selectedLotsArray = new Map<any, any>();
   public assignTaskResources: any;
   public lotSyncWtArr = new Map<any, any>();
+  public lotSyncWtPkgArr = new Map<any, any>();
+
+  public brandStrainPkgs: any ;
+  public showPkgSelectionModel = false;
   public selLotBrandStrainRow = {
     BrandId: null,
     StrainId: null,
@@ -73,6 +88,19 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     GeneticsId: null,
     GeneticsName: null,
     LotListId: null,
+    ProductTypeId: null,
+    UniqueId: null
+  };
+  public selPkgBrandStrainRow = {
+    BrandId: null,
+    StrainId: null,
+    BrandName: null,
+    StrainName: null,
+    RequireWt: null,
+    selectedRowIndex: null,
+    combinationTotalAssignedWt: null,
+    GeneticsId: null,
+    GeneticsName: null,
     ProductTypeId: null,
     UniqueId: null
   };
@@ -98,7 +126,17 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     this.questionForm = this.fb.group({
       questions: new FormArray([])
     });
-    this.getChangeOrderTaskByProductType(this.OtherData.orderId, this.productTypeId, this.ProductItem.get('skewkeyName').value);
+
+    this.questionPkgForm = this.fb.group({
+      pkgQuestions: new FormArray([])
+    });
+    if (this.ProductItem.get('skewkeyName').value === 'BUD' ) {
+      this.getSelectedOrderDetails(this.OtherData.orderId);
+    } else {
+      this.getSelectedOrderPkgDetails(this.OtherData.orderId);
+    }
+
+    this.getChangeOrderTaskByProductType(this.OtherData.orderId, this.productTypeId, this.ProductItem.get('skewkeyName').value, 'Addition');
   }
 
   onChange_Action(productItem) {
@@ -115,6 +153,10 @@ export class PkgAllocateEmployeeComponent implements OnInit {
   get questions(): FormArray {
     return this.questionForm.get('questions') as FormArray;
   }
+
+  get pkgQuestions(): FormArray {
+    return this.questionPkgForm.get('pkgQuestions') as FormArray;
+  }
   get tasksArr(): FormArray {
     return this.ProductItem.get('tasksArr') as FormArray;
   }
@@ -129,6 +171,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     return this.fb.group({
       'taskId': new FormControl(null),
       'taskType': new FormControl(productItem.value.taskType),
+      'taskTypeName': new FormControl(null),
       'taskStatus': new FormControl('ToBeAssigned'),
       'employee': new FormControl(null),
       'employeeName': new FormControl(null),
@@ -153,6 +196,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     return this.fb.group({
       'taskId': new FormControl(productTypeTaskList.TaskId),
       'taskType': new FormControl(productTypeTaskList.TaskTypeId),
+      'taskTypeName': new FormControl(productTypeTaskList.TaskTypeName),
       'taskStatus': new FormControl(productTypeTaskList.TaskStatus),
       'employee': new FormControl(productTypeTaskList.EmpId),
       'employeeName': new FormControl(productTypeTaskList.EmpName),
@@ -205,10 +249,21 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     }
   }
 
-  getChangeOrderTaskByProductType(orderId, productTypeId, skewKeyName) {
+   getSelectedOrderDetails(OrderId) {
+    this.orderService.getSelectedOrderDetails(OrderId, 'BUD', false, 0).subscribe(
+      data => {
+        if (data !== 'No data found!') {
+          this.globalData.orderDetails = data;
+      }
+    },
+      error => { console.log(error); },
+      () => console.log('sucess'));
+  }
+
+  getChangeOrderTaskByProductType(orderId, productTypeId, skewKeyName, actionType) {
     let productTaskList = [];
     this.loaderService.display(true);
-    this.orderService.getChangeOrderTasksByProductType(orderId, productTypeId, skewKeyName).subscribe(
+    this.orderService.getChangeOrderTasksByProductType(orderId, productTypeId, skewKeyName, actionType).subscribe(
       data => {
         if (data !== 'No data found!') {
           productTaskList = data.Table;
@@ -247,6 +302,10 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     return this.lotSyncWtArr.get(lotId);
   }
 
+  getLotSyncPkgWt(lotId): number {
+    return this.lotSyncWtPkgArr.get(lotId);
+  }
+
   setLotSyncWt(lotId, weight) {
     this.lotSyncWtArr.set(lotId, weight);
   }
@@ -254,7 +313,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
   openLotSelection(parentRowData, rowData, rowIndex) {
     const strainId = parentRowData.value.strain;
     this.brandStrainLots = [];
-    this.brandStrainLots = this.ChangeOrderDetails.orderDetails['Table1'].filter(result => {
+    this.brandStrainLots = this.globalData.orderDetails['Table1'].filter(result => {
       if (parentRowData.value.geneticsId) {
         return result.GeneticsId === parentRowData.value.geneticsId;
       } else {
@@ -298,7 +357,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     this.selLotBrandStrainRow.ProductTypeId = parentRowData.value.productType;
     this.selLotBrandStrainRow.UniqueId = rowData.value.uniqueId;
 
-    this.ChangeOrderDetails.orderDetails['Table'].filter((value, key) => {
+    this.globalData.orderDetails['Table'].filter((value, key) => {
       return value.ProductTypeId === parentRowData.value.productType;
     })
       .map(value => {
@@ -498,7 +557,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
               SelectedWt: result.answer,
               Selected: true,
               Index: result.questionNumber,
-              StrainId: this.selLotBrandStrainRow.StrainId,
+              StrainId: result.StrainId,
               StrainName: this.selLotBrandStrainRow.StrainName,
               BrandId: this.selLotBrandStrainRow.BrandId,
               GeneticsId: this.selLotBrandStrainRow.GeneticsId,
@@ -586,5 +645,352 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       });
       this.addtionAssignedQty = assQty;
     }
+  }
+
+  // OIl
+  getSelectedOrderPkgDetails(OrderId) {
+    this.orderService.getSelectedOrderDetails(OrderId, 'OIL', false, 0).subscribe(
+      data => {
+        if (data !== 'No data found!') {
+          this.globalData.orderDetails = data;
+          const newArr = [];
+            this.orderDetailsBS = this.removeDuplicatesByName(this.globalData.orderDetails['Table']);
+          // Unique Brand Strain Combination
+          this.orderDetailsBS_filteredData = [];
+          this.selectedPkgsArray = [];
+
+          this.orderDetailsBS.forEach((value, key) => {
+            const counts  = this.globalData.orderDetails['Table1'].filter(result => result.StrainId === value.StrainId).length;
+            value['LotCount'] = counts;
+            if ( value.StrainId !== '') { this.orderDetailsBS_filteredData.push(value); }
+          });
+          // End Unique Brand Strain Combination
+
+          //// localStorage.setItem('uniqueOrderStrains', this.orderDetailsBS_filteredData);
+        }
+      },
+      error => { console.log(error); },
+      () => console.log('sucess'));
+  }
+
+  removeDuplicatesByName(dataObject) {
+    // To get unique record according brand and strain
+    const newArr = [];
+    dataObject.forEach((value, key) => {
+      let exists = false;
+      newArr.forEach((val2, key1) => {
+        if (value.StrainName === val2.StrainName) { exists = true; }
+      });
+
+      if (exists === false && value.StrainName !== '') { newArr.push(value); }
+    });
+    return newArr;
+    // End of getting unique record accroding brand and strain
+  }
+
+  removeDuplicatesById(dataObject) {
+    // To get unique record according brand and strain
+    const newArr = [];
+    dataObject.forEach((value, key) => {
+      let exists = false;
+      newArr.forEach((val2, key1) => {
+        if (value.strainid === val2.strainid) { exists = true; }
+      });
+
+      if (exists === false && value.strainid !== '') { newArr.push(value); }
+    });
+    return newArr;
+    // End of getting unique record accroding brand and strain
+  }
+
+  openPkgSelection(parentRowData, rowData, rowIndex) {
+    const StrainId = parentRowData.value.strain;
+    const GeneticsId = parentRowData.value.geneticsId;
+    this.brandStrainPkgs = [];
+    this.brandStrainPkgs = this.globalData.orderDetails['Table1'].filter(result => result.GeneticsId === GeneticsId);
+    this.selPkgBrandStrainRow.BrandId = 0;
+    this.selPkgBrandStrainRow.StrainId = StrainId;
+    this.selPkgBrandStrainRow.selectedRowIndex = rowIndex;
+    this.selPkgBrandStrainRow.UniqueId = rowData.value.uniqueId;
+    this.selPkgBrandStrainRow.ProductTypeId = parentRowData.value.productType;
+    this.selPkgBrandStrainRow.RequireWt = 0;
+    this.selPkgBrandStrainRow.combinationTotalAssignedWt = 0;
+
+    this.globalData.orderDetails['Table1'].filter((value, key) =>
+      value.GeneticsId === GeneticsId)
+      .map(value => {
+        this.selPkgBrandStrainRow.RequireWt += value.TotalWt;
+        this.selPkgBrandStrainRow.BrandName = '';
+        this.selPkgBrandStrainRow.StrainName = value.StrainName;
+        this.selPkgBrandStrainRow.GeneticsId = value.GeneticsId;
+        this.selPkgBrandStrainRow.GeneticsName = value.GeneticsName;
+
+      });
+
+    this.questionPkgForm = this.fb.group({
+      pkgQuestions: this.fb.array(this.brandStrainPkgs.map(this.createQuestionPkgControl(this.fb)))
+    });
+
+    if (rowData.value.actiontype === 'AddToCurrentTask') {
+      const employeeBox = (rowData as FormGroup).controls['addedQty'];
+      const validators = !rowData.value.addedQty ? Validators.compose([Validators.required]) : null;
+      employeeBox.setValidators(validators);
+      employeeBox.updateValueAndValidity();
+    } else if (rowData.value.actiontype === 'CreateTask') {
+    const employeeBox = (rowData as FormGroup).controls['assignedQty'];
+    const validators = !rowData.value.assignedQty ? Validators.compose([Validators.required]) : null;
+    employeeBox.setValidators(validators);
+    employeeBox.updateValueAndValidity();
+  }
+    this.selPkgBrandStrainRow.RequireWt = 0;
+    if (rowData.value.actiontype === 'AddToCurrentTask') {
+    const totalPkgWt = Number(rowData.value.addedQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
+    this.selPkgBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
+    // this.selLotBrandStrainRow.combinationTotalAssignedWt = rowData.value.addedQty;
+    } else if (rowData.value.actiontype === 'CreateTask') {
+      const totalPkgWt = Number(rowData.value.assignedQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
+      this.selPkgBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
+      // this.selLotBrandStrainRow.combinationTotalAssignedWt = rowData.value.assignedQty;
+    }
+    // this.selPkgBrandStrainRow.ProductTypeId = parentRowData.value.productType
+
+
+    // this.oilOrderPackets.value.forEach(result => {
+    //   let totalPkgWt = 0;
+    //   if (this.taskId && this.taskId > 0) {
+    //     if ((result.strainid === StrainId  || result.geneticsId === GeneticsId) && Number(result.assignPackageWt) > 0) {
+    //       totalPkgWt = Number(result.assignPackageWt) * Number(result.packageunit);
+    //         this.selPkgBrandStrainRow.combinationTotalAssignedWt += Number(totalPkgWt);
+    //     }
+    //   } else {
+    //     if ((result.strainid === StrainId) && Number(result.assignPackageWt) > 0) {
+    //       totalPkgWt = Number(result.assignPackageWt) * Number(result.packageunit);
+    //         this.selPkgBrandStrainRow.combinationTotalAssignedWt += Number(totalPkgWt);
+    //     }
+    //   }
+    // });
+
+    this.syncAllPkgWeight();
+    this.showPkgSelectionModel = true;
+  }
+
+  createQuestionPkgControl(fb: FormBuilder) {
+    return (question, index) => {
+      let checkbox;
+      let answerbox;
+      let previousWt = 0;
+      const pkgSelectedDetails = this.selectedPkgsArray[this.selPkgBrandStrainRow.selectedRowIndex];
+
+      if (pkgSelectedDetails) {
+        const pkgRowDetails = [];
+        pkgSelectedDetails.forEach(data => {
+          if (data.Index === index) {
+            pkgRowDetails.push(data);
+          }
+        });
+        if (pkgRowDetails.length) {
+          const pkgWt = pkgRowDetails[0].SelectedWt;
+          previousWt = pkgWt;
+            checkbox = pkgRowDetails[0].Selected;
+            // answerbox = pkgRowDetails[0].Selected
+            // ? [pkgWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+            // : null;
+            answerbox = [pkgWt, Validators.compose([ Validators.max(question.AvailableWt)])];
+        } else {
+          checkbox = question.selected;
+          // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+          //   : null;
+          answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
+        }
+      } else {
+        checkbox = question.selected;
+        // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
+        //   : null;
+        answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
+      }
+        return fb.group({
+          questionNumber: index, question: checkbox, OilPkgCode: question.OilPkgCode,
+          TPPkgTypeName: question.TPPkgTypeName, answer: answerbox,
+          AvailWt: question.AvailableWt,  previousValue: previousWt || 0,
+          StrainId: question.StrainId, StrainName: question.StrainName, GeneticsId: question.GeneticsId, GeneticsName: question.GeneticsName,
+          OilPkgId: question.OilPkgId
+        });
+    };
+  }
+
+  submitPkg(form) {
+    debugger;
+    const pkgDetails = [];
+    let totalPkgWt = 0;
+    let loMaxWtFlag = false;
+
+    if (this.questionPkgForm.valid) {
+      // In edit mode, skip this validation on submit and checking this validations on update tasks
+      /// condition added by Devdan :: 23-Nov-2018
+        form.value.pkgQuestions.forEach(result => {
+          totalPkgWt +=  Number(result.answer) ? Number(result.answer) : 0;
+        });
+        if (totalPkgWt !== Number(this.selPkgBrandStrainRow.combinationTotalAssignedWt)) {
+          this.msgs = [];
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg,
+            detail: 'Sum of all pkg weight is not equal to total assigned weight.' });
+          return;
+        }
+
+      form.value.pkgQuestions.forEach((result, index) => {
+       // if (result.question === true) {  // change checkbox true condition add on weight
+          if (result.answer > 0) {
+          let totalSelectedOilPkgWt = 0;
+          this.selectedPkgsArray.forEach(result1 => {
+            result1.forEach(result3 => {
+              if (result3.OilPkgId ===  result.OilPkgId ) {
+                totalSelectedOilPkgWt += Number(result3.SelectedWt);
+              }
+            });
+          });
+          if (Number(totalSelectedOilPkgWt) > 0) {
+            totalSelectedOilPkgWt = Number(totalSelectedOilPkgWt) - Number(result.answer);
+          } else {
+            totalSelectedOilPkgWt = Number(result.answer);
+          }
+          if (Number(totalSelectedOilPkgWt) > result.AvailWt ) {
+                const answerBox = (this.questionForm.get('pkgQuestions.' + index) as FormGroup).controls['answer'];
+
+                (answerBox as FormControl).setErrors({ 'oilpkgmaxwtexceeded': true });
+
+                loMaxWtFlag = true;
+                this.msgs = [];
+                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg,
+                  detail: (Number(result.AvailWt) - Number(totalSelectedOilPkgWt)) + ' (gms) weight available for oil pkg ' + result.OilPkgCode });
+                  return;
+          }
+          pkgDetails.push(
+            {
+              OilPkgId: result.OilPkgId,
+              OilPkgCode: result.OilPkgCode,
+              TPPkgTypeName: result.TPPkgTypeName,
+              AvailWt: result.AvailWt,
+              SelectedWt: result.answer,
+              Selected: true,
+              Index: result.questionNumber,
+              StrainId: result.StrainId,
+              BrandId: this.selPkgBrandStrainRow.BrandId,
+              ProductTypeId: this.selPkgBrandStrainRow.ProductTypeId,
+              GeneticsId:  this.selPkgBrandStrainRow.GeneticsId,
+              UniqueId: this.selPkgBrandStrainRow.UniqueId,
+            }
+          );
+        }
+      });
+
+      if (loMaxWtFlag) {
+        return;
+      }
+      this.selectedPkgsArray[this.selPkgBrandStrainRow.selectedRowIndex] = pkgDetails;
+      // Changed added by Devdan :: Calling common methods to get n set local storage :: 27-Sep-2018
+      // localStorage.setItem('selectedPkgsArray', JSON.stringify(this.selectedPkgsArray));
+
+      if (this.appCommonService.getSessionStorage('selectedPkgsArray')) {
+        const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
+        pkgDetails.forEach((item, index) => {
+          selectedLots1.forEach((item1, index1) => {
+            item1.forEach((p, index2) => {
+              if (p.UniqueId === item.UniqueId && p.OilPkgId === item.OilPkgId) {
+                item1.splice(index2, 1);
+                // (index2);
+                item1.push(item);
+              } else {
+                if (item1.filter(r => r.UniqueId === item.UniqueId && r.OilPkgId === item.OilPkgId ).length <= 0) {
+                  item1.push(item);
+                }
+              }
+            });
+          });
+        });
+        this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(selectedLots1));
+      } else {
+        this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(this.selectedPkgsArray));
+      }
+      // this.appCommonService.setLocalStorage('selectedPkgsArray', JSON.stringify(this.selectedPkgsArray));
+      this.showPkgSelectionModel = false;
+    } else {
+      this.appCommonService.validateAllFields(this.questionForm);
+    }
+  }
+
+  deletePkgItem(taskIndex) {
+    const controla = <FormArray>this.ProductItem.get('tasksArr');
+    if (controla.length !== 1) {
+      const con =  (controla.controls[taskIndex] as FormGroup);
+      if (this.appCommonService.getSessionStorage('selectedPkgsArray')) {
+        const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
+          selectedLots1.forEach((item1, index1) => {
+          for ( let i = 0; i < item1.length; i++) {
+            if ( item1[i].UniqueId === con.value.uniqueId) {
+              item1.splice(i, 1);
+              i -- ;
+            }
+         }
+      });
+      this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(selectedLots1));
+      }
+      controla.removeAt(taskIndex);
+    }
+  }
+
+  syncAllPkgWeight() {
+    // const selectedLots = Array.from(this.selectedLotsArray.values());
+    const selectedPkg = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
+    if (selectedPkg !== null) {
+      this.lotSyncWtPkgArr.clear();
+      selectedPkg
+        .forEach((item, index) => {
+          if (item !== null && item.length) {
+            item.forEach((element, lotIndex) => {
+              if (this.lotSyncWtPkgArr.has(element.OilPkgId)) {
+                this.lotSyncWtPkgArr.set(element.OilPkgId,
+                  Number(this.lotSyncWtPkgArr.get(element.OilPkgId)) -
+                  Number(element.SelectedWt));
+              } else {
+                this.lotSyncWtPkgArr.set(element.OilPkgId,
+                  Number(element.AvailWt) - Number(element.SelectedWt));
+              }
+            });
+          }
+        });
+    }
+  }
+
+  pkgWeightOnChange(rowItem) {
+    let updatedWt = 0;
+    if (this.lotSyncWtPkgArr.has(rowItem.value.OilPkgId)) {
+
+      updatedWt = (Number(this.lotSyncWtPkgArr.get(rowItem.value.OilPkgId)) + Number(rowItem.value.previousValue))
+        - Number(rowItem.value.answer);
+
+      if (updatedWt <= 0) { updatedWt = 0; }
+      this.lotSyncWtPkgArr.set(rowItem.value.OilPkgId, updatedWt);
+
+      rowItem.controls['previousValue'].patchValue(rowItem.value.answer);
+    } else {
+      updatedWt = Number(rowItem.value.AvailWt) - Number(rowItem.value.answer);
+
+      if (updatedWt <= 0) { updatedWt = 0; }
+      this.lotSyncWtPkgArr.set(rowItem.value.OilPkgId, updatedWt);
+
+      rowItem.controls['previousValue'].patchValue(rowItem.value.answer);
+    }
+  }
+
+  isPkgSelected (uniqueId) {
+    this.selectedPkgsArray.forEach((item, index) => {
+      item.forEach(result => {
+        if (result.UniqueId === uniqueId ) {
+          return true;
+        } else {
+          return false;
+        }
+    });
+  });
   }
 }

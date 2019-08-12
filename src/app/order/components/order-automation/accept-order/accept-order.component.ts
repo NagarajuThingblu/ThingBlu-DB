@@ -216,9 +216,9 @@ export class AcceptOrderComponent implements OnInit {
           this.identifiedrderDetails = data.Table;
           this.identifiedOrderItems = data.Table1;
           if (this.identifiedOrderItems) {
-            this.budOrderItems = this.identifiedOrderItems.filter(r => String(r.SkewKeyName) === String('BudMaterialWt'));
-            this.jointOrderItems = this.identifiedOrderItems.filter(r => r.SkewKeyName === 'JointMaterialWt');
-            this.oilOrderItems = this.identifiedOrderItems.filter(r => r.SkewKeyName === 'OilMaterialWt');
+            this.budOrderItems = this.identifiedOrderItems.filter(r => String(r.SkewKeyName) === String('BUD'));
+            this.jointOrderItems = this.identifiedOrderItems.filter(r => r.SkewKeyName === 'JOINTS');
+            this.oilOrderItems = this.identifiedOrderItems.filter(r => r.SkewKeyName === 'OIL');
           }
           setTimeout(() => {
             this.createAcceptOrderForm();

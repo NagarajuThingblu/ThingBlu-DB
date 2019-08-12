@@ -67,12 +67,12 @@
                   </div>
                 </div>
               </div>
-              <div class="ui-g-12 ui-md-12">
-                <app-section-header headerLabel="Additions">
+              <div class="ui-g-12 ui-md-12"  *ngIf="changeOrderItemsAddition.length > 0">
+                <app-section-header  headerLabel="Additions">
                 </app-section-header>
               </div>
 
-              <div class="ui-g-12">
+              <div class="ui-g-12" *ngIf="changeOrderItemsAddition.length > 0">
                 <div class="ui-g-12" formArrayName="productAdditionArr">
                   <div class="ui-g" *ngFor="let ProductItem of productAdditionArr?.controls; let iA = index"
                     [formGroupName]="iA">
@@ -153,12 +153,12 @@
                 </div>
               </div>
 <!-- Start Substraction -->
-                <div class="ui-g-12 ui-md-12">
-                <app-section-header headerLabel="Substractions">
+                <div class="ui-g-12 ui-md-12"  *ngIf="changeOrderItemsSubstraction.length > 0">
+                <app-section-header  headerLabel="Substractions">
                 </app-section-header>
                 </div>
 
-                <div class="ui-g-12">
+                <div class="ui-g-12"  *ngIf="changeOrderItemsSubstraction.length > 0">
                   <div class="ui-g-12" formArrayName="productSubstractionArr">
                     <div class="ui-g" *ngFor="let ProductItem of productSubstractionArr?.controls; let iA = index"
                       [formGroupName]="iA">
@@ -225,12 +225,12 @@
 <!-- End Substraction -->
 
  <!-- No Action Start -->
-              <div class="ui-g-12 ui-md-12">
-                <app-section-header headerLabel="No Action Required">
+              <div class="ui-g-12 ui-md-12"  *ngIf="changeOrderItemsNoAction.length > 0">
+                <app-section-header  headerLabel="No Action Required">
                 </app-section-header>
               </div>
 
-              <div class="ui-g-12">
+              <div class="ui-g-12"  *ngIf="changeOrderItemsNoAction.length > 0">
                   <div class="ui-g-12" formArrayName="productNoActionArr">
                     <div class="ui-g" *ngFor="let ProductItem of productNoActionArr?.controls; let iA = index"
                       [formGroupName]="iA">
@@ -294,7 +294,7 @@
 
                               <div class="le-su-2">
                                   <label for="lbBrand" class="towlable fwLabelBold"><strong>Reason</strong></label>
-                                  <div *ngIf="ProductItem.value.skewTypeName === 'JointMaterialWt' && ProductItem.value.taskCount > 0 ; else  reason_content">
+                                  <div *ngIf="ProductItem.value.skewTypeName === 'JOINTS' && ProductItem.value.taskCount > 0 ; else  reason_content">
                                       Items will be added to the Preroll Dashboard.
                                   </div> 
                                   <ng-template #reason_content>

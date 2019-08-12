@@ -1,3 +1,4 @@
+import { HttpMethodsService } from './../../../../shared/services/http-methods.service';
 import { forEach } from '@angular/router/src/utils/collection';
 import { DropdwonTransformService } from './../../../../shared/services/dropdown-transform.service';
 import { DropdownValuesService } from './../../../../shared/services/dropdown-values.service';
@@ -56,6 +57,7 @@ export class ChangeOrderComponent implements OnInit {
     private appCommonService: AppCommonService,
     private fb: FormBuilder,
     private dropdwonTransformService: DropdwonTransformService,
+    private httpMethodsService: HttpMethodsService,
     private dropdownDataService: DropdownValuesService) {
     this._cookieService = <UserModel>this.appCommonService.getUserProfile();
   }
@@ -74,6 +76,16 @@ export class ChangeOrderComponent implements OnInit {
     if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
       this.appCommonService.removeSessionItem('selectedReleaseLotsArray');
     }
+
+    if (this.appCommonService.getSessionStorage('selectedPkgsArray')) {
+      this.appCommonService.removeSessionItem('selectedPkgsArray');
+    }
+
+    if (this.appCommonService.getSessionStorage('selectedReleasePkgsArray')) {
+      this.appCommonService.removeSessionItem('selectedReleasePkgsArray');
+    }
+
+
     this.changeOrderForm = this.fb.group({
       'incomingOrderId': new FormControl(null),
       'orderId': new FormControl(null),
@@ -256,11 +268,12 @@ export class ChangeOrderComponent implements OnInit {
       data => {
         if (data !== 'No data found!') {
           this.changerderDetails = data.Table;
-          this.changeOrderItemsAddition = data.Table1.filter(r => r.OrderedChangeQty > 0 &&   r.OrderedQty - r.TotalAssignedQty > 0 );
           // tslint:disable-next-line:max-line-length
-          this.changeOrderItemsSubstraction = data.Table1.filter(r => (r.OrderedChangeQty < 0 || r.OrderedChangeQty > 0)  && r.TaskCount > 0 && r.OrderedQty - r.TotalAssignedQty < 0);
+          this.changeOrderItemsAddition = data.Table1.filter(r => r.OrderedChangeQty > 0 &&   r.OrderedQty - r.TotalAssignedQty > 0 && r.SkewKeyName !== 'JOINTS');
           // tslint:disable-next-line:max-line-length
-          this.changeOrderItemsNoAction = data.Table1.filter(r => (r.OrderedChangeQty <= 0 && r.TaskCount <= 0) || (r.OrderedChangeQty <= 0 && r.OrderedQty - r.TotalAssignedQty >= 0) || (r.OrderedChangeQty > 0 && r.OrderedQty - r.TotalAssignedQty === 0));
+          this.changeOrderItemsSubstraction = data.Table1.filter(r => (r.OrderedChangeQty < 0 || r.OrderedChangeQty > 0)  && r.TaskCount > 0 && r.OrderedQty - r.TotalAssignedQty < 0 && r.SkewKeyName !== 'JOINTS');
+          // tslint:disable-next-line:max-line-length
+          this.changeOrderItemsNoAction = data.Table1.filter(r => ((r.OrderedChangeQty <= 0 && r.TaskCount <= 0 && r.SkewKeyName !== 'JOINTS') || (r.OrderedChangeQty <= 0 && r.OrderedQty - r.TotalAssignedQty >= 0 && r.SkewKeyName !== 'JOINTS') || (r.OrderedChangeQty > 0 && r.OrderedQty - r.TotalAssignedQty === 0 && r.SkewKeyName !== 'JOINTS')) || r.SkewKeyName === 'JOINTS');
           setTimeout(() => {
             this.otherData.orderId = this.changerderDetails[0].OrderId;
             this.createChangeOrderForm();
@@ -322,17 +335,13 @@ export class ChangeOrderComponent implements OnInit {
       header: 'Confirmation',
       icon: 'fa fa-exclamation-triangle',
       accept: () => {
-        this.saveChangeOrder (this.changeOrderForm);
-        // console.log(this.changeOrderForm, 'test');
-        // console.log(JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray')), 'a');
-        // console.log(JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray')), 'b');
+         this.saveChangeOrder (this.changeOrderForm);
       },
       reject: () => {
         // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
       }
     });
   } else {
-    console.log(this.changeOrderForm);
     this.appCommonService.validateAllFields(this.changeOrderForm);
   }
   }
@@ -367,7 +376,9 @@ export class ChangeOrderComponent implements OnInit {
       AddtionLotDetails: [],
       SubstractionLotDetails: [],
       AdditionTaskList: [],
-      SubstractionTaskList: []
+      SubstractionTaskList: [],
+      AdditionPkgDetails: [],
+      SubstractionPkgDetails: []
     };
            const AddArray = (this.changeOrderForm.controls['productAdditionArr'] as FormArray);
            AddArray.controls.forEach((item, index) => {
@@ -376,7 +387,8 @@ export class ChangeOrderComponent implements OnInit {
               OrderId: this.changeOrderForm.value.orderId,
               OrderItemId   : control.value.orderItemId,
               ProductTypeId : control.value.productType,
-              taskAction     : control.value.taskAction,
+              ActionType     : control.value.taskAction,
+              IndexCode     : index
            });
           });
 
@@ -386,6 +398,9 @@ export class ChangeOrderComponent implements OnInit {
             taskArraycontrols.controls.forEach((task, index1) => {
               draftOrderApi.AdditionTaskList.push({
                           TaskId      : task.value.taskId,
+                          OrderItemId : item.value.orderItemId,
+                          SkewKeyName : item.value.skewkeyName,
+                          ProductTypeId: item.value.productType,
                           TaskTypeId  : task.value.taskType ,
                           TaskStatus  : task.value.taskStatus ,
                           EmpId       : task.value.employee ,
@@ -393,7 +408,8 @@ export class ChangeOrderComponent implements OnInit {
                           AddedQty    : task.value.addedQty ,
                           PkgTypeId   : task.value.pkgType ,
                           ActionType  : task.value.actiontype ,
-                          UniqueId    : task.value.uniqueId
+                          UniqueId    : task.value.uniqueId,
+                          IndexCode     : index
               });
             });
          });
@@ -405,7 +421,8 @@ export class ChangeOrderComponent implements OnInit {
              OrderId: this.changeOrderForm.value.orderId,
              OrderItemId   : control.value.orderItemId,
              ProductTypeId : control.value.productType,
-             taskAction     : control.value.taskAction,
+             ActionType     : control.value.taskAction,
+             IndexCode     : index
           });
          });
 
@@ -415,14 +432,18 @@ export class ChangeOrderComponent implements OnInit {
             taskArraycontrols.controls.forEach((task, index1) => {
               draftOrderApi.SubstractionTaskList.push({
                 TaskId: task.value.taskId,
+                OrderItemId : item.value.orderItemId,
+                SkewKeyName : item.value.skewkeyName,
+                ProductTypeId: item.value.productType,
                 TaskTypeId: task.value.taskType,
                 TaskStatus: task.value.taskStatus,
                 EmpId: task.value.employee,
                 AssignedQty: task.value.assignedQty,
-                ReleaseQty: task.value.releaseQty,
+                ReleasedQty: task.value.releaseQty,
                 PkgTypeId: task.value.pkgType,
                 ActionType: task.value.actiontype,
-                UniqueId: task.value.uniqueId
+                UniqueId: task.value.uniqueId,
+                IndexCode     : index
               });
             });
           });
@@ -433,8 +454,10 @@ export class ChangeOrderComponent implements OnInit {
            draftOrderApi.OrderNoActionDetails.push({
             OrderId: this.changeOrderForm.value.orderId,
             OrderItemId   : control.value.orderItemId,
+            SkewKeyName : item.value.skewkeyName,
             ProductTypeId : control.value.productType,
-            taskAction     : control.value.taskAction,
+            ActionType     : control.value.taskAction,
+            IndexCode     : index
          });
         });
 
@@ -451,7 +474,31 @@ export class ChangeOrderComponent implements OnInit {
                       LotId: element.LotNo,
                       Weight: element.SelectedWt,
                       ProductTypeId: element.ProductTypeId,
-                      UniqueId: element.UniqueId
+                      UniqueId: element.UniqueId,
+                      IndexCode     : index
+                    }
+                  );
+                });
+              }
+            });
+        }
+
+        let AddPkgDetails = null;
+        AddPkgDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
+        if (AddPkgDetails !== null) {
+          AddPkgDetails
+            .forEach((item, index) => {
+              if (item !== null && item.length) {
+                // tslint:disable-next-line:no-shadowed-variable
+                item.forEach((element, lotIndex) => {
+                  draftOrderApi.AdditionPkgDetails.push(
+                    {
+                      StrainId: element.StrainId,
+                      OilPkgId: element.OilPkgId,
+                      Weight: element.SelectedWt,
+                      ProductTypeId: element.ProductTypeId,
+                      UniqueId: element.UniqueId,
+                      IndexCode     : index
                     }
                   );
                 });
@@ -472,7 +519,31 @@ export class ChangeOrderComponent implements OnInit {
                       LotId: element.LotNo,
                       Weight: element.SelectedWt,
                       ProductTypeId: element.ProductTypeId,
-                      UniqueId: element.UniqueId
+                      UniqueId: element.UniqueId,
+                      IndexCode     : index
+                    }
+                  );
+                });
+              }
+            });
+        }
+
+        let subPkgDetails = null;
+        subPkgDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedReleasePkgsArray'));
+        if (subPkgDetails !== null) {
+          subPkgDetails
+            .forEach((item, index) => {
+              if (item !== null && item.length) {
+                // tslint:disable-next-line:no-shadowed-variable
+                item.forEach((element, lotIndex) => {
+                  draftOrderApi.SubstractionPkgDetails.push(
+                    {
+                      StrainId: element.StrainId,
+                      OilPkgId:   element.OilPkgId,
+                      Weight:     element.SelectedWt,
+                      ProductTypeId: element.ProductTypeId,
+                      UniqueId:   element.UniqueId,
+                      IndexCode: index
                     }
                   );
                 });
@@ -481,6 +552,25 @@ export class ChangeOrderComponent implements OnInit {
         }
 
         console.log(draftOrderApi);
+        this.loaderService.display(true);
+        this.httpMethodsService.post('api/Order/ChangeOrderAddUpdate', draftOrderApi)
+          .subscribe((result: any) => {
+            if (String(result[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
+              this.msgs = [];
+              this.msgs.push({
+                severity: 'success', summary: this.globalResource.applicationmsg,
+                detail: 'User updated successfully.'
+              });
+              this.loaderService.display(false);
+              setTimeout(() => {
+            }, 500);
+            }
+          },
+            error => {
+              this.msgs = [];
+              this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
+              this.loaderService.display(false);
+            });
   }
 }
 

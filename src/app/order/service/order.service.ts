@@ -569,12 +569,13 @@ export class OrderService {
       });
   }
 
-  getChangeOrderTasksByProductType(orderId, productTypeId, skewType): Observable<any> {
+  getChangeOrderTasksByProductType(orderId, productTypeId, skewType, actionType): Observable<any> {
     const url = 'api/Order/ChangeOrderTasksGetByProductType';
     let params = new HttpParams();
     params = params.append('OrderId', String(orderId));
     params = params.append('ProductTypeId', String(productTypeId));
     params = params.append('SkewKeyName', String(skewType));
+    params = params.append('ActionType', String(actionType));
     return this.http
     .get(url, {params: params})
     .map(
