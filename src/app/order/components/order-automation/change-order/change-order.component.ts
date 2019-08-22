@@ -32,7 +32,7 @@ export class ChangeOrderComponent implements OnInit {
   public additionOrderItems: any;
   public substractionOrderItems: any;
   public noActionOrderItems: any;
-
+  public validProductitemCount = 0;
   public changerderDetails: any;
   public changeOrderItemsAddition: any;
   public changeOrderItemsSubstraction: any;
@@ -83,6 +83,10 @@ export class ChangeOrderComponent implements OnInit {
 
     if (this.appCommonService.getSessionStorage('selectedReleasePkgsArray')) {
       this.appCommonService.removeSessionItem('selectedReleasePkgsArray');
+    }
+
+    if (this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray')) {
+      this.appCommonService.removeSessionItem('selectedJointsPkgReleaseArray');
     }
 
 
@@ -271,10 +275,14 @@ export class ChangeOrderComponent implements OnInit {
           // tslint:disable-next-line:max-line-length
           this.changeOrderItemsAddition = data.Table1.filter(r => r.OrderedChangeQty > 0 &&   r.OrderedQty - r.TotalAssignedQty > 0 && r.SkewKeyName !== 'JOINTS');
           // tslint:disable-next-line:max-line-length
-          this.changeOrderItemsSubstraction = data.Table1.filter(r => (r.OrderedChangeQty < 0 || r.OrderedChangeQty > 0)  && r.TaskCount > 0 && r.OrderedQty - r.TotalAssignedQty < 0 && r.SkewKeyName !== 'JOINTS');
+          this.changeOrderItemsSubstraction = data.Table1.filter(r => (r.OrderedChangeQty < 0 || r.OrderedChangeQty > 0)  && r.TaskCount > 0 && r.OrderedQty - r.TotalAssignedQty < 0 );
           // tslint:disable-next-line:max-line-length
-          this.changeOrderItemsNoAction = data.Table1.filter(r => ((r.OrderedChangeQty <= 0 && r.TaskCount <= 0 && r.SkewKeyName !== 'JOINTS') || (r.OrderedChangeQty <= 0 && r.OrderedQty - r.TotalAssignedQty >= 0 && r.SkewKeyName !== 'JOINTS') || (r.OrderedChangeQty > 0 && r.OrderedQty - r.TotalAssignedQty === 0 && r.SkewKeyName !== 'JOINTS')) || r.SkewKeyName === 'JOINTS');
+          this.changeOrderItemsNoAction = data.Table1.filter(r => ((r.OrderedChangeQty <= 0 && r.TaskCount <= 0 && r.SkewKeyName !== 'JOINTS') || (r.OrderedChangeQty <= 0 && r.OrderedQty - r.TotalAssignedQty >= 0 && r.SkewKeyName !== 'JOINTS')
+           || (r.OrderedChangeQty > 0 && r.OrderedQty - r.TotalAssignedQty === 0 && r.SkewKeyName !== 'JOINTS')) ||
+            // tslint:disable-next-line:max-line-length
+            (r.SkewKeyName === 'JOINTS' && (r.OrderedQty - r.TotalAssignedQty >= 0 || (r.OrderedQty - r.TotalAssignedQty >= 0 && r.OrderedQty - Math.abs(r.OrderedChangeQty) > 0)) ));
           setTimeout(() => {
+            this.validProductitemCount =  this.changerderDetails[0].ValidProductitemCount;
             this.otherData.orderId = this.changerderDetails[0].OrderId;
             this.createChangeOrderForm();
             this.addProductAdditionItem();
@@ -378,7 +386,9 @@ export class ChangeOrderComponent implements OnInit {
       AdditionTaskList: [],
       SubstractionTaskList: [],
       AdditionPkgDetails: [],
-      SubstractionPkgDetails: []
+      SubstractionPkgDetails: [],
+      SubsractionJointPkgDetails: [],
+      SubstractionJointPkgMixDetails: []
     };
            const AddArray = (this.changeOrderForm.controls['productAdditionArr'] as FormArray);
            AddArray.controls.forEach((item, index) => {
@@ -482,7 +492,7 @@ export class ChangeOrderComponent implements OnInit {
               }
             });
         }
-
+debugger;
         let AddPkgDetails = null;
         AddPkgDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
         if (AddPkgDetails !== null) {
@@ -551,6 +561,54 @@ export class ChangeOrderComponent implements OnInit {
             });
         }
 
+        let subJointPkgDetails = null;
+        subJointPkgDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray'));
+        if (subJointPkgDetails !== null) {
+          subJointPkgDetails
+            .forEach((item, index) => {
+              if (item !== null) {
+                // tslint:disable-next-line:no-shadowed-variable
+                item.lotDetails.forEach((element, lotIndex) => {
+                  draftOrderApi.SubsractionJointPkgDetails.push(
+                    {
+                      LotId:      element.LotNo,
+                      ProductTypeId: element.ProductTypeId,
+                      StrainId: element.StrainId,
+                      PkgTypeId:  element.PkgTypeId,
+                      UnitValue:  element.UnitValue,
+                      ItemQty:    element.ItemQty,
+                      Qty:        element.SelectedQty,
+                      UniqueId:   element.UniqueId,
+                      IndexCode: index
+                    }
+                  );
+                });
+              }
+            });
+        }
+
+        let subJointMixPkgDetails = null;
+        subJointMixPkgDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray'));
+        if (subJointMixPkgDetails !== null) {
+          subJointMixPkgDetails
+            .forEach((item, index) => {
+              if (item !== null) {
+                // tslint:disable-next-line:no-shadowed-variable
+                item.mixPkgDetails.forEach((element, lotIndex) => {
+                  draftOrderApi.SubstractionJointPkgMixDetails.push(
+                    {
+                      MixPkgId: element.MixPkgId,
+                      ProductTypeId: element.ProductTypeId,
+                      Qty:        element.SelectedQty,
+                      UniqueId:   element.UniqueId,
+                      IndexCode: index
+                    }
+                  );
+                });
+              }
+            });
+        }
+
         console.log(draftOrderApi);
         this.loaderService.display(true);
         this.httpMethodsService.post('api/Order/ChangeOrderAddUpdate', draftOrderApi)
@@ -559,11 +617,16 @@ export class ChangeOrderComponent implements OnInit {
               this.msgs = [];
               this.msgs.push({
                 severity: 'success', summary: this.globalResource.applicationmsg,
-                detail: 'User updated successfully.'
+                detail: 'Order change saved successfully.'
               });
               this.loaderService.display(false);
               setTimeout(() => {
-            }, 500);
+                this.appCommonService.navChangeOrder.isBackClicked = true;
+                this.router.navigate(['../home/orderlisting']);
+              }, 2000);
+            } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'FAILURE') {
+              this.msgs = [];
+              this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
             }
           },
             error => {

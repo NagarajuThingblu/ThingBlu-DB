@@ -7,10 +7,10 @@
         <div class="ui-g">
           <div class="ui-g-12 ui-md-12">
             <span> <a [routerLink]="" (click)="backIncomingOrderList()"
-                style="text-decoration: underline;float: right;color: #337ab7"> Back</a></span>
+                style="text-decoration: underline;float: right;color: #337ab7"> < Back</a></span>
           </div>
           <div class="ui-g-12 ui-md-12">
-            <app-section-header headerLabel="Basic Informaton">
+            <app-section-header headerLabel="Basic Information">
             </app-section-header>
           </div>
           <div class="ui-g-12 ui-md-3">
@@ -45,7 +45,7 @@
               <strong> Creation Date</strong>
               <div class="clear"></div>
               <div>
-                  {{acceptOrderForm.controls.orderdate.value  | date: 'MM/dd/yyyy'}}
+                  {{acceptOrderForm.controls.orderdate.value  | date: 'MM/dd/yyyy'}} 
               </div>
             </div>
           </div>
@@ -242,7 +242,12 @@
               </div>
             </div>
           <div class="ui-g-12 ui-md-12"  >
-              <div class="">
+            <span style="color: red" *ngIf = 'validProductitemCount <=0'>
+                All product items marked as invalid. &nbsp;&nbsp;
+                <u><a class="btn-link" routerLink="" (click)="backIncomingOrderList()" tabindex="">Cancel</a></u>
+            </span>
+ 
+              <div class=""  *ngIf = 'validProductitemCount > 0'>
                 <p-button style="font-size: 16px;" type="submit" styleClass="ui-button-rounded" label="Accept Order"
                   tabindex="94" id="btnCreateProductLine" name="btnCreateProductLine"></p-button>
                   &nbsp;&nbsp;
@@ -250,6 +255,7 @@
                 &nbsp;&nbsp;
                 <u><a class="btn-link" routerLink="" (click)="backIncomingOrderList()" tabindex="">Cancel</a></u>
               </div>
+ 
           </div>
          </div>
         </form> 

@@ -317,5 +317,59 @@ export class OrderListingComponent implements OnInit, OnDestroy {
        }
       }
   }
+
+  deleteIncomingOrder(cEvent, incomingOrderId) {
+    if (cEvent.stopPropagation) {
+      cEvent.stopPropagation();
+    } else if (window.event) {
+      // this code is for IE
+      window.event.cancelBubble = true;
+    }
+    this.confirmationService.confirm({
+      key: 'draftdelete',
+      message: this.orderrequestResource.deleteIncomingConfirm,
+      header: this.globalResource.applicationmsg,
+      icon: 'fa fa-trash',
+      accept: () => {
+        this.removeIncomingOrder(incomingOrderId);
+      },
+      reject: () => {
+          // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
+      }
+  });
+  }
+
+  removeIncomingOrder(incomingOrderId) {
+    //   this.deleteClick = false;
+     const  orderdeleteapi: any = {
+        IncomingOrderDeleteActive: {
+        IncomingOrderId: incomingOrderId,
+        VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
+        IsActive: 0,
+        IsDeleted: 1
+      }
+     };
+       this.orderService.removeIncomingOrder(orderdeleteapi).subscribe(
+        data => {
+          if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
+            this.msgs = [];
+            this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: 'Order deleted successfully' });
+            this.getAllIncomingOrders();
+            this.getAllChangeOrders();
+          }
+       });
+    }
+    tabViewhandleChange(e) {
+      const index = e.index;
+      if (index === 0) {
+        this.getAllOrders();
+      } else  if (index === 1) {
+        this.getAllDreaftOrders();
+      } else  if (index === 2) {
+        this.getAllIncomingOrders();
+      } else  if (index === 3) {
+        this.getAllChangeOrders();
+      }
+    }
 }
 

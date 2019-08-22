@@ -48,7 +48,7 @@ export class AcceptOrderComponent implements OnInit {
   public selectedAllJoint = true;
   public selectedAllOil = true;
   public defaultDate: Date;
-
+  public validProductitemCount = 0;
   constructor(private orderService: OrderService,
     private loaderService: LoaderService,
     private titleService: Title,
@@ -221,6 +221,7 @@ export class AcceptOrderComponent implements OnInit {
             this.oilOrderItems = this.identifiedOrderItems.filter(r => r.SkewKeyName === 'OIL');
           }
           setTimeout(() => {
+            this.validProductitemCount =  this.identifiedrderDetails[0].ValidProductitemCount;
             this.createAcceptOrderForm();
             if (this.budOrderItems) {
               this.addBudItem();
@@ -380,10 +381,15 @@ export class AcceptOrderComponent implements OnInit {
           'IndexCode': String(index)
         });
       });
-      console.log(orderDetailsForApi);
 
+      let cnfMsg = '';
+        if (isIgnored) {
+          cnfMsg = 'Are you sure you want to ignore this change to Order: ' + formModel.s2OrderNo + '?';
+        } else {
+          cnfMsg =  this.acceptOrderResource.ordersaveconfirm;
+        }
       this.confirmationService.confirm({
-        message: this.acceptOrderResource.ordersaveconfirm,
+        message: cnfMsg,
         header: 'Confirmation',
         icon: 'fa fa-exclamation-triangle',
         accept: () => {
@@ -405,10 +411,15 @@ export class AcceptOrderComponent implements OnInit {
     this.orderService.saveAcceptOrder(orderDetailsForApi)
       .subscribe(
         data => {
-
+          let succsMsg = '';
           if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
+            if (orderDetailsForApi.OrderDetails.IsIgnored) {
+              succsMsg = 'Order ignored successfully.';
+            } else {
+              succsMsg = 'Order created successfully.';
+            }
             this.msgs = [];
-            this.msgs.push({ severity: 'success', summary: this.globalResource.applicationmsg, detail: 'Order created successfully.' });
+            this.msgs.push({ severity: 'success', summary: this.globalResource.applicationmsg, detail: succsMsg  });
             setTimeout(() => {
               this.loaderService.display(false);
               this.appCommonService.navIncomingOrder.isBackClicked = true;

@@ -459,15 +459,18 @@ export class IdentifyOrderComponent implements OnInit {
                   rejectVisible: false,
                   acceptLabel: 'Ok',
                   accept: () => {
-                    if ( this.incomingOrderDetails[0].IncomingOrderId > 0 && !data[0].IsChangeOrder && data[0].IsIdentified) {
+                    if ( this.incomingOrderDetails[0].IncomingOrderId > 0 &&   data[0].IsIdentified && !data[0].IsAccepted ) {
                     this.router.navigate(['../home/acceptorder/' + this.incomingOrderDetails[0].IncomingOrderId]);
-                  } else if ( this.incomingOrderDetails[0].IncomingOrderId > 0 && data[0].IsChangeOrder && data[0].IsIdentified) {
+                  } else if ( this.incomingOrderDetails[0].IncomingOrderId > 0 && data[0].IsChangeOrder && data[0].IsIdentified && data[0].IsAccepted) {
                     this.router.navigate(['../home/changeOrder/' + this.incomingOrderDetails[0].IncomingOrderId]);
                   }
                 }
               });
             }, 1000);
-            } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'DUPLICATE') {
+          } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'FAILURE') {
+            this.msgs = [];
+            this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: 'Internal server error!' });
+          }   else if (String(data[0].ResultKey).toLocaleUpperCase() === 'DUPLICATE') {
               this.msgs = [];
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Duplicate S2Order No' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'RETAILERNAMEEMPTY') {

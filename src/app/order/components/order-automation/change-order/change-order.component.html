@@ -67,12 +67,12 @@
                   </div>
                 </div>
               </div>
-              <div class="ui-g-12 ui-md-12"  *ngIf="changeOrderItemsAddition.length > 0">
+              <div class="ui-g-12 ui-md-12"  >
                 <app-section-header  headerLabel="Additions">
                 </app-section-header>
               </div>
 
-              <div class="ui-g-12" *ngIf="changeOrderItemsAddition.length > 0">
+              <div class="ui-g-12" >
                 <div class="ui-g-12" formArrayName="productAdditionArr">
                   <div class="ui-g" *ngFor="let ProductItem of productAdditionArr?.controls; let iA = index"
                     [formGroupName]="iA">
@@ -153,12 +153,12 @@
                 </div>
               </div>
 <!-- Start Substraction -->
-                <div class="ui-g-12 ui-md-12"  *ngIf="changeOrderItemsSubstraction.length > 0">
+                <div class="ui-g-12 ui-md-12"  >
                 <app-section-header  headerLabel="Substractions">
                 </app-section-header>
                 </div>
 
-                <div class="ui-g-12"  *ngIf="changeOrderItemsSubstraction.length > 0">
+                <div class="ui-g-12"  >
                   <div class="ui-g-12" formArrayName="productSubstractionArr">
                     <div class="ui-g" *ngFor="let ProductItem of productSubstractionArr?.controls; let iA = index"
                       [formGroupName]="iA">
@@ -225,12 +225,12 @@
 <!-- End Substraction -->
 
  <!-- No Action Start -->
-              <div class="ui-g-12 ui-md-12"  *ngIf="changeOrderItemsNoAction.length > 0">
+              <div class="ui-g-12 ui-md-12"  >
                 <app-section-header  headerLabel="No Action Required">
                 </app-section-header>
               </div>
 
-              <div class="ui-g-12"  *ngIf="changeOrderItemsNoAction.length > 0">
+              <div class="ui-g-12"  >
                   <div class="ui-g-12" formArrayName="productNoActionArr">
                     <div class="ui-g" *ngFor="let ProductItem of productNoActionArr?.controls; let iA = index"
                       [formGroupName]="iA">
@@ -316,7 +316,12 @@
                 <!-- No Action End -->
 
               <div class="ui-g-12 ui-md-12">
-                <div class="">
+                  <span style="color: red" *ngIf = 'validProductitemCount <=0'>
+                      All product items marked as invalid.  &nbsp;&nbsp;
+                      <u><a class="btn-link" routerLink="" (click)="backIncomingOrderList()" tabindex="">Cancel</a></u>
+                  </span>
+       
+                  <div class=""  *ngIf = 'validProductitemCount > 0'>
                   <p-button style="font-size: 16px;" type="submit" styleClass="ui-button-rounded" label="Accept Changes"
                     tabindex="94" id="btnAcceptChanges" name="btnCreateProductLine"></p-button>
                   &nbsp;&nbsp;

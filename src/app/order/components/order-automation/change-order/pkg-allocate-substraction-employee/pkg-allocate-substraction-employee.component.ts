@@ -11,6 +11,7 @@ import { AppCommonService } from '../../../../../shared/services/app-common.serv
 import { LoaderService } from '../../../../../shared/services/loader.service';
 import { GlobalResources } from '../../../../../global resource/global.resource';
 import { TaskResources } from '../../../../../task/task.resources';
+import { debug } from 'util';
 
 @Component({
   moduleId: module.id,
@@ -42,14 +43,18 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   @Output() CancelTask: EventEmitter<any> = new EventEmitter<any>();
 
   public questionForm: FormGroup;
+  public questionJointForm: FormGroup;
   public productTypeTaskList = [];
   public selectedLotDetails = [];
   public selectedPkgDetails = [];
+  public selectedJointPkgDetails = [];
+  public selectedJointMixPkgDetails = [];
   public actionType: any;
   public productTypeId: number;
   public employees: any;
 
   public showLotSelectionModel = false;
+  public showJointSelectionModel = false;
   public brandStrainLots: any;
   public globalResource: any;
   public msgs: Message[] = [];
@@ -84,7 +89,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   public questionPkgForm: FormGroup;
   public brandStrainPkgs: any ;
   public showPkgSelectionModel = false;
-  public selectedPkgsArray: any[] = [];
+  public selectedPkgsArray = new Map<any, any>();
   public lotSyncWtPkgArr = new Map<any, any>();
   public selPkgBrandStrainRow = {
     BrandId: null,
@@ -101,6 +106,26 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   };
   // END OIl
 
+  // JoinTs
+  public selectedJointPkgArray  = new Map<any, any>();
+  public completedLotArray: any[] = [];
+
+  public selLotJointBrandStrainRow = {
+    BrandId: null,
+    StrainId: null,
+    BrandName: null,
+    StrainName: null,
+    RequireWt: null,
+    selectedRowIndex: null,
+    combinationTotalAssignedQty: null,
+    GeneticsId: null,
+    GeneticsName: null,
+    ProductTypeId: null,
+    UniqueId: null,
+    pkgSizeRequiredQtyArr: []
+  };
+
+  public completionParameters: any = [];
   constructor(
     private fb: FormBuilder,
     private dropdwonTransformService: DropdwonTransformService,
@@ -125,6 +150,11 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
     this.questionPkgForm = this.fb.group({
       pkgQuestions: new FormArray([])
     });
+
+    this.questionJointForm = this.fb.group({
+      jointQuestions: this.fb.array([]),
+      mixPkgDetailsArr: this.fb.array([])
+    });
     this.getChangeOrderTaskByProductType(this.OtherData.orderId, this.productTypeId, this.ProductItem.get('skewkeyName').value, 'Substraction');
   }
 
@@ -148,6 +178,18 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
 
   get tasksArr(): FormArray {
     return this.ProductItem.get('tasksArr') as FormArray;
+  }
+
+  get jointQuestions(): FormArray {
+    return this.questionJointForm.get('jointQuestions') as FormArray;
+  }
+
+  get mixPkgDetailsArr(): FormArray {
+    return this.questionJointForm.get('mixPkgDetailsArr') as FormArray;
+  }
+
+  get completeParamArr(): FormArray {
+    return this.questionJointForm.get('completeParamArr') as FormArray;
   }
 
   addTaskItem(actionType): void {
@@ -203,7 +245,8 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       'actiontype': new FormControl('ReleaseMaterial'),
       uniqueId: uniqId,
       // tslint:disable-next-line:max-line-length
-      isSameLot: skewkeyname === 'OIL' ? this.PkgPerTask(this.ProductItem, productTypeTaskList, uniqId, 0) : this.lotsPerTask(this.ProductItem, productTypeTaskList, uniqId, 0),
+      isSameLot: skewkeyname === 'OIL' ? this.PkgPerTask(this.ProductItem, productTypeTaskList, uniqId, 0) :
+                 skewkeyname === 'BUD' ? this.lotsPerTask(this.ProductItem, productTypeTaskList, uniqId, 0) : null,
     });
   }
 
@@ -244,6 +287,8 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   getChangeOrderTaskByProductType(orderId, productTypeId, skewKeyName, actionType) {
     this.selectedLotDetails = [];
     let productTaskList = [];
+    this.selectedJointPkgDetails = [];
+    this.selectedJointMixPkgDetails = [];
     this.loaderService.display(true);
     this.orderService.getChangeOrderTasksByProductType(orderId, productTypeId, skewKeyName, actionType).subscribe(
       data => {
@@ -252,9 +297,12 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
           this.loaderService.display(false);
           if (productTaskList.length > 0) {
             this.productTypeTaskList = productTaskList;
-            if (this.ProductItem.get('skewkeyName').value === 'BUD' ) {
+            if (this.ProductItem.get('skewkeyName').value === 'BUD') {
               this.selectedLotDetails = data.Table1;
-            } else {
+            } else  if (this.ProductItem.get('skewkeyName').value === 'JOINTS' ) {
+              this.selectedJointPkgDetails = data.Table1;
+              this.selectedJointMixPkgDetails = data.Table2;
+            } else  {
               this.selectedPkgDetails = data.Table1;
             }
             this.actionNameValue.push({ label: 'Release Material', value: 'ReleaseMaterial' });
@@ -293,7 +341,6 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   }
 
   openLotSelection(parentRowData, rowData, rowIndex) {
-
     let assQty = 0;
     this.addtionAssignedQty = 0;
     this.tasksArr.controls.forEach((data) => {
@@ -306,6 +353,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
     const strainId = parentRowData.value.strain;
     this.brandStrainLots = [];
     this.brandStrainLots = this.selectedLotDetails.filter(r => r.TaskId === rowData.value.taskId);
+
     this.selLotBrandStrainRow.BrandId = 0;
     this.selLotBrandStrainRow.StrainId = strainId;
 
@@ -355,7 +403,6 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   }
 
   syncAllLotWeight() {
-    // const selectedLots = Array.from(this.selectedLotsArray.values());
     const selectedLots = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
 
     if (selectedLots !== null) {
@@ -411,10 +458,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       if (lotSelectedDetails) {
         const lotRowDetails = [];
         lotSelectedDetails.forEach(data => {
-          // Added by Devdan :: 16-Oct-2018
-          if (data.Index === index) {
             lotRowDetails.push(data);
-          }
         });
 
         if (lotRowDetails.length) {
@@ -536,15 +580,9 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
               UniqueId: this.selLotBrandStrainRow.UniqueId
             }
           );
-          // Added by bharat for bud packaing new changes
-          // this.setLotSyncWt(result.LotNo,
-          //   Number(result.AvailWt) - (totalSelectedLotWt1 + Number(result.answer))
-          //   );
         }
       });
-      // this.allocateEmpArr.controls[this.selLotBrandStrainRow.selectedRowIndex].updateValueAndValidity();
       this.selectedLotsArray.set(this.selLotBrandStrainRow.UniqueId, lotDetails);
-      //  this.selectedLotsArray[this.selLotBrandStrainRow.UniqueId] = lotDetails;
       if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
         lotDetails.forEach((item, index) => {
@@ -579,12 +617,14 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
 
   addedQty_onChange(rowData, changedOrderqty, orderQty) {
     let assQty = 0;
-    this.addtionAssignedQty = 0;
+    let assigedQty = 0;
     this.tasksArr.controls.forEach((data) => {
       assQty = Number(assQty) + Number((data as FormGroup).controls['releaseQty'].value);
+      assigedQty = Number(assigedQty) + Number((data as FormGroup).controls['assignedQty'].value);
     });
+    this.addtionAssignedQty = assQty;
     const employeeBox = (rowData as FormGroup).controls['releaseQty'];
-    if (assQty > Math.abs(Number(changedOrderqty)) || assQty > Number(orderQty)) {
+    if (assQty > (assigedQty - Number(orderQty))) {
       setTimeout(() => {
         employeeBox.setErrors({ 'assignedQtyExceeded': true });
       }, 0);
@@ -593,13 +633,11 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       this.tasksArr.controls.forEach((data) => {
         (data as FormGroup).controls['releaseQty'].setErrors(null);
       });
-      this.addtionAssignedQty = assQty;
-
       if (this.ProductItem.value.skewkeyName === 'BUD') {
-        if (assQty <= 0) {
           let selectedLots1 = [];
           if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
             selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
+            if (selectedLots1) {
             selectedLots1.forEach((item, index) => {
 
               for (let i = 0; i < item.length; i++) {
@@ -608,21 +646,47 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
                   i--;
                 }
               }
-
-              //   item.forEach((p, index2) => {
-              //     if (p.UniqueId === rowData.value.uniqueId) {
-              //       item.slice(index, 1);
-              //     }
-              // });
             });
+          }
             this.selectedLotsArray.clear();
             this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
-            return;
+          }
+        this.lotsPerTask1(this.ProductItem, rowData, 0);
+      } else  if (this.ProductItem.value.skewkeyName === 'JOINTS') {
+          let selectedJointPkgs: any;
+          if (this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray')) {
+            selectedJointPkgs = JSON.parse(this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray'));
+            if (selectedJointPkgs) {
+            selectedJointPkgs.forEach((item, index) => {
+              if (item) {
+                if (item.lotDetails) {
+                  for (let i = 0; i <  item.lotDetails.length; i++) {
+                    if (item.lotDetails[i].UniqueId === rowData.value.uniqueId) {
+                      item.lotDetails.splice(i, 1);
+                      i--;
+                    }
+                  }
+            }
+          }
+            });
+            selectedJointPkgs.forEach((item, index) => {
+              if (item) {
+                if (item.mixPkgDetails) {
+              for (let i = 0; i < item.mixPkgDetails.length; i++) {
+                if (item.mixPkgDetails[i].UniqueId === rowData.value.uniqueId) {
+                  item.mixPkgDetails.splice(i, 1);
+                  i--;
+              }
           }
         }
-        this.lotsPerTask1(this.ProductItem, rowData, 0);
+      }
+        });
+        }
+            this.appCommonService.setSessionStorage('selectedJointsPkgReleaseArray', JSON.stringify(selectedJointPkgs));
+            return;
+          }
+        // this.lotsPerTask1(this.ProductItem, rowData, 0);
       } else {
-      if (assQty <= 0) {
         let selectedLots1 = [];
         if (this.appCommonService.getSessionStorage('selectedReleasePkgsArray')) {
           selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleasePkgsArray'));
@@ -634,18 +698,10 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
                 i--;
               }
             }
-
-            //   item.forEach((p, index2) => {
-            //     if (p.UniqueId === rowData.value.uniqueId) {
-            //       item.slice(index, 1);
-            //     }
-            // });
           });
-          this.selectedPkgsArray = [];
+          this.selectedPkgsArray.clear();
           this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(selectedLots1));
-          return;
         }
-      }
       this.pkgPerTask1(this.ProductItem, rowData, 0);
     }
   }
@@ -686,12 +742,12 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
         );
 
         this.selectedLotsArray.set(uniqId, lotDetails);
-        //  this.selectedLotsArray[this.selLotBrandStrainRow.UniqueId] = lotDetails;
         let selectedLots1 = [];
         if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
           selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
           lotDetails.forEach((item, index) => {
             selectedLots1.forEach((item1, index1) => {
+              if (item1.length > 0) {
               item1.forEach((p, index2) => {
                 if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
                   item1.splice(index2, 1);
@@ -707,6 +763,11 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
                   }
                 }
               });
+            } else {
+              if (unselectedwt > 0) {
+                item1.push(item);
+                }
+            }
             });
           });
           this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
@@ -750,13 +811,13 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
           }
         );
 
-        this.selectedPkgsArray[i] = pkgDetails;
-        //  this.selectedLotsArray[this.selLotBrandStrainRow.UniqueId] = lotDetails;
+        this.selectedPkgsArray.set(uniqId, pkgDetails);
         let selectedLots1 = [];
         if (this.appCommonService.getSessionStorage('selectedReleasePkgsArray')) {
           selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleasePkgsArray'));
           pkgDetails.forEach((item, index) => {
             selectedLots1.forEach((item1, index1) => {
+              if (item1.length > 0) {
               item1.forEach((p, index2) => {
                 if (p.UniqueId === item.UniqueId && p.OilPkgId === item.OilPkgId) {
                   item1.splice(index2, 1);
@@ -772,11 +833,16 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
                   }
                 }
               });
+            } else {
+              if (unselectedwt > 0) {
+                item1.push(item);
+                }
+              }
             });
           });
           this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(selectedLots1));
         } else {
-          this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(Array.from(this.selectedPkgsArray)));
+          this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(Array.from(this.selectedPkgsArray.values())));
         }
         return true;
       } else {
@@ -815,12 +881,12 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
         );
 
         this.selectedLotsArray.set(this.selLotBrandStrainRow.UniqueId, lotDetails);
-        //  this.selectedLotsArray[this.selLotBrandStrainRow.UniqueId] = lotDetails;
         let selectedLots1 = [];
         if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
           selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
           lotDetails.forEach((item, index) => {
             selectedLots1.forEach((item1, index1) => {
+              if (item1.length > 0) {
               item1.forEach((p, index2) => {
                 if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
                   item1.splice(index2, 1);
@@ -833,6 +899,9 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
                   }
                 }
               });
+            } else {
+              item1.push(item);
+            }
             });
           });
           this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
@@ -944,7 +1013,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       let checkbox;
       let answerbox;
       let previousWt = 0;
-      const pkgSelectedDetails = this.selectedPkgsArray[this.selPkgBrandStrainRow.selectedRowIndex];
+      const pkgSelectedDetails = this.selectedPkgsArray.get(this.selPkgBrandStrainRow.UniqueId); // [this.selPkgBrandStrainRow.selectedRowIndex];
       if (pkgSelectedDetails) {
         const pkgRowDetails = [];
         pkgSelectedDetails.forEach(data => {
@@ -1048,9 +1117,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       if (loMaxWtFlag) {
         return;
       }
-      this.selectedPkgsArray[this.selPkgBrandStrainRow.selectedRowIndex] = pkgDetails;
-      // Changed added by Devdan :: Calling common methods to get n set local storage :: 27-Sep-2018
-      // localStorage.setItem('selectedPkgsArray', JSON.stringify(this.selectedPkgsArray));
+      this.selectedPkgsArray.set(this.selPkgBrandStrainRow.UniqueId , pkgDetails);
 
       if (this.appCommonService.getSessionStorage('selectedReleasePkgsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleasePkgsArray'));
@@ -1071,9 +1138,8 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
         });
         this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(selectedLots1));
       } else {
-        this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(this.selectedPkgsArray));
+        this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(Array.from(this.selectedPkgsArray.values())));
       }
-      // this.appCommonService.setLocalStorage('selectedPkgsArray', JSON.stringify(this.selectedPkgsArray));
       this.showPkgSelectionModel = false;
     } else {
       this.appCommonService.validateAllFields(this.questionForm);
@@ -1094,14 +1160,13 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
             }
          }
       });
-      this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(selectedLots1));
+      this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(Array.from(this.selectedPkgsArray.values())));
       }
       controla.removeAt(taskIndex);
     }
   }
 
   syncAllPkgWeight() {
-    // const selectedLots = Array.from(this.selectedLotsArray.values());
     const selectedPkg = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
     if (selectedPkg !== null) {
       this.lotSyncWtPkgArr.clear();
@@ -1173,13 +1238,13 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
           }
         );
 
-        this.selectedLotsArray.set(i, PkgDetails);
-        //  this.selectedLotsArray[this.selLotBrandStrainRow.UniqueId] = lotDetails;
+        this.selectedPkgsArray.set(rowData.value.uniqueId, PkgDetails);
         let selectedLots1 = [];
         if (this.appCommonService.getSessionStorage('selectedReleasePkgsArray')) {
           selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleasePkgsArray'));
           PkgDetails.forEach((item, index) => {
             selectedLots1.forEach((item1, index1) => {
+              if (item1.length > 0) {
               item1.forEach((p, index2) => {
                 if (p.UniqueId === item.UniqueId && p.OilPkgId === item.OilPkgId) {
                   item1.splice(index2, 1);
@@ -1192,11 +1257,14 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
                   }
                 }
               });
+            } else {
+              item1.push(item);
+            }
             });
           });
           this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(selectedLots1));
         } else {
-          this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(Array.from(this.selectedPkgsArray )));
+          this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(Array.from(this.selectedPkgsArray.values() )));
         }
         return true;
       } else {
@@ -1204,5 +1272,267 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       }
     }
   }
+  // JOint Package
+  openjointLotSelection(parentRowData, rowData, rowIndex) {
+      let assQty = 0;
+      this.tasksArr.controls.forEach((data) => {
+        assQty = Number(assQty) + Number((data as FormGroup).controls['releaseQty'].value);
+      });
+      if (assQty > Math.abs(Number(parentRowData.value.orderedQty))) {
+        return;
+      }
 
+      const strainId = parentRowData.value.strain;
+      this.brandStrainLots = [];
+      this.selLotJointBrandStrainRow.pkgSizeRequiredQtyArr = [];
+      this.brandStrainLots = this.selectedJointPkgDetails.filter(r => r.TaskId === rowData.value.taskId);
+
+      this.selLotJointBrandStrainRow.BrandId = 0;
+      this.selLotJointBrandStrainRow.StrainId = strainId;
+      this.selLotJointBrandStrainRow.selectedRowIndex = rowIndex;
+      this.selLotJointBrandStrainRow.RequireWt = 0;
+      this.selLotJointBrandStrainRow.combinationTotalAssignedQty = 0;
+      this.selLotJointBrandStrainRow.ProductTypeId = parentRowData.value.productType;
+      this.selLotJointBrandStrainRow.UniqueId = rowData.value.uniqueId;
+
+      if (rowData.value.actiontype === 'ReleaseMaterial') {
+        const employeeBox = (rowData as FormGroup).controls['releaseQty'];
+        const validators = !rowData.value.releaseQty ? Validators.compose([Validators.required]) : null;
+        employeeBox.setValidators(validators);
+        employeeBox.updateValueAndValidity();
+      }
+
+      if (rowData.value.actiontype === 'ReleaseMaterial') {
+         // const totalPkgWt = Number(rowData.value.releaseQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
+        this.selLotJointBrandStrainRow.combinationTotalAssignedQty = Number(rowData.value.releaseQty) ;
+      }
+
+      this.selectedJointPkgDetails.filter((value, key) =>
+      //  value.StrainId === rowData.StrainId)
+      value.TaskId  === rowData.value.taskId)
+      .map(value => {
+        this.selLotJointBrandStrainRow.RequireWt += value.TotalWt;
+        this.selLotJointBrandStrainRow.BrandName = '';
+        this.selLotJointBrandStrainRow.StrainName = value.StrainName;
+        this.selLotJointBrandStrainRow.GeneticsId = value.GeneticsId;
+        this.selLotJointBrandStrainRow.GeneticsName = value.GeneticsName;
+      });
+
+    this.questionJointForm = this.fb.group({
+      jointQuestions: this.fb.array(this.brandStrainLots.map(this.createJointQuestionControl(this.fb))),
+      mixPkgDetailsArr: this.fb.array(
+        _.uniqBy(this.selectedJointMixPkgDetails, 'MixPkgId')
+          .filter(result => result.TaskId === rowData.value.taskId)
+          .map((childObject, childIndex) => {
+            return this.createMixItem(childObject, childIndex);
+          })
+      )
+    });
+    this.showJointSelectionModel = true;
+  }
+
+  createJointQuestionControl(fb: FormBuilder) {
+    return (question, index) => {
+      let checkbox;
+      let answerbox;
+      let lotSelectedDetails = [];
+
+      if (this.selectedJointPkgArray.get(this.selLotJointBrandStrainRow.UniqueId)) {
+        lotSelectedDetails = this.selectedJointPkgArray.get(this.selLotJointBrandStrainRow.UniqueId).lotDetails;
+      } else {
+        lotSelectedDetails = [];
+      }
+
+      if (lotSelectedDetails) {
+        const lotRowDetails = [];
+        lotSelectedDetails.forEach(data => {
+          lotRowDetails.push(data);
+        });
+
+        if (lotRowDetails.length) {
+          const lotQty = lotRowDetails[0].SelectedQty;
+          checkbox = lotRowDetails[0].Selected;
+          answerbox = [lotQty, Validators.compose([Validators.max(question.AvailableWt)])];
+        } else {
+          checkbox = question.selected;
+          answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
+        }
+      } else {
+        checkbox = question.selected;
+        answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
+      }
+      return fb.group({
+        question: checkbox, answer: answerbox, questionNumber: index, LotNo: question.LotId, UnitValue: question.UnitValue,
+        AvailTubesQty: question.AssignedQty, GrowerLotNo: question.GrowerLotNo, LotNoteCount: question.LotNoteCount,
+        GeneticsId: question.GeneticsId, GeneticsName: question.GeneticsName, StrainId: question.StrainId, StrainName: question.StrainName,
+        ItemQty: question.ItemQty, PkgTypeId: question.PkgTypeId, PkgTypeName: question.PkgTypeName
+      });
+    };
+  }
+
+  createMixItem(childObject, childIndex): FormGroup {
+    let checkbox;
+    let mixPkgDetails = [];
+
+    if (this.selectedJointPkgArray.get(this.selLotJointBrandStrainRow.UniqueId)) {
+      mixPkgDetails = this.selectedJointPkgArray.get(this.selLotJointBrandStrainRow.UniqueId).mixPkgDetails;
+    } else {
+      mixPkgDetails = [];
+    }
+    if (mixPkgDetails && mixPkgDetails.length > 0) {
+      const lotRowDetails = [];
+      mixPkgDetails.forEach(data => {
+          lotRowDetails.push(data);
+      });
+
+      if (lotRowDetails.length) {
+        checkbox = lotRowDetails[0].selected;
+      } else {
+        checkbox = childObject.selected;
+      }
+    } else {
+      checkbox = childObject.selected;
+    }
+
+    return this.fb.group({
+      srno: childIndex,
+      UnitValue: childObject.TubeUnitValue,
+      ItemQty: childObject.TubeItemQty,
+      PkgTypeId: childObject.TubePkgTypeId,
+      PkgTypeName: childObject.TubePkgTypeName,
+      StrainId: childObject.StrainId,
+      StrainName: childObject.StrainName,
+      GeneticsId: childObject.GeneticsId,
+      Qty: childObject.Qty,
+      mixPkgCheck: checkbox,
+      mixPkgId: childObject.MixPkgId ? childObject.MixPkgId : 0,
+      MixPkgNo: childObject.MixPkgNo
+    });
+  }
+
+  changeValidator(selected, index) {
+    const answerbox = this.questionJointForm.get('jointQuestions.' + index).get('answer');
+    const availableqty = this.questionJointForm.get('jointQuestions.' + index).get('AvailTubesQty');
+
+   // const validators = selected ? Validators.compose([Validators.required, Validators.min(0.1), Validators.max(availableqty.value)]) : null;
+    const validators = Validators.compose([Validators.max(availableqty.value)]);
+   answerbox.setValidators(validators);
+    answerbox.updateValueAndValidity();
+  }
+
+  submitJoint(form) {
+    const lotDetails = [];
+    const mixPkgDetails = [];
+    const totalSumObject = {
+      lotTotalQty: 0,
+      ItemQty: 0,
+      UnitValue: 0,
+      PkgTypeName: '',
+      productTotalRequiredQty: 0
+    };
+    if (this.questionJointForm.valid) {
+      form.value.jointQuestions.forEach(result => {
+          lotDetails.push(
+            {
+              ProductTypeId: this.selLotJointBrandStrainRow.ProductTypeId,
+              LotNo: result.LotNo,
+              GrowerLotNo: result.GrowerLotNo,
+              PkgTypeId: result.PkgTypeId,
+              UnitValue: result.UnitValue,
+              SelectedQty: result.answer,
+              Selected: true,
+              Index: result.questionNumber,
+              StrainId: result.StrainId,
+              AvailTubesQty: result.AvailTubesQty,
+              StrainName: result.StrainName,
+              BrandId: this.selLotBrandStrainRow.BrandId,
+              GeneticsId: this.selLotBrandStrainRow.GeneticsId,
+              GeneticsName: this.selLotBrandStrainRow.GeneticsName,
+              PkgTypeName: result.PkgTypeName,
+              ItemQty: result.ItemQty,
+              LotNoteCount: result.LotNoteCount,
+              UniqueId: this.selLotJointBrandStrainRow.UniqueId
+            }
+          );
+      });
+
+      form.value.mixPkgDetailsArr.forEach(result => {
+
+        if (result.mixPkgCheck === true) {
+          mixPkgDetails.push(
+            {
+              ProductTypeId: this.selLotJointBrandStrainRow.ProductTypeId,
+              MixPkgId: result.mixPkgId,
+              MixPkgNo: result.MixPkgNo,
+              SelectedQty: 1,
+              Index: result.srno,
+              UnitValue: result.UnitValue,
+              ItemQty: result.ItemQty,
+              PkgTypeId: result.PkgTypeId,
+              PkgTypeName: result.PkgTypeName,
+              StrainId: result.StrainId,
+              StrainName: result.StrainName,
+              GeneticsId: result.GeneticsId,
+              selected: true,
+              UniqueId: this.selLotJointBrandStrainRow.UniqueId
+            }
+          );
+        }
+      });
+
+      this.selectedJointPkgArray.set(this.selLotJointBrandStrainRow.UniqueId, {
+        lotDetails: lotDetails,
+        mixPkgDetails: mixPkgDetails
+      });
+      // this.selectedJointPkgArray[this.selLotJointBrandStrainRow.selectedRowIndex] = {
+      //   lotDetails: lotDetails,
+      //   mixPkgDetails: mixPkgDetails
+      // };
+      if (this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray')) {
+        const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray'));
+        lotDetails.forEach((item, index) => {
+          selectedLots1.forEach((item1, index1) => {
+            if (item1) {
+            item1.lotDetails.forEach((p, index2) => {
+              if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
+                item1.lotDetails.splice(index2, 1);
+                // (index2);
+                item1.lotDetails.push(item);
+              } else {
+                if (item1.lotDetails.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
+                  item1.lotDetails.push(item);
+                }
+              }
+            });
+          }
+          });
+        });
+
+        mixPkgDetails.forEach((item, index) => {
+          selectedLots1.forEach((item1, index1) => {
+            if (item1) {
+            item1.mixPkgDetails.forEach((p, index2) => {
+              if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
+                item1.mixPkgDetails.splice(index2, 1);
+                // (index2);
+                item1.mixPkgDetails.push(item);
+              } else {
+                if (item1.mixPkgDetails.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
+                  item1.mixPkgDetails.push(item);
+                }
+              }
+            });
+          }
+          });
+        });
+
+        this.appCommonService.setSessionStorage('selectedJointsPkgReleaseArray', JSON.stringify(selectedLots1));
+      } else {
+        this.appCommonService.setSessionStorage('selectedJointsPkgReleaseArray', JSON.stringify(Array.from( this.selectedJointPkgArray.values())));
+      }
+      this.showJointSelectionModel = false;
+    } else {
+      this.appCommonService.validateAllFields(this.questionJointForm);
+    }
+  }
 }

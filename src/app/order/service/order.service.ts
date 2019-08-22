@@ -584,4 +584,10 @@ export class OrderService {
       });
   }
 
+  removeIncomingOrder(removeOrderApi) {
+    const url = 'api/Order/IncomingOrderDeleteActive';
+    return this.http.post(url, removeOrderApi, this.headers)
+    .map(data =>  data );
+}
+
 }

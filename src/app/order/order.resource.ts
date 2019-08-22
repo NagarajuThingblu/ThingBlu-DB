@@ -50,7 +50,8 @@ export class OrderResource {
                     orderTotal: 'Order Total',
                     lastUpdated: 'Last Updated',
                     changeDate: 'Change Date',
-                    initialDate: 'Initial Date'
+                    initialDate: 'Initial Date',
+                    deleteIncomingConfirm: 'Are you sure you’d like to discard this order?',
 
                 },
                 identifyProduct: {

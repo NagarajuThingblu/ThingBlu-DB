@@ -4,7 +4,7 @@
             <!-- Order Listing -->
             <div class="mainDiv">
             <p-panel header="All Orders" styleClass="clsTabWidth" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-            <p-tabView  styleClass="clsTabView">
+            <p-tabView (onChange)="tabViewhandleChange($event)"  styleClass="clsTabView">
                 <!-- Order tab -->
                 <p-tabPanel header="All Orders" [selected] = "orderTabSelected">
                     <p-table #dtOrderListing [value]="allOrders" 
@@ -253,11 +253,11 @@
                                 <td> <span *ngIf="order?.RetailerName">{{order?.RetailerName}}</span>
                                   
                                 </td>
-                                <td class="datewidth">{{order?.OrderTotal }}</td>
+                                <td class="datewidth">${{order?.OrderTotal }}</td>
                                 <td class="datewidth">{{order?.CreatedDate | date:'MM/dd/yyyy' }}</td>
                                 <td class="datewidth">{{order?.ModifiedDate | date:'MM/dd/yyyy' }}</td>
                                 <td class="text-center"> 
-                                    <a  [routerLink]="" aria-hidden="true" (click)="deleteDraft( $event, order?.DraftOrderId)"  pTooltip="Discard draft order" tooltipPosition="left">
+                                    <a  [routerLink]="" aria-hidden="true" (click)="deleteIncomingOrder( $event, order?.IncomingOrderId)"  pTooltip="Discard incoming order" tooltipPosition="left">
                                     <span style="font-size: 1.4rem;" class="fa fa-trash"></span>
                                 </a> 
                                <!-- <button pButton type="submit" label="Discard"  style="background-color:#a93939" (click)="removeOrderDraft(order?.DraftOrderId)" ></button>-->
@@ -352,7 +352,7 @@
                                 <td class="datewidth">{{order?.UpdatedDate | date:'MM/dd/yyyy' }}</td>
                                 <td class="datewidth">{{order?.ModifiedDate | date:'MM/dd/yyyy' }}</td>
                                 <td class="text-center"> 
-                                    <a  [routerLink]="" aria-hidden="true" (click)="deleteDraft( $event, order?.DraftOrderId)"  pTooltip="Discard draft order" tooltipPosition="left">
+                                    <a  [routerLink]="" aria-hidden="true" (click)="deleteIncomingOrder( $event, order?.IncomingOrderId)"  pTooltip="Discard incoming order" tooltipPosition="left">
                                     <span style="font-size: 1.4rem;" class="fa fa-trash"></span>
                                 </a> 
                                <!-- <button pButton type="submit" label="Discard"  style="background-color:#a93939" (click)="removeOrderDraft(order?.DraftOrderId)" ></button>-->

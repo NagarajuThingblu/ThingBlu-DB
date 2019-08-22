@@ -64,7 +64,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     employees: [],
     orderDetails: []
   };
-  public selectedPkgsArray: any[] = [];
+  public selectedPkgsArray = new Map<any, any>();
   public completedLotArray: any[] = [];
 
   public orderDetailsBS: any;
@@ -231,11 +231,6 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       if (this.appCommonService.getSessionStorage('selectedLotsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
           selectedLots1.forEach((item1, index1) => {
-          //   item1.forEach((p, index2) => {
-          //     if (p.UniqueId === con.value.uniqueId ) {
-          //       item1.splice(index2, 1);
-          //     }
-          // });
           for ( let i = 0; i < item1.length; i++) {
             if ( item1[i].UniqueId === con.value.uniqueId) {
               item1.splice(i, 1);
@@ -386,7 +381,6 @@ export class PkgAllocateEmployeeComponent implements OnInit {
   }
 
   syncAllLotWeight() {
-    // const selectedLots = Array.from(this.selectedLotsArray.values());
     const selectedLots = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
     if (selectedLots !== null) {
       this.lotSyncWtArr.clear();
@@ -434,9 +428,6 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       let checkbox;
       let answerbox;
       const lotSelectedDetails = this.selectedLotsArray.get(this.selLotBrandStrainRow.UniqueId);
-      // if (!this.lotSyncWtArr.has(question.LotId)) {
-      //   this.setLotSyncWt(question.LotId, question.AvailableWt);
-      // }
       let previousWt = 0;
       if (lotSelectedDetails) {
         const lotRowDetails = [];
@@ -566,15 +557,9 @@ export class PkgAllocateEmployeeComponent implements OnInit {
               UniqueId: this.selLotBrandStrainRow.UniqueId
             }
           );
-          // Added by bharat for bud packaing new changes
-          // this.setLotSyncWt(result.LotNo,
-          //   Number(result.AvailWt) - (totalSelectedLotWt1 + Number(result.answer))
-          //   );
         }
       });
-      // this.allocateEmpArr.controls[this.selLotBrandStrainRow.selectedRowIndex].updateValueAndValidity();
       this.selectedLotsArray.set(this.selLotBrandStrainRow.UniqueId, lotDetails);
-      //  this.selectedLotsArray[this.selLotBrandStrainRow.UniqueId] = lotDetails;
 
       if (this.appCommonService.getSessionStorage('selectedLotsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
@@ -628,6 +613,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
   }
 
   addedQty_onChange(rowData, unassignedTqty) {
+
     let assQty = 0;
     this.addtionAssignedQty = 0;
     this.tasksArr.controls.forEach((data) => {
@@ -654,19 +640,15 @@ export class PkgAllocateEmployeeComponent implements OnInit {
         if (data !== 'No data found!') {
           this.globalData.orderDetails = data;
           const newArr = [];
-            this.orderDetailsBS = this.removeDuplicatesByName(this.globalData.orderDetails['Table']);
-          // Unique Brand Strain Combination
+          this.orderDetailsBS = this.removeDuplicatesByName(this.globalData.orderDetails['Table']);
           this.orderDetailsBS_filteredData = [];
-          this.selectedPkgsArray = [];
+          this.selectedPkgsArray.clear();
 
           this.orderDetailsBS.forEach((value, key) => {
-            const counts  = this.globalData.orderDetails['Table1'].filter(result => result.StrainId === value.StrainId).length;
+            const counts = this.globalData.orderDetails['Table1'].filter(result => result.StrainId === value.StrainId).length;
             value['LotCount'] = counts;
-            if ( value.StrainId !== '') { this.orderDetailsBS_filteredData.push(value); }
+            if (value.StrainId !== '') { this.orderDetailsBS_filteredData.push(value); }
           });
-          // End Unique Brand Strain Combination
-
-          //// localStorage.setItem('uniqueOrderStrains', this.orderDetailsBS_filteredData);
         }
       },
       error => { console.log(error); },
@@ -779,7 +761,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       let checkbox;
       let answerbox;
       let previousWt = 0;
-      const pkgSelectedDetails = this.selectedPkgsArray[this.selPkgBrandStrainRow.selectedRowIndex];
+      const pkgSelectedDetails = this.selectedPkgsArray.get(this.selPkgBrandStrainRow.UniqueId);
 
       if (pkgSelectedDetails) {
         const pkgRowDetails = [];
@@ -819,7 +801,6 @@ export class PkgAllocateEmployeeComponent implements OnInit {
   }
 
   submitPkg(form) {
-    debugger;
     const pkgDetails = [];
     let totalPkgWt = 0;
     let loMaxWtFlag = false;
@@ -838,7 +819,6 @@ export class PkgAllocateEmployeeComponent implements OnInit {
         }
 
       form.value.pkgQuestions.forEach((result, index) => {
-       // if (result.question === true) {  // change checkbox true condition add on weight
           if (result.answer > 0) {
           let totalSelectedOilPkgWt = 0;
           this.selectedPkgsArray.forEach(result1 => {
@@ -886,10 +866,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       if (loMaxWtFlag) {
         return;
       }
-      this.selectedPkgsArray[this.selPkgBrandStrainRow.selectedRowIndex] = pkgDetails;
-      // Changed added by Devdan :: Calling common methods to get n set local storage :: 27-Sep-2018
-      // localStorage.setItem('selectedPkgsArray', JSON.stringify(this.selectedPkgsArray));
-
+      this.selectedPkgsArray.set(this.selPkgBrandStrainRow.UniqueId, pkgDetails);
       if (this.appCommonService.getSessionStorage('selectedPkgsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
         pkgDetails.forEach((item, index) => {
@@ -909,9 +886,8 @@ export class PkgAllocateEmployeeComponent implements OnInit {
         });
         this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(selectedLots1));
       } else {
-        this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(this.selectedPkgsArray));
+        this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(Array.from(this.selectedPkgsArray.values())));
       }
-      // this.appCommonService.setLocalStorage('selectedPkgsArray', JSON.stringify(this.selectedPkgsArray));
       this.showPkgSelectionModel = false;
     } else {
       this.appCommonService.validateAllFields(this.questionForm);
@@ -939,7 +915,6 @@ export class PkgAllocateEmployeeComponent implements OnInit {
   }
 
   syncAllPkgWeight() {
-    // const selectedLots = Array.from(this.selectedLotsArray.values());
     const selectedPkg = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
     if (selectedPkg !== null) {
       this.lotSyncWtPkgArr.clear();
@@ -980,17 +955,5 @@ export class PkgAllocateEmployeeComponent implements OnInit {
 
       rowItem.controls['previousValue'].patchValue(rowItem.value.answer);
     }
-  }
-
-  isPkgSelected (uniqueId) {
-    this.selectedPkgsArray.forEach((item, index) => {
-      item.forEach(result => {
-        if (result.UniqueId === uniqueId ) {
-          return true;
-        } else {
-          return false;
-        }
-    });
-  });
   }
 }
