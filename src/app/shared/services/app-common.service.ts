@@ -137,20 +137,8 @@ calcUTCTime(date1, offset) {
     (<any>Object).values(formGroup.controls).forEach((control, index) => {
       // control.markAsTouched();
 
-      if (!control.valid && this.firstInvalidFieldFocus === false && control.enabled ) {
-        control.markAsDirty();
-       //  control.nativeElement.focus();
-        this.firstInvalidFieldFocus = true;
-        return false;
-      }
-
-      if (control.nativeElement && !control.valid && this.firstInvalidFieldFocus === false && control.enabled ) {
-        control.markAsDirty();
-         control.nativeElement.focus();
-        this.firstInvalidFieldFocus = true;
-        return false;
-      } else if (control instanceof FormGroup ) {
-            this.validateAllFields_1(control);
+      if (control instanceof FormGroup ) {
+        this.validateAllFields_1(control);
       } else if (control.controls) {
           // Object.keys(control.controls).forEach(c => this.validateAllFields(c));
           Object.keys(control.controls).forEach(field => {
@@ -162,7 +150,19 @@ calcUTCTime(date1, offset) {
                   this.validateAllFields_1(formControl);
               }
           });
+        } else if (!control.valid && this.firstInvalidFieldFocus === false && control.enabled ) {
+          control.markAsDirty();
+        //  control.nativeElement.focus();
+          this.firstInvalidFieldFocus = true;
+          return false;
         }
+
+      // if (control.nativeElement && !control.valid && this.firstInvalidFieldFocus === false && control.enabled ) {
+      //   control.markAsDirty();
+      //    control.nativeElement.focus();
+      //   this.firstInvalidFieldFocus = true;
+      //   return false;
+      // }
       // (<any>this.orderRequestForm.controls['retailers']).nativeElement.focus();
     });
 

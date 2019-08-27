@@ -52,7 +52,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
   public brandStrainLots: any;
   public globalResource: any;
   public msgs: Message[] = [];
-  public addtionAssignedQty  = 0;
+  public addtionAssignedQty = 0;
 
   public lotInfo: any = {
     lotId: 0,
@@ -75,7 +75,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
   public lotSyncWtArr = new Map<any, any>();
   public lotSyncWtPkgArr = new Map<any, any>();
 
-  public brandStrainPkgs: any ;
+  public brandStrainPkgs: any;
   public showPkgSelectionModel = false;
   public selLotBrandStrainRow = {
     BrandId: null,
@@ -108,7 +108,6 @@ export class PkgAllocateEmployeeComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private dropdwonTransformService: DropdwonTransformService,
     private appCommonService: AppCommonService,
     private loaderService: LoaderService,
     private orderService: OrderService
@@ -130,7 +129,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     this.questionPkgForm = this.fb.group({
       pkgQuestions: new FormArray([])
     });
-    if (this.ProductItem.get('skewkeyName').value === 'BUD' ) {
+    if (this.ProductItem.get('skewkeyName').value === 'BUD') {
       this.getSelectedOrderDetails(this.OtherData.orderId);
     } else {
       this.getSelectedOrderPkgDetails(this.OtherData.orderId);
@@ -173,10 +172,10 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       'taskType': new FormControl(productItem.value.taskType),
       'taskTypeName': new FormControl(null),
       'taskStatus': new FormControl('ToBeAssigned'),
-      'employee': new FormControl(null),
+      'employee': new FormControl(null, Validators.required ),
       'employeeName': new FormControl(null),
-      'assignedQty': new FormControl(null, actionType !== 'AddToCurrentTask' ? Validators.required : null),
-      'addedQty': new FormControl(null, actionType === 'AddToCurrentTask' ? Validators.required : null),
+      'assignedQty': new FormControl(null, actionType !== 'AddToCurrentTask' ? [Validators.required, Validators.min(1)] : null),
+      'addedQty': new FormControl(null, actionType === 'AddToCurrentTask' ?  [Validators.required, Validators.min(1)] : null),
       'pkgType': new FormControl(productItem.value.pkgType),
       'pkgTypeName': new FormControl(null),
       'actiontype': new FormControl(actionType),
@@ -201,7 +200,8 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       'employee': new FormControl(productTypeTaskList.EmpId),
       'employeeName': new FormControl(productTypeTaskList.EmpName),
       'assignedQty': new FormControl(productTypeTaskList.AssignedQty),
-      'addedQty': new FormControl(productTypeTaskList.TaskId ? 0 : null, Validators.required),
+      // tslint:disable-next-line:max-line-length
+      'addedQty': new FormControl(productTypeTaskList.TaskId ? 0 : null, Validators.compose([Validators.required, productTypeTaskList.TaskId <= 0 ? Validators.min(1) : null ])),
       'pkgType': new FormControl(productTypeTaskList.PkgtypeId),
       'pkgTypeName': new FormControl(productTypeTaskList.PkgTypeName),
       'actiontype': new FormControl('AddToCurrentTask'),
@@ -224,33 +224,47 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     this.loaderService.display(false);
   }
 
-  deleteItem(taskIndex) {
+  deleteItem(taskIndex, rowData) {
     const controla = <FormArray>this.ProductItem.get('tasksArr');
     if (controla.length !== 1) {
-      const con =  (controla.controls[taskIndex] as FormGroup);
+      const con = (controla.controls[taskIndex] as FormGroup);
       if (this.appCommonService.getSessionStorage('selectedLotsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
-          selectedLots1.forEach((item1, index1) => {
-          for ( let i = 0; i < item1.length; i++) {
-            if ( item1[i].UniqueId === con.value.uniqueId) {
+        selectedLots1.forEach((item1, index1) => {
+          for (let i = 0; i < item1.length; i++) {
+            if (item1[i].UniqueId === con.value.uniqueId) {
               item1.splice(i, 1);
-              i -- ;
+              i--;
             }
-         }
-      });
-      this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(selectedLots1));
+          }
+          if ( item1.length <= 0) {
+            item1.splice(index1, 1);
+          }
+        });
+        this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(selectedLots1));
       }
       controla.removeAt(taskIndex);
     }
+     this.addtionAssignedQty = 0;
+    let assQty = 0;
+    this.tasksArr.controls.forEach((data) => {
+      if (rowData.value.actiontype === 'AddToCurrentTask') {
+        assQty = Number(assQty) + Number((data as FormGroup).controls['addedQty'].value);
+      }
+      if (rowData.value.actiontype === 'CreateTask') {
+      assQty = Number(assQty) + Number((data as FormGroup).controls['assignedQty'].value);
+      }
+    });
+    this.addtionAssignedQty = assQty;
   }
 
-   getSelectedOrderDetails(OrderId) {
+  getSelectedOrderDetails(OrderId) {
     this.orderService.getSelectedOrderDetails(OrderId, 'BUD', false, 0).subscribe(
       data => {
         if (data !== 'No data found!') {
           this.globalData.orderDetails = data;
-      }
-    },
+        }
+      },
       error => { console.log(error); },
       () => console.log('sucess'));
   }
@@ -282,11 +296,12 @@ export class PkgAllocateEmployeeComponent implements OnInit {
 
     this.tasksArr.controls.forEach((data) => {
       const answerBox = (data as FormGroup).controls['employee'];
-      (answerBox as FormControl).setErrors(null);
+      (answerBox as FormControl).updateValueAndValidity();
     });
     this.tasksArr.controls.forEach((data) => {
       // tslint:disable-next-line:max-line-length
-      if ((data as FormGroup).controls['employee'].value === rowData.value.employee && (data as FormGroup).controls['uniqueId'].value !== rowData.value.uniqueId) {
+      if ((data as FormGroup).controls['employee'].value === rowData.value.employee && (data as FormGroup).controls['uniqueId'].value !== rowData.value.uniqueId
+      && (data as FormGroup).controls['taskId'].value <= 0 ) {
         const answerBox = (rowData as FormGroup).controls['employee'];
         (answerBox as FormControl).setErrors({ 'duplicateemployee': true });  // lotmaxwtexceeded
       }
@@ -326,28 +341,25 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     }
     this.selLotBrandStrainRow.BrandId = 0;
     this.selLotBrandStrainRow.StrainId = strainId;
-    // this.selLotBrandStrainRow.selectedRowIndex = rowIndex;
 
     if (rowData.value.actiontype === 'AddToCurrentTask') {
       const employeeBox = (rowData as FormGroup).controls['addedQty'];
-      const validators = !rowData.value.addedQty ? Validators.compose([Validators.required]) : null;
+      const validators = !rowData.value.addedQty ? Validators.compose([Validators.required, rowData.value.taskId <= 0 ? Validators.min(1) : null]) : null;
       employeeBox.setValidators(validators);
       employeeBox.updateValueAndValidity();
     } else if (rowData.value.actiontype === 'CreateTask') {
-    const employeeBox = (rowData as FormGroup).controls['assignedQty'];
-    const validators = !rowData.value.assignedQty ? Validators.compose([Validators.required]) : null;
-    employeeBox.setValidators(validators);
-    employeeBox.updateValueAndValidity();
-  }
+      const employeeBox = (rowData as FormGroup).controls['assignedQty'];
+      const validators = !rowData.value.assignedQty ? Validators.compose([Validators.required , rowData.value.taskId <= 0 ? Validators.min(1) : null]) : null;
+      employeeBox.setValidators(validators);
+      employeeBox.updateValueAndValidity();
+    }
     this.selLotBrandStrainRow.RequireWt = 0;
     if (rowData.value.actiontype === 'AddToCurrentTask') {
-    const totalPkgWt = Number(rowData.value.addedQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
-    this.selLotBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
-    // this.selLotBrandStrainRow.combinationTotalAssignedWt = rowData.value.addedQty;
+      const totalPkgWt = Number(rowData.value.addedQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
+      this.selLotBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
     } else if (rowData.value.actiontype === 'CreateTask') {
       const totalPkgWt = Number(rowData.value.assignedQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
       this.selLotBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
-      // this.selLotBrandStrainRow.combinationTotalAssignedWt = rowData.value.assignedQty;
     }
     this.selLotBrandStrainRow.ProductTypeId = parentRowData.value.productType;
     this.selLotBrandStrainRow.UniqueId = rowData.value.uniqueId;
@@ -365,18 +377,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     this.questionForm = this.fb.group({
       questions: this.fb.array(this.brandStrainLots.map(this.createQuestionControl(this.fb)))
     });
-
-    // this.allocateEmpArr.value.forEach((result, index) => {
-    //   let totalPkgWt = 0;
-    //     // if ((result.strainid === rowData.value.strainId) && Number(result.assignPackageWt) > 0) {
-    //     if ((result.productTypeId === rowData.value.productTypeId) && Number(result.assignQty) > 0 && index === rowIndex) {
-    //       totalPkgWt = Number(result.assignQty) * Number(result.pkgSize) * Number(result.itemQty);
-    //         this.selLotBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
-    //     }
-    // });
-
     this.syncAllLotWeight();
-
     this.showLotSelectionModel = true;
   }
 
@@ -432,7 +433,6 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       if (lotSelectedDetails) {
         const lotRowDetails = [];
         lotSelectedDetails.forEach(data => {
-          // Added by Devdan :: 16-Oct-2018
           if (data.Index === index) {
             lotRowDetails.push(data);
           }
@@ -442,20 +442,13 @@ export class PkgAllocateEmployeeComponent implements OnInit {
           const lotWt = lotRowDetails[0].SelectedWt;
           previousWt = lotWt;
           checkbox = lotRowDetails[0].Selected;
-          // answerbox = lotRowDetails[0].Selected
-          // ? [lotWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-          // : null;
           answerbox = [lotWt, Validators.compose([Validators.max(question.AvailableWt)])];
         } else {
           checkbox = question.selected;
-          // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-          //   : null;
           answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
         }
       } else {
         checkbox = question.selected;
-        // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-        //   : null;
         answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
       }
       return fb.group({
@@ -474,17 +467,11 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     let noLotSelected = false;
 
     if (this.questionForm.valid) {
-      // In edit mode, skip this validation on submit and checking this validations on update tasks
-      /// condition added by Devdan :: 23-Nov-2018
       form.value.questions.forEach(result => {
         totalLotWt += Number(result.answer) ? Number(result.answer) : 0;
-
-        // comment checkbox condition for remove checkbox :: 05-april-2019 :: swapnil
-        // if (result.question) {  //change result.question to result.answer
         if (result.answer) {
           noLotSelected = true;
         }
-        // if (Number(result.answer) > 0 && !result.question) {  //change result.question to result.answer
         if (Number(result.answer) > 0 && !result.answer) {
           lotSelectFlag = true;
           return;
@@ -565,17 +552,21 @@ export class PkgAllocateEmployeeComponent implements OnInit {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
         lotDetails.forEach((item, index) => {
           selectedLots1.forEach((item1, index1) => {
+            if (item1.length > 0) {
             item1.forEach((p, index2) => {
               if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
                 item1.splice(index2, 1);
                 // (index2);
                 item1.push(item);
               } else {
-                if (item1.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo ).length <= 0) {
+                if (item1.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
                   item1.push(item);
                 }
               }
             });
+          } else {
+            item1.push(item);
+          }
           });
         });
         this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(selectedLots1));
@@ -592,45 +583,137 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       this.appCommonService.validateAllFields(this.questionForm);
     }
   }
-  assognedQty_onChange(rowData, unassignedTqty) {
+  assognedQty_onChange(rowData, unassignedTqty, index) {
     let assQty = 0;
     this.addtionAssignedQty = 0;
     this.tasksArr.controls.forEach((data) => {
-      assQty = Number(assQty ) + Number((data as FormGroup).controls['assignedQty'].value);
+      assQty = Number(assQty) + Number((data as FormGroup).controls['assignedQty'].value);
     });
     const employeeBox = (rowData as FormGroup).controls['assignedQty'];
     if (assQty > unassignedTqty) {
+      this.addtionAssignedQty = assQty;
       setTimeout(() => {
         employeeBox.setErrors({ 'assignedQtyExceeded': true });
       }, 0);
 
     } else {
       this.tasksArr.controls.forEach((data) => {
-         (data as FormGroup).controls['assignedQty'].setErrors(null);
+        (data as FormGroup).controls['assignedQty'].updateValueAndValidity();
       });
       this.addtionAssignedQty = assQty;
+    }
+
+    if (this.ProductItem.value.skewkeyName === 'BUD') {
+      let selectedLots1 = [];
+      if (this.appCommonService.getSessionStorage('selectedLotsArray')) {
+        selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
+        if (selectedLots1) {
+          selectedLots1.forEach((item, index1) => {
+            for (let i = 0; i < item.length; i++) {
+              if (item[i].UniqueId === rowData.value.uniqueId) {
+                item.splice(i, 1);
+                i--;
+              }
+            }
+            if ( item.length <= 0) {
+              item.splice(index1, 1);
+            }
+          });
+        }
+        this.selectedLotsArray.delete(rowData.value.uniqueId);
+        this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(selectedLots1));
+      }
+      setTimeout(() => {
+      this.syncAllLotWeight();
+      }, 0);
+    } else if (this.ProductItem.value.skewkeyName === 'OIL') {
+      let selectedLots1 = [];
+      if (this.appCommonService.getSessionStorage('selectedPkgsArray')) {
+        selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
+        selectedLots1.forEach((item, index1) => {
+          for (let i = 0; i < item.length; i++) {
+            if (item[i].UniqueId === rowData.value.uniqueId) {
+              item.splice(i, 1);
+              i--;
+            }
+          }
+          if ( item.length <= 0) {
+            item.splice(index1, 1);
+          }
+        });
+        this.selectedPkgsArray.delete(rowData.value.uniqueId);
+        this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(selectedLots1));
+      }
+      setTimeout(() => {
+        this.syncAllPkgWeight();
+      }, 0);
     }
   }
 
-  addedQty_onChange(rowData, unassignedTqty) {
-
+  addedQty_onChange(rowData, unassignedTqty, index) {
     let assQty = 0;
     this.addtionAssignedQty = 0;
     this.tasksArr.controls.forEach((data) => {
-      assQty = Number(assQty ) + Number((data as FormGroup).controls['addedQty'].value);
+      assQty = Number(assQty) + Number((data as FormGroup).controls['addedQty'].value);
     });
     const employeeBox = (rowData as FormGroup).controls['addedQty'];
     if (assQty > unassignedTqty) {
+      this.addtionAssignedQty = assQty;
       setTimeout(() => {
         employeeBox.setErrors({ 'assignedQtyExceeded': true });
       }, 0);
-
     } else {
       this.tasksArr.controls.forEach((data) => {
-         (data as FormGroup).controls['addedQty'].setErrors(null);
+        (data as FormGroup).controls['addedQty'].updateValueAndValidity();
       });
       this.addtionAssignedQty = assQty;
     }
+
+    if (this.ProductItem.value.skewkeyName === 'BUD') {
+      let selectedLots1 = [];
+      if (this.appCommonService.getSessionStorage('selectedLotsArray')) {
+        selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
+        if (selectedLots1) {
+          selectedLots1.forEach((item, index1) => {
+            for (let i = 0; i < item.length; i++) {
+              if (item[i].UniqueId === rowData.value.uniqueId) {
+                item.splice(i, 1);
+                i--;
+              }
+            }
+            if ( item.length <= 0) {
+              item.splice(index1, 1);
+            }
+          });
+        }
+        this.selectedLotsArray.delete(rowData.value.uniqueId);
+        this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(selectedLots1));
+      }
+      setTimeout(() => {
+        this.syncAllLotWeight();
+        }, 0);
+    } else if (this.ProductItem.value.skewkeyName === 'OIL') {
+      let selectedLots1 = [];
+      if (this.appCommonService.getSessionStorage('selectedPkgsArray')) {
+        selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
+        selectedLots1.forEach((item, index1) => {
+          for (let i = 0; i < item.length; i++) {
+            if (item[i].UniqueId === rowData.value.uniqueId) {
+              item.splice(i, 1);
+              i--;
+            }
+          }
+          if ( item.length <= 0) {
+            item.splice(index1, 1);
+          }
+        });
+        this.selectedPkgsArray.delete(rowData.value.uniqueId);
+        this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(selectedLots1));
+      }
+    }
+    setTimeout(() => {
+    this.syncAllPkgWeight();
+  }, 0);
   }
 
   // OIl
@@ -715,43 +798,24 @@ export class PkgAllocateEmployeeComponent implements OnInit {
 
     if (rowData.value.actiontype === 'AddToCurrentTask') {
       const employeeBox = (rowData as FormGroup).controls['addedQty'];
-      const validators = !rowData.value.addedQty ? Validators.compose([Validators.required]) : null;
+      const validators = !rowData.value.addedQty ? Validators.compose([Validators.required , rowData.value.taskId <= 0 ? Validators.min(1) : null]) : null;
       employeeBox.setValidators(validators);
       employeeBox.updateValueAndValidity();
     } else if (rowData.value.actiontype === 'CreateTask') {
-    const employeeBox = (rowData as FormGroup).controls['assignedQty'];
-    const validators = !rowData.value.assignedQty ? Validators.compose([Validators.required]) : null;
-    employeeBox.setValidators(validators);
-    employeeBox.updateValueAndValidity();
-  }
+      const employeeBox = (rowData as FormGroup).controls['assignedQty'];
+      const validators = !rowData.value.assignedQty ? Validators.compose([Validators.required , rowData.value.taskId <= 0 ? Validators.min(1) : null]) : null;
+      employeeBox.setValidators(validators);
+      employeeBox.updateValueAndValidity();
+    }
     this.selPkgBrandStrainRow.RequireWt = 0;
     if (rowData.value.actiontype === 'AddToCurrentTask') {
-    const totalPkgWt = Number(rowData.value.addedQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
-    this.selPkgBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
-    // this.selLotBrandStrainRow.combinationTotalAssignedWt = rowData.value.addedQty;
+      const totalPkgWt = Number(rowData.value.addedQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
+      this.selPkgBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
+      // this.selLotBrandStrainRow.combinationTotalAssignedWt = rowData.value.addedQty;
     } else if (rowData.value.actiontype === 'CreateTask') {
       const totalPkgWt = Number(rowData.value.assignedQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
       this.selPkgBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
-      // this.selLotBrandStrainRow.combinationTotalAssignedWt = rowData.value.assignedQty;
     }
-    // this.selPkgBrandStrainRow.ProductTypeId = parentRowData.value.productType
-
-
-    // this.oilOrderPackets.value.forEach(result => {
-    //   let totalPkgWt = 0;
-    //   if (this.taskId && this.taskId > 0) {
-    //     if ((result.strainid === StrainId  || result.geneticsId === GeneticsId) && Number(result.assignPackageWt) > 0) {
-    //       totalPkgWt = Number(result.assignPackageWt) * Number(result.packageunit);
-    //         this.selPkgBrandStrainRow.combinationTotalAssignedWt += Number(totalPkgWt);
-    //     }
-    //   } else {
-    //     if ((result.strainid === StrainId) && Number(result.assignPackageWt) > 0) {
-    //       totalPkgWt = Number(result.assignPackageWt) * Number(result.packageunit);
-    //         this.selPkgBrandStrainRow.combinationTotalAssignedWt += Number(totalPkgWt);
-    //     }
-    //   }
-    // });
-
     this.syncAllPkgWeight();
     this.showPkgSelectionModel = true;
   }
@@ -773,30 +837,23 @@ export class PkgAllocateEmployeeComponent implements OnInit {
         if (pkgRowDetails.length) {
           const pkgWt = pkgRowDetails[0].SelectedWt;
           previousWt = pkgWt;
-            checkbox = pkgRowDetails[0].Selected;
-            // answerbox = pkgRowDetails[0].Selected
-            // ? [pkgWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-            // : null;
-            answerbox = [pkgWt, Validators.compose([ Validators.max(question.AvailableWt)])];
+          checkbox = pkgRowDetails[0].Selected;
+          answerbox = [pkgWt, Validators.compose([Validators.max(question.AvailableWt)])];
         } else {
           checkbox = question.selected;
-          // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-          //   : null;
           answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
         }
       } else {
         checkbox = question.selected;
-        // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-        //   : null;
         answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
       }
-        return fb.group({
-          questionNumber: index, question: checkbox, OilPkgCode: question.OilPkgCode,
-          TPPkgTypeName: question.TPPkgTypeName, answer: answerbox,
-          AvailWt: question.AvailableWt,  previousValue: previousWt || 0,
-          StrainId: question.StrainId, StrainName: question.StrainName, GeneticsId: question.GeneticsId, GeneticsName: question.GeneticsName,
-          OilPkgId: question.OilPkgId
-        });
+      return fb.group({
+        questionNumber: index, question: checkbox, OilPkgCode: question.OilPkgCode,
+        TPPkgTypeName: question.TPPkgTypeName, answer: answerbox,
+        AvailWt: question.AvailableWt, previousValue: previousWt || 0,
+        StrainId: question.StrainId, StrainName: question.StrainName, GeneticsId: question.GeneticsId, GeneticsName: question.GeneticsName,
+        OilPkgId: question.OilPkgId
+      });
     };
   }
 
@@ -806,24 +863,24 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     let loMaxWtFlag = false;
 
     if (this.questionPkgForm.valid) {
-      // In edit mode, skip this validation on submit and checking this validations on update tasks
-      /// condition added by Devdan :: 23-Nov-2018
-        form.value.pkgQuestions.forEach(result => {
-          totalPkgWt +=  Number(result.answer) ? Number(result.answer) : 0;
+      form.value.pkgQuestions.forEach(result => {
+        totalPkgWt += Number(result.answer) ? Number(result.answer) : 0;
+      });
+      if (totalPkgWt !== Number(this.selPkgBrandStrainRow.combinationTotalAssignedWt)) {
+        this.msgs = [];
+        this.msgs.push({
+          severity: 'warn', summary: this.globalResource.applicationmsg,
+          detail: 'Sum of all pkg weight is not equal to total assigned weight.'
         });
-        if (totalPkgWt !== Number(this.selPkgBrandStrainRow.combinationTotalAssignedWt)) {
-          this.msgs = [];
-          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg,
-            detail: 'Sum of all pkg weight is not equal to total assigned weight.' });
-          return;
-        }
+        return;
+      }
 
       form.value.pkgQuestions.forEach((result, index) => {
-          if (result.answer > 0) {
+        if (result.answer > 0) {
           let totalSelectedOilPkgWt = 0;
           this.selectedPkgsArray.forEach(result1 => {
             result1.forEach(result3 => {
-              if (result3.OilPkgId ===  result.OilPkgId ) {
+              if (result3.OilPkgId === result.OilPkgId) {
                 totalSelectedOilPkgWt += Number(result3.SelectedWt);
               }
             });
@@ -833,16 +890,18 @@ export class PkgAllocateEmployeeComponent implements OnInit {
           } else {
             totalSelectedOilPkgWt = Number(result.answer);
           }
-          if (Number(totalSelectedOilPkgWt) > result.AvailWt ) {
-                const answerBox = (this.questionForm.get('pkgQuestions.' + index) as FormGroup).controls['answer'];
+          if (Number(totalSelectedOilPkgWt) > result.AvailWt) {
+            const answerBox = (this.questionForm.get('pkgQuestions.' + index) as FormGroup).controls['answer'];
 
-                (answerBox as FormControl).setErrors({ 'oilpkgmaxwtexceeded': true });
+            (answerBox as FormControl).setErrors({ 'oilpkgmaxwtexceeded': true });
 
-                loMaxWtFlag = true;
-                this.msgs = [];
-                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg,
-                  detail: (Number(result.AvailWt) - Number(totalSelectedOilPkgWt)) + ' (gms) weight available for oil pkg ' + result.OilPkgCode });
-                  return;
+            loMaxWtFlag = true;
+            this.msgs = [];
+            this.msgs.push({
+              severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail: (Number(result.AvailWt) - Number(totalSelectedOilPkgWt)) + ' (gms) weight available for oil pkg ' + result.OilPkgCode
+            });
+            return;
           }
           pkgDetails.push(
             {
@@ -856,7 +915,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
               StrainId: result.StrainId,
               BrandId: this.selPkgBrandStrainRow.BrandId,
               ProductTypeId: this.selPkgBrandStrainRow.ProductTypeId,
-              GeneticsId:  this.selPkgBrandStrainRow.GeneticsId,
+              GeneticsId: this.selPkgBrandStrainRow.GeneticsId,
               UniqueId: this.selPkgBrandStrainRow.UniqueId,
             }
           );
@@ -871,17 +930,20 @@ export class PkgAllocateEmployeeComponent implements OnInit {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
         pkgDetails.forEach((item, index) => {
           selectedLots1.forEach((item1, index1) => {
+            if (item1.length > 0) {
             item1.forEach((p, index2) => {
               if (p.UniqueId === item.UniqueId && p.OilPkgId === item.OilPkgId) {
                 item1.splice(index2, 1);
-                // (index2);
                 item1.push(item);
               } else {
-                if (item1.filter(r => r.UniqueId === item.UniqueId && r.OilPkgId === item.OilPkgId ).length <= 0) {
+                if (item1.filter(r => r.UniqueId === item.UniqueId && r.OilPkgId === item.OilPkgId).length <= 0) {
                   item1.push(item);
                 }
               }
             });
+          } else {
+            item1.push(item);
+          }
           });
         });
         this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(selectedLots1));
@@ -894,24 +956,38 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     }
   }
 
-  deletePkgItem(taskIndex) {
+  deletePkgItem(taskIndex, rowData) {
     const controla = <FormArray>this.ProductItem.get('tasksArr');
     if (controla.length !== 1) {
-      const con =  (controla.controls[taskIndex] as FormGroup);
+      const con = (controla.controls[taskIndex] as FormGroup);
       if (this.appCommonService.getSessionStorage('selectedPkgsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
-          selectedLots1.forEach((item1, index1) => {
-          for ( let i = 0; i < item1.length; i++) {
-            if ( item1[i].UniqueId === con.value.uniqueId) {
+        selectedLots1.forEach((item1, index1) => {
+          for (let i = 0; i < item1.length; i++) {
+            if (item1[i].UniqueId === con.value.uniqueId) {
               item1.splice(i, 1);
-              i -- ;
+              i--;
             }
-         }
-      });
-      this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(selectedLots1));
+          }
+          if ( item1.length <= 0) {
+            item1.splice(index1, 1);
+          }
+        });
+        this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(selectedLots1));
       }
       controla.removeAt(taskIndex);
     }
+    this.addtionAssignedQty = 0;
+    let assQty = 0;
+    this.tasksArr.controls.forEach((data) => {
+      if (rowData.value.actiontype === 'AddToCurrentTask') {
+        assQty = Number(assQty) + Number((data as FormGroup).controls['addedQty'].value);
+      }
+      if (rowData.value.actiontype === 'CreateTask') {
+      assQty = Number(assQty) + Number((data as FormGroup).controls['assignedQty'].value);
+      }
+    });
+    this.addtionAssignedQty = assQty;
   }
 
   syncAllPkgWeight() {
@@ -939,20 +1015,16 @@ export class PkgAllocateEmployeeComponent implements OnInit {
   pkgWeightOnChange(rowItem) {
     let updatedWt = 0;
     if (this.lotSyncWtPkgArr.has(rowItem.value.OilPkgId)) {
-
       updatedWt = (Number(this.lotSyncWtPkgArr.get(rowItem.value.OilPkgId)) + Number(rowItem.value.previousValue))
         - Number(rowItem.value.answer);
-
       if (updatedWt <= 0) { updatedWt = 0; }
       this.lotSyncWtPkgArr.set(rowItem.value.OilPkgId, updatedWt);
-
       rowItem.controls['previousValue'].patchValue(rowItem.value.answer);
     } else {
       updatedWt = Number(rowItem.value.AvailWt) - Number(rowItem.value.answer);
 
       if (updatedWt <= 0) { updatedWt = 0; }
       this.lotSyncWtPkgArr.set(rowItem.value.OilPkgId, updatedWt);
-
       rowItem.controls['previousValue'].patchValue(rowItem.value.answer);
     }
   }

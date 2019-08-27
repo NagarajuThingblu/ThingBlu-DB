@@ -335,23 +335,12 @@ export class ChangeOrderComponent implements OnInit {
     this.showProductInfoModel = true;
   }
 
-  onSubmit () {
-
+  onSubmit() {
     if (this.changeOrderForm.valid) {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to proceed?',
-      header: 'Confirmation',
-      icon: 'fa fa-exclamation-triangle',
-      accept: () => {
-         this.saveChangeOrder (this.changeOrderForm);
-      },
-      reject: () => {
-        // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
-      }
-    });
-  } else {
-    this.appCommonService.validateAllFields(this.changeOrderForm);
-  }
+      this.saveChangeOrder(this.changeOrderForm);
+    } else {
+      this.appCommonService.validateAllFields(this.changeOrderForm);
+    }
   }
 
   onIgnoreOrderChange () {
@@ -368,14 +357,17 @@ export class ChangeOrderComponent implements OnInit {
     });
   }
 
-  saveChangeOrder (model) {
+  saveChangeOrder(model) {
+    let HasError = false;
+    // tslint:disable-next-line:prefer-const
+    let SubstractionTaskListValidation = [];
     const draftOrderApi: any = {
       ChangeOrderDetails: {
-        OrderId:  this.changeOrderForm.value.orderId,
-        IncomingOrderId:  this.changeOrderForm.value.incomingOrderId,
+        OrderId: this.changeOrderForm.value.orderId,
+        IncomingOrderId: this.changeOrderForm.value.incomingOrderId,
         ClientId: this.appCommonService.getUserProfile().ClientId,
         VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
-        RetailerId:  this.changeOrderForm.value.retailerId,
+        RetailerId: this.changeOrderForm.value.retailerId,
         DeliveryDate: new Date(this.changeOrderForm.value.deliveryDate).toLocaleDateString().replace(/\u200E/g, ''),
       },
       OrderAdditionDetails: [],
@@ -390,226 +382,378 @@ export class ChangeOrderComponent implements OnInit {
       SubsractionJointPkgDetails: [],
       SubstractionJointPkgMixDetails: []
     };
-           const AddArray = (this.changeOrderForm.controls['productAdditionArr'] as FormArray);
-           AddArray.controls.forEach((item, index) => {
-             const control = (item as FormGroup);
-             draftOrderApi.OrderAdditionDetails.push({
-              OrderId: this.changeOrderForm.value.orderId,
-              OrderItemId   : control.value.orderItemId,
-              ProductTypeId : control.value.productType,
-              ActionType     : control.value.taskAction,
-              IndexCode     : index
-           });
-          });
-
-          AddArray.controls.forEach((item, index) => {
-            const control = (item as FormGroup);
-            const taskArraycontrols = <FormArray>control.get('tasksArr');
-            taskArraycontrols.controls.forEach((task, index1) => {
-              draftOrderApi.AdditionTaskList.push({
-                          TaskId      : task.value.taskId,
-                          OrderItemId : item.value.orderItemId,
-                          SkewKeyName : item.value.skewkeyName,
-                          ProductTypeId: item.value.productType,
-                          TaskTypeId  : task.value.taskType ,
-                          TaskStatus  : task.value.taskStatus ,
-                          EmpId       : task.value.employee ,
-                          AssignedQty : task.value.assignedQty,
-                          AddedQty    : task.value.addedQty ,
-                          PkgTypeId   : task.value.pkgType ,
-                          ActionType  : task.value.actiontype ,
-                          UniqueId    : task.value.uniqueId,
-                          IndexCode     : index
-              });
-            });
-         });
-
-          const subArray = (this.changeOrderForm.controls['productSubstractionArr'] as FormArray);
-          subArray.controls.forEach((item, index) => {
-            const control = (item as FormGroup);
-            draftOrderApi.OrderSubstractionDetails.push({
-             OrderId: this.changeOrderForm.value.orderId,
-             OrderItemId   : control.value.orderItemId,
-             ProductTypeId : control.value.productType,
-             ActionType     : control.value.taskAction,
-             IndexCode     : index
-          });
-         });
-
-          subArray.controls.forEach((item, index) => {
-            const control = (item as FormGroup);
-            const taskArraycontrols = <FormArray>control.get('tasksArr');
-            taskArraycontrols.controls.forEach((task, index1) => {
-              draftOrderApi.SubstractionTaskList.push({
-                TaskId: task.value.taskId,
-                OrderItemId : item.value.orderItemId,
-                SkewKeyName : item.value.skewkeyName,
-                ProductTypeId: item.value.productType,
-                TaskTypeId: task.value.taskType,
-                TaskStatus: task.value.taskStatus,
-                EmpId: task.value.employee,
-                AssignedQty: task.value.assignedQty,
-                ReleasedQty: task.value.releaseQty,
-                PkgTypeId: task.value.pkgType,
-                ActionType: task.value.actiontype,
-                UniqueId: task.value.uniqueId,
-                IndexCode     : index
-              });
-            });
-          });
-
-         const noActionArray = (this.changeOrderForm.controls['productNoActionArr'] as FormArray);
-         noActionArray.controls.forEach((item, index) => {
-           const control = (item as FormGroup);
-           draftOrderApi.OrderNoActionDetails.push({
-            OrderId: this.changeOrderForm.value.orderId,
-            OrderItemId   : control.value.orderItemId,
-            SkewKeyName : item.value.skewkeyName,
-            ProductTypeId : control.value.productType,
-            ActionType     : control.value.taskAction,
-            IndexCode     : index
-         });
+    const AddArray = (this.changeOrderForm.controls['productAdditionArr'] as FormArray);
+    AddArray.controls.forEach((item, index) => {
+      const control = (item as FormGroup);
+      draftOrderApi.OrderAdditionDetails.push({
+        OrderId: this.changeOrderForm.value.orderId,
+        OrderItemId: control.value.orderItemId,
+        ProductTypeId: control.value.productType,
+        ActionType: control.value.taskAction,
+        IndexCode: index
+      });
+    });
+    AddArray.controls.forEach((item, index) => {
+      const control = (item as FormGroup);
+      const taskArraycontrols = <FormArray>control.get('tasksArr');
+      taskArraycontrols.controls.forEach((task, index1) => {
+        if ((task.value.actiontype === 'CreateTask' && Number(task.value.assignedQty) > 0 )
+              ||
+            (task.value.actiontype === 'AddToCurrentTask' && Number(task.value.addedQty) > 0 )) {
+        draftOrderApi.AdditionTaskList.push({
+          TaskId: task.value.taskId,
+          OrderItemId: item.value.orderItemId,
+          SkewKeyName: item.value.skewkeyName,
+          ProductTypeId: item.value.productType,
+          TaskTypeId: task.value.taskType,
+          TaskStatus: task.value.taskStatus,
+          EmpId: task.value.employee,
+          AssignedQty: task.value.assignedQty,
+          AddedQty: task.value.addedQty,
+          PkgTypeId: task.value.pkgType,
+          ActionType: task.value.actiontype,
+          UniqueId: task.value.uniqueId,
+          IndexCode: index
         });
+      }
+      });
+    });
 
-        let AddlotDetails = null;
-        AddlotDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
-        if (AddlotDetails !== null) {
-          AddlotDetails
-            .forEach((item, index) => {
-              if (item !== null && item.length) {
-                // tslint:disable-next-line:no-shadowed-variable
-                item.forEach((element, lotIndex) => {
-                  draftOrderApi.AddtionLotDetails.push(
-                    {
-                      LotId: element.LotNo,
-                      Weight: element.SelectedWt,
-                      ProductTypeId: element.ProductTypeId,
-                      UniqueId: element.UniqueId,
-                      IndexCode     : index
-                    }
-                  );
+    const subArray = (this.changeOrderForm.controls['productSubstractionArr'] as FormArray);
+    subArray.controls.forEach((item, index) => {
+      const control = (item as FormGroup);
+      draftOrderApi.OrderSubstractionDetails.push({
+        OrderId: this.changeOrderForm.value.orderId,
+        OrderItemId: control.value.orderItemId,
+        ProductTypeId: control.value.productType,
+        ActionType: control.value.taskAction,
+        IndexCode: index
+      });
+    });
+
+    subArray.controls.forEach((item, index) => {
+      const control = (item as FormGroup);
+      const taskArraycontrols = <FormArray>control.get('tasksArr');
+      taskArraycontrols.controls.forEach((task, index1) => {
+        if (Number(task.value.releaseQty) > 0) {
+          draftOrderApi.SubstractionTaskList.push({
+          TaskId: task.value.taskId,
+          OrderItemId: item.value.orderItemId,
+          SkewKeyName: item.value.skewkeyName,
+          ProductTypeId: item.value.productType,
+          TaskTypeId: task.value.taskType,
+          TaskStatus: task.value.taskStatus,
+          EmpId: task.value.employee,
+          AssignedQty: task.value.assignedQty,
+          ReleasedQty: task.value.releaseQty,
+          PkgTypeId: task.value.pkgType,
+          ActionType: task.value.actiontype,
+          UniqueId: task.value.uniqueId,
+          IndexCode: index
+        });
+      }
+
+      SubstractionTaskListValidation.push({
+        TaskId: task.value.taskId,
+        OrderItemId: item.value.orderItemId,
+        SkewKeyName: item.value.skewkeyName,
+        ProductTypeId: item.value.productType,
+        TaskTypeId: task.value.taskType,
+        TaskStatus: task.value.taskStatus,
+        EmpId: task.value.employee,
+        AssignedQty: task.value.assignedQty,
+        ReleasedQty: task.value.releaseQty,
+        PkgTypeId: task.value.pkgType,
+        ActionType: task.value.actiontype,
+        UniqueId: task.value.uniqueId,
+        IndexCode: index
+      });
+      });
+    });
+
+    const noActionArray = (this.changeOrderForm.controls['productNoActionArr'] as FormArray);
+    noActionArray.controls.forEach((item, index) => {
+      const control = (item as FormGroup);
+      draftOrderApi.OrderNoActionDetails.push({
+        OrderId: this.changeOrderForm.value.orderId,
+        OrderItemId: control.value.orderItemId,
+        SkewKeyName: item.value.skewkeyName,
+        ProductTypeId: control.value.productType,
+        ActionType: control.value.taskAction,
+        IndexCode: index
+      });
+    });
+
+    let AddlotDetails = null;
+    AddlotDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
+    if (AddlotDetails !== null) {
+      AddlotDetails
+        .forEach((item, index) => {
+          if (item !== null && item.length) {
+            // tslint:disable-next-line:no-shadowed-variable
+            item.forEach((element, lotIndex) => {
+              if (Number(element.SelectedWt) > 0) {
+              draftOrderApi.AddtionLotDetails.push(
+                {
+                  LotId: element.LotNo,
+                  Weight: element.SelectedWt,
+                  ProductTypeId: element.ProductTypeId,
+                  UniqueId: element.UniqueId,
+                  IndexCode: index
+                } );
+              }
+            });
+          }
+        });
+    }
+
+    let AddPkgDetails = null;
+    AddPkgDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
+    if (AddPkgDetails !== null) {
+      AddPkgDetails
+        .forEach((item, index) => {
+          if (item !== null && item.length) {
+            // tslint:disable-next-line:no-shadowed-variable
+            item.forEach((element, lotIndex) => {
+              if (Number(element.SelectedWt) > 0) {
+              draftOrderApi.AdditionPkgDetails.push(
+                {
+                  StrainId: element.StrainId,
+                  OilPkgId: element.OilPkgId,
+                  Weight: element.SelectedWt,
+                  ProductTypeId: element.ProductTypeId,
+                  UniqueId: element.UniqueId,
+                  IndexCode: index
                 });
               }
             });
-        }
-debugger;
-        let AddPkgDetails = null;
-        AddPkgDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
-        if (AddPkgDetails !== null) {
-          AddPkgDetails
-            .forEach((item, index) => {
-              if (item !== null && item.length) {
-                // tslint:disable-next-line:no-shadowed-variable
-                item.forEach((element, lotIndex) => {
-                  draftOrderApi.AdditionPkgDetails.push(
-                    {
-                      StrainId: element.StrainId,
-                      OilPkgId: element.OilPkgId,
-                      Weight: element.SelectedWt,
-                      ProductTypeId: element.ProductTypeId,
-                      UniqueId: element.UniqueId,
-                      IndexCode     : index
-                    }
-                  );
+          }
+        });
+    }
+
+    let subLotDetails = null;
+    subLotDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
+    if (subLotDetails !== null) {
+      subLotDetails
+        .forEach((item, index) => {
+          if (item !== null && item.length) {
+            // tslint:disable-next-line:no-shadowed-variable
+            item.forEach((element, lotIndex) => {
+              if (Number(element.SelectedWt) > 0) {
+              draftOrderApi.SubstractionLotDetails.push(
+                {
+                  LotId: element.LotNo,
+                  Weight: element.SelectedWt,
+                  ProductTypeId: element.ProductTypeId,
+                  UniqueId: element.UniqueId,
+                  IndexCode: index
                 });
               }
             });
-        }
+          }
+        });
+    }
 
-        let subLotDetails = null;
-        subLotDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
-        if (subLotDetails !== null) {
-          subLotDetails
-            .forEach((item, index) => {
-              if (item !== null && item.length) {
-                // tslint:disable-next-line:no-shadowed-variable
-                item.forEach((element, lotIndex) => {
-                  draftOrderApi.SubstractionLotDetails.push(
-                    {
-                      LotId: element.LotNo,
-                      Weight: element.SelectedWt,
-                      ProductTypeId: element.ProductTypeId,
-                      UniqueId: element.UniqueId,
-                      IndexCode     : index
-                    }
-                  );
+    let subPkgDetails = null;
+    subPkgDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedReleasePkgsArray'));
+    if (subPkgDetails !== null) {
+      subPkgDetails
+        .forEach((item, index) => {
+          if (item !== null && item.length) {
+            // tslint:disable-next-line:no-shadowed-variable
+            item.forEach((element, lotIndex) => {
+              if (Number(element.SelectedWt) > 0) {
+              draftOrderApi.SubstractionPkgDetails.push(
+                {
+                  StrainId: element.StrainId,
+                  OilPkgId: element.OilPkgId,
+                  Weight: element.SelectedWt,
+                  ProductTypeId: element.ProductTypeId,
+                  UniqueId: element.UniqueId,
+                  IndexCode: index
                 });
               }
             });
-        }
+          }
+        });
+    }
 
-        let subPkgDetails = null;
-        subPkgDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedReleasePkgsArray'));
-        if (subPkgDetails !== null) {
-          subPkgDetails
-            .forEach((item, index) => {
-              if (item !== null && item.length) {
-                // tslint:disable-next-line:no-shadowed-variable
-                item.forEach((element, lotIndex) => {
-                  draftOrderApi.SubstractionPkgDetails.push(
-                    {
-                      StrainId: element.StrainId,
-                      OilPkgId:   element.OilPkgId,
-                      Weight:     element.SelectedWt,
-                      ProductTypeId: element.ProductTypeId,
-                      UniqueId:   element.UniqueId,
-                      IndexCode: index
-                    }
-                  );
+    let subJointPkgDetails = null;
+    subJointPkgDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray'));
+    if (subJointPkgDetails !== null) {
+      subJointPkgDetails
+        .forEach((item, index) => {
+          if (item !== null) {
+            // tslint:disable-next-line:no-shadowed-variable
+            item.lotDetails.forEach((element, lotIndex) => {
+              if (Number(element.SelectedQty) > 0) {
+              draftOrderApi.SubsractionJointPkgDetails.push(
+                {
+                  LotId: element.LotNo,
+                  ProductTypeId: element.ProductTypeId,
+                  StrainId: element.StrainId,
+                  PkgTypeId: element.PkgTypeId,
+                  UnitValue: element.UnitValue,
+                  ItemQty: element.ItemQty,
+                  Qty: element.SelectedQty,
+                  UniqueId: element.UniqueId,
+                  IndexCode: index
                 });
               }
             });
-        }
+          }
+        });
+    }
 
-        let subJointPkgDetails = null;
-        subJointPkgDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray'));
-        if (subJointPkgDetails !== null) {
-          subJointPkgDetails
-            .forEach((item, index) => {
-              if (item !== null) {
-                // tslint:disable-next-line:no-shadowed-variable
-                item.lotDetails.forEach((element, lotIndex) => {
-                  draftOrderApi.SubsractionJointPkgDetails.push(
-                    {
-                      LotId:      element.LotNo,
-                      ProductTypeId: element.ProductTypeId,
-                      StrainId: element.StrainId,
-                      PkgTypeId:  element.PkgTypeId,
-                      UnitValue:  element.UnitValue,
-                      ItemQty:    element.ItemQty,
-                      Qty:        element.SelectedQty,
-                      UniqueId:   element.UniqueId,
-                      IndexCode: index
-                    }
-                  );
-                });
-              }
+    let subJointMixPkgDetails = null;
+    subJointMixPkgDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray'));
+    if (subJointMixPkgDetails !== null) {
+      subJointMixPkgDetails
+        .forEach((item, index) => {
+          if (item !== null) {
+            // tslint:disable-next-line:no-shadowed-variable
+            item.mixPkgDetails.forEach((element, lotIndex) => {
+              draftOrderApi.SubstractionJointPkgMixDetails.push(
+                {
+                  MixPkgId: element.MixPkgId,
+                  ProductTypeId: element.ProductTypeId,
+                  Qty: element.SelectedQty,
+                  UniqueId: element.UniqueId,
+                  IndexCode: index
+                }
+              );
             });
-        }
+          }
+        });
+    }
 
-        let subJointMixPkgDetails = null;
-        subJointMixPkgDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray'));
-        if (subJointMixPkgDetails !== null) {
-          subJointMixPkgDetails
-            .forEach((item, index) => {
-              if (item !== null) {
-                // tslint:disable-next-line:no-shadowed-variable
-                item.mixPkgDetails.forEach((element, lotIndex) => {
-                  draftOrderApi.SubstractionJointPkgMixDetails.push(
-                    {
-                      MixPkgId: element.MixPkgId,
-                      ProductTypeId: element.ProductTypeId,
-                      Qty:        element.SelectedQty,
-                      UniqueId:   element.UniqueId,
-                      IndexCode: index
-                    }
-                  );
-                });
+    // * Addition task and his selected lots
+    draftOrderApi.AdditionTaskList.forEach(element => {
+      if (element) {
+        if (element.SkewKeyName === 'BUD') {
+          if (element.ActionType === 'CreateTask' || (element.ActionType === 'AddToCurrentTask' && element.AddedQty > 0)  ) {
+            if (draftOrderApi.AddtionLotDetails.length > 0) {
+              if (draftOrderApi.AddtionLotDetails.filter(item => item.UniqueId === element.UniqueId) <= 0) {
+                this.msgs = [];
+                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Lots.' });
+                HasError = true;
               }
-            });
+         } else {
+          this.msgs = [];
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Lots.' });
+          HasError = true;
+         }
         }
+        } else if (element.SkewKeyName === 'OIL') {
+          if (element.ActionType === 'CreateTask' || (element.ActionType === 'AddToCurrentTask' && element.AddedQty > 0)  ) {
+          if (draftOrderApi.AdditionPkgDetails.length > 0) {
+            if (draftOrderApi.AdditionPkgDetails.filter(item => item.UniqueId === element.UniqueId) <= 0) {
+              this.msgs = [];
+              this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Oil Packages.' });
+              HasError = true;
+            }
+       } else {
+        this.msgs = [];
+        this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Oil Packages.' });
+        HasError = true;
+       }
+      }
+      }
+     }
+    });
 
-        console.log(draftOrderApi);
+    // substraction task and Order Qty match validation
+    subArray.controls.forEach((item, index) => {
+      const control = (item as FormGroup);
+      let assignedQty = 0;
+      let releasedQty = 0;
+
+      if (SubstractionTaskListValidation.length > 0) {
+        const subsTask = SubstractionTaskListValidation.
+        filter(r => r.OrderItemId === control.value.orderItemId && control.value.productType === r.ProductTypeId );
+        if (subsTask.length > 0) {
+          subsTask.forEach(element => {
+            assignedQty = Number(assignedQty) + Number(element.AssignedQty);
+            releasedQty = Number(releasedQty) + Number(element.ReleasedQty);
+          });
+
+          if ( Math.abs(Number(control.value.orderedQty) - Number(assignedQty)) !== Number(releasedQty) ) {
+            this.msgs = [];
+            this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Assigned Qty exceeds Ordered Qty.' });
+            HasError = true;
+            return;
+          }
+        }
+      }
+    });
+
+     // * Substraction task and his selected lots
+    draftOrderApi.SubstractionTaskList.forEach(element => {
+      if (element) {
+        if (element.SkewKeyName === 'BUD') {
+          if (element.ActionType === 'ReleaseMaterial' && element.ReleasedQty > 0) {
+            if (draftOrderApi.SubstractionLotDetails.length > 0) {
+              if (draftOrderApi.SubstractionLotDetails.filter(item => item.UniqueId === element.UniqueId) <= 0) {
+                this.msgs = [];
+                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Lots.' });
+                HasError = true;
+              }
+            } else {
+              this.msgs = [];
+              this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Lots.' });
+              HasError = true;
+            }
+          }
+        } else if (element.SkewKeyName === 'JOINTS') {
+          if (element.ActionType === 'ReleaseMaterial' && element.ReleasedQty > 0) {
+            if (draftOrderApi.SubsractionJointPkgDetails.length > 0) {
+              if (draftOrderApi.SubsractionJointPkgDetails.filter(item => item.UniqueId === element.UniqueId) <= 0) {
+                this.msgs = [];
+                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Oil Packages.' });
+                HasError = true;
+              }
+            } else {
+              this.msgs = [];
+              this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Oil Packages.' });
+              HasError = true;
+            }
+            if (HasError && draftOrderApi.SubstractionJointPkgMixDetails.length > 0) {
+              if (draftOrderApi.SubstractionJointPkgMixDetails.filter(item => item.UniqueId === element.UniqueId) <= 0) {
+                this.msgs = [];
+                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Oil Packages.' });
+                HasError = true;
+              } else {
+                HasError = false;
+              }
+            }
+          }
+        } else if (element.SkewKeyName === 'OIL') {
+          if (element.ActionType === 'ReleaseMaterial' && element.ReleasedQty > 0) {
+            if (draftOrderApi.SubstractionPkgDetails.length > 0) {
+              if (draftOrderApi.SubstractionPkgDetails.filter(item => item.UniqueId === element.UniqueId) <= 0) {
+                this.msgs = [];
+                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Oil Packages.' });
+                HasError = true;
+              }
+            } else {
+              this.msgs = [];
+              this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Oil Packages.' });
+              HasError = true;
+            }
+          }
+        }
+      }
+    });
+
+    if (HasError) {
+      return;
+    } else {
+    console.log(draftOrderApi);
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to proceed?',
+      header: 'Confirmation',
+      icon: 'fa fa-exclamation-triangle',
+      accept: () => {
         this.loaderService.display(true);
         this.httpMethodsService.post('api/Order/ChangeOrderAddUpdate', draftOrderApi)
           .subscribe((result: any) => {
@@ -634,6 +778,11 @@ debugger;
               this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
               this.loaderService.display(false);
             });
+      },
+      reject: () => {
+      }
+    });
+  }
   }
 }
 

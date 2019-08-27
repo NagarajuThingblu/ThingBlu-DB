@@ -74,23 +74,23 @@
                   <span *ngIf="ProductItem.value.skewkeyName === 'OIL'">
                     <span
                       *ngIf="taskArrayItem.value.isSameLot && taskArrayItem.controls['releaseQty'].value > 0 ; else taskSelectLot123_content">
-                      Same Lot
+                      Same Pkg
                     </span>
                     <ng-template #taskSelectLot123_content>
-                      <span *ngIf="taskArrayItem.controls['releaseQty'].value > 0 ; else taskSelectLotProductItem_content">
-                        <a class="btn-link anchor" [class.clsLotSelected]="selectedPkgsArray[i]?.length" [routerLink]=""
+                      <span *ngIf="taskArrayItem.controls['releaseQty'].value > 0  && (absValue(ProductItem.value.orderedQty - ProductItem.value.totalAssignedQty) - addtionAssignedQty ) >= 0  ; else taskSelectLotProductItem_content">
+                        <a class="btn-link anchor" [class.clsLotSelected]="selectedPkgsArray.get(taskArrayItem.value.uniqueId)?.length > 0" [routerLink]=""
                           (click)="openPkgSelection(ProductItem, taskArrayItem, i)">
-                          <span *ngIf="!selectedPkgsArray[i]?.length">
-                            Select Lots
+                          <span *ngIf="selectedPkgsArray.get(taskArrayItem.value.uniqueId)?.length <= 0">
+                            Select Pkgs
                           </span>
-                          <span *ngIf="selectedPkgsArray[i]?.length">
-                            View/Change Lots
+                          <span *ngIf="selectedPkgsArray.get(taskArrayItem.value.uniqueId)?.length > 0">
+                            View/Change Pkgs
                           </span>
                         </a>
                       </span>
                       <ng-template #taskSelectLotProductItem_content>
                         <div>
-                          Select Lots
+                          Select Pkgs
                         </div>
                       </ng-template>
                     </ng-template>
@@ -99,11 +99,11 @@
                   <!-- BUD -->
                   <span *ngIf="ProductItem.value.skewkeyName === 'BUD'">
                     <span
-                      *ngIf="taskArrayItem.value.isSameLot && taskArrayItem.controls['releaseQty'].value > 0 ; else taskSelectLot12_content">
+                      *ngIf="taskArrayItem.value.isSameLot && taskArrayItem.controls['releaseQty'].value > 0   ; else taskSelectLot12_content">
                       Same Lot
                     </span>
                     <ng-template #taskSelectLot12_content>
-                      <span *ngIf="  taskArrayItem.controls['releaseQty'].value > 0 ; else taskSelectLot1_content">
+                      <span *ngIf="  taskArrayItem.controls['releaseQty'].value > 0  && (absValue(ProductItem.value.orderedQty - ProductItem.value.totalAssignedQty) - addtionAssignedQty ) >= 0  ; else taskSelectLot1_content">
                         <a class="btn-link anchor"
                           [class.clsLotSelected]="selectedLotsArray.get(taskArrayItem.value.uniqueId)?.length > 0" [routerLink]=""
                           (click)="openLotSelection(ProductItem, taskArrayItem, i)">
@@ -124,22 +124,22 @@
                   </span>
 
                   <!-- Joints -->
-
+ 
                   <span *ngIf="ProductItem.value.skewkeyName === 'JOINTS'">
                     <span
-                      *ngIf="taskArrayItem.value.isSameLot && taskArrayItem.controls['releaseQty'].value > 0 ; else taskSelectLotjoint12_content">
-                      Same Lot
+                      *ngIf="taskArrayItem.value.isSameLot && taskArrayItem.controls['releaseQty'].value > 0    ; else taskSelectLotjoint12_content">
+                      Same Pkg
                     </span>
                     <ng-template #taskSelectLotjoint12_content>
-                      <span *ngIf="  taskArrayItem.controls['releaseQty'].value > 0 ; else taskSelectLotjoint1_content">
+                      <span *ngIf="  taskArrayItem.controls['releaseQty'].value > 0  ; else taskSelectLotjoint1_content">
                         <a class="btn-link anchor"
-                          [class.clsLotSelected]="selectedLotsArray.get(taskArrayItem.value.uniqueId)?.length > 0" [routerLink]=""
+                          [class.clsLotSelected]="selectedJointPkgArray.get(taskArrayItem.value.uniqueId)?.lotDetails.length > 0 || selectedJointPkgArray.get(taskArrayItem.value.uniqueId)?.mixPkgDetails.length > 0" [routerLink]=""
                           (click)="openjointLotSelection(ProductItem, taskArrayItem, i)">
-                          <span *ngIf="selectedLotsArray.get(taskArrayItem.value.uniqueId)?.length <= 0">
-                            Select Lots
+                          <span *ngIf="selectedJointPkgArray.get(taskArrayItem.value.uniqueId)?.lotDetails.length <= 0 && selectedJointPkgArray.get(taskArrayItem.value.uniqueId)?.mixPkgDetails.length <= 0">
+                            Select Pkgs
                           </span>
-                          <span *ngIf="selectedLotsArray.get(taskArrayItem.value.uniqueId)?.length > 0">
-                            View/Change Lots
+                          <span *ngIf="selectedJointPkgArray.get(taskArrayItem.value.uniqueId)?.lotDetails.length > 0 || selectedJointPkgArray.get(taskArrayItem.value.uniqueId)?.mixPkgDetails.length > 0">
+                            View/Change Pkgs
                           </span>
                         </a>
                       </span>
@@ -175,15 +175,10 @@
     </div>
   </div>
 
-
-
   <p-dialog header="Select Lots" [(visible)]="showLotSelectionModel" modal="modal" [resizable]="true"
     [responsive]="true" [width]="600" [minWidth]="300" [blockScroll]="true">
-
     <form [formGroup]="questionForm" (ngSubmit)="submit(questionForm)" formSubmit>
-
       <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-
         <div class="ui-g">
           <div class="ui-g-12 ui-md-6">
             <label>
@@ -197,14 +192,16 @@
 
           <div class="ui-g-12 ui-md-6">
             <label>
-              <strong>Release Weight:</strong>
+                <span *ngIf = "!isCompletedOrReviewTask"> <strong>Release Weight:</strong></span>
+                <span *ngIf = "isCompletedOrReviewTask"><strong>Release Qty:</strong></span>
+              
             </label>
-
             <label>
-              {{ selLotBrandStrainRow?.combinationTotalAssignedWt }} {{globalResource.measure}}
+                <span *ngIf = "!isCompletedOrReviewTask">{{ selLotBrandStrainRow?.combinationTotalAssignedWt }} {{globalResource.measure}} </span>
+                <span *ngIf = "isCompletedOrReviewTask">{{ selLotBrandStrainRow?.combinationTotalAssignedWt }} </span>
+              
             </label>
           </div>
-
         </div>
         <div formArrayName="questions">
           <p-table [value]="questions?.controls" id="tblLotSelection">
@@ -212,43 +209,28 @@
               <tr>
                 <th style="width:150px">{{globalResource.strain}}</th>
                 <th style="width:170px">{{globalResource.lotno}}</th>
-                <th style="width:33.33333333%">Assigned Wt</th>
-                <th style="width:33.33333333%">Release Wt</th>
+                <th style="width:33.33333333%">
+                   <span *ngIf = "!isCompletedOrReviewTask"> Assigned Wt</span>
+                   <span *ngIf = "isCompletedOrReviewTask"> Assigned Qty </span></th>
+                <th style="width:33.33333333%">
+                  <span *ngIf = "!isCompletedOrReviewTask"> Release Wt</span>
+                  <span *ngIf = "isCompletedOrReviewTask"> Release Qty </span></th>
               </tr>
             </ng-template>
             <ng-template pTemplate="body" let-question let-i="rowIndex">
               <tr [formGroupName]="i">
                 <td style="width: 150px"> {{ brandStrainLots[i].StrainName  }}</td>
                 <td style="width: 170px">
-                  <!-- <p-checkbox
-                      label="{{ brandStrainLots[i].GrowerLotNo  }}"
-                      formControlName="question"
-                      (ngModelChange)="changeValidator($event, i)"
-                      binary="true"
-                    ></p-checkbox> -->
                   <label>{{ brandStrainLots[i].GrowerLotNo  }}</label>
-
                   <app-lot-comment [LotId]="question.value.LotNo" [LotCommentsCount]="brandStrainLots[i].LotNoteCount"
                     (CommentIconClicked)="commentIconClicked($event)"></app-lot-comment>
-
                   <app-lot-note-icon [LotId]="question.value.LotNo" (NoteIconClicked)="showLotNote($event)">
                   </app-lot-note-icon>
-
                 </td>
-
                 <td>
-
-                  {{ question.value.SelectedWt  }} {{globalResource.listgramunit}}
-                  <!-- <ng-container *ngIf="taskId && taskId > 0">
-                  
-                    {{ question.value.SelectedWt  }} {{globalResource.listgramunit}}
-                  </ng-container>
-
-                  <ng-container *ngIf="!taskId">
-                    {{ lotSyncWtArr.has(brandStrainLots[i].LotId) 
-                        ? getLotSyncWt(brandStrainLots[i].LotId)
-                        :  question.value.AvailWt }} {{globalResource.listgramunit}}
-                  </ng-container> -->
+                    <span *ngIf = "!isCompletedOrReviewTask">  {{ question.value.SelectedWt  }} {{globalResource.listgramunit}}</span>
+                  <span *ngIf = "isCompletedOrReviewTask"> {{question.value.SelectedQty}} </span>
+                 
                 </td>
                 <td>
                   <input type="number" (change)="lotWeightOnChange(question)" OnlyNumber="true" pInputText
@@ -277,6 +259,52 @@
             </ng-template>
           </p-table>
         </div>
+
+        <!-- Mix pkg arr details -->
+        <div formArrayName="mixLotDetailsArr">
+            <p-table [value]="mixLotDetailsArr?.controls" id="tblMixLotPkgSelection">
+
+              <ng-template pTemplate="body" let-mixPkgQuestion let-i="rowIndex">
+                <tr [formGroupName]="i">
+                  <td colspan="2" style="width: 320px">  
+                     <!-- Mix Pkg Lot Details -->
+                     <ol *ngIf="mixPkgQuestion?.value.mixPkgId">
+                        <li *ngFor="let mixPkgDetails of selectedLotMixPkgDetails">
+                            {{mixPkgDetails?.GrowerLotNo }} ({{mixPkgDetails?.LotUsedWt}}{{globalResource.listgramunit}})
+                            <app-lot-comment
+                                [LotId]="mixPkgDetails?.LotId"
+                                [LotCommentsCount]="mixPkgDetails?.LotNoteCount"
+                                (CommentIconClicked)="commentIconClicked($event)"
+                            ></app-lot-comment>
+
+                            <app-lot-note-icon
+                              [LotId]="mixPkgDetails?.LotId"                                                
+                              (NoteIconClicked)="showLotNote($event)"
+                            ></app-lot-note-icon>
+                        </li>                      
+                      </ol>  
+                    <!-- Mix Pkg Lot Details -->  
+                  </td>
+                  <td>
+                      <span >   {{mixPkgQuestion.value.SelectedQty}}</span>                   
+                  </td>
+                  <td>
+                    <input type="number"  OnlyNumber="true" pInputText  (change)="lotWeightMixOnChange(mixPkgQuestion)"
+                    pKeyFilter="pint"  autocomplete="off" formControlName="mixPkgCount" id="mixPkgCount" name="mixPkgCount"
+                      style="width:100%;" />
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="3">
+                    {{ assignTaskResources.nolotpresent }} "{{ selLotBrandStrainRow?.StrainName }}".
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        <!-- End Mix pkg arr details -->
       </div>
       <p-footer class="text-right">
 
@@ -308,16 +336,6 @@
                  {{ selPkgBrandStrainRow?.GeneticsName }}
                </label>
            </div>
-             <!-- <div class="ui-g-12 ui-md-6">
-                 <label>
-                   <strong>Strain</strong>
-                 </label>
-
-                 <label>
-                   {{ selPkgBrandStrainRow?.StrainName }}
-                 </label>
-               </div> -->
-
                <div class="ui-g-12 ui-md-6">
                    <label>
                      <strong>Required Weight</strong>
@@ -447,11 +465,6 @@
            <tr [formGroupName]="i">
              <td> {{ brandStrainLots[i].StrainName }} </td>
              <td style="width:230px">
-
-               <!-- remove checkbox :: 08-april-2019 -->
-               <!-- <p-checkbox label="{{ brandStrainLots[i].GrowerLotNo  }}" formControlName="question" (ngModelChange)="changeValidator($event, i)"
-                 binary="true"></p-checkbox> -->
-
                  <label>{{ brandStrainLots[i].GrowerLotNo  }}</label>
 
                <app-lot-comment
@@ -574,11 +587,6 @@
    </p-footer>
  </form>
 </p-dialog>
-
-
-
-
-
 
 </form>
 <app-lot-note [Lot]="lotInfo" *ngIf="lotInfo?.showLotNoteModal" (NoteSaved)="onNoteSave($event)"></app-lot-note>
