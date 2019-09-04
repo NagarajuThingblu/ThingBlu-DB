@@ -45,22 +45,24 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
 
   public questionForm: FormGroup;
   public questionJointForm: FormGroup;
-  public productTypeTaskList = [];
-  public selectedLotDetails = [];
-  public selectedLotMixPkgDetails = [];
 
-  public selectedPkgDetails = [];
-
-  public selectedJointPkgDetails = [];
-  public selectedJointMixPkgDetails = [];
   public actionType: any;
   public productTypeId: number;
   public employees: any;
 
-  public isCompletedOrReviewTask = false;
+  public productTypeTaskList = [];
+  public selectedLotDetails = [];
+  public selectedLotMixPkgDetails = [];
+  public selectedPkgDetails = [];
 
+  public selectedJointPkgDetails = [];
+  public selectedJointMixPkgDetails = [];
+
+
+  public isCompletedOrReviewTask = false;
   public showLotSelectionModel = false;
   public showJointSelectionModel = false;
+
   public brandStrainLots: any;
   public globalResource: any;
   public msgs: Message[] = [];
@@ -73,7 +75,6 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   };
 
   public selectedLotsArray = new Map<any, any>();
-  public selectedMixLotsArray = new Map<any, any>();
   public assignTaskResources: any;
   public lotSyncWtArr = new Map<any, any>();
   public selLotBrandStrainRow = {
@@ -94,7 +95,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
 
   // Start OIL
   public questionPkgForm: FormGroup;
-  public brandStrainPkgs: any ;
+  public brandStrainPkgs: any;
   public showPkgSelectionModel = false;
   public selectedPkgsArray = new Map<any, any>();
   public lotSyncWtPkgArr = new Map<any, any>();
@@ -114,7 +115,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   // END OIl
 
   // JoinTs
-  public selectedJointPkgArray  = new Map<any, any>();
+  public selectedJointPkgArray = new Map<any, any>();
   public completedLotArray: any[] = [];
 
   public selLotJointBrandStrainRow = {
@@ -143,7 +144,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
 
   ngOnInit() {
     this.actionNameValue = [
-    //  { label: 'None', value: 'None' },
+      //  { label: 'None', value: 'None' },
     ];
     this.globalResource = GlobalResources.getResources().en;
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
@@ -213,7 +214,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   }
 
   createTaskItemsForCurrentTask(skewkeyname, productTypeTaskList): FormGroup {
-   const uniqId = this.appCommonService.randomNumber();
+    const uniqId = this.appCommonService.randomNumber();
     // tslint:disable-next-line:max-line-length
     this.addtionAssignedQty = this.ProductItem.value.taskCount === 1 ? Math.abs(this.ProductItem.value.orderedQty - this.ProductItem.value.totalAssignedQty) : 0;
     return this.fb.group({
@@ -233,7 +234,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       uniqueId: uniqId,
       // tslint:disable-next-line:max-line-length
       isSameLot: skewkeyname === 'OIL' ? this.PkgPerTask(this.ProductItem, productTypeTaskList, uniqId, 0) :
-                 skewkeyname === 'BUD1' ? this.lotsPerTask(this.ProductItem, productTypeTaskList, uniqId, 0) : null,
+        skewkeyname === 'BUD1' ? this.lotsPerTask(this.ProductItem, productTypeTaskList, uniqId, 0) : null,
     });
   }
 
@@ -246,25 +247,6 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
     this.lotInfo.lotId = LotId;
     this.lotInfo.showLotCommentModal = true;
     this.loaderService.display(false);
-  }
-
-  deleteItem(taskIndex) {
-    const controla = <FormArray>this.ProductItem.get('tasksArr');
-    if (controla.length !== 1) {
-      const con = (controla.controls[taskIndex] as FormGroup);
-      if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
-        const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
-        selectedLots1.forEach((item1, index1) => {
-          item1.forEach((p, index2) => {
-            if (p.UniqueId === con.value.uniqueId) {
-              item1.splice(index2, 1);
-            }
-          });
-        });
-        this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
-      }
-      controla.removeAt(taskIndex);
-    }
   }
 
   getChangeOrderTaskByProductType(orderId, productTypeId, skewKeyName, actionType) {
@@ -285,37 +267,22 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
             if (this.ProductItem.get('skewkeyName').value === 'BUD') {
               this.selectedLotDetails = data.Table1;
               this.selectedLotMixPkgDetails = data.Table2;
-            } else  if (this.ProductItem.get('skewkeyName').value === 'JOINTS' ) {
+            } else if (this.ProductItem.get('skewkeyName').value === 'JOINTS') {
               this.selectedJointPkgDetails = data.Table1;
               this.selectedJointMixPkgDetails = data.Table2;
-            } else  {
+            } else {
               this.selectedPkgDetails = data.Table1;
             }
             this.actionNameValue.push({ label: 'Release Material', value: 'ReleaseMaterial' });
             this.ProductItem.controls['taskAction'].patchValue('ReleaseMaterial');
           } else {
-           // this.ProductItem.controls['taskAction'].patchValue('None');
+            // this.ProductItem.controls['taskAction'].patchValue('None');
           }
         }
         this.onChange_Action(this.ProductItem);
       },
       error => { console.log(error); this.loaderService.display(false); },
       () => console.log('Get All Order Incoming complete'));
-  }
-
-  onChange_Employee(rowData) {
-
-    this.tasksArr.controls.forEach((data) => {
-      const answerBox = (data as FormGroup).controls['employee'];
-      (answerBox as FormControl).setErrors(null);
-    });
-    this.tasksArr.controls.forEach((data) => {
-      // tslint:disable-next-line:max-line-length
-      if ((data as FormGroup).controls['employee'].value === rowData.value.employee && (data as FormGroup).controls['uniqueId'].value !== rowData.value.uniqueId) {
-        const answerBox = (rowData as FormGroup).controls['employee'];
-        (answerBox as FormControl).setErrors({ 'duplicateemployee': true });  // lotmaxwtexceeded
-      }
-    });
   }
 
   getLotSyncWt(lotId): number {
@@ -327,7 +294,7 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
   }
 
   openLotSelection(parentRowData, rowData, rowIndex) {
-    debugger;
+
     let assQty = 0;
     this.addtionAssignedQty = 0;
 
@@ -368,54 +335,24 @@ export class PkgAllocateSubstractionEmployeeComponent implements OnInit {
       });
 
     if (rowData.value.actiontype === 'ReleaseMaterial') {
-      if ( this.isCompletedOrReviewTask) {
+      if (this.isCompletedOrReviewTask) {
         this.selLotBrandStrainRow.combinationTotalAssignedWt = Number(rowData.value.releaseQty);
       } else {
         const totalPkgWt = Number(rowData.value.releaseQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
         this.selLotBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
       }
     }
-debugger;
+    const brandMixLots = this.selectedLotMixPkgDetails.filter(r => r.TaskId === rowData.value.taskId);
     this.questionForm = this.fb.group({
       questions: this.fb.array(this.brandStrainLots.map(this.createQuestionControl(this.fb))),
-      mixLotDetailsArr:  this.fb.array(
-        _.uniqBy(this.selectedLotMixPkgDetails, 'MixPkgId').map((childObject, childIndex) => {
+      mixLotDetailsArr: this.fb.array(
+        _.uniqBy(brandMixLots, 'MixPkgId').map((childObject, childIndex) => {
           return this.createLotMixItem(childObject, childIndex);
         })
       )
     });
-   // this.syncAllLotWeight();
+    // this.syncAllLotWeight();
     this.showLotSelectionModel = true;
-  }
-
-  createLotMixItem(childObject, childIndex): FormGroup {
-    let answerbox;
-    const lotMixSelectedDetails = this.selectedMixLotsArray.get(this.selLotBrandStrainRow.UniqueId);
-
-        if (lotMixSelectedDetails) {
-          const lotRowDetails = [];
-          lotMixSelectedDetails.forEach(data => {
-            if (childObject.MixPkgId === data.MixPkgId ) {
-            lotRowDetails.push(data);
-            }
-          });
-
-          if (lotRowDetails.length) {
-            const Qty = 1 ;
-            answerbox = [Qty, Validators.compose([Validators.max(1)])];
-          } else {
-            answerbox = [null, Validators.compose([Validators.max(1)])];
-          }
-        } else {
-          answerbox = [null, Validators.compose([Validators.max(1)])];
-        }
-
-    return this.fb.group({
-      srno: childIndex,
-      mixPkgId: childObject.MixPkgId ? childObject.MixPkgId : 0,
-      SelectedQty: 1,
-      mixPkgCount: answerbox
-    });
   }
 
   createQuestionControl(fb: FormBuilder) {
@@ -423,14 +360,17 @@ debugger;
       let checkbox;
       let answerbox;
       let previousWt = 0;
-      const lotSelectedDetails = this.selectedLotsArray.get(this.selLotBrandStrainRow.UniqueId);
+      let lotSelectedDetails = [];
+      if (this.selectedLotsArray.get(this.selLotBrandStrainRow.UniqueId)) {
+        lotSelectedDetails = this.selectedLotsArray.get(this.selLotBrandStrainRow.UniqueId).lotDetails;
+      }
 
       if (!this.isCompletedOrReviewTask) {
         if (lotSelectedDetails) {
           const lotRowDetails = [];
           lotSelectedDetails.forEach(data => {
             if (data.Index === index) {
-            lotRowDetails.push(data);
+              lotRowDetails.push(data);
             }
           });
 
@@ -452,7 +392,7 @@ debugger;
           const lotRowDetails = [];
           lotSelectedDetails.forEach(data => {
             if (data.Index === index) {
-            lotRowDetails.push(data);
+              lotRowDetails.push(data);
             }
           });
 
@@ -479,6 +419,39 @@ debugger;
     };
   }
 
+  createLotMixItem(childObject, childIndex): FormGroup {
+    let answerbox;
+    let lotMixSelectedDetails = [];
+    if (this.selectedLotsArray.get(this.selLotBrandStrainRow.UniqueId)) {
+      lotMixSelectedDetails = this.selectedLotsArray.get(this.selLotBrandStrainRow.UniqueId).mixLotDetails;
+    }
+
+    if (lotMixSelectedDetails) {
+      const lotRowDetails = [];
+      lotMixSelectedDetails.forEach(data => {
+        if (childObject.MixPkgId === data.MixPkgId) {
+          lotRowDetails.push(data);
+        }
+      });
+
+      if (lotRowDetails.length) {
+        const Qty = 1;
+        answerbox = [Qty, Validators.compose([Validators.max(1)])];
+      } else {
+        answerbox = [null, Validators.compose([Validators.max(1)])];
+      }
+    } else {
+      answerbox = [null, Validators.compose([Validators.max(1)])];
+    }
+
+    return this.fb.group({
+      srno: childIndex,
+      mixPkgId: childObject.MixPkgId ? childObject.MixPkgId : 0,
+      SelectedQty: 1,
+      mixPkgCount: answerbox
+    });
+  }
+
   syncAllLotWeight() {
     const selectedLots = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
 
@@ -502,6 +475,11 @@ debugger;
     }
   }
 
+  checkMixLot(mixPkgId) {
+    const anc = this.selectedLotMixPkgDetails.filter(r => r.MixPkgId === mixPkgId);
+    return anc;
+  }
+
   lotWeightOnChange(rowItem) {
     let updatedWt = 0;
     if (this.lotSyncWtArr.has(rowItem.value.LotNo)) {
@@ -521,6 +499,10 @@ debugger;
 
       rowItem.controls['previousValue'].patchValue(rowItem.value.answer);
     }
+  }
+
+  lotWeightMixOnChange(rowData) {
+
   }
 
   submit(form) {
@@ -570,23 +552,26 @@ debugger;
       }
 
       form.value.questions.forEach((result, index) => {
-        if (result.answer > 0) {  // comment checkbox condition for remove checkbox :: 05-april-2019 :: swapnil
-
+        if (result.answer > 0) {
           let totalSelectedLotWt = 0;
-          this.selectedLotsArray.forEach(result1 => {
-            result1.forEach(result3 => {
-              if (result3.LotNo === result.LotNo) {
-                totalSelectedLotWt += Number(result3.SelectedWt);
+
+          if (this.isCompletedOrReviewTask) {
+            this.selectedLotsArray.forEach(result1 => {
+              if (result1.length > 0) {
+                result1.lotDetails.forEach(result3 => {
+                  if (result3.LotNo === result.LotNo) {
+                    totalSelectedLotWt += Number(result3.SelectedQty);
+                  }
+                });
               }
             });
-          });
 
-          if (Number(totalSelectedLotWt) > 0) {
-            totalSelectedLotWt = Number(totalSelectedLotWt) - Number(result.answer);
-          } else {
-            totalSelectedLotWt = Number(result.answer);
-          }
-          if (this.isCompletedOrReviewTask) {
+            if (Number(totalSelectedLotWt) > 0) {
+              totalSelectedLotWt = Number(totalSelectedLotWt) - Number(result.answer);
+            } else {
+              totalSelectedLotWt = Number(result.answer);
+            }
+
             if (Number(totalSelectedLotWt) > result.SelectedQty) {
               const answerBox = (this.questionForm.get('questions.' + index) as FormGroup).controls['answer'];
               (answerBox as FormControl).setErrors({ 'lotmaxwtexceeded': true });
@@ -599,21 +584,40 @@ debugger;
               return;
             }
           } else {
-          if (Number(totalSelectedLotWt) > result.SelectedWt) {
-            const answerBox = (this.questionForm.get('questions.' + index) as FormGroup).controls['answer'];
-            (answerBox as FormControl).setErrors({ 'lotmaxwtexceeded': true });
-            loMaxWtFlag = true;
-            this.msgs = [];
-            this.msgs.push({
-              severity: 'warn', summary: this.globalResource.applicationmsg,
-              detail: (Number(result.SelectedWt) - Number(totalSelectedLotWt)) + ' (gms) weight available for lot ' + result.GrowerLotNo
+            this.selectedLotsArray.forEach(result1 => {
+              if (result1.length > 0) {
+                result1.lotDetails.forEach(result3 => {
+                  if (result3.LotNo === result.LotNo) {
+                    totalSelectedLotWt += Number(result3.SelectedWt);
+                  }
+                });
+              }
             });
-            return;
+
+            if (Number(totalSelectedLotWt) > 0) {
+              totalSelectedLotWt = Number(totalSelectedLotWt) - Number(result.answer);
+            } else {
+              totalSelectedLotWt = Number(result.answer);
+            }
+
+            if (Number(totalSelectedLotWt) > result.SelectedWt) {
+              const answerBox = (this.questionForm.get('questions.' + index) as FormGroup).controls['answer'];
+              (answerBox as FormControl).setErrors({ 'lotmaxwtexceeded': true });
+              loMaxWtFlag = true;
+              this.msgs = [];
+              this.msgs.push({
+                severity: 'warn', summary: this.globalResource.applicationmsg,
+                detail: (Number(result.SelectedWt) - Number(totalSelectedLotWt)) + ' (gms) weight available for lot ' + result.GrowerLotNo
+              });
+              return;
+            }
           }
         }
+      });
 
-          const lotListId = 0;
-          if (Number(result.answer) > 0) {
+      form.value.questions.forEach((result, index) => {
+        const lotListId = 0;
+        if (Number(result.answer) > 0) {
           lotDetails.push(
             {
               LotListId: lotListId,
@@ -621,8 +625,8 @@ debugger;
               GrowerLotNo: result.GrowerLotNo,
               AvailWt: result.AvailWt,
               SelectedWt: this.isCompletedOrReviewTask ?
-                          Number(result.answer) * Number(this.ProductItem.value.pkgSize) * Number(this.ProductItem.value.itemQty) :
-                          Number(result.answer),
+                Number(result.answer) * Number(this.ProductItem.value.pkgSize) * Number(this.ProductItem.value.itemQty) :
+                Number(result.answer),
               Selected: true,
               Index: result.questionNumber,
               StrainId: result.StrainId,
@@ -635,14 +639,14 @@ debugger;
               SelectedQty: Number(result.answer)
             }
           );
-          }
         }
       });
+
       const mixLotDetails = [];
       form.value.mixLotDetailsArr.forEach((result, index) => {
         if (result.mixPkgCount > 0) {
           mixLotDetails.push({
-            MixPkgId: result.MixPkgId,
+            MixPkgId: result.mixPkgId,
             ProductTypeId: this.selLotBrandStrainRow.ProductTypeId,
             UniqueId: this.selLotBrandStrainRow.UniqueId,
             Qty: 1,
@@ -650,49 +654,86 @@ debugger;
           });
         }
       });
-     // this.selectedMixLotsArray.set(this.selLotBrandStrainRow.UniqueId, mixLotDetails);
+
       this.selectedLotsArray.set(this.selLotBrandStrainRow.UniqueId, {
-        lotDetails, mixLotDetails});
+        lotDetails, mixLotDetails
+      });
       if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
+
+        selectedLots1.forEach((item, index) => {
+          if (item) {
+            for (let i = 0; i < item.lotDetails.length; i++) {
+              if (item.lotDetails[i].UniqueId === this.selLotBrandStrainRow.UniqueId) {
+                item.lotDetails.splice(i, 1);
+                i--;
+              }
+            }
+          }
+        });
+
+        selectedLots1.forEach((item, index) => {
+          if (item) {
+            for (let i = 0; i < item.mixLotDetails.length; i++) {
+              if (item.mixLotDetails[i].UniqueId === this.selLotBrandStrainRow.UniqueId) {
+                item.mixLotDetails.splice(i, 1);
+                i--;
+              }
+            }
+          }
+        });
+
         lotDetails.forEach((item, index) => {
           selectedLots1.forEach((item1, index1) => {
-            if (item1.length > 0) {
-            item1.lotDetails.forEach((p, index2) => {
-              if (lotDetails.filter(r => (p.UniqueId === r.UniqueId && p.LotNo === r.LotNo)).length <= 0) {
-               if ( lotDetails.filter(r => p.UniqueId === r.UniqueId ).length > 0) {
-                item1.lotDetails.splice(index2, 1);
-                }
-              }
-              if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
-                item1.lotDetails.splice(index2, 1);
-                // (index2);
-                item1.lotDetails.push(item);
+            if (item1) {
+              if (item1.lotDetails.length > 0) {
+                item1.lotDetails.forEach((p, index2) => {
+                  if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
+                    item1.lotDetails.splice(index2, 1);
+                    item1.lotDetails.push(item);
+                  } else {
+                    if (item1.lotDetails.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
+                      item1.lotDetails.push(item);
+                    }
+                  }
+                });
               } else {
                 if (item1.lotDetails.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
                   item1.lotDetails.push(item);
                 }
               }
-            });
-          }
+            } else {
+              if (item1.lotDetails.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
+                item1.lotDetails.push(item);
+              }
+            }
           });
         });
 
         mixLotDetails.forEach((item, index) => {
           selectedLots1.forEach((item1, index1) => {
             if (item1) {
-            item1.mixLotDetails.forEach((p, index2) => {
-              if (p.UniqueId === item.UniqueId && p.MixPkgId === item.MixPkgId) {
-                item1.mixLotDetails.splice(index2, 1);
-                // (index2);
-                item1.mixLotDetails.push(item);
+              if (item1.mixLotDetails.length > 0) {
+                item1.mixLotDetails.forEach((p, index2) => {
+                  if (p.UniqueId === item.UniqueId && p.MixPkgId === item.MixPkgId) {
+                    item1.mixLotDetails.splice(index2, 1);
+                    item1.mixLotDetails.push(item);
+                  } else {
+                    if (item1.mixLotDetails.filter(r => r.UniqueId === item.UniqueId && r.MixPkgId === item.MixPkgId).length <= 0) {
+                      item1.mixLotDetails.push(item);
+                    }
+                  }
+                });
               } else {
                 if (item1.mixLotDetails.filter(r => r.UniqueId === item.UniqueId && r.MixPkgId === item.MixPkgId).length <= 0) {
                   item1.mixLotDetails.push(item);
                 }
               }
-            });
-          }
+            } else {
+              if (item1.mixLotDetails.filter(r => r.UniqueId === item.UniqueId && r.MixPkgId === item.MixPkgId).length <= 0) {
+                item1.mixLotDetails.push(item);
+              }
+            }
           });
         });
 
@@ -730,68 +771,79 @@ debugger;
         (data as FormGroup).controls['releaseQty'].setErrors(null);
       });
       if (this.ProductItem.value.skewkeyName === 'BUD') {
-          let selectedLots1 = [];
-          if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
-            selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
-            if (selectedLots1) {
+        let selectedLots1 = [];
+        if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
+          selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
+          if (selectedLots1) {
             selectedLots1.forEach((item, index) => {
               if (item) {
-              for (let i = 0; i < item.lotDetails.length; i++) {
-                if (item.lotDetails[i].UniqueId === rowData.value.uniqueId) {
-                  item.lotDetails.splice(i, 1);
-                  i--;
-                }
-              }
-              for (let i = 0; i < item.mixlotDetails.length; i++) {
-                if (item.mixlotDetails[i].UniqueId === rowData.value.uniqueId) {
-                  item.mixlotDetails.splice(i, 1);
-                  i--;
-                }
-              }
-            }
-            });
-          }
-            this.selectedLotsArray.delete(rowData.value.uniqueId);
-            this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
-          }
-          setTimeout(() => {
-            // this.syncAllLotWeight();
-          }, 0);
-      //  this.lotsPerTask1(this.ProductItem, rowData, 0); remprory remove working file
-      } else  if (this.ProductItem.value.skewkeyName === 'JOINTS') {
-          let selectedJointPkgs: any;
-          if (this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray')) {
-            selectedJointPkgs = JSON.parse(this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray'));
-            if (selectedJointPkgs) {
-            selectedJointPkgs.forEach((item, index) => {
-              if (item) {
-                if (item.lotDetails) {
-                  for (let i = 0; i <  item.lotDetails.length; i++) {
+                if (item.lotDetails.length > 0) {
+                  for (let i = 0; i < item.lotDetails.length; i++) {
                     if (item.lotDetails[i].UniqueId === rowData.value.uniqueId) {
                       item.lotDetails.splice(i, 1);
                       i--;
                     }
                   }
-            }
-          }
+                }
+              }
             });
+          }
+
+          selectedLots1.forEach((item, index) => {
+            if (item.length > 0) {
+              if (item.mixLotDetails.length > 0) {
+                for (let i = 0; i < item.mixLotDetails.length; i++) {
+                  if (item.mixLotDetails[i].UniqueId === rowData.value.uniqueId) {
+                    item.mixLotDetails.splice(i, 1);
+                    i--;
+                  }
+                }
+              }
+            }
+          });
+
+          this.selectedLotsArray.delete(rowData.value.uniqueId);
+          this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
+        }
+        setTimeout(() => {
+          // this.syncAllLotWeight();
+        }, 0);
+      } else if (this.ProductItem.value.skewkeyName === 'JOINTS') {
+        let selectedJointPkgs: any;
+        if (this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray')) {
+          selectedJointPkgs = JSON.parse(this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray'));
+          if (selectedJointPkgs) {
+
             selectedJointPkgs.forEach((item, index) => {
               if (item) {
-                if (item.mixPkgDetails) {
-              for (let i = 0; i < item.mixPkgDetails.length; i++) {
-                if (item.mixPkgDetails[i].UniqueId === rowData.value.uniqueId) {
-                  item.mixPkgDetails.splice(i, 1);
-                  i--;
+                if (item.lotDetails.length > 0) {
+                  for (let i = 0; i < item.lotDetails.length; i++) {
+                    if (item.lotDetails[i].UniqueId === rowData.value.uniqueId) {
+                      item.lotDetails.splice(i, 1);
+                      i--;
+                    }
+                  }
+                }
               }
+            });
+
+            selectedJointPkgs.forEach((item, index) => {
+              if (item) {
+                if (item.mixPkgDetails.length > 0) {
+                  for (let i = 0; i < item.mixPkgDetails.length; i++) {
+                    if (item.mixPkgDetails[i].UniqueId === rowData.value.uniqueId) {
+                      item.mixPkgDetails.splice(i, 1);
+                      i--;
+                    }
+                  }
+                }
+              }
+            });
           }
-        }
-      }
-        });
-        }
           this.selectedJointPkgArray.delete(rowData.value.uniqueId);
-            this.appCommonService.setSessionStorage('selectedJointsPkgReleaseArray', JSON.stringify(selectedJointPkgs));
-            return;
-          }
+          this.appCommonService.setSessionStorage('selectedJointsPkgReleaseArray', JSON.stringify(selectedJointPkgs));
+          return;
+        }
         // this.lotsPerTask1(this.ProductItem, rowData, 0);
       } else {
         let selectedLots1 = [];
@@ -812,92 +864,92 @@ debugger;
         setTimeout(() => {
           this.syncAllPkgWeight();
         }, 0);
-      this.pkgPerTask1(this.ProductItem, rowData, 0);
+        this.pkgPerTask1(this.ProductItem, rowData, 0);
+      }
     }
-  }
   }
 
   absValue(value) {
     return Math.abs(Number(value));
   }
 
-  lotsPerTask(productItem, rowData, uniqId , i) {
-    let brandStrainLots = [];
-    let unselectedwt = 0;
-    brandStrainLots = this.selectedLotDetails.filter(r => r.TaskId === rowData.TaskId);
-    const releaseQty = productItem.value.taskCount === 1 ? Math.abs(this.ProductItem.value.orderedQty - this.ProductItem.value.totalAssignedQty) : 0;
+  lotsPerTask(productItem, rowData, uniqId, i) {
+    // let brandStrainLots = [];
+    // let unselectedwt = 0;
+    // brandStrainLots = this.selectedLotDetails.filter(r => r.TaskId === rowData.TaskId);
+    // const releaseQty = productItem.value.taskCount === 1 ? Math.abs(this.ProductItem.value.orderedQty - this.ProductItem.value.totalAssignedQty) : 0;
 
-    if (brandStrainLots) {
-      if (brandStrainLots.length === 1) {
-        const lotDetails = [];
-        const lotListId = 0;
-        unselectedwt = Number(releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty);
-      lotDetails.push(
-          {
-            LotListId: lotListId,
-            LotNo: brandStrainLots[0].LotId,
-            GrowerLotNo: brandStrainLots[0].GrowerLotNo,
-            AvailWt: null,
-            SelectedWt: Number(releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty),
-            Selected: true,
-            Index: 0,
-            StrainId: brandStrainLots[0].StrainId,
-            StrainName: brandStrainLots[0].StrainName,
-            BrandId: productItem.value.brand,
-            GeneticsId: brandStrainLots[0].GeneticsId,
-            GeneticsName: brandStrainLots[0].GeneticsName,
-            ProductTypeId: productItem.value.productType,
-            UniqueId: uniqId,
-            SelectedQty: Number(releaseQty)
-          }
-        );
+    // if (brandStrainLots) {
+    //   if (brandStrainLots.length === 1) {
+    //     const lotDetails = [];
+    //     const lotListId = 0;
+    //     unselectedwt = Number(releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty);
+    //   lotDetails.push(
+    //       {
+    //         LotListId: lotListId,
+    //         LotNo: brandStrainLots[0].LotId,
+    //         GrowerLotNo: brandStrainLots[0].GrowerLotNo,
+    //         AvailWt: null,
+    //         SelectedWt: Number(releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty),
+    //         Selected: true,
+    //         Index: 0,
+    //         StrainId: brandStrainLots[0].StrainId,
+    //         StrainName: brandStrainLots[0].StrainName,
+    //         BrandId: productItem.value.brand,
+    //         GeneticsId: brandStrainLots[0].GeneticsId,
+    //         GeneticsName: brandStrainLots[0].GeneticsName,
+    //         ProductTypeId: productItem.value.productType,
+    //         UniqueId: uniqId,
+    //         SelectedQty: Number(releaseQty)
+    //       }
+    //     );
 
-        this.selectedLotsArray.set(uniqId, lotDetails);
-        let selectedLots1 = [];
-        if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
-          selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
-          lotDetails.forEach((item, index) => {
-            selectedLots1.forEach((item1, index1) => {
-              if (item1.length > 0) {
-              item1.forEach((p, index2) => {
-                if (lotDetails.filter(r => p.UniqueId === r.UniqueId && p.LotNo === r.LotNo).length <= 0) {
-                  if ( lotDetails.filter(r => p.UniqueId === r.UniqueId ).length > 0) {
-                    item1.splice(index2, 1);
-                    }
-                }
-                if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
-                  item1.splice(index2, 1);
-                  // (index2);
-                  if (unselectedwt > 0) {
-                  item1.push(item);
-                  }
-                } else {
-                  if (item1.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
-                    if (unselectedwt > 0) {
-                    item1.push(item);
-                    }
-                  }
-                }
-              });
-            } else {
-              if (unselectedwt > 0) {
-                item1.push(item);
-                }
-            }
-            });
-          });
-          this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
-        } else {
-          this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
-        }
-        return true;
-      } else {
-        return false;
-      }
-    }
+    //     this.selectedLotsArray.set(uniqId, lotDetails);
+    //     let selectedLots1 = [];
+    //     if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
+    //       selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
+    //       lotDetails.forEach((item, index) => {
+    //         selectedLots1.forEach((item1, index1) => {
+    //           if (item1.length > 0) {
+    //           item1.forEach((p, index2) => {
+    //             if (lotDetails.filter(r => p.UniqueId === r.UniqueId && p.LotNo === r.LotNo).length <= 0) {
+    //               if ( lotDetails.filter(r => p.UniqueId === r.UniqueId ).length > 0) {
+    //                 item1.splice(index2, 1);
+    //                 }
+    //             }
+    //             if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
+    //               item1.splice(index2, 1);
+    //               // (index2);
+    //               if (unselectedwt > 0) {
+    //               item1.push(item);
+    //               }
+    //             } else {
+    //               if (item1.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
+    //                 if (unselectedwt > 0) {
+    //                 item1.push(item);
+    //                 }
+    //               }
+    //             }
+    //           });
+    //         } else {
+    //           if (unselectedwt > 0) {
+    //             item1.push(item);
+    //             }
+    //         }
+    //         });
+    //       });
+    //       this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
+    //     } else {
+    //       this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
+    //     }
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // }
   }
 
-  PkgPerTask(productItem, rowData, uniqId , i) {
+  PkgPerTask(productItem, rowData, uniqId, i) {
     let brandStrainPkgs = [];
     let unselectedwt = 0;
     brandStrainPkgs = this.selectedPkgDetails.filter(r => r.TaskId === rowData.TaskId);
@@ -934,29 +986,29 @@ debugger;
           pkgDetails.forEach((item, index) => {
             selectedLots1.forEach((item1, index1) => {
               if (item1.length > 0) {
-              item1.forEach((p, index2) => {
-                if (pkgDetails.filter(r => p.UniqueId === r.UniqueId && p.OilPkgId === r.OilPkgId).length <= 0) {
-                  if ( pkgDetails.filter(r => p.UniqueId === r.UniqueId ).length > 0) {
+                item1.forEach((p, index2) => {
+                  if (pkgDetails.filter(r => p.UniqueId === r.UniqueId && p.OilPkgId === r.OilPkgId).length <= 0) {
+                    if (pkgDetails.filter(r => p.UniqueId === r.UniqueId).length > 0) {
+                      item1.splice(index2, 1);
+                    }
+                  }
+                  if (p.UniqueId === item.UniqueId && p.OilPkgId === item.OilPkgId) {
                     item1.splice(index2, 1);
-                    }
-                }
-                if (p.UniqueId === item.UniqueId && p.OilPkgId === item.OilPkgId) {
-                  item1.splice(index2, 1);
-                  // (index2);
-                  if (unselectedwt > 0) {
-                  item1.push(item);
-                  }
-                } else {
-                  if (item1.filter(r => r.UniqueId === item.UniqueId && r.OilPkgId === item.OilPkgId).length <= 0) {
+                    // (index2);
                     if (unselectedwt > 0) {
-                    item1.push(item);
+                      item1.push(item);
+                    }
+                  } else {
+                    if (item1.filter(r => r.UniqueId === item.UniqueId && r.OilPkgId === item.OilPkgId).length <= 0) {
+                      if (unselectedwt > 0) {
+                        item1.push(item);
+                      }
                     }
                   }
-                }
-              });
-            } else {
-              if (unselectedwt > 0) {
-                item1.push(item);
+                });
+              } else {
+                if (unselectedwt > 0) {
+                  item1.push(item);
                 }
               }
             });
@@ -973,73 +1025,73 @@ debugger;
   }
 
   lotsPerTask1(productItem, rowData, i) {
-    let brandStrainLots = [];
-    let unselectedwt = 0;
-    brandStrainLots = this.selectedLotDetails.filter(r => r.TaskId === rowData.value.taskId);
+    // let brandStrainLots = [];
+    // let unselectedwt = 0;
+    // brandStrainLots = this.selectedLotDetails.filter(r => r.TaskId === rowData.value.taskId);
 
-    if (brandStrainLots) {
-      if (brandStrainLots.length === 1) {
-        const lotDetails = [];
-        const lotListId = 0;
-        unselectedwt = Number(rowData.value.releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty);
-        lotDetails.push(
-          {
-            LotListId: lotListId,
-            LotNo: brandStrainLots[0].LotId,
-            GrowerLotNo: brandStrainLots[0].GrowerLotNo,
-            AvailWt: null,
-            SelectedWt: Number(rowData.value.releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty),
-            Selected: true,
-            Index: 0,
-            StrainId: brandStrainLots[0].StrainId,
-            StrainName: brandStrainLots[0].StrainName,
-            BrandId: productItem.value.brand,
-            GeneticsId: brandStrainLots[0].GeneticsId,
-            GeneticsName: brandStrainLots[0].GeneticsName,
-            ProductTypeId: productItem.value.productType,
-            UniqueId: rowData.value.uniqueId,
-            SelectedQty: Number(rowData.value.releaseQty)
-          }
-        );
+    // if (brandStrainLots) {
+    //   if (brandStrainLots.length === 1) {
+    //     const lotDetails = [];
+    //     const lotListId = 0;
+    //     unselectedwt = Number(rowData.value.releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty);
+    //     lotDetails.push(
+    //       {
+    //         LotListId: lotListId,
+    //         LotNo: brandStrainLots[0].LotId,
+    //         GrowerLotNo: brandStrainLots[0].GrowerLotNo,
+    //         AvailWt: null,
+    //         SelectedWt: Number(rowData.value.releaseQty) * Number(productItem.value.pkgSize) * Number(productItem.value.itemQty),
+    //         Selected: true,
+    //         Index: 0,
+    //         StrainId: brandStrainLots[0].StrainId,
+    //         StrainName: brandStrainLots[0].StrainName,
+    //         BrandId: productItem.value.brand,
+    //         GeneticsId: brandStrainLots[0].GeneticsId,
+    //         GeneticsName: brandStrainLots[0].GeneticsName,
+    //         ProductTypeId: productItem.value.productType,
+    //         UniqueId: rowData.value.uniqueId,
+    //         SelectedQty: Number(rowData.value.releaseQty)
+    //       }
+    //     );
 
-        this.selectedLotsArray.set(this.selLotBrandStrainRow.UniqueId, lotDetails);
-        let selectedLots1 = [];
-        if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
-          selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
-          lotDetails.forEach((item, index) => {
-            selectedLots1.forEach((item1, index1) => {
-              if (item1.length > 0) {
-              item1.forEach((p, index2) => {
-                if (lotDetails.filter(r => p.UniqueId === r.UniqueId && p.LotNo === r.LotNo).length <= 0) {
-                  if ( lotDetails.filter(r => p.UniqueId === r.UniqueId ).length > 0) {
-                    item1.splice(index2, 1);
-                    }
-                }
-                if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
-                  item1.splice(index2, 1);
-                  if (unselectedwt > 0) {
-                    item1.push(item);
-                  }
-                } else {
-                  if (item1.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
-                    item1.push(item);
-                  }
-                }
-              });
-            } else {
-              item1.push(item);
-            }
-            });
-          });
-          this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
-        } else {
-          this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
-        }
-        return true;
-      } else {
-        return false;
-      }
-    }
+    //     this.selectedLotsArray.set(this.selLotBrandStrainRow.UniqueId, lotDetails);
+    //     let selectedLots1 = [];
+    //     if (this.appCommonService.getSessionStorage('selectedReleaseLotsArray')) {
+    //       selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleaseLotsArray'));
+    //       lotDetails.forEach((item, index) => {
+    //         selectedLots1.forEach((item1, index1) => {
+    //           if (item1.length > 0) {
+    //           item1.forEach((p, index2) => {
+    //             if (lotDetails.filter(r => p.UniqueId === r.UniqueId && p.LotNo === r.LotNo).length <= 0) {
+    //               if ( lotDetails.filter(r => p.UniqueId === r.UniqueId ).length > 0) {
+    //                 item1.splice(index2, 1);
+    //                 }
+    //             }
+    //             if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
+    //               item1.splice(index2, 1);
+    //               if (unselectedwt > 0) {
+    //                 item1.push(item);
+    //               }
+    //             } else {
+    //               if (item1.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
+    //                 item1.push(item);
+    //               }
+    //             }
+    //           });
+    //         } else {
+    //           item1.push(item);
+    //         }
+    //         });
+    //       });
+    //       this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(selectedLots1));
+    //     } else {
+    //       this.appCommonService.setSessionStorage('selectedReleaseLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
+    //     }
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // }
   }
 
   // OIl
@@ -1056,7 +1108,7 @@ debugger;
 
     const strainId = parentRowData.value.strain;
     this.brandStrainLots = [];
-    this.brandStrainPkgs =  this.selectedPkgDetails.filter(r => r.TaskId === rowData.value.taskId);
+    this.brandStrainPkgs = this.selectedPkgDetails.filter(r => r.TaskId === rowData.value.taskId);
     this.selPkgBrandStrainRow.BrandId = 0;
     this.selPkgBrandStrainRow.StrainId = strainId;
     this.selPkgBrandStrainRow.selectedRowIndex = rowIndex;
@@ -1112,30 +1164,23 @@ debugger;
         if (pkgRowDetails.length) {
           const pkgWt = pkgRowDetails[0].SelectedWt;
           previousWt = pkgWt;
-            checkbox = pkgRowDetails[0].Selected;
-            // answerbox = pkgRowDetails[0].Selected
-            // ? [pkgWt, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-            // : null;
-            answerbox = [pkgWt, Validators.compose([ Validators.max(question.AvailableWt)])];
+          checkbox = pkgRowDetails[0].Selected;
+          answerbox = [pkgWt, Validators.compose([Validators.max(question.AvailableWt)])];
         } else {
           checkbox = question.selected;
-          // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-          //   : null;
           answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
         }
       } else {
         checkbox = question.selected;
-        // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
-        //   : null;
         answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
       }
-        return fb.group({
-          questionNumber: index, question: checkbox, OilPkgCode: question.OilPkgCode,
-          TPPkgTypeName: question.TPPkgTypeName, answer: answerbox,
-          AvailWt: question.AssignedOilWt,  previousValue: previousWt || 0, SelectedWt : question.AssignedOilWt,
-          StrainId: question.StrainId, StrainName: question.StrainName, GeneticsId: question.GeneticsId, GeneticsName: question.GeneticsName,
-          OilPkgId: question.OilPkgId
-        });
+      return fb.group({
+        questionNumber: index, question: checkbox, OilPkgCode: question.OilPkgCode,
+        TPPkgTypeName: question.TPPkgTypeName, answer: answerbox,
+        AvailWt: question.AssignedOilWt, previousValue: previousWt || 0, SelectedWt: question.AssignedOilWt,
+        StrainId: question.StrainId, StrainName: question.StrainName, GeneticsId: question.GeneticsId, GeneticsName: question.GeneticsName,
+        OilPkgId: question.OilPkgId
+      });
     };
   }
 
@@ -1145,24 +1190,23 @@ debugger;
     let loMaxWtFlag = false;
 
     if (this.questionPkgForm.valid) {
-      // In edit mode, skip this validation on submit and checking this validations on update tasks
-      /// condition added by Devdan :: 23-Nov-2018
-        form.value.pkgQuestions.forEach(result => {
-          totalPkgWt +=  Number(result.answer) ? Number(result.answer) : 0;
+      form.value.pkgQuestions.forEach(result => {
+        totalPkgWt += Number(result.answer) ? Number(result.answer) : 0;
+      });
+      if (totalPkgWt !== Number(this.selPkgBrandStrainRow.combinationTotalAssignedWt)) {
+        this.msgs = [];
+        this.msgs.push({
+          severity: 'warn', summary: this.globalResource.applicationmsg,
+          detail: 'Sum of all pkg weight is not equal to total assigned weight.'
         });
-        if (totalPkgWt !== Number(this.selPkgBrandStrainRow.combinationTotalAssignedWt)) {
-          this.msgs = [];
-          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg,
-            detail: 'Sum of all pkg weight is not equal to total assigned weight.' });
-          return;
-        }
+        return;
+      }
       form.value.pkgQuestions.forEach((result, index) => {
-       // if (result.question === true) {  // change checkbox true condition add on weight
-          if (result.answer > 0) {
+        if (result.answer > 0) {
           let totalSelectedOilPkgWt = 0;
           this.selectedPkgsArray.forEach(result1 => {
             result1.forEach(result3 => {
-              if (result3.OilPkgId ===  result.OilPkgId ) {
+              if (result3.OilPkgId === result.OilPkgId) {
                 totalSelectedOilPkgWt += Number(result3.SelectedWt);
               }
             });
@@ -1172,41 +1216,39 @@ debugger;
           } else {
             totalSelectedOilPkgWt = Number(result.answer);
           }
-          if (Number(totalSelectedOilPkgWt) > result.AvailWt ) {
-                const answerBox = (this.questionPkgForm.get('pkgQuestions.' + index) as FormGroup).controls['answer'];
-
-                (answerBox as FormControl).setErrors({ 'oilpkgmaxwtexceeded': true });
-
-                loMaxWtFlag = true;
-                this.msgs = [];
-                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg,
-                  detail: (Number(result.AvailWt) - Number(totalSelectedOilPkgWt)) + ' (gms) weight available for oil pkg ' + result.OilPkgCode });
-                  return;
+          if (Number(totalSelectedOilPkgWt) > result.AvailWt) {
+            const answerBox = (this.questionPkgForm.get('pkgQuestions.' + index) as FormGroup).controls['answer'];
+            (answerBox as FormControl).setErrors({ 'oilpkgmaxwtexceeded': true });
+            loMaxWtFlag = true;
+            this.msgs = [];
+            this.msgs.push({
+              severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail: (Number(result.AvailWt) - Number(totalSelectedOilPkgWt)) + ' (gms) weight available for oil pkg ' + result.OilPkgCode
+            });
+            return;
           }
           if (result.answer > 0) {
-          pkgDetails.push(
-            {
-              OilPkgId: result.OilPkgId,
-              OilPkgCode: result.OilPkgCode,
-              TPPkgTypeName: result.TPPkgTypeName,
-              AvailWt: result.AvailWt,
-              SelectedWt: result.answer,
-              Selected: true,
-              Index: result.questionNumber,
-              StrainId: result.StrainId,
-              BrandId: this.selPkgBrandStrainRow.BrandId,
-              GeneticsId:  this.selPkgBrandStrainRow.GeneticsId,
-              ProductTypeId: this.selPkgBrandStrainRow.ProductTypeId,
-              UniqueId: this.selPkgBrandStrainRow.UniqueId,
-            }
-          );
+            pkgDetails.push(
+              {
+                OilPkgId: result.OilPkgId,
+                OilPkgCode: result.OilPkgCode,
+                TPPkgTypeName: result.TPPkgTypeName,
+                AvailWt: result.AvailWt,
+                SelectedWt: result.answer,
+                Selected: true,
+                Index: result.questionNumber,
+                StrainId: result.StrainId,
+                BrandId: this.selPkgBrandStrainRow.BrandId,
+                GeneticsId: this.selPkgBrandStrainRow.GeneticsId,
+                ProductTypeId: this.selPkgBrandStrainRow.ProductTypeId,
+                UniqueId: this.selPkgBrandStrainRow.UniqueId,
+              }
+            );
           }
         }
       });
-      if (loMaxWtFlag) {
-        return;
-      }
-      this.selectedPkgsArray.set(this.selPkgBrandStrainRow.UniqueId , pkgDetails);
+
+      this.selectedPkgsArray.set(this.selPkgBrandStrainRow.UniqueId, pkgDetails);
 
       if (this.appCommonService.getSessionStorage('selectedReleasePkgsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedReleasePkgsArray'));
@@ -1214,16 +1256,15 @@ debugger;
           selectedLots1.forEach((item1, index1) => {
             item1.forEach((p, index2) => {
               if (pkgDetails.filter(r => p.UniqueId === r.UniqueId && p.OilPkgId === r.OilPkgId).length <= 0) {
-                if ( pkgDetails.filter(r => p.UniqueId === r.UniqueId ).length > 0) {
+                if (pkgDetails.filter(r => p.UniqueId === r.UniqueId).length > 0) {
                   item1.splice(index2, 1);
-                  }
+                }
               }
               if (p.UniqueId === item.UniqueId && p.OilPkgId === item.OilPkgId) {
                 item1.splice(index2, 1);
-                // (index2);
                 item1.push(item);
               } else {
-                if (item1.filter(r => r.UniqueId === item.UniqueId && r.OilPkgId === item.OilPkgId ).length <= 0) {
+                if (item1.filter(r => r.UniqueId === item.UniqueId && r.OilPkgId === item.OilPkgId).length <= 0) {
                   item1.push(item);
                 }
               }
@@ -1243,18 +1284,18 @@ debugger;
   deletePkgItem(taskIndex) {
     const controla = <FormArray>this.ProductItem.get('tasksArr');
     if (controla.length !== 1) {
-      const con =  (controla.controls[taskIndex] as FormGroup);
+      const con = (controla.controls[taskIndex] as FormGroup);
       if (this.appCommonService.getSessionStorage('selectedPkgsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
-          selectedLots1.forEach((item1, index1) => {
-          for ( let i = 0; i < item1.length; i++) {
-            if ( item1[i].UniqueId === con.value.uniqueId) {
+        selectedLots1.forEach((item1, index1) => {
+          for (let i = 0; i < item1.length; i++) {
+            if (item1[i].UniqueId === con.value.uniqueId) {
               item1.splice(i, 1);
-              i -- ;
+              i--;
             }
-         }
-      });
-      this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(Array.from(this.selectedPkgsArray.values())));
+          }
+        });
+        this.appCommonService.setSessionStorage('selectedPkgsArray', JSON.stringify(Array.from(this.selectedPkgsArray.values())));
       }
       controla.removeAt(taskIndex);
     }
@@ -1339,31 +1380,31 @@ debugger;
           PkgDetails.forEach((item, index) => {
             selectedLots1.forEach((item1, index1) => {
               if (item1.length > 0) {
-              item1.forEach((p, index2) => {
-                if (PkgDetails.filter(r => p.UniqueId === r.UniqueId && p.OilPkgId === r.OilPkgId).length <= 0) {
-                  if ( PkgDetails.filter(r => p.UniqueId === r.UniqueId ).length > 0) {
-                    item1.splice(index2, 1);
+                item1.forEach((p, index2) => {
+                  if (PkgDetails.filter(r => p.UniqueId === r.UniqueId && p.OilPkgId === r.OilPkgId).length <= 0) {
+                    if (PkgDetails.filter(r => p.UniqueId === r.UniqueId).length > 0) {
+                      item1.splice(index2, 1);
                     }
-                }
-                if (p.UniqueId === item.UniqueId && p.OilPkgId === item.OilPkgId) {
-                  item1.splice(index2, 1);
-                  if (unselectedwt > 0) {
-                    item1.push(item);
                   }
-                } else {
-                  if (item1.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.OilPkgId).length <= 0) {
-                    item1.push(item);
+                  if (p.UniqueId === item.UniqueId && p.OilPkgId === item.OilPkgId) {
+                    item1.splice(index2, 1);
+                    if (unselectedwt > 0) {
+                      item1.push(item);
+                    }
+                  } else {
+                    if (item1.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.OilPkgId).length <= 0) {
+                      item1.push(item);
+                    }
                   }
-                }
-              });
-            } else {
-              item1.push(item);
-            }
+                });
+              } else {
+                item1.push(item);
+              }
             });
           });
           this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(selectedLots1));
         } else {
-          this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(Array.from(this.selectedPkgsArray.values() )));
+          this.appCommonService.setSessionStorage('selectedReleasePkgsArray', JSON.stringify(Array.from(this.selectedPkgsArray.values())));
         }
         return true;
       } else {
@@ -1373,42 +1414,43 @@ debugger;
   }
   // JOint Package
   openjointLotSelection(parentRowData, rowData, rowIndex) {
-      let assQty = 0;
-      this.tasksArr.controls.forEach((data) => {
-        assQty = Number(assQty) + Number((data as FormGroup).controls['releaseQty'].value);
-      });
-      if (assQty > Math.abs(Number(parentRowData.value.orderedQty))) {
-        return;
-      }
+    let assQty = 0;
+    this.tasksArr.controls.forEach((data) => {
+      assQty = Number(assQty) + Number((data as FormGroup).controls['releaseQty'].value);
+    });
+    if (Number(rowData.value.assignedQty) < rowData.value.releaseQty ||
+      assQty > this.absValue(this.ProductItem.value.orderedQty - this.ProductItem.value.totalAssignedQty)) {
+      return;
+    }
 
-      const strainId = parentRowData.value.strain;
-      this.brandStrainLots = [];
-      this.selLotJointBrandStrainRow.pkgSizeRequiredQtyArr = [];
-      this.brandStrainLots = this.selectedJointPkgDetails.filter(r => r.TaskId === rowData.value.taskId);
+    const strainId = parentRowData.value.strain;
+    this.brandStrainLots = [];
+    this.selLotJointBrandStrainRow.pkgSizeRequiredQtyArr = [];
+    this.brandStrainLots = this.selectedJointPkgDetails.filter(r => r.TaskId === rowData.value.taskId);
 
-      this.selLotJointBrandStrainRow.BrandId = 0;
-      this.selLotJointBrandStrainRow.StrainId = strainId;
-      this.selLotJointBrandStrainRow.selectedRowIndex = rowIndex;
-      this.selLotJointBrandStrainRow.RequireWt = 0;
-      this.selLotJointBrandStrainRow.combinationTotalAssignedQty = 0;
-      this.selLotJointBrandStrainRow.ProductTypeId = parentRowData.value.productType;
-      this.selLotJointBrandStrainRow.UniqueId = rowData.value.uniqueId;
+    this.selLotJointBrandStrainRow.BrandId = 0;
+    this.selLotJointBrandStrainRow.StrainId = strainId;
+    this.selLotJointBrandStrainRow.selectedRowIndex = rowIndex;
+    this.selLotJointBrandStrainRow.RequireWt = 0;
+    this.selLotJointBrandStrainRow.combinationTotalAssignedQty = 0;
+    this.selLotJointBrandStrainRow.ProductTypeId = parentRowData.value.productType;
+    this.selLotJointBrandStrainRow.UniqueId = rowData.value.uniqueId;
 
-      if (rowData.value.actiontype === 'ReleaseMaterial') {
-        const employeeBox = (rowData as FormGroup).controls['releaseQty'];
-        const validators = !rowData.value.releaseQty ? Validators.compose([Validators.required]) : null;
-        employeeBox.setValidators(validators);
-        employeeBox.updateValueAndValidity();
-      }
+    if (rowData.value.actiontype === 'ReleaseMaterial') {
+      const employeeBox = (rowData as FormGroup).controls['releaseQty'];
+      const validators = !rowData.value.releaseQty ? Validators.compose([Validators.required]) : null;
+      employeeBox.setValidators(validators);
+      employeeBox.updateValueAndValidity();
+    }
 
-      if (rowData.value.actiontype === 'ReleaseMaterial') {
-         // const totalPkgWt = Number(rowData.value.releaseQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
-        this.selLotJointBrandStrainRow.combinationTotalAssignedQty = Number(rowData.value.releaseQty) ;
-      }
+    if (rowData.value.actiontype === 'ReleaseMaterial') {
+      // const totalPkgWt = Number(rowData.value.releaseQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
+      this.selLotJointBrandStrainRow.combinationTotalAssignedQty = Number(rowData.value.releaseQty);
+    }
 
-      this.selectedJointPkgDetails.filter((value, key) =>
+    this.selectedJointPkgDetails.filter((value, key) =>
       //  value.StrainId === rowData.StrainId)
-      value.TaskId  === rowData.value.taskId)
+      value.TaskId === rowData.value.taskId)
       .map(value => {
         this.selLotJointBrandStrainRow.RequireWt += value.TotalWt;
         this.selLotJointBrandStrainRow.BrandName = '';
@@ -1446,7 +1488,7 @@ debugger;
         const lotRowDetails = [];
         lotSelectedDetails.forEach(data => {
           if (data.Index === index) {
-          lotRowDetails.push(data);
+            lotRowDetails.push(data);
           }
         });
 
@@ -1483,7 +1525,9 @@ debugger;
     if (mixPkgDetails && mixPkgDetails.length > 0) {
       const lotRowDetails = [];
       mixPkgDetails.forEach(data => {
+        if (childObject.MixPkgId === data.MixPkgId) {
           lotRowDetails.push(data);
+        }
       });
 
       if (lotRowDetails.length) {
@@ -1497,10 +1541,10 @@ debugger;
 
     return this.fb.group({
       srno: childIndex,
-      UnitValue: childObject.TubeUnitValue,
-      ItemQty: childObject.TubeItemQty,
-      PkgTypeId: childObject.TubePkgTypeId,
-      PkgTypeName: childObject.TubePkgTypeName,
+      UnitValue: childObject.UnitValue,
+      ItemQty: childObject.ItemQty,
+      PkgTypeId: childObject.PkgTypeId,
+      PkgTypeName: childObject.PkgTypeName,
       StrainId: childObject.StrainId,
       StrainName: childObject.StrainName,
       GeneticsId: childObject.GeneticsId,
@@ -1511,29 +1555,69 @@ debugger;
     });
   }
 
+  getMixLotDetails(pkgItemDetails, value) {
+    if (value === 1) {
+      return this.selectedJointMixPkgDetails.filter(item =>
+        item.MixPkgId === pkgItemDetails.MixPkgId
+      );
+    } else if (value === 2) {
+      return this.selectedJointMixPkgDetails.filter(item =>
+        item.MixPkgId === pkgItemDetails.value.mixPkgId
+      );
+    }
+  }
+
   changeValidator(selected, index) {
     const answerbox = this.questionJointForm.get('jointQuestions.' + index).get('answer');
     const availableqty = this.questionJointForm.get('jointQuestions.' + index).get('AvailTubesQty');
 
-   // const validators = selected ? Validators.compose([Validators.required, Validators.min(0.1), Validators.max(availableqty.value)]) : null;
+    // const validators = selected ? Validators.compose([Validators.required, Validators.min(0.1), Validators.max(availableqty.value)]) : null;
     const validators = Validators.compose([Validators.max(availableqty.value)]);
-   answerbox.setValidators(validators);
+    answerbox.setValidators(validators);
     answerbox.updateValueAndValidity();
   }
 
   submitJoint(form) {
     const lotDetails = [];
     const mixPkgDetails = [];
-    const totalSumObject = {
-      lotTotalQty: 0,
-      ItemQty: 0,
-      UnitValue: 0,
-      PkgTypeName: '',
-      productTotalRequiredQty: 0
-    };
+
+    let totalSelectedPkgQty = 0;
+    let lotSelectFlag = false;
     if (this.questionJointForm.valid) {
+
+
       form.value.jointQuestions.forEach(result => {
-         if (result.answer > 0) {
+        if (result.answer > 0) {
+          totalSelectedPkgQty = totalSelectedPkgQty + Number(result.answer);
+          lotSelectFlag = true;
+        }
+      });
+
+      form.value.mixPkgDetailsArr.forEach(result => {
+        if (result.mixPkgCheck === true) {
+          totalSelectedPkgQty = totalSelectedPkgQty + 1;
+          lotSelectFlag = true;
+        }
+      });
+
+      if (!lotSelectFlag) {
+        this.msgs = [];
+        this.msgs.push({
+          severity: 'warn', summary: this.globalResource.applicationmsg,
+          detail: 'Please select Pkgs.'
+        });
+        return;
+      } else if (totalSelectedPkgQty !== Number(this.selLotJointBrandStrainRow.combinationTotalAssignedQty)) {
+        this.msgs = [];
+        this.msgs.push({
+          severity: 'warn', summary: this.globalResource.applicationmsg,
+          detail: 'Selected packages does not equal Required Packages'
+        });
+        return;
+      }
+
+      form.value.jointQuestions.forEach(result => {
+        if (result.answer > 0) {
           lotDetails.push(
             {
               ProductTypeId: this.selLotJointBrandStrainRow.ProductTypeId,
@@ -1556,7 +1640,7 @@ debugger;
               UniqueId: this.selLotJointBrandStrainRow.UniqueId
             }
           );
-         }
+        }
       });
 
       form.value.mixPkgDetailsArr.forEach(result => {
@@ -1587,56 +1671,95 @@ debugger;
         lotDetails: lotDetails,
         mixPkgDetails: mixPkgDetails
       });
-      // this.selectedJointPkgArray[this.selLotJointBrandStrainRow.selectedRowIndex] = {
-      //   lotDetails: lotDetails,
-      //   mixPkgDetails: mixPkgDetails
-      // };
+
       if (this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedJointsPkgReleaseArray'));
+        // Remove Old Selectded Lots for current ub=niqueID
+        selectedLots1.forEach((item, index) => {
+          if (item) {
+            if (item.lotDetails) {
+              for (let i = 0; i < item.lotDetails.length; i++) {
+                if (item.lotDetails[i].UniqueId === this.selLotJointBrandStrainRow.UniqueId) {
+                  item.lotDetails.splice(i, 1);
+                  i--;
+                }
+              }
+            }
+          }
+        });
+
+        selectedLots1.forEach((item, index) => {
+          if (item) {
+            if (item.mixPkgDetails) {
+              for (let i = 0; i < item.mixPkgDetails.length; i++) {
+                if (item.mixPkgDetails[i].UniqueId === this.selLotJointBrandStrainRow.UniqueId) {
+                  item.mixPkgDetails.splice(i, 1);
+                  i--;
+                }
+              }
+            }
+          }
+        });
+
+        // END
+
         lotDetails.forEach((item, index) => {
           selectedLots1.forEach((item1, index1) => {
             if (item1) {
-            item1.lotDetails.forEach((p, index2) => {
-              if (lotDetails.filter(r => p.UniqueId === r.UniqueId && p.LotNo === r.LotNo).length <= 0) {
-                if ( lotDetails.filter(r => p.UniqueId === r.UniqueId ).length > 0) {
-                  item1.splice(index2, 1);
+              if (item1.lotDetails.length > 0) {
+                item1.lotDetails.forEach((p, index2) => {
+                  if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
+                    item1.lotDetails.splice(index2, 1);
+                    item1.lotDetails.push(item);
+                  } else {
+                    if (item1.lotDetails.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
+                      item1.lotDetails.push(item);
+                    }
                   }
-              }
-              if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
-                item1.lotDetails.splice(index2, 1);
-                // (index2);
-                item1.lotDetails.push(item);
+                });
               } else {
                 if (item1.lotDetails.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
                   item1.lotDetails.push(item);
                 }
               }
-            });
-          }
+            } else {
+              if (item1.lotDetails.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
+                item1.lotDetails.push(item);
+              }
+            }
           });
         });
 
         mixPkgDetails.forEach((item, index) => {
           selectedLots1.forEach((item1, index1) => {
             if (item1) {
-            item1.mixPkgDetails.forEach((p, index2) => {
-              if (p.UniqueId === item.UniqueId && p.LotNo === item.LotNo) {
-                item1.mixPkgDetails.splice(index2, 1);
-                // (index2);
-                item1.mixPkgDetails.push(item);
+              if (item1.mixPkgDetails.length > 0) {
+                item1.mixPkgDetails.forEach((p, index2) => {
+                  if (p.UniqueId === item.UniqueId && p.MixPkgId === item.MixPkgId) {
+                    item1.mixPkgDetails.splice(index2, 1);
+                    item1.mixPkgDetails.push(item);
+                  } else {
+                    if (item1.mixPkgDetails.filter(r => r.UniqueId === item.UniqueId && r.MixPkgId === item.MixPkgId).length <= 0) {
+                      item1.mixPkgDetails.push(item);
+                    }
+                  }
+                });
               } else {
-                if (item1.mixPkgDetails.filter(r => r.UniqueId === item.UniqueId && r.LotNo === item.LotNo).length <= 0) {
+                if (item1.mixPkgDetails.filter(r => r.UniqueId === item.UniqueId && r.MixPkgId === item.MixPkgId).length <= 0) {
                   item1.mixPkgDetails.push(item);
                 }
               }
-            });
-          }
+            } else {
+              if (item1.mixPkgDetails.filter(r => r.UniqueId === item.UniqueId && r.MixPkgId === item.MixPkgId).length <= 0) {
+                item1.mixPkgDetails.push(item);
+              }
+            }
           });
         });
 
         this.appCommonService.setSessionStorage('selectedJointsPkgReleaseArray', JSON.stringify(selectedLots1));
       } else {
-        this.appCommonService.setSessionStorage('selectedJointsPkgReleaseArray', JSON.stringify(Array.from( this.selectedJointPkgArray.values())));
+        this.appCommonService.setSessionStorage('selectedJointsPkgReleaseArray', JSON.stringify(Array.from(this.selectedJointPkgArray.values())));
       }
       this.showJointSelectionModel = false;
     } else {

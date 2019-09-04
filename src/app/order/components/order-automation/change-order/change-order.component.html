@@ -2,7 +2,7 @@
     <div class="ui-g">
       <div class="ui-g-12">
         <p-panel header="Order Changed - Action Required" [toggleable]="true" [style]="{'margin-bottom':'20px'}">
-          <form [formGroup]="changeOrderForm" autocomplete="off" (ngSubmit)="onSubmit(null, false)">
+          <form [formGroup]="changeOrderForm" autocomplete="off" (ngSubmit)="onSubmit()">
             <div class="ui-g">
               <div class="ui-g-12 ui-md-3">
                 <div class="paddingRL twocnt">
@@ -32,7 +32,7 @@
               <div class="ui-g-12 ui-md-2">
                 <div style="text-align: right">
                   <a class="btn-link" style="color: red;  cursor: pointer;text-decoration: underline"
-                    (click)="onIgnoreOrderChange( null, true)" tabindex="">Ignore Order</a>
+                    (click)="onIgnoreOrderChange()" tabindex="">Ignore Order</a>
                   &nbsp;&nbsp; <a class="btn-link anchor" [routerLink]="" (click)="backIncomingOrderList()"> Back</a>
                 </div>
               </div>
@@ -67,7 +67,7 @@
                   </div>
                 </div>
               </div>
-              <div class="ui-g-12 ui-md-12"  >
+              <div class="ui-g-12 ui-md-12" *ngIf = "changeOrderItemsAddition.length > 0" >
                 <app-section-header  headerLabel="Additions">
                 </app-section-header>
               </div>
@@ -153,7 +153,7 @@
                 </div>
               </div>
 <!-- Start Substraction -->
-                <div class="ui-g-12 ui-md-12"  >
+                <div class="ui-g-12 ui-md-12" *ngIf = "changeOrderItemsSubstraction.length > 0"  >
                 <app-section-header  headerLabel="Substractions">
                 </app-section-header>
                 </div>
@@ -231,7 +231,7 @@
 <!-- End Substraction -->
 
  <!-- No Action Start -->
-              <div class="ui-g-12 ui-md-12"  >
+              <div class="ui-g-12 ui-md-12" *ngIf = "changeOrderItemsNoAction.length > 0" >
                 <app-section-header  headerLabel="No Action Required">
                 </app-section-header>
               </div>
@@ -268,7 +268,13 @@
                               <label for="lbBrand" class="towlable fwLabelBold"><strong>Product</strong></label>
                               <div>
                                 <a class="btn-link" [routerLink]="" (click)="viewProductDetails(ProductItem)">
-                                  {{ProductItem.controls.pkgTypeName.value}} - {{ProductItem.controls.itemQty.value}} X {{ProductItem.controls.pkgSize.value}} g </a>
+                                    <span *ngIf="ProductItem.value.skewkeyName === 'BUD' || ProductItem.value.skewkeyName === 'OIL'">
+                                        {{ProductItem.controls.pkgTypeName.value}} - {{ProductItem.controls.pkgSize.value}} g  
+                                    </span>
+                                    <span *ngIf="ProductItem.value.skewkeyName === 'JOINTS' ">
+                                    {{ProductItem.controls.pkgTypeName.value}} - {{ProductItem.controls.itemQty.value}} X {{ProductItem.controls.pkgSize.value}} g 
+                                  </span>
+                                  </a>
                               </div>
                             </div>
                           </div>

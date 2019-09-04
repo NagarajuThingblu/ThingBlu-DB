@@ -32,11 +32,11 @@ export class ChangeOrderComponent implements OnInit {
   public additionOrderItems: any;
   public substractionOrderItems: any;
   public noActionOrderItems: any;
-  public validProductitemCount = 0;
+  public validProductitemCount: Number;
   public changerderDetails: any;
-  public changeOrderItemsAddition: any;
-  public changeOrderItemsSubstraction: any;
-  public changeOrderItemsNoAction: any;
+  public changeOrderItemsAddition: any = [];
+  public changeOrderItemsSubstraction: any = [];
+  public changeOrderItemsNoAction: any = [];
   public actionNameValue: SelectItem[];
   public employees: SelectItem[];
   public changeOrderDetails = {
@@ -375,6 +375,7 @@ export class ChangeOrderComponent implements OnInit {
       OrderNoActionDetails: [],
       AddtionLotDetails: [],
       SubstractionLotDetails: [],
+      SubstractionMixLotDetails: [],
       AdditionTaskList: [],
       SubstractionTaskList: [],
       AdditionPkgDetails: [],
@@ -536,15 +537,36 @@ export class ChangeOrderComponent implements OnInit {
     if (subLotDetails !== null) {
       subLotDetails
         .forEach((item, index) => {
-          if (item !== null && item.length) {
+          if (item !== null) {
             // tslint:disable-next-line:no-shadowed-variable
-            item.forEach((element, lotIndex) => {
+            item.lotDetails.forEach((element, lotIndex) => {
               if (Number(element.SelectedWt) > 0) {
               draftOrderApi.SubstractionLotDetails.push(
                 {
                   LotId: element.LotNo,
                   Weight: element.SelectedWt,
                   ProductTypeId: element.ProductTypeId,
+                  UniqueId: element.UniqueId,
+                  IndexCode: index
+                });
+              }
+            });
+          }
+        });
+    }
+
+    if (subLotDetails !== null) {
+      subLotDetails
+        .forEach((item, index) => {
+          if (item !== null) {
+            // tslint:disable-next-line:no-shadowed-variable
+            item.mixLotDetails.forEach((element, lotIndex) => {
+              if (Number(element.Qty) > 0) {
+              draftOrderApi.SubstractionMixLotDetails.push(
+                {
+                  MixPkgId: element.MixPkgId,
+                  ProductTypeId: element.ProductTypeId,
+                  Qty: element.Qty,
                   UniqueId: element.UniqueId,
                   IndexCode: index
                 });
@@ -626,7 +648,6 @@ export class ChangeOrderComponent implements OnInit {
           }
         });
     }
-
     // * Addition task and his selected lots
     draftOrderApi.AdditionTaskList.forEach(element => {
       if (element) {
@@ -634,13 +655,9 @@ export class ChangeOrderComponent implements OnInit {
           if (element.ActionType === 'CreateTask' || (element.ActionType === 'AddToCurrentTask' && element.AddedQty > 0)  ) {
             if (draftOrderApi.AddtionLotDetails.length > 0) {
               if (draftOrderApi.AddtionLotDetails.filter(item => item.UniqueId === element.UniqueId) <= 0) {
-                this.msgs = [];
-                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Lots.' });
-                HasError = true;
+                 HasError = true;
               }
          } else {
-          this.msgs = [];
-          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Lots.' });
           HasError = true;
          }
         }
@@ -648,19 +665,21 @@ export class ChangeOrderComponent implements OnInit {
           if (element.ActionType === 'CreateTask' || (element.ActionType === 'AddToCurrentTask' && element.AddedQty > 0)  ) {
           if (draftOrderApi.AdditionPkgDetails.length > 0) {
             if (draftOrderApi.AdditionPkgDetails.filter(item => item.UniqueId === element.UniqueId) <= 0) {
-              this.msgs = [];
-              this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Oil Packages.' });
               HasError = true;
             }
        } else {
-        this.msgs = [];
-        this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Oil Packages.' });
         HasError = true;
        }
       }
       }
      }
     });
+
+    if (HasError) {
+      this.msgs = [];
+      this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Lots/Packages.' });
+      return;
+    }
 
     // substraction task and Order Qty match validation
     subArray.controls.forEach((item, index) => {
@@ -678,14 +697,18 @@ export class ChangeOrderComponent implements OnInit {
           });
 
           if ( Math.abs(Number(control.value.orderedQty) - Number(assignedQty)) !== Number(releasedQty) ) {
-            this.msgs = [];
-            this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Assigned Qty exceeds Ordered Qty.' });
-            HasError = true;
+             HasError = true;
             return;
           }
         }
       }
     });
+
+    if (HasError) {
+      this.msgs = [];
+      this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Assigned Qty exceeds Ordered Qty.' });
+      return;
+    }
 
      // * Substraction task and his selected lots
     draftOrderApi.SubstractionTaskList.forEach(element => {
@@ -694,34 +717,32 @@ export class ChangeOrderComponent implements OnInit {
           if (element.ActionType === 'ReleaseMaterial' && element.ReleasedQty > 0) {
             if (draftOrderApi.SubstractionLotDetails.length > 0) {
               if (draftOrderApi.SubstractionLotDetails.filter(item => item.UniqueId === element.UniqueId) <= 0) {
-                this.msgs = [];
-                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Lots.' });
-                HasError = true;
+                  HasError = true;
               }
             } else {
-              this.msgs = [];
-              this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Lots.' });
-              HasError = true;
+               HasError = true;
+            }
+
+            if (HasError && draftOrderApi.SubstractionMixLotDetails.length > 0) {
+              if (draftOrderApi.SubstractionMixLotDetails.filter(item => item.UniqueId === element.UniqueId) <= 0) {
+                 HasError = true;
+              } else {
+                HasError = false;
+              }
             }
           }
         } else if (element.SkewKeyName === 'JOINTS') {
           if (element.ActionType === 'ReleaseMaterial' && element.ReleasedQty > 0) {
             if (draftOrderApi.SubsractionJointPkgDetails.length > 0) {
               if (draftOrderApi.SubsractionJointPkgDetails.filter(item => item.UniqueId === element.UniqueId) <= 0) {
-                this.msgs = [];
-                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Oil Packages.' });
-                HasError = true;
+                 HasError = true;
               }
             } else {
-              this.msgs = [];
-              this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Oil Packages.' });
-              HasError = true;
+                HasError = true;
             }
             if (HasError && draftOrderApi.SubstractionJointPkgMixDetails.length > 0) {
               if (draftOrderApi.SubstractionJointPkgMixDetails.filter(item => item.UniqueId === element.UniqueId) <= 0) {
-                this.msgs = [];
-                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Oil Packages.' });
-                HasError = true;
+                 HasError = true;
               } else {
                 HasError = false;
               }
@@ -731,14 +752,10 @@ export class ChangeOrderComponent implements OnInit {
           if (element.ActionType === 'ReleaseMaterial' && element.ReleasedQty > 0) {
             if (draftOrderApi.SubstractionPkgDetails.length > 0) {
               if (draftOrderApi.SubstractionPkgDetails.filter(item => item.UniqueId === element.UniqueId) <= 0) {
-                this.msgs = [];
-                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Oil Packages.' });
-                HasError = true;
+                 HasError = true;
               }
             } else {
-              this.msgs = [];
-              this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Oil Packages.' });
-              HasError = true;
+               HasError = true;
             }
           }
         }
@@ -746,9 +763,12 @@ export class ChangeOrderComponent implements OnInit {
     });
 
     if (HasError) {
+      this.msgs = [];
+      this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Lots/Packages.' });
       return;
     } else {
     console.log(draftOrderApi);
+
     this.confirmationService.confirm({
       message: 'Are you sure you want to proceed?',
       header: 'Confirmation',

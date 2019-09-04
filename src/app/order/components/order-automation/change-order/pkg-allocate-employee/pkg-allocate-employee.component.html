@@ -7,7 +7,7 @@
               *</span></label>
           <div>
             <p-dropdown [filter]="true" (onChange)="onChange_Action(ProductItem)" id="taskAction" class="clsControl"
-              tabindex="{{tabindexcount * (iA + 1) + 3 }}" [options]="actionNameValue" placeholder="--Select--"
+              tabindex="1" [options]="actionNameValue" placeholder="--Select--"
               formControlName="taskAction">
             </p-dropdown>
           </div>
@@ -404,7 +404,7 @@
                 </td>
                 <td>
                   <input type="number" (change)="lotWeightOnChange(question)" OnlyNumber="true" pInputText
-                    pKeyFilter="pnum" autocomplete="off" formControlName="answer" id="answer" name="answer"
+                    pKeyFilter="num" autocomplete="off" formControlName="answer" id="answer" name="answer"
                     style="width:100%;" />
                   <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip tooltipPosition="left"
                     *ngIf="!question.controls['answer'].valid&&question.controls['answer'].dirty">
@@ -421,7 +421,7 @@
             </ng-template>
             <ng-template pTemplate="emptymessage" let-columns>
               <tr>
-                <td [attr.colspan]="3">
+                <td [attr.colspan]="4">
                   {{ assignTaskResources.nolotpresent }} "{{ selLotBrandStrainRow?.StrainName }}".
                 </td>
               </tr>
@@ -494,7 +494,8 @@
                 </td>
 
                 <td>
-                  <input pKeyFilter="pnum" type="number" OnlyNumber="true" pInputText autocomplete="off"
+                  <input pKeyFilter="num" type="number" OnlyNumber="true" pInputText autocomplete="off"
+                  PositiveIntegers OnlyNumberWithoutZero="true"
                     formControlName="answer" id="answer" name="answer" (change)="pkgWeightOnChange(question)"
                     style="width:100%;" />
                   <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
@@ -515,7 +516,7 @@
             </ng-template>
             <ng-template pTemplate="emptymessage" let-columns>
               <tr>
-                <td [attr.colspan]="4">
+                <td [attr.colspan]="5">
                   Sorry, No package is present against "{{ selPkgBrandStrainRow?.StrainName }}".
                 </td>
               </tr>

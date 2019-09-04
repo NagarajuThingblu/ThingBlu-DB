@@ -130,10 +130,10 @@ const appRoutes: Routes = [
       { path: 'inviteemployee', component: InviteNewEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'adduser', component: AddEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'adduser/:UserId', component: AddEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'identifyorder', component: IdentifyOrderComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'identifyorder', component: IdentifyOrderComponent, canActivate: [AuthGuard] },
       { path: 'identifyorder/:incomingOrderId', component: IdentifyOrderComponent, canActivate: [AuthGuard]},
-      { path: 'acceptorder', component: AcceptOrderComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'acceptorder/:incomingOrderId', component: AcceptOrderComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'acceptorder', component: AcceptOrderComponent, canActivate: [AuthGuard] },
+      { path: 'acceptorder/:incomingOrderId', component: AcceptOrderComponent, canActivate: [AuthGuard] },
       { path: 'changeOrder/:incomingOrderId', component: ChangeOrderComponent, canActivate: [AuthGuard] },
 
     ]

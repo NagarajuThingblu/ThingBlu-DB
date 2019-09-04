@@ -48,7 +48,7 @@ export class AcceptOrderComponent implements OnInit {
   public selectedAllJoint = true;
   public selectedAllOil = true;
   public defaultDate: Date;
-  public validProductitemCount = 0;
+  public validProductitemCount: number;
   constructor(private orderService: OrderService,
     private loaderService: LoaderService,
     private titleService: Title,

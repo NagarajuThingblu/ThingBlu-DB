@@ -245,7 +245,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       }
       controla.removeAt(taskIndex);
     }
-     this.addtionAssignedQty = 0;
+     // this.addtionAssignedQty = 0;
     let assQty = 0;
     this.tasksArr.controls.forEach((data) => {
       if (rowData.value.actiontype === 'AddToCurrentTask') {
@@ -321,6 +321,29 @@ export class PkgAllocateEmployeeComponent implements OnInit {
   }
 
   openLotSelection(parentRowData, rowData, rowIndex) {
+
+    let assQty = 0;
+    // this.addtionAssignedQty = 0;
+    if (rowData.value.actiontype === 'CreateTask') {
+    this.tasksArr.controls.forEach((data) => {
+      assQty = Number(assQty) + Number((data as FormGroup).controls['assignedQty'].value);
+    });
+
+    if (Number(parentRowData.value.unassignedQty) < assQty ) {
+      return;
+    }
+  }
+
+    if (rowData.value.actiontype === 'AddToCurrentTask') {
+    this.tasksArr.controls.forEach((data) => {
+      assQty = Number(assQty) + Number((data as FormGroup).controls['addedQty'].value);
+    });
+    if (Number(parentRowData.value.unassignedQty) < assQty ) {
+      return;
+    }
+  }
+
+
     const strainId = parentRowData.value.strain;
     this.brandStrainLots = [];
     this.brandStrainLots = this.globalData.orderDetails['Table1'].filter(result => {
@@ -341,6 +364,11 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     }
     this.selLotBrandStrainRow.BrandId = 0;
     this.selLotBrandStrainRow.StrainId = strainId;
+    this.selLotBrandStrainRow.RequireWt = 0;
+    this.selLotBrandStrainRow.BrandName = '';
+        this.selLotBrandStrainRow.StrainName = parentRowData.value.strainName;
+        this.selLotBrandStrainRow.GeneticsId = parentRowData.value.geneticsId;
+        this.selLotBrandStrainRow.GeneticsName = parentRowData.value.geneticsName;
 
     if (rowData.value.actiontype === 'AddToCurrentTask') {
       const employeeBox = (rowData as FormGroup).controls['addedQty'];
@@ -353,7 +381,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       employeeBox.setValidators(validators);
       employeeBox.updateValueAndValidity();
     }
-    this.selLotBrandStrainRow.RequireWt = 0;
+
     if (rowData.value.actiontype === 'AddToCurrentTask') {
       const totalPkgWt = Number(rowData.value.addedQty) * Number(parentRowData.value.pkgSize) * Number(parentRowData.value.itemQty);
       this.selLotBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
@@ -369,10 +397,10 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     })
       .map(value => {
         this.selLotBrandStrainRow.RequireWt += value.TotalWt;
-        this.selLotBrandStrainRow.BrandName = '';
-        this.selLotBrandStrainRow.StrainName = value.StrainName;
-        this.selLotBrandStrainRow.GeneticsId = value.GeneticsId;
-        this.selLotBrandStrainRow.GeneticsName = value.GeneticsName;
+        // this.selLotBrandStrainRow.BrandName = '';
+        // this.selLotBrandStrainRow.StrainName = value.StrainName;
+        // this.selLotBrandStrainRow.GeneticsId = value.GeneticsId;
+        // this.selLotBrandStrainRow.GeneticsName = value.GeneticsName;
       });
     this.questionForm = this.fb.group({
       questions: this.fb.array(this.brandStrainLots.map(this.createQuestionControl(this.fb)))
@@ -550,6 +578,18 @@ export class PkgAllocateEmployeeComponent implements OnInit {
 
       if (this.appCommonService.getSessionStorage('selectedLotsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
+
+        selectedLots1.forEach((item, index1) => {
+          if (item.length > 0) {
+            for (let i = 0; i < item.length; i++) {
+              if (item[i].UniqueId === this.selLotBrandStrainRow.UniqueId) {
+                item.splice(i, 1);
+                i--;
+              }
+            }
+          }
+        });
+
         lotDetails.forEach((item, index) => {
           selectedLots1.forEach((item1, index1) => {
             if (item1.length > 0) {
@@ -585,7 +625,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
   }
   assognedQty_onChange(rowData, unassignedTqty, index) {
     let assQty = 0;
-    this.addtionAssignedQty = 0;
+    // this.addtionAssignedQty = 0;
     this.tasksArr.controls.forEach((data) => {
       assQty = Number(assQty) + Number((data as FormGroup).controls['assignedQty'].value);
     });
@@ -652,7 +692,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
 
   addedQty_onChange(rowData, unassignedTqty, index) {
     let assQty = 0;
-    this.addtionAssignedQty = 0;
+    // this.addtionAssignedQty = 0;
     this.tasksArr.controls.forEach((data) => {
       assQty = Number(assQty) + Number((data as FormGroup).controls['addedQty'].value);
     });
@@ -769,6 +809,28 @@ export class PkgAllocateEmployeeComponent implements OnInit {
   }
 
   openPkgSelection(parentRowData, rowData, rowIndex) {
+
+    let assQty = 0;
+    // this.addtionAssignedQty = 0;
+    if (rowData.value.actiontype === 'CreateTask') {
+    this.tasksArr.controls.forEach((data) => {
+      assQty = Number(assQty) + Number((data as FormGroup).controls['assignedQty'].value);
+    });
+
+    if (Number(parentRowData.value.unassignedQty) < assQty ) {
+      return;
+    }
+  }
+
+    if (rowData.value.actiontype === 'AddToCurrentTask') {
+    this.tasksArr.controls.forEach((data) => {
+      assQty = Number(assQty) + Number((data as FormGroup).controls['addedQty'].value);
+    });
+    if (Number(parentRowData.value.unassignedQty) < assQty ) {
+      return;
+    }
+  }
+
     const StrainId = parentRowData.value.strain;
     const GeneticsId = parentRowData.value.geneticsId;
     this.brandStrainPkgs = [];
@@ -780,16 +842,17 @@ export class PkgAllocateEmployeeComponent implements OnInit {
     this.selPkgBrandStrainRow.ProductTypeId = parentRowData.value.productType;
     this.selPkgBrandStrainRow.RequireWt = 0;
     this.selPkgBrandStrainRow.combinationTotalAssignedWt = 0;
+    this.selPkgBrandStrainRow.GeneticsName =  parentRowData.value.geneticsName;
+    this.selPkgBrandStrainRow.StrainName = parentRowData.value.strainName;
+    this.selPkgBrandStrainRow.BrandName = parentRowData.value.brandName;
 
     this.globalData.orderDetails['Table1'].filter((value, key) =>
       value.GeneticsId === GeneticsId)
       .map(value => {
         this.selPkgBrandStrainRow.RequireWt += value.TotalWt;
-        this.selPkgBrandStrainRow.BrandName = '';
-        this.selPkgBrandStrainRow.StrainName = value.StrainName;
-        this.selPkgBrandStrainRow.GeneticsId = value.GeneticsId;
-        this.selPkgBrandStrainRow.GeneticsName = value.GeneticsName;
-
+       //  this.selPkgBrandStrainRow.BrandName = '';
+        // this.selPkgBrandStrainRow.StrainName = value.StrainName;
+        // this.selPkgBrandStrainRow.GeneticsId = value.GeneticsId;
       });
 
     this.questionPkgForm = this.fb.group({
@@ -928,6 +991,18 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       this.selectedPkgsArray.set(this.selPkgBrandStrainRow.UniqueId, pkgDetails);
       if (this.appCommonService.getSessionStorage('selectedPkgsArray')) {
         const selectedLots1 = JSON.parse(this.appCommonService.getSessionStorage('selectedPkgsArray'));
+
+        selectedLots1.forEach((item, index1) => {
+          if (item.length > 0) {
+            for (let i = 0; i < item.length; i++) {
+              if (item[i].UniqueId === this.selPkgBrandStrainRow.UniqueId) {
+                item.splice(i, 1);
+                i--;
+              }
+            }
+          }
+        });
+
         pkgDetails.forEach((item, index) => {
           selectedLots1.forEach((item1, index1) => {
             if (item1.length > 0) {
@@ -977,7 +1052,7 @@ export class PkgAllocateEmployeeComponent implements OnInit {
       }
       controla.removeAt(taskIndex);
     }
-    this.addtionAssignedQty = 0;
+    // this.addtionAssignedQty = 0;
     let assQty = 0;
     this.tasksArr.controls.forEach((data) => {
       if (rowData.value.actiontype === 'AddToCurrentTask') {
