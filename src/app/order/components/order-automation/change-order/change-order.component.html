@@ -72,7 +72,7 @@
                 </app-section-header>
               </div>
 
-              <div class="ui-g-12" >
+              <div class="ui-g-12"  *ngIf = "changeOrderItemsAddition.length > 0"  >
                 <div class="ui-g-12" formArrayName="productAdditionArr">
                   <div class="ui-g" *ngFor="let ProductItem of productAdditionArr?.controls; let iA = index"
                     [formGroupName]="iA">
@@ -158,7 +158,7 @@
                 </app-section-header>
                 </div>
 
-                <div class="ui-g-12"  >
+                <div class="ui-g-12"  *ngIf = "changeOrderItemsSubstraction.length > 0" >
                   <div class="ui-g-12" formArrayName="productSubstractionArr">
                     <div class="ui-g" *ngFor="let ProductItem of productSubstractionArr?.controls; let iA = index"
                       [formGroupName]="iA">
@@ -236,7 +236,7 @@
                 </app-section-header>
               </div>
 
-              <div class="ui-g-12"  >
+              <div class="ui-g-12"  *ngIf = "changeOrderItemsNoAction.length > 0"   >
                   <div class="ui-g-12" formArrayName="productNoActionArr">
                     <div class="ui-g" *ngFor="let ProductItem of productNoActionArr?.controls; let iA = index"
                       [formGroupName]="iA">

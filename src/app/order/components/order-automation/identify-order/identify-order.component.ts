@@ -85,7 +85,11 @@ export class IdentifyOrderComponent implements OnInit {
     private appCommonService: AppCommonService,
     private dropdownDataService: DropdownValuesService,
     private dropdwonTransformService: DropdwonTransformService,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder) {
+      setTimeout(() => {
+        this.loaderService.display(true);
+      }, 0);
+    }
 
   ngOnInit() {
     this.identifyProductResource = OrderResource.getResources().en.identifyProduct;
@@ -93,7 +97,7 @@ export class IdentifyOrderComponent implements OnInit {
     this.titleService.setTitle(this.identifyProductResource.identifyProducttitle);
     this.cookie_clientId = this.appCommonService.getUserProfile().ClientId;
     this.cookie_virtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
-    this.loaderService.display(true);
+
     this.getAllBrands(0);
     this.getAllStrains(0);
     this.getAllPackageType(0);
@@ -158,15 +162,20 @@ export class IdentifyOrderComponent implements OnInit {
           this.incomingOrderDetails = data.Table;
           this.incomingOrderItems = data.Table1;
           if ( this.incomingOrderDetails) {
-            if ( this.incomingOrderDetails[0].IsIdentified) {
+            if ( this.incomingOrderDetails[0].IsIdentified && !this.incomingOrderDetails[0].IsChangeOrder) {
               this.router.navigate(['../home/acceptorder/' + this.incomingOrderDetails[0].IncomingOrderId]);
-            }
+             } // else if ( this.incomingOrderDetails[0].IsIdentified && this.incomingOrderDetails[0].IsChangeOrder) {
+            //   this.router.navigate(['../home/changeOrder/' + this.incomingOrderDetails[0].IncomingOrderId]);
+            // } else {
+            //   this.router.navigate(['../home/acceptorder/' + this.incomingOrderDetails[0].IncomingOrderId]);
+            // }
           }
           if (this.incomingOrderItems) {
             this.addItem();
           }
          // this.loaderService.display(false);
         }
+        this.loaderService.display(false);
       },
       error => { console.log(error); this.loaderService.display(false); },
       () => console.log('Get All Order Incoming complete'));
@@ -415,7 +424,9 @@ export class IdentifyOrderComponent implements OnInit {
   }
 
   onSubmit(model) {
-    this.loaderService.display(true);
+    setTimeout(() => {
+      this.loaderService.display(true);
+    }, 0);
     let identifyDetailsForApi;
     identifyDetailsForApi = {
       orderDetails: {
@@ -451,8 +462,8 @@ export class IdentifyOrderComponent implements OnInit {
         .subscribe(
           data => {
             if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
-              this.loaderService.display(false);
               setTimeout(() => {
+                this.loaderService.display(false);
                 this.confirmationService.confirm({
                   message: this.identifyProductResource.identifysave,
                   key: 'identifyOrderconfirm',
@@ -468,54 +479,72 @@ export class IdentifyOrderComponent implements OnInit {
               });
             }, 1000);
           } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'FAILURE') {
+            this.loaderService.display(false);
             this.msgs = [];
             this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: 'Internal server error!' });
           }   else if (String(data[0].ResultKey).toLocaleUpperCase() === 'DUPLICATE') {
+            this.loaderService.display(false);
               this.msgs = [];
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Duplicate S2Order No' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'RETAILERNAMEEMPTY') {
               this.msgs = [];
+              this.loaderService.display(false);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Retailar not provided.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'S2ORDERNOEMPTY') {
               this.msgs = [];
+              this.loaderService.display(false);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'S2Order no not provided.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'S2ORDERNOEXISTS') {
               this.msgs = [];
+              this.loaderService.display(false);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'S2Order No already Exists' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'SKEWTYPEEMPTY') {
               this.msgs = [];
+              this.loaderService.display(false);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Skew Type.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'BRANDEMPTY') {
               this.msgs = [];
+              this.loaderService.display(false);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select or Add Brand.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'BRANDNOTEXIST') {
               this.msgs = [];
+              this.loaderService.display(false);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Selected Brand not exists.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'STRAINEMPTY') {
               this.msgs = [];
+              this.loaderService.display(false);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select or Add Strain.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'STRAINNOTEXIST') {
               this.msgs = [];
+              this.loaderService.display(false);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Selected Strain not exists.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'PKGTYPEEMPTY') {
               this.msgs = [];
+              this.loaderService.display(false);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select or Add Pkg Type' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'PKGTYPENOTEXIST') {
               this.msgs = [];
+              this.loaderService.display(false);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Selected Pkg Type not exists.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'PKGSIZEEMPTY') {
               this.msgs = [];
+              this.loaderService.display(false);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please enter package Size' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'ITEMQTYEMPTY') {
               this.msgs = [];
+              this.loaderService.display(false);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please enter Item Qty.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'UNITPRICEEMPTY') {
               this.msgs = [];
+              this.loaderService.display(false);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please enter Unit Price.' });
+            } else {
+              this.loaderService.display(false);
             }
+
           });
       // http call ends
-      this.loaderService.display(false);
+
     } else {
       this.appCommonService.validateAllFields(this.identifyProductForm);
       this.loaderService.display(false);

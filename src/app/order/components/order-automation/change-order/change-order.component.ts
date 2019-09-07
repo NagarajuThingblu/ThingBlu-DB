@@ -706,7 +706,7 @@ export class ChangeOrderComponent implements OnInit {
 
     if (HasError) {
       this.msgs = [];
-      this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Assigned Qty exceeds Ordered Qty.' });
+      this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Assigned Qty not matched with Ordered Qty.' });
       return;
     }
 

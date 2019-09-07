@@ -198,7 +198,7 @@
                             <div class="le-su-12">
                               <label for="contactFirstName" class="towlable fwLabelBold"><strong>{{ identifyProductResource.pkgType }}</strong><span
                                   class="star"> *</span></label>
-                              <div *ngIf="ProductItem.value.pkgTypeName; else pkgType_content">
+                              <div *ngIf="ProductItem.value.pkgTypeName || ProductItem.value.pkgType > 0; else pkgType_content">
                                 <span [class.markRowAsRed]="ProductItem.value.pkgType <=0">
                                   {{ProductItem.value.pkgTypeName}} </span>
                               </div>
@@ -339,7 +339,7 @@
     class="clsConfirmBox" 
     header="Confirmation" 
     key="identifyOrderconfirm" 
-    icon="fa fa-question-circle" 
+    icon="fa fa-info-circle" 
     acceptIcon="fa-close"
     width="425" #cd>
 </p-confirmDialog>
