@@ -71,8 +71,8 @@
                             <!-- <td>
                                 <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
                             </td> -->
-                            <td>{{order?.OrderRefId}}</td>
-                            <td>{{order?.RetailerName}}</td>
+                            <td style="word-break: break-all">{{order?.OrderRefId}}</td>
+                            <td style="word-break: break-all">{{order?.RetailerName}}</td>
                             <td class="datewidth">{{order?.OrderDate | date:'MM/dd/yyyy' }}</td>
                             <td class="datewidth">{{order?.DeliveryDate | date:'MM/dd/yyyy' }}</td>
                             <td>
@@ -156,7 +156,7 @@
                         <ng-template pTemplate="body" let-order let-rowData let-columns="columns" let-rowIndex="rowIndex">
                             <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
                                     <td>{{order?.DraftOrderNo}}</td>
-                                    <td> <span *ngIf="order?.RetailerName">{{order?.RetailerName}}</span>
+                                    <td style="word-break: break-all"> <ng-container *ngIf="order?.RetailerName">{{order?.RetailerName}}</ng-container>
                                       
                                     </td>
                                     <td class="datewidth">{{order?.CreatedDate | date:'MM/dd/yyyy' }}</td>
@@ -190,6 +190,7 @@
                   <!-- Start Incoming Order -->
                   <p-tabPanel header="Incoming" [selected] = "incomingTabSelected" >
                     <p-table #dtIncomingOrderListing [value]="allIncomingOrders" 
+                    class="clsTableSelection"
                     sortMode="single"                      
                     [responsive]="true" 
                     [paginator]="true" 
@@ -209,7 +210,7 @@
                     </ng-template>
                     <ng-template pTemplate="header">
                         <tr>
-                            <th style="width:20%" [pSortableColumn]="'S2OrderNo'">{{orderrequestResource.s2systemid}} 
+                            <th style="width:25%" [pSortableColumn]="'S2OrderNo'">{{orderrequestResource.s2systemid}} 
                                 <p-sortIcon [field]="'S2OrderNo'"></p-sortIcon>                                
                             </th>
                             <th style="width:30%" [pSortableColumn]="'RetailerName'">{{orderrequestResource.retailer}}
@@ -247,13 +248,13 @@
                             </th>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-order let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                    <ng-template pTemplate="body" let-order let-rowData let-columns="columns" class="clsTableRow rowBorder"  let-rowIndex="rowIndex">
                         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
                                 <td>{{order?.S2OrderNo}}</td>
-                                <td> <span *ngIf="order?.RetailerName">{{order?.RetailerName}}</span>
+                                <td style=" word-break: break-all; " > <ng-container *ngIf="order?.RetailerName">{{order?.RetailerName}}</ng-container>
                                   
                                 </td>
-                                <td class="datewidth">${{order?.OrderTotal }}</td>
+                                <td class="datewidth"> <ng-container *ngIf="order?.OrderTotal >= 0">$</ng-container>{{order?.OrderTotal }}</td>
                                 <td class="datewidth">{{order?.CreatedDate | date:'MM/dd/yyyy' }}</td>
                                 <td class="datewidth">{{order?.ModifiedDate | date:'MM/dd/yyyy' }}</td>
                                 <td class="text-center"> 
@@ -285,6 +286,7 @@
                  <!-- Start Order Change-->
                  <p-tabPanel header="Order Changes"  [selected] = "changeTabSelected"s>
                     <p-table #dtChangeOrderListing [value]="allChangeOrders" 
+                    class="clsTableSelection"
                     sortMode="single"                      
                     [responsive]="true" 
                     [paginator]="true" 
@@ -304,7 +306,7 @@
                     </ng-template>
                     <ng-template pTemplate="header">
                         <tr>
-                            <th style="width:20%" [pSortableColumn]="'S2OrderNo'">{{orderrequestResource.s2systemid}} 
+                            <th style="width:25%" [pSortableColumn]="'S2OrderNo'">{{orderrequestResource.s2systemid}} 
                                 <p-sortIcon [field]="'S2OrderNo'"></p-sortIcon>                                
                             </th>
                             <th style="width:30%" [pSortableColumn]="'RetailerName'">{{orderrequestResource.retailer}}
@@ -345,10 +347,10 @@
                     <ng-template pTemplate="body" let-order let-rowData let-columns="columns" let-rowIndex="rowIndex">
                         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
                                 <td>{{order?.S2OrderNo}}</td>
-                                <td> <span *ngIf="order?.RetailerName">{{order?.RetailerName}}</span>
+                                <td style=" word-break: break-all; "> <ng-container *ngIf="order?.RetailerName">{{order?.RetailerName}}</ng-container>
                                   
                                 </td>
-                                <td class="datewidth">${{order?.OrderTotal }}</td>
+                                <td class="datewidth"> <ng-container *ngIf="order?.OrderTotal >= 0">$</ng-container>{{order?.OrderTotal }}</td>
                                 <td class="datewidth">{{order?.UpdatedDate | date:'MM/dd/yyyy' }}</td>
                                 <td class="datewidth">{{order?.ModifiedDate | date:'MM/dd/yyyy' }}</td>
                                 <td class="text-center"> 

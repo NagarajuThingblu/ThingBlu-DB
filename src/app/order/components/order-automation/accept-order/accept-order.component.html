@@ -93,7 +93,7 @@
                   <th style="width:15%;">Sub-Brand</th>
                   <th style="width:20%;">Strain</th>
                   <th style="width:20%;">Package Type</th>
-                  <th style="width:10%;">Unit Cost</th>
+                  <th style="width:10%;">Unit Price</th>
                   <th style="width:10%;">Order Qty</th>
                 </tr>
                 <tr>
@@ -116,7 +116,8 @@
                   </p-checkbox>
                   </td>
                   <td> <span>{{item.controls.brandName.value}}</span> </td>
-                  <td> <span>{{item.controls.subBrandName.value}}</span> </td>
+                  <td> <span *ngIf = 'item.controls.subBrandName.value '>{{item.controls.subBrandName.value}}</span>
+                    <span *ngIf = '!item.controls.subBrandName.value'>None</span> </td>
                   <td> <span>{{item.controls.strainName.value}}</span> </td>
                   <td> <span>{{item.controls.pkgTypeName.value}} - {{item.controls.pkgSize.value}} g</span> </td>
                   <td> <span>${{item.controls.unitPrice.value}}</span> </td>
@@ -148,7 +149,7 @@
                         <th style="width:15%;">Sub-Brand</th>
                         <th style="width:20%;">Strain</th>
                         <th style="width:20%;">Package Type</th>
-                        <th style="width:10%;">Unit Cost</th>
+                        <th style="width:10%;">Unit Price</th>
                         <th style="width:10%;">Order Qty</th>
                       </tr>
                       <tr>
@@ -171,7 +172,8 @@
                         </p-checkbox>
                         </td>
                         <td> <span>{{item.controls.brandName.value}}</span> </td>
-                        <td> <span>{{item.controls.subBrandName.value}}</span> </td>
+                        <td> <span *ngIf = 'item.controls.subBrandName.value '>{{item.controls.subBrandName.value}}</span>
+                          <span *ngIf = '!item.controls.subBrandName.value'>None</span> </td>
                         <td> <span>{{item.controls.strainName.value}}</span> </td>
                         <td> <span>{{item.controls.pkgTypeName.value}} - {{item.controls.itemQty.value}} X {{item.controls.pkgSize.value}} g</span> </td>
                         <td> <span>${{item.controls.unitPrice.value}}</span> </td>
@@ -202,7 +204,7 @@
                       <th style="width:15%;">Sub-Brand</th>
                       <th style="width:20%;">Strain</th>
                       <th style="width:20%;">Package Type</th>
-                      <th style="width:10%;">Unit Cost</th>
+                      <th style="width:10%;">Unit Price</th>
                       <th style="width:10%;">Order Qty</th>
                     </tr>
                     <tr>
@@ -225,7 +227,8 @@
                       </p-checkbox>
                       </td>
                       <td> <span>{{item.controls.brandName.value}}</span> </td>
-                      <td> <span>{{item.controls.subBrandName.value}}</span> </td>
+                      <td> <span *ngIf = 'item.controls.subBrandName.value '>{{item.controls.subBrandName.value}}</span>
+                        <span *ngIf = '!item.controls.subBrandName.value'>None</span> </td>
                       <td> <span>{{item.controls.strainName.value}}</span> </td>
                       <td> <span>{{item.controls.pkgTypeName.value}} - {{item.controls.itemQty.value}} X {{item.controls.pkgSize.value}} g</span> </td>
                       <td> <span>${{item.controls.unitPrice.value}}</span> </td>

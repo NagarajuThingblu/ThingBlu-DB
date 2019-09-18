@@ -678,6 +678,10 @@ export class MastersResource {
                    errormsg: 'You do not have permission to access the page that you requested, Please contact administrator.',
                    rediretmsg: 'To redirect home page',
                    clickhere: 'click here.'
+                },
+                addNewSkew: {
+                    skewType: 'Skew Type',
+                    skewName: 'Skew Name',
                 }
             }
         };

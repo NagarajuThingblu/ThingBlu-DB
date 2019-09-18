@@ -45,8 +45,11 @@ export class DropdwonTransformService {
     if (IsSorted) {
         return tmpArray
             .sort((a, b) => {
-          if (a.label === placeholder || a.label === placeholder) {
-            return -1;
+          // if (a.label === placeholder || a.label === placeholder) {
+          //   return -1;    // changed by sanjay 18-09-2019
+          // }
+          if (a.label === placeholder || b.label === placeholder) {
+            return +1;
           }
           if (!a.label) {
             // Change this values if you want to put `null` values at the end of the array

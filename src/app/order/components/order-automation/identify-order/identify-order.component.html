@@ -8,7 +8,7 @@
             <span> <a [routerLink]="" (click)="backIncomingOrderList()"
                 style="text-decoration: underline;float: right;color: #337ab7"> < Back</a></span>
           </div>
-          <div class="ui-g-12 ui-md-2">
+          <div class="ui-g-12 ui-md-3">
             <div class="paddingRL twocnt">
               <strong> Order ID  </strong>
               <div>
@@ -41,11 +41,15 @@
               </div>
             </div>
           </div>
-          <div class="ui-g-2 ui-md-3">
+          <div class="ui-g-2 ui-md-2">
           </div>
           <div class="ui-g-12 ui-md-2">
           </div>
-          <div class="ui-g-12 ui-md-6" style="text-align: center">
+          <div class="ui-g-12 ui-md-8" style="text-align: center">
+            <span> <a [routerLink]="" (click)="addNewSkew()" style="text-decoration: underline ;color: #337ab7"> Add
+              Type</a></span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
             <span> <a [routerLink]="" (click)="addNewBrand()" style="text-decoration: underline ;color: #337ab7"> Add
               {{ identifyProductResource.brand}}</a></span>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -58,7 +62,7 @@
             <span> <a [routerLink]="" (click)="addNewPackageType()" style="text-decoration: underline; color: #337ab7">
               {{ identifyProductResource.addNewPkg}}</a></span>
           </div>
-          <div class="ui-g-12 ui-md-4">
+          <div class="ui-g-12 ui-md-2">
           </div>
           <form [formGroup]="identifyProductForm" autocomplete="off" (ngSubmit)="onSubmit(identifyProductForm.value)">
             <div class="ui-g" style=" margin-top: -20px;">
@@ -98,14 +102,23 @@
                       </div>
                       <div class="ui-g-12 ui-g-nopad"
                         [style.opacity]="ProductItem.controls.chkIsInvalidProductItem.value ? 0.5 : null">
-                        <div class="ui-g-12 ui-md-6">
-                          <div class="ui-g-12 ui-md-3">
+                        <div class="ui-g-12 ui-md-5">
+                          <!-- <div class="ui-g-12 ui-md-3">
                             <div class="le-su-12">
                               <label for="lbskewType" class="towlable fwLabelBold"><strong> {{ identifyProductResource.skewType }} </strong><span
                                   class="star"> *</span></label>
+                                  
                               <div *ngIf="ProductItem.value.skewTypeName; else skew_content">
+                                <div>
                                   <span [class.markRowAsRed]="ProductItem.value.skewType <=0">
-                                      {{ProductItem.value.skewTypeName}} </span>
+                                    {{ProductItem.value.skewTypeName}} </span>
+                                </div>
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                  *ngIf="!ProductItem.controls['skewType'].valid&&ProductItem.controls['skewType'].dirty">
+                                  <span *ngIf="ProductItem.controls['skewType'].errors['required']">
+                                    Invalid Type.
+                                  </span>
+                                </div>
                               </div>
                               <ng-template #skew_content>
                                 <div>
@@ -121,7 +134,37 @@
                                 </div>
                               </ng-template>
                             </div>
+                          </div> -->
+
+
+                             <div class="ui-g-12 ui-md-3">
+                            <div class="le-su-12">
+                              <label for="lbskewType" class="towlable fwLabelBold"><strong> {{ identifyProductResource.skewType }} </strong><span
+                                  class="star"> *</span></label>
+                                  
+                              <div *ngIf="ProductItem.value.skewType <=0 ; else skew_content">
+                                <div>
+                                  <span [class.markRowAsRed]="ProductItem.value.skewType <=0">
+                                    {{ProductItem.value.leafSkewName}} </span>
+                                </div>
+                                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                                  *ngIf="!ProductItem.controls['skewType'].valid&&ProductItem.controls['skewType'].dirty">
+                                  <span *ngIf="ProductItem.controls['skewType'].errors['required']">
+                                    Invalid Type.
+                                  </span>
+                                </div>
+                              </div>
+                              <ng-template #skew_content>
+                                <div>
+                                  <span >
+                                    {{ProductItem.value.skewTypeName}} </span>  
+                                    <span style="font-size:x-small; color: red;  " [class.markRowAsRed]="ProductItem.value.skewType <=0">
+                                     ({{ProductItem.value.leafSkewName}})</span>
+                                </div>
+                              </ng-template>
+                            </div>
                           </div>
+
                           <div class="ui-g-12 ui-md-3">
                             <div class="le-su-12">
                               <label for="lbBrand" class="towlable fwLabelBold"><strong> {{ identifyProductResource.brand }}</strong><span
@@ -151,15 +194,18 @@
                             <div class="le-su-12">
                               <label for="contactFirstName" class="towlable fwLabelBold"><strong>{{ identifyProductResource.subBrand }}
                                 </strong></label>
-                              <div *ngIf="ProductItem.value.subBrandName; else subBrand_content">
+                              <div *ngIf="ProductItem.value.subBrandName || ProductItem.value.productType > 0; else subBrand_content">
                                 <span [class.markRowAsRed]="ProductItem.value.subBrand <=0">
                                   {{ProductItem.controls.subBrandName.value}} </span>
+                                  <span *ngIf="ProductItem.value.subBrand <=0 &&  ProductItem.value.productType > 0">
+                                   None </span>
                               </div>
+                              
                               <ng-template #subBrand_content>
                                 <div>
                                   <p-dropdown [filter]="true" (onChange)="onChange_subBrand()" id="subBrand"
                                     [disabled]="ProductItem.controls.chkIsInvalidProductItem.value" class="clsControl"
-                                    [options]="getDynamicSubBrands(ProductItem)" placeholder="--Select--"
+                                    [options]="getDynamicSubBrands(ProductItem)" placeholder="None"
                                     tabindex="{{tabindexcount * (iA + 1) + 4 }}" formControlName="subBrand">
                                   </p-dropdown>
                                 </div>
@@ -193,12 +239,12 @@
                             </div>
                           </div>
                         </div>
-                        <div class="ui-g-12 ui-md-6">
+                        <div class="ui-g-12 ui-md-7">
                           <div class="ui-g-12 ui-md-3">
                             <div class="le-su-12">
                               <label for="contactFirstName" class="towlable fwLabelBold"><strong>{{ identifyProductResource.pkgType }}</strong><span
                                   class="star"> *</span></label>
-                              <div *ngIf="ProductItem.value.pkgTypeName || ProductItem.value.pkgType > 0; else pkgType_content">
+                              <div *ngIf="ProductItem.value.pkgTypeName || ProductItem.value.productType > 0; else pkgType_content">
                                 <span [class.markRowAsRed]="ProductItem.value.pkgType <=0">
                                   {{ProductItem.value.pkgTypeName}} </span>
                               </div>
@@ -218,15 +264,16 @@
                                 </div>
                               </ng-template>
                             </div>
+
                           </div>
-                          <div class="ui-g-12 ui-md-3">
+                          <div class="ui-g-12 ui-md-2">
                             <div class="le-su-12">
-                              <label for="itemSize" class="towlable fwLabelBold"><strong>   {{ identifyProductResource.itemSize }}
+                              <label for="itemSize" class="towlable fwLabelBold"><strong>  Item Wt
                                 </strong><span class="star"> *</span></label>
                               <div
                                 *ngIf="ProductItem.value.pkgSize > 0 &&!ProductItem.controls['pkgSize'].dirty; else pkgSize_content">
                                 <span [class.markRowAsRed]="ProductItem.value.productType <=0">
-                                  {{ProductItem.value.pkgSize}} </span>
+                                  {{ProductItem.value.pkgSize}} (g) </span>
                               </div>
                               <ng-template #pkgSize_content>
                                 <div>
@@ -250,9 +297,9 @@
                               </ng-template>
                             </div>
                           </div>
-                          <div class="ui-g-12 ui-md-3">
+                          <div class="ui-g-12 ui-md-2">
                             <div class="le-su-12">
-                              <label for="itemQty" class="towlable fwLabelBold"><strong> {{ identifyProductResource.itemPkg }} 
+                              <label for="itemQty" class="towlable fwLabelBold"><strong> Item Qty 
                                 </strong><span class="star"> *</span></label>
                               <div
                                 *ngIf="ProductItem.value.itemQty > 0 &&!ProductItem.controls['itemQty'].dirty ; else itemQty_content">
@@ -277,7 +324,7 @@
                               </ng-template>
                             </div>
                           </div>
-                          <div class="ui-g-12 ui-md-3">
+                          <div class="ui-g-12 ui-md-2">
                             <div class="le-su-12">
                               <label for="lbunitPrice" class="towlable fwLabelBold"><strong> {{ identifyProductResource.unitPrice }}  
                                 </strong><span class="star"> *</span></label>
@@ -304,6 +351,15 @@
                             </div>
 
                           </div>
+                          <div class="ui-g-12 ui-md-2">
+                            <div class="le-su-12">
+                              <label for="lbunitPrice" class="towlable fwLabelBold"> <strong> Order Qty  </strong>  </label>
+                              <div> 
+                              {{ProductItem.value.orderQty}}
+                              </div>
+                            </div>
+                          </div>
+
                         </div>
                       </div>
                     </div>
@@ -324,6 +380,9 @@
       </p-panel>
     </div>
   </div>
+
+  <app-add-new-skew-popup [Skew]="SkewInfo" (SkewSaved)="onSkewSave($event)"></app-add-new-skew-popup>
+
   <app-add-new-brand [Brand]="BrandInfo" (BrandSaved)="onBrandSave($event)"></app-add-new-brand>
 
   <app-add-new-sub-brand [SubBrand]="SubBrandInfo" (SubBrandSaved)="onSubBrandSave($event)"></app-add-new-sub-brand>
