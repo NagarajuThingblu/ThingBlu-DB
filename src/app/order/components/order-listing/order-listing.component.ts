@@ -257,7 +257,9 @@ export class OrderListingComponent implements OnInit, OnDestroy {
           if (this.allIncomingOrders.length > 20) {
             this.incomingpaginationValues[AppConstants.getPaginationOptions.length] = this.allIncomingOrders.length;
           }
-          this.loaderService.display(false);
+          setTimeout(() => {
+            this.loaderService.display(false);
+          }, 0);
        } else {
         this.allIncomingOrders = [];
         this.loaderService.display(false);

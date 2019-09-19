@@ -24,6 +24,15 @@ import { GlobalResources } from '../../../../global resource/global.resource';
   div.tblProductSKU .ui-table .ui-table-tbody>tr>td {
     word-break: break-word !important;
   }
+  .ui-table .ui-table-thead>tr>th {
+    height: 30px;
+    border: none;
+    vertical-align: top;
+}
+div.clsRemoveTableInnerBorders .ui-table-tbody > tr > td {
+  border-right-color: transparent !important;
+  border: none;
+  height: 30px;
   `]
 })
 export class IdentifyOrderComponent implements OnInit {

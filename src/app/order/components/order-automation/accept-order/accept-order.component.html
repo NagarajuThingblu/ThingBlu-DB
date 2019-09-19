@@ -93,8 +93,8 @@
                   <th style="width:15%;">Sub-Brand</th>
                   <th style="width:20%;">Strain</th>
                   <th style="width:20%;">Package Type</th>
-                  <th style="width:10%;">Unit Price</th>
-                  <th style="width:10%;">Order Qty</th>
+                  <th style="width:10%; text-align: center">Unit Price</th>
+                  <th style="width:10%; text-align: center">Order Qty</th>
                 </tr>
                 <tr>
                     <td style="width:7%;     padding-left: 8px;">
@@ -110,7 +110,7 @@
                 <tr [formGroupName]="i">
                   <td>
                       
-                    <span class="ui-column-title">test</span>
+                    <span class="ui-column-title"></span>
                     <p-checkbox   labelStyleClass="fwLabelBold" label=""  [(ngModel)]="item.controls.chkAcceptProductItem.value" (onChange)="checkIfAllSelectedBud();"
                     class="clsControl" formControlName="chkAcceptProductItem" binary="true">
                   </p-checkbox>
@@ -120,8 +120,8 @@
                     <span *ngIf = '!item.controls.subBrandName.value'>None</span> </td>
                   <td> <span>{{item.controls.strainName.value}}</span> </td>
                   <td> <span>{{item.controls.pkgTypeName.value}} - {{item.controls.pkgSize.value}} g</span> </td>
-                  <td> <span>${{item.controls.unitPrice.value}}</span> </td>
-                  <td> <span>{{item.controls.orderedQty.value}}</span> </td>
+                  <td style="text-align: center"> <span>${{item.controls.unitPrice.value}}</span> </td>
+                  <td style="text-align: center"> <span>{{item.controls.orderedQty.value}}</span> </td>
               </ng-template>
               <ng-template pTemplate="emptymessage">
                 <tr>
@@ -149,8 +149,8 @@
                         <th style="width:15%;">Sub-Brand</th>
                         <th style="width:20%;">Strain</th>
                         <th style="width:20%;">Package Type</th>
-                        <th style="width:10%;">Unit Price</th>
-                        <th style="width:10%;">Order Qty</th>
+                        <th style="width:10%;  text-align: center">Unit Price</th>
+                        <th style="width:10%;  text-align: center">Order Qty</th>
                       </tr>
                       <tr>
                           <td style="width:7%;     padding-left: 8px;">
@@ -166,7 +166,7 @@
                       <tr [formGroupName]="i">
                         <td>
                             
-                          <span class="ui-column-title">test</span>
+                          <span class="ui-column-title"></span>
                           <p-checkbox   labelStyleClass="fwLabelBold" label=""  [(ngModel)]="item.controls.chkAcceptProductItem.value" (onChange)="checkIfAllSelectedJoint();"
                           class="clsControl" formControlName="chkAcceptProductItem" binary="true">
                         </p-checkbox>
@@ -176,8 +176,8 @@
                           <span *ngIf = '!item.controls.subBrandName.value'>None</span> </td>
                         <td> <span>{{item.controls.strainName.value}}</span> </td>
                         <td> <span>{{item.controls.pkgTypeName.value}} - {{item.controls.itemQty.value}} X {{item.controls.pkgSize.value}} g</span> </td>
-                        <td> <span>${{item.controls.unitPrice.value}}</span> </td>
-                        <td> <span>{{item.controls.orderedQty.value}}</span> </td>
+                        <td style=" text-align: center"> <span>${{item.controls.unitPrice.value}}</span> </td>
+                        <td style=" text-align: center"> <span>{{item.controls.orderedQty.value}}</span> </td>
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                       <tr>
@@ -204,8 +204,8 @@
                       <th style="width:15%;">Sub-Brand</th>
                       <th style="width:20%;">Strain</th>
                       <th style="width:20%;">Package Type</th>
-                      <th style="width:10%;">Unit Price</th>
-                      <th style="width:10%;">Order Qty</th>
+                      <th style="width:10%;  text-align: center">Unit Price</th>
+                      <th style="width:10%;  text-align: center">Order Qty</th>
                     </tr>
                     <tr>
                         <td style="width:7%;     padding-left: 8px;">
@@ -221,7 +221,7 @@
                     <tr [formGroupName]="i">
                       <td>
                           
-                        <span class="ui-column-title">test</span>
+                        <span class="ui-column-title"></span>
                         <p-checkbox   labelStyleClass="fwLabelBold" label=""   [(ngModel)]="item.controls.chkAcceptProductItem.value" (onChange)="checkIfAllSelectedOil();"
                         class="clsControl" formControlName="chkAcceptProductItem" binary="true">
                       </p-checkbox>
@@ -231,8 +231,8 @@
                         <span *ngIf = '!item.controls.subBrandName.value'>None</span> </td>
                       <td> <span>{{item.controls.strainName.value}}</span> </td>
                       <td> <span>{{item.controls.pkgTypeName.value}} - {{item.controls.itemQty.value}} X {{item.controls.pkgSize.value}} g</span> </td>
-                      <td> <span>${{item.controls.unitPrice.value}}</span> </td>
-                      <td> <span>{{item.controls.orderedQty.value}}</span> </td>
+                      <td style=" text-align: center"> <span>${{item.controls.unitPrice.value}}</span> </td>
+                      <td style=" text-align: center"> <span>{{item.controls.orderedQty.value}}</span> </td>
                   </ng-template>
                   <ng-template pTemplate="emptymessage">
                     <tr>
