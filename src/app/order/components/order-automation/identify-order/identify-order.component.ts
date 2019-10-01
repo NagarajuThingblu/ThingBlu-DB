@@ -239,7 +239,7 @@ export class IdentifyOrderComponent implements OnInit {
   getDynamicSubBrands(productItem) {
     // console.log('Get all sub brands complete');
     return this.dropdwonTransformService.transform(this.globalData.brands.filter(
-      data => data.ParentId === productItem.value.brand), 'SubBrandName', 'SubBrandId', 'None');
+      data => (data.ParentId === productItem.value.brand && productItem.value.brand > 0)), 'SubBrandName', 'SubBrandId', 'None');
   }
 
   addNewBrand() {
@@ -253,7 +253,7 @@ export class IdentifyOrderComponent implements OnInit {
   }
 
   onSubBrandSave(OnBrandSave) {
-    this.getAllSubBrands(OnBrandSave.SubBrand, OnBrandSave.Brand);
+    this.getAllSubBrands(OnBrandSave.SubBrand, OnBrandSave.brand);
   }
 
   getAllSubBrands(subBrandId, brand) {
