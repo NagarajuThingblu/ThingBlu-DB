@@ -1931,7 +1931,6 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
             Qty: object.reviewedQty ? object.reviewedQty : 0
           });
         });
-
         // 4th Object: Product wise all lot list and their entered wt details
         formModel.reviewParamArr.forEach((object, index) => {
           object.PkgDetails.forEach((PkgObject, childIndex) => {
@@ -1943,7 +1942,7 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
                 this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.duplicatePackageCode });
                 duplicateEntry = true;
               }
-              if (PkgObject.pkgCompletedQty > 0) {
+              if (PkgObject.pkgReviewedQty > 0) {
               reviewPkgDetailsForApi.OilPkgCodeProductList.push({
                 ProductTypeId: object.ProductTypeId,
                 OilPkgId: PkgObject.oilPkgId,

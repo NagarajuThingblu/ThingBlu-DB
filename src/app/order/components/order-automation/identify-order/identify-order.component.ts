@@ -24,6 +24,15 @@ import { GlobalResources } from '../../../../global resource/global.resource';
   div.tblProductSKU .ui-table .ui-table-tbody>tr>td {
     word-break: break-word !important;
   }
+  .ui-table .ui-table-thead>tr>th {
+    height: 30px;
+    border: none;
+    vertical-align: top;
+}
+div.clsRemoveTableInnerBorders .ui-table-tbody > tr > td {
+  border-right-color: transparent !important;
+  border: none;
+  height: 30px;
   `]
 })
 export class IdentifyOrderComponent implements OnInit {
@@ -49,6 +58,12 @@ export class IdentifyOrderComponent implements OnInit {
     strains: [],
     skewtypes: [],
     packagetypes: []
+  };
+
+  public SkewInfo: any = {
+    SkewName: null,
+    showSkewModal: false,
+    allSkewTypes: []
   };
 
   public BrandInfo: any = {
@@ -85,7 +100,11 @@ export class IdentifyOrderComponent implements OnInit {
     private appCommonService: AppCommonService,
     private dropdownDataService: DropdownValuesService,
     private dropdwonTransformService: DropdwonTransformService,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder) {
+      setTimeout(() => {
+        this.loaderService.display(true);
+      }, 0);
+    }
 
   ngOnInit() {
     this.identifyProductResource = OrderResource.getResources().en.identifyProduct;
@@ -93,7 +112,7 @@ export class IdentifyOrderComponent implements OnInit {
     this.titleService.setTitle(this.identifyProductResource.identifyProducttitle);
     this.cookie_clientId = this.appCommonService.getUserProfile().ClientId;
     this.cookie_virtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
-    this.loaderService.display(true);
+
     this.getAllBrands(0);
     this.getAllStrains(0);
     this.getAllPackageType(0);
@@ -129,19 +148,21 @@ export class IdentifyOrderComponent implements OnInit {
       'productType': new FormControl(incomingOrderItems.ProductTypeId),
       'skewType': new FormControl(incomingOrderItems.SkewTypeId, Validators.compose([Validators.required])),
       'skewTypeName': new FormControl(incomingOrderItems.SkewType),
+      'leafSkewName': new FormControl(incomingOrderItems.LeafSkewName),
       'brand': new FormControl(incomingOrderItems.BrandId, Validators.compose([Validators.required])),
       'brandName': new FormControl(incomingOrderItems.BrandName),
       'subBrand': new FormControl(incomingOrderItems.SubBrandId),
       'subBrandName': new FormControl(incomingOrderItems.SubBrandName),
       'strain': new FormControl(incomingOrderItems.StrainId, Validators.compose([Validators.required])),
       'strainName': new FormControl(incomingOrderItems.StrainName),
-      'pkgType': new FormControl(incomingOrderItems.PkgTypeId, Validators.compose([Validators.required])),
+      'pkgType': new FormControl(incomingOrderItems.PkgTypeId <= 0 ? null : incomingOrderItems.PkgTypeId, Validators.compose([Validators.required])),
       'pkgTypeName': new FormControl(incomingOrderItems.PkgType),
       'pkgSize': new FormControl(incomingOrderItems.PkgSize, Validators.compose([Validators.required, Validators.min(0.1), Validators.maxLength(10)])),
       'itemQty': new FormControl(incomingOrderItems.SkewType === 'BUD' || incomingOrderItems.SkewType === 'OIL' ? 1 : incomingOrderItems.ItemQty,
         Validators.compose([Validators.required, Validators.min(1)])),
       'unitPrice': new FormControl(incomingOrderItems.UnitPrice, Validators.compose([Validators.required])),
       'chkIsInvalidProductItem': new FormControl(incomingOrderItems.IsInvalid),
+      'orderQty':  new FormControl(incomingOrderItems.OrderedQty),
     });
   }
 
@@ -158,15 +179,20 @@ export class IdentifyOrderComponent implements OnInit {
           this.incomingOrderDetails = data.Table;
           this.incomingOrderItems = data.Table1;
           if ( this.incomingOrderDetails) {
-            if ( this.incomingOrderDetails[0].IsIdentified) {
+            if ( this.incomingOrderDetails[0].IsIdentified && !this.incomingOrderDetails[0].IsChangeOrder) {
               this.router.navigate(['../home/acceptorder/' + this.incomingOrderDetails[0].IncomingOrderId]);
-            }
+             } // else if ( this.incomingOrderDetails[0].IsIdentified && this.incomingOrderDetails[0].IsChangeOrder) {
+            //   this.router.navigate(['../home/changeOrder/' + this.incomingOrderDetails[0].IncomingOrderId]);
+            // } else {
+            //   this.router.navigate(['../home/acceptorder/' + this.incomingOrderDetails[0].IncomingOrderId]);
+            // }
           }
           if (this.incomingOrderItems) {
             this.addItem();
           }
          // this.loaderService.display(false);
         }
+        this.loaderService.display(false);
       },
       error => { console.log(error); this.loaderService.display(false); },
       () => console.log('Get All Order Incoming complete'));
@@ -207,13 +233,13 @@ export class IdentifyOrderComponent implements OnInit {
 
   getSubBrands() {
     this.subbrands = this.dropdwonTransformService.transform(this.globalData.brands.filter(
-      data => data.ParentId === this.identifyProductForm.value.brand), 'SubBrandName', 'SubBrandId', '-- Select --');
+      data => data.ParentId === this.identifyProductForm.value.brand), 'SubBrandName', 'SubBrandId', 'None');
   }
 
   getDynamicSubBrands(productItem) {
     // console.log('Get all sub brands complete');
     return this.dropdwonTransformService.transform(this.globalData.brands.filter(
-      data => data.ParentId === productItem.value.brand), 'SubBrandName', 'SubBrandId', '-- Select --');
+      data => (data.ParentId === productItem.value.brand && productItem.value.brand > 0)), 'SubBrandName', 'SubBrandId', 'None');
   }
 
   addNewBrand() {
@@ -227,7 +253,7 @@ export class IdentifyOrderComponent implements OnInit {
   }
 
   onSubBrandSave(OnBrandSave) {
-    this.getAllSubBrands(OnBrandSave.SubBrand, OnBrandSave.Brand);
+    this.getAllSubBrands(OnBrandSave.SubBrand, OnBrandSave.brand);
   }
 
   getAllSubBrands(subBrandId, brand) {
@@ -240,7 +266,7 @@ export class IdentifyOrderComponent implements OnInit {
           subBrandArray = this.globalData.brands.filter(r => Number(r.SubBrandId) === Number(subBrandId));
           const tempBrandName = subBrandArray[0].SubBrandName;
           this.subbrands = this.dropdwonTransformService.transform(this.globalData.brands.filter(
-            r => r.ParentId === brand), 'SubBrandName', 'SubBrandId', '-- Select --');
+            r => r.ParentId === brand), 'SubBrandName', 'SubBrandId', 'None');
           let arrayItem;
           arrayItem = this.identifyProductForm.get('productItemArr') as FormArray;
           arrayItem.controls.forEach(e => {
@@ -360,7 +386,7 @@ export class IdentifyOrderComponent implements OnInit {
         if (String(data).toLocaleUpperCase() !== 'NO DATA FOUND!') {
           this.globalData.skewtypes = data;
           // tslint:disable-next-line:max-line-length
-          this.skewtypes = this.dropdwonTransformService.transform(data, 'SkwTypeName', 'SkwTypeName', '-- Select --');
+          this.skewtypes = this.dropdwonTransformService.transform(data, 'SkwTypeName', 'SkwTypeId', '-- Select --');
         } else {
           this.globalData.skewtypes = [];
           this.skewtypes = [];
@@ -415,8 +441,11 @@ export class IdentifyOrderComponent implements OnInit {
   }
 
   onSubmit(model) {
-    this.loaderService.display(true);
+    setTimeout(() => {
+      this.loaderService.display(true);
+    }, 0);
     let identifyDetailsForApi;
+    if (this.identifyProductForm.valid) {
     identifyDetailsForApi = {
       orderDetails: {
         IncomingOrderId: this.incomingOrderDetails[0].IncomingOrderId,
@@ -446,13 +475,30 @@ export class IdentifyOrderComponent implements OnInit {
         IndexCode: index
       });
     });
-    if (this.identifyProductForm.valid) {
+
+    if (identifyDetailsForApi.productItemDetails) {
+      if ( identifyDetailsForApi.productItemDetails.length <= 0) {
+        setTimeout(() => {
+          this.loaderService.display(false);
+        }, 0);
+        this.msgs = [];
+        this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Invalid order. Order should have atleast one product.' });
+        return;
+      }
+    } else {
+      setTimeout(() => {
+        this.loaderService.display(false);
+      }, 0);
+      this.msgs = [];
+      this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Invalid order. Order should have atleast one product.' });
+      return;
+    }
       this.orderService.saveIdentifyOrder(identifyDetailsForApi)
         .subscribe(
           data => {
             if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
-              this.loaderService.display(false);
               setTimeout(() => {
+                this.loaderService.display(false);
                 this.confirmationService.confirm({
                   message: this.identifyProductResource.identifysave,
                   key: 'identifyOrderconfirm',
@@ -468,57 +514,109 @@ export class IdentifyOrderComponent implements OnInit {
               });
             }, 1000);
           } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'FAILURE') {
+            setTimeout(() => {
+              this.loaderService.display(false);
+            }, 0);
             this.msgs = [];
             this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: 'Internal server error!' });
           }   else if (String(data[0].ResultKey).toLocaleUpperCase() === 'DUPLICATE') {
+            setTimeout(() => {
+              this.loaderService.display(false);
+            }, 0);
               this.msgs = [];
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Duplicate S2Order No' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'RETAILERNAMEEMPTY') {
               this.msgs = [];
+              setTimeout(() => {
+                this.loaderService.display(false);
+              }, 0);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Retailar not provided.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'S2ORDERNOEMPTY') {
               this.msgs = [];
+              setTimeout(() => {
+                this.loaderService.display(false);
+              }, 0);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'S2Order no not provided.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'S2ORDERNOEXISTS') {
               this.msgs = [];
+              setTimeout(() => {
+                this.loaderService.display(false);
+              }, 0);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'S2Order No already Exists' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'SKEWTYPEEMPTY') {
               this.msgs = [];
+              setTimeout(() => {
+                this.loaderService.display(false);
+              }, 0);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select Skew Type.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'BRANDEMPTY') {
               this.msgs = [];
+              setTimeout(() => {
+                this.loaderService.display(false);
+              }, 0);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select or Add Brand.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'BRANDNOTEXIST') {
               this.msgs = [];
+              setTimeout(() => {
+                this.loaderService.display(false);
+              }, 0);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Selected Brand not exists.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'STRAINEMPTY') {
               this.msgs = [];
+              setTimeout(() => {
+                this.loaderService.display(false);
+              }, 0);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select or Add Strain.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'STRAINNOTEXIST') {
               this.msgs = [];
+              setTimeout(() => {
+                this.loaderService.display(false);
+              }, 0);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Selected Strain not exists.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'PKGTYPEEMPTY') {
               this.msgs = [];
+              setTimeout(() => {
+                this.loaderService.display(false);
+              }, 0);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please Select or Add Pkg Type' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'PKGTYPENOTEXIST') {
               this.msgs = [];
+              setTimeout(() => {
+                this.loaderService.display(false);
+              }, 0);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Selected Pkg Type not exists.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'PKGSIZEEMPTY') {
               this.msgs = [];
+              setTimeout(() => {
+                this.loaderService.display(false);
+              }, 0);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please enter package Size' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'ITEMQTYEMPTY') {
               this.msgs = [];
+              setTimeout(() => {
+                this.loaderService.display(false);
+              }, 0);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please enter Item Qty.' });
             } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'UNITPRICEEMPTY') {
               this.msgs = [];
+              setTimeout(() => {
+                this.loaderService.display(false);
+              }, 0);
               this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Please enter Unit Price.' });
+            } else {
+              setTimeout(() => {
+                this.loaderService.display(false);
+              }, 0);
             }
+
           });
       // http call ends
-      this.loaderService.display(false);
+
     } else {
       this.appCommonService.validateAllFields(this.identifyProductForm);
-      this.loaderService.display(false);
+      setTimeout(() => {
+        this.loaderService.display(false);
+      }, 0);
     }
   }
   onChange_pkgType () {
@@ -527,5 +625,50 @@ export class IdentifyOrderComponent implements OnInit {
 
   onChange_subBrand() {
 
+  }
+
+  // new popup skewtype
+  onSkewSave(skewData) {
+    console.log(skewData);
+    this.mapSkewType(skewData);
+  }
+
+  mapSkewType(skewData) {
+
+        if (skewData) {
+          let arrayItem;
+          arrayItem = this.identifyProductForm.get('productItemArr') as FormArray;
+          arrayItem.controls.forEach(e => {
+
+            if (String(e.controls['leafSkewName'].value) === String(skewData.SkewName)) {
+              const tampskew  = e.controls['skewType'];
+              tampskew .patchValue(skewData.SkewTypeId);
+
+              const tampskewType = e.controls['skewTypeName'];
+              tampskewType.patchValue(skewData.SkewTypeName);
+            }
+          });
+  }
+}
+
+  addNewSkew() {
+    this.showSkewTypePopup();
+  }
+
+  showSkewTypePopup() {
+    this.loaderService.display(false);
+    this.SkewInfo.SkewName = null;
+    this.SkewInfo.showSkewModal =  true;
+    this.SkewInfo.allSkewTypes = [];
+    this.getAllSkewTypes();
+  }
+
+  getAllSkewTypes() {
+    this.dropdownDataService.getSkewListByClient().subscribe(
+      data => {
+        this.SkewInfo.allSkewTypes =  this.dropdwonTransformService.transform(data, 'SkwTypeName', 'SkwTypeId', '-- Select --');
+      },
+      error => { console.log(error); },
+      () => console.log());
   }
 }

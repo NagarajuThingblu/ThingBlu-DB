@@ -64,3 +64,14 @@ ul.ui-tabview-nav li span.ui-tabview-title {
   text-decoration: underline;
   background-color: transparent;
 }
+
+div.clsTableWithoutHeaderColorCss.nobordernoheight .ui-table-thead > tr > th{
+  height: auto;
+  border: 0px;
+  vertical-align: top;
+}
+div.clsRemoveTableInnerBorders.nobordernoheight .ui-table-tbody > tr > td{
+  border: 0px;
+  vertical-align: top;
+  height: auto;
+}

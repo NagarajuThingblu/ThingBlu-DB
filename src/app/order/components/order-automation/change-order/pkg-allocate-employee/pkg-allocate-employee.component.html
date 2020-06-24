@@ -3,8 +3,7 @@
     <div class="ui-g-10">
       <div class="ui-g-12 ui-md-3">
         <div class="le-su-3">
-          <label for="lbBrand" class="towlable fwLabelBold"><strong>Action</strong><span class="star">
-              *</span></label>
+          <label for="lbBrand" class="towlable fwLabelBold"><strong>Action</strong><span class="star">*</span></label>
           <div>
             <p-dropdown [filter]="true" (onChange)="onChange_Action(ProductItem)" id="taskAction" class="clsControl"
               tabindex="1" [options]="actionNameValue" placeholder="--Select--"
@@ -53,10 +52,10 @@
               <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                 *ngIf="!taskArrayItem.controls['employee'].valid&&taskArrayItem.controls['employee'].dirty">
                 <span *ngIf="taskArrayItem.controls['employee'].hasError('duplicateemployee')">
-                  same emplyee for task.
+                  Same employee for tasks.
                 </span> 
                 <span *ngIf="taskArrayItem.controls['employee'].errors['required']">
-                 Please select employee.
+                 Select employee.
                 </span> 
                 
               </div>
@@ -72,13 +71,13 @@
                 *ngIf="!taskArrayItem.controls['assignedQty'].valid&&taskArrayItem.controls['assignedQty'].dirty">
      
                   <span *ngIf="taskArrayItem.controls['assignedQty'].errors['required']">
-                    required
+                    Required field.
                   </span>
                   <span *ngIf="taskArrayItem.controls['assignedQty'].hasError('assignedQtyExceeded')">
-                    Weight exceeded.
+                    Qty exceeded.
                   </span>
                   <span *ngIf="taskArrayItem.controls['assignedQty'].hasError('min')">
-                    Qty should 1 or more.
+                    Qty should be 1 or more.
                    </span>
               </div>
             </td>
@@ -210,10 +209,10 @@
                   <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                     *ngIf="!taskArrayItem.controls['employee'].valid&&taskArrayItem.controls['employee'].dirty">
                     <span *ngIf="taskArrayItem.controls['employee'].hasError('duplicateemployee')">
-                      same emplyee for task.
+                      Same employee for tasks.
                     </span>
                     <span *ngIf="taskArrayItem.controls['employee'].errors['required']">
-                      Please select employee.
+                      Select employee.
                      </span> 
                   </div>
                 </ng-template>
@@ -243,13 +242,13 @@
               <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                 *ngIf="!taskArrayItem.controls['addedQty'].valid&&taskArrayItem.controls['addedQty'].dirty">
                 <span *ngIf="taskArrayItem.controls['addedQty'].errors['required']">
-                  required
+                  Required field.
                 </span>
                 <span *ngIf="taskArrayItem.controls['addedQty'].hasError('assignedQtyExceeded')">
-                  Weight exceeded.
+                  Qty exceeded.
                 </span>
                 <span *ngIf="taskArrayItem.controls['addedQty'].hasError('min')">
-                 Qty should 1 or more.
+                 Qty should be 1 or more.
                 </span>
               </div>
             </td>
@@ -495,20 +494,19 @@
 
                 <td>
                   <input pKeyFilter="num" type="number" OnlyNumber="true" pInputText autocomplete="off"
-                  PositiveIntegers OnlyNumberWithoutZero="true"
                     formControlName="answer" id="answer" name="answer" (change)="pkgWeightOnChange(question)"
                     style="width:100%;" />
                   <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                     *ngIf="!question.controls['answer'].valid&&question.controls['answer'].dirty">
                     <span
                       *ngIf="question.controls['answer'].errors['max'] || question.controls['answer'].errors['min']">
-                      Select Valid Weight
+                      Select Valid Weight.
                     </span>
                     <span *ngIf="question.controls['answer'].errors['required']">
-                      Required
+                      Required field.
                     </span>
                     <span *ngIf="question.controls['answer'].hasError('oilpkgmaxwtexceeded')">
-                      max lot wt exceeded
+                      Max lot weight exceeded.
                     </span>
                   </div>
                 </td>

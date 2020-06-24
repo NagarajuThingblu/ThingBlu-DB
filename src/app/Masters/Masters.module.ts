@@ -1,3 +1,4 @@
+import { AddNewSkewPopupComponent } from './components/add-new-skew-popup/add-new-skew-popup.component';
 
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
@@ -84,7 +85,8 @@ import { EmployeesComponent } from './components/employees/employees.component';
     AddNewSubBrandFormComponent,
     TppPackageTypeMappingMasterComponent,
     TaskSettingComponent,
-    EmployeesComponent
+    EmployeesComponent,
+    AddNewSkewPopupComponent
   ],
   imports: [
     SharedModule
@@ -132,7 +134,8 @@ import { EmployeesComponent } from './components/employees/employees.component';
     NewPackageTypeFormComponent,
     AddNewSubBrandFormComponent,
     TppPackageTypeMappingMasterComponent,
-    TaskSettingComponent
+    TaskSettingComponent,
+    AddNewSkewPopupComponent
   ]
 })
 
