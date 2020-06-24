@@ -61,6 +61,7 @@ import { EmployeesComponent } from './employee/components/employees/employees.co
 import { IdentifyOrderComponent } from './order/components/order-automation/identify-order/identify-order.component';
 import { AcceptOrderComponent } from './order/components/order-automation/accept-order/accept-order.component';
 import { ChangeOrderComponent } from './order/components/order-automation/change-order/change-order.component';
+import{AddNewTaskComponent} from './Masters/components/add-new-task/add-new-task.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'default', pathMatch: 'full' },
@@ -135,6 +136,7 @@ const appRoutes: Routes = [
       { path: 'acceptorder', component: AcceptOrderComponent, canActivate: [AuthGuard] },
       { path: 'acceptorder/:incomingOrderId', component: AcceptOrderComponent, canActivate: [AuthGuard] },
       { path: 'changeOrder/:incomingOrderId', component: ChangeOrderComponent, canActivate: [AuthGuard] },
+      {path:'Taskmaster',component:AddNewTaskComponent, canActivate:[AuthGuard]},
 
     ]
   }

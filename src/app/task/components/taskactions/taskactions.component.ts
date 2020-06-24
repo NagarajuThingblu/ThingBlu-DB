@@ -177,7 +177,7 @@ export class TaskactionsComponent implements OnInit {
           this.taskActionDetails['MixedOilPkgDetails'] = data.Table5 ? data.Table5 : [] ;
 
           this.taskStatusHistory =  data.Table1 ? data.Table1 : [];
-        } else if (this.taskActionDetails.TaskTypeKey === 'CUSTOMTASK') {
+        } else if (this.taskActionDetails.TaskTypeKey === 'CUSTOMTASK'|| this.taskActionDetails.TaskTypeKey === 'INDEPENDENT') {
           this.taskStatusHistory =  data.Table1 ? data.Table1 : [];
         } else if (this.taskActionDetails.TaskTypeKey === 'QACHECK') {
           this.taskActionDetails['AssignOrderPkgQtyDetails'] = data.Table2 ? data.Table2 : [];

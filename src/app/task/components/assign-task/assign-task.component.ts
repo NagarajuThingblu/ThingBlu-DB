@@ -46,7 +46,8 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
   private taskDetails: any;
   connection;
   public assignTask: any = {
-    task: ''
+    task: '',
+    taskcategory:''
   };
   public taskId: any;
   public prodDBRouteParamsArray: any = [];
@@ -56,6 +57,8 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
   public tampQty: any;
   public labelQty: any;
+
+  public tasktypelist:any;
 
   constructor(
     private fb: FormBuilder,
@@ -95,6 +98,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
   public globalResource: any;
 
   public tasknames: SelectItem[];
+  public taskcategories:SelectItem[];
   // public Lots: SelectItem[];  // Commented by Devdan :: 29-Oct-2018 :: Unused
   // public Employees: SelectItem[]; // Commented by Devdan :: 29-Oct-2018 :: Unused
   // public Priorities: SelectItem[]; // Commented by Devdan :: 29-Oct-2018 :: Unused
@@ -136,9 +140,11 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
     if (this.prodDBRouteParams) {
       // console.log(this.prodDBRouteParams);
       this.assignTask.task = this.prodDBRouteParams.TaskTypeId;
+      this.assignTask.taskcategory= this.prodDBRouteParams.TaskCateforyID
       this.readonlyFlag = true;
       this.assignTaskForm = this.fb.group({
         'taskname': new FormControl(null, Validators.required),
+        'taskCategory':new FormControl(null,Validators.required),
       });
 
        // add pre value :: 08-april-2019
@@ -151,6 +157,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
     } else {
       this.assignTaskForm = this.fb.group({
         'taskname': new FormControl(null, Validators.required),
+        'taskCategory':new FormControl(null,Validators.required),
       });
     }
 
@@ -201,6 +208,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
             // }
             this.assignTaskForm = this.fb.group({
               'taskname': new FormControl(this.assignTask.task, Validators.required),
+              'taskCategory': new FormControl(this.assignTask.taskcategory, Validators.required),
             });
             this.isServiceCallComplete = true;
             // http call ends
@@ -211,6 +219,42 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
         );
     }
   }
+  taskcategorychange()
+  {
+    const categoryname = this.assignTask.taskcategory;
+const categorylist = this.tasktypelist.filter(item=>item.CategoryName==categoryname);
+if((<UserModel>this.appCommonService.getUserProfile()).UserRole === (this.userRoles.Manager) || this.prodDBRouteParams){
+
+this.tasknames=this.dropdwonTransformService.transform(
+  categorylist.filter(item =>
+    String(item.TaskTypeKey).toLocaleUpperCase() !== 'GRINDING' &&
+    String(item.TaskTypeKey).toLocaleUpperCase() !== 'JOINTSCREATION' &&
+    String(item.TaskTypeKey).toLocaleUpperCase() !== 'TAMPING' &&
+    String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBING' &&
+    String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBELABELING'
+  ),
+  'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+  this.assignTaskForm = this.fb.group({
+    'taskCategory': new FormControl(this.assignTask.taskcategory, Validators.required),
+    'taskname': new FormControl(null, Validators.required)
+  });
+  this.selectedTaskTypeName=null;
+}
+else{
+  this.tasknames=this.dropdwonTransformService.transform(
+    categorylist.filter(item =>
+      String(item.TaskTypeKey).toLocaleUpperCase() == 'CUSTOMTASK'
+    ),
+    'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+    this.assignTaskForm = this.fb.group({
+      'taskCategory': new FormControl(this.assignTask.taskcategory, Validators.required),
+      'taskname': new FormControl(null, Validators.required)
+    });
+    this.selectedTaskTypeName=null;
+  
+}
+  
+  }
   // ChangeComponent() {
   //   this.loadComponent(this.assignTask.task);
   // }
@@ -219,11 +263,14 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
     this.dropdownDataService.getAllTask().subscribe(
       data => {
         this.globalData.taskTypes = data;
+        this.tasktypelist=data;
         console.log(data, 'tasks');
 
         if ((<UserModel>this.appCommonService.getUserProfile()).UserRole === this.userRoles.Manager || this.prodDBRouteParams) {
           if (this.prodDBRouteParams) {
+            
             this.tasknames = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+            this.taskcategories=this.dropdwonTransformService.transform(data,'CategoryName','CategoryName','-- Select --', false);
           } else {
             this.tasknames = this.dropdwonTransformService.transform(
               data.filter(item =>
@@ -234,11 +281,17 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
                 String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBELABELING'
               ),
               'TaskTypeName', 'TaskTypeId', '-- Select --', false);
-          }
+              const categories= Array.from(data.reduce((m, t) => m.set(t.CategoryName, t), new Map()).values())
+              this.taskcategories=this.dropdwonTransformService.transform(categories,'CategoryName','CategoryName','-- Select --', false);       }
         } else {
-          this.tasknames = this.dropdwonTransformService.transform(
+          // this.tasknames = this.dropdwonTransformService.transform(
+          //   data.filter(item => String(item.TaskTypeKey).toLocaleUpperCase() === 'CUSTOMTASK'),
+          //   'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+          this.taskcategories= this.dropdwonTransformService.transform(
             data.filter(item => String(item.TaskTypeKey).toLocaleUpperCase() === 'CUSTOMTASK'),
-            'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+            'CategoryName','CategoryName','-- Select --', false
+
+          );
         }
       },
       error => { console.log(error); },
@@ -824,6 +877,15 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
         }
 
       }
+      else if (this.selectedTaskTypeName === 'INDEPENDENT') {  // CUSTOM TASK
+        // assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = 0;
+        assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'INDEPENDENT';
+        assignTaskDetailsForWebApi.TaskDetails['LotId'] = 0;
+        assignTaskDetailsForWebApi.TaskDetails['NotifyEmp'] = false;
+        assignTaskDetailsForWebApi.TaskDetails['NotifyManager'] = false;
+        assignTaskDetailsForWebApi.TaskDetails['Priority'] = '';
+
+      }
       // if (((this.returnFormattedDate(new Date(this.returnFormattedDate(new Date()))) >
       //   this.returnFormattedDate(new Date(assignTaskDetailsForWebApi.TaskDetails.EstStartDate))))) {
       //     this.msgs = [];
@@ -874,9 +936,10 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
                   this.assignTaskForm = this.fb.group({
                     'taskname': new FormControl(null, Validators.required),
+                    'taskCategory':new FormControl(null,Validators.required),
                   });
 
-                  this.taskTypeChange();
+                  this.taskcategorychange();
                 } else if (String(data[0]['Result']).toLocaleUpperCase() === 'A-PACKAGE') {
                   this.msgs = [];
                   this.msgs.push({
@@ -923,10 +986,12 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
                   });
 
                   this.assignTask.task = null;
+                  this.assignTask.taskcategory=null;
                   this.selectedTaskTypeName = '';
                   this.isServiceCallComplete = false;
                   this.assignTaskForm = this.fb.group({
                     'taskname': new FormControl(null, Validators.required),
+                    'taskCategory':new FormControl(null,Validators.required),
                   });
 
                   if (this.prodDBRouteParams) {
@@ -937,7 +1002,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
                     }, 2000);
                   }
-                  this.taskTypeChange();
+                  this.taskcategorychange();
                 }
                 // http call ends
                 // Commented by DEVDAN :: 26-Sep2018 :: Optimizing API Calls

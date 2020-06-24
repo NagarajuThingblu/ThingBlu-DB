@@ -678,6 +678,27 @@ export class MastersResource {
                    errormsg: 'You do not have permission to access the page that you requested, Please contact administrator.',
                    rediretmsg: 'To redirect home page',
                    clickhere: 'click here.'
+                },
+                addnewtasktype:{
+                    Pageheading:'Add New Task',
+                    pageheading: 'New Task',
+                    entertasktype: 'Task Category',
+                    tasktype: 'Task Type',
+                    tasktyperequired: 'Select Task Type',
+                    entertask: 'Task Type',
+                    TaskType: 'Tasktype',
+                    Taskrequired: 'Task  Required',
+                    TaskLength: 'Must not more than 50 charachters',
+                    description: 'Task Description',
+                    newTasksavedsuccess: 'Task saved successfully.',
+                    taskalreadyexist: 'This task already exist',
+                    taskActivated: 'Task activated successfully.',
+                    taskInactivated: 'Task inactivated successfully.',
+                    deletetaskmsg: 'Do you want to delete this task?',
+                    activetaskmsg: 'Do you want to activate this task?',
+                    deactivatetaskmsg: 'Do you want to inactivate this task?',
+                    TaskDeletedSuccess: 'Task deleted successfully.',
+
                 }
             }
         };

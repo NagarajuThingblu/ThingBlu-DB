@@ -17,11 +17,13 @@ export class MsalService {
         clientID: environment.tenantClientID,
         signUpSignInPolicy: environment.signUpSignInPolicy,
         signUpPolicy: environment.signUpPolicy,
-        b2cScopes: [environment.b2cScopes]
+        b2cScopes: [environment.b2cScopes],
+        tenantURL:environment.tenantURL
     };
 
     // Configure the authority for Azure AD B2C
-    authority = 'https://login.microsoftonline.com/tfp/' + this.tenantConfig.tenant + '/' + this.tenantConfig.signUpSignInPolicy;
+    authority = 'https://'+this.tenantConfig.tenantURL+'/tfp/' + this.tenantConfig.tenant + '/' + this.tenantConfig.signUpSignInPolicy;
+   //authority = 'https://thingblub2ctest.b2clogin.com/tfp/' + this.tenantConfig.tenant + '/' + this.tenantConfig.signUpSignInPolicy;
 
     logger = new Msal.Logger(this.loggerCallback, { level: Msal.LogLevel.Verbose, correlationId: '12345' });
 
@@ -42,8 +44,8 @@ export class MsalService {
                 redirectUri:  environment.redirectUri,
                 state: '12345',
                 navigateToLoginRequestUrl: false,
-                postLogoutRedirectUri: environment.redirectUri
-                // validateAuthority: false
+                postLogoutRedirectUri: environment.redirectUri,
+                 validateAuthority: false
             }
         );
     }

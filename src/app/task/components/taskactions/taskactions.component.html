@@ -108,7 +108,7 @@
           ></app-oil-packaging>
           
           <app-custom-task
-            *ngIf="taskActionDetails?.TaskTypeKey=='CUSTOMTASK'&&taskActionDetails" 
+            *ngIf="taskActionDetails?.TaskTypeKey=='CUSTOMTASK'||taskActionDetails?.TaskTypeKey=='INDEPENDENT'&&taskActionDetails" 
             style="width:100%;"
             [PageFlag]="page"
             [TaskModel]="taskActionDetails"

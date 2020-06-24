@@ -34,7 +34,13 @@ export class CustomTaskComponent implements OnInit {
   @Input() ParentFormGroup: FormGroup;
   @Input() TaskModel: any;
   @Output() TaskCompleteOrReviewed: EventEmitter<any> = new EventEmitter<any>();
+  ngOnChanges()
+  {
+    console.log(this.TaskModel);
+    this.TaskTypeKey=this.TaskModel.TaskTypeKey;
+    this.TaskTypeKey=="INDEPENDENT"?this.ParentFormGroup.addControl('INDEPENDENT',this.CUSTOMTASK):this.ParentFormGroup.addControl('CUSTOMTASK', this.CUSTOMTASK);
 
+  }
   public _cookieService: UserModel;
   public taskStatus: any;
   public selectedLotComments: any = [];
@@ -56,7 +62,8 @@ export class CustomTaskComponent implements OnInit {
     private loaderService: LoaderService,
     private appCommonService: AppCommonService,
     private titleService: Title,
-    private refreshService: RefreshService
+    private refreshService: RefreshService,
+    private dropdownDataService: DropdownValuesService,
   ) {
     this._cookieService = this.appCommonService.getUserProfile();
   }
@@ -66,7 +73,7 @@ export class CustomTaskComponent implements OnInit {
   // Commented by Devdan :: 26-Oct-2018 :: Unused
   // public Lots: any[];
   // public Employees: any[];
-  // public Priorities: SelectItem[];
+   public priorities: SelectItem[];
 
   public assignTaskResources: any;
   public globalResource: any;
@@ -86,6 +93,13 @@ export class CustomTaskComponent implements OnInit {
   taskTypeId: any;
   // Added by Devdan :: Sec to Min change :: 06-Nov-2018 :: Variable to Enable/Disable Second Text Box
   isRActSecsDisabled: boolean;
+  TaskTypeKey:any;
+  public employees: any[];
+  private globalData = {
+    lots: [],
+    employees: [],
+    strains: []
+  };
   ngOnInit() {
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
@@ -101,6 +115,7 @@ export class CustomTaskComponent implements OnInit {
       // Get the task type id from data received from resolver
       if (this.TaskModel.TaskDetails !== undefined) {
         this.taskTypeId = this.TaskModel.TaskDetails.TaskTypeId;
+       
       }
     });
 
@@ -113,9 +128,10 @@ export class CustomTaskComponent implements OnInit {
         esthrs: '',
         usercomment: '',
         emprate: '',
-        empcost: ''
+        empcost: '',
+        priority: this.TaskModel.TaskPriority
       };
-
+      this.TaskTypeKey=this.TaskModel.TaskTypeKey;
       this.CUSTOMTASK = this.fb.group({
         'lotno': new FormControl(0, Validators.required),
         // 'brand': new FormControl(''),
@@ -131,7 +147,7 @@ export class CustomTaskComponent implements OnInit {
         'comment': new FormControl('', Validators.maxLength(500)),
       });
 
-      this.ParentFormGroup.addControl('CUSTOMTASK', this.CUSTOMTASK);
+     this.TaskTypeKey=="INDEPENDENT"?this.ParentFormGroup.addControl('INDEPENDENT',this.CUSTOMTASK):this.ParentFormGroup.addControl('CUSTOMTASK', this.CUSTOMTASK);
 
       if (this.taskTypeId > 0) {
           this.TaskModel.CUSTOMTASK = {
@@ -140,7 +156,9 @@ export class CustomTaskComponent implements OnInit {
             esthrs: '',
             usercomment: this.TaskModel.TaskDetails.TaskComment,
             emprate: '',
-            empcost: ''
+            empcost: '',
+            TaskTypeId:this.TaskModel.task,
+            priority: this.TaskModel.TaskPriority,
         };
       }
 
@@ -189,6 +207,12 @@ export class CustomTaskComponent implements OnInit {
 
       // this.completionForm.addControl('skewTypeGroup', this.qcs.toFormGroup(this.questions));
     }
+    this.employeeListByClient();
+    this.priorities =  [
+      {label: 'Normal', value: 'Normal'},
+      {label: 'Important', value: 'Important'},
+      {label: 'Critical', value: 'Critical'}
+    ];
   }
 
   padLeft(text: string, padChar: string, size: number): string {
@@ -380,5 +404,29 @@ export class CustomTaskComponent implements OnInit {
 
     // To get all form fields values where dynamic or static
     get diagnostic() { return JSON.stringify(this.completionForm.value); }
+    employeeListByClient() {
+      this.dropdownDataService.getEmployeeListByClient().subscribe(
+        data => {
+          this.globalData.employees = data;
+          if (data !== 'No data found!') {
+          this.employees = this.dropdwonTransformService.transform(data, 'EmpName', 'EmpId', '-- Select --');
+          } else {
+            this.employees = [];
+          }
+        } ,
+        error => { console.log(error); },
+        () => console.log('Get all employees by client complete'));
+    }
+    empOnChange() {
+      const selectedEmp = this.globalData.employees.filter(data => data.EmpId === this.TaskModel.CUSTOMTASK.employee)[0];
+  
+      if (selectedEmp !== undefined) {
+        this.TaskModel.CUSTOMTASK.emprate =  selectedEmp.HourlyRate;
+        this.TaskModel.CUSTOMTASK.empcost =  selectedEmp.HourlyRate * this.TaskModel.CUSTOMTASK.esthrs;
+      } else {
+        this.TaskModel.CUSTOMTASK.emprate =  0;
+        this.TaskModel.CUSTOMTASK.empcost = 0;
+      }
+    }
 
 }

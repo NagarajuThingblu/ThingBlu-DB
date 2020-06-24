@@ -6,7 +6,23 @@
         <label for="strain">{{ globalResource.employee }}</label>{{ globalResource.labelcolon }}
                          <div style="clear:both"></div>
           <div class="clear"></div>
-          <span class="lblText">{{ _cookieService.EmpName }}</span>
+          <span *ngIf="TaskTypeKey=='CUSTOMTASK'" class="lblText">{{ _cookieService.EmpName }}</span>
+          <div *ngIf="TaskTypeKey=='INDEPENDENT'" class="ui-inputgroup">
+          <p-dropdown
+               [filter] ="true"
+              [options]="employees"
+              placeholder="-- Select --"
+              (onChange)="empOnChange()"
+              [(ngModel)]="TaskModel.CUSTOMTASK.employee"
+              [autoWidth]="true"              
+              formControlName="employee"
+              id="employee"
+              class="clsControl"
+              name="employee">
+           
+          </p-dropdown
+          >
+        </div>
       </div>
   </div>
   <!--End Employee-->
@@ -25,7 +41,7 @@
          <p-calendar                                  
            [(ngModel)]="TaskModel.CUSTOMTASK.startdate"
            [showIcon]="true"
-           [disabled]="true"
+           [disabled]="TaskTypeKey=='INDEPENDENT'?false:true"
            [defaultDate]="defaultDate"
            formControlName="estimatedstartdate"          
            class="clsControl"
@@ -38,7 +54,25 @@
      </div>
  </div>
  <!--End Estimated Start DateTime-->   
- 
+
+ <!--Priority-->
+ <div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label for="employee">{{ globalResource.priority }}:</label>
+                     
+    <p-dropdown
+      [options]="priorities"
+      [(ngModel)]="TaskModel.CUSTOMTASK.priority"
+      [autoWidth]="true"
+      formControlName="priority"
+      id="priority"
+      class="clsControl"
+      name="priority">
+    </p-dropdown>                                  
+  </div>
+</div>
+<!--End Priority-->
+
  <!--Comment-->
  <div class="ui-g-12 ui-md-6">
    <div class="paddingRL">

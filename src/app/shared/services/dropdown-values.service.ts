@@ -286,4 +286,15 @@ getRoleList() {
   return data;
  });
 }
+getNewTaskType() {
+  const url = 'api/TaskType/GetTaskCategory';
+
+   
+    return this.http
+    .get(url)
+   .map(data => {
+    // // console.log('Strains Service success');
+    return data;
+   });
+}
 }

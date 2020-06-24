@@ -206,6 +206,7 @@ export class GlobalResources {
                      units: 'Units',
                      gramUnit: 'g',
                      total: 'Total',
+                     taskCategory:'Task Category'
                 }
             };
     }

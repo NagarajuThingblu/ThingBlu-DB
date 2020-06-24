@@ -16,10 +16,12 @@ export class ResetPasswordMsalService {
         tenant: environment.tenant,
         clientID: environment.tenantClientID,
         resetPolicy: environment.resetPolicy,
-        b2cScopes: [environment.b2cScopes]
+        b2cScopes: [environment.b2cScopes],
+        tenantURL:environment.tenantURL
     };
 
-    resetPasswordAuthority = 'https://login.microsoftonline.com/tfp/' + this.tenantConfig.tenant + '/' + this.tenantConfig.resetPolicy;
+    resetPasswordAuthority = 'https://'+this.tenantConfig.tenantURL+'/tfp/' + this.tenantConfig.tenant + '/' + this.tenantConfig.resetPolicy;
+    //resetPasswordAuthority = 'https://thingblub2ctest.b2clogin.com/tfp/' + this.tenantConfig.tenant + '/' + this.tenantConfig.resetPolicy;
     logger = new Msal.Logger(this.loggerCallback, { level: Msal.LogLevel.Verbose, correlationId: '12345' });
     private signUpClientApplication: Msal.UserAgentApplication;
 
@@ -36,7 +38,8 @@ export class ResetPasswordMsalService {
                 logger: this.logger,
                 redirectUri: environment.resetPwdRedirectUri,
                 state: '12345',
-                storeAuthStateInCookie: true
+                storeAuthStateInCookie: true,
+                validateAuthority: false
             }
         );
     }

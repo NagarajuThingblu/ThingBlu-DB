@@ -183,7 +183,36 @@
                     </div>
                     <!--End Tub Label Details -->
               </div>
+ <!--Task Name -->
+ <div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label for="taskname">
+      {{ globalResource.taskCategory }}<span class="star">*</span>:
+    </label>
 
+    <p-dropdown          
+      [filter] ="true"        
+      [options]="taskcategories"                            
+      placeholder="-- Select --"
+      [(ngModel)]="assignTask.taskcategory"
+      [autoWidth]="true"
+      formControlName="taskCategory"
+      (onChange)="taskcategorychange()"
+      [readonly]="readonlyFlag"
+      class="clsControl" 
+      id="taskCategory"
+      name="taskCategory">
+    </p-dropdown>
+    <!-- (onChange)="ChangeComponent()" -->
+    <div
+      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+      *ngIf="!assignTaskForm.controls['taskCategory'].valid&&assignTaskForm.controls['taskCategory'].dirty">
+       
+        {{ globalResource.tasknamerequired }}
+    </div>
+  </div>
+</div>
+<!--End Task Name -->   
             <!--Task Name -->
             <div class="ui-g-12 ui-md-6">
               <div class="paddingRL">
@@ -306,7 +335,7 @@
               ></app-oil-packaging>
 
               <app-custom-task
-                *ngIf="selectedTaskTypeName=='CUSTOMTASK'&&this.isServiceCallComplete" 
+                *ngIf="(selectedTaskTypeName=='CUSTOMTASK' || selectedTaskTypeName=='INDEPENDENT' )&&this.isServiceCallComplete" 
                 style="width:100%;"                 
                 [TaskModel]="assignTask"       
                 [PageFlag]="page"     

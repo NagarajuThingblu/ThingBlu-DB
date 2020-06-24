@@ -53,7 +53,8 @@ import { ForgotPasswordService } from '../task/services/forgot-password.service'
 import { TaskSettingComponent } from './components/task-setting/task-setting.component';
 import { TaskSettingService } from './services/tasksetting.service';
 import { EmployeesComponent } from './components/employees/employees.component';
-
+import { AddNewTaskComponent } from './components/add-new-task/add-new-task.component';
+import{ NewTaskActionService} from '../task/services/new-task-action.service'
 
 @NgModule({
   declarations: [
@@ -84,7 +85,8 @@ import { EmployeesComponent } from './components/employees/employees.component';
     AddNewSubBrandFormComponent,
     TppPackageTypeMappingMasterComponent,
     TaskSettingComponent,
-    EmployeesComponent
+    EmployeesComponent,
+    AddNewTaskComponent
   ],
   imports: [
     SharedModule
@@ -114,7 +116,8 @@ import { EmployeesComponent } from './components/employees/employees.component';
     TPPPackageTypeActionService,
     TPPPackageTypeService,
     ForgotPasswordService,
-    TaskSettingService
+    TaskSettingService,
+    NewTaskActionService
   ],
   exports: [
     NewProductTypeComponent,

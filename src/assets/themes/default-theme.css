@@ -1,4 +1,4 @@
-
+     
 div.clsRemoveTableInnerBorders .ui-table-tbody > tr > td:not(:last-child) {
   border-right-color: transparent !important;
 }
