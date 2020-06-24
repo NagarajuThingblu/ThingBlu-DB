@@ -1,0 +1,91 @@
+<p-dialog header="Add New Skew" [(visible)]="Skew.showSkewModal" modal="modal" [resizable]="true" [responsive]="true"
+    [width]="600" [minWidth]="200" class="notecontrol" (onHide)="hideSkewPopup()">
+    <form #SkewForm="ngForm" [formGroup]="newSkewForm" (ngSubmit)="saveSkewName(newSkewForm)" novalidate>
+        <div class="ui-g">
+            <!--Brand -->
+            <div class="ui-g-12 ui-md-12">
+                <div class="paddingRL">
+                    <div class="le-su-12">
+                        <label for="selectSkew" class="towlable">{{ newSkewResources.skewType}}<span
+                                class="star">*</span></label>:
+
+                        <p-dropdown [filter]="true" id="skewType" [options]="Skew.allSkewTypes"
+                            formControlName="skewType" placeholder="-- Select --" [autoWidth]="false" class="clsControl"
+                            name="skewType">
+                        </p-dropdown>
+
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                            *ngIf="!newSkewForm.controls['skewType'].valid&&newSkewForm.controls['skewType'].dirty">
+                            <span *ngIf="newSkewForm.controls['skewType'].errors['required']">Select skew type.</span>
+                            <span *ngIf="newSkewForm.controls['skewType'].hasError('brandnotpresent')">
+                                Not available.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End Brand -->
+            <!-- SubBrand Name -->
+            <div class="ui-g-12 ui-md-12">
+                <div class="paddingRL">
+                    <div class="le-su-12">
+                        <label for="enterSkew"> {{ newSkewResources.skewName}}<span class="star">*</span></label>:
+
+                        <input pInputText name="skewName" id="skewName" autocomplete="off" placeholder="Enter Value"
+                            type="text" class="clsControl" formControlName="skewName" />
+
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                            *ngIf="!newSkewForm.controls['skewName'].valid&&newSkewForm.controls['skewName'].dirty">
+
+                            <span *ngIf="newSkewForm.controls['skewName'].errors['required']">
+                                Skew name required.
+                            </span>
+                            <span *ngIf="newSkewForm.controls['skewName'].errors['maxlength']">Max length
+                                exceeded.</span>
+                            <span *ngIf="newSkewForm.controls['skewName'].errors['whitespace']">Whitespace not
+                                allowed.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End SubBrand Name -->
+            <!-- Description -->
+            <div class="ui-g-12 ui-md-12">
+                <div class="paddingRL">
+                    <div class="le-su-12">
+                        <label for="enterdescription">
+                            Description<span class="star"></span>:
+                        </label>
+
+                        <input pInputText name="description" id="description" autocomplete="off"
+                            placeholder="Enter Description" type="text" class="clsControl"
+                            formControlName="description" />
+                    </div>
+                </div>
+            </div>
+            <!-- End Description -->
+            <!-- IsActive -->
+            <div class="ui-g-12 ui-md-12">
+                <div class="paddingRL">
+                    <label></label>
+                    <div class="clear"></div>
+
+                    <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalResource.IsActiveFlag}}"
+                        formControlName="chkIsActive" binary="true"></p-checkbox>
+                </div>
+            </div>
+            <!--End IsActive -->
+
+            <div class="ui-g-12 ui-md-6" style="text-align:left;">
+                <div class="paddingRL">
+                    <p-button type="submit" label="Save" id="btnSubBrandSave" name="btnSubBrandSave"></p-button>
+
+                    <button pButton (click)="resetForm()" type="button" label="Clear" class="ui-button-secondary">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</p-dialog>
+
+<p-growl [(value)]="msgs" life='5000'></p-growl>

@@ -698,7 +698,10 @@ export class MastersResource {
                     activetaskmsg: 'Do you want to activate this task?',
                     deactivatetaskmsg: 'Do you want to inactivate this task?',
                     TaskDeletedSuccess: 'Task deleted successfully.',
-
+                },
+                addNewSkew: {
+                    skewType: 'Skew Type',
+                    skewName: 'Skew Name',
                 }
             }
         };

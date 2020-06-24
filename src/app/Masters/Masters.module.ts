@@ -1,3 +1,4 @@
+import { AddNewSkewPopupComponent } from './components/add-new-skew-popup/add-new-skew-popup.component';
 
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
@@ -86,7 +87,7 @@ import{ NewTaskActionService} from '../task/services/new-task-action.service'
     TppPackageTypeMappingMasterComponent,
     TaskSettingComponent,
     EmployeesComponent,
-    AddNewTaskComponent
+    AddNewSkewPopupComponent
   ],
   imports: [
     SharedModule
@@ -135,7 +136,8 @@ import{ NewTaskActionService} from '../task/services/new-task-action.service'
     NewPackageTypeFormComponent,
     AddNewSubBrandFormComponent,
     TppPackageTypeMappingMasterComponent,
-    TaskSettingComponent
+    TaskSettingComponent,
+    AddNewSkewPopupComponent
   ]
 })
 

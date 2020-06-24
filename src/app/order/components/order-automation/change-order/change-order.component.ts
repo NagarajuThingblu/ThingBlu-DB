@@ -706,7 +706,7 @@ export class ChangeOrderComponent implements OnInit {
 
     if (HasError) {
       this.msgs = [];
-      this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Assigned Qty exceeds Ordered Qty.' });
+      this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Assigned Qty not matched with Ordered Qty.' });
       return;
     }
 
@@ -783,14 +783,27 @@ export class ChangeOrderComponent implements OnInit {
                 severity: 'success', summary: this.globalResource.applicationmsg,
                 detail: 'Order change saved successfully.'
               });
-              this.loaderService.display(false);
               setTimeout(() => {
+                this.loaderService.display(false);
                 this.appCommonService.navChangeOrder.isBackClicked = true;
                 this.router.navigate(['../home/orderlisting']);
               }, 2000);
             } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'FAILURE') {
+              this.loaderService.display(false);
               this.msgs = [];
               this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+            }  else if (String(result[0].ResultKey).toLocaleUpperCase() === 'CHANGESALREADYDONE') {
+              this.loaderService.display(false);
+              this.msgs = [];
+              this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Changes already done.' });
+            } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'LOTWTNOTAVAILABLE') {
+              this.loaderService.display(false);
+              this.msgs = [];
+              this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: String(result[0].Description) });
+            } else if (String(result[0].ResultKey).toLocaleUpperCase() === 'REQUIREDQTYISNOTAVLFORSUBSTARCT') {
+              this.loaderService.display(false);
+              this.msgs = [];
+              this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: String(result[0].Description) });
             }
           },
             error => {

@@ -3,8 +3,7 @@
     <div class="ui-g-10">
       <div class="ui-g-12 ui-md-3">
         <div class="le-su-3">
-          <label for="lbBrand" class="towlable fwLabelBold"><strong>Action</strong><span class="star">
-              *</span></label>
+          <label for="lbBrand" class="towlable fwLabelBold"><strong>Action</strong><span class="star">*</span></label>
           <div>
             <p-dropdown [filter]="true" (onChange)="onChange_Action(ProductItem)" id="taskAction" class="clsControl"
               tabindex="1" [options]="actionNameValue" placeholder="--Select--"
@@ -56,10 +55,10 @@
                 <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                   *ngIf="!taskArrayItem.controls['releaseQty'].valid&&taskArrayItem.controls['releaseQty'].dirty">
                   <span *ngIf="taskArrayItem.controls['releaseQty'].errors['required']">
-                    required
+                    Required field.
                   </span>
                   <span *ngIf="taskArrayItem.controls['releaseQty'].hasError('assignedQtyExceeded')">
-                    Weight exceeded.
+                    Qty exceeded.
                   </span>
                 </div>
               </span>
@@ -373,13 +372,13 @@
                     *ngIf="!question.controls['answer'].valid&&question.controls['answer'].dirty">
                     <span
                       *ngIf="question.controls['answer'].errors['max'] || question.controls['answer'].errors['min']">
-                      Select Valid Weight
+                      Select Valid Weight.
                     </span>
                     <span *ngIf="question.controls['answer'].errors['required']">
-                      Required
+                      Required field.
                     </span>
                     <span *ngIf="question.controls['answer'].hasError('oilpkgmaxwtexceeded')">
-                      max lot wt exceeded
+                      Max lot weight exceeded.
                     </span>
                   </div>
                 </td>
@@ -475,13 +474,13 @@
                     *ngIf="!question.controls['answer'].valid&&question.controls['answer'].dirty">
                     <span
                       *ngIf="question.controls['answer'].errors['max'] || question.controls['answer'].errors['min']">
-                      Select Valid Weight
+                      Select Valid Weight.
                     </span>
                     <span *ngIf="question.controls['answer'].errors['required']">
-                      Required
+                      Required field.
                     </span>
                     <span *ngIf="question.controls['answer'].hasError('lotmaxwtexceeded')">
-                      max lot wt exceeded
+                      Max lot weight exceeded.
                     </span>
                   </div>
                 </td>

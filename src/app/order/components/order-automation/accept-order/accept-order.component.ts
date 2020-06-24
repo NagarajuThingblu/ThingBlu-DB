@@ -221,7 +221,7 @@ export class AcceptOrderComponent implements OnInit {
             this.oilOrderItems = this.identifiedOrderItems.filter(r => r.SkewKeyName === 'OIL');
           }
           setTimeout(() => {
-            this.validProductitemCount =  this.identifiedrderDetails[0].ValidProductitemCount;
+            this.validProductitemCount = this.identifiedrderDetails[0].ValidProductitemCount;
             this.createAcceptOrderForm();
             if (this.budOrderItems) {
               this.addBudItem();
@@ -241,9 +241,9 @@ export class AcceptOrderComponent implements OnInit {
   }
 
   selectAllBud(event) {
-      let arrayItem;
-      arrayItem = this.acceptOrderForm.get('productBudArr') as FormArray;
-      if (event) {
+    let arrayItem;
+    arrayItem = this.acceptOrderForm.get('productBudArr') as FormArray;
+    if (event) {
       arrayItem.controls.forEach(e => {
         e.controls['chkAcceptProductItem'].patchValue(true);
       });
@@ -262,9 +262,9 @@ export class AcceptOrderComponent implements OnInit {
   }
 
   selectAllJoint(event) {
-      let arrayItem;
-      arrayItem = this.acceptOrderForm.get('productJointArr') as FormArray;
-      if (event) {
+    let arrayItem;
+    arrayItem = this.acceptOrderForm.get('productJointArr') as FormArray;
+    if (event) {
       arrayItem.controls.forEach(e => {
         e.controls['chkAcceptProductItem'].patchValue(true);
       });
@@ -283,17 +283,17 @@ export class AcceptOrderComponent implements OnInit {
   }
 
   selectAllOil(event) {
-      let arrayItem;
-      arrayItem = this.acceptOrderForm.get('productOilArr') as FormArray;
-      if (event) {
+    let arrayItem;
+    arrayItem = this.acceptOrderForm.get('productOilArr') as FormArray;
+    if (event) {
       arrayItem.controls.forEach(e => {
         e.controls['chkAcceptProductItem'].patchValue(true);
       });
     } else {
       arrayItem.controls.forEach(e => {
         e.controls['chkAcceptProductItem'].patchValue(false);
-    });
-  }
+      });
+    }
   }
   checkIfAllSelectedOil() {
     let arrayItem;
@@ -336,7 +336,7 @@ export class AcceptOrderComponent implements OnInit {
           'IncomingOrderItemId': element.orderItemId,
           'SkewKeyName': 'BUD',
           'BrandId': Number(element.brand),
-          'SubBrandId': Number(element.subbrand ? element.subbrand : 0),
+          'SubBrandId': Number(element.subBrand ? element.subBrand : 0),
           'StrainId': Number(element.strain),
           'PkgTypeId': Number(element.pkgType),
           'PkgSize': Number(element.pkgSize),
@@ -353,7 +353,7 @@ export class AcceptOrderComponent implements OnInit {
           'IncomingOrderItemId': element.orderItemId,
           'SkewKeyName': 'JOINTS',
           'BrandId': Number(element.brand),
-          'SubBrandId': Number(element.subbrand ? element.subbrand : 0),
+          'SubBrandId': Number(element.subBrand ? element.subBrand : 0),
           'StrainId': Number(element.strain),
           'PkgTypeId': Number(element.pkgType),
           'PkgSize': Number(element.pkgSize),
@@ -370,7 +370,7 @@ export class AcceptOrderComponent implements OnInit {
           'IncomingOrderItemId': element.orderItemId,
           'SkewKeyName': 'OIL',
           'BrandId': Number(element.brand),
-          'SubBrandId': Number(element.subbrand ? element.subbrand : 0),
+          'SubBrandId': Number(element.subBrand ? element.subBrand : 0),
           'StrainId': Number(element.strain),
           'PkgTypeId': Number(element.pkgType),
           'PkgSize': Number(element.pkgSize),
@@ -381,13 +381,31 @@ export class AcceptOrderComponent implements OnInit {
           'IndexCode': String(index)
         });
       });
+      this.msgs = [];
+      if (!isIgnored) {
+        if (orderDetailsForApi.OrderSkewDetails) {
+          if (orderDetailsForApi.OrderSkewDetails.length <= 0) {
+            this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Invalid order. Order should have atleast one product.' });
+            this.loaderService.display(false);
+            return;
+          } else if (orderDetailsForApi.OrderSkewDetails.filter(r => r.IsAccepted === 1 ||  r.IsAccepted === true).length <= 0) {
+            this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Accept atleast one product.' });
+            this.loaderService.display(false);
+            return;
+          }
+        } else {
+          this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Invalid order. Order should have atleast one product.' });
+          this.loaderService.display(false);
+          return;
+        }
+      }
 
       let cnfMsg = '';
-        if (isIgnored) {
-          cnfMsg = 'Are you sure you want to ignore this change to Order: ' + formModel.s2OrderNo + '?';
-        } else {
-          cnfMsg =  this.acceptOrderResource.ordersaveconfirm;
-        }
+      if (isIgnored) {
+        cnfMsg = 'Are you sure you want to ignore this change to Order: ' + formModel.s2OrderNo + '?';
+      } else {
+        cnfMsg = this.acceptOrderResource.ordersaveconfirm;
+      }
       this.confirmationService.confirm({
         message: cnfMsg,
         header: 'Confirmation',
@@ -419,7 +437,7 @@ export class AcceptOrderComponent implements OnInit {
               succsMsg = 'Order created successfully.';
             }
             this.msgs = [];
-            this.msgs.push({ severity: 'success', summary: this.globalResource.applicationmsg, detail: succsMsg  });
+            this.msgs.push({ severity: 'success', summary: this.globalResource.applicationmsg, detail: succsMsg });
             setTimeout(() => {
               this.loaderService.display(false);
               this.appCommonService.navIncomingOrder.isBackClicked = true;
@@ -446,10 +464,9 @@ export class AcceptOrderComponent implements OnInit {
           } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'INACTIVERETAILER') {
             this.msgs = [];
             this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'Selected Retailer is inactive.' });
+          } else {
+            this.loaderService.display(false);
           }
-
-          // http call ends
-          this.loaderService.display(false);
         },
         error => {
           console.log(error);
