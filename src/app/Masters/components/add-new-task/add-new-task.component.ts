@@ -137,6 +137,9 @@ public backUrl: boolean;
       ()=> console.log('Get all Tasks types complete')
     );
   }
+  onPageChange(e) {
+    this.event = e;
+  }
   onSubmit(value:string){
     if(String(this.TaskmasterForm.value.task).trim().length===0)
     {

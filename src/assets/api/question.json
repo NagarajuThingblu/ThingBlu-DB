@@ -2,7 +2,7 @@
   {
     "controlType": "textbox",
     "key": "BUD_WT",
-    "label": "Flower Weight",
+    "label": "Flower Weight(Grams)",
     "required": true,
     "type": "text",
     "order": 1,
@@ -11,7 +11,7 @@
   {
     "controlType": "textbox",
     "key": "JOINTS_WT",
-    "label": "Preroll Weight  ",
+    "label": "Preroll Weight(Grams)",
     "value": "",
     "required": true,
     "order": 2,
@@ -20,7 +20,7 @@
   {
     "controlType": "textbox",
     "key": "OIL_WT",
-    "label": "Oil Material Weight",
+    "label": "Oil Material Weight(Grams)",
     "type": "text",
     "order": 3,
     "value": "",
@@ -29,7 +29,7 @@
   {
     "controlType": "textbox",
     "key": "WASTE_WT",
-    "label": "Waste Material Weight",
+    "label": "Waste Material Weight(Grams)",
     "type": "text",
     "order": 4,
     "value": "",

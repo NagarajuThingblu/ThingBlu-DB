@@ -254,7 +254,7 @@
                                       {{ProductItem.value.pkgTypeName}} </span>
                                   </div>
                                   <ng-template #pkgType_content>
-                                    <div>
+                                    <div style="width:120px;" >
                                       <p-dropdown [filter]="true" (onChange)="onChange_pkgType()" id="pkgType"
                                         [disabled]="ProductItem.controls.chkIsInvalidProductItem.value" class="clsControl"
                                         [options]="packagetypes" placeholder="--Select--" tabindex="{{tabindexcount * (iA + 1) + 6 }}"

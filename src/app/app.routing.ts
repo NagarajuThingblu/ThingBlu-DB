@@ -62,6 +62,10 @@ import { IdentifyOrderComponent } from './order/components/order-automation/iden
 import { AcceptOrderComponent } from './order/components/order-automation/accept-order/accept-order.component';
 import { ChangeOrderComponent } from './order/components/order-automation/change-order/change-order.component';
 import{AddNewTaskComponent} from './Masters/components/add-new-task/add-new-task.component';
+import{RoomtypeMasterComponent} from './Masters/components/roomtype-master/roomtype-master.component';
+import{ZonesComponent} from './Masters/components/zones/zones.component';
+import{RoomsComponent}from './Masters/components/rooms/rooms.component';
+import{RoomsTablesComponent}from './Masters/components/rooms-tables/rooms-tables.component'
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'default', pathMatch: 'full' },
@@ -137,6 +141,11 @@ const appRoutes: Routes = [
       { path: 'acceptorder/:incomingOrderId', component: AcceptOrderComponent, canActivate: [AuthGuard] },
       { path: 'changeOrder/:incomingOrderId', component: ChangeOrderComponent, canActivate: [AuthGuard] },
       {path:'Taskmaster',component:AddNewTaskComponent, canActivate:[AuthGuard]},
+      { path: 'Roomtypes', component: RoomtypeMasterComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'Zones', component: ZonesComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'Rooms', component: RoomsComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'RoomTables', component: RoomsTablesComponent, canActivate: [AuthGuard, RoleGuard] },
+      
 
     ]
   }

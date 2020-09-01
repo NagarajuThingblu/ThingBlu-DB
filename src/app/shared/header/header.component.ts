@@ -67,6 +67,7 @@ export class HeaderComponent implements OnInit {
   public ngpassword: any;
   public loginResources: any;
   public username: any;
+  public ClientId:any;
   stringEscapeRegex: any = /[^ a-zA-Z0-9]/g;
   lastCookie = document.cookie; // 'static' memory between function calls
   public token: string;
@@ -85,6 +86,8 @@ export class HeaderComponent implements OnInit {
   public userModel: UserModel;
   public userRoles: any;
   public userRoleWisePageList: any;
+  public headerimagtail :any;
+  public headerimagesmall:any;
 
   ngOnInit() {
     this.isYes = false;
@@ -92,6 +95,9 @@ export class HeaderComponent implements OnInit {
     // this.autoLogoutService.showLogoutModal.subscribe(data => this.showLogoutModal = data);
 
     this.username = this.appCommonService.getUserProfile().UserName;
+    this.ClientId= String(this.appCommonService.getUserProfile().ClientId);
+    this.headerimagtail="assets/img/"+this.ClientId+"ThingBluNoTagline.png";
+    this.headerimagesmall="assets/img/"+this.ClientId+"hannah-logo-small.png";
     this.heading = this.username + ' is logged in. Do you want to continue with this?';
 
     this.userModel = this.appCommonService.getUserProfile();

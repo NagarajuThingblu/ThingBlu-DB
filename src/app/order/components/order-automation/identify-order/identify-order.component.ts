@@ -155,7 +155,7 @@ export class IdentifyOrderComponent implements OnInit {
       'subBrandName': new FormControl(incomingOrderItems.SubBrandName),
       'strain': new FormControl(incomingOrderItems.StrainId, Validators.compose([Validators.required])),
       'strainName': new FormControl(incomingOrderItems.StrainName),
-      'pkgType': new FormControl(incomingOrderItems.PkgTypeId <= 0 ? null : incomingOrderItems.PkgTypeId, Validators.compose([Validators.required])),
+      'pkgType': new FormControl(incomingOrderItems.PkgTypeId <= 0 ? null : incomingOrderItems.PkgTypeId),
       'pkgTypeName': new FormControl(incomingOrderItems.PkgType),
       'pkgSize': new FormControl(incomingOrderItems.PkgSize, Validators.compose([Validators.required, Validators.min(0.1), Validators.maxLength(10)])),
       'itemQty': new FormControl(incomingOrderItems.SkewType === 'BUD' || incomingOrderItems.SkewType === 'OIL' ? 1 : incomingOrderItems.ItemQty,

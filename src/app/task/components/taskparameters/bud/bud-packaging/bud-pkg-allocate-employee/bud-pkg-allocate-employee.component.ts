@@ -197,10 +197,10 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
   openLotSelection(rowData, rowIndex) {
     this.brandStrainLots = [];
     this.brandStrainLots = this.AllocateEmpData.orderDetails['Table1'].filter(result => {
-      if (rowData.value.geneticsId) {
-        return result.GeneticsId === rowData.value.geneticsId;
-      } else {
+      if (rowData.value.strainId) {
         return result.StrainId === rowData.value.strainId;
+        } else {
+        return result.GeneticsId === rowData.value.geneticsId;
     }
     });
     this.selLotBrandStrainRow.BrandId = 0;

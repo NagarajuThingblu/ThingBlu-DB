@@ -221,9 +221,12 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
   }
   taskcategorychange()
   {
-    const categoryname = this.assignTask.taskcategory;
-const categorylist = this.tasktypelist.filter(item=>item.CategoryName==categoryname);
-if((<UserModel>this.appCommonService.getUserProfile()).UserRole === (this.userRoles.Manager) || this.prodDBRouteParams){
+    
+    if(this.assignTask.taskcategory!=null){
+      
+      const categoryname = this.assignTask.taskcategory;
+      const categorylist = this.tasktypelist.filter(item=>item.TaskCategoryID==categoryname);
+            if((<UserModel>this.appCommonService.getUserProfile()).UserRole === (this.userRoles.Manager) || this.prodDBRouteParams){
 
 this.tasknames=this.dropdwonTransformService.transform(
   categorylist.filter(item =>
@@ -251,7 +254,7 @@ else{
       'taskname': new FormControl(null, Validators.required)
     });
     this.selectedTaskTypeName=null;
-  
+}
 }
   
   }
@@ -270,7 +273,7 @@ else{
           if (this.prodDBRouteParams) {
             
             this.tasknames = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', '-- Select --', false);
-            this.taskcategories=this.dropdwonTransformService.transform(data,'CategoryName','CategoryName','-- Select --', false);
+            this.taskcategories=this.dropdwonTransformService.transform(data,'CategoryName','TaskCategoryID','-- Select --', false);
           } else {
             this.tasknames = this.dropdwonTransformService.transform(
               data.filter(item =>
@@ -282,14 +285,14 @@ else{
               ),
               'TaskTypeName', 'TaskTypeId', '-- Select --', false);
               const categories= Array.from(data.reduce((m, t) => m.set(t.CategoryName, t), new Map()).values())
-              this.taskcategories=this.dropdwonTransformService.transform(categories,'CategoryName','CategoryName','-- Select --', false);       }
+              this.taskcategories=this.dropdwonTransformService.transform(categories,'CategoryName','TaskCategoryID','-- Select --', false);       }
         } else {
           // this.tasknames = this.dropdwonTransformService.transform(
           //   data.filter(item => String(item.TaskTypeKey).toLocaleUpperCase() === 'CUSTOMTASK'),
           //   'TaskTypeName', 'TaskTypeId', '-- Select --', false);
           this.taskcategories= this.dropdwonTransformService.transform(
             data.filter(item => String(item.TaskTypeKey).toLocaleUpperCase() === 'CUSTOMTASK'),
-            'CategoryName','CategoryName','-- Select --', false
+            'CategoryName','TaskCategoryID','-- Select --', false
 
           );
         }

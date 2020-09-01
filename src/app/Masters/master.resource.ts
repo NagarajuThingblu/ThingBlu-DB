@@ -702,6 +702,46 @@ export class MastersResource {
                 addNewSkew: {
                     skewType: 'Skew Type',
                     skewName: 'Skew Name',
+                },
+                addNewRoomType:{
+                    pageheading:'New Room Type',
+                    enterroomtype:'Room Type Name',
+                    RoomTypeRequired:'Room Type Required',
+                    RoomTypeLength:"Must not more than 50 Characters",
+                    enterdescription:'Room Type Description',
+                    descriptionrequired:'Description type required',
+                    descriptionLength:'Must not more than 500 characters',
+                    newRoomTypeSavedSuccess:'Room type saved successfully',
+                    newRoomTypeInactivated:'Room type Inactivated successfully',
+                    newRoomTypeActivated:'Room Type Activated successfully',
+                    newRoomTypeDeleted:'Room type Deleted Scuccessfully',
+                    RoomTypeAlreadyExists:'Room Type already Exists',
+                    RoomTypeAssigned:'Can not delete this RoomType. It is in use',
+                    noupdate:'Can not update this Room Type.Might be it does not exist',
+                    notactivated:'Can not activate this Room Type.Might be it deos not exist',
+                    notinactivated:'Can not Inactivate this Room Type .Might be it does not exist',
+                    notdeleted:'Can not delete this RoomType.Might be it does not exist',
+                    RoomtypeIsInactive:'Can not activate this RoomType.May be Room is Inactive'
+                },
+                addNewzones:{
+                    pageheading:'New Zone',
+                    enterzone:'Zone Name',
+                    ZoneRequired:'Zone Required',
+                    ZoneLength:"Must not more than 50 Characters",
+                    enterdescription:'Zone Description',
+                    descriptionrequired:'Description type required',
+                    descriptionLength:'Must not more than 500 characters',
+                    newZoneSavedSuccess:'Zone saved successfully',
+                    newZoneInactivated:'Zone Inactivated successfully',
+                    newZoneActivated:'Zone Activated successfully',
+                    newZoneDeleted:'Zone Deleted Scuccessfully',
+                    ZoneAlreadyExists:'Zone already Exists',
+                    ZoneAssigned:'Can not delete this Zone. It is in use',
+                    noupdate:'Can not update this Zone.Might be it does not exist',
+                    notactivated:'Can not activate this Zone.Might be it deos not exist',
+                    notinactivated:'Can not Inactivate this Zone .Might be it does not exist',
+                    notdeleted:'Can not delete this Zone.Might be it does not exist',
+                    ZoneIsInactive:'Can not activate this Zone.May be Room is Inactive'
                 }
             }
         };

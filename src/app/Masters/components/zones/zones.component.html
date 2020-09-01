@@ -1,0 +1,164 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header="{{pageHeader}}" [toggleable]="true">
+        <p-header>
+
+        </p-header>
+        <form [formGroup]="ZonetypeMasterform" (ngSubmit)="SaveZones(ZonetypeMasterform)">
+          <div class="ui-g">
+            <!---Zone Name-->
+            <div class="ui-g-12 ui-md-6">
+              <div class="PaddingRL">
+                <div class="le-se-12">
+                  <label for="enterzone">
+                    {{newzonetypeResource.enterzone}}<span class="star">*</span>
+                  </label>
+                  <input pInputText name="Zone" id="zone" autocomplete="off" class="clsControl" placeholder="Enter Zone"
+                    formControlName="Zone">
+                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!ZonetypeMasterform.controls['Zone'].valid && ZonetypeMasterform.controls['Zone'].dirty">
+                    <span *ngIf="ZonetypeMasterform.controls['Zone'].errors['required']">
+                      {{newzonetypeResource.ZoneRequired}}
+                    </span>
+                    <span *ngIf="ZonetypeMasterform.controls['Zone'].errors['maxlength']">
+                      {{newzonetypeResource.ZoneLength}}
+                    </span>
+                    <span *ngIf="ZonetypeMasterform.controls['Zone'].errors['whitespace']">
+                      {{newzonetypeResource.ZoneRequired}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--end of ZoneName-->
+            <!--Description-->
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <div class="le-se-12">
+                  <label for="enterdescription">
+                    {{newzonetypeResource.enterdescription}}
+                  </label>
+                  <input pInputText name="description" id="description" autocomplete="off" class="clsControl"
+                    placeholder="enter description" formControlName="description">
+                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!ZonetypeMasterform.controls['description'].valid && ZonetypeMasterform.controls['description'].dirty">
+                    <span *ngIf="ZonetypeMasterform.controls['description'].errors['required']">
+                      {{newzonetypeResource.descriptionrequired}}
+                    </span>
+                    <span *ngIf="ZonetypeMasterform.controls['description'].errors['maxlength']">
+                      {{newzonetypeResource.descriptionLength}}
+                    </span>
+                    <span *ngIf="ZonetypeMasterform.controls['description'].errors['whitespace']">
+                      {{newzonetypeResource.descriptionrequired}}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--End of Desccription-->
+            <!--IsActive-->
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label></label>
+                <div class="clear"></div>
+                <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalResource.IsActiveFlag}}"
+                  formControlName="chkIsActive" binary="true"></p-checkbox>
+              </div>
+            </div>
+            <!--End IsActive-->
+            <div class="ui-g-12 ui-md-12" style="text-align: right;">
+              <div class="paddingRL">
+              <p-button type="submit" label="{{ saveButtontext}}" id="btnRoomTypeSave" name="btnRoomTypeSave">
+              </p-button>
+
+              <button pButton (click)="resetAll()" type="button" label="{{clear}}" class="ui-button-secondary">
+              </button>
+            </div>
+</div>
+          </div>
+        </form>
+      </p-panel>
+    </div>
+  </div>
+
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header="Zone List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+<p-table #dtZoneList [value]="allZonestypelist"
+   sortMode="single" [responsive]="true" [paginator]="true" [rows]="10"           
+   sortField="ZoneId"
+   sortOrder="-1"
+   [rowsPerPageOptions]="paginationValues"
+   (onPage)="onPageChange($event)"
+   [globalFilterFields]="['ZoneName','Description' ]">
+
+   <ng-template pTemplate="caption">
+    <div style="text-align: right;">
+      <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+      <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" (input)="allZonestypelist.filterGlobal($event.target.value,'contains')"
+      style="width: auto;">
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header" >
+    <tr>
+      <th [pSortableColumn]="'ZoneName'">Zone  <p-sortIcon [field]="'ZoneName'"></p-sortIcon></th>
+      <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>            
+                  <th style="width:100px;"> </th>
+    </tr>
+    <tr>
+      <th>
+          <input pInputText type="text" autocomplete="off" (input)="dtZoneList.filter($event.target.value, 'ZoneName', 'contains')" class="clsControl">
+      </th>
+      <th>
+          <input pInputText type="text" autocomplete="off" (input)="dtZoneList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+      </th>
+    <th rowspan="2"></th>
+                            
+    </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-Zone let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+           <td>{{Zone?.ZoneName}}</td>
+             <td>{{Zone?.Description}}</td>
+            <td style="width:65px;"> 
+               <span class="ui-column-title">edit</span>
+              <a href="#" [routerLink]="" (click)="GetZoneonEdit(Zone?.ZoneId)" >                             
+                  <span class="fa fa-edit"></span>
+              </a>
+              <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(Zone?.ZoneId,Zone,1,0)" >
+                <span class="fa fa-trash"></span>
+              </a>
+            <div class="clsToggleButtonDiv">
+                  <p-toggleButton 
+                    [(ngModel)]="Zone.IsActive" 
+                    onLabel="Active" offLabel="InActive"  
+                    [style]="{'width':'90px'}"
+                    (onChange)="showConformationMessaegForDeactive(Zone?.ZoneId,Zone, rowIndex,0,1)"
+                    >
+                   </p-toggleButton>
+            </div>
+        </td>  
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft" let-state>
+      <pagination-counts
+        *ngIf="allZonestypelist?.length"
+        [inputData]="allZonestypelist"
+        [inputEvent]="event"
+      ></pagination-counts>
+    </ng-template>
+</p-table>
+      </p-panel>
+    </div>
+  </div>
+</div>
+<p-growl [(value)]="msg" life='5000'></p-growl>
+<p-confirmDialog 
+  header="Confirmation" 
+  icon="fa fa-question-circle" 
+  width="425" 
+  *ngIf="true"
+  class="clsConfirmBox" >
+</p-confirmDialog>

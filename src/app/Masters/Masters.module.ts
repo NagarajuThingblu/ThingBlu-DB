@@ -55,7 +55,12 @@ import { TaskSettingComponent } from './components/task-setting/task-setting.com
 import { TaskSettingService } from './services/tasksetting.service';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { AddNewTaskComponent } from './components/add-new-task/add-new-task.component';
-import{ NewTaskActionService} from '../task/services/new-task-action.service'
+import{ NewTaskActionService} from '../task/services/new-task-action.service';
+import { RoomtypeMasterComponent } from './components/roomtype-master/roomtype-master.component';
+import{NewRoomGenerationService} from './../task/services/new-room-generation.service';
+import { ZonesComponent } from './components/zones/zones.component';
+import { RoomsComponent } from './components/rooms/rooms.component';
+import { RoomsTablesComponent } from './components/rooms-tables/rooms-tables.component'
 
 @NgModule({
   declarations: [
@@ -87,7 +92,12 @@ import{ NewTaskActionService} from '../task/services/new-task-action.service'
     TppPackageTypeMappingMasterComponent,
     TaskSettingComponent,
     EmployeesComponent,
-    AddNewSkewPopupComponent
+    AddNewSkewPopupComponent,
+    AddNewTaskComponent,
+    RoomtypeMasterComponent,
+    ZonesComponent,
+    RoomsComponent,
+    RoomsTablesComponent
   ],
   imports: [
     SharedModule
@@ -118,7 +128,8 @@ import{ NewTaskActionService} from '../task/services/new-task-action.service'
     TPPPackageTypeService,
     ForgotPasswordService,
     TaskSettingService,
-    NewTaskActionService
+    NewTaskActionService,
+    NewRoomGenerationService
   ],
   exports: [
     NewProductTypeComponent,

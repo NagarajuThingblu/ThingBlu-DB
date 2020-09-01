@@ -7,7 +7,7 @@
                
                
                 <a class="navbar-brand" (click)="logoClick()" routerLink="" >
-                <img src="assets/img/ThingBluNoTagline.png" alt="ThingBlu" style="height:40px;">
+                <img [src]=headerimagtail alt="ThingBlu" style="height:40px;">
                
                 </a>
                 <!-- <a href="javascript:void(0);" class="bars"></a> -->
@@ -38,7 +38,7 @@
                         </button>
                       </li> -->
                       <li>
-                            <img class="img-responsive" style="width: 35px;" src="assets/img/hannah-logo-small.png" alt="ThingBlu">
+                            <img class="img-responsive" style="width: 35px;" [src]=headerimagesmall alt="ThingBlu">
                       </li>
                       <li class="lithree">
                         <p-slideMenu #menu [model]="item1" [popup]="true" styleClass="clsLogOutMenu" ></p-slideMenu>

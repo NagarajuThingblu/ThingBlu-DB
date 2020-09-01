@@ -4,15 +4,15 @@ export class LotResources {
             en: {
                 lotentryform: {
                     pageheading: 'New Lot Entry',
-                    biotfweight: 'Transfer Weight',
+                    biotfweight: 'Transfer Weight(Grams)',
                     biotfweightrequired: 'Enter transfer weight.',
                     // startweight: 'Start Weight',
-                    startweight: 'Recevied Weight',
+                    startweight: 'Recevied Weight(Grams)',
                     startweightrequired: 'Enter received weight.',
                    // costoflot: 'Lot Cost(USD)',
                     costoflot: 'Lot Cost',
                     costoflotrequired: 'Enter lot cost.',
-                    shortageoverage: 'Shortage/Overage',
+                    shortageoverage: 'Shortage/Overage(Grams)',
                     growerlotno: 'Lot ID',
                     lotsavedsuccess: 'Lot details saved successfully.',
                     growerlotalreadyexist:  'State Lot No. already exists.',
