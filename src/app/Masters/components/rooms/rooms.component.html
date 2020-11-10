@@ -1,3 +1,210 @@
 <div class="content-section implementation GridDemo orderRequest">
-  <span>Page is under Development</span>
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header={{pageheading}} [toggleable]="true">
+        <p-header>
+
+        </p-header>
+        <form [formGroup]="Roomtypemassterform" (ngSubmit)="SaveRooms(Roomtypemassterform.value)">
+          <div class="ui-g">
+            <div class="ui-g-12 ui-md-12" style="padding: 0">
+
+              <a [routerLink]="" *ngIf="backUrl" class="btn-link" (click)="backToLot()"
+                style="float: right;padding-right: 21px;text-decoration: underline">
+                << Back</a>
+            </div>
+          </div>
+          <div class="ui-g">
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <div class="le-su-12">
+                  <label for="enterRoomtype">{{ newRoomtyperesource.enterRoomType}}<span class="star">*</span></label>:
+                  <p-dropdown [filter]="true" id="Roomtype" [options]="RoomTypes" formControlName="RoomType"
+                    placeholder="-- Select --" [autoWidth]="false" class="clsControl" name="RoomType">
+                  </p-dropdown>
+                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!Roomtypemassterform.controls['RoomType'].valid&&Roomtypemassterform.controls['RoomType'].dirty">
+                    <span *ngIf="Roomtypemassterform.controls['RoomType'].errors['required']">
+                      {{ newRoomtyperesource.RoomTypeRequired }}
+                    </span>
+                    <span *ngIf="Roomtypemassterform.controls['RoomType'].hasError('Roomypenotpresent')">
+                      {{ newRoomtyperesource.Roomypenotpresent }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--Zones optional-->
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <div class="le-su-12">
+                  <label for="Zones">
+                    {{ newRoomtyperesource.Zone}}:
+                  </label>
+                  <p-button class="toplinks" type="button" icon="fa fa-list-ul"
+                    label="{{ newRoomtyperesource.viewaddZones}}" id="btn_geneticshow" (click)="viewZoneList()"
+                    name="btnviewRoom"></p-button>
+
+                  <p-dropdown [filter]="true" id="zones" [options]="Zonestypes" formControlName="Zones"
+                    placeholder="-- Select --" [autoWidth]="false" class="clsControl" name="Zones">
+                  </p-dropdown>
+
+                  
+                </div>
+              </div>
+            </div>
+
+                <!--Room Name-->
+
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="enterRoom">
+                        {{ newRoomtyperesource.enterRoom}}<span class="star">*</span>:
+                      </label>
+    
+                      <input pInputText name="RoomName" id="RoomName" autocomplete="off" placeholder="Enter Room Name"
+                        type="text" class="clsControl" formControlName="RoomName" />
+    
+                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!Roomtypemassterform.controls['RoomName'].valid&&Roomtypemassterform.controls['RoomName'].dirty">
+                        <span
+                          *ngIf="Roomtypemassterform.controls['RoomName'].errors['required']">{{newRoomtyperesource.Roomrequired}}</span>
+                        <span
+                          *ngIf="Roomtypemassterform.controls['RoomName'].errors['maxlength']">{{newRoomtyperesource.Roomrequired}}</span>
+                        <span
+                          *ngIf="Roomtypemassterform.controls['RoomName'].errors['whitespace']">{{newRoomtyperesource.Roomrequired}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--Description-->
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="description">
+                        {{ newRoomtyperesource.enterdescription}}<span class="star"></span>:
+                      </label>
+    
+                      <input pInputText name="description" id="description" type="text" autocomplete="off"
+                        class="clsControl" placeholder="Enter Room Description" formControlName="description" />
+                    </div>
+                  </div>
+                </div>
+
+                 <!-- IsActive -->
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label></label>
+                <div class="clear"></div>
+
+                <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalResource.IsActiveFlag}}"
+                  formControlName="chkIsActive" binary="true"></p-checkbox>
+              </div>
+            </div>
+            <!--End IsActive -->
+
+            <div class="ui-g-12 ui-md-12" style="text-align:right;">
+              <div class="paddingRL">
+                <!-- <button pButton type="submit" name="btnLogin" label="Add New" (click)="resetAll()" style="align-content: right"></button> -->
+                <p-button type="submit" label="{{ saveButtontext}}" id="btnRoomSave" name="btnroomSave"></p-button>
+
+                <button pButton (click)="resetAll()" type="button" label="{{ clear }}" class="ui-button-secondary">
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </p-panel>
+    </div>
+  </div>
+
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header="Room List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+        <p-table #dtRoomList [value]="allRoomtypelist" sortMode="single" [responsive]="true" [paginator]="true"
+        [rows]="10" sortField="RoomTypeId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
+        (onPage)="onPageChange($event)"
+        [globalFilterFields]="['RoomName','RoomTypeName','Zone','Description']">
+        <ng-template pTemplate="caption">
+          <div style="text-align: right">
+            <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+            <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter"
+              (input)="dtRoomList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th [pSortableColumn]="'RoomName'">Room <p-sortIcon [field]="'RoomName'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'RoomTypeName'">Room Type <p-sortIcon [field]="'RoomTypeName'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'ZoneName'"> ZoneName <p-sortIcon [field]="'ZoneName'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon>
+            </th>
+            
+            <th style="width:100px;"> </th>
+          </tr>
+
+          <tr>
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtRoomList.filter($event.target.value, 'RoomName', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtRoomList.filter($event.target.value, 'RoomTypeName', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtRoomList.filter($event.target.value, 'ZoneName', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtRoomList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+            </th>
+          
+            <th rowspan="2"></th>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-Room let-rowData let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+            
+
+            <td>{{Room?.RoomName}}</td>
+            <td>{{Room?.RoomTypeName}}</td>
+            <td>{{Room?.ZoneName }}</td>
+            <td>{{Room?.Description }}</td>
+           
+            <td style="width:65px;">
+              <span class="ui-column-title">edit</span>
+              <a href="#" [routerLink]="" (click)="getRoomOnEdit(Room?.RoomId)">
+                <span class="fa fa-edit"></span>
+              </a>
+              <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(Room?.RoomId,Room,1,0)">
+                <span class="fa fa-trash"></span>
+              </a>
+            
+              <div class="clsToggleButtonDiv">
+                <p-toggleButton [(ngModel)]="Room.IsActive" onLabel="Active" offLabel="InActive"
+                  [style]="{'width':'90px'}"
+                  (onChange)="showConformationMessaegForDeactive(Room?.RoomId,Room, rowIndex,0,1)">
+                </p-toggleButton>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft" let-state>
+          <pagination-counts *ngIf="allRoomtypelist?.length" [inputData]="allRoomtypelist" [inputEvent]="event">
+          </pagination-counts>
+        </ng-template>
+      </p-table>
+      </p-panel>
+    </div>
+  </div>
 </div>
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" *ngIf="true" class="clsConfirmBox">
+</p-confirmDialog>

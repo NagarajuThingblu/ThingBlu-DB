@@ -42,4 +42,30 @@ export class DashobardService {
    });
 }
 
+getproductionDashboardDetails()
+{
+const url="api/Task/GetProductionDashboardDetails";
+let params = new HttpParams();
+params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+return this.http
+    .get(url, {params: params})
+
+   .map(data => {
+    return data;
+   });
+}
+
+getytdprodcutstatsDetails()
+{
+  const url="api/Task/GetYTDProductivityStatistics";
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+  return this.http
+      .get(url, {params: params})
+  
+     .map(data => {
+      return data;
+     });
+}
+
 }

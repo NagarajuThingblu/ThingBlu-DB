@@ -55,4 +55,27 @@ GetZonelist()
 }
 //#endregion
 
+////#region Room 
+addNewRoom(RoomtypeMasterform:any)
+{
+  const url='api/RoomType/AddUpdateRooms';
+
+  return this.http.post(url,RoomtypeMasterform,this.headers).map(data=>data);
+}
+GetRoomList()
+{
+  const url='api/RoomType/GetRoomsList';
+    let params = new HttpParams();
+    params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
+    return this.http.get(url,{params: params}).map(data=>data);
+}
+GetRoomTypes()
+{
+  const url='api/RoomType/GetRoomTypeList';
+    let params = new HttpParams();
+    params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
+    return this.http.get(url,{params: params}).map(data=>data);
+}
+
+////#region 
 }

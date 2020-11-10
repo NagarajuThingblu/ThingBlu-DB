@@ -95,7 +95,9 @@ export class NewProductTypeComponent implements OnInit {
       packageType: null,
       packageUnit: null,
       packageItemQty: null,
-      packageLbl: null
+      packageLbl: null,
+      unitPrice:null,
+      
     };
 
     private globalData = {
@@ -407,7 +409,9 @@ export class NewProductTypeComponent implements OnInit {
             UnitValue: element.value.packageUnit,
             ItemQty:  this.newProductTypeEntryForm.getRawValue().items[index].packageItemQty,
             IsActive: element.value.chkSelectAll ? 1 : 0,
-            IndexCode: index
+            IndexCode: index,
+            UnitPrice:element.value.packageUnitPrice
+            
          });
       // });
      });
@@ -678,6 +682,7 @@ export class NewProductTypeComponent implements OnInit {
       // tslint:disable-next-line:max-line-length
       packageItemQty: new FormControl({value: this.skewKeyName !== 'JointMaterialWt' ? 1 : 0 , disabled : this.skewKeyName !== 'JointMaterialWt' ? true : false },
         this.skewKeyName === 'JointMaterialWt' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
+        packageUnitPrice: new FormControl(null,Validators.compose([Validators.required])),
       chkSelectAll: new FormControl(true)
     });
   }

@@ -1,0 +1,131 @@
+<div class="page-header">
+  <h1 class="pull-left" style="margin:8px 0px">
+  <span>Production Dashboard</span>
+  </h1>
+  <div class="pull-right" style="padding:0px !important; margin-top:2px !important; margin-bottom:2px;">
+      
+  </div>
+</div>
+<div class="content-section implementation GridDemo" style="background: #ffffff">
+  <div  class="ui-g"  *ngFor="let oderc of ordercount">
+    <div class="ui-g-12">
+      <span>Date/Time: {{TodayDate | date: 'short'}}</span>
+    </div>
+    <div class="ui-g-12">
+      <div class="ui-g-4">
+        <span>Total Orders For Today: {{oderc.TotalOrdersforToday}}</span>
+      </div>
+      <div class="ui-g-4">
+        <span>Orders Completed: {{oderc.OrdersCompleted}}</span>
+      </div>
+    </div>
+  </div>
+    <div class="ui-g-12">
+  <p-table #dtproductiondashboard [value]="allproductiondashboardlist"
+    sortMode="single"                      
+    [responsive]="true" 
+    [paginator]="true" 
+    [rows]="10"           
+    sortField="OrderId"
+    sortOrder="-1"
+    [rowsPerPageOptions]="paginationValues"
+    (onPage)="onPageChange($event)"
+    [globalFilterFields]="['Order','Store','Brand','Units','Priority','AssignedTo','Delivery','Progress','QAStatus','Notes' ]">
+
+    <ng-template pTemplate="header" >
+      <tr>
+        <th [pSortableColumn]="'Order'">Order  <p-sortIcon [field]="'Order'"></p-sortIcon></th>
+        <th [pSortableColumn]="'Store'">Store<p-sortIcon [field]="'Store'"></p-sortIcon></th>
+        <th [pSortableColumn]="'Brand'">Brand<p-sortIcon [field]="'Brand'"></p-sortIcon></th>
+        <th [pSortableColumn]="'Units'">Units<p-sortIcon [field]="'Units'"></p-sortIcon></th>
+        <th [pSortableColumn]="'Priority'">Priority<p-sortIcon [field]="'Priority'"></p-sortIcon></th>
+        <th [pSortableColumn]="'AssignedTo'">AssignedTo<p-sortIcon [field]="'AssignedTo'"></p-sortIcon></th>
+        <th [pSortableColumn]="'Delivery'">Delivery<p-sortIcon [field]="'Delivery'"></p-sortIcon></th>
+        <th [pSortableColumn]="'Progress'">Progress<p-sortIcon [field]="'Progress'"></p-sortIcon></th>
+        <th [pSortableColumn]="'QAStatus'">QAStatus<p-sortIcon [field]="'QAStatus'"></p-sortIcon></th>
+        <th [pSortableColumn]="'Notes'">Notes<p-sortIcon [field]="'Notes'"></p-sortIcon></th>
+      </tr>
+      <tr>
+        <th>
+          <input pInputText type="text" autocomplete="off" (input)="dtRoomtypelist.filter($event.target.value, 'Order', 'contains')" class="clsControl">
+      </th>
+    <th>
+      <input pInputText type="text" autocomplete="off" (input)="dtRoomtypelist.filter($event.target.value, 'Store', 'contains')" class="clsControl">
+  </th>
+  <th>
+    <input pInputText type="text" autocomplete="off" (input)="dtRoomtypelist.filter($event.target.value, 'Brand', 'contains')" class="clsControl">
+</th>
+<th>
+  <input pInputText type="text" autocomplete="off" (input)="dtRoomtypelist.filter($event.target.value, 'Units', 'contains')" class="clsControl">
+</th>
+<th>
+  <input pInputText type="text" autocomplete="off" (input)="dtRoomtypelist.filter($event.target.value, 'Priority', 'contains')" class="clsControl">
+</th>
+<th>
+  <input pInputText type="text" autocomplete="off" (input)="dtRoomtypelist.filter($event.target.value, 'Assigned To', 'contains')" class="clsControl">
+</th>
+<th>
+  <input pInputText type="text" autocomplete="off" (input)="dtRoomtypelist.filter($event.target.value, 'Delivery', 'contains')" class="clsControl">
+</th>
+<th>
+  <input pInputText type="text" autocomplete="off" (input)="dtRoomtypelist.filter($event.target.value, 'Progress', 'contains')" class="clsControl">
+</th>
+<th>
+  <input pInputText type="text" autocomplete="off" (input)="dtRoomtypelist.filter($event.target.value, 'QAStatus', 'contains')" class="clsControl">
+</th>
+<th>
+  <input pInputText type="text" autocomplete="off" (input)="dtRoomtypelist.filter($event.target.value, 'Notes', 'contains')" class="clsControl">
+</th>
+
+      </tr>
+      </ng-template>
+      <ng-template  pTemplate="body" let-ProductionDashboardtype let-rowData let-columns="columns" let-rowIndex="rowIndex" >
+<tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" >  
+  <td>{{ProductionDashboardtype?.Order}}</td>
+  <td>{{ProductionDashboardtype?.Store}}</td>
+  <td>{{ProductionDashboardtype?.Brand}}</td>
+  <td>{{ProductionDashboardtype?.Units}}</td>
+  <td>{{ProductionDashboardtype?.Priority}}</td>
+  <td>{{ProductionDashboardtype?.AssignedTo}}</td>
+  <td>{{ProductionDashboardtype?.Delivery}}</td>
+  <td>{{ProductionDashboardtype?.Progress}}</td>
+  <td>{{ProductionDashboardtype?.QAStatus}}</td>
+  <td>{{ProductionDashboardtype?.Notes}}</td>
+
+</tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+  <div class="ui-g-12">
+<div *ngFor ="let ytd of ytdlistdist">
+<div class="ui-g-12" >
+  <span><b> {{ytd}}</b></span>
+ </div>
+    <div *ngFor = "let ytdlist of allYtdlist; let id=index ">
+<!-- <span>{{ytdlist | json}}</span> -->
+
+ <div *ngIf="ytd==ytdlist.Category" class="ui-g-6" >
+   
+  <span> {{ytdlist.Item}}</span>
+ </div>
+</div>
+</div>
+    </div>
+
+    <div class="ui-g-12">
+      <div *ngFor ="let ytd of prdctlistdist">
+      <div class="ui-g-12">
+        <span> <b>{{ytd}}</b></span>
+       </div>
+      <div *ngFor = "let ytdlist of allProductstatslist ; let id=index;">
+  <!-- <span>{{ytdlist | json}}</span> -->
+  
+   <div *ngIf="ytd==ytdlist.Category" class="ui-g-6">
+    <span> {{ytdlist.Item}}</span>
+   </div>
+  </div>
+</div>
+      </div>
+
+</div>

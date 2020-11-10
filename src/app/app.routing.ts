@@ -65,7 +65,8 @@ import{AddNewTaskComponent} from './Masters/components/add-new-task/add-new-task
 import{RoomtypeMasterComponent} from './Masters/components/roomtype-master/roomtype-master.component';
 import{ZonesComponent} from './Masters/components/zones/zones.component';
 import{RoomsComponent}from './Masters/components/rooms/rooms.component';
-import{RoomsTablesComponent}from './Masters/components/rooms-tables/rooms-tables.component'
+import{RoomsTablesComponent}from './Masters/components/rooms-tables/rooms-tables.component';
+import{ProductionsdashboardComponent}from './dashboard/components/productionsdashboard/productionsdashboard.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'default', pathMatch: 'full' },
@@ -145,6 +146,7 @@ const appRoutes: Routes = [
       { path: 'Zones', component: ZonesComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'Rooms', component: RoomsComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'RoomTables', component: RoomsTablesComponent, canActivate: [AuthGuard, RoleGuard] },
+      {path:'productiondashboard',component:ProductionsdashboardComponent,canActivate:[AuthGuard,RoleGuard]},
       
 
     ]

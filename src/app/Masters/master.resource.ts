@@ -50,6 +50,12 @@ export class MastersResource {
                     viewsubbrands: 'View All Sub-Brands',
                     viewstrain: 'View All Strains',
                     viewpackagetype: 'View All Package Types',
+                    PackageUnitPrice:'Package Unit Price',
+                    PackageUnitPricerequired:'Package Unit Prce Required',
+                    MeasureOfUnit:'Measure Of Unit'
+                    
+
+
                 },
 
 
@@ -742,6 +748,31 @@ export class MastersResource {
                     notinactivated:'Can not Inactivate this Zone .Might be it does not exist',
                     notdeleted:'Can not delete this Zone.Might be it does not exist',
                     ZoneIsInactive:'Can not activate this Zone.May be Room is Inactive'
+                },
+                addNewRooms:{
+                    pageheading:'New Room',
+                    enterRoomType:'Room Type',
+                    RoomTypeRequired:'Room Type Required',
+                    Roomypenotpresent: 'Room type is deleted or is inactive.',
+                    Zone:'Zone',
+                    viewaddZones: 'View/Add Zones',
+                    enterRoom:'Room Name',
+                    RoomRequired:'Room Required',
+                    RoomLength:"Must not more than 50 Characters",
+                    enterdescription:'Room Description',
+                    descriptionrequired:'Description type required',
+                    descriptionLength:'Must not more than 500 characters',
+                    newRoomSavedSuccess:'Room saved successfully',
+                    newRoomInactivated:'Room Inactivated successfully',
+                    newRoomActivated:'Room Activated successfully',
+                    newRoomDeleted:'Room Deleted Scuccessfully',
+                    RoomAlreadyExists:'Room already Exists',
+                    RoomAssigned:'Can not delete this Room. It is in use',
+                    noupdate:'Can not update this Room.Might be it does not exist',
+                    notactivated:'Can not activate this Room.Might be it deos not exist',
+                    notinactivated:'Can not Inactivate this Room .Might be it does not exist',
+                    notdeleted:'Can not delete this Room.Might be it does not exist',
+                    RoomIsInactive:'Can not activate this Room.May be Room is Inactive'
                 }
             }
         };

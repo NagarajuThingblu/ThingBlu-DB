@@ -304,6 +304,10 @@
                                     <th>{{ newProductTypeResources.packageitemqty }}
                                         <span class="star">*</span>
                                     </th>
+                                    <th>
+                                      {{newProductTypeResources.PackageUnitPrice}}
+                                      <span class="star">*</span>
+                                    </th>
                                     <th style="width: 80px;">Is Active</th>
                                     <th style="width: 60px;">Action</th>                             
                                 </tr>
@@ -369,6 +373,24 @@
                                             {{ newProductTypeResources.packageitemqtyval }}
                                           </span>                              
                                         </div>
+                                    </td>
+                                    <td>
+                                      <input pInputText
+                                        name="packageunitprice"
+                                        id="packageunitprice"
+                                        type="number"
+                                        class="clsControl"
+                                        autocomplete="off"
+                                        formControlName="packageUnitPrice"
+                                        placeholder="Enter Package Unit Price">
+                                       <div class="ui-message ui-message-error ui-corner-all" appErrorTooltip
+                                        *ngIf="!item.controls['packageUnitPrice'].valid&&item.controls['packageUnitPrice'].dirty">
+                                        <span *ngIf="item.controls['packageUnitPrice'].errors['required']">
+                                          {{newProductTypeResources.PackageUnitPricerequired}}
+                                        </span>
+                                      
+                                      </div>
+
                                     </td>
 
                                     <td>
