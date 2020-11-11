@@ -772,7 +772,12 @@ export class MastersResource {
                     notactivated:'Can not activate this Room.Might be it deos not exist',
                     notinactivated:'Can not Inactivate this Room .Might be it does not exist',
                     notdeleted:'Can not delete this Room.Might be it does not exist',
-                    RoomIsInactive:'Can not activate this Room.May be Room is Inactive'
+                    RoomIsInactive:'Can not activate this Room.May be Room is Inactive',
+                    deleteRoomMsg: 'Do you want to delete this Room?',
+                    activeRoomMsg: 'Do you want to activate this Room?',
+                    deactivateRoomMsg: 'Do you want to inactivate this Room?',
+                    RoomDeletedSuccess: 'Room deleted successfully.',
+                    roomtypeOrZonesIsInactive: 'Can not activate this Room. Might be Room type or Zones is inactive.',
                 }
             }
         };

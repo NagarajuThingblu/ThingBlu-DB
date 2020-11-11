@@ -264,7 +264,7 @@ public RoomTypeDisabled:any;
   }
   showConformationMessaegForDelete(RoomID, Room, IsDeleted, ActiveInactiveFlag) {
     let strMessage: any;
-    strMessage = this.newRoomtyperesource.deletestrainmsg;
+    strMessage = this.newRoomtyperesource.deleteRoomMsg;
     this.confirmationService.confirm({
       message: strMessage,
       header: 'Confirmation',
@@ -300,23 +300,23 @@ public RoomTypeDisabled:any;
           data => {
             // console.log(data);
             this.msg = [];
-            if (data[0]['Result'] === 'Success' && ActiveInactiveFlag === 1) {
+            if (data[0]['Result'] === 'success' && ActiveInactiveFlag === 1) {
               if (Strain.IsActive === true) {
                 this.msg.push({severity: 'success', summary: this.globalResource.applicationmsg,
-                detail:  this.newRoomtyperesource.strainActivated});
+                detail:  this.newRoomtyperesource.newRoomActivated});
                 this.resetAll();
                 this.GetRooms();
                 this.loadService.display(false);
               } else {
                 this.msg.push({severity: 'success', summary: this.globalResource.applicationmsg,
-                detail:  this.newRoomtyperesource.strainInactivated});
+                detail:  this.newRoomtyperesource.newRoomInactivated});
                 this.resetAll();
                 this.GetRooms();
                 this.loadService.display(false);
               }
-            } else if (data[0]['Result'] === 'Success' && IsDeleted === 1) {
+            } else if (data[0]['Result'] === 'success' && IsDeleted === 1) {
               this.msg.push({severity: 'success', summary: this.globalResource.applicationmsg,
-              detail:  this.newRoomtyperesource.strainDeletedSuccess});
+              detail:  this.newRoomtyperesource.RoomDeletedSuccess});
               this.resetAll();
               this.GetRooms();
               this.loadService.display(false);
@@ -336,15 +336,15 @@ public RoomTypeDisabled:any;
                 Strain.IsActive = !Strain.IsActive;
                 this.loadService.display(false);
               }
-            } else if (String(data.toLocaleUpperCase()) === 'STRAINTYPEORGENETICSISINACTIVE') {
+            } else if (String(data.toLocaleUpperCase()) === 'ROOMTYPEORZONEISINACTIVE') {
                 this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-                detail: this.newRoomtyperesource.straintypeOrGeneticsIsInactive });
+                detail: this.newRoomtyperesource.roomtypeOrZonesIsInactive });
                 Strain.IsActive = !Strain.IsActive;
                 this.loadService.display(false);
             } else if (data === 'Failure') {
               this.msg.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
             } else if (data === 'Duplicate') {
-              this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.newRoomtyperesource.strainalreadyexist });
+              this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.newRoomtyperesource.RoomAlreadyExists });
             } else if (data === 'InUse') {
               this.msg = [];
               this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg,
@@ -362,6 +362,27 @@ public RoomTypeDisabled:any;
             this.resetAll();
             this.loadService.display(false);
           });
+  }
+
+  showConformationMessaegForDeactive(StrainId, Strain, rowIndex, IsDeleted, ActiveInactiveFlag) {
+    console.log(Strain);
+    let strMessage: any;
+    if (this.allRoomtypelist[rowIndex].IsActive === true) {
+      strMessage = this.newRoomtyperesource.activeRoomMsg ;
+    } else {
+      strMessage = this.newRoomtyperesource.deactivateRoomMsg ;
+    }
+    this.confirmationService.confirm({
+      message: strMessage,
+      header: 'Confirmation',
+      icon: 'fa fa-exclamation-triangle',
+      accept: () => {
+         this.activateDeleteRoom(StrainId, Strain, IsDeleted, ActiveInactiveFlag);
+        },
+        reject: () => {
+          Strain.IsActive = !Strain.IsActive;
+        }
+    });
   }
 
 }
