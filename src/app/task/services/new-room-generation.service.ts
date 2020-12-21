@@ -10,6 +10,7 @@ import{AppCommonService} from '../../shared/services/app-common.service';
 
 @Injectable()
 export class NewRoomGenerationService {
+ 
 private _cookieservice:any;
   constructor(private http:DataService,private appcommonservice:AppCommonService,private appCommonService: AppCommonService) 
   {
@@ -78,4 +79,25 @@ GetRoomTypes()
 }
 
 ////#region 
+
+
+GetRoomTableList() {
+  const url='api/RoomType/GetRoomTables';
+    let params = new HttpParams();
+    params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
+    return this.http.get(url,{params: params}).map(data=>data);
+}
+addNewRoomTable(RoomTableMasterform:any)
+{
+  const url='api/RoomType/AddUpdateRoomTables';
+
+  return this.http.post(url,RoomTableMasterform,this.headers).map(data=>data);
+}
+GetRoomTableMaplist()
+{
+  const url='api/RoomType/GetRoomTableMaplist';
+    let params = new HttpParams();
+    params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
+    return this.http.get(url,{params: params}).map(data=>data);
+}
 }

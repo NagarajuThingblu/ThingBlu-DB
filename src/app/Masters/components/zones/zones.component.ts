@@ -11,6 +11,7 @@ import { AppConstants } from '../../../shared/models/app.constants';
 import { AppComponent } from '../../../../app/app.component';
 import { stringify } from 'querystring';
 import { flatMap } from 'rxjs/operators';
+import { DropdwonTransformService } from '../../../shared/services/dropdown-transform.service';
 
 @Component({
   selector: 'app-zones',
@@ -37,6 +38,7 @@ export class ZonesComponent implements OnInit {
     Description: null
 
   }
+  public Roomlist:any;
   pageHeader: any;
   constructor(
     private fb: FormBuilder,
@@ -45,7 +47,8 @@ export class ZonesComponent implements OnInit {
     private appcomponent: AppComponent,
     private appCommonservice: AppCommonService,
     private NewRoomgeneration: NewRoomGenerationService,
-    private Confirmationservice: ConfirmationService
+    private Confirmationservice: ConfirmationService,
+    private dropdwonTransformService: DropdwonTransformService
 
   ) { }
 
@@ -58,12 +61,24 @@ export class ZonesComponent implements OnInit {
     this.loadService.display(false);
     this._Cookieservice = this.appCommonservice.getUserProfile();
     this.GetZones();
+    this.GetRoomlist();
 
     this.ZonetypeMasterform = this.fb.group({
       'Zone': new FormControl(null, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]),
       'description': new FormControl(null, [Validators.maxLength(500)]),
-      'chkIsActive': new FormControl(null)
+      'chkIsActive': new FormControl(null),
+      'Roomlist': new FormControl(null,Validators.required)
     });
+
+  }
+  GetRoomlist()
+  {
+this.NewRoomgeneration.GetRoomList().subscribe(data=>{
+if(data!="No Data found!")
+{
+this.Roomlist=this.dropdwonTransformService.transform(data,"RoomName","RoomTypeId",'-- Select --')
+}
+});
 
   }
   SaveZones(formModel) {
@@ -72,14 +87,15 @@ export class ZonesComponent implements OnInit {
       this.ZonetypeMasterform.value.Zone = null;
       return;
     }
-    const ZoneDetailsForAPI = {
+   const ZoneDetailsForAPI = {
       Zone: {
         ZonesTypeId: this.ZoneTypeforupdate,
         ZonesName: this.appCommonservice.trimString(this.ZonetypeMasterform.value.Zone),
         Description: this.appCommonservice.trimString(this.ZonetypeMasterform.value.description),
         VirtualRoleId: this._Cookieservice.VirtualRoleId,
         IsActive: this.ZonetypeMasterform.value.chkIsActive,
-        ClientId: this._Cookieservice.ClientId
+        ClientId: this._Cookieservice.ClientId,
+        RoomId:this.ZonetypeMasterform.value.Roomlist
 
       }
     }

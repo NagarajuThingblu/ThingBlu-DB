@@ -1,3 +1,231 @@
 <div class="content-section implementation GridDemo orderRequest">
-  <span>Page is under Development</span>
+  <div class="ui-g">
+     <div class="ui-g-12">
+        <p-panel header="{{pageheading}}" [toggleable]="true" >
+           <p-header>
+           </p-header>
+           <form [formGroup]="RoomtableMasterform" (ngSubmit)="saveRoomtble()" >
+           <div class="ui-g">
+              <!--Room-->
+              <div class="ui-g-12 ui-md-6">
+                 <div class="PaddingRL">
+                    <div class="le-se-12">
+                       <label for="RoomTable">{{newRoomTableresource.enterRoom}} <span class="star" >*</span>  </label>
+                       <p-dropdown [filter]="true" id="Roomlist" [options]="Roomlist" [(ngModel)]="selectedRoom"  formControlName="Roomlist"
+                       placeholder="--Select--" [autoWidth]="false" class="clsControl" name="Roomlist" (onChange)= selectZones(selectedRoom)   ></p-dropdown>
+                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!RoomtableMasterform.controls['Roomlist'].valid && RoomtableMasterform.controls['Roomlist'].dirty">
+                          <span *ngIf="RoomtableMasterform.controls['Roomlist'].errors['required']">
+                          {{newRoomTableresource.RoomRequired}}
+                          </span>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <!--End Room-->
+              <!--Zone-->
+              <div class="ui-g-12 ui-md-6" *ngIf="ZoneVisible">
+                 <div class="PaddingRL">
+                    <div class="le-se-12">
+                       <label for="RoomTable">{{newRoomTableresource.Zone}} <span class="star" >*</span>  </label>
+                       <p-dropdown [filter]="true" id="Roomlist" [options]="Zonelist"  formControlName="Zonelist"
+                       placeholder="--Select--" [autoWidth]="false" class="clsControl" name="Zonelist" ></p-dropdown>
+                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!RoomtableMasterform.controls['Zonelist'].valid && RoomtableMasterform.controls['Zonelist'].dirty">
+                          <span *ngIf="RoomtableMasterform.controls['Zonelist'].errors['required']">
+                          {{newRoomTableresource.Zonerequired}}
+                          </span>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <!--End of Zone-->
+              <!--Room Table-->
+              <div class="ui-g-12 ui-md-6">
+                <div class="PaddingRL">
+                  <div class="le-se-12">
+                    <label for="RoomTableName">{{newRoomTableresource.enterRoomTable}} <span class="star" >*</span> </label>
+                    <input InputText name="roomtable" id="roomtable" autocomplete="off" class="clsControl" placeholder="Enter RoomTable name"
+                    formControlName="RoomTable">
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!RoomtableMasterform.controls['RoomTable'].valid && RoomtableMasterform.controls['RoomTable'].dirty">
+                    <span *ngIf="RoomtableMasterform.controls['RoomTable'].errors['required']">
+                      {{newRoomTableresource.RoomTableRequired}}
+                    </span>
+                    <span *ngIf="RoomtableMasterform.controls['RoomTable'].errors['maxlength']">
+                      {{newRoomTableresource.RoomTableRequired}}
+                    </span>
+                    <span *ngIf="RoomtableMasterform.controls['RoomTable'].errors['whitespace']">
+                      {{newRoomTableresource.RoomTableRequired}}
+                    </span>
+                  </div>
+                  </div>
+                </div>
+                </div>
+              
+              <!--End of Room Table-->
+
+              <!--Description-->
+              <div class="ui-g-12 ui-md-6">
+                 <div class="PaddingRL">
+                    <div class="le-se-12">
+                       <label for="RoomTabledescription">{{newRoomTableresource.enterdescription}}</label>
+                       <input InputText name="description" id="decription" autocomplete="off" class="clsControl" placeholder="Enter Description"
+                       formControlName="description">
+                       </div>
+                 </div>
+              </div>
+              <!--End of Description-->
+<div class="ui-g-12 ui-md-12">
+              <!--Length,width,height-->
+              <div class="ui-g-6 ui-md-6">
+                 <div class="PaddingRL">
+                    <div class="ui-g-2 ui-md-2 ">
+                      <label for="length">  {{newRoomTableresource.Lenghtlabel}}</label>
+                       <input InputText type="number" name="length" id="length" autocomplete="off" class="clsControl"
+                       formControlName="Length">
+                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!RoomtableMasterform.controls['Length'].valid && RoomtableMasterform.controls['Length'].dirty">
+                          <span *ngIf="RoomtableMasterform.controls['Length'].errors['required']">
+                          {{newRoomTableresource.lengthRequired}}
+                          </span>
+                       </div>
+                    </div>
+                    <div class="ui-g-2 ui-md-2">
+                     <label for="width">{{newRoomTableresource.Breadthlabel}}</label>
+                     <input InputText type="number" name="description" id="width" autocomplete="off" class="clsControl"
+                     formControlName="Width">
+                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!RoomtableMasterform.controls['Width'].valid && RoomtableMasterform.controls['Width'].dirty">
+                          <span *ngIf="RoomtableMasterform.controls['Width'].errors['required']">
+                          {{newRoomTableresource.widthrequired}}
+                          </span>
+                       </div>
+                  </div>
+                  <div class="ui-g-2 ui-md-2">
+                     <label for="height">{{newRoomTableresource.Heightlabel}}</label>
+                     <input InputText type="number" name="description" id="height" autocomplete="off" class="clsControl"
+                     formControlName="Height">
+                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!RoomtableMasterform.controls['Height'].valid && RoomtableMasterform.controls['Height'].dirty">
+                          <span *ngIf="RoomtableMasterform.controls['Height'].errors['required']">
+                          {{newRoomTableresource.HeightRequired}}
+                          </span>
+                       </div>
+                  </div>
+                 </div>
+              </div>
+              <!--End of length,width,height-->
+
+              <!-- IsActive -->
+            <div class="ui-g-3 ui-md-3">
+               <div class="paddingRL">
+                 <label></label>
+                 <div class="clear"></div>
+ 
+                 <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalresource.IsActiveFlag}}"
+                   formControlName="chkIsActive" binary="true"></p-checkbox>
+               </div>
+             </div>
+             <!--End IsActive -->
+            
+             <div class="ui-g-3 ui-md-3" style="text-align:right;">
+               <div class="paddingRL">
+                  <label></label>
+                 <div class="clear"></div>
+                 <!-- <button pButton type="submit" name="btnLogin" label="Add New" (click)="resetAll()" style="align-content: right"></button> -->
+                 <p-button type="submit" label="{{ savebuttontext}}" id="btnRoomSave" name="btnroomSave"></p-button>
+ 
+                 <button pButton (click)="resetAll()" type="button" label="{{ clear }}" class="ui-button-secondary">
+                 </button>
+               </div>
+             </div>
 </div>
+           </div>
+           </form>
+        </p-panel>
+     </div>
+  </div>
+
+  <div class="ui-g">
+     <div class="ui-g-12">
+        <p-panel header="RoomTable list" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+         <p-table #dtRoomtablelist [value]="RoomTableList" sortMode="single" [responsive]="true" [paginator]="true"
+         [rows]="10" sortfield="TableId" sortorder="-1" [rowsPerPageOptions]="paginationValues"
+         (onPage)="onPageChange($event)"
+        [globalFilterFields]="['TableName','ZoneName','RoomName','TableDescription']">
+        <ng-template pTemplate="caption">
+         <div style="text-align: right">
+            <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+            <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter"
+              (input)="dtRoomList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="header" >
+         <tr>
+            <th [pSortableColumn]="'TableName'">TableName <p-sortIcon [field]="'TableName'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'ZoneName'">ZoneName <p-sortIcon [field]="'ZoneName'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'RoomName'"> RoomName <p-sortIcon [field]="'RoomName'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'TableDescription'"> Description <p-sortIcon [field]="'TableDescription'"></p-sortIcon>
+            </th>
+            <th>Dimension</th>
+            <th style="width:100px;"> </th>
+          </tr>
+
+         <tr>
+            <th>
+               <input pInputText type="text" autocomplete="off"
+               (input)="dtRoomtablelist.filter($event.target.value,'TableName','contains')" class="clsControl">
+            </th>
+            <th>
+               <input pInputText type="text" autocomplete="off"
+               (input)="dtRoomtablelist.filter($event.target.value,'ZoneName','contains')" class="clsControl">
+            </th>
+            <th>
+               <input pInputText type="text" autocomplete="off"
+               (input)="dtRoomtablelist.filter($event.target.value,'RoomName','contains')" class="clsControl">
+            </th>
+            <th rowspan="2"></th>
+            <th rowspan="2"></th>
+            <th rowspan="2"></th>
+         </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-RoomTable let-rowData let-columns='columns' let-rowIndex="rowIndex">
+         <tr  [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" >
+            <td>{{RoomTable?.TableName}}</td>
+            <td>{{RoomTable?.ZoneName}} </td>
+            <td>{{RoomTable?.RoomName}}  </td>
+            <td>{{RoomTable?.TableDescription}}</td>
+            <td>{{RoomTable?.RmTblLength}}✕{{RoomTable?.RmTblWidth}}✕{{RoomTable?.RmTblHeight}}</td>
+
+            <td style="width:65px;">
+               <span class="ui-column-title">edit</span>
+               <a href="#" [routerLink]="" (click)="GetRoomTableOnEdit(RoomTable?.TableId)">
+                 <span class="fa fa-edit"></span>
+               </a>
+               <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(RoomTable?.TableId,RoomTable,1,0)">
+                 <span class="fa fa-trash"></span>
+               </a>
+             
+               <div class="clsToggleButtonDiv">
+                 <p-toggleButton [(ngModel)]="RoomTable.IsActive" onLabel="Active" offLabel="InActive"
+                   [style]="{'width':'90px'}"
+                   (onChange)="showConformationMessaegForDeactive(RoomTable?.TableId,RoomTable, rowIndex,0,1)">
+                 </p-toggleButton>
+               </div>
+             </td>
+         </tr>
+        </ng-template>
+         </p-table>
+        </p-panel>
+     </div>
+  </div>
+
+</div>
+<p-growl [(value)]="msg" life='5000'></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" *ngIf="true" class="clsConfirmBox">
+</p-confirmDialog>

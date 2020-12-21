@@ -70,7 +70,6 @@ public RoomTypeDisabled:any;
     this.GetRooms();
     this.Roomtypemassterform= this.fb.group({
       'RoomType': new FormControl(null,[Validators.required]),
-      'Zones': new FormControl(null,[Validators.required]),
       'RoomName': new FormControl(null,[Validators.required,Validators.minLength(1),Validators.maxLength(50)]),
       'description': new FormControl(null,[Validators.maxLength(500)]),
       'chkIsActive': new FormControl(null)
@@ -83,7 +82,7 @@ public RoomTypeDisabled:any;
     this.loadService.display(true);
     this.NewRoomgeneration.GetRoomTypes().subscribe(data=>{
       if(data!="No Data found!"){
-        this.RoomTypes=this.dropdwonTransformService.transform(data, 'RoomTypeName', 'RoomTypeId', '-- Select --');;
+        this.RoomTypes=this.dropdwonTransformService.transform(data, 'RoomTypeName', 'RoomId', '-- Select --');;
         this.paginationvalues=AppConstants.getPaginationOptions;
         if(this.RoomTypes.length>20)
         {
@@ -151,7 +150,6 @@ public RoomTypeDisabled:any;
     VirtualRoleId: this._Cookieservice.VirtualRoleId,
     IsActive: this.Roomtypemassterform.value.chkIsActive,
     ClientId: this._Cookieservice.ClientId,
-    ZoneId:this.Roomtypemassterform.value.Zones,
     RoomTypeId:this.Roomtypemassterform.value.RoomType
 
   }
@@ -222,7 +220,7 @@ public RoomTypeDisabled:any;
        this.RoomTypeforupdate = RoomId;
        this.RoomOnEdit = data;
        const Roomtype = this.Roomtypemassterform.controls['RoomType'];
-       const Zone = this.Roomtypemassterform.controls['Zones'];
+       //const Zone = this.Roomtypemassterform.controls['Zones'];
        const Room = this.Roomtypemassterform.controls['RoomName'];
        const description = this.Roomtypemassterform.controls['description'];
      
@@ -249,7 +247,7 @@ public RoomTypeDisabled:any;
         // ];
         // this.Zonestypes = [];
         // this.Zonestypes = geneticsNewData;
-        Zone.patchValue(this.RoomOnEdit[0].ZoneId);
+        //Zone.patchValue(this.RoomOnEdit[0].ZoneId);
        this.RoomTypeDisabled = true;
        
      } else {
@@ -257,11 +255,11 @@ public RoomTypeDisabled:any;
      }
      this.loadService.display(false);
   }
-  viewZoneList() {
-    this.appCommonService.strainFormDetail = this.Roomtypemassterform;
-    this.appCommonService.strainPageBackLink = true;
-    this.router.navigate(['../home/addnewsgenetics']);
-  }
+  // viewZoneList() {
+  //   this.appCommonService.strainFormDetail = this.Roomtypemassterform;
+  //   this.appCommonService.strainPageBackLink = true;
+  //   this.router.navigate(['../home/Zones']);
+  // }
   showConformationMessaegForDelete(RoomID, Room, IsDeleted, ActiveInactiveFlag) {
     let strMessage: any;
     strMessage = this.newRoomtyperesource.deleteRoomMsg;
@@ -285,7 +283,6 @@ public RoomTypeDisabled:any;
       Rooms: {
         RoomId: StrainId,
         RoomTypeId: Strain.RoomTypeId,
-        ZoneId: Strain.ZoneId,
         VirtualRoleId: this._Cookieservice.VirtualRoleId,
         IsDeleted: IsDeleted,
         IsActive: Strain.IsActive,

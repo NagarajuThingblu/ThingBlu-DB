@@ -35,7 +35,7 @@
               </div>
             </div>
             <!--Zones optional-->
-            <div class="ui-g-12 ui-md-6">
+            <!-- <div class="ui-g-12 ui-md-6">
               <div class="paddingRL">
                 <div class="le-su-12">
                   <label for="Zones">
@@ -52,7 +52,7 @@
                   
                 </div>
               </div>
-            </div>
+            </div> -->
 
                 <!--Room Name-->
 
@@ -139,8 +139,8 @@
             </th>
             <th [pSortableColumn]="'RoomTypeName'">Room Type <p-sortIcon [field]="'RoomTypeName'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'ZoneName'"> ZoneName <p-sortIcon [field]="'ZoneName'"></p-sortIcon>
-            </th>
+            <!-- <th [pSortableColumn]="'ZoneName'"> ZoneName <p-sortIcon [field]="'ZoneName'"></p-sortIcon>
+            </th> -->
             <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon>
             </th>
             
@@ -156,10 +156,10 @@
               <input pInputText type="text" autocomplete="off"
                 (input)="dtRoomList.filter($event.target.value, 'RoomTypeName', 'contains')" class="clsControl">
             </th>
-            <th>
+            <!-- <th>
               <input pInputText type="text" autocomplete="off"
                 (input)="dtRoomList.filter($event.target.value, 'ZoneName', 'contains')" class="clsControl">
-            </th>
+            </th> -->
             <th>
               <input pInputText type="text" autocomplete="off"
                 (input)="dtRoomList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
@@ -175,7 +175,7 @@
 
             <td>{{Room?.RoomName}}</td>
             <td>{{Room?.RoomTypeName}}</td>
-            <td>{{Room?.ZoneName }}</td>
+            <!-- <td>{{Room?.ZoneName }}</td> -->
             <td>{{Room?.Description }}</td>
            
             <td style="width:65px;">

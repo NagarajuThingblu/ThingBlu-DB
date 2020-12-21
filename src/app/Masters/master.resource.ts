@@ -747,7 +747,10 @@ export class MastersResource {
                     notactivated:'Can not activate this Zone.Might be it deos not exist',
                     notinactivated:'Can not Inactivate this Zone .Might be it does not exist',
                     notdeleted:'Can not delete this Zone.Might be it does not exist',
-                    ZoneIsInactive:'Can not activate this Zone.May be Room is Inactive'
+                    ZoneIsInactive:'Can not activate this Zone.May be Room is Inactive',
+                    RoomName:'Room Name',
+                    RoomRequired:'Room is required'
+
                 },
                 addNewRooms:{
                     pageheading:'New Room',
@@ -778,6 +781,43 @@ export class MastersResource {
                     deactivateRoomMsg: 'Do you want to inactivate this Room?',
                     RoomDeletedSuccess: 'Room deleted successfully.',
                     roomtypeOrZonesIsInactive: 'Can not activate this Room. Might be Room type or Zones is inactive.',
+                },
+                addNewRoomTable:{
+                    pageheading:'New Room Table',
+                    enterRoom:'Room Name',
+                    RoomRequired:'Room Required',
+                    Roomnotpresent: 'Room is deleted or is inactive.',
+                    Zone:'Zone',
+                    Zonerequired: 'Zone required',
+                    viewaddZones: 'View/Add Zones',
+                    enterRoomTable:'RoomTable Name',
+                    RoomTableRequired:'RoomTable Required',
+                    RoomTableLength:"Must not more than 50 Characters",
+                    enterdescription:'RoomTable Description',
+                    descriptionrequired:'Description type required',
+                    descriptionLength:'Must not more than 500 characters',
+                    newRoomTableSavedSuccess:'Room saved successfully',
+                    newRoomTableInactivated:'Room Inactivated successfully',
+                    newRoomTableActivated:'Room Activated successfully',
+                    newRoomTableDeleted:'Room Deleted Scuccessfully',
+                    RoomTableAlreadyExists:'Room already Exists',
+                    RoomTableAssigned:'Can not delete this Room. It is in use',
+                    noupdate:'Can not update this Room.Might be it does not exist',
+                    notactivated:'Can not activate this Room.Might be it deos not exist',
+                    notinactivated:'Can not Inactivate this Room .Might be it does not exist',
+                    notdeleted:'Can not delete this Room.Might be it does not exist',
+                    RoomTableIsInactive:'Can not activate this Room.May be Room is Inactive',
+                    deleteRoomTableMsg: 'Do you want to delete this Room?',
+                    activeRoomTableMsg: 'Do you want to activate this Room?',
+                    deactivateRoomTableMsg: 'Do you want to inactivate this Room?',
+                    RoomTableDeletedSuccess: 'Room deleted successfully.',
+                    RoomOrZonesIsInactive: 'Can not activate this RoomTable. Might be Room  or Zones is inactive.',
+                    Lenghtlabel:'Length',
+                    lengthRequired:"Length Required",
+                    Breadthlabel:'Breadth',
+                    widthrequired:'Breadth Required',
+                    Heightlabel:'Height',
+                    HeightRequired:'Height required'
                 }
             }
         };

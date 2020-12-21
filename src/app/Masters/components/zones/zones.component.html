@@ -7,6 +7,24 @@
         </p-header>
         <form [formGroup]="ZonetypeMasterform" (ngSubmit)="SaveZones(ZonetypeMasterform)">
           <div class="ui-g">
+            <!--Room-->
+            <div class="ui-g-12 ui-md-6">
+              <div class="PaddingRL">
+                <div class="le-se-12">
+                <label for="RoomName">  {{newzonetypeResource.RoomName}}<span class="star">*</span></label>
+               <p-dropdown [filter]="true" id="Roomlist" [options]="Roomlist"  formControlName="Roomlist"
+                plceholder="--Select--" [autoWidth]="false" class="clsControl" name="roomlist" >
+                </p-dropdown>
+                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                *ngIf="!ZonetypeMasterform.controls['Roomlist'].valid && ZonetypeMasterform.controls['Roomlist'].dirty">
+                <span *ngIf="ZonetypeMasterform.controls['Roomlist'].errors['required']">
+                  {{newzonetypeResource.RoomRequired}}
+                </span>
+               </div> 
+            </div>
+            </div></div>
+            <!--End of Room-->
+
             <!---Zone Name-->
             <div class="ui-g-12 ui-md-6">
               <div class="PaddingRL">
@@ -34,7 +52,7 @@
             <!--end of ZoneName-->
             <!--Description-->
             <div class="ui-g-12 ui-md-6">
-              <div class="paddingRL">
+              <div class="PaddingRL">
                 <div class="le-se-12">
                   <label for="enterdescription">
                     {{newzonetypeResource.enterdescription}}
@@ -103,7 +121,8 @@
   <ng-template pTemplate="header" >
     <tr>
       <th [pSortableColumn]="'ZoneName'">Zone  <p-sortIcon [field]="'ZoneName'"></p-sortIcon></th>
-      <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>            
+      <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>
+      <th [pSortableColumn]="'RoomName'">RoomName<p-sortIcon [field]="'RoomName'"  ></p-sortIcon>  </th>           
                   <th style="width:100px;"> </th>
     </tr>
     <tr>
@@ -112,6 +131,9 @@
       </th>
       <th>
           <input pInputText type="text" autocomplete="off" (input)="dtZoneList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+      </th>
+      <th>
+        <input pInputText type="text" autocomplete="off" (input)="dtZoneList.filter($event.target.value,'RoomName','contains')" class="clsControl">
       </th>
     <th rowspan="2"></th>
                             
@@ -122,6 +144,7 @@
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
            <td>{{Zone?.ZoneName}}</td>
              <td>{{Zone?.Description}}</td>
+             <td>{{Zone?.RoomName}}</td>
             <td style="width:65px;"> 
                <span class="ui-column-title">edit</span>
               <a href="#" [routerLink]="" (click)="GetZoneonEdit(Zone?.ZoneId)" >                             
