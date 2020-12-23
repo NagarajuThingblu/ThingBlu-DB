@@ -67,6 +67,7 @@ import{ZonesComponent} from './Masters/components/zones/zones.component';
 import{RoomsComponent}from './Masters/components/rooms/rooms.component';
 import{RoomsTablesComponent}from './Masters/components/rooms-tables/rooms-tables.component';
 import{ProductionsdashboardComponent}from './dashboard/components/productionsdashboard/productionsdashboard.component';
+import{EmpPerformanceDashboardComponent} from './dashboard/components/emp-performance-dashboard/emp-performance-dashboard.component'
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'default', pathMatch: 'full' },
@@ -147,6 +148,7 @@ const appRoutes: Routes = [
       { path: 'Rooms', component: RoomsComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'RoomTables', component: RoomsTablesComponent, canActivate: [AuthGuard, RoleGuard] },
       {path:'productiondashboard',component:ProductionsdashboardComponent,canActivate:[AuthGuard,RoleGuard]},
+      {path:'employeeperformancedashBoard', component:EmpPerformanceDashboardComponent, canActivate:[AuthGuard,RoleGuard] }
       
 
     ]

@@ -67,5 +67,19 @@ getytdprodcutstatsDetails()
       return data;
      });
 }
+GetTasktypeTotaltime()
+{
+  const url = 'api/Task/GetTaskTypeTotalTime';
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+  params = params.append('EmpId', '110');
+  params = params.append('FilterType', String('MTD'));
+  return this.http
+  .get(url, {params: params})
+
+ .map(data => {
+  return data;
+ });
+}
 
 }

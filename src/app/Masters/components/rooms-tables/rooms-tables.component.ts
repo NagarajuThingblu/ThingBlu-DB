@@ -305,20 +305,20 @@ this.NewRoomgeneration.addNewRoomTable(RoomTablesforAPI).subscribe(data=>{
   if (data[0]['Result'] === 'success' && ActiveInactiveFlag === 1) {
     if (RoomTable.IsActive === true) {
       this.msg.push({severity: 'success', summary: this.globalresource.applicationmsg,
-      detail:  this.newRoomTableresource.newRoomActivated});
+      detail:  this.newRoomTableresource.newRoomTableActivated});
       this.resetAll();
       this.GetRoomTables();
       this.loaderservice.display(false);
     } else {
       this.msg.push({severity: 'success', summary: this.globalresource.applicationmsg,
-      detail:  this.newRoomTableresource.newRoomInactivated});
+      detail:  this.newRoomTableresource.newRoomTableInactivated});
       this.resetAll();
       this.GetRoomTables();
       this.loaderservice.display(false);
     }
   } else if (data[0]['Result'] === 'success' && IsDeleted === 1) {
     this.msg.push({severity: 'success', summary: this.globalresource.applicationmsg,
-    detail:  this.newRoomTableresource.RoomDeletedSuccess});
+    detail:  this.newRoomTableresource.newRoomTableDeleted});
     this.resetAll();
     this.globalresource();
     this.loaderservice.display(false);

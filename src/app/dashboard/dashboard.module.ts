@@ -14,6 +14,7 @@ import { JointsDashboardDataComponent } from './components/joints-dashboard-data
 import { JointsDashboardDataPrintComponent } from './components/joints-dashboard-data-print/joints-dashboard-data-print.component';
 import { ManagerdashboardPrintComponent } from './components/managerdashboard-print/managerdashboard-print.component';
 import{ProductionsdashboardComponent} from './components/productionsdashboard/productionsdashboard.component';
+import{EmpPerformanceDashboardComponent} from './components/emp-performance-dashboard/emp-performance-dashboard.component'
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import{ProductionsdashboardComponent} from './components/productionsdashboard/pr
     JointsDashboardDataComponent,
     JointsDashboardDataPrintComponent,
     ManagerdashboardPrintComponent,
-    ProductionsdashboardComponent
+    ProductionsdashboardComponent,
+    EmpPerformanceDashboardComponent
   ],
   imports: [
     SharedModule

@@ -42,6 +42,7 @@ import {ProgressBarModule} from 'primeng/progressbar';
 import {TieredMenuModule} from 'primeng/tieredmenu';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import {SidebarModule} from 'primeng/sidebar';
+import {ChartModule} from 'primeng/chart';
 
 import { HeaderComponent } from './header/header.component';
 import { AuthenticationService } from './services/authentication.service';
@@ -148,7 +149,8 @@ import { CanDeactivateGuard } from '../guards/can-deactivate.guard';
     SidebarModule,
     InputSwitchModule,
     ToggleButtonModule,
-    PasswordModule
+    PasswordModule,
+    ChartModule
   ],
 
   exports: [
@@ -213,6 +215,7 @@ import { CanDeactivateGuard } from '../guards/can-deactivate.guard';
     SectionHeaderComponent,
     CharactersCountComponent,
     PhoneMaskPipe,
+    ChartModule
   ]
 })
 // For Shared Services
