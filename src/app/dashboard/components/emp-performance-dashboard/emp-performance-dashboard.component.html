@@ -7,9 +7,82 @@
   </div>
 </div>
 <div class="content-section implementation GridDemo" style="background: #ffffff">
-  <div class="ui-g">
-    <p-card>
-      <p-chart type="pie" [data]="data"></p-chart>
-  </p-card>
+  <div class="ui-g-12" style="background: #ffffff">
+    <p-dropdown
+    [filter] ="true" 
+      [options]="taskTypes" 
+      placeholder="-- Select --"
+      name="taskTypes"
+      >
+    </p-dropdown>
+   
+    <!-- <p-dropdown
+    [options]="taskTypes"
+    placeholder="-- Select --"
+    [autoWidth]="true"
+    class="clsControl" 
+    formControlName="taskTypes"
+    id="taskname"
+    name="taskname">
+  </p-dropdown> -->
+    <div class="ui-g-12 ui-md-12" style="background: #ffffff">
+      <p-card>
+        <p-chart type="pie"  style="height:300px;" responsive="true" [data]="data"></p-chart>
+      </p-card>
+    </div>
+    <p-dropdown
+    [filter] ="true" 
+      [options]="dropdowndata" 
+      placeholder="-- Select --"
+      (onChange)="GetTaskTypetotalTime()"
+      optionLabel="Title"
+      name="dropdowndata">
+    </p-dropdown>
   </div>
+      
+
+  <div class="ui-g-10"  style="background: #ffffff; width: 100%;">
+    <div class="ui-g-10">
+      <h5><b>YEAR-TO-DATE:</b> </h5>
+    </div>
+    <div class="ui-g-12 ui-md-4">
+      Number of Tasks Completed - 690<br>
+      Trimming: 200 Grams per hour (average)<br>
+      Number of Orders: 20/hour 
+    </div>
+    <div class="ui-g-12 ui-md-4 ui-md-ofset-4">
+      Number of Joints/Hour: 120
+      Number of Orders: 20/hour 
+    </div>
+    <div class="ui-g-12 ">
+      <h5><b>MONTH-TO-DATE:</b></h5>
+    </div>
+    <div class="ui-g-12 ui-md-4">
+      Tasks Completed – 135 <br>
+
+      Trimming: 200 Grams per hour (average) <br>
+      
+      Number of Orders: 20/hour 
+    </div>
+    <div class="ui-g-12 ui-md-4 ui-md-ofset-4">
+      Number of Joints/Hour: 120
+      Number of Jars/Hour: 35	 
+    </div>
+    <div class="ui-g-12">
+      <h5><b>PRODUCTIVITY STATISTICS FOR WEEK OF 5/21:</b> </h5>
+    </div>
+    <div class="ui-g-12 ui-md-4">
+      Number of Joints/Hour: 120<br>
+
+      Number of Jars/Hour: 35	 
+      
+    
+    </div>
+    <div class="ui-g-12 ui-md-4 ui-md-ofset-4">
+      Trimming: 160 grams per hour 	 
+      Number of Orders: 20/hour 
+    </div>
+  </div>
+  
+  
 </div>
