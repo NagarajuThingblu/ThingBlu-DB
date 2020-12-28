@@ -27,17 +27,18 @@
   </p-dropdown> -->
     <div class="ui-g-12 ui-md-12" style="background: #ffffff">
       <p-card>
-        <p-chart type="pie"  style="height:300px;" responsive="true" [data]="data"></p-chart>
-      </p-card>
+
+        <p-dropdown
+        [options]="dropdowndata" 
+        placeholder="-- Select --"
+        (onChange)="GetTaskTypetotalTime()"
+        optionLabel="Title"
+        name="dropdowndata">
+      </p-dropdown>
+      
+        <p-chart type="pie"  style="width:50%; height:50px;" responsive="true" [data]="data"></p-chart>
+     </p-card>
     </div>
-    <p-dropdown
-    [filter] ="true" 
-      [options]="dropdowndata" 
-      placeholder="-- Select --"
-      (onChange)="GetTaskTypetotalTime()"
-      optionLabel="Title"
-      name="dropdowndata">
-    </p-dropdown>
   </div>
       
 

@@ -10,6 +10,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER, LOCALE_ID  } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+
+
 import { LoginModule } from './login/login.module';
 
 import { AppComponent } from './app.component';
@@ -67,6 +69,7 @@ export function init_app_resetpassword(appLoadFOrgotPasswordService: AppLoadFOrg
     MastersModule,
     BrowserAnimationsModule,
     ProgressSpinnerModule,
+   
     // NgIdleKeepaliveModule.forRoot(),
     NgIdleModule.forRoot(),
       // Optionally you can set time for `idle`, `timeout` and `ping` in seconds.
