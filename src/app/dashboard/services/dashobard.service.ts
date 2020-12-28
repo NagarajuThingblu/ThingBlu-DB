@@ -72,14 +72,40 @@ GetTasktypeTotaltime()
   const url = 'api/Task/GetTaskTypeTotalTime';
   let params = new HttpParams();
   params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
-  params = params.append('EmpId', '110');
+  params = params.append('EmpId', '111');
   params = params.append('FilterType', String('MTD'));
+  params=params.append("EmpfilterId",'126');
+  params=params.append("showall",'false');
   return this.http
   .get(url, {params: params})
 
  .map(data => {
   return data;
  });
+}
+
+GetemployeeList()
+{
+  const url="api/Employee/GetEmployeeListByClientRole";
+  let param= new HttpParams();
+  param=param.append('ClientId',String(this.appCommonService.getUserProfile().ClientId))
+  param= param.append('ManagerId',String(this.appCommonService.getUserProfile().EmpId))
+  return this.http.get(url,{params: param}).map(data=>{
+    return data;
+  });
+}
+GetProductivityStatistics()
+{
+  const url="api/Task/GetProductivityStatistics";
+  let param= new HttpParams();
+  //param= param.append('EmpId',String(this.appCommonService.getUserProfile().EmpId))
+  param= param.append('EmpId','111');
+  param=param.append('ClientId',String(this.appCommonService.getUserProfile().ClientId))
+  param=param.append("FilterempId",'0');
+  param=param.append("showAll",'true');
+  return this.http.get(url,{params: param}).map(data=>{
+    return data;
+  });
 }
 
 }

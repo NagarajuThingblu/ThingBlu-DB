@@ -13,52 +13,15 @@ import { DropdownValuesService } from '../../../shared/services/dropdown-values.
 export class EmpPerformanceDashboardComponent implements OnInit {
   dropdowndata:any;
   data: any;
+  EmployeeList:any;
+  allYtdlist:any;
+  ytdlistdist:any;
   public taskTypes: SelectItem[];
   Tasktypetotaltime:any;
   constructor(private loaderService: LoaderService,private dashboardService: DashobardService,  private dropdownDataService: DropdownValuesService,
     private dropdwonTransformService: DropdwonTransformService,) { 
     this.data = {
-      labels: ['A','B','C','D','E','F','G','H','abc bcd efg','ijk klm mno','jyothi','abc icd ehg','ijk hjhjlm mno','jyothi1','mani'],
-      datasets: [
-          {
-              data: [300, 50, 100,300, 50, 100,300, 50, 100,300, 50, 100,300, 50, 100],
-              backgroundColor: [
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                 
-                 
-              ],
-              hoverBackgroundColor: [
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-              ]
-          }]    
+          
       };
   }
 
@@ -66,6 +29,8 @@ export class EmpPerformanceDashboardComponent implements OnInit {
     this.loaderService.display(false);
     this.getAllTaskTypes();
     this.GetTaskTypetotalTime();
+    this.GetEmployeeList();
+    this.GetProductivityStatistics();
     this.dropdowndata = [{ id:1, Title:"Last Week"},
                            { id:2, Title:"YTD"},
                            { id:3, Title:"MTD"}]
@@ -107,6 +72,25 @@ this.dashboardService.GetTasktypeTotaltime().subscribe(data=>{
        } ,
        error => { console.log(error); this.loaderService.display(false); },
        );
+   }
+
+   GetEmployeeList()
+   {
+     this.dashboardService.GetemployeeList().subscribe(data=>{
+this.EmployeeList=this.dropdwonTransformService.transform(data,"EmpName","EmpId","Show ALL",false);
+
+     },
+     
+     error=>{ console.log(error);this.loaderService.display(false);  },
+     );
+   }
+   GetProductivityStatistics()
+   {
+     this.dashboardService.GetProductivityStatistics().subscribe(data=>{
+       this.allYtdlist=data;
+       this.ytdlistdist=this.allYtdlist.map(item => item.Category)
+       .filter((value, index, self) => self.indexOf(value) === index);
+     })
    }
 
 }
