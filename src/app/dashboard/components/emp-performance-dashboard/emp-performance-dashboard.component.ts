@@ -4,6 +4,7 @@ import { DashobardService } from '../../services/dashobard.service';
 import { SelectItem } from 'primeng/api';
 import { DropdwonTransformService } from '../../../shared/services/dropdown-transform.service';
 import { DropdownValuesService } from '../../../shared/services/dropdown-values.service';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
 
 @Component({
   selector: 'app-emp-performance-dashboard',
@@ -11,69 +12,41 @@ import { DropdownValuesService } from '../../../shared/services/dropdown-values.
   styleUrls: ['./emp-performance-dashboard.component.css']
 })
 export class EmpPerformanceDashboardComponent implements OnInit {
-  dropdowndata:any;
+  dropdowndatefilter:any;
   data: any;
+  EmployeeList:any;
+  allYtdlist:any;
+  ytdlistdist:any;
   public taskTypes: SelectItem[];
+  filtername:any;
   Tasktypetotaltime:any;
+  datefilter:any;
+  FilterempId:any=0;
   constructor(private loaderService: LoaderService,private dashboardService: DashobardService,  private dropdownDataService: DropdownValuesService,
     private dropdwonTransformService: DropdwonTransformService,) { 
     this.data = {
-      labels: ['A','B','C','D','E','F','G','H','abc bcd efg','ijk klm mno','jyothi','abc icd ehg','ijk hjhjlm mno','jyothi1','mani'],
-      datasets: [
-          {
-              data: [300, 50, 100,300, 50, 100,300, 50, 100,300, 50, 100,300, 50, 100],
-              backgroundColor: [
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                 
-                 
-              ],
-              hoverBackgroundColor: [
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-                  "#FF6384",
-                  "#36A2EB",
-                  "#FFCE56",
-              ]
-          }]    
+          
       };
   }
 
   ngOnInit() {
     this.loaderService.display(false);
-    this.getAllTaskTypes();
-    this.GetTaskTypetotalTime();
-    this.dropdowndata = [{ id:1, Title:"Last Week"},
-                           { id:2, Title:"YTD"},
-                           { id:3, Title:"MTD"}]
+    this.datefilter= [{ id:1, Title:"Last Week"},
+    { id:2, Title:"YTD"},
+    { id:3, Title:"MTD"}]
+    this.dropdowndatefilter =this.dropdwonTransformService.transform(this.datefilter, 'Title', 'Title', '-- Select --', false) ;
+    this.datefilter=this.datefilter[0].Title
+    this.GetEmployeeList();
+    //this.GetProductivityStatistics();
+    
   }
 
-  GetTaskTypetotalTime()
+  GetTaskTypetotalTime(Filterdata,Filterempid)
   {
-this.dashboardService.GetTasktypeTotaltime().subscribe(data=>{
+    
+this.dashboardService.GetTasktypeTotaltime(Filterdata,Filterempid).subscribe(data=>{
+  if(data!='No data found!')
+  {
   this.Tasktypetotaltime=data;
   this.data = {
     labels: this.Tasktypetotaltime[0],
@@ -93,20 +66,48 @@ this.dashboardService.GetTasktypeTotaltime().subscribe(data=>{
             
         }]    
     };
+  }
 })
   }
 
-  getAllTaskTypes() {
-    // this.loaderService.display(true);
-     this.dropdownDataService.getAllTask().subscribe(
-       data => {
-         // console.log(data);
-        //  this.globalData.taskTypes = data;
-         this.taskTypes = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', 'Show All', false) ;
-        // this.loaderService.display(false);
-       } ,
-       error => { console.log(error); this.loaderService.display(false); },
-       );
+  Ondropdownchange(event)
+  {
+  this.GetProductivityStatistics(event.value);
+  this.FilterempId=event.value;
+  this.GetTaskTypetotalTime(this.datefilter,this.FilterempId);
+  }
+  Ondropdowndatefilterchange(event)
+  {
+this.datefilter=event.value;
+this.GetTaskTypetotalTime(this.datefilter,this.FilterempId);
+  }
+  GetEmployeeList()
+   {
+     this.dashboardService.GetemployeeList().subscribe(data=>{
+this.EmployeeList=this.dropdwonTransformService.transform(data,"EmpName","EmpId","Show ALL",false);
+this.GetProductivityStatistics(this.FilterempId);
+this.GetTaskTypetotalTime(this.datefilter,this.FilterempId);
+
+     },
+     
+     error=>{ console.log(error);this.loaderService.display(false);  },
+     );
+   }
+   GetProductivityStatistics(FilterEmpId)
+   {
+     this.dashboardService.GetProductivityStatistics(FilterEmpId).subscribe(data=>{
+       if(data!='No data found!')
+       {
+       this.allYtdlist=data;
+       this.ytdlistdist=this.allYtdlist.map(item => item.Category)
+       .filter((value, index, self) => self.indexOf(value) === index);
+       }
+       else{
+         this.allYtdlist=[];
+         this.ytdlistdist=[];
+       }
+     })
+     
    }
 
 }

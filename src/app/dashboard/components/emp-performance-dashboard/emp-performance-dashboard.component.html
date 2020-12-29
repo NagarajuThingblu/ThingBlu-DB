@@ -10,9 +10,10 @@
   <div class="ui-g-12" style="background: #ffffff">
     <p-dropdown
     [filter] ="true" 
-      [options]="taskTypes" 
+      [options]="EmployeeList" 
       placeholder="-- Select --"
-      name="taskTypes"
+      name="EmployeeList"
+      (onChange)="Ondropdownchange($event)"
       >
     </p-dropdown>
    
@@ -27,21 +28,20 @@
   </p-dropdown> -->
     <div class="ui-g-12 ui-md-12" style="background: #ffffff">
       <p-card>
-
         <p-dropdown
-        [options]="dropdowndata" 
-        placeholder="-- Select --"
-        (onChange)="GetTaskTypetotalTime()"
-        optionLabel="Title"
-        name="dropdowndata">
-      </p-dropdown>
-      
-        <p-chart type="pie"  style="width:50%; height:50px;" responsive="true" [data]="data"></p-chart>
-     </p-card>
+    [filter] ="true" 
+      [options]="dropdowndatefilter" 
+      placeholder="-- Select --"
+      (onChange)="Ondropdowndatefilterchange($event)"
+       name="dropdowndatefilter">
+    </p-dropdown>
+        <p-chart type="pie"  height="80w" responsive="true" [data]="data"></p-chart>
+      </p-card>
     </div>
+    
   </div>
       
-
+<!-- 
   <div class="ui-g-10"  style="background: #ffffff; width: 100%;">
     <div class="ui-g-10">
       <h5><b>YEAR-TO-DATE:</b> </h5>
@@ -83,7 +83,21 @@
       Trimming: 160 grams per hour 	 
       Number of Orders: 20/hour 
     </div>
-  </div>
-  
+  </div> -->
+  <div class="ui-g-12" style="background: #ffffff; width: 100%;">
+    <div *ngFor ="let ytd of ytdlistdist">
+    <div class="ui-g-12" >
+      <span><b> {{ytd}}</b></span>
+     </div>
+        <div *ngFor = "let ytdlist of allYtdlist; let id=index ">
+    <!-- <span>{{ytdlist | json}}</span> -->
+    
+     <div *ngIf="ytd==ytdlist.Category" class="ui-g-6" >
+       
+      <span> {{ytdlist.Item}}</span>
+     </div>
+    </div>
+    </div>
+        </div>
   
 </div>
