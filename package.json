@@ -36,6 +36,7 @@
     "font-awesome": "^4.7.0",
     "msal": "^0.2.4",
     "ngx-cookie-service": "^1.0.10",
+    "primeicons": "^4.1.0",
     "primeng": "^5.2.7",
     "promise-polyfill": "7.1.2",
     "rxjs": "^5.5.12",

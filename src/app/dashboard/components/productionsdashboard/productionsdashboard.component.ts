@@ -68,10 +68,11 @@ this.loaderService.display(false);
         this.ytdlistdist=this.allYtdlist.map(item => item.Category)
         .filter((value, index, self) => self.indexOf(value) === index);
        
+       
         this.allProductstatslist=data.Table1;
         this.prdctlistdist=this.allProductstatslist.map(item => item.Category)
         .filter((value, index, self) => self.indexOf(value) === index);
-      
+        
       }
           })
   }

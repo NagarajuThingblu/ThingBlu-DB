@@ -1,0 +1,65 @@
+.firstcard{
+    height: 270px;
+    padding:10px
+}
+
+.seccard{
+    height:270px;
+    padding:10px;
+    overflow: auto;
+}
+h6{
+    color:rgb(12, 137, 196);
+    
+}
+/* .scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+
+.scroll::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+
+.scroll::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+.scroll::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+} */
+#block{
+     background-color:rgb(233, 241, 241); 
+     text-align:end;
+     padding: auto;
+}
+.blockdiv{
+    color: rgb(7, 104, 196);  
+}
+.progress{
+    width:100%;
+    height:30px;
+    border-radius:25px;
+}   
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(177, 177, 177); 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #696969; 
+}
+
