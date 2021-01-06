@@ -1,0 +1,19 @@
+h6{
+    color:rgb(12, 137, 196);
+}
+@media only screen and (min-width : 992px){
+    .card{
+        height:350px;
+    }
+    }
+.card{
+    height:350px;
+}
+#block{
+    background-color:rgb(233, 241, 241); 
+    text-align:end;
+    padding: auto;
+}
+.blockdiv{
+   color: rgb(7, 104, 196);  
+}

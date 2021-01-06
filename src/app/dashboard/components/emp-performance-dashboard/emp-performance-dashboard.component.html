@@ -18,15 +18,6 @@
       >
     </p-dropdown>
    </div>
-    <!-- <p-dropdown
-    [options]="taskTypes"
-    placeholder="-- Select --"
-    [autoWidth]="true"
-    class="clsControl" 
-    formControlName="taskTypes"
-    id="taskname"
-    name="taskname">
-  </p-dropdown> -->
     <div class="ui-g-12 ui-md-12" style="background: #ffffff" >
       <p-card>
         <p-dropdown
@@ -44,55 +35,13 @@
   </div>
       
 <!-- 
-  <div class="ui-g-10"  style="background: #ffffff; width: 100%;">
-    <div class="ui-g-10">
-      <h5><b>YEAR-TO-DATE:</b> </h5>
-    </div>
-    <div class="ui-g-12 ui-md-4">
-      Number of Tasks Completed - 690<br>
-      Trimming: 200 Grams per hour (average)<br>
-      Number of Orders: 20/hour 
-    </div>
-    <div class="ui-g-12 ui-md-4 ui-md-ofset-4">
-      Number of Joints/Hour: 120
-      Number of Orders: 20/hour 
-    </div>
-    <div class="ui-g-12 ">
-      <h5><b>MONTH-TO-DATE:</b></h5>
-    </div>
-    <div class="ui-g-12 ui-md-4">
-      Tasks Completed – 135 <br>
-
-      Trimming: 200 Grams per hour (average) <br>
-      
-      Number of Orders: 20/hour 
-    </div>
-    <div class="ui-g-12 ui-md-4 ui-md-ofset-4">
-      Number of Joints/Hour: 120
-      Number of Jars/Hour: 35	 
-    </div>
-    <div class="ui-g-12">
-      <h5><b>PRODUCTIVITY STATISTICS FOR WEEK OF 5/21:</b> </h5>
-    </div>
-    <div class="ui-g-12 ui-md-4">
-      Number of Joints/Hour: 120<br>
-
-      Number of Jars/Hour: 35	 
-      
-    
-    </div>
-    <div class="ui-g-12 ui-md-4 ui-md-ofset-4">
-      Trimming: 160 grams per hour 	 
-      Number of Orders: 20/hour 
-    </div>
-  </div> -->
   <div class="ui-g-12" style="background: #ffffff; width: 100%;">
     <div *ngFor ="let ytd of ytdlistdist">
     <div class="ui-g-12" >
       <span><b> {{ytd}}</b></span>
      </div>
         <div *ngFor = "let ytdlist of allYtdlist; let id=index ">
-    <!-- <span>{{ytdlist | json}}</span> -->
+  
     
      <div *ngIf="ytd==ytdlist.Category" class="ui-g-6" >
        
@@ -100,6 +49,30 @@
      </div>
     </div>
     </div>
-        </div>
+        </div> -->
   
+</div>
+<div class="container ui-g-12">
+  <div *ngFor ="let ytd of ytdlistdist">
+    <div class="ui-g-12 ui-md-4">
+      <div class="card" style="padding:10px">
+        <div class="ui-g-12 ui-md-12">
+          <h6 class="font-weight-bold">{{ytd}}</h6>
+        </div>
+        <div *ngFor = "let ytdlist of allYtdlist; let id=index ">
+          <div *ngIf="ytd==ytdlist.Category" class="ui-g-12 ui-md-12">
+            <div class="ui-g-7 ui-md-7">
+              <span> {{ytdlist.SubCategory}}</span>
+            </div>
+           <div class="ui-g-5 ui-md-5" id="block">
+            <span class="blockdiv"> {{ytdlist.Item}}</span>
+           </div>
+           <!-- <div class="ui-g-5 ui-md-5">
+            <span> {{ytdlist.UOM}}</span>
+           </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
