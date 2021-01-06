@@ -1,14 +1,17 @@
 h6{
     color:rgb(12, 137, 196);
 }
-@media only screen and (min-width : 992px){
-    .card{
-        height:350px;
+@media screen and (min-width: 481px) and(max-width: 650px) {
+   .card {
+     height: auto;
     }
-    }
-.card{
-    height:350px;
-}
+  }
+  @media screen and (min-width: 768px) and (max-width: 1400px) {
+    .card {
+      height: 350px;
+     }
+   }
+
 #block{
     background-color:rgb(233, 241, 241); 
     text-align:end;
