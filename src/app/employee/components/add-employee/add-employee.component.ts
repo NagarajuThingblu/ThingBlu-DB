@@ -48,6 +48,7 @@ export class AddEmployeeComponent implements OnInit {
   blockSpace: RegExp = /[^\s]/;
   public PhoneNoName = 'Phone No';
   public EmailIdlbName = 'Email Id';
+  public Managerlist:any;
 
   constructor(
     private loaderService: LoaderService,
@@ -76,6 +77,7 @@ export class AddEmployeeComponent implements OnInit {
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
     this.defaultDate.setDate(this.defaultDate.getDate() + 1);
     this.getAllRoles();
+    this.GetManagerlist();
 
     this.genders = [
       { label: '-- Select --', value: null },
@@ -103,6 +105,7 @@ export class AddEmployeeComponent implements OnInit {
       'hireDate': new FormControl(this.defaultDate),
       'userRole': new FormControl(null, Validators.compose([Validators.required])),
       'hourlyRate': new FormControl(null, Validators.compose([Validators.required])),
+      'Managerlist': new FormControl(null,Validators.compose([Validators.required]))
     });
 
     if (!this.isUpdateMode) {
@@ -504,5 +507,17 @@ onResetPassword() {
     this.appCommonService.validateAllFields(this.addEmpForm);
     this.loaderService.display(false);
   }
+}
+
+GetManagerlist()
+{
+  this.dropdownDataService.getManagerList().subscribe(data=>{
+    this.Managerlist=this.dropdwonTransformService.transform(data,'ManagerName','ManagerId','--Select--');
+  }
+  ,
+      error => { console.log(error);
+        this.loaderService.display(false); },
+      () => console.log('Get all Managerlist complete'));
+  
 }
 }

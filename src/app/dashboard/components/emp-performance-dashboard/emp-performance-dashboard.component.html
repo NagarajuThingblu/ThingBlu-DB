@@ -8,6 +8,7 @@
 </div>
 <div class="content-section implementation GridDemo" style="background: #ffffff">
   <div class="ui-g-12" style="background: #ffffff">
+    <div *ngIf="UserRoles.Employee!=userdetails.UserRole">
     <p-dropdown
     [filter] ="true" 
       [options]="EmployeeList" 
@@ -16,7 +17,7 @@
       (onChange)="Ondropdownchange($event)"
       >
     </p-dropdown>
-   
+   </div>
     <!-- <p-dropdown
     [options]="taskTypes"
     placeholder="-- Select --"
@@ -26,13 +27,14 @@
     id="taskname"
     name="taskname">
   </p-dropdown> -->
-    <div class="ui-g-12 ui-md-12" style="background: #ffffff">
+    <div class="ui-g-12 ui-md-12" style="background: #ffffff" >
       <p-card>
         <p-dropdown
     [filter] ="true" 
       [options]="dropdowndatefilter" 
       placeholder="-- Select --"
       (onChange)="Ondropdowndatefilterchange($event)"
+      [(ngModel)]="datefilter"
        name="dropdowndatefilter">
     </p-dropdown>
         <p-chart type="pie"  height="80w" responsive="true" [data]="data"></p-chart>

@@ -297,4 +297,15 @@ getNewTaskType() {
     return data;
    });
 }
+getManagerList() {
+  const url = 'api/Employee/GetManagerList';
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+  return this.http
+  .get(url, {params: params})
+ .map(data => {
+  // console.log('GetRoleList Service success');
+  return data;
+ });
+}
 }

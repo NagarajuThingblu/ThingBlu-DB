@@ -266,6 +266,25 @@
               <div class="ui-g-12 ui-md-4">
                 <div class="paddingRL">
                   <div class="le-su-12">
+                    <label for="strain" class="towlable fwLabelBold">ManagerList<span class="star"> *</span></label>
+                    <p-dropdown [filter]="true" id="managerlist" [options]="Managerlist" placeholder="-- Select --"
+                      [autoWidth]="false" [tabindex]="10" class="clsControl" name="managerlist" formControlName="Managerlist">
+                    </p-dropdown>
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!addEmpForm.controls['Managerlist'].valid&&addEmpForm.controls['Managerlist'].dirty">
+                      <span *ngIf="addEmpForm.controls['Managerlist'].errors['required']">
+                        Select Manager.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-12 ui-g-nopad">
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="le-su-12">
                     <ul class="list-inline">
                       <li>
                         <p-button type="submit" tabindex="12" styleClass="ui-button-rounded" label="{{submitlabel}}"
