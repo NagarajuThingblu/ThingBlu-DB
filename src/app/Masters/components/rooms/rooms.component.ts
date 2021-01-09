@@ -82,7 +82,7 @@ public RoomTypeDisabled:any;
     this.loadService.display(true);
     this.NewRoomgeneration.GetRoomTypes().subscribe(data=>{
       if(data!="No Data found!"){
-        this.RoomTypes=this.dropdwonTransformService.transform(data, 'RoomTypeName', 'RoomId', '-- Select --');;
+        this.RoomTypes=this.dropdwonTransformService.transform(data, 'RoomTypeName', 'RoomTypeId', '-- Select --');;
         this.paginationvalues=AppConstants.getPaginationOptions;
         if(this.RoomTypes.length>20)
         {

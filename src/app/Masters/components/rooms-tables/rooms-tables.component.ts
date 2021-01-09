@@ -180,7 +180,7 @@ this.msg=[];
 if (data[0]['Result'] == 'success') {
   this.msg.push({
     severity: 'success', summary: this.globalresource.applicationmsg,
-    detail: this.newRoomTableresource.newRoomSavedSuccess
+    detail: this.newRoomTableresource.newRoomTableSavedSuccess
   });
   this.resetAll();
   this.GetRoomTables();
@@ -189,7 +189,7 @@ else if (data == 'failue') {
   this.msg.push({ severity: 'error', summary: this.globalresource.applicationmsg, detail: this.globalresource.error })
 }
 else if (data == 'duplicate') {
-  this.msg.push({ severity: 'warn', summary: this.globalresource.applicationmsg, detail: this.newRoomTableresource.RoomAlreadyExists })
+  this.msg.push({ severity: 'warn', summary: this.globalresource.applicationmsg, detail: this.newRoomTableresource.RoomTableAlreadyExists })
 }
 else if (String(data.toLocaleUpperCase() === 'NOTUPDATED')) {
   this.msg.push({
