@@ -1,0 +1,42 @@
+.zones-list{
+    list-style-type: none;
+}
+.zonelistbox{
+    border:1px solid #D5D5D5;
+    height:80px;
+    overflow: auto;
+}
+.add{
+    border-radius: 50%;
+     margin:1px;
+}
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(177, 177, 177); 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #696969; 
+  }
+  /* .even-larger-badge {
+    font-size: 1em;
+} */
+.zonelisttext{
+  font-size:15px;
+}
+.zonelistitems{
+    display:inline;
+    float:left;
+}

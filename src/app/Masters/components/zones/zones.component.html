@@ -27,27 +27,38 @@
 
             <!---Zone Name-->
             <div class="ui-g-12 ui-md-6">
-              <div class="PaddingRL">
-                <div class="le-se-12">
-                  <label for="enterzone">
-                    {{newzonetypeResource.enterzone}}<span class="star">*</span>
-                  </label>
-                  <input pInputText name="Zone" id="zone" autocomplete="off" class="clsControl" placeholder="Enter Zone"
-                    formControlName="Zone">
-                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                    *ngIf="!ZonetypeMasterform.controls['Zone'].valid && ZonetypeMasterform.controls['Zone'].dirty">
-                    <span *ngIf="ZonetypeMasterform.controls['Zone'].errors['required']">
-                      {{newzonetypeResource.ZoneRequired}}
-                    </span>
-                    <span *ngIf="ZonetypeMasterform.controls['Zone'].errors['maxlength']">
-                      {{newzonetypeResource.ZoneLength}}
-                    </span>
-                    <span *ngIf="ZonetypeMasterform.controls['Zone'].errors['whitespace']">
-                      {{newzonetypeResource.ZoneRequired}}
-                    </span>
+              <!-- <div class="ui-g-8 ui-md-8"> -->
+                <div class="PaddingRL">
+                  <div class="le-se-8">
+                    <label for="enterzone">
+                      {{newzonetypeResource.enterzone}}<span class="star">*</span>
+                    </label>
+                    <div class="input-group"style="padding: 0px">
+                    <input pInputText name="Zone" id="zone" autocomplete="off"  placeholder="Enter Zone" formControlName="Zone"
+                      style="width:87%; display:block;" #myzone>&nbsp;
+                      <button class="btn btn-primary add" type="button"  [disabled]="ZoneTypeforupdate!=0? true: false" (click)="addzoneslist(myzone)"><i class="fa fa-plus"></i></button>
+                      
+                    </div>
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!ZonetypeMasterform.controls['Zone'].valid && ZonetypeMasterform.controls['Zone'].dirty">
+                      <span *ngIf="ZonetypeMasterform.controls['Zone'].errors['required']">
+                        {{newzonetypeResource.ZoneRequired}}
+                      </span>
+                      <span *ngIf="ZonetypeMasterform.controls['Zone'].errors['maxlength']">
+                        {{newzonetypeResource.ZoneLength}}
+                      </span>
+                      <span *ngIf="ZonetypeMasterform.controls['Zone'].errors['whitespace']">
+                        {{newzonetypeResource.ZoneRequired}}
+                      </span>
+                      
+                    </div>
+                    <div *ngIf="!dataExist" class="ui-message ui-messages-error ui-corner-all" appErrorTooltip>
+                      {{zonelisterror}}
+                    </div>
+                    
                   </div>
                 </div>
-              </div>
+              <!-- </div> -->
             </div>
             <!--end of ZoneName-->
             <!--Description-->
@@ -75,8 +86,27 @@
               </div>
             </div>
             <!--End of Desccription-->
-            <!--IsActive-->
             <div class="ui-g-12 ui-md-6">
+              <div class="PaddingRL">
+                <div class="le-se-12">
+                  <label for="zoneslist">Zones List</label>
+                  <div  class="zonelistbox">
+                    <ul class="zones-list" style='padding: 0px;'>
+                      <li  *ngFor="let i of zonearray; let id=index" class="zonelistitems" >
+                        <span class="badge badge-pill badge-light zonelisttext">{{i}}&nbsp;<i class="fa fa-times" (click)="removeitem(id)"></i></span>
+                        
+                      </li>
+                    </ul>
+                  </div>   
+                    
+                  
+                
+               
+                </div>
+              </div>
+            </div>
+            <!--IsActive-->
+            <div class="ui-g-12 ui-md-6" style="padding-top: 0px;">
               <div class="paddingRL">
                 <label></label>
                 <div class="clear"></div>
@@ -99,6 +129,19 @@
       </p-panel>
     </div>
   </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   <div class="ui-g">
     <div class="ui-g-12">
