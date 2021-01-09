@@ -40,6 +40,9 @@ export class ZonesComponent implements OnInit {
   }
   public Roomlist:any;
   pageHeader: any;
+  public zonearray:any=[ ];
+  public zonelisterror: String = 'Zone name already exist';
+  public dataExist =true;
   constructor(
     private fb: FormBuilder,
     private loadService: LoaderService,
@@ -81,16 +84,24 @@ this.Roomlist=this.dropdwonTransformService.transform(data,"RoomName","RoomId",'
 });
 
   }
+  
+  removeitem(deleteitem){
+    this.zonearray.splice(deleteitem,1)
+  }
   SaveZones(formModel) {
     if (String(this.ZonetypeMasterform.value.Zone).trim().length == 0) {
       this.ZonetypeMasterform.controls['Zone'].setErros({ 'whitespace': true });
       this.ZonetypeMasterform.value.Zone = null;
       return;
     }
+  if(this.ZoneTypeforupdate!=0){
+    this.zonearray.push(this.appCommonservice.trimString(this.ZonetypeMasterform.value.Zone));
+   
+    }
    const ZoneDetailsForAPI = {
       Zone: {
         ZonesTypeId: this.ZoneTypeforupdate,
-        ZonesName: this.appCommonservice.trimString(this.ZonetypeMasterform.value.Zone),
+        ZonesName: this.zonearray,
         Description: this.appCommonservice.trimString(this.ZonetypeMasterform.value.description),
         VirtualRoleId: this._Cookieservice.VirtualRoleId,
         IsActive: this.ZonetypeMasterform.value.chkIsActive,
@@ -147,8 +158,22 @@ this.Roomlist=this.dropdwonTransformService.transform(data,"RoomName","RoomId",'
     this.saveButtontext = 'save';
     this.pageHeader = 'Add New Zone';
     this.clear = 'Clear';
+    this.zonearray.length = 0;
     this.resetForm();
 
+  }
+  addzoneslist(prozone){
+    const proroom = this.ZonetypeMasterform.value.Roomlist
+    const zonecheck = this.allZonestypelist.filter(rt => rt.RoomId == proroom &&   rt.ZoneName === prozone.value);
+    if (prozone.value.length>0 && zonecheck.length===0  ){
+        this.zonearray.push(prozone.value);
+      prozone.value='';
+      this.dataExist = true;
+    }
+    else if(zonecheck.length!=0){
+      this.dataExist = false;
+    }
+    console.log(this.zonelisterror);
   }
   resetForm() {
     this.ZonetypeMasterform.reset({ chkIsActive: true });
@@ -187,10 +212,12 @@ this.Roomlist=this.dropdwonTransformService.transform(data,"RoomName","RoomId",'
     if (data != 'No Data Found') {
       this.ZoneTypeforupdate = ZoneID;
       this.ZoneTypeEdit = data;
+      const Room = this.ZonetypeMasterform.controls['Roomlist'];
       const Zone = this.ZonetypeMasterform.controls['Zone'];
       const description = this.ZonetypeMasterform.controls['description'];
       const chkIsActive = this.ZonetypeMasterform.controls['chkIsActive'];
 
+      Room.patchValue(this.ZoneTypeEdit[0].RoomId);
       Zone.patchValue(this.ZoneTypeEdit[0].ZoneName);
       description.patchValue(this.ZoneTypeEdit[0].Description);
       chkIsActive.patchValue(this.ZoneTypeEdit[0].IsActive);
