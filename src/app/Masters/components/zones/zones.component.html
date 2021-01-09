@@ -52,7 +52,7 @@
                       </span>
                       
                     </div>
-                    <div *ngIf="!dataExist" class="ui-message ui-messages-error ui-corner-all" appErrorTooltip>
+                    <div *ngIf="!dataExist && !(!ZonetypeMasterform.controls['Zone'].valid && ZonetypeMasterform.controls['Zone'].dirty)" class="ui-message ui-messages-error ui-corner-all" appErrorTooltip>
                       {{zonelisterror}}
                     </div>
                     
