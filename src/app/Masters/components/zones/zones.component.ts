@@ -43,6 +43,7 @@ export class ZonesComponent implements OnInit {
   public zonearray:any=[ ];
   public zonelisterror: String = 'Zone name already exist';
   public dataExist =true;
+  public zoneListBox: boolean= true;
   constructor(
     private fb: FormBuilder,
     private loadService: LoaderService,
@@ -96,6 +97,7 @@ this.Roomlist=this.dropdwonTransformService.transform(data,"RoomName","RoomId",'
     }
   if(this.ZoneTypeforupdate!=0){
     this.zonearray.push(this.appCommonservice.trimString(this.ZonetypeMasterform.value.Zone));
+    this.zoneListBox= false;
    
     }
    const ZoneDetailsForAPI = {

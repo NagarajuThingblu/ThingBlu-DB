@@ -36,7 +36,7 @@
                     <div class="input-group"style="padding: 0px">
                     <input pInputText name="Zone" id="zone" autocomplete="off"  placeholder="Enter Zone" formControlName="Zone"
                       style="width:87%; display:block;" #myzone>&nbsp;
-                      <button class="btn btn-primary add" type="button"  [disabled]="ZoneTypeforupdate!=0? true: false" (click)="addzoneslist(myzone)"><i class="fa fa-plus"></i></button>
+                      <button class="btn btn-primary add" type="button"  [ngStyle]= "ZoneTypeforupdate!=0? {'display':'none'}: {'display':''}"  (click)="addzoneslist(myzone)"><i class="fa fa-plus"></i></button>
                       
                     </div>
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
@@ -84,10 +84,20 @@
                   </div>
                 </div>
               </div>
+              <!--IsActive-->
+              <div class="ui-g-12 ui-md-6" style="padding-top: 0px;">
+                <div class="paddingRL">
+                  <label></label>
+                  <div class="clear"></div>
+                  <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalResource.IsActiveFlag}}"
+                    formControlName="chkIsActive" binary="true"></p-checkbox>
+                </div>
+              </div>
+              <!--End IsActive-->
             </div>
             <!--End of Desccription-->
             <div class="ui-g-12 ui-md-6">
-              <div class="PaddingRL">
+              <div class="PaddingRL" *ngIf="ZoneTypeforupdate!=0? false: true">
                 <div class="le-se-12">
                   <label for="zoneslist">Zones List</label>
                   <div  class="zonelistbox">
@@ -106,14 +116,14 @@
               </div>
             </div>
             <!--IsActive-->
-            <div class="ui-g-12 ui-md-6" style="padding-top: 0px;">
+            <!-- <div class="ui-g-12 ui-md-6" style="padding-top: 0px;">
               <div class="paddingRL">
                 <label></label>
                 <div class="clear"></div>
                 <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalResource.IsActiveFlag}}"
                   formControlName="chkIsActive" binary="true"></p-checkbox>
               </div>
-            </div>
+            </div> -->
             <!--End IsActive-->
             <div class="ui-g-12 ui-md-12" style="text-align: right;">
               <div class="paddingRL">
