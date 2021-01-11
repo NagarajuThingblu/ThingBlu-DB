@@ -19,7 +19,8 @@ export class AppConstants {
         return {
             Manager: 'Manager',
             Employee: 'Employee',
-            SuperAdmin: 'SuperAdmin'
+            SuperAdmin: 'SuperAdmin',
+            Temp:'Temp'
         } ;
     }
     public static get defaultTextAreaLength(): number {

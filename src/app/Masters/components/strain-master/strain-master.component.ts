@@ -366,7 +366,8 @@ export class StrainMasterComponent implements OnInit {
           VirtualRoleId: this._cookieService.VirtualRoleId,
           IsDeleted: IsDeleted,
           IsActive: Strain.IsActive,
-          ActiveInactive: ActiveInactiveFlag
+          ActiveInactive: ActiveInactiveFlag,
+          ClientId: Number(this._cookieService.ClientId)
         }
       };
         // console.log(strainDetailsForApi);

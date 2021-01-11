@@ -5,6 +5,8 @@ import { SelectItem } from 'primeng/api';
 import { DropdwonTransformService } from '../../../shared/services/dropdown-transform.service';
 import { DropdownValuesService } from '../../../shared/services/dropdown-values.service';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { AppConstants } from '../../../shared/models/app.constants';
+import { AppCommonService } from '../../../shared/services/app-common.service';
 
 @Component({
   selector: 'app-emp-performance-dashboard',
@@ -22,11 +24,14 @@ export class EmpPerformanceDashboardComponent implements OnInit {
   Tasktypetotaltime:any;
   datefilter:any;
   FilterempId:any=0;
+  userdetails:any;
+  UserRoles=AppConstants.getUserRoles;
   constructor(private loaderService: LoaderService,private dashboardService: DashobardService,  private dropdownDataService: DropdownValuesService,
-    private dropdwonTransformService: DropdwonTransformService,) { 
+    private dropdwonTransformService: DropdwonTransformService,private appCommonService: AppCommonService,) { 
     this.data = {
           
       };
+this.userdetails=this.appCommonService.getUserProfile()
   }
 
   ngOnInit() {
@@ -35,8 +40,15 @@ export class EmpPerformanceDashboardComponent implements OnInit {
     { id:2, Title:"YTD"},
     { id:3, Title:"MTD"}]
     this.dropdowndatefilter =this.dropdwonTransformService.transform(this.datefilter, 'Title', 'Title', '-- Select --', false) ;
-    this.datefilter=this.datefilter[0].Title
-    this.GetEmployeeList();
+    this.datefilter= this.datefilter[0].Title;
+    if(this.UserRoles.Employee!=this.userdetails.UserRole)
+    {
+          this.GetEmployeeList();
+    }
+    else{
+      this.GetProductivityStatistics(this.FilterempId);
+this.GetTaskTypetotalTime(this.datefilter,this.FilterempId);
+    }
     //this.GetProductivityStatistics();
     
   }

@@ -16,6 +16,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { AppComponent } from '../../../app.component';
 import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { HttpParams } from '@angular/common/http';
+import { AppConstants } from '../../../shared/models/app.constants';
 
 @Component({
   moduleId: module.id,
@@ -48,6 +49,9 @@ export class AddEmployeeComponent implements OnInit {
   blockSpace: RegExp = /[^\s]/;
   public PhoneNoName = 'Phone No';
   public EmailIdlbName = 'Email Id';
+  public Managerlist:any;
+  public selectedRole:any;
+  public constantusrRole:any;
 
   constructor(
     private loaderService: LoaderService,
@@ -64,7 +68,7 @@ export class AddEmployeeComponent implements OnInit {
     private scrolltopservice: ScrollTopService,
     private msalService: MsalService,
     private router: Router,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {
     this._cookieService = this.appCommonService.getUserProfile();
   }
@@ -76,6 +80,8 @@ export class AddEmployeeComponent implements OnInit {
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
     this.defaultDate.setDate(this.defaultDate.getDate() + 1);
     this.getAllRoles();
+    this.GetManagerlist();
+    this.constantusrRole=  AppConstants.getUserRoles;
 
     this.genders = [
       { label: '-- Select --', value: null },
@@ -103,6 +109,7 @@ export class AddEmployeeComponent implements OnInit {
       'hireDate': new FormControl(this.defaultDate),
       'userRole': new FormControl(null, Validators.compose([Validators.required])),
       'hourlyRate': new FormControl(null, Validators.compose([Validators.required])),
+      'Managerlist': new FormControl(null)
     });
 
     if (!this.isUpdateMode) {
@@ -136,6 +143,7 @@ export class AddEmployeeComponent implements OnInit {
       'hireDate': new FormControl(this.userDetails[0].HireDate),
       'userRole': new FormControl(this.userDetails[0].RoleId, Validators.compose([Validators.required])),
       'hourlyRate': new FormControl(this.userDetails[0].HourlyRate, Validators.compose([Validators.required])),
+      'Managerlist': new FormControl(null)
     });
   }
 
@@ -179,8 +187,7 @@ export class AddEmployeeComponent implements OnInit {
         this.addEmpForm.controls['cellPhone'].reset();
       }
     }
-
-    if (this.addEmpForm.valid) {
+   if (this.addEmpForm.valid) {
       employeeForApi = {
         addEmpApiDetails: {
           FirstName: this.addEmpForm.value.firstName || '',
@@ -198,7 +205,8 @@ export class AddEmployeeComponent implements OnInit {
           HourlyLabourRate: this.addEmpForm.value.hourlyRate || 0,
           VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
           ClientId: this.cookie_clientId,
-          InviteToken: encodeURIComponent(this.addEmpForm.value.email) || ''
+          InviteToken: encodeURIComponent(this.addEmpForm.value.email) || '',
+          ManagerId:this.addEmpForm.value.Managerlist
         }
       };
 
@@ -306,6 +314,7 @@ export class AddEmployeeComponent implements OnInit {
           UserRoleId: this.addEmpForm.value.userRole || '',
           HourlyLabourRate: this.addEmpForm.value.hourlyRate || 0,
           VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
+          ManagerId:this.addEmpForm.value.Managerlist
         }
       };
 
@@ -415,6 +424,8 @@ this.backToList();
       'hireDate': new FormControl(this.defaultDate),
       'userRole': new FormControl(null, Validators.compose([Validators.required])),
       'hourlyRate': new FormControl(null, Validators.compose([Validators.required])),
+      'Managerlist': new FormControl(null)
+      
     });
   }
 
@@ -504,5 +515,32 @@ onResetPassword() {
     this.appCommonService.validateAllFields(this.addEmpForm);
     this.loaderService.display(false);
   }
+}
+
+GetManagerlist()
+{
+  this.dropdownDataService.getManagerList().subscribe(data=>{
+    this.Managerlist=this.dropdwonTransformService.transform(data,'ManagerName','ManagerId','--Select--');
+  }
+  ,
+      error => { console.log(error);
+        this.loaderService.display(false); },
+      () => console.log('Get all Managerlist complete'));
+  
+}
+Managerdrpdwnchng(event)
+{
+const selectedRole=this.userRoles.filter(ur=>ur.value==event.value);
+this.selectedRole=selectedRole[0].label;
+const managerdata = this.addEmpForm.get('Managerlist');
+if(this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole)
+{
+
+managerdata.setValidators(Validators.required);
+}
+else{
+managerdata.clearValidators();
+}
+managerdata.updateValueAndValidity();
 }
 }

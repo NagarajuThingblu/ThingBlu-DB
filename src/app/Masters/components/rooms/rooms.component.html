@@ -23,7 +23,7 @@
                     placeholder="-- Select --" [autoWidth]="false" class="clsControl" name="RoomType">
                   </p-dropdown>
                   <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                    *ngIf="!Roomtypemassterform.controls['RoomType'].valid&&Roomtypemassterform.controls['RoomType'].dirty">
+                    *ngIf="!Roomtypemassterform.controls['RoomType'].valid && Roomtypemassterform.controls['RoomType'].dirty">
                     <span *ngIf="Roomtypemassterform.controls['RoomType'].errors['required']">
                       {{ newRoomtyperesource.RoomTypeRequired }}
                     </span>
@@ -69,11 +69,11 @@
                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!Roomtypemassterform.controls['RoomName'].valid&&Roomtypemassterform.controls['RoomName'].dirty">
                         <span
-                          *ngIf="Roomtypemassterform.controls['RoomName'].errors['required']">{{newRoomtyperesource.Roomrequired}}</span>
+                          *ngIf="Roomtypemassterform.controls['RoomName'].errors['required']">{{newRoomtyperesource.RoomRequired}}</span>
                         <span
-                          *ngIf="Roomtypemassterform.controls['RoomName'].errors['maxlength']">{{newRoomtyperesource.Roomrequired}}</span>
+                          *ngIf="Roomtypemassterform.controls['RoomName'].errors['maxlength']">{{newRoomtyperesource.RoomRequired}}</span>
                         <span
-                          *ngIf="Roomtypemassterform.controls['RoomName'].errors['whitespace']">{{newRoomtyperesource.Roomrequired}}</span>
+                          *ngIf="Roomtypemassterform.controls['RoomName'].errors['whitespace']">{{newRoomtyperesource.RoomRequired}}</span>
                       </div>
                     </div>
                   </div>
