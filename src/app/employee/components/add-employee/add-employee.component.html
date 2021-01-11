@@ -219,7 +219,8 @@
                   <div class="le-su-12">
                     <label for="strain" class="towlable fwLabelBold">User Role<span class="star"> *</span></label>
                     <p-dropdown [filter]="true" id="userRole" [options]="userRoles" placeholder="-- Select --"
-                      [autoWidth]="false" [tabindex]="10" class="clsControl" name="userRole" formControlName="userRole">
+                      [autoWidth]="false" [tabindex]="10" class="clsControl" name="userRole" formControlName="userRole"
+                      (onChange)="Managerdrpdwnchng($event)">
                     </p-dropdown>
 
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
@@ -262,7 +263,7 @@
                 </div>
               </div>
             </div>
-            <div class="ui-g-12 ui-md-12 ui-g-nopad">
+            <div class="ui-g-12 ui-md-12 ui-g-nopad" *ngIf="this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole">
               <div class="ui-g-12 ui-md-4">
                 <div class="paddingRL">
                   <div class="le-su-12">
