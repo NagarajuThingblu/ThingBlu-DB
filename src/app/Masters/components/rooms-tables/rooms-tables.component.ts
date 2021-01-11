@@ -288,7 +288,7 @@ activateDeleteRoom(RoomtableID, RoomTable, IsDeleted, ActiveInactiveFlag)
 {
 this.submitted=true;
 const RoomTablesforAPI={
-  RoomTable:{
+  RoomTables:{
     RoomTableId:RoomtableID,
     RoomId:RoomTable.RoomId,
     ZoneId:RoomTable.ZoneId,
@@ -373,9 +373,9 @@ showConformationMessaegForDeactive(RoomTableId, Roomtable, rowIndex, IsDeleted, 
 {
   let strMessage: any;
   if (this.RoomTableList[rowIndex].IsActive === true) {
-    strMessage = this.newRoomTableresource.activeRoomMsg ;
+    strMessage = this.newRoomTableresource.activeRoomTableMsg ;
   } else {
-    strMessage = this.newRoomTableresource.deactivateRoomMsg ;
+    strMessage = this.newRoomTableresource.deactivateRoomTableMsg ;
   }
   this.confirmationService.confirm({
     message: strMessage,
