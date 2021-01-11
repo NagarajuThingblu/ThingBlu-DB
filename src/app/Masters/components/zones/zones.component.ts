@@ -251,6 +251,7 @@ this.Roomlist=this.dropdwonTransformService.transform(data,"RoomName","RoomId",'
       Zone: {
         ZonesTypeId: ZoneId,
         ZonesName: this.appCommonservice.trimString(this.ZonetypeMasterform.value.Zone),
+        RoomId:  Zone.RoomId,         
         Description: this.appCommonservice.trimString(this.ZonetypeMasterform.value.description),
         VirtualRoleId: this._Cookieservice.VirtualRoleId,
         Isdeleted: IsDeleted,

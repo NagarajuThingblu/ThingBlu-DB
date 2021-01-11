@@ -90,7 +90,7 @@ GetRoomTableList() {
 addNewRoomTable(RoomTableMasterform:any)
 {
   const url='api/RoomType/AddUpdateRoomTables';
-
+  console.log(RoomTableMasterform);
   return this.http.post(url,RoomTableMasterform,this.headers).map(data=>data);
 }
 GetRoomTableMaplist()

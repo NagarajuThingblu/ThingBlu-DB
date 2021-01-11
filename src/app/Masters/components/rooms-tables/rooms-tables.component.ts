@@ -73,9 +73,9 @@ public ZoneVisible:boolean=false;
       'Roomlist':new FormControl(null,[Validators.required]),
       'Zonelist': new FormControl(null,Validators.required),
       'RoomTable': new FormControl(null,[Validators.required,Validators.minLength(1),Validators.maxLength(50)]),
-      'Length': new FormControl(null,[Validators.required]),
-      'Width': new FormControl(null,Validators.required),
-       'Height': new FormControl(null,Validators.required),
+      'Length': new FormControl(null),
+      'Width': new FormControl(null),
+       'Height': new FormControl(null),
       'description': new FormControl(null),
       'chkIsActive': new FormControl(null)
     })
