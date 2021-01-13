@@ -104,9 +104,9 @@
 
   <div *ngFor ="let ytd of ytdlistdist">
     <div class="ui-g-12 ui-md-4">
-      <div class="card firstcard" style="padding:15px">
-        <div class="ui-g-12 ui-md-6">
-          <h6 class="font-weight-bold">{{ytd}}</h6>
+      <div class="card firstcard">
+        <div class="ui-g-12">
+          <h6>{{ytd}}</h6>
         </div>
        
         <div *ngFor = "let ytdlist of allYtdlist; let id=index " class="p-card-content">
@@ -141,7 +141,7 @@
     <div  [ngClass]="id===0? 'ui-g-12 ui-md-4':'ui-g-12 ui-md-8'">
       <div class="card seccard" >
         <div class="ui-g-12 ui-md-12">
-          <h6 class="font-weight-bold">{{ytd}}</h6>
+          <h6>{{ytd}}</h6>
         </div>
         <div class="ui-g-12">
           <div *ngFor = "let ytdlist of allProductstatslist ; let i=index;">

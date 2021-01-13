@@ -78,7 +78,7 @@ export class ZonesComponent implements OnInit {
   GetRoomlist()
   {
 this.NewRoomgeneration.GetRoomList().subscribe(data=>{
-if(data!="No Data found!")
+if(data!="No data found")
 {
 this.Roomlist=this.dropdwonTransformService.transform(data,"RoomName","RoomId",'-- Select --')
 }
@@ -187,7 +187,7 @@ this.Roomlist=this.dropdwonTransformService.transform(data,"RoomName","RoomId",'
   GetZones() {
     this.loadService.display(true);
     this.NewRoomgeneration.GetZonelist().subscribe(data => {
-      if (data !== 'No Data found!') {
+      if (data !== 'No Data found') {
         this.allZonestypelist = data;
         this.paginationvalues = AppConstants.getPaginationOptions;
         if (this.allZonestypelist.length > 20) {

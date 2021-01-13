@@ -18,21 +18,21 @@
       >
     </p-dropdown>
    </div>
+
     <div class="ui-g-12 ui-md-12" style="background: #ffffff" >
       <p-card>
-        <div class="ui-g-12 ui-md-12">
-        <div class="ui-g-4 ui-md-4">
-            <p-dropdown
+        <p-dropdown
         [filter] ="true" 
           [options]="dropdowndatefilter" 
           placeholder="-- Select --"
+          name="dropdowndatefilter"
           (onChange)="Ondropdowndatefilterchange($event)"
-          name="dropdowndatefilter">
+        >
         </p-dropdown>
-        </div>
-        <div class="ui-g-4 ui-md-4">
-          <h1><b>Time spent by task</b></h1>
-        </div>
+        <div class="ui-g-12 ui-md-12">
+         
+      <h1 class="headingOfChart">Time spent by task</h1>
+        
       </div> 
         <p-chart type="pie"  height="80w" responsive="true" [data]="data"></p-chart>
          
@@ -40,23 +40,7 @@
     </div>
     
   </div>
-      
-<!-- 
-  <div class="ui-g-12" style="background: #ffffff; width: 100%;">
-    <div *ngFor ="let ytd of ytdlistdist">
-    <div class="ui-g-12" >
-      <span><b> {{ytd}}</b></span>
-     </div>
-        <div *ngFor = "let ytdlist of allYtdlist; let id=index ">
-  
-    
-     <div *ngIf="ytd==ytdlist.Category" class="ui-g-6" >
-       
-      <span> {{ytdlist.Item}}</span>
-     </div>
-    </div>
-    </div>
-        </div> -->
+
   
 </div>
 <div class="container ui-g-12">
