@@ -68,12 +68,24 @@ this.dashboardService.GetTasktypeTotaltime(Filterdata,Filterempid).subscribe(dat
             backgroundColor: [
               "#FF6384",
               "#36A2EB",
-              "#FFCE56"
+              "#FFCE56",
+              "#DFFF00",
+              "#FFBF00",
+              "#FF7F50",
+              "#9FE2BF",
+              "#6495ED",
+              "#CCCCFF"
           ],
           hoverBackgroundColor: [
               "#FF6384",
               "#36A2EB",
-              "#FFCE56"
+              "#FFCE56",
+              "#DFFF00",
+              "#FFBF00",
+              "#FF7F50",
+              "#9FE2BF",
+              "#6495ED",
+              "#CCCCFF"
           ]
             
         }]    
