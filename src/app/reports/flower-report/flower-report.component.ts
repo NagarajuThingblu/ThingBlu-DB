@@ -47,7 +47,11 @@ export class FlowerReportComponent implements OnInit {
      // this.iFrameUrl = ' https://demo.navizanalytics.com/Thingblu/DashboardEmbed/Home.aspx?DashboardName=Flower&UserName=' + this.userName; // Production
       // this.iFrameUrl = 'https://demo.navizanalytics.com/NavizUICW/DashboardEmbed/Home.aspx?DashboardName=Flower&UserName=' + this.userName;  // UAT
       // this.iFrameUrl = 'https://demo.navizanalytics.com/NavizUICW/DashboardEmbed/Home.aspx?DashboardName=Flower&UserName=' + this.value;
-      this.iFrameUrl = 'https://demo.navizanalytics.com/Thingbludemo/DashboardEmbed/Home.aspx?DashboardName=Flower&UserName='+this.userName; 
+     //Dev test
+      //this.iFrameUrl = 'https://demo.navizanalytics.com/Thingbludemo/DashboardEmbed/Home.aspx?DashboardName=Flower&UserName='+this.userName; 
+
+      //Demo
+      this.iFrameUrl = 'https://thingbludemoapplication.navizanalytics.com/ThingbluDevTest/DashboardEmbed/Home.aspx?DashboardName=Flower&UserName='+this.userName; 
       this.iFrameUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.iFrameUrl);
       this.reportUrl.rptUrl = this.iFrameUrl;
       this.loaderService.display(false);

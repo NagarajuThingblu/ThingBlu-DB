@@ -48,7 +48,11 @@ export class OrderReportComponent implements OnInit {
       // this.iFrameUrl = ' https://demo.navizanalytics.com/Thingblu/DashboardEmbed/Home.aspx?DashboardName=Order&UserName=' + this.userName; // Production
       // this.iFrameUrl = 'https://demo.navizanalytics.com/NavizUICW/DashboardEmbed/Home.aspx?DashboardName=Order&UserName=' + this.userName; // UAT
        // this.iFrameUrl = 'https://demo.navizanalytics.com/NavizUICW/DashboardEmbed/Home.aspx?DashboardName=Order&UserName=' + this.value;
-       this.iFrameUrl = 'https://demo.navizanalytics.com/Thingbludemo/DashboardEmbed/Home.aspx?DashboardName=Order&UserName='+this.userName; // UAT
+       //Dev test
+       //this.iFrameUrl = 'https://demo.navizanalytics.com/Thingbludemo/DashboardEmbed/Home.aspx?DashboardName=Order&UserName='+this.userName; // UAT
+
+       //Demo
+       this.iFrameUrl = 'https://thingbludemoapplication.navizanalytics.com/ThingbluDevTest/DashboardEmbed/Home.aspx?DashboardName=Order&UserName='+this.userName; // UAT
         this.iFrameUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.iFrameUrl);
         this.reportUrl.rptUrl = this.iFrameUrl;
         this.loaderService.display(false);
