@@ -25,8 +25,7 @@ h6{
 .blockdiv{
    color: rgb(7, 104, 196);  
 }
-/* @supports (-ms-ime-align:auto) {
-  .card {
-    height: 350px;
-  }
-} */
+.headingOfChart{
+  font-weight: bold;
+  text-align: center;
+}

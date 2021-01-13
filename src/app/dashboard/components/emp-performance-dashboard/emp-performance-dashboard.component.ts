@@ -40,7 +40,7 @@ this.userdetails=this.appCommonService.getUserProfile()
     { id:2, Title:"YTD"},
     { id:3, Title:"MTD"}]
     this.dropdowndatefilter =this.dropdwonTransformService.transform(this.datefilter, 'Title', 'Title', '-- Select --', false) ;
-    this.datefilter= this.datefilter[0].Title;
+    //this.datefilter= this.datefilter[0].Title;
     if(this.UserRoles.Employee!=this.userdetails.UserRole)
     {
           this.GetEmployeeList();
