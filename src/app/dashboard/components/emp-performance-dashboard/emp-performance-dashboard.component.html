@@ -1,6 +1,6 @@
 <div class="page-header">
   <h1 class="pull-left" style="margin:8px 0px">
-<span>Employee Performance Dashboard</span>
+<span>Performance Dashboard</span>
   </h1>
   <div class="pull-right" style="padding:0px !important; margin-top:2px !important; margin-bottom:2px;">
       
@@ -27,6 +27,7 @@
           placeholder="-- Select --"
           name="dropdowndatefilter"
           (onChange)="Ondropdowndatefilterchange($event)"
+          [(ngModel)]="autoselectdatefilter"
         >
         </p-dropdown>
         <div class="ui-g-12 ui-md-12">

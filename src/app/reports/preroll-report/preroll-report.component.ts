@@ -50,9 +50,10 @@ export class PrerollReportComponent implements OnInit {
      
      //dev
      //this.iFrameUrl = 'https://demo.navizanalytics.com/Thingbludemo/DashboardEmbed/Home.aspx?DashboardName=Pre-Roll&UserName='+this.userName;   // UAT
-     
+     //Dev
+     this.iFrameUrl = 'https://thingbludemoapplication.navizanalytics.com/ThingBluDev/DashboardEmbed/Home.aspx?DashboardName=Production&UserName='+this.userName; 
      //Demo
-     this.iFrameUrl = 'https://thingbludemoapplication.navizanalytics.com/ThingbluDevTest/DashboardEmbed/Home.aspx?DashboardName=Production&UserName='+this.userName;   // UAT
+     //this.iFrameUrl = 'https://thingbludemoapplication.navizanalytics.com/ThingbluDevTest/DashboardEmbed/Home.aspx?DashboardName=Production&UserName='+this.userName;   // UAT
      
      this.iFrameUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.iFrameUrl);
       this.reportUrl.rptUrl = this.iFrameUrl;

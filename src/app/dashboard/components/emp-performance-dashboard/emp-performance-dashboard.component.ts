@@ -26,6 +26,7 @@ export class EmpPerformanceDashboardComponent implements OnInit {
   FilterempId:any=0;
   userdetails:any;
   UserRoles=AppConstants.getUserRoles;
+  autoselectdatefilter:any;
   constructor(private loaderService: LoaderService,private dashboardService: DashobardService,  private dropdownDataService: DropdownValuesService,
     private dropdwonTransformService: DropdwonTransformService,private appCommonService: AppCommonService,) { 
     this.data = {
@@ -40,7 +41,8 @@ this.userdetails=this.appCommonService.getUserProfile()
     { id:2, Title:"YTD"},
     { id:3, Title:"MTD"}]
     this.dropdowndatefilter =this.dropdwonTransformService.transform(this.datefilter, 'Title', 'Title', '-- Select --', false) ;
-    //this.datefilter= this.datefilter[0].Title;
+    this.datefilter= this.datefilter[0].Title;
+    this.autoselectdatefilter=this.dropdowndatefilter[1].value;
     if(this.UserRoles.Employee!=this.userdetails.UserRole)
     {
           this.GetEmployeeList();
@@ -108,7 +110,7 @@ this.GetTaskTypetotalTime(this.datefilter,this.FilterempId);
   GetEmployeeList()
    {
      this.dashboardService.GetemployeeList().subscribe(data=>{
-this.EmployeeList=this.dropdwonTransformService.transform(data,"EmpName","EmpId","Show ALL",false);
+this.EmployeeList=this.dropdwonTransformService.transform(data,"EmpName","EmpId","Show All",false);
 this.GetProductivityStatistics(this.FilterempId);
 this.GetTaskTypetotalTime(this.datefilter,this.FilterempId);
 
