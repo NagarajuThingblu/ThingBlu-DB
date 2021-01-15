@@ -1,0 +1,82 @@
+<div class="page-header">
+  <h1 class="pull-left" style="margin:8px 0px">
+  <span>Production Dashboard</span>
+  </h1>
+  <div class="pull-right" style="padding:0px !important; margin-top:2px !important; margin-bottom:2px;">
+      
+  </div>
+</div>
+
+<div *ngFor ="let ytd of ytdlistdist">
+  <div class="ui-g-12 ui-md-4">
+    <div class="card firstcard">
+      <div class="ui-g-12">
+        <h6>{{ytd}}</h6>
+      </div>
+     
+      <div *ngFor = "let ytdlist of allYtdlist; let id=index " class="p-card-content">
+        <div *ngIf="ytd==ytdlist.Category" class="ui-g-12 ui-md-12" >
+          <div class="ui-g-4 ui-md-2">
+            <i class={{ytdlist.IconName}}></i>&nbsp;
+          </div>
+          <div class="ui-g-4 ui-md-5">
+            <span>{{ytdlist.Item}}</span>&nbsp;
+          </div>
+          <div *ngIf="id!=2" class="ui-g-4 ui-md-5" id="blocktop">
+            <span class="blockdiv">{{ytdlist.ItemQty}}</span>
+          </div>
+          <div *ngIf="id===2" class="ui-g-4 ui-md-5">
+            <span>{{ytdlist.ItemQty}}</span>
+          </div>
+            </div>
+             
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngFor ="let ytd of prdctlistdist; let id=index">
+    <div  [ngClass]="id===0? 'ui-g-12 ui-md-4':'ui-g-12 ui-md-8'">
+      <div class="card seccard" >
+        <div class="ui-g-12 ui-md-12">
+          <h6>{{ytd}}</h6>
+        </div>
+        <div class="ui-g-12">
+          <div *ngFor = "let ytdlist of allProductstatslist ; let i=index;">
+            <div *ngIf="ytd==ytdlist.Category" >
+              <div *ngIf="id===0" class="ui-g-12">
+                <div class="ui-g-7 ui-md-7">
+                  <span> {{ytdlist.Item}}</span>
+                </div>
+                <div class="ui-g-5 ui-md-5" id="block">
+                  <span class="blockdiv">{{ytdlist.ItemQty}}</span>
+                </div>
+              </div>
+              <div *ngIf="id===1&&(!(i>6))"   class="ui-g-12 ui-md-6">
+                <div  class="ui-g-12 ui-md-12">
+                  <span>{{ytdlist.Item}}</span>
+                </div>
+                <div class="ui-g-5 ui-md-7" id="block">
+                  <span class="blockdiv">{{ytdlist.ItemQty}}</span>
+                </div>
+                <div  class="ui-g-5 ui-md-5">
+                  <span>{{ytdlist.UOM}}</span>
+                </div>
+             </div>
+             <div  *ngIf="i>6" class="ui-g-12 ui-md-6">
+              <div class="ui-g-12 ui-md-12">
+                <span>{{ytdlist.Item}}</span>
+              </div>
+              <div  class="ui-g-7 ui-md-7" id="block">
+                <span class="blockdiv">{{ytdlist.ItemQty}}</span>
+              </div>
+              <div  class="ui-g-5 ui-md-5">
+                <span>{{ytdlist.UOM}}</span>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
