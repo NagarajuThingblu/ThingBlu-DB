@@ -58,9 +58,13 @@ import { AddNewTaskComponent } from './components/add-new-task/add-new-task.comp
 import{ NewTaskActionService} from '../task/services/new-task-action.service';
 import { RoomtypeMasterComponent } from './components/roomtype-master/roomtype-master.component';
 import{NewRoomGenerationService} from './../task/services/new-room-generation.service';
+import{NewFieldGenerationService} from './../task/services/new-field-generation.service';
 import { ZonesComponent } from './components/zones/zones.component';
 import { RoomsComponent } from './components/rooms/rooms.component';
-import { RoomsTablesComponent } from './components/rooms-tables/rooms-tables.component'
+import { RoomsTablesComponent } from './components/rooms-tables/rooms-tables.component';
+import { FieldsComponent } from './components/fields/fields.component';
+import { SectionsComponent } from './components/sections/sections.component';
+import{NewSectionDetailsActionService} from './../task/services/add-section-details.service';
 
 @NgModule({
   declarations: [
@@ -97,7 +101,10 @@ import { RoomsTablesComponent } from './components/rooms-tables/rooms-tables.com
     RoomtypeMasterComponent,
     ZonesComponent,
     RoomsComponent,
-    RoomsTablesComponent
+    RoomsTablesComponent,
+    FieldsComponent,
+    SectionsComponent
+   
   ],
   imports: [
     SharedModule
@@ -129,7 +136,9 @@ import { RoomsTablesComponent } from './components/rooms-tables/rooms-tables.com
     ForgotPasswordService,
     TaskSettingService,
     NewTaskActionService,
-    NewRoomGenerationService
+    NewRoomGenerationService,
+    NewFieldGenerationService,
+    NewSectionDetailsActionService
   ],
   exports: [
     NewProductTypeComponent,

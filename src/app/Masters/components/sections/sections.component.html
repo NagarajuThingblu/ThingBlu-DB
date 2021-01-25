@@ -1,0 +1,220 @@
+<div class="content-section implementation GridDemo">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header="{{ newSectionResources.pageheading }}" [(collapsed)]="collapsed" [toggleable]="true">
+        <p-header>
+          
+        </p-header>
+        <form  [formGroup]="newSectionEntryForm" (ngSubmit)="onSubmit(newSectionEntryForm.value)">
+          <div class="ui-g ">
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="Field" class="towlable">Field List<span class="star">*</span></label>
+                  <p-dropdown
+                    id="Field"
+                    formControlName="Field"
+                    placeholder="-- Select --"
+                    class="clsControl"
+                    name="Field">
+                  </p-dropdown>
+              </div>
+            </div>
+          </div>
+          <div formArrayName="items" style="position: relative">
+            <div style="width:calc(100% - 20px);float:left;">
+              <p-table [value]="SectionDetailsArr?.controls" id="sectionDetails" name="sectionDetails">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Section
+                      <span class="star">*</span>
+                    </th>
+                    <th>Strain
+                      <span class="star">*</span>
+                    </th>
+                    <th>Plant Count
+                       <span class="star">*</span>
+                    </th>
+                    <th>Year
+                        <span class="star">*</span>
+                    </th>
+                    <th style="width: 80px;">Is Active</th>
+                    <th style="width: 60px;">Action</th>  
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-i="rowIndex" >
+                  <tr [formGroupName]="i">
+                    <td>
+                      <input pInputText
+                        name="section"
+                        id="section"
+                        type="text"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="section"
+                        placeholder="Enter section "
+                        min="0.1">
+                    </td>
+                    <td>
+                      <p-dropdown
+                      id="strain"
+                      formControlName="strain"
+                      placeholder="-- Select --"
+                      [autoWidth]="false"
+                      class="clsControl"
+                      name="strain">
+                    </p-dropdown>
+                  </td>
+                    <td>
+                      <input pInputText
+                        name="PlantCount"
+                        id="PlantCount"
+                        type="number"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="PlantCount"
+                        placeholder="Enter Plant Count "
+                        min="0.1">
+                    </td>
+                    <td>
+                      <input pInputText
+                        name="year"
+                        id="year"
+                        type="number"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="year"
+                        placeholder="Enter year"
+                        min="0.1">
+                    </td>
+                    <td>
+                      <p-checkbox value="true"
+                       formControlName="chkSelectAll" checked="true"
+                      binary="true"></p-checkbox>                                      
+                    </td>
+                    <td>
+                      <a (click)="deleteItem(i)" >                                                    
+                          <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                          </span>
+                      </a>   
+                  </td>
+                  <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
+                    This section already exists.
+                  </div>  
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="SectionDetailsArr.hasError('duplicate')">
+              duplicate entries
+            </div>  
+            <div style="position: absolute;right: 0px;bottom: 42px;">
+              <a (click)="addItem()" *ngIf="newSectionEntryForm.get('items').valid">
+                  <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                  </span>
+              </a>
+            </div>
+            <div class="ui-g" style="width:100%;text-align:right;">
+              <div class="ui-g-12">
+                <button pButton type="submit" label="Save" ></button>
+                <button 
+                    pButton 
+                    (click)="resetForm()" 
+                    type="button" 
+                    label="Clear" 
+                    class="ui-button-secondary">
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </p-panel>
+    </div>
+  </div>
+</div>
+<div class="ui-g">
+  <div class="ui-g-12">
+    <p-panel header="{{ newSectionResources.tableheading }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+      <p-table #dtFieldList [value]="allsectionslist" sortMode="single" [responsive]="true" [paginator]="true"
+    [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
+    (onPage)="onPageChange($event)"
+    [globalFilterFields]="['section','strain','PlantCount','year']">
+        <ng-template pTemplate="caption">
+          <div style="text-align: right">
+            <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+            <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter"
+              (input)="dtFieldList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th [pSortableColumn]="'section'">Section Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'strain'">Strain<p-sortIcon [field]="'Acres'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'PlantCount'"> Plant Count <p-sortIcon [field]="'Description'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'year'"> Year <p-sortIcon [field]="'Description'"></p-sortIcon>
+            </th>
+            <th style="width:100px;">Filters </th>
+          </tr>
+          <tr>
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtRoomList.filter($event.target.value, 'RoomName', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtRoomList.filter($event.target.value, 'RoomName', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtRoomList.filter($event.target.value, 'RoomTypeName', 'contains')" class="clsControl">
+            </th>
+            <!-- <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtRoomList.filter($event.target.value, 'ZoneName', 'contains')" class="clsControl">
+            </th> -->
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtRoomList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+            </th>
+          
+            <th rowspan="2"></th>
+    
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-Field let-rowData let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+            <td>{{section?.section}}</td>
+            <td>{{section?.strain}}</td>
+            <td>{{section?.PlantCount }}</td>
+            <td>{{section?.year }}</td>
+            <td style="width:65px;">
+              <span class="ui-column-title">edit</span>
+              <a href="#" [routerLink]="" (click)="getFieldOnEdit(Field?.FieldId)">
+                <span class="fa fa-edit"></span>
+              </a>
+              <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(Field?.FieldId,Field,1,0)">
+                <span class="fa fa-trash"></span>
+              </a>
+            
+              <div class="clsToggleButtonDiv">
+                <p-toggleButton [(ngModel)]="Field.IsActive" onLabel="Active" offLabel="InActive"
+                  [style]="{'width':'90px'}"
+                  (onChange)="showConformationMessaegForDeactive(Field?.FieldId,Field, rowIndex,0,1)">
+                </p-toggleButton>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft" let-state>
+          <pagination-counts *ngIf="allFieldslist?.length" [inputData]="allFieldslist" [inputEvent]="event">
+          </pagination-counts>
+        </ng-template>
+      </p-table>
+    </p-panel>
+  </div>
+</div>
+<p-growl [(value)]="msg" life='5000'></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" *ngIf="true" class="clsConfirmBox">
+</p-confirmDialog>

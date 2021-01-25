@@ -690,6 +690,7 @@ export class NewProductTypeComponent implements OnInit {
     // this.productTypeDetailsArr.push(this.createItem());
     this.arrayItems = this.newProductTypeEntryForm.get('items') as FormArray;
     this.arrayItems.push(this.createItem());
+    console.log(this.arrayItems)
   }
   deleteItem(index: number) {
     // control refers to your formarray

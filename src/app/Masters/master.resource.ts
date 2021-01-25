@@ -57,8 +57,10 @@ export class MastersResource {
 
 
                 },
-
-
+                addnewsection: {
+                    pageheading: 'Add New Section',
+                    tableheading: 'Section List',
+                },
                 addnewbrand: {
                     pageheading: 'Add New Brand',
                     pageheadinglist: 'Brand List',

@@ -69,6 +69,9 @@ import{RoomsTablesComponent}from './Masters/components/rooms-tables/rooms-tables
 import{ProductionsdashboardComponent}from './dashboard/components/productionsdashboard/productionsdashboard.component';
 import{EmpPerformanceDashboardComponent} from './dashboard/components/emp-performance-dashboard/emp-performance-dashboard.component'
 import{ProductiondashboardsummaryComponent} from './dashboard/components/productiondashboardsummary/productiondashboardsummary.component'
+import { FieldsComponent } from './Masters/components/fields/fields.component';
+import { SectionsComponent } from './Masters/components/sections/sections.component';
+
 const appRoutes: Routes = [
   { path: '', redirectTo: 'default', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
@@ -149,7 +152,10 @@ const appRoutes: Routes = [
       { path: 'RoomTables', component: RoomsTablesComponent, canActivate: [AuthGuard, RoleGuard] },
       {path:'productiondashboard',component:ProductionsdashboardComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'employeeperformancedashBoard', component:EmpPerformanceDashboardComponent, canActivate:[AuthGuard,RoleGuard] },
-      {path:'productiondashboardsummary', component:ProductiondashboardsummaryComponent,canActivate:[AuthGuard,RoleGuard]}
+      {path:'productiondashboardsummary', component:ProductiondashboardsummaryComponent,canActivate:[AuthGuard,RoleGuard]},
+      {path:'FieldsComponent', component:FieldsComponent},
+      {path:'SectionsComponent', component:SectionsComponent},
+      
 
     ]
   }

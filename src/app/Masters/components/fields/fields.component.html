@@ -1,0 +1,184 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header={{pageheading}}  [toggleable]="true">
+        <p-header>
+
+        </p-header>
+        <form [formGroup]="Fieldtypemassterform" (ngSubmit)="SaveFields(Fieldtypemassterform.value)">
+          <div class="ui-g">
+            <div class="ui-g-12 ui-md-12" style="padding: 0">
+
+              <a [routerLink]="" *ngIf="backUrl" class="btn-link" (click)="backToLot()"
+                style="float: right;padding-right: 21px;text-decoration: underline">
+                << Back</a>
+            </div>
+          </div>
+          <div class="ui-g">
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <div class="le-su-12">
+                  <label for="enterFieldName">Field Name<span class="star">*</span></label>:
+                  <input pInputText name="FieldName" id="FieldName" autocomplete="off" placeholder="Enter Field Name"
+                  type="text" class="clsControl" formControlName="FieldName" />
+                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                  *ngIf="!Fieldtypemassterform.controls['FieldName'].valid&&Fieldtypemassterform.controls['FieldName'].dirty">
+                  <span
+                    *ngIf="Fieldtypemassterform.controls['FieldName'].errors['required']">filed required</span>
+                  <span
+                    *ngIf="Fieldtypemassterform.controls['FieldName'].errors['maxlength']">{{newRoomtyperesource.RoomRequired}}</span>
+                  <span
+                    *ngIf="Fieldtypemassterform.controls['FieldName'].errors['whitespace']">{{newRoomtyperesource.RoomRequired}}</span>
+                </div>
+                </div>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <div class="le-su-12">
+                  <label for="enterAcres">Acres<span class="star">*</span>:
+                  </label>
+
+                  <input pInputText name="Acres" id="Acres" autocomplete="off" placeholder="Enter Number of Acres"
+                    type="number" class="clsControl" formControlName="Acres" />
+
+                  <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!Fieldtypemassterform.controls['Acres'].valid&&Fieldtypemassterform.controls['Acres'].dirty">
+                    <span
+                      *ngIf="Fieldtypemassterform.controls['Acres'].errors['required']">{{newRoomtyperesource.RoomRequired}}</span>
+                    <span
+                      *ngIf="Fieldtypemassterform.controls['Acres'].errors['maxlength']">{{newRoomtyperesource.RoomRequired}}</span>
+                    <span
+                      *ngIf="Fieldtypemassterform.controls['Acres'].errors['whitespace']">{{newRoomtyperesource.RoomRequired}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--Description-->
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <div class="le-su-12">
+                  <label for="description">Description<span class="star"></span>:
+                  </label>
+
+                  <input pInputText name="description" id="description" type="text" autocomplete="off"
+                    class="clsControl" placeholder="Enter Field Description" formControlName="description" />
+                </div>
+              </div>
+            </div>
+            
+            <!-- IsActive -->
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label></label>
+                <div class="clear"></div>
+
+                <p-checkbox value="true" [(ngModel)]="chkIsActive" label="{{globalResource.IsActiveFlag}}"
+                  formControlName="chkIsActive" binary="true"></p-checkbox>
+              </div>
+            </div>
+        <!--End IsActive -->
+
+          <div class="ui-g-12 ui-md-12" style="text-align:right;">
+            <div class="paddingRL"> 
+              <!-- <button pButton type="submit" name="btnLogin" label="Add New" (click)="resetAll()" style="align-content: right"></button> -->
+              <p-button type="submit" label="{{ saveButtontext}}" id="btnRoomSave" name="btnroomSave"></p-button>
+
+              <button pButton (click)="resetAll()" type="button" label="{{ clear }}" class="ui-button-secondary">
+              </button>
+            </div>
+          </div>
+         </div>
+    </form>
+  </p-panel>
+</div>
+</div>
+
+<div class="ui-g">
+<div class="ui-g-12">
+  <p-panel header="Field List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+    <p-table #dtFieldList [value]="allRoomtypelist" sortMode="single" [responsive]="true" [paginator]="true"
+    [rows]="10" sortField="FieldId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
+    (onPage)="onPageChange($event)"
+    [globalFilterFields]="['FieldName','Acres','Description']">
+    <ng-template pTemplate="caption">
+      <div style="text-align: right">
+        <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+        <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter"
+          (input)="dtFieldList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th [pSortableColumn]="'FieldName'">Field Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
+        </th>
+        <th [pSortableColumn]="'Acres'">Acres<p-sortIcon [field]="'Acres'"></p-sortIcon>
+        </th>
+        <!-- <th [pSortableColumn]="'ZoneName'"> ZoneName <p-sortIcon [field]="'ZoneName'"></p-sortIcon>
+        </th> -->
+        <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon>
+        </th>
+        
+        <th style="width:100px;">Filters </th>
+      </tr>
+
+      <tr>
+        <th>
+          <input pInputText type="text" autocomplete="off"
+            (input)="dtRoomList.filter($event.target.value, 'RoomName', 'contains')" class="clsControl">
+        </th>
+        <th>
+          <input pInputText type="text" autocomplete="off"
+            (input)="dtRoomList.filter($event.target.value, 'RoomTypeName', 'contains')" class="clsControl">
+        </th>
+        <!-- <th>
+          <input pInputText type="text" autocomplete="off"
+            (input)="dtRoomList.filter($event.target.value, 'ZoneName', 'contains')" class="clsControl">
+        </th> -->
+        <th>
+          <input pInputText type="text" autocomplete="off"
+            (input)="dtRoomList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+        </th>
+      
+        <th rowspan="2"></th>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-Field let-rowData let-columns="columns" let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+        
+
+        <td>{{Field?.FieldName}}</td>
+        <td>{{Field?.Acres}}</td>
+        <td>{{Field?.Description }}</td>
+       
+        <td style="width:65px;">
+          <span class="ui-column-title">edit</span>
+          <a href="#" [routerLink]="" (click)="getFieldOnEdit(Field?.FieldId)">
+            <span class="fa fa-edit"></span>
+          </a>
+          <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(Field?.FieldId,Field,1,0)">
+            <span class="fa fa-trash"></span>
+          </a>
+        
+          <div class="clsToggleButtonDiv">
+            <p-toggleButton [(ngModel)]="Field.IsActive" onLabel="Active" offLabel="InActive"
+              [style]="{'width':'90px'}"
+              (onChange)="showConformationMessaegForDeactive(Field?.FieldId,Field, rowIndex,0,1)">
+            </p-toggleButton>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft" let-state>
+      <pagination-counts *ngIf="allFieldslist?.length" [inputData]="allFieldslist" [inputEvent]="event">
+      </pagination-counts>
+    </ng-template>
+  </p-table>
+  </p-panel>
+</div>
+</div>
+</div>
+<p-growl [(value)]="msg" life='5000'></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" *ngIf="true" class="clsConfirmBox">
+</p-confirmDialog>
