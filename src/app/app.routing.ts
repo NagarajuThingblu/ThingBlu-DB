@@ -153,8 +153,8 @@ const appRoutes: Routes = [
       {path:'productiondashboard',component:ProductionsdashboardComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'employeeperformancedashBoard', component:EmpPerformanceDashboardComponent, canActivate:[AuthGuard,RoleGuard] },
       {path:'productiondashboardsummary', component:ProductiondashboardsummaryComponent,canActivate:[AuthGuard,RoleGuard]},
-      {path:'FieldsComponent', component:FieldsComponent},
-      {path:'SectionsComponent', component:SectionsComponent},
+      {path:'fields', component:FieldsComponent, canActivate:[AuthGuard,RoleGuard]},
+      {path:'sections', component:SectionsComponent,canActivate:[AuthGuard,RoleGuard]},
       
 
     ]
