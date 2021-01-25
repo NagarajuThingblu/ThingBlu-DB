@@ -142,7 +142,7 @@ public RoomTypeDisabled:any;
         else if (data == 'duplicate') {
           this.msg.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.newFieldresource.FieldAlreadyExists })
         }
-        else if (String(data.toLocaleUpperCase() === 'NOTUPDATED')) {
+        else if (String(data === 'NOTUPDATED')) {
           this.msg.push({
             severity: 'warn', summary: this.globalResource.applicationmsg,
             detail: this.newFieldresource.noupdate
