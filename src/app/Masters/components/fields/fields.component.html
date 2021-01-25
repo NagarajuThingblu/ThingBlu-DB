@@ -26,9 +26,9 @@
                   <span
                     *ngIf="Fieldtypemassterform.controls['FieldName'].errors['required']">filed required</span>
                   <span
-                    *ngIf="Fieldtypemassterform.controls['FieldName'].errors['maxlength']">{{newRoomtyperesource.RoomRequired}}</span>
+                    *ngIf="Fieldtypemassterform.controls['FieldName'].errors['maxlength']">{{newFieldresource.FieldRequired}}</span>
                   <span
-                    *ngIf="Fieldtypemassterform.controls['FieldName'].errors['whitespace']">{{newRoomtyperesource.RoomRequired}}</span>
+                    *ngIf="Fieldtypemassterform.controls['FieldName'].errors['whitespace']">{{newFieldresource.FieldRequired}}</span>
                 </div>
                 </div>
               </div>
@@ -45,11 +45,11 @@
                   <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                     *ngIf="!Fieldtypemassterform.controls['Acres'].valid&&Fieldtypemassterform.controls['Acres'].dirty">
                     <span
-                      *ngIf="Fieldtypemassterform.controls['Acres'].errors['required']">{{newRoomtyperesource.RoomRequired}}</span>
+                      *ngIf="Fieldtypemassterform.controls['Acres'].errors['required']">{{newFieldresource.FieldRequired}}</span>
                     <span
-                      *ngIf="Fieldtypemassterform.controls['Acres'].errors['maxlength']">{{newRoomtyperesource.RoomRequired}}</span>
+                      *ngIf="Fieldtypemassterform.controls['Acres'].errors['maxlength']">{{newFieldresource.FieldRequired}}</span>
                     <span
-                      *ngIf="Fieldtypemassterform.controls['Acres'].errors['whitespace']">{{newRoomtyperesource.RoomRequired}}</span>
+                      *ngIf="Fieldtypemassterform.controls['Acres'].errors['whitespace']">{{newFieldresource.FieldRequired}}</span>
                   </div>
                 </div>
               </div>
@@ -82,7 +82,7 @@
           <div class="ui-g-12 ui-md-12" style="text-align:right;">
             <div class="paddingRL"> 
               <!-- <button pButton type="submit" name="btnLogin" label="Add New" (click)="resetAll()" style="align-content: right"></button> -->
-              <p-button type="submit" label="{{ saveButtontext}}" id="btnRoomSave" name="btnroomSave"></p-button>
+              <p-button type="submit" label="{{ saveButtontext}}" id="btnFieldSave" name="btnFieldSave"></p-button>
 
               <button pButton (click)="resetAll()" type="button" label="{{ clear }}" class="ui-button-secondary">
               </button>
@@ -97,7 +97,7 @@
 <div class="ui-g">
 <div class="ui-g-12">
   <p-panel header="Field List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-    <p-table #dtFieldList [value]="allRoomtypelist" sortMode="single" [responsive]="true" [paginator]="true"
+    <p-table #dtFieldList [value]="allFieldslist" sortMode="single" [responsive]="true" [paginator]="true"
     [rows]="10" sortField="FieldId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
     (onPage)="onPageChange($event)"
     [globalFilterFields]="['FieldName','Acres','Description']">
@@ -125,11 +125,11 @@
       <tr>
         <th>
           <input pInputText type="text" autocomplete="off"
-            (input)="dtRoomList.filter($event.target.value, 'RoomName', 'contains')" class="clsControl">
+            (input)="dtFieldList.filter($event.target.value, 'FieldName', 'contains')" class="clsControl">
         </th>
         <th>
           <input pInputText type="text" autocomplete="off"
-            (input)="dtRoomList.filter($event.target.value, 'RoomTypeName', 'contains')" class="clsControl">
+            (input)="dtFieldList.filter($event.target.value, 'Acres', 'contains')" class="clsControl">
         </th>
         <!-- <th>
           <input pInputText type="text" autocomplete="off"
@@ -137,7 +137,7 @@
         </th> -->
         <th>
           <input pInputText type="text" autocomplete="off"
-            (input)="dtRoomList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+            (input)="dtFieldList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
         </th>
       
         <th rowspan="2"></th>

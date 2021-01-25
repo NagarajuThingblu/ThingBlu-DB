@@ -820,7 +820,37 @@ export class MastersResource {
                     widthrequired:'Breadth Required',
                     Heightlabel:'Height',
                     HeightRequired:'Height required'
-                }
+                },
+                addNewFields:{
+                    pageheading:'New Field',
+                    enterFieldType:'Field Type',
+                    FieldRequired:'Field  Required',
+                    // Roomypenotpresent: 'Field type is deleted or is inactive.',
+                    // Zone:'Zone',
+                    // viewaddZones: 'View/Add Zones',
+                    enterAcres:'Acres',
+                    AcresRequired:'Acres Required',
+                    // RoomLength:"Must not more than 50 Characters",
+                    enterdescription:'Field Description',
+                    descriptionrequired:'Description type required',
+                    descriptionLength:'Must not more than 500 characters',
+                    newFieldSavedSuccess:'Field saved successfully',
+                    newFieldInactivated:'Field Inactivated successfully',
+                    newFieldActivated:'Field Activated successfully',
+                    newFieldDeleted:'Field Deleted Scuccessfully',
+                    FieldAlreadyExists:'Field already Exists',
+                    FieldAssigned:'Can not delete this Field. It is in use',
+                    noupdate:'Can not update this Field.Might be it does not exist',
+                    notactivated:'Can not activate this Field.Might be it deos not exist',
+                    notinactivated:'Can not Inactivate this Field .Might be it does not exist',
+                    notdeleted:'Can not delete this Field.Might be it does not exist',
+                    FieldIsInactive:'Can not activate this Field.May be Field is Inactive',
+                    deleteFieldMsg: 'Do you want to delete this Field?',
+                    activeFieldMsg: 'Do you want to activate this Field?',
+                    deactivateFieldMsg: 'Do you want to inactivate this Field?',
+                    FieldDeletedSuccess: 'Field deleted successfully.',
+                    // FieldtypeOrZonesIsInactive: 'Can not activate this Field. Might be Field is inactive.',
+                },
             }
         };
     }

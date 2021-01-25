@@ -23,7 +23,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./fields.component.css']
 })
 export class FieldsComponent implements OnInit {
-  public newRoomtyperesource:any;
+  public newFieldresource:any;
   // public Roomtypemassterform:any;
   public globalResource:any;
   public submitted: boolean;
@@ -39,7 +39,7 @@ export class FieldsComponent implements OnInit {
   public event: any;
   newFielddetails: {
     Description: null,
-    Acres: null,
+    Acres:null,
     FieldName: null
 }
   pageheading: any;
@@ -48,7 +48,7 @@ public Zonestypes:any[];
 public FieldOnEdit:any;
 public RoomTypeDisabled:any;
   Fieldtypemassterform: FormGroup;
-  Fieldforupdate:  any = 0;;
+  Fieldforupdate:  any = 0;
   constructor(private fb: FormBuilder,
     private loadService: LoaderService,
     private Cookieservice: CookieService,
@@ -65,8 +65,8 @@ public RoomTypeDisabled:any;
   ngOnInit() {
     this.chkIsActive=1;
     this.pageheading="Add New Field";
-    this.appcomponent.setTitle('Rooms');
-    this.newRoomtyperesource=MastersResource.getResources().en.addNewRooms;
+    this.appcomponent.setTitle('Fields');
+    this.newFieldresource=MastersResource.getResources().en.addNewFields;
     this.globalResource=GlobalResources.getResources().en;
     this.loadService.display(false);
     this._Cookieservice=this.appCommonservice.getUserProfile();
@@ -75,10 +75,10 @@ public RoomTypeDisabled:any;
     this.GetFields();
     this.Fieldtypemassterform= this.fb.group({
       'FieldName': new FormControl(null,[Validators.required]),
-      'Acres': new FormControl(null,[Validators.required,Validators.minLength(1),Validators.maxLength(50)]),
+      'Acres': new FormControl(null,[Validators.required]),
       'description': new FormControl(null,[Validators.maxLength(500)]),
       'chkIsActive': new FormControl(null)
-
+      
     });
 
   }
@@ -110,10 +110,10 @@ public RoomTypeDisabled:any;
       return;
    }
     const FieldDetailsForAPI = {
-      Fields: {
+      fields: {
         FieldId: this.Fieldforupdate,
         FieldName: this.appCommonservice.trimString(this.Fieldtypemassterform.value.FieldName),
-        Acres: this.appCommonservice.trimString(this.Fieldtypemassterform.value.Acres),
+        Acres:this.Fieldtypemassterform.value.Acres,
         Description: this.appCommonservice.trimString(this.Fieldtypemassterform.value.description),
         VirtualRoleId: this._Cookieservice.VirtualRoleId,
         IsActive: this.Fieldtypemassterform.value.chkIsActive,
@@ -131,7 +131,7 @@ public RoomTypeDisabled:any;
         if (data[0]['Result'] == 'success') {
           this.msg.push({
             severity: 'success', summary: this.globalResource.applicationmsg,
-            detail: this.newRoomtyperesource.newRoomSavedSuccess
+            detail: this.newFieldresource.newFieldSavedSuccess
           });
           this.resetAll();
           this.GetFields();
@@ -140,12 +140,12 @@ public RoomTypeDisabled:any;
           this.msg.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.error })
         }
         else if (data == 'duplicate') {
-          this.msg.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.newRoomtyperesource.RoomAlreadyExists })
+          this.msg.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.newFieldresource.FieldAlreadyExists })
         }
         else if (String(data.toLocaleUpperCase() === 'NOTUPDATED')) {
           this.msg.push({
             severity: 'warn', summary: this.globalResource.applicationmsg,
-            detail: this.newRoomtyperesource.noupdate
+            detail: this.newFieldresource.noupdate
           });
         }
         else {
@@ -170,7 +170,7 @@ public RoomTypeDisabled:any;
   resetAll() {
     // this.RoomTypeforupdate = 0;
     this.saveButtontext = 'save';
-    this.pageheading = 'Add New Room';
+    this.pageheading = 'Add New Field';
     this.clear = 'Clear';
     this.resetForm();
   }
@@ -206,12 +206,6 @@ public RoomTypeDisabled:any;
        this.pageheading = 'Edit Field';
 
       
-      //  if (!this.RoomTypes.filter(item => item.value === this.FieldOnEdit[0].RoomTypeId).length) {
-      //   this.RoomTypes.push({ label: this.FieldOnEdit[0].RoomTypeName, value: this.FieldOnEdit[0].RoomTypeId });
-      //  }
-     
-      //   Roomtype.patchValue(this.FieldOnEdit[0].RoomTypeId);
-      //  this.RoomTypeDisabled = true;
        
      } else {
      this.allFieldslist = [];
@@ -220,7 +214,7 @@ public RoomTypeDisabled:any;
   }
   showConformationMessaegForDelete(FieldId, Field, IsDeleted, ActiveInactiveFlag) {
     let strMessage: any;
-    strMessage = this.newRoomtyperesource.deleteRoomMsg;
+    strMessage = this.newFieldresource.deleteFieldMsg;
     this.confirmationService.confirm({
       message: strMessage,
       header: 'Confirmation',
@@ -258,48 +252,48 @@ public RoomTypeDisabled:any;
             if (data[0]['Result'] === 'success' && ActiveInactiveFlag === 1) {
               if (Strain.IsActive === true) {
                 this.msg.push({severity: 'success', summary: this.globalResource.applicationmsg,
-                detail:  this.newRoomtyperesource.newRoomActivated});
+                detail:  this.newFieldresource.newFieldActivated});
                 this.resetAll();
                 this.GetFields();
                 this.loadService.display(false);
               } else {
                 this.msg.push({severity: 'success', summary: this.globalResource.applicationmsg,
-                detail:  this.newRoomtyperesource.newRoomInactivated});
+                detail:  this.newFieldresource.newFieldInactivated});
                 this.resetAll();
                 this.GetFields();
                 this.loadService.display(false);
               }
             } else if (data[0]['Result'] === 'success' && IsDeleted === 1) {
               this.msg.push({severity: 'success', summary: this.globalResource.applicationmsg,
-              detail:  this.newRoomtyperesource.RoomDeletedSuccess});
+              detail:  this.newFieldresource.FieldDeletedSuccess});
               this.resetAll();
               this.GetFields();
               this.loadService.display(false);
-            } else if (String(data.toLocaleUpperCase()) === 'NOTUPDATED') {
+            } else if (String(data) === 'NOTUPDATED') {
               if (IsDeleted === 1) {
                 this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-                detail: this.newRoomtyperesource.notdeleted });
+                detail: this.newFieldresource.notdeleted });
                 this.loadService.display(false);
               } else if (Strain.IsActive === true) {
                 this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-                detail: this.newRoomtyperesource.notactivated });
+                detail: this.newFieldresource.notactivated });
                 Strain.IsActive = !Strain.IsActive;
                 this.loadService.display(false);
               } else {
                 this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-                detail: this.newRoomtyperesource.notinactivated });
+                detail: this.newFieldresource.notinactivated });
                 Strain.IsActive = !Strain.IsActive;
                 this.loadService.display(false);
               }
             } else if (String(data.toLocaleUpperCase()) === 'ROOMTYPEORZONEISINACTIVE') {
                 this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-                detail: this.newRoomtyperesource.roomtypeOrZonesIsInactive });
+                detail: this.newFieldresource.FieldIsInactive });
                 Strain.IsActive = !Strain.IsActive;
                 this.loadService.display(false);
             } else if (data === 'Failure') {
               this.msg.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
             } else if (data === 'Duplicate') {
-              this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.newRoomtyperesource.RoomAlreadyExists });
+              this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.newFieldresource.FieldAlreadyExists });
             } else if (data === 'InUse') {
               this.msg = [];
               this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg,
@@ -322,9 +316,9 @@ public RoomTypeDisabled:any;
     console.log(Strain);
     let strMessage: any;
     if (this.allFieldslist[rowIndex].IsActive === true) {
-      strMessage = this.newRoomtyperesource.activeRoomMsg ;
+      strMessage = this.newFieldresource.activeFieldMsg ;
     } else {
-      strMessage = this.newRoomtyperesource.deactivateRoomMsg ;
+      strMessage = this.newFieldresource.deactivateFieldMsg ;
     }
     this.confirmationService.confirm({
       message: strMessage,

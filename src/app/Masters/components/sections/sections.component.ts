@@ -34,7 +34,7 @@ export class SectionsComponent implements OnInit {
   Fields: any[];
   chkIsActive: boolean;
   strains: any[];
-  section: any[];
+  // section: any[];
   public saveButtonText: any;
   public newProductTypeResources: any;
   public newSectionResources: any;
@@ -47,13 +47,7 @@ export class SectionsComponent implements OnInit {
  
   collapsed: any;
 
- 
- 
-
-
-
-  
-    newSectionDetails = {
+  newSectionDetails = {
       Field: null,
       section: null,
       strain: null,
@@ -61,7 +55,9 @@ export class SectionsComponent implements OnInit {
       year: null,
       
     };
-
+    private globalData = {
+      Fields: [],
+    };
    
   public newEmployeeResources: any;
 
@@ -77,7 +73,7 @@ export class SectionsComponent implements OnInit {
     private scrolltopservice: ScrollTopService,
     private router: Router
   ) {
-   
+    this.getAllFields();
    
   }
   items = new FormArray([], this.customGroupValidation );
@@ -97,7 +93,17 @@ export class SectionsComponent implements OnInit {
    
   }
  
-
+  getAllFields() {
+    this.dropdownDataService.getFields().subscribe(
+      data => {
+        this.globalData.Fields = data;
+        this.Fields = this.dropdwonTransformService.transform(data.filter(x => x.ParentId === 0), 'FieldName', 'FieldId', '-- Select --');
+        // this.SubBrandInfo.allBrands = this.brands;
+        // this.getSubBrands();
+      } ,
+      error => { console.log(error); },
+      () => console.log('Get all brands complete'));
+  }
  
 
   

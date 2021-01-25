@@ -31,7 +31,7 @@ addNewField(Fieldtypemassterform:any)
 }
 GetFieldList()
 {
-  const url='api/RoomType/GetFieldsList';
+  const url='api/Grower/GetFieldsList';
     let params = new HttpParams();
     params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
     return this.http.get(url,{params: params}).map(data=>data);
