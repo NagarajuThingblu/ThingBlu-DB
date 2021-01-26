@@ -128,7 +128,7 @@ public RoomTypeDisabled:any;
       this.loadService.display(false);
       this.NewFieldgeneration.addNewField(FieldDetailsForAPI).subscribe(data=>{
         this.msg=[];
-        if (data[0]['Result'] == 'success') {
+        if (data[0]['Result'] == 'Success') {
           this.msg.push({
             severity: 'success', summary: this.globalResource.applicationmsg,
             detail: this.newFieldresource.newFieldSavedSuccess

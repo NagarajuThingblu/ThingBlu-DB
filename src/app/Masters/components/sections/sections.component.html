@@ -62,6 +62,7 @@
                       placeholder="-- Select --"
                       [autoWidth]="false"
                       class="clsControl"
+                      [options]="strains"
                       name="strain">
                     </p-dropdown>
                   </td>
@@ -72,7 +73,7 @@
                         type="number"
                         autocomplete="off"
                         class="clsControl"       
-                        formControlName="PlantCount"
+                        formControlName="plantcount"
                         placeholder="Enter Plant Count "
                         min="0.1">
                     </td>
@@ -148,28 +149,28 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th [pSortableColumn]="'section'">Section Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
+            <th [pSortableColumn]="'SectionName'">Section Name <p-sortIcon [field]="'SectionName'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'strain'">Strain<p-sortIcon [field]="'Acres'"></p-sortIcon>
+            <th [pSortableColumn]="'StrainName'">Strain<p-sortIcon [field]="'StrainName'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'PlantCount'"> Plant Count <p-sortIcon [field]="'Description'"></p-sortIcon>
+            <th [pSortableColumn]="'PlantsCount'"> Plant Count <p-sortIcon [field]="'PlantsCount'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'year'"> Year <p-sortIcon [field]="'Description'"></p-sortIcon>
+            <th [pSortableColumn]="'Year'"> Year <p-sortIcon [field]="'Year'"></p-sortIcon>
             </th>
             <th style="width:100px;">Filters </th>
           </tr>
           <tr>
             <th>
               <input pInputText type="text" autocomplete="off"
-                (input)="dtRoomList.filter($event.target.value, 'RoomName', 'contains')" class="clsControl">
+                (input)="dtRoomList.filter($event.target.value, 'SectionName', 'contains')" class="clsControl">
             </th>
             <th>
               <input pInputText type="text" autocomplete="off"
-                (input)="dtRoomList.filter($event.target.value, 'RoomName', 'contains')" class="clsControl">
+                (input)="dtRoomList.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
             </th>
             <th>
               <input pInputText type="text" autocomplete="off"
-                (input)="dtRoomList.filter($event.target.value, 'RoomTypeName', 'contains')" class="clsControl">
+                (input)="dtRoomList.filter($event.target.value, 'PlantsCount', 'contains')" class="clsControl">
             </th>
             <!-- <th>
               <input pInputText type="text" autocomplete="off"
@@ -177,45 +178,45 @@
             </th> -->
             <th>
               <input pInputText type="text" autocomplete="off"
-                (input)="dtRoomList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+                (input)="dtRoomList.filter($event.target.value, 'Year', 'contains')" class="clsControl">
             </th>
           
             <th rowspan="2"></th>
     
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-Field let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <ng-template pTemplate="body" let-section let-rowData let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-            <td>{{section?.section}}</td>
-            <td>{{section?.strain}}</td>
-            <td>{{section?.PlantCount }}</td>
-            <td>{{section?.year }}</td>
+            <td>{{section?.SectionName}}</td>
+            <td>{{section?.StrainName}}</td>
+            <td>{{section?.PlantsCount }}</td>
+            <td>{{section?.Year }}</td>
             <td style="width:65px;">
               <span class="ui-column-title">edit</span>
-              <a href="#" [routerLink]="" (click)="getFieldOnEdit(Field?.FieldId)">
+              <a href="#" [routerLink]="" (click)="getFieldOnEdit(section?.SectionId)">
                 <span class="fa fa-edit"></span>
               </a>
-              <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(Field?.FieldId,Field,1,0)">
+              <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(section?.SectionId,section,1,0)">
                 <span class="fa fa-trash"></span>
               </a>
             
               <div class="clsToggleButtonDiv">
-                <p-toggleButton [(ngModel)]="Field.IsActive" onLabel="Active" offLabel="InActive"
+                <p-toggleButton [(ngModel)]="section.IsActive" onLabel="Active" offLabel="InActive"
                   [style]="{'width':'90px'}"
-                  (onChange)="showConformationMessaegForDeactive(Field?.FieldId,Field, rowIndex,0,1)">
+                  (onChange)="showConformationMessaegForDeactive(section?.SectionId,section, rowIndex,0,1)">
                 </p-toggleButton>
               </div>
             </td>
           </tr>
         </ng-template>
         <ng-template pTemplate="paginatorleft" let-state>
-          <pagination-counts *ngIf="allFieldslist?.length" [inputData]="allFieldslist" [inputEvent]="event">
+          <pagination-counts *ngIf="allsectionslist?.length" [inputData]="allsectionslist" [inputEvent]="event">
           </pagination-counts>
         </ng-template>
       </p-table>
     </p-panel>
   </div>
 </div>
-<p-growl [(value)]="msg" life='5000'></p-growl>
+<p-growl [(value)]="msgs" life='5000'></p-growl>
 <p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" *ngIf="true" class="clsConfirmBox">
 </p-confirmDialog>

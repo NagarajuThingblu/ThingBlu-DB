@@ -7,6 +7,7 @@ import { DataService } from '../../shared/services/DataService.service';
 import { CookieService } from 'ngx-cookie-service';
 import { UserModel } from '../../shared/models/user.model';
 import { AppCommonService } from '../../shared/services/app-common.service';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable()
 export class NewSectionDetailsActionService {
@@ -27,10 +28,19 @@ export class NewSectionDetailsActionService {
   });
 
   addNewSectionEntry(NewSectionForApi: any) {
-      const url = 'api/ClientProductType/AddUpdateSections';
+      const url = 'api/Grower/AddUpdateSections';
 
       return this.http.post(url, NewSectionForApi, this.headers)
       // .do(data =>console.log('All : ' + JSON.stringify(data)))
      .map(data =>  data );
+    }
+
+    Getsectionlist()
+    {
+      const url='api/Grower/GetSectionsList';
+  let params = new HttpParams();
+  params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
+  return this.http.get(url,{params: params}).map(data=>data);
+
     }
 }

@@ -60,6 +60,7 @@ export class SectionsComponent implements OnInit {
     };
    
   public newEmployeeResources: any;
+  public allsectionslist:any;
 
   constructor(
     private fb: FormBuilder,
@@ -74,6 +75,8 @@ export class SectionsComponent implements OnInit {
     private router: Router
   ) {
     this.getAllFields();
+    this.getAllStrains();
+    this.getAllsectionlist();
    
   }
   items = new FormArray([], this.customGroupValidation );
@@ -97,7 +100,7 @@ export class SectionsComponent implements OnInit {
     this.dropdownDataService.getFields().subscribe(
       data => {
         this.globalData.Fields = data;
-        this.Fields = this.dropdwonTransformService.transform(data.filter(x => x.ParentId === 0), 'FieldName', 'FieldId', '-- Select --');
+        this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --');
         // this.SubBrandInfo.allBrands = this.brands;
         // this.getSubBrands();
       } ,
@@ -105,6 +108,25 @@ export class SectionsComponent implements OnInit {
       () => console.log('Get all brands complete'));
   }
  
+  getAllStrains() {
+    this.dropdownDataService.getStrains().subscribe(
+      data => {
+        
+        if (data) {
+        
+        this.strains = this.dropdwonTransformService.transform(data, 'StrainName', 'StrainId', '-- Select --');
+        }
+      } ,
+      error => { console.log(error); },
+      () => console.log('Get all strains complete'));
+  }
+  getAllsectionlist()
+  {
+this.newSectionDetailsActionService.Getsectionlist().subscribe(
+  data=>{
+    this.allsectionslist=data;
+})
+  }
 
   
  resetForm() {
@@ -137,17 +159,17 @@ export class SectionsComponent implements OnInit {
             VirtualRoleId: Number(this._cookieService.VirtualRoleId),
             IsActive: this.newSectionEntryForm.value.chkSelectAll ? 1 : 0,
         },
-        SectionDetails: []
+        SectionsTypeDetails: []
       };
 
 
     this.SectionDetailsArr.controls.forEach((element, index) => {
 
-        newSectionForApi.SectionDetails.push({
+        newSectionForApi.SectionsTypeDetails.push({
             SectionName: element.value.section,
-            StrainId:  this.newSectionEntryForm.value.strain,
+            StrainId:  element.value.strain,
             IsActive: element.value.chkSelectAll ? 1 : 0,
-            PlantCount:element.value.PlantCount,
+            PlantsCount:element.value.plantcount,
             Year:element.value.year
             
          });
@@ -165,7 +187,7 @@ export class SectionsComponent implements OnInit {
               this.msgs = [];
               if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
                 this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
-                detail: this.newProductTypeResources.newproductsavedsuccess });
+                detail: this.newSectionResources.newsectionsavedsuccess });
                
                 this.resetForm();
               } else if (String(data).toLocaleUpperCase() === 'FAILURE') {

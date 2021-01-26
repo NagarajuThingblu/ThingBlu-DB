@@ -60,6 +60,7 @@ export class MastersResource {
                 addnewsection: {
                     pageheading: 'Add New Section',
                     tableheading: 'Section List',
+                    newsectionsavedsuccess:'secton saved successfully'
                 },
                 addnewbrand: {
                     pageheading: 'Add New Brand',
