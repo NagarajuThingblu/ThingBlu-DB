@@ -114,7 +114,7 @@ public RoomTypeDisabled:any;
         FieldId: this.Fieldforupdate,
         FieldName: this.appCommonservice.trimString(this.Fieldtypemassterform.value.FieldName),
         Acres:this.Fieldtypemassterform.value.Acres,
-        Description: this.appCommonservice.trimString(this.Fieldtypemassterform.value.description),
+        FieldDescription: this.appCommonservice.trimString(this.Fieldtypemassterform.value.description),
         VirtualRoleId: this._Cookieservice.VirtualRoleId,
         IsActive: this.Fieldtypemassterform.value.chkIsActive,
         ClientId: this._Cookieservice.ClientId,
@@ -193,14 +193,16 @@ public RoomTypeDisabled:any;
       //  const Roomtype = this.Fieldtypemassterform.controls['RoomType'];
        //const Zone = this.Roomtypemassterform.controls['Zones'];
        const Field = this.Fieldtypemassterform.controls['FieldName'];
+       const Acres = this.Fieldtypemassterform.controls['Acres'];
        const description = this.Fieldtypemassterform.controls['description'];
      
        const chkIsActive = this.Fieldtypemassterform.controls['chkIsActive'];
         
        Field.patchValue(this.FieldOnEdit[0].FieldName);
-       
+       Acres.patchValue(this.FieldOnEdit[0].Acres);
+       description.patchValue(this.FieldOnEdit[0].Description);
         chkIsActive.patchValue(this.FieldOnEdit[0].IsActive);
-        description.patchValue(this.FieldOnEdit[0].Description);
+       
         this.clear = 'Cancel';
        this.saveButtontext = 'Update';
        this.pageheading = 'Edit Field';
@@ -226,18 +228,18 @@ public RoomTypeDisabled:any;
       }
   });
   }
-  activateDeleteRoom( StrainId, Strain,IsDeleted, ActiveInactiveFlag) {
+  activateDeleteRoom(FieldId, Field,IsDeleted, ActiveInactiveFlag) {
     this.submitted = true;
     // tslint:disable-next-line:prefer-const
     // console.log(Strain);
 
       const FieldDetailsForApi = {
-      Fields: {
-        FieldId: StrainId,
+      fields: {
+        FieldId: FieldId,
         // RoomTypeId: Field.RoomTypeId,
         VirtualRoleId: this._Cookieservice.VirtualRoleId,
         IsDeleted: IsDeleted,
-        IsActive: Strain.IsActive,
+        IsActive: Field.IsActive,
         ActiveInactive: ActiveInactiveFlag,
         ClientId: this._Cookieservice.ClientId,
       }
@@ -250,7 +252,7 @@ public RoomTypeDisabled:any;
             // console.log(data);
             this.msg = [];
             if (data[0]['Result'] === 'success' && ActiveInactiveFlag === 1) {
-              if (Strain.IsActive === true) {
+              if (Field.IsActive === true) {
                 this.msg.push({severity: 'success', summary: this.globalResource.applicationmsg,
                 detail:  this.newFieldresource.newFieldActivated});
                 this.resetAll();
@@ -274,21 +276,21 @@ public RoomTypeDisabled:any;
                 this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                 detail: this.newFieldresource.notdeleted });
                 this.loadService.display(false);
-              } else if (Strain.IsActive === true) {
+              } else if (Field.IsActive === true) {
                 this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                 detail: this.newFieldresource.notactivated });
-                Strain.IsActive = !Strain.IsActive;
+                Field.IsActive = !Field.IsActive;
                 this.loadService.display(false);
               } else {
                 this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                 detail: this.newFieldresource.notinactivated });
-                Strain.IsActive = !Strain.IsActive;
+                Field.IsActive = !Field.IsActive;
                 this.loadService.display(false);
               }
             } else if (String(data.toLocaleUpperCase()) === 'ROOMTYPEORZONEISINACTIVE') {
                 this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                 detail: this.newFieldresource.FieldIsInactive });
-                Strain.IsActive = !Strain.IsActive;
+                Field.IsActive = !Field.IsActive;
                 this.loadService.display(false);
             } else if (data === 'Failure') {
               this.msg.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
