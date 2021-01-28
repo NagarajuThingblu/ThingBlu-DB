@@ -60,7 +60,16 @@ export class MastersResource {
                 addnewsection: {
                     pageheading: 'Add New Section',
                     tableheading: 'Section List',
-                    newsectionsavedsuccess:'secton saved successfully'
+                    newsectionsavedsuccess:'secton saved successfully',
+                    deleteSectionMsg: 'Do you want to delete this Section?',
+                    newsectiondeletedsuccess:'section deleted successfully',
+                   sectionisassigned: 'section is in use',
+                 sectiondeactivatesuccess:'section is deactivated',
+                 sectionactivatesuccess:'section is activated',
+                 activeSectionMsg: 'Do you want to activate this Section?',
+                 deactivateSectionMsg: 'Do you want to inactivate this Section?',
+
+
                 },
                 addnewbrand: {
                     pageheading: 'Add New Brand',

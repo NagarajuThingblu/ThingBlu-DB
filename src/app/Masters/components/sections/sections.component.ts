@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../../shared/services/loader.service';
 import { GlobalResources } from '../../../global resource/global.resource';
 import { MastersResource } from '../../master.resource';
@@ -9,6 +9,7 @@ import { DropdownValuesService } from '../../../shared/services/dropdown-values.
 import { DropdwonTransformService } from '../../../shared/services/dropdown-transform.service';
 import { AppCommonService } from './../../../shared/services/app-common.service';
 import { Input, EventEmitter } from '@angular/core';
+import { ConfirmationService, Confirmation } from 'primeng/api';
 import { AppComponent } from '../../../app.component';
 import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { AppConstants } from '../../../shared/models/app.constants';
@@ -35,16 +36,19 @@ export class SectionsComponent implements OnInit {
   chkIsActive: boolean;
   strains: any[];
   // section: any[];
-  public saveButtonText: any;
+  public saveButtonText = 'save';
   public newProductTypeResources: any;
   public newSectionResources: any;
   public globalResource: any;
   public _cookieService: any;
   public newSectionForm_copy: any;
   public msgs: any[];
+  public SectionOnEdit: any;
   submitted: boolean;
   public SectionIdForUpdate: any = 0;
- 
+  public IsDeletedForUpdate: any = 0;
+  public ActiveInActiveForUpdate: any = 0
+  pageheading: any;
   collapsed: any;
 
   newSectionDetails = {
@@ -72,7 +76,9 @@ export class SectionsComponent implements OnInit {
     private appCommonService: AppCommonService,
     private appComponentData: AppComponent,
     private scrolltopservice: ScrollTopService,
-    private router: Router
+    private confirmationService: ConfirmationService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.getAllFields();
     this.getAllStrains();
@@ -101,8 +107,8 @@ export class SectionsComponent implements OnInit {
       data => {
         this.globalData.Fields = data;
         this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --');
-        // this.SubBrandInfo.allBrands = this.brands;
-        // this.getSubBrands();
+       
+        console.log("fields"+JSON.stringify(this.Fields));
       } ,
       error => { console.log(error); },
       () => console.log('Get all brands complete'));
@@ -153,11 +159,11 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
       let newSectionForApi;
       newSectionForApi = {
         Sections: {
-          SectionId: this.SectionIdForUpdate,
+         
             ClientId: Number(this._cookieService.ClientId),
             FieldId: Number(this.newSectionEntryForm.value.Field),
             VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-            IsActive: this.newSectionEntryForm.value.chkSelectAll ? 1 : 0,
+           
         },
         SectionsTypeDetails: []
       };
@@ -166,11 +172,14 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
     this.SectionDetailsArr.controls.forEach((element, index) => {
 
         newSectionForApi.SectionsTypeDetails.push({
+          SectionId: this.SectionIdForUpdate,
             SectionName: element.value.section,
             StrainId:  element.value.strain,
             IsActive: element.value.chkSelectAll ? 1 : 0,
             PlantsCount:element.value.plantcount,
-            Year:element.value.year
+            year:element.value.year,
+            IsDeleted:this.IsDeletedForUpdate,
+            ActiveInactive:this.ActiveInActiveForUpdate
             
          });
     
@@ -240,64 +249,7 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
         this.appCommonService.validateAllFields(this.newSectionEntryForm);
       }
     }
-    productTypeDeleteEvent(value: any, IsDeleted: number, ActiveAction: number) {
-      let newRoleDetailsForApi;
-      newRoleDetailsForApi = {
-        ClientProductType: {
-            ProductTypeId: value.ProductTypeId,
-            VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-            IsDeleted: IsDeleted,
-            IsActiveGrid: value.IsActiveFlag,
-            ActiveInactive: ActiveAction
-        },
-        productTyepeNewDetails: []
-      };
-      
-         this.loaderService.display(true);
-        this.newSectionDetailsActionService.addNewSectionEntry(newRoleDetailsForApi)
-        .subscribe(
-            data => {
-           
-              this.msgs = [];
-              if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS' && IsDeleted === 1) {
-              
-                this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
-                detail: this.newProductTypeResources.prodcttypedeletesuccess });
-                
-                this.resetForm();
-                
-              } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'INUSE') {
-                this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-                detail: this.newProductTypeResources.producttypeisassigned });
-                this.loaderService.display(false);
-              } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS' && ActiveAction === 1) {
-                if (value.IsActiveFlag !== true) {
-                  this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
-                  detail: this.newProductTypeResources.producttypedeactivatesuccess });
-                  this.resetForm();
-                 
-                  this.loaderService.display(false);
-                } else {
-                  this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
-                  detail: this.newProductTypeResources.producttypeactivatesuccess });
-                  this.resetForm();
-                 
-                  this.loaderService.display(false);
-                }
-              } else {
-                this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data });
-              }
-                
-                this.loaderService.display(false);
-            },
-            error => {
-              this.msgs = [];
-              this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
-              
-              this.loaderService.display(false);
-            });
-    
-    }
+ 
 
     customGroupValidation (formArray) {
       let isError = false;
@@ -321,7 +273,9 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
   }
 
   ngOnInit() {
+    console.log("Field list "+this.globalData.Fields);
     this.saveButtonText = 'Save';
+    this.pageheading="Add New Section";
     this.clear = 'Clear';
     this.newEmployeeResources = MastersResource.getResources().en.addnewemployee;
     this.newProductTypeResources = MastersResource.getResources().en.newproductype;
@@ -407,8 +361,148 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
   this.appCommonService.ProductTypeFormDetail = this.newSectionEntryForm;
     this.router.navigate(['../home/strainmaster']);
   }
+  getSectionOnEdit(SectionId) {
+    console.log(this.allsectionslist)
+    const data = this.allsectionslist.filter(x => x.SectionId === SectionId);
+    console.log(data);
+    var itemlist = this.newSectionEntryForm.get('items')['controls'];
+     if (data !== 'No data found!') {
+       this.SectionIdForUpdate = SectionId;
+       this.SectionOnEdit = data;
+       const fieldName = this.newSectionEntryForm.controls['Field'];
+       const sectionName = itemlist[0].controls['section'];
+       const strainName =  itemlist[0].controls["strain"];
+       const plantsCount =  itemlist[0].controls["plantcount"];
+       const year = itemlist[0].controls["year"];
+       const chkIsActive =   itemlist[0].controls["chkSelectAll"];
+        
+       fieldName.patchValue(this.SectionOnEdit[0].FieldId);
+       sectionName.patchValue(this.SectionOnEdit[0].SectionName);
+       strainName.patchValue(this.SectionOnEdit[0].StrainId);
+       plantsCount.patchValue(this.SectionOnEdit[0].PlantsCount);
+       year.patchValue(this.SectionOnEdit[0].Year);
+        chkIsActive.patchValue(this.SectionOnEdit[0].IsActive);
+       
+        this.clear = 'Cancel';
+       this.saveButtonText = 'Update';
+       this.pageheading = 'Edit Section';
 
- 
+      
+       
+     } else {
+     this.allsectionslist = [];
+     }
+     this.loaderService.display(false);
+    //  this.cdr.detectChanges();
+  }
+  showConformationMessaegForDeactive(SectionId, section, rowIndex, IsDeleted, ActiveInactiveFlag) {
+    console.log(section);
+    let strMessage: any;
+    if (this.allsectionslist[rowIndex].IsActive === true) {
+      strMessage = this.newSectionResources.activeSectionMsg ;
+    } else {
+      strMessage = this.newSectionResources.deactivateSectionMsg ;
+    }
+    this.confirmationService.confirm({
+      message: strMessage,
+      header: 'Confirmation',
+      icon: 'fa fa-exclamation-triangle',
+      accept: () => {
+         this.activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag);
+        },
+        reject: () => {
+          section.IsActive = !section.IsActive;
+        }
+    });
+  }
+  showConformationMessaegForDelete(SectionId,section, IsDeleted: number, ActiveInactiveFlag) {
+    let strMessage: any;
+    strMessage = this.newSectionResources.deleteSectionMsg;
+    this.confirmationService.confirm({
+      message: strMessage,
+      header: 'Confirmation',
+      icon: 'fa fa-exclamation-triangle',
+      accept: () => {
+        this.activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag);
+      },
+      reject: () => {
+      }
+    });
 }
+activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
+  let newSectionDetailsForApi;
+  // console.log(value);
+  newSectionDetailsForApi= {
+    Sections: {
+        ClientId: Number(this._cookieService.ClientId),
+        FieldId: section.FieldId,
+        VirtualRoleId:  Number(this._cookieService.VirtualRoleId),
+        // ActiveInactive: ActiveInactiveFlag,
+        // IsDeleted: IsDeleted,
+        // IsActive: section.IsActive,
+       
+    },
+    SectionsTypeDetails: []
+  };
+  this.SectionDetailsArr.controls.forEach((element, index) => {
 
+    newSectionDetailsForApi.SectionsTypeDetails.push({
+        SectionId: SectionId,
+        SectionName: section.SectionName,
+        StrainId:section.StrainId,
+        IsActive:section.IsActive,
+        PlantsCount:section.PlantsCount,
+        year:section.Year,
+        IsDeleted:IsDeleted,
+        ActiveInactive:ActiveInactiveFlag
+        
+     });
+
+ });
+  this.loaderService.display(true);
+  this.newSectionDetailsActionService.addNewSectionEntry(newSectionDetailsForApi)
+  .subscribe(
+    data => {
+   
+      this.msgs = [];
+      if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS' && IsDeleted === 1) {
+      
+        this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+        detail: this.newSectionResources.newsectiondeletedsuccess  });
+        
+        this.resetForm();
+        
+      } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'INUSE') {
+        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+        detail: this.newSectionResources.sectionisassigned });
+        this.loaderService.display(false);
+      } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS' && ActiveInactiveFlag === 1) {
+        if (data[0].IsActiveFlag !== true) {
+          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+          detail: this.newSectionResources.sectiondeactivatesuccess });
+          this.resetForm();
+         
+          this.loaderService.display(false);
+        } else {
+          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+          detail: this.newSectionResources.sectionactivatesuccess });
+          this.resetForm();
+         
+          this.loaderService.display(false);
+        }
+      } else {
+        this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data });
+      }
+        
+        this.loaderService.display(false);
+    },
+    error => {
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
+      
+      this.loaderService.display(false);
+    });
+
+}
+}
  

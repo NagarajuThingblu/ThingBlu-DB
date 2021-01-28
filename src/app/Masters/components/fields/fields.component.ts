@@ -190,8 +190,6 @@ public RoomTypeDisabled:any;
      if (data !== 'No data found!') {
        this.Fieldforupdate = FieldId;
        this.FieldOnEdit = data;
-      //  const Roomtype = this.Fieldtypemassterform.controls['RoomType'];
-       //const Zone = this.Roomtypemassterform.controls['Zones'];
        const Field = this.Fieldtypemassterform.controls['FieldName'];
        const Acres = this.Fieldtypemassterform.controls['Acres'];
        const description = this.Fieldtypemassterform.controls['description'];
@@ -236,7 +234,6 @@ public RoomTypeDisabled:any;
       const FieldDetailsForApi = {
       fields: {
         FieldId: FieldId,
-        // RoomTypeId: Field.RoomTypeId,
         VirtualRoleId: this._Cookieservice.VirtualRoleId,
         IsDeleted: IsDeleted,
         IsActive: Field.IsActive,
@@ -251,7 +248,7 @@ public RoomTypeDisabled:any;
           data => {
             // console.log(data);
             this.msg = [];
-            if (data[0]['Result'] === 'success' && ActiveInactiveFlag === 1) {
+            if (data[0]['Result'] === 'Success' && ActiveInactiveFlag === 1) {
               if (Field.IsActive === true) {
                 this.msg.push({severity: 'success', summary: this.globalResource.applicationmsg,
                 detail:  this.newFieldresource.newFieldActivated});
@@ -265,7 +262,7 @@ public RoomTypeDisabled:any;
                 this.GetFields();
                 this.loadService.display(false);
               }
-            } else if (data[0]['Result'] === 'success' && IsDeleted === 1) {
+            } else if (data[0]['Result'] === 'Success' && IsDeleted === 1) {
               this.msg.push({severity: 'success', summary: this.globalResource.applicationmsg,
               detail:  this.newFieldresource.FieldDeletedSuccess});
               this.resetAll();
@@ -287,7 +284,7 @@ public RoomTypeDisabled:any;
                 Field.IsActive = !Field.IsActive;
                 this.loadService.display(false);
               }
-            } else if (String(data.toLocaleUpperCase()) === 'ROOMTYPEORZONEISINACTIVE') {
+            } else if (String(data) === 'ROOMTYPEORZONEISINACTIVE') {
                 this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                 detail: this.newFieldresource.FieldIsInactive });
                 Field.IsActive = !Field.IsActive;
@@ -314,8 +311,8 @@ public RoomTypeDisabled:any;
             this.loadService.display(false);
           });
   }
-  showConformationMessaegForDeactive(StrainId, Strain, rowIndex, IsDeleted, ActiveInactiveFlag) {
-    console.log(Strain);
+  showConformationMessaegForDeactive(FieldId, Field, rowIndex, IsDeleted, ActiveInactiveFlag) {
+    console.log(Field);
     let strMessage: any;
     if (this.allFieldslist[rowIndex].IsActive === true) {
       strMessage = this.newFieldresource.activeFieldMsg ;
@@ -327,10 +324,10 @@ public RoomTypeDisabled:any;
       header: 'Confirmation',
       icon: 'fa fa-exclamation-triangle',
       accept: () => {
-         this.activateDeleteRoom(StrainId, Strain, IsDeleted, ActiveInactiveFlag);
+         this.activateDeleteRoom(FieldId, Field, IsDeleted, ActiveInactiveFlag);
         },
         reject: () => {
-          Strain.IsActive = !Strain.IsActive;
+          Field.IsActive = !Field.IsActive;
         }
     });
   }

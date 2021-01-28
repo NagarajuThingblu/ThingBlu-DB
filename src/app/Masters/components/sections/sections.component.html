@@ -149,6 +149,8 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
+            <!-- <th [pSortableColumn]="'FieldName'">Field Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
+            </th> -->
             <th [pSortableColumn]="'SectionName'">Section Name <p-sortIcon [field]="'SectionName'"></p-sortIcon>
             </th>
             <th [pSortableColumn]="'StrainName'">Strain<p-sortIcon [field]="'StrainName'"></p-sortIcon>
@@ -160,25 +162,26 @@
             <th style="width:100px;">Filters </th>
           </tr>
           <tr>
-            <th>
-              <input pInputText type="text" autocomplete="off"
-                (input)="dtRoomList.filter($event.target.value, 'SectionName', 'contains')" class="clsControl">
-            </th>
-            <th>
-              <input pInputText type="text" autocomplete="off"
-                (input)="dtRoomList.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
-            </th>
-            <th>
-              <input pInputText type="text" autocomplete="off"
-                (input)="dtRoomList.filter($event.target.value, 'PlantsCount', 'contains')" class="clsControl">
-            </th>
             <!-- <th>
               <input pInputText type="text" autocomplete="off"
-                (input)="dtRoomList.filter($event.target.value, 'ZoneName', 'contains')" class="clsControl">
+                (input)="dtFieldList.filter($event.target.value, 'FieldName', 'contains')" class="clsControl">
             </th> -->
             <th>
               <input pInputText type="text" autocomplete="off"
-                (input)="dtRoomList.filter($event.target.value, 'Year', 'contains')" class="clsControl">
+                (input)="dtFieldList.filter($event.target.value, 'SectionName', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtFieldList.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtFieldList.filter($event.target.value, 'PlantsCount', 'contains')" class="clsControl">
+            </th>
+           
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtFieldList.filter($event.target.value, 'Year', 'contains')" class="clsControl">
             </th>
           
             <th rowspan="2"></th>
@@ -193,7 +196,7 @@
             <td>{{section?.Year }}</td>
             <td style="width:65px;">
               <span class="ui-column-title">edit</span>
-              <a href="#" [routerLink]="" (click)="getFieldOnEdit(section?.SectionId)">
+              <a href="#" [routerLink]="" (click)="getSectionOnEdit(section?.SectionId)">
                 <span class="fa fa-edit"></span>
               </a>
               <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(section?.SectionId,section,1,0)">
