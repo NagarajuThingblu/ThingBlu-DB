@@ -2,6 +2,23 @@ export class MastersResource {
     static getResources() {
         return {
             en: {
+                newlabel: {
+                    pageheading: 'Add New Bin Label',
+                    taskType:'Task Type',
+                    binNo:'Bin Number',
+                    strain:'Strain',
+                    skewType:'Skew Type',
+                    lightDept:'Light Dept',
+                    trimmingMethod:'Trimming Method',
+                    header:'Bin Labels List',
+                    newlabelsavedsuccess:'Successfully saved',
+                    deleteLabelMsg: 'Do you want to delete this Bin Label?',
+                    newlabeldeletedsuccess:'Bin Label deleted successfully',
+                    labeldeactivatesuccess:'Bin Label is deactivated',
+                 labelactivatesuccess:'Bin Label is activated',
+                 activeLabelMsg: 'Do you want to activate this Bin Label?',
+                 deactivateLabelMsg: 'Do you want to inactivate this Bin Label?',
+                },
                 newproductype: {
                     pageheading: 'Add New Product Type',
                     brand: 'Brand',

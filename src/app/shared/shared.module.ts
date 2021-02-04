@@ -21,6 +21,7 @@ import {SplitButtonModule} from 'primeng/splitbutton';
 import {MenubarModule} from 'primeng/menubar';
 import {MenuItem} from 'primeng/api';
 import {CheckboxModule} from 'primeng/checkbox';
+import {RadioButtonModule} from 'primeng/radiobutton';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import {GrowlModule} from 'primeng/growl';
 import {DialogModule} from 'primeng/dialog';
@@ -127,6 +128,7 @@ import { CanDeactivateGuard } from '../guards/can-deactivate.guard';
     BrowserAnimationsModule,
     MenubarModule,
     CheckboxModule,
+    RadioButtonModule,
     InputTextareaModule,
     GrowlModule,
     DataTableModule,
@@ -171,6 +173,7 @@ import { CanDeactivateGuard } from '../guards/can-deactivate.guard';
     SidebarComponent,
     MenubarModule,
     CheckboxModule,
+    RadioButtonModule,
     InputTextareaModule,
     GrowlModule,
     DataTableModule,

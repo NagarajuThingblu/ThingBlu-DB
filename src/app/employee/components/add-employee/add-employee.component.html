@@ -271,6 +271,7 @@
                     <p-dropdown [filter]="true" id="managerlist" [options]="Managerlist" placeholder="-- Select --"
                       [autoWidth]="false" [tabindex]="10" class="clsControl" name="managerlist" formControlName="Managerlist">
                     </p-dropdown>
+                  
 
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                       *ngIf="!addEmpForm.controls['Managerlist'].valid&&addEmpForm.controls['Managerlist'].dirty">

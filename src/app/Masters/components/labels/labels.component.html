@@ -1,43 +1,47 @@
 <div class="content-section implementation GridDemo">
   <div class="ui-g">
     <div class="ui-g-12">
-      <p-panel header="{{ newSectionResources.pageheading }}" [(collapsed)]="collapsed" [toggleable]="true">
+      <p-panel header="{{ newLabelResources.pageheading }}" [(collapsed)]="collapsed" [toggleable]="true">
         <p-header>
           
         </p-header>
-        <form  [formGroup]="newSectionEntryForm" (ngSubmit)="onSubmit(newSectionEntryForm.value)">
+        <form  [formGroup]="newLabelsEntryForm" (ngSubmit)="onSubmit(newLabelsEntryForm.value)">
           <div class="ui-g ">
-            <div class="ui-g-12 ui-md-6">
+            <div class="ui-g-12 ui-md-6" style="padding-left:0px;">
               <div class="paddingRL">
-                <label for="Field" class="towlable">Field List<span class="star">*</span></label>
+                <label for="TaskType" class="towlable">{{ newLabelResources.taskType }}<span class="star">*</span></label>
                   <p-dropdown
-                    id="Field"
-                    formControlName="Field"
+                    id="TaskType"
+                    [options]="tasktypes"
+                    formControlName="TaskType"
                     placeholder="-- Select --"
-                    [options]="Fields"
                     class="clsControl"
-                    name="Field">
+                    (onChange) = "TaskType_InChange($event)"
+                    name="TaskType">
                   </p-dropdown>
               </div>
             </div>
           </div>
           <div formArrayName="items" style="position: relative">
             <div style="width:calc(100% - 20px);float:left;">
-              <p-table [value]="SectionDetailsArr?.controls" id="sectionDetails" name="sectionDetails">
+              <p-table [value]="labelDetailsArr?.controls" id="labelDetails" name="labelDetails">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th>Section
+                    <th>{{ newLabelResources.binNo }}
                       <span class="star">*</span>
                     </th>
-                    <th>Strain
+                    <th>{{ newLabelResources.strain }}
                       <span class="star">*</span>
                     </th>
-                    <th>Plant Count
+                    <th>{{ newLabelResources.skewType }}
                        <span class="star">*</span>
                     </th>
-                    <th>Year
+                    <th style="width: 80px;">{{ newLabelResources.lightDept }}
                         <span class="star">*</span>
                     </th>
+                    <th>{{ newLabelResources.trimmingMethod }}
+                      <span class="star">*</span>
+                   </th>
                     <th style="width: 80px;">Is Active</th>
                     <th style="width: 60px;">Action</th>  
                   </tr>
@@ -46,13 +50,13 @@
                   <tr [formGroupName]="i">
                     <td>
                       <input pInputText
-                        name="section"
-                        id="section"
+                        name="binNo"
+                        id="binNo"
                         type="text"
                         autocomplete="off"
                         class="clsControl"       
-                        formControlName="section"
-                        placeholder="Enter section "
+                        formControlName="binNo"
+                        placeholder="Enter Bin Number "
                         min="0.1">
                     </td>
                     <td>
@@ -67,26 +71,31 @@
                     </p-dropdown>
                   </td>
                     <td>
-                      <input pInputText
-                        name="PlantCount"
-                        id="PlantCount"
-                        type="number"
-                        autocomplete="off"
-                        class="clsControl"       
-                        formControlName="plantcount"
-                        placeholder="Enter Plant Count "
-                        min="0.1">
+                      <p-dropdown
+                      id="skewType"
+                      [options]="skewtypes"
+                      formControlName="skewType"
+                      placeholder="-- Select --"
+                      [disabled]="enableDropDown"
+                      class="clsControl"
+                      name="skewType">
+                      </p-dropdown>
                     </td>
                     <td>
-                      <input pInputText
-                        name="year"
-                        id="year"
-                        type="number"
-                        autocomplete="off"
-                        class="clsControl"       
-                        formControlName="year"
-                        placeholder="Enter year"
-                        min="0.1">
+                      <p-checkbox value="true"
+                       formControlName="lightDept" checked="true"
+                      binary="true"></p-checkbox>                                      
+                    </td>
+                     <td Style="text-align:center">
+                     
+                      <div class="radio" *ngFor="let TrimmingMethod of TrimmingMethods;" >
+                        <p-radioButton [name]=i
+                         [value]="TrimmingMethod" 
+                         label={{TrimmingMethod}} 
+                         [disabled]="enableDropDown"
+                         formControlName="TrimmingMethod"></p-radioButton >
+                       </div>  
+                                 
                     </td>
                     <td>
                       <p-checkbox value="true"
@@ -94,33 +103,27 @@
                       binary="true"></p-checkbox>                                      
                     </td>
                     <td>
-                      <a (click)="deleteItem(i)" *ngIf="!newSectionEntryForm.get('items').valid || sysmbol == 0">                                                    
+                      <a (click)="deleteItem(i)" >                                                    
                           <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
                           </span>
                       </a> 
-                      <!-- <div style="position: absolute;right: 0px;bottom: 42px;"> -->
-                        <a (click)="addItem()" *ngIf="newSectionEntryForm.get('items').valid  ">
+                        <a (click)="addItem()" *ngIf="newLabelsEntryForm.get('items').valid">
                             <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
                             </span>
                         </a>
-                      <!-- </div>   -->
+                      
+                    
                   </td>
-                  <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
+                  <!-- <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
                     This section already exists.
-                  </div>  
+                  </div>   -->
                   </tr>
                 </ng-template>
               </p-table>
             </div>
-            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="SectionDetailsArr.hasError('duplicate')">
+            <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="SectionDetailsArr.hasError('duplicate')">
               duplicate entries
-            </div>  
-            <!-- <div style="position: absolute;right: 0px;bottom: 42px;">
-              <a (click)="addItem()" *ngIf="newSectionEntryForm.get('items').valid">
-                  <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
-                  </span>
-              </a>
-            </div> -->
+            </div>   -->
             <div class="ui-g" style="width:100%;text-align:right;">
               <div class="ui-g-12">
                 <button pButton type="submit" label="Save" ></button>
@@ -141,29 +144,31 @@
 </div>
 <div class="ui-g">
   <div class="ui-g-12">
-    <p-panel header="{{ newSectionResources.tableheading }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-      <p-table #dtSecList [value]="allsectionslist" sortMode="single" [responsive]="true" [paginator]="true"
+    <p-panel header="{{ newLabelResources.header }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+      <p-table #dtLabelList [value]="allLabelslist" sortMode="single" [responsive]="true" [paginator]="true"
     [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
     (onPage)="onPageChange($event)"
-    [globalFilterFields]="['SectionName','StrainName','PlantsCount','Year']">
+    [globalFilterFields]="['BinNo','StrainName','skewType','IsLightDeprevation','TrimmingMethod']">
         <ng-template pTemplate="caption">
           <div style="text-align: right">
             <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
             <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter"
-              (input)="dtSecList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+              (input)="dtLabelList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
           </div>
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
             <!-- <th [pSortableColumn]="'FieldName'">Field Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
             </th> -->
-            <th [pSortableColumn]="'SectionName'">Section Name <p-sortIcon [field]="'SectionName'"></p-sortIcon>
+            <th [pSortableColumn]="'BinNo'">Bin Number <p-sortIcon [field]="'BinNo'"></p-sortIcon>
             </th>
             <th [pSortableColumn]="'StrainName'">Strain<p-sortIcon [field]="'StrainName'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'PlantsCount'"> Plant Count <p-sortIcon [field]="'PlantsCount'"></p-sortIcon>
+            <th [pSortableColumn]="'skewType'">Skew Type <p-sortIcon [field]="'skewType'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'Year'"> Year <p-sortIcon [field]="'Year'"></p-sortIcon>
+            <th [pSortableColumn]="'IsLightDeprevation'">Light Dept <p-sortIcon [field]="'IsLightDeprevation'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'TrimmingMethod'"> Trimming Method <p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon>
             </th>
             <th style="width:100px;">Action </th>
           </tr>
@@ -174,45 +179,50 @@
             </th> -->
             <th>
               <input pInputText type="text" autocomplete="off"
-                (input)="dtSecList.filter($event.target.value, 'SectionName', 'contains')" class="clsControl">
+                (input)="dtLabelList.filter($event.target.value, 'binNo', 'contains')" class="clsControl">
             </th>
             <th>
               <input pInputText type="text" autocomplete="off"
-                (input)="dtSecList.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
+                (input)="dtLabelList.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
             </th>
             <th>
               <input pInputText type="text" autocomplete="off"
-                (input)="dtSecList.filter($event.target.value, 'PlantsCount', 'contains')" class="clsControl">
+                (input)="dtLabelList.filter($event.target.value, 'skewType', 'contains')" class="clsControl">
             </th>
            
             <th>
               <input pInputText type="text" autocomplete="off"
-                (input)="dtSecList.filter($event.target.value, 'Year', 'contains')" class="clsControl">
+                (input)="dtLabelList.filter($event.target.value, 'IsLightDeprevation', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtLabelList.filter($event.target.value, 'TrimmingMethod', 'contains')" class="clsControl">
             </th>
           
             <th rowspan="2"></th>
     
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-section let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <ng-template pTemplate="body" let-label let-rowData let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-            <td>{{section?.SectionName}}</td>
-            <td>{{section?.StrainName}}</td>
-            <td>{{section?.PlantsCount }}</td>
-            <td>{{section?.Year }}</td>
+            <td>{{label?.BinNo}}</td>
+            <td>{{label?.StrainName}}</td>
+            <td>{{label?.SkewType }}</td>
+            <td>{{label?.IsLightDeprevation }}</td>
+            <td>{{label?.TrimmingMethod }}</td>
             <td style="width:65px;">
               <span class="ui-column-title">edit</span>
-              <a href="#" [routerLink]="" (click)="getSectionOnEdit(section?.SectionId)">
+              <a href="#" [routerLink]="" (click)="getLabelsOnEdit(label?.LabelId)">
                 <span class="fa fa-edit"></span>
               </a>
-              <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(section?.SectionId,section,1,0)">
+              <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(label?.LabelId,label,1,0)">
                 <span class="fa fa-trash"></span>
               </a>
             
               <div class="clsToggleButtonDiv">
-                <p-toggleButton [(ngModel)]="section.IsActive" onLabel="Active" offLabel="InActive"
+                <p-toggleButton [(ngModel)]="label.IsActive" onLabel="Active" offLabel="InActive"
                   [style]="{'width':'90px'}"
-                  (onChange)="showConformationMessaegForDeactive(section?.SectionId,section, rowIndex,0,1)">
+                  (onChange)="showConformationMessaegForDeactive(label?.LabelId,label, rowIndex,0,1)">
                 </p-toggleButton>
               </div>
             </td>

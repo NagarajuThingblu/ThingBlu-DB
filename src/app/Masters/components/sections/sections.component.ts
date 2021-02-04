@@ -50,7 +50,7 @@ export class SectionsComponent implements OnInit {
   public ActiveInActiveForUpdate: any = 0
   pageheading: any;
   collapsed: any;
-
+  sysmbol:any;
   newSectionDetails = {
       Field: null,
       section: null,
@@ -199,6 +199,7 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
                 detail: this.newSectionResources.newsectionsavedsuccess });
                
                 this.resetForm();
+                this.getAllsectionlist();
               } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
                 this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
               } else if (String(data[0].ResultKey).toUpperCase() === 'INUSE') {
@@ -324,6 +325,7 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
     });
   }
   addItem(): void {
+    this.sysmbol=0;
     // this.SectionDetailsArr.push(this.createItem());
     this.arrayItems = this.newSectionEntryForm.get('items') as FormArray;
     this.arrayItems.push(this.createItem());
@@ -471,6 +473,7 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
         detail: this.newSectionResources.newsectiondeletedsuccess  });
         
         this.resetForm();
+        this.getAllsectionlist();
         
       } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'INUSE') {
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,

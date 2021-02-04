@@ -71,7 +71,7 @@ import{EmpPerformanceDashboardComponent} from './dashboard/components/emp-perfor
 import{ProductiondashboardsummaryComponent} from './dashboard/components/productiondashboardsummary/productiondashboardsummary.component'
 import { FieldsComponent } from './Masters/components/fields/fields.component';
 import { SectionsComponent } from './Masters/components/sections/sections.component';
-
+import { LabelsComponent } from './Masters/components/labels/labels.component';
 const appRoutes: Routes = [
   { path: '', redirectTo: 'default', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
@@ -155,7 +155,7 @@ const appRoutes: Routes = [
       {path:'productiondashboardsummary', component:ProductiondashboardsummaryComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'fields', component:FieldsComponent, canActivate:[AuthGuard,RoleGuard]},
       {path:'sections', component:SectionsComponent,canActivate:[AuthGuard,RoleGuard]},
-      
+      {path:'labels', component:LabelsComponent}
 
     ]
   }

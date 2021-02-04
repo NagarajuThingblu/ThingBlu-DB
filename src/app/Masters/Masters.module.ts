@@ -65,6 +65,9 @@ import { RoomsTablesComponent } from './components/rooms-tables/rooms-tables.com
 import { FieldsComponent } from './components/fields/fields.component';
 import { SectionsComponent } from './components/sections/sections.component';
 import{NewSectionDetailsActionService} from './../task/services/add-section-details.service';
+import { NewLabelDetailsActionService } from './../task/services/add-label-details.service';
+import { LabelsComponent } from './components/labels/labels.component';
+
 
 @NgModule({
   declarations: [
@@ -103,7 +106,8 @@ import{NewSectionDetailsActionService} from './../task/services/add-section-deta
     RoomsComponent,
     RoomsTablesComponent,
     FieldsComponent,
-    SectionsComponent
+    SectionsComponent,
+    LabelsComponent
    
   ],
   imports: [
@@ -138,7 +142,8 @@ import{NewSectionDetailsActionService} from './../task/services/add-section-deta
     NewTaskActionService,
     NewRoomGenerationService,
     NewFieldGenerationService,
-    NewSectionDetailsActionService
+    NewSectionDetailsActionService,
+    NewLabelDetailsActionService
   ],
   exports: [
     NewProductTypeComponent,

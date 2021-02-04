@@ -169,7 +169,7 @@ public RoomTypeDisabled:any;
   }
   resetAll() {
     // this.RoomTypeforupdate = 0;
-    this.saveButtontext = 'save';
+    this.saveButtontext = 'Save';
     this.pageheading = 'Add New Field';
     this.clear = 'Clear';
     this.resetForm();

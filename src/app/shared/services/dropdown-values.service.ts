@@ -133,6 +133,20 @@ getFields() {
     return data;
    });
 }
+getTaskType() {
+  const url = 'api/Grower/GetFieldsList';
+
+      let params = new HttpParams();
+      params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+    return this.http
+    .get(url, {params: params})
+
+   .map(data => {
+    // console.log('Brands Service success');
+    return data;
+   });
+}
 
   getStrains() {
     const url = 'api/Strain/GetStrainList';
