@@ -312,7 +312,7 @@ else{
 
   onSubmit(assignTaskFormValues: any) {
     this.submitted = true;
-
+console.log(assignTaskFormValues)
     let assignTaskDetailsForWebApi;
 
     // Added by Devdan :: 11-Oct-2018
@@ -324,8 +324,9 @@ else{
     } else {
       lotid = 0;
     }
+   
 
-    if (this.assignTaskForm.valid) {
+    if (this.assignTaskForm) {
       assignTaskDetailsForWebApi = {
         TaskDetails: {
           ClientId: this._cookieService.ClientId,
@@ -889,28 +890,62 @@ else{
         assignTaskDetailsForWebApi.TaskDetails['Priority'] = '';
 
       }
-      // if (((this.returnFormattedDate(new Date(this.returnFormattedDate(new Date()))) >
-      //   this.returnFormattedDate(new Date(assignTaskDetailsForWebApi.TaskDetails.EstStartDate))))) {
-      //     this.msgs = [];
-      //     this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-      //       detail: 'Task will be get assign for past date.'});
-      // }
-      // return;
 
-      // console.log(assignTaskDetailsForWebApi);
-      // this.confirmationService.confirm({
-      //   message: this.globalResource.saveconfirm,
-      //   header: 'Confirmation',
-      //   icon: 'fa fa-exclamation-triangle',
-      //   accept: () => {
-
+      else if (this.selectedTaskTypeName === 'PLANTING') { // PLANTING TASK
+       let plantingDataForApi = {
+        Plants: {
+          "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
+          "SectionId": assignTaskFormValues.PLANTING.section,
+          "AssignedPlantsCount": assignTaskFormValues.PLANTING.assignedPC,
+          "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
+          "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
+          "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority ,
+          "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
+          "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
+          "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
+          "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
+       },
+       EmployeeTypes:[]
+      };
+      assignTaskFormValues[this.selectedTaskTypeName].employeeList
+      .forEach((element, index) => {
+        plantingDataForApi.EmployeeTypes.push({
+          "EmpId" : assignTaskFormValues.PLANTING.employeeList[index] 
+        });
+      });
+       this.loaderService.display(true);
+      this.taskCommonService.assignPlantTask(plantingDataForApi).
+      subscribe(
+        data => {
+          this.msgs = [];
+          if (String(data[0]. RESULTKEY).toLocaleUpperCase() === 'SUCCESS') {
+            this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+            detail: this.assignTaskResources.taskassignedsuccessfully});
+            this.assignTask.task = null;
+            this.assignTask.taskcategory=null;
+            this.selectedTaskTypeName = '';
+            this.isServiceCallComplete = false;
+            this.assignTaskForm = this.fb.group({
+              'taskname': new FormControl(null, Validators.required),
+              'taskCategory':new FormControl(null,Validators.required),
+            });
+            this.loaderService.display(false);
+        }
+        else if (String(data).toLocaleUpperCase() === 'FAILURE') {
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        });
+    
+      }
           // http call starts
+        
+   
           this.loaderService.display(true);
           this.taskCommonService.assignTask(assignTaskDetailsForWebApi)
             .subscribe(
               data => {
                 // this.router.navigate(['']);
-
+                
                 if (String(data[0]['Result']).toLocaleUpperCase() === 'NOBALANCE') {
                   this.msgs = [];
                   this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.incorrectassignwt });
@@ -1014,18 +1049,20 @@ else{
                 //   });
                 this.loaderService.display(false);
               },
+          
               error => {
                 this.msgs = [];
                 this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
                 // http call ends
                 this.loaderService.display(false);
               });
+            }
       //   },
       //   reject: () => {
       //     // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
       //   }
       // });
-    } else {
+     else {
       this.appCommonService.validateAllFields(this.assignTaskForm);
     }
   }

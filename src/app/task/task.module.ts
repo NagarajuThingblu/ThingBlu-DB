@@ -37,6 +37,7 @@ import { OilMaterialsOutComponent } from './components/taskparameters/oil/oil-ma
 import { TubeBrandLabelComponent } from './components/taskparameters/joints/tube-brand-label/tube-brand-label.component';
 import { EmployeeAssignTaskComponent } from './components/employee-assign-task/employee-assign-task.component';
 import { BudPkgAllocateEmployeeComponent } from './components/taskparameters/bud/bud-packaging/bud-pkg-allocate-employee/bud-pkg-allocate-employee.component';
+import { PlantingComponent } from './components/taskparameters/planting/planting.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { BudPkgAllocateEmployeeComponent } from './components/taskparameters/bud
     BrandLabelReplacementComponent,
     TubeBrandLabelComponent,
     EmployeeAssignTaskComponent,
-    BudPkgAllocateEmployeeComponent
+    BudPkgAllocateEmployeeComponent,
+    PlantingComponent
   ],
   imports: [
     SharedModule

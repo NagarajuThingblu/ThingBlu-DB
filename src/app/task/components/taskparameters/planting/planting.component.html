@@ -1,0 +1,232 @@
+<div class="ui-g " [formGroup]="PLANTING" *ngIf="PageFlag.page =='AssignTask'">
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="field">Field<span class="star">*</span></label>:
+      <div class="clear"></div>
+        <p-dropdown
+        [filter] ="true"
+        
+        placeholder="-- Select --"
+        [options]="Fields"
+        [autoWidth]="true"
+        (onChange)="getSectionListByFieldName($event)"
+        formControlName="field"
+        class="clsControl"
+        id="field"
+        name="field">
+        </p-dropdown>
+
+        <!-- <div
+          class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+          *ngIf="!TRIMMING.controls['strain'].valid&&TRIMMING.controls['strain'].dirty">
+           
+            <span *ngIf="TRIMMING.controls['strain'].errors['required']">
+              {{ globalResource.strainrequired }}
+            </span>                      
+        </div> -->
+    </div>
+  </div>
+
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="section">Section<span class="star">*</span></label>:
+      <div class="clear"></div>
+      <p-dropdown
+          [filter] ="true"
+          [options]="sectionList"
+          (onChange)=" getStrainAndPlantCount($event)"
+         
+          placeholder="-- Select --"
+          
+          [autoWidth]="true"
+         
+          formControlName="section"
+          class="clsControl"
+          id="section"
+          name="section">
+      </p-dropdown>
+      <!-- <div
+      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+      *ngIf="!TRIMMING.controls['lotno'].valid&&TRIMMING.controls['lotno'].dirty">
+       
+        <span *ngIf="TRIMMING.controls['lotno'].errors['required']">
+          {{ globalResource.lotnorequired }}
+        </span>                      
+    </div> -->
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-4">
+    <div class="paddingRL">
+      <label for="strain">Strain<span class="star">*</span></label>:
+      
+      <input type="text" 
+      pInputText 
+      autocomplete="off"
+      id="strain" 
+      name="strain" 
+      [value]="strainName"
+      formControlName="strain"         
+          
+      class="clsControl"  
+    />
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-4 ui-md-offset-2">
+    <div class="paddingRL">
+      <label for="plantCount">Total Plants Count<span class="star">*</span></label>:
+      <input type="number" 
+      pInputText 
+      autocomplete="off"
+     
+      [value]="plantCount"
+      id="plantCount" 
+      name="plantCount" 
+     
+      formControlName="plantCount"         
+          
+      class="clsControl"  
+    />
+    </div>
+  </div>
+  
+  <div class="ui-g-12 ui-md-4">
+    <div class="paddingRL">
+      <label for="employeeList">Assigned To<span class="star">*</span></label>:
+      <p-multiSelect #checkedItems
+      [filter] ="true"
+      [options]="employees"
+      
+      placeholder="-- Select --"
+      (onChange)="OnSelectingEmployees($event, checkedItems)"
+      formControlName="employeeList"
+      class="clsControl"
+      id="employeeList"
+      name="employeeList">
+      </p-multiSelect>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-4 ui-md-offset-2">
+    <div class="paddingRL">
+      <label for="assignedPC">Assigned Plants Count<span class="star">*</span></label>:
+      <input type="number" 
+      pInputText 
+      autocomplete="off"
+     
+    
+      id="assignedPC" 
+      name="assignedPC" 
+     
+      formControlName="assignedPC"         
+          
+      class="clsControl" 
+      styleClass="multiselect-mobileregulation-width" 
+    />
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-4">
+    <div class="paddingRL">
+      <label for="EmployeeListBox">Employee List</label>
+      <div  class="EmployeeListBox">
+        <ul class="emp-list" style='padding: 0px;'>
+          <li  *ngFor="let i of employeeArray; let id=index" class="EmployeeListItem" >
+            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;<i class="fa fa-times" (click)="removeitem(id)"></i></span>
+            
+          </li>
+        </ul>
+      </div>  
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-4 ui-md-offset-2">
+    <div class="paddingRL">
+      <label for="estimatedstartdate">
+        Est. Start Date<span class="star">*</span>:
+      </label>
+      <small class="smallTextRed"
+          *ngIf="showPastDateLabel"
+          >Task will be get created for past date
+        </small>
+        <p-calendar                        
+          
+           [showIcon]="true"
+           [defaultDate]="defaultDate"      
+           (onSelect)="estStartDate_Select()"
+           (onInput)="estStartDate_Select()"  
+           formControlName="estimatedstartdate"          
+           class="clsControl"
+           id="estimatedstartdate"
+           name="estimatedstartdate"
+           >
+         </p-calendar>
+         <!-- <div
+           class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+           *ngIf="!SIFTING.controls['estimatedstartdate'].valid&&SIFTING.controls['estimatedstartdate'].dirty">
+            
+             <span *ngIf="SIFTING.controls['estimatedstartdate'].errors['required']">
+               {{ globalResource.startdaterequired }}
+             </span>                                                                                                                                                                            
+         </div>
+         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip 
+           *ngIf="SIFTING.hasError('invalidDate')" >
+             {{ globalResource.datecomparevalidation }}
+         </div>  -->
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-4">
+    <div class="paddingRL">
+      <label for="employee">Priority</label>:
+                       
+      <p-dropdown
+        [options]="priorities"
+      
+        [autoWidth]="true"
+        formControlName="priority"
+        id="priority"
+        class="clsControl"
+        name="priority">
+      </p-dropdown>                                  
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-4 ui-md-offset-2">
+    <div class="paddingRL">
+        <label for="comment">Comment</label>:
+                           
+          <textarea                        
+            pInputTextarea                        
+            
+            formControlName="comment"
+            id="comment"
+            name="comment"
+            maxlength="500"
+            class="clsControl"
+            binary="true"
+          ></textarea>
+  
+          <!-- <div
+            class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+            *ngIf="!SIFTING.controls['comment'].valid&&SIFTING.controls['comment'].dirty">
+             
+              <span *ngIf="SIFTING.controls['comment'].errors['maxLength']">
+                {{ assignTaskResources.commentMaxLength }}
+              </span>                      
+        </div> -->
+      </div>
+  </div>
+  <div class="ui-g-12 ui-md-6 " >
+    <div class="paddingRL">                              
+          <p-checkbox          
+            label="Notify Manager"
+           
+            formControlName="notifymanager"
+            binary="true"
+          ></p-checkbox>
+  
+          <p-checkbox 
+            value="true"
+            label="Notify Employee"
+           
+            formControlName="notifyemployee"
+            binary="true"
+          ></p-checkbox>                                                              
+      </div>
+  </div>
+</div>

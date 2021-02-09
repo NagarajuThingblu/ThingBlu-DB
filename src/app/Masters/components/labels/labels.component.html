@@ -27,6 +27,9 @@
               <p-table [value]="labelDetailsArr?.controls" id="labelDetails" name="labelDetails">
                 <ng-template pTemplate="header">
                   <tr>
+                    <th>{{ newLabelResources.taskType }}
+                      <span class="star">*</span>
+                    </th>
                     <th>{{ newLabelResources.binNo }}
                       <span class="star">*</span>
                     </th>
@@ -43,11 +46,12 @@
                       <span class="star">*</span>
                    </th>
                     <th style="width: 80px;">Is Active</th>
-                    <th style="width: 60px;">Action</th>  
+                   
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-item let-i="rowIndex" >
                   <tr [formGroupName]="i">
+                    
                     <td>
                       <input pInputText
                         name="binNo"
@@ -148,7 +152,7 @@
       <p-table #dtLabelList [value]="allLabelslist" sortMode="single" [responsive]="true" [paginator]="true"
     [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
     (onPage)="onPageChange($event)"
-    [globalFilterFields]="['BinNo','StrainName','skewType','IsLightDeprevation','TrimmingMethod']">
+    [globalFilterFields]="['TaskTypeName','BinNo','StrainName','skewType','IsLightDeprevation','TrimmingMethod']">
         <ng-template pTemplate="caption">
           <div style="text-align: right">
             <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
@@ -160,6 +164,8 @@
           <tr>
             <!-- <th [pSortableColumn]="'FieldName'">Field Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
             </th> -->
+            <th [pSortableColumn]="'TaskTypeName'">Task Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
+            </th>
             <th [pSortableColumn]="'BinNo'">Bin Number <p-sortIcon [field]="'BinNo'"></p-sortIcon>
             </th>
             <th [pSortableColumn]="'StrainName'">Strain<p-sortIcon [field]="'StrainName'"></p-sortIcon>
@@ -177,6 +183,10 @@
               <input pInputText type="text" autocomplete="off"
                 (input)="dtFieldList.filter($event.target.value, 'FieldName', 'contains')" class="clsControl">
             </th> -->
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtLabelList.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
+            </th>
             <th>
               <input pInputText type="text" autocomplete="off"
                 (input)="dtLabelList.filter($event.target.value, 'binNo', 'contains')" class="clsControl">
@@ -205,6 +215,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-label let-rowData let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+            <td>{{label?.TaskTypeName}}</td>
             <td>{{label?.BinNo}}</td>
             <td>{{label?.StrainName}}</td>
             <td>{{label?.SkewType }}</td>
@@ -229,7 +240,7 @@
           </tr>
         </ng-template>
         <ng-template pTemplate="paginatorleft" let-state>
-          <pagination-counts *ngIf="allsectionslist?.length" [inputData]="allsectionslist" [inputEvent]="event">
+          <pagination-counts *ngIf="allLabelslist?.length" [inputData]="allLabelslist" [inputEvent]="event">
           </pagination-counts>
         </ng-template>
       </p-table>

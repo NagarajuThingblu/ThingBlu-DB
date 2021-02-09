@@ -145,7 +145,7 @@
       <p-table #dtSecList [value]="allsectionslist" sortMode="single" [responsive]="true" [paginator]="true"
     [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
     (onPage)="onPageChange($event)"
-    [globalFilterFields]="['SectionName','StrainName','PlantsCount','Year']">
+    [globalFilterFields]="['FieldName','SectionName','StrainName','PlantsCount','Year']">
         <ng-template pTemplate="caption">
           <div style="text-align: right">
             <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
@@ -157,6 +157,8 @@
           <tr>
             <!-- <th [pSortableColumn]="'FieldName'">Field Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
             </th> -->
+            <th [pSortableColumn]="'FieldName'">Field Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
+            </th>
             <th [pSortableColumn]="'SectionName'">Section Name <p-sortIcon [field]="'SectionName'"></p-sortIcon>
             </th>
             <th [pSortableColumn]="'StrainName'">Strain<p-sortIcon [field]="'StrainName'"></p-sortIcon>
@@ -172,6 +174,10 @@
               <input pInputText type="text" autocomplete="off"
                 (input)="dtFieldList.filter($event.target.value, 'FieldName', 'contains')" class="clsControl">
             </th> -->
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtSecList.filter($event.target.value, 'FieldName', 'contains')" class="clsControl">
+            </th>
             <th>
               <input pInputText type="text" autocomplete="off"
                 (input)="dtSecList.filter($event.target.value, 'SectionName', 'contains')" class="clsControl">
@@ -196,6 +202,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-section let-rowData let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+            <td>{{section?.FieldName}}</td>
             <td>{{section?.SectionName}}</td>
             <td>{{section?.StrainName}}</td>
             <td>{{section?.PlantsCount }}</td>

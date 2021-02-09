@@ -129,6 +129,11 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
     this.loaderService.display(false);
   }, 500);
 
+  // this.tasktypes =  [
+  //   {label: 'Trimming', value: 'Trimming'},
+  //   {label: 'Bucking', value: 'Bucking'},
+  //   {label: 'PreBucking', value: 'PreBucking'}
+  // ];
   }
   get labelDetailsArr(): FormArray {
     return this.newLabelsEntryForm.get('items') as FormArray;
@@ -154,10 +159,11 @@ createItem(): FormGroup {
       data => {
         
         if (data) {
-        
-        this.TaskType = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', '-- Select --');
+          let category 
+         category = data.filter(item=>item.CategoryName == 'Growing');
+        this.TaskType = this.dropdwonTransformService.transform(category, 'TaskTypeName', 'TaskTypeId', '-- Select --');
         console.log(this.TaskType) 
-        this.tasktypes = this.TaskType.filter(x => x.label == 'Harvesting' || x.label == 'Planting' ||x.label == 'Trimming' ||x.label == 'Bucking' || x.label == 'PreBucking'  )
+        this.tasktypes = this.TaskType.filter(x =>x.label == 'Trimming' ||x.label == 'Bucking' || x.label == 'PreBucking'  )
         console.log(this.tasktypes) 
       }
       } ,
