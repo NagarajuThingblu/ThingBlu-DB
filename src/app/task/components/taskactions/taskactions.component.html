@@ -148,6 +148,16 @@
             (TaskCompleteOrReviewed)="getTaskDetaisByTask()"
           ></app-tube-brand-label>
 
+          <app-planting
+          *ngIf="taskActionDetails?.TaskTypeKey=='PLANTING'&&taskActionDetails" 
+          style="width:100%;"            
+          [PageFlag]="page"
+          [TaskModel]="taskActionDetails"  
+          (TaskCompleteOrReviewed)="getTaskDetaisByTask()"            
+        >
+
+        </app-planting>
+
             <!--End Dynamic Component Contents Depends on whatever the task is selected -->
 
           </div>

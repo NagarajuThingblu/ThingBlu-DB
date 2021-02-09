@@ -229,4 +229,68 @@
           ></p-checkbox>                                                              
       </div>
   </div>
+
+  <div *ngIf="PageFlag.page =='TaskAction'">
+    <div class="ui-g">
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+            <label>
+              <strong>{{ globalResource.employee }}: </strong>
+            </label>
+            <label>
+              {{TaskModel?.EmpName}}
+          </label>
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.strain }}: </strong>
+      </label>
+          {{TaskModel?.StrainName}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>Field: </strong>
+      </label>
+          {{TaskModel?.field}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>Section: </strong>
+      </label>
+          {{TaskModel?.section}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>Assigned Plant Count: </strong>
+      </label>
+          {{TaskModel?.assignedPC}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.eststartdate }}: </strong>
+      </label>
+          {{TaskModel?.EstStartDate}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.priority }}: </strong>
+      </label>
+          {{TaskModel?.TaskPriority}}
+    </div>
+  </div>
+
+</div>
+</div>
 </div>
