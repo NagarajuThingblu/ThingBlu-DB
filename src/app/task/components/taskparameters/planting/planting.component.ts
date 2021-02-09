@@ -179,25 +179,7 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
     this.allsectionslist=data;
 })
   }
-//   GetFields() {
-//     this.loadService.display(true);
-//     this.NewFieldgeneration.GetFieldList().subscribe(data=>{
-//       if(data!="No Data found!"){
-//         this.allFieldslist=data;
-//         this.paginationvalues=AppConstants.getPaginationOptions;
-//         if(this.allFieldslist.length>20)
-//         {
-//           this.paginationvalues[AppConstants.getPaginationOptions.length] = this.allFieldslist.length;
-//         }
-//       }
-//       else{
-//         this.allFieldslist=[];
-//       }
-//       this.loadService.display(false);
-//     },
-//     error => { console.log(error); this.loadService.display(false); },
-//     () => console.log('GetAllFieldsbyClient complete'));
-//  }
+
   getStrainListByTask() {
     this.dropdownDataService.getLotListByTask(this.TaskModel.task).subscribe(
       data => {
