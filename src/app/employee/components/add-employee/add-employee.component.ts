@@ -143,8 +143,21 @@ export class AddEmployeeComponent implements OnInit {
       'hireDate': new FormControl(this.userDetails[0].HireDate),
       'userRole': new FormControl(this.userDetails[0].RoleId, Validators.compose([Validators.required])),
       'hourlyRate': new FormControl(this.userDetails[0].HourlyRate, Validators.compose([Validators.required])),
-      'Managerlist': new FormControl(null)
+      'Managerlist': new FormControl(this.userDetails[0].ManagerId)
+      
     });
+    const managerdata = this.addEmpForm.get('Managerlist');
+if( this.addEmpForm.get('userRole').value == 10 || this.addEmpForm.get('userRole').value == 14 )
+{
+  if(this.addEmpForm.get('userRole').value == 10){
+    this.selectedRole ='Employee'
+  }
+  else{
+    this.selectedRole ='Temp'
+  }
+ 
+managerdata.setValidators(Validators.required);
+}
   }
 
   getAllRoles() {

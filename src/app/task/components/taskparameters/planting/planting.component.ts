@@ -24,17 +24,18 @@ import { NewSectionDetailsActionService } from '../../../services/add-section-de
 
 @Component({
   moduleId: module.id,
-  selector: 'app-harvesting',
-  templateUrl: './harvesting.component.html',
-  styleUrls: ['./harvesting.component.css']
+  selector: 'app-planting',
+  templateUrl: './planting.component.html',
+  styleUrls: ['./planting.component.css']
 })
-export class HarvestingComponent implements OnInit {
-  HARVESTING: FormGroup;
+export class PlantingComponent implements OnInit{
+  PLANTING: FormGroup;
   // tslint:disable-next-line:no-input-rename
   @Input('TaskModel') TaskModel: any;
   @Input() PageFlag: any;
   @Input() ParentFormGroup: FormGroup;
   @ViewChild('checkedItems') private checkedElements: ElementRef;
+
 
   questions: QuestionBase<any>[];
   public _cookieService: UserModel;
@@ -118,7 +119,7 @@ export class HarvestingComponent implements OnInit {
     ];
 
     if (this.PageFlag.page !== 'TaskAction') {
-      this.TaskModel.HARVESTING = {
+      this.TaskModel.PLANTING = {
         field: '',
         plantCount:'',
         section: '',
@@ -136,7 +137,7 @@ export class HarvestingComponent implements OnInit {
         usercomment: '',
       };
     }
-    this.HARVESTING = this.fb.group({
+    this.PLANTING = this.fb.group({
       'strain': new FormControl('', Validators.required),
       'field' : new FormControl('', Validators.required),
       'section': new FormControl('', Validators.required),
@@ -156,7 +157,7 @@ export class HarvestingComponent implements OnInit {
       'assignwt': new FormControl('', Validators.compose([Validators.required, Validators.min(0.1)]))
     });
 
-    this.ParentFormGroup.addControl('HARVESTING', this.HARVESTING);
+    this.ParentFormGroup.addControl('PLANTING', this.PLANTING);
     }
 
   getAllFields() {
@@ -197,7 +198,7 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
 
   estStartDate_Select() {
     if (((new Date(this.returnFormattedDate(this.defaultDate)) >
-      new Date(this.HARVESTING.value.estimatedstartdate)))) {
+      new Date(this.PLANTING.value.estimatedstartdate)))) {
       this.showPastDateLabel = true;
     } else {
       this.showPastDateLabel = false;
@@ -238,11 +239,11 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
       {
         this.strainName = sec.StrainName;
         this.plantCount =sec.PlantsCount;
-        this.TaskModel.HARVESTING.section = sec.SectionName
-        this.TaskModel.HARVESTING.strain =  this.strainName
-        this.HARVESTING.controls["strain"].setValue(this.strainName)
-        this.TaskModel.HARVESTING.totalPC  = this.plantCount
-        this.HARVESTING.controls["plantCount"].setValue(this.plantCount)
+        this.TaskModel.PLANTING.section = sec.SectionName
+        this.TaskModel.PLANTING.strain =  this.strainName
+        this.PLANTING.controls["strain"].setValue(this.strainName)
+        this.TaskModel.PLANTING.totalPC  = this.plantCount
+        this.PLANTING.controls["plantCount"].setValue(this.plantCount)
       }
     }
    

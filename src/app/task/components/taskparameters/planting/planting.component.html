@@ -1,4 +1,4 @@
-<div class="ui-g " [formGroup]="HARVESTING">
+<div class="ui-g " [formGroup]="PLANTING" *ngIf="PageFlag.page =='AssignTask'">
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="field">Field<span class="star">*</span></label>:
@@ -55,7 +55,7 @@
     </div> -->
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6">
+  <div class="ui-g-12 ui-md-4">
     <div class="paddingRL">
       <label for="strain">Strain<span class="star">*</span></label>:
       
@@ -71,7 +71,7 @@
     />
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6">
+  <div class="ui-g-12 ui-md-4 ui-md-offset-2">
     <div class="paddingRL">
       <label for="plantCount">Total Plants Count<span class="star">*</span></label>:
       <input type="number" 
@@ -89,7 +89,7 @@
     </div>
   </div>
   
-  <div class="ui-g-12 ui-md-6">
+  <div class="ui-g-12 ui-md-4">
     <div class="paddingRL">
       <label for="employeeList">Assigned To<span class="star">*</span></label>:
       <p-multiSelect #checkedItems
@@ -105,7 +105,7 @@
       </p-multiSelect>
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6">
+  <div class="ui-g-12 ui-md-4 ui-md-offset-2">
     <div class="paddingRL">
       <label for="assignedPC">Assigned Plants Count<span class="star">*</span></label>:
       <input type="number" 
@@ -123,7 +123,7 @@
     />
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6">
+  <div class="ui-g-12 ui-md-4">
     <div class="paddingRL">
       <label for="EmployeeListBox">Employee List</label>
       <div  class="EmployeeListBox">
@@ -136,7 +136,7 @@
       </div>  
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6">
+  <div class="ui-g-12 ui-md-4 ui-md-offset-2">
     <div class="paddingRL">
       <label for="estimatedstartdate">
         Est. Start Date<span class="star">*</span>:
@@ -171,7 +171,7 @@
          </div>  -->
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6">
+  <div class="ui-g-12 ui-md-4">
     <div class="paddingRL">
       <label for="employee">Priority</label>:
                        
@@ -186,7 +186,7 @@
       </p-dropdown>                                  
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6">
+  <div class="ui-g-12 ui-md-4 ui-md-offset-2">
     <div class="paddingRL">
         <label for="comment">Comment</label>:
                            

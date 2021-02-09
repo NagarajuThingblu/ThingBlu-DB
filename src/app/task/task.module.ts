@@ -38,6 +38,7 @@ import { TubeBrandLabelComponent } from './components/taskparameters/joints/tube
 import { EmployeeAssignTaskComponent } from './components/employee-assign-task/employee-assign-task.component';
 import { BudPkgAllocateEmployeeComponent } from './components/taskparameters/bud/bud-packaging/bud-pkg-allocate-employee/bud-pkg-allocate-employee.component';
 import { HarvestingComponent } from './components/taskparameters/harvesting/harvesting.component';
+import { PlantingComponent } from './components/taskparameters/planting/planting.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { HarvestingComponent } from './components/taskparameters/harvesting/harv
     TubeBrandLabelComponent,
     EmployeeAssignTaskComponent,
     BudPkgAllocateEmployeeComponent,
-    HarvestingComponent
+    HarvestingComponent,
+    PlantingComponent
   ],
   imports: [
     SharedModule

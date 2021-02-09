@@ -72,7 +72,8 @@ import{ProductiondashboardsummaryComponent} from './dashboard/components/product
 import { FieldsComponent } from './Masters/components/fields/fields.component';
 import { SectionsComponent } from './Masters/components/sections/sections.component';
 import { LabelsComponent } from './Masters/components/labels/labels.component';
-import{ HarvestingComponent} from './task/components/taskparameters/harvesting/harvesting.component';
+//import{ HarvestingComponent} from './task/components/taskparameters/harvesting/harvesting.component';
+// import { PlantingComponent } from './task/components/taskparameters/planting/planting.component';
 const appRoutes: Routes = [
   { path: '', redirectTo: 'default', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
@@ -156,8 +157,9 @@ const appRoutes: Routes = [
       {path:'productiondashboardsummary', component:ProductiondashboardsummaryComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'fields', component:FieldsComponent, canActivate:[AuthGuard,RoleGuard]},
       {path:'sections', component:SectionsComponent,canActivate:[AuthGuard,RoleGuard]},
-      {path:'labels', component:LabelsComponent},
-      {path:'harvesting',component:HarvestingComponent}
+      {path:'labels', component:LabelsComponent,canActivate:[AuthGuard,RoleGuard]},
+      // {path:'planting', component:PlantingComponent}
+     // {path:'harvesting',component:HarvestingComponent}
 
     ]
   }
