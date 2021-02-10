@@ -70,6 +70,7 @@ export class HarvestingComponent implements OnInit {
   display = false;
   public sectionList = [];
   public  Fields: any[];
+  public fields: any[];
   public strains: any[];
   public employees: any[];
   public globalResource: any;
@@ -89,8 +90,8 @@ export class HarvestingComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.getAllFields();
-    this.getAllsectionlist();
+    this.getAllFieldsAndSections();
+    // this.getAllsectionlist();
     this.employeeListByClient();
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
@@ -159,25 +160,29 @@ export class HarvestingComponent implements OnInit {
     this.ParentFormGroup.addControl('HARVESTING', this.HARVESTING);
     }
 
-  getAllFields() {
-    this.dropdownDataService.getFields().subscribe(
+    getAllFieldsAndSections() {
+      this.fields = [];
+    let TaskTypeId = this.ParentFormGroup.controls.taskname.value
+    this.dropdownDataService.getFieldsSectionsInGrowers(TaskTypeId).subscribe(
       data => {
         this.globalData.Fields = data;
         this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --');
-       
+        const fieldsfilter = Array.from(data.reduce((m, t) => m.set(t.FieldName, t), new Map()).values())
+        this.fields = this.dropdwonTransformService.transform(fieldsfilter,'FieldName', 'FieldId', '-- Select --',false)
+        console.log("fields"+JSON.stringify(this.Fields));
         console.log("fields"+JSON.stringify(this.Fields));
       } ,
       error => { console.log(error); },
       () => console.log('Get all brands complete'));
   }
 
-  getAllsectionlist()
-  {
-this.newSectionDetailsActionService.Getsectionlist().subscribe(
-  data=>{
-    this.allsectionslist=data;
-})
-  }
+//   getAllsectionlist()
+//   {
+// this.newSectionDetailsActionService.Getsectionlist().subscribe(
+//   data=>{
+//     this.allsectionslist=data;
+// })
+//   }
 
   getStrainListByTask() {
     this.dropdownDataService.getLotListByTask(this.TaskModel.task).subscribe(
@@ -225,7 +230,7 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
 
   getSectionListByFieldName(event?:any){
     this.sectionList = [];
-      for(let sec of this.allsectionslist){
+      for(let sec of this.globalData.Fields){
         if(event.value === sec.FieldId){
           this.sectionList.push({label: sec.SectionName, value: sec.SectionId})
         }
@@ -233,11 +238,11 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
     
   }
   getStrainAndPlantCount(event?: any){
-    for(let sec of this.allsectionslist){
+    for(let sec of this.globalData.Fields){
       if(event.value === sec.SectionId)
       {
         this.strainName = sec.StrainName;
-        this.plantCount =sec.PlantsCount;
+        this.plantCount =sec.AvilablePlantCount;
         this.TaskModel.HARVESTING.section = sec.SectionName
         this.TaskModel.HARVESTING.strain =  this.strainName
         this.HARVESTING.controls["strain"].setValue(this.strainName)

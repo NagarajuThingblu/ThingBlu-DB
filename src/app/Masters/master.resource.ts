@@ -3,14 +3,14 @@ export class MastersResource {
         return {
             en: {
                 newlabel: {
-                    pageheading: 'Add New Bin Label',
+                    pageheading: 'Add New Bin',
                     taskType:'Task Type',
                     binNo:'Bin Number',
                     strain:'Strain',
                     skewType:'Skew Type',
                     lightDept:'Light Dept',
                     trimmingMethod:'Trimming Method',
-                    header:'Bin Labels List',
+                    header:'Bins List',
                     newlabelsavedsuccess:'Successfully saved',
                     deleteLabelMsg: 'Do you want to delete this Bin Label?',
                     newlabeldeletedsuccess:'Bin Label deleted successfully',

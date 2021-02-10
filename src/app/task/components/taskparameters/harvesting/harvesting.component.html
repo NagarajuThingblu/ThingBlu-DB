@@ -7,7 +7,7 @@
         [filter] ="true"
         
         placeholder="-- Select --"
-        [options]="Fields"
+        [options]="fields"
         [autoWidth]="true"
         (onChange)="getSectionListByFieldName($event)"
         formControlName="field"
@@ -61,6 +61,7 @@
       
       <input type="text" 
       pInputText 
+      readonly
       autocomplete="off"
       id="strain" 
       name="strain" 
@@ -77,7 +78,7 @@
       <input type="number" 
       pInputText 
       autocomplete="off"
-     
+      readonly
       [value]="plantCount"
       id="plantCount" 
       name="plantCount" 
@@ -146,7 +147,7 @@
           >Task will be get created for past date
         </small>
         <p-calendar                        
-          
+        [(ngModel)]="TaskModel.HARVESTING.startdate"
            [showIcon]="true"
            [defaultDate]="defaultDate"      
            (onSelect)="estStartDate_Select()"

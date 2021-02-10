@@ -27,9 +27,6 @@
               <p-table [value]="labelDetailsArr?.controls" id="labelDetails" name="labelDetails">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th>{{ newLabelResources.taskType }}
-                      <span class="star">*</span>
-                    </th>
                     <th>{{ newLabelResources.binNo }}
                       <span class="star">*</span>
                     </th>
@@ -46,7 +43,8 @@
                       <span class="star">*</span>
                    </th>
                     <th style="width: 80px;">Is Active</th>
-                   
+                    <th style="width: 80px;">Action</th>
+                    
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-item let-i="rowIndex" >
@@ -97,8 +95,11 @@
                          [value]="TrimmingMethod" 
                          label={{TrimmingMethod}} 
                          [disabled]="enableDropDown"
-                         formControlName="TrimmingMethod"></p-radioButton >
+                         formControlName="TrimmingMethod"
+                         ></p-radioButton >
+                         <div *ngIf="TrimmingMethod.errors?.required">selection is required</div>
                        </div>  
+                     
                                  
                     </td>
                     <td>

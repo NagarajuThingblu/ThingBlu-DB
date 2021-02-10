@@ -43,4 +43,18 @@ export class NewSectionDetailsActionService {
   return this.http.get(url,{params: params}).map(data=>data);
 
     }
+    getFieldsInGrowers() {
+  const url = 'api/Grower/GetFieldsSectionList';
+
+      let params = new HttpParams();
+      params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+    return this.http
+    .get(url, {params: params})
+
+   .map(data => {
+    // console.log('Brands Service success');
+    return data;
+   });
+}
 }
