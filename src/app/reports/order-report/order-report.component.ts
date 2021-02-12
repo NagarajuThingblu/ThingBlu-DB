@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../shared/services/loader.service';
 import { AppCommonService } from '../../shared/services/app-common.service';
 import { DomSanitizer, Title } from '@angular/platform-browser';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-order-report',
@@ -53,7 +54,7 @@ export class OrderReportComponent implements OnInit {
       //Dev
       
        //Demo
-       this.iFrameUrl = 'https://thingbludemoapplication.navizanalytics.com/ThingBluDev/DashboardEmbed/Home.aspx?DashboardName=Financial&UserName='+this.userName;
+       this.iFrameUrl = environment.reportURL +'/DashboardEmbed/Home.aspx?DashboardName=Financial&UserName='+this.userName;
        //Demo
        //this.iFrameUrl = 'https://thingbludemoapplication.navizanalytics.com/ThingbluDevTest/DashboardEmbed/Home.aspx?DashboardName=Financial&UserName='+this.userName; // UAT
         this.iFrameUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.iFrameUrl);
