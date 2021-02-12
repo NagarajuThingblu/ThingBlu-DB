@@ -2,6 +2,7 @@ import { DomSanitizer, Title } from '@angular/platform-browser';
 import { AppCommonService } from '../../shared/services/app-common.service';
 import { LoaderService } from '../../shared/services/loader.service';
 import { Component, OnInit } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-flower-report',
@@ -50,7 +51,7 @@ export class FlowerReportComponent implements OnInit {
      //Dev test
       //this.iFrameUrl = 'https://demo.navizanalytics.com/Thingbludemo/DashboardEmbed/Home.aspx?DashboardName=Flower&UserName='+this.userName; 
      //Dev(thingblub2csample)
-      this.iFrameUrl = 'https://thingbludemoapplication.navizanalytics.com/ThingBluDev/DashboardEmbed/Home.aspx?DashboardName=PeopleAnalytics&UserName='+this.userName; 
+      this.iFrameUrl = environment.reportURL + '/DashboardEmbed/Home.aspx?DashboardName=PeopleAnalytics&UserName='+this.userName; 
       //Demo(thingblub2ctest)
       //this.iFrameUrl = 'https://thingbludemoapplication.navizanalytics.com/ThingbluDevTest/DashboardEmbed/Home.aspx?DashboardName=PeopleAnalytics&UserName='+this.userName; 
       this.iFrameUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.iFrameUrl);

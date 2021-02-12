@@ -2,6 +2,7 @@ import { DomSanitizer, Title } from '@angular/platform-browser';
 import { AppCommonService } from './../../shared/services/app-common.service';
 import { LoaderService } from './../../shared/services/loader.service';
 import { Component, OnInit } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-preroll-report',
@@ -51,7 +52,7 @@ export class PrerollReportComponent implements OnInit {
      //dev
      //this.iFrameUrl = 'https://demo.navizanalytics.com/Thingbludemo/DashboardEmbed/Home.aspx?DashboardName=Pre-Roll&UserName='+this.userName;   // UAT
      //Dev
-     this.iFrameUrl = 'https://thingbludemoapplication.navizanalytics.com/ThingBluDev/DashboardEmbed/Home.aspx?DashboardName=Production&UserName='+this.userName; 
+     this.iFrameUrl = environment.reportURL +'/DashboardEmbed/Home.aspx?DashboardName=Production&UserName='+this.userName; 
      //Demo
      //this.iFrameUrl = 'https://thingbludemoapplication.navizanalytics.com/ThingbluDevTest/DashboardEmbed/Home.aspx?DashboardName=Production&UserName='+this.userName;   // UAT
      
