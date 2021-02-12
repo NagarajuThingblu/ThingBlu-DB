@@ -10,7 +10,7 @@
 /node_modules
 
 # ignore an entire directory
-/src/environments/
+# /src/environments/
 
 # IDEs and editors
 /.idea
