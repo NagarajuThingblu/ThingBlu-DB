@@ -56,7 +56,11 @@ export class TaskactionsComponent implements OnInit {
     'StartWeight': 0,
     'IsLotCompleted': null,
     // Added by Devdan :: 08-Oct-2018 :: To get task type id
-    'TaskTypeId': 0
+    'TaskTypeId': 0,
+    'FieldName': '',
+    'SectionName': '',
+    'AssignedPlantCnt':'',
+    'CompletedPlantCnt': ''
   };
 
   public page: any = {

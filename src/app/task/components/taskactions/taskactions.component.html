@@ -150,13 +150,11 @@
 
           <app-planting
           *ngIf="taskActionDetails?.TaskTypeKey=='PLANTING'&&taskActionDetails" 
-          style="width:100%;"            
-          [PageFlag]="page"
-          [TaskModel]="taskActionDetails"  
-          (TaskCompleteOrReviewed)="getTaskDetaisByTask()"            
+              style="width:100%;"            
+              [PageFlag]="page"
+              [TaskModel]="taskActionDetails"         
         >
-
-        </app-planting>
+          </app-planting>
 
             <!--End Dynamic Component Contents Depends on whatever the task is selected -->
 

@@ -228,68 +228,114 @@
           ></p-checkbox>                                                              
       </div>
   </div>
+</div>
 
-  <div *ngIf="PageFlag.page =='TaskAction'">
-    <div class="ui-g">
-      <div class="ui-g-12 ui-md-6">
-        <div class="paddingRL">
-            <label>
-              <strong>{{ globalResource.employee }}: </strong>
-            </label>
-            <label>
-              {{TaskModel?.EmpName}}
+
+
+<div *ngIf="PageFlag.page =='TaskAction'">
+  <div class="ui-g">
+    <div class="ui-g-12 ui-md-6">
+      <div class="paddingRL">
+          <label>
+            <strong>Employee: </strong>
           </label>
+          <label>
+            {{TaskModel?.EmpName}}
+        </label>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label>
+      <strong>{{ globalResource.strain }}: </strong>
+    </label>
+        {{TaskModel?.StrainName}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label>
+      <strong>Field: </strong>
+    </label>
+        {{TaskModel?.FieldName}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label>
+      <strong>Section: </strong>
+    </label>
+        {{TaskModel?.SectionName}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label>
+      <strong>Assigned Plant Count: </strong>
+    </label>
+        {{TaskModel?.AssignedPlantCnt}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label>
+      <strong>{{ globalResource.eststartdate }}: </strong>
+    </label>
+        {{TaskModel?.EstStartDate}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label>
+      <strong>{{ globalResource.priority }}: </strong>
+    </label>
+        {{TaskModel?.TaskPriority}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
+  <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.actualstartdate }}: </strong>
+      </label>
+    
+        {{TaskModel?.ActStartDate }}
+    </div>
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+  <div class="paddingRL">
+    <label>
+      <strong>{{ globalResource.actualenddate }}: </strong>
+    </label>
+  
+      {{TaskModel?.ActEndDate}}
+  </div>
+</div>
+
+<!-- <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="500" [minWidth]="200" >
+  <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+      <div class="ui-grid-row">            
+        <div class="ui-grid-col-7">
+         Assigned Plant Count:
+        </div>
+      </div class="ui-grid-col-5">
+      {{ taskCompletionModel.AssignedPlantCnt }} 
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-7">
+          <label for="completedPC">Completed Plant Count<span class="star">*</span></label>:
+          <input type="text" 
+          pInputText 
+          autocomplete="off"
+          id="completedPC" 
+          name="completedPC" 
+          [value]="strainName"
+          formControlName="completedPC"         
+          class="clsControl"  
+        />
+        </div>
       </div>
     </div>
-    <div class="ui-g-12 ui-md-6">
-    <div class="paddingRL">
-      <label>
-        <strong>{{ globalResource.strain }}: </strong>
-      </label>
-          {{TaskModel?.StrainName}}
-    </div>
-  </div>
-  <div class="ui-g-12 ui-md-6">
-    <div class="paddingRL">
-      <label>
-        <strong>Field: </strong>
-      </label>
-          {{TaskModel?.field}}
-    </div>
-  </div>
-  <div class="ui-g-12 ui-md-6">
-    <div class="paddingRL">
-      <label>
-        <strong>Section: </strong>
-      </label>
-          {{TaskModel?.section}}
-    </div>
-  </div>
-  <div class="ui-g-12 ui-md-6">
-    <div class="paddingRL">
-      <label>
-        <strong>Assigned Plant Count: </strong>
-      </label>
-          {{TaskModel?.assignedPC}}
-    </div>
-  </div>
-  <div class="ui-g-12 ui-md-6">
-    <div class="paddingRL">
-      <label>
-        <strong>{{ globalResource.eststartdate }}: </strong>
-      </label>
-          {{TaskModel?.EstStartDate}}
-    </div>
-  </div>
-  <div class="ui-g-12 ui-md-6">
-    <div class="paddingRL">
-      <label>
-        <strong>{{ globalResource.priority }}: </strong>
-      </label>
-          {{TaskModel?.TaskPriority}}
-    </div>
-  </div>
-
-</div>
-</div>
+  </form>
+</p-dialog> -->
 </div>

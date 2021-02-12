@@ -32,13 +32,15 @@ import { filter } from 'rxjs/operator/filter';
 export class PlantingComponent implements OnInit{
   PLANTING: FormGroup;
   // tslint:disable-next-line:no-input-rename
-  @Input('TaskModel') TaskModel: any;
+  @Input() TaskModel: any;
   @Input() PageFlag: any;
   @Input() ParentFormGroup: FormGroup;
+  @Input() questions: any[];
   @ViewChild('checkedItems') private checkedElements: ElementRef;
+  @Output() TaskCompleteOrReviewed: EventEmitter<any> = new EventEmitter<any>();
 
 
-  questions: QuestionBase<any>[];
+  // questions: QuestionBase<any>[];
   public _cookieService: UserModel;
   public assignTaskResources: any;
   public userRoles: any;
@@ -67,7 +69,7 @@ export class PlantingComponent implements OnInit{
     private elref: ElementRef
   ) { 
     this._cookieService = this.appCommonService.getUserProfile();
-    this.questions = service.getQuestions();
+    // this.questions = service.getQuestions();
   }
   display = false;
   public sectionList = [];
@@ -83,6 +85,7 @@ export class PlantingComponent implements OnInit{
   public employeeArray:any=[];
   public strainName: any;
   public plantCount: any;
+  public taskCompletionModel: any;
   public allsectionslist:any;
   private globalData = {
     lots: [],
@@ -138,17 +141,13 @@ export class PlantingComponent implements OnInit{
         notifyemployee: this.TaskModel.IsEmployeeNotify ? this.TaskModel.IsEmployeeNotify : false,
         usercomment: '',
       };
-    }
+   
     this.PLANTING = this.fb.group({
       'strain': new FormControl('', Validators.required),
       'field' : new FormControl('', Validators.required),
       'section': new FormControl('', Validators.required),
-      'employee': new FormControl('', Validators.required),
       'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
-      'estimatedenddate': new FormControl(''),
-      'endtime': new FormControl(''),
       // 'estimatedenddate': new FormControl('',  Validators.compose([Validators.required])),
-      'esthrs': new FormControl(''),
       'employeeList': new FormControl('', Validators.required),
      'plantCount' : new FormControl('', Validators.required),
      'assignedPC' : new FormControl('', Validators.required),
@@ -156,15 +155,33 @@ export class PlantingComponent implements OnInit{
       'notifymanager': new FormControl(''),
       'notifyemployee': new FormControl(''),
       'comment': new FormControl('', Validators.maxLength(500)),
-      'assignwt': new FormControl('', Validators.compose([Validators.required, Validators.min(0.1)]))
     });
 
     this.ParentFormGroup.addControl('PLANTING', this.PLANTING);
     }
+    else{
+      this.questions.forEach(question => {
+        if (question.key === 'BUD_WT') {
+          question.value = this.TaskModel.UsableWt;
+        } else if (question.key === 'JOINTS_WT') {
+          question.value = this.TaskModel.JointsWt;
+        } else if (question.key === 'OIL_WT') {
+          question.value = this.TaskModel.OilMaterialWt;
+        }
+      });
+      this.taskCompletionModel = {
+        CompletedPlantCnt : this.TaskModel.CompletedPlantCnt,
+        AssignedPlantCnt : this.TaskModel.AssignedPlantCnt
+      }
+    }
+
+  }
 
   getAllFieldsAndSections() {
     this.fields = [];
-    let TaskTypeId = this.ParentFormGroup.controls.taskname.value
+
+    let TaskTypeId = this.ParentFormGroup != undefined?
+    this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
     this.dropdownDataService.getFieldsSectionsInGrowers(TaskTypeId).subscribe(
       data => {
         this.globalData.Fields = data;

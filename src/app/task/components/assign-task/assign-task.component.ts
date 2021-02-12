@@ -326,7 +326,7 @@ console.log(assignTaskFormValues)
     }
    
 
-    if (this.assignTaskForm) {
+    if (this.assignTaskForm.valid) {
       assignTaskDetailsForWebApi = {
         TaskDetails: {
           ClientId: this._cookieService.ClientId,
