@@ -3,13 +3,13 @@ export const environment = {
      // apiEndpoint: 'http://192.168.5.148/tbwebapinew/',
     //apiEndpoint: 'http://localhost:44386/',
     
-     apiEndpoint: 'https://tbdevtestapi.azurewebsites.net/', //demo API processor
+    //  apiEndpoint: 'https://tbdevtestapi.azurewebsites.net/', //demo API processor
      //  apiEndpoint: 'http://localhost:54302/',
      // apiEndpoint: 'http://192.168.5.148/tbtestapi/',
     // apiEndpoint: 'http://localhost/thingbluwebapinew/'
     // apiEndpoint: 'https://thingbluapiuat.azurewebsites.net/',
     tolerance: 5,
-   // apiEndpoint: 'https://tbappapitest.azurewebsites.net/', // Growers dev
+   apiEndpoint: 'https://tbappapitest.azurewebsites.net/', // Growers dev
     // apiEndpoint: 'https://tbappapihannah.azurewebsites.net/', //Processor dev
     //  apiEndpoint: 'https://tbdemowebapi.azurewebsites.net/',
   
@@ -21,31 +21,31 @@ export const environment = {
     clientKey: 'Hannah Industries',
   
     // ** Start  Demo Test config (demo processors)
-      tenant: 'thingblub2ctest.onmicrosoft.com',
-      tenantClientID: '00f2482d-33d6-47a8-9639-39be906d926e',
-      signUpSignInPolicy: 'B2C_1_SignUpInV2',
-      signUpPolicy: 'B2C_1_SignUpV2',
-      resetPolicy: 'B2C_1_ResetPassword',
-      b2cScopes: 'https://thingblub2ctest.onmicrosoft.com/helloAPI/demo.read',
-     redirectUri: 'https://tbdevtest.azurewebsites.net/',
-     resetPwdRedirectUri: 'https://tbdevtest.azurewebsites.net/resetsuccess/',
-  //  redirectUri: 'http://localhost:8000/',
-  //   resetPwdRedirectUri: 'http://localhost:8000/resetsuccess/',
-      tenantURL:'thingblub2ctest.b2clogin.com',
-      reportURL: 'https://thingbludemoapplication.navizanalytics.com/ThingbluDevTest',
+  //     tenant: 'thingblub2ctest.onmicrosoft.com',
+  //     tenantClientID: '00f2482d-33d6-47a8-9639-39be906d926e',
+  //     signUpSignInPolicy: 'B2C_1_SignUpInV2',
+  //     signUpPolicy: 'B2C_1_SignUpV2',
+  //     resetPolicy: 'B2C_1_ResetPassword',
+  //     b2cScopes: 'https://thingblub2ctest.onmicrosoft.com/helloAPI/demo.read',
+  //    redirectUri: 'https://tbdevtest.azurewebsites.net/',
+  //    resetPwdRedirectUri: 'https://tbdevtest.azurewebsites.net/resetsuccess/',
+  // //  redirectUri: 'http://localhost:8000/',
+  // //   resetPwdRedirectUri: 'http://localhost:8000/resetsuccess/',
+  //     tenantURL:'thingblub2ctest.b2clogin.com',
+  //     reportURL: 'https://thingbludemoapplication.navizanalytics.com/ThingbluDevTest',
     // ** End Hannah LocalDev Test config
   
-    //start of dev testing (growers & processors)
-//     tenant: 'thingbluB2Csample.onmicrosoft.com',
-//     tenantClientID: '74b4f050-b759-45cd-ab9d-1c0e3a8417f7',
-//     signUpSignInPolicy: 'B2C_1_SignupSignin',
-//     signUpPolicy: 'B2C_1_SignUpV2',
-//     resetPolicy: 'B2C_1_PasswordReset',
-//     b2cScopes: 'https://thingbluB2Csample.onmicrosoft.com/access-api/user_impersonation', 
-//     reportURL: 'https://thingbludemoapplication.navizanalytics.com/ThingbluDev',
-//     //Local
-//   redirectUri: 'http://localhost:8000/',
-//  resetPwdRedirectUri: 'http://localhost:8000/resetsuccess/',
+    // start of dev testing (growers & processors)
+    tenant: 'thingbluB2Csample.onmicrosoft.com',
+    tenantClientID: '74b4f050-b759-45cd-ab9d-1c0e3a8417f7',
+    signUpSignInPolicy: 'B2C_1_SignupSignin',
+    signUpPolicy: 'B2C_1_SignUpV2',
+    resetPolicy: 'B2C_1_PasswordReset',
+    b2cScopes: 'https://thingbluB2Csample.onmicrosoft.com/access-api/user_impersonation', 
+    reportURL: 'https://thingbludemoapplication.navizanalytics.com/ThingbluDev',
+    //Local
+  redirectUri: 'http://localhost:8000/',
+ resetPwdRedirectUri: 'http://localhost:8000/resetsuccess/',
 
 //Dev Grower
   //   redirectUri: 'https://test.thingbluapp.com/',
