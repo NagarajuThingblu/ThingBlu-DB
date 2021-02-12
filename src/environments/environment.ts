@@ -27,12 +27,12 @@ export const environment = {
       signUpPolicy: 'B2C_1_SignUpV2',
       resetPolicy: 'B2C_1_ResetPassword',
       b2cScopes: 'https://thingblub2ctest.onmicrosoft.com/helloAPI/demo.read',
-     redirectUri: 'https://tbdevtest.azurewebsites.net/',
-     resetPwdRedirectUri: 'https://tbdevtest.azurewebsites.net/resetsuccess/',
-   // redirectUri: 'http://localhost:8000/',
-    // resetPwdRedirectUri: 'http://localhost:8000/resetsuccess/',
+    //  redirectUri: 'https://tbdevtest.azurewebsites.net/',
+    //  resetPwdRedirectUri: 'https://tbdevtest.azurewebsites.net/resetsuccess/',
+   redirectUri: 'http://localhost:8000/',
+    resetPwdRedirectUri: 'http://localhost:8000/resetsuccess/',
       tenantURL:'thingblub2ctest.b2clogin.com',
-      reportURL: 'https://thingbludemoapplication.navizanalytics.com/ThingBluDev',
+      reportURL: 'https://thingbludemoapplication.navizanalytics.com/ThingbluDevTest',
     // ** End Hannah LocalDev Test config
   
     //start of dev testing (growers & processors)
