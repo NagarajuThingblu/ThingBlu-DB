@@ -937,6 +937,57 @@ console.log(assignTaskFormValues)
         });
     
       }
+
+      //Harvesting Task
+
+      else if (this.selectedTaskTypeName === 'HARVESTING') { // HARVESTING TASK
+        let harvestingDataForApi = {
+          Harvesting: {
+           "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
+           "SectionId": assignTaskFormValues.HARVESTING.section,
+           "AssignedPlantsCount": assignTaskFormValues.HARVESTING.assignedPC,
+           "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
+           "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
+           "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority ,
+           "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
+           "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
+           "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
+           "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
+        },
+        EmployeeTypes:[]
+       };
+       assignTaskFormValues[this.selectedTaskTypeName].employeeList
+       .forEach((element, index) => {
+        harvestingDataForApi.EmployeeTypes.push({
+           "EmpId" : assignTaskFormValues.HARVESTING.employeeList[index] 
+         });
+       });
+        this.loaderService.display(true);
+       this.taskCommonService.assignHarvestTask(harvestingDataForApi).
+       subscribe(
+         data => {
+           this.msgs = [];
+           if (String(data[0]. RESULTKEY).toLocaleUpperCase() === 'SUCCESS') {
+             this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+             detail: this.assignTaskResources.taskassignedsuccessfully});
+             this.assignTask.task = null;
+             this.assignTask.taskcategory=null;
+             this.selectedTaskTypeName = '';
+             this.isServiceCallComplete = false;
+             this.assignTaskForm = this.fb.group({
+               'taskname': new FormControl(null, Validators.required),
+               'taskCategory':new FormControl(null,Validators.required),
+             });
+             this.loaderService.display(false);
+         }
+         else if (String(data).toLocaleUpperCase() === 'FAILURE') {
+           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+         }
+         });
+     
+       }
+ 
+
           // http call starts
         
    

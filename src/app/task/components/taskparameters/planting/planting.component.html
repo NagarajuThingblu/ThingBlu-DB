@@ -242,8 +242,8 @@
           <label>
             {{TaskModel?.EmpName}}
         </label>
+      </div>
     </div>
-  </div>
   <div class="ui-g-12 ui-md-6">
   <div class="paddingRL">
     <label>
@@ -301,7 +301,7 @@
         {{TaskModel?.ActStartDate }}
     </div>
   </div>
-</div>
+
 <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
   <div class="paddingRL">
     <label>
@@ -311,31 +311,259 @@
       {{TaskModel?.ActEndDate}}
   </div>
 </div>
-
-<!-- <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="500" [minWidth]="200" >
+<p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="500" [minWidth]="200" >
   <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-      <div class="ui-grid-row">            
+      <div class="ui-grid-row"> 
         <div class="ui-grid-col-7">
-         Assigned Plant Count:
+          
+         </div>
+         
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label for="completedPC">Completed Plant Count</label>:
         </div>
-      </div class="ui-grid-col-5">
-      {{ taskCompletionModel.AssignedPlantCnt }} 
-      <div class="ui-grid-row">
-        <div class="ui-grid-col-7">
-          <label for="completedPC">Completed Plant Count<span class="star">*</span></label>:
-          <input type="text" 
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div>
+          <input type="number" 
           pInputText 
           autocomplete="off"
           id="completedPC" 
           name="completedPC" 
-          [value]="strainName"
-          formControlName="completedPC"         
-          class="clsControl"  
+          formControlName="completedPC"              
+          class="clsControl"   
+        />
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label for="terminatedtedPC">Terminated Plant Count</label>:
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div>
+          <input type="number" 
+          pInputText 
+          autocomplete="off"
+          id="terminatedtedPC" 
+          name="terminatedtedPC" 
+          formControlName="terminatedtedPC"              
+          class="clsControl"   
+        />
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label for="terminationReason">Termination Reason</label>:
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div>
+          <input type="text" 
+          pInputText 
+          autocomplete="off"
+          id="terminationReason" 
+          name="terminationReason" 
+          formControlName="terminationReason"              
+          class="clsControl"   
+        />
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label for="comment">Comment</label>:
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div>
+          <input type="text" 
+          pInputText 
+          autocomplete="off"
+          id="comment" 
+          name="comment" 
+          [(ngModel)]="taskCompletionModel.miscComment"
+          formControlName="comment"              
+          class="clsControl"   
         />
         </div>
       </div>
     </div>
+    <p-footer>
+      <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
+      <!-- [disabled]="!completionForm.valid" -->
+      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showmodal=false" label="Cancel"></button>
+    </p-footer>
   </form>
-</p-dialog> -->
+</p-dialog>
+
+<p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
+  <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-6">
+          <label for="completedPC">Completed Plant Count:</label>
+        </div> 
+         
+        <div class="ui-g-12 ui-md-6">
+          <div>
+            <input type="number" 
+            pInputText 
+            autocomplete="off"
+            id="completedPC" 
+            name="completedPC" 
+            [(ngModel)]="taskReviewModel.CompletedPlantCnt"
+            formControlName="completedPC"              
+            class="clsControl"   
+          />
+          </div>
+        </div> 
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <label for="terminatedtedPC">Terminated Plant Count</label>:
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div>
+            <input type="number" 
+            pInputText 
+            autocomplete="off"
+            id="terminatedtedPC" 
+            name="terminatedtedPC" 
+            [(ngModel)]="taskReviewModel.TerminatedPlantCount"
+            formControlName="terminatedtedPC"              
+            class="clsControl"   
+          />
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <label for="terminationReason">Termination Reason</label>:
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div>
+            <input type="text" 
+            pInputText 
+            autocomplete="off"
+            id="terminationReason" 
+            name="terminationReason" 
+            [(ngModel)]="taskReviewModel.TerminationReason"
+            formControlName="terminationReason"              
+            class="clsControl"   
+          />
+          </div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4">
+            {{ assignTaskResources.actualhrs }}:
+          </div>
+          <div class="ui-grid-col-4">
+            {{ TaskModel?.ActHrs | minutesToTime}}
+          </div>
+          <div class="ui-grid-col-4">
+            <div class="ui-inputgroup ui-inputgroup-border" >
+            <input type="number"                   
+                  pInputText 
+                  autocomplete="off"
+                  pKeyFilter="int"
+                  [(ngModel)]="taskReviewModel.racthrs"                         
+                  formControlName="ActHrs"
+                  id="acthrs"
+                  name="acthrs"                      
+                /> 
+                <span>:</span>
+                <input type="number"                  
+                  pInputText     
+                  autocomplete="off"   
+                  pKeyFilter="int"           
+                  [(ngModel)]="taskReviewModel.ractmins"                         
+                  formControlName="ActMins"
+                  id="actmins"
+                  name="actmins"                      
+                />
+          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                *ngIf="!reviewForm.controls['ActMins'].valid&&reviewForm.controls['ActMins'].dirty">
+                  <span *ngIf="reviewForm.controls['ActMins'].errors['max']">
+                    {{ globalResource.maxMinSecValue }}
+                  </span>
+          </div>
+              <span>:</span>
+              <input type="number"                  
+                pInputText         
+                autocomplete="off"      
+                pKeyFilter="int"    
+                [(ngModel)]="taskReviewModel.ractsecs"                         
+                formControlName="ActSecs"
+                id="actsecs"
+                name="actsecs"                  
+              />
+          <div class="ui-message ui-messages-error-Sec ui-corner-all" appErrorTooltip
+                  *ngIf="!reviewForm.controls['ActSecs'].valid&&reviewForm.controls['ActSecs'].dirty">
+                    <span *ngIf="reviewForm.controls['ActSecs'].errors['max']">
+                      {{ globalResource.maxMinSecValue }}
+                    </span>
+          </div>
+        </div>
+          </div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4">
+            {{ assignTaskResources.misccost }}:
+          </div>
+          <div class="ui-grid-col-4">
+              {{ taskReviewModel.misccost | currency }}
+          </div>
+          <div class="ui-grid-col-4">
+              <input type="text"
+                OnlyNumber="true" 
+                pInputText 
+                pKeyFilter="num"
+                autocomplete="off"
+                [(ngModel)]="taskReviewModel.rmisccost"                         
+                formControlName="rmisccost"
+                id="misccost"
+                name="misccost"      
+              />                   
+              
+          </div>             
+      </div>
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-4">
+          {{ assignTaskResources.comment }}:
+        </div>
+        <div class="ui-grid-col-4">               
+            {{ taskReviewModel.comment }}
+        </div>
+        <div class="ui-grid-col-4">
+            <textarea                        
+              pInputTextarea                        
+              [(ngModel)]="taskCompletionModel.rmisccomment"
+              formControlName="rmisccomment"
+              id="rmisccomment"
+              name="rmisccomment"
+              maxlength="500"
+              class="clsControl"
+              binary="true"
+            ></textarea>                 
+            
+        </div> 
+        
+    </div>
+      </div>
+  
+    <p-footer>
+      <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
+      <!-- [disabled]="!reviewForm.valid" -->
+      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showReviewmodal=false" label="Cancel"></button>
+    </p-footer>
+  </form>
+</p-dialog>
+
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+
+
+</div>
 </div>

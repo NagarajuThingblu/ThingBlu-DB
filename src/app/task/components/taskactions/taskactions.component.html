@@ -152,9 +152,19 @@
           *ngIf="taskActionDetails?.TaskTypeKey=='PLANTING'&&taskActionDetails" 
               style="width:100%;"            
               [PageFlag]="page"
-              [TaskModel]="taskActionDetails"         
+              [TaskModel]="taskActionDetails"     
+              (TaskCompleteOrReviewed)="getTaskDetaisByTask()"    
         >
           </app-planting>
+
+          <app-harvesting
+          *ngIf="taskActionDetails?.TaskTypeKey=='HARVESTING'&&taskActionDetails" 
+              style="width:100%;"            
+              [PageFlag]="page"
+              [TaskModel]="taskActionDetails"     
+              (TaskCompleteOrReviewed)="getTaskDetaisByTask()"    
+        >
+          </app-harvesting>
 
             <!--End Dynamic Component Contents Depends on whatever the task is selected -->
 

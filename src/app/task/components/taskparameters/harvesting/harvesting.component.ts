@@ -21,6 +21,8 @@ import { LoaderService } from '../../../../shared/services/loader.service';
 import { Title } from '@angular/platform-browser';
 import { RefreshService } from '../../../../dashboard/services/refresh.service';
 import { NewSectionDetailsActionService } from '../../../services/add-section-details.service';
+import { filter } from 'rxjs/operator/filter';
+import { NewClientService } from '../../../../Masters/services/new-client.service';
 
 @Component({
   moduleId: module.id,
@@ -28,15 +30,20 @@ import { NewSectionDetailsActionService } from '../../../services/add-section-de
   templateUrl: './harvesting.component.html',
   styleUrls: ['./harvesting.component.css']
 })
-export class HarvestingComponent implements OnInit {
+export class HarvestingComponent implements OnInit{
   HARVESTING: FormGroup;
+  completionForm: FormGroup;
+  reviewForm: FormGroup;
   // tslint:disable-next-line:no-input-rename
-  @Input('TaskModel') TaskModel: any;
+  @Input() TaskModel: any;
   @Input() PageFlag: any;
   @Input() ParentFormGroup: FormGroup;
+  @Input() questions: any[];
   @ViewChild('checkedItems') private checkedElements: ElementRef;
+  @Output() TaskCompleteOrReviewed: EventEmitter<any> = new EventEmitter<any>();
 
-  questions: QuestionBase<any>[];
+
+  // questions: QuestionBase<any>[];
   public _cookieService: UserModel;
   public assignTaskResources: any;
   public userRoles: any;
@@ -65,7 +72,7 @@ export class HarvestingComponent implements OnInit {
     private elref: ElementRef
   ) { 
     this._cookieService = this.appCommonService.getUserProfile();
-    this.questions = service.getQuestions();
+    // this.questions = service.getQuestions();
   }
   display = false;
   public sectionList = [];
@@ -81,6 +88,8 @@ export class HarvestingComponent implements OnInit {
   public employeeArray:any=[];
   public strainName: any;
   public plantCount: any;
+  public taskCompletionModel: any;
+  public taskReviewModel: any;
   public allsectionslist:any;
   private globalData = {
     lots: [],
@@ -88,7 +97,7 @@ export class HarvestingComponent implements OnInit {
     strains: [],
     Fields: [],
   };
-
+  isRActSecsDisabled: boolean;
   ngOnInit() {
     this.getAllFieldsAndSections();
     // this.getAllsectionlist();
@@ -136,17 +145,13 @@ export class HarvestingComponent implements OnInit {
         notifyemployee: this.TaskModel.IsEmployeeNotify ? this.TaskModel.IsEmployeeNotify : false,
         usercomment: '',
       };
-    }
+   
     this.HARVESTING = this.fb.group({
       'strain': new FormControl('', Validators.required),
       'field' : new FormControl('', Validators.required),
       'section': new FormControl('', Validators.required),
-      'employee': new FormControl('', Validators.required),
       'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
-      'estimatedenddate': new FormControl(''),
-      'endtime': new FormControl(''),
       // 'estimatedenddate': new FormControl('',  Validators.compose([Validators.required])),
-      'esthrs': new FormControl(''),
       'employeeList': new FormControl('', Validators.required),
      'plantCount' : new FormControl('', Validators.required),
      'assignedPC' : new FormControl('', Validators.required),
@@ -154,35 +159,274 @@ export class HarvestingComponent implements OnInit {
       'notifymanager': new FormControl(''),
       'notifyemployee': new FormControl(''),
       'comment': new FormControl('', Validators.maxLength(500)),
-      'assignwt': new FormControl('', Validators.compose([Validators.required, Validators.min(0.1)]))
     });
+  
 
     this.ParentFormGroup.addControl('HARVESTING', this.HARVESTING);
     }
+    else{
+     this.taskReviewModel = {
+      misccost: this.TaskModel.MiscCost,
+      CompletedPlantCnt : this.TaskModel.CompletedPlantCnt,
+      TerminatedPlantCount : this.TaskModel.TerminatedPlantCnt,
+      TerminationReason : this.TaskModel.TerminationReason,
+      comment :'',
+      wetweight : this.TaskModel.WetWt,
+      driweight : this.TaskModel.DryWt,
+      wasteweight : this.TaskModel.WasteWt,
+      racthrs: this.TaskModel.RevHrs ?  this.TaskModel.RevHrs : this.padLeft(String(Math.floor(this.TaskModel.ActHrs / 3600)), '0', 2),
+      ractmins: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) / 60)), '0', 2),
+      ractsecs: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) % 60)), '0', 2),
+     }
+      this.taskCompletionModel = {
+        CompletedPlantCnt : this.TaskModel.CompletedPlantCnt,
+        AssignedPlantCnt : this.TaskModel.AssignedPlantCnt,
+        TerminatedPlantCount : this.TaskModel.TerminatedPlantCount,
+        TerminationReason : this.TaskModel.TerminationReason,
+        comment : this.TaskModel.comment,
+        wetweight : this.TaskModel.wetweight,
+        driweight : this.TaskModel.dryweight,
+        wasteweight : this.TaskModel.wasteweight
 
-    getAllFieldsAndSections() {
-      this.fields = [];
-    let TaskTypeId = this.ParentFormGroup.controls.taskname.value
+      }
+
+      this.completionForm = this.fb.group({
+        'completedPC': new FormControl(''),
+        'terminatedtedPC': new FormControl(''),
+        'terminationReason':new FormControl(null),
+        'comment':new FormControl(null),
+        'wetweight': new FormControl(''),
+        'dryweight': new FormControl(''),
+        'wasteweight': new FormControl('')
+      });
+
+      this.reviewForm = this.fb.group({
+        'completedPC': new FormControl(''),
+        'terminatedtedPC': new FormControl(''),
+        'terminationReason':new FormControl(null),
+        'ActHrs': new FormControl(null),
+          'ActMins': new FormControl(null, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
+          'ActSecs': new FormControl({value: null, disabled: this.isRActSecsDisabled}, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
+          'rmisccost': new FormControl(null),
+          'rmisccomment': new FormControl(null),
+          'wetweight': new FormControl(''),
+          'dryweight': new FormControl(''),
+          'wasteweight': new FormControl('')
+      })
+    }
+
+  }
+
+  getAllFieldsAndSections() {
+    this.fields = [];
+
+    let TaskTypeId = this.ParentFormGroup != undefined?
+    this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
     this.dropdownDataService.getFieldsSectionsInGrowers(TaskTypeId).subscribe(
       data => {
         this.globalData.Fields = data;
-        this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --');
+        this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --',false);
         const fieldsfilter = Array.from(data.reduce((m, t) => m.set(t.FieldName, t), new Map()).values())
         this.fields = this.dropdwonTransformService.transform(fieldsfilter,'FieldName', 'FieldId', '-- Select --',false)
-        console.log("fields"+JSON.stringify(this.Fields));
         console.log("fields"+JSON.stringify(this.Fields));
       } ,
       error => { console.log(error); },
       () => console.log('Get all brands complete'));
   }
 
-//   getAllsectionlist()
-//   {
-// this.newSectionDetailsActionService.Getsectionlist().subscribe(
-//   data=>{
-//     this.allsectionslist=data;
-// })
-//   }
+  
+  padLeft(text: string, padChar: string, size: number): string {
+    return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;
+  }
+
+  submitCompleteParameter(formModel) {
+    if (this.completionForm.valid) {
+      // this.CheckThreSholdValidation(formModel);
+       this.completeTask(formModel);
+    } else {
+      this.appCommonService.validateAllFields(this.completionForm);
+    }
+}
+
+submitReviewParameter(formModel) {
+  if (this.reviewForm.valid) {
+    this.submitReview(formModel);
+  } else {
+    this.appCommonService.validateAllFields(this.reviewForm);
+  }
+}
+CaluculateTotalSecs(Hours, Mins, Secs) {
+  return (Number(Hours) * 3600) + (Number(Mins) * 60) + Number(Secs);
+}
+submitReview(formModel) {
+  const ActSeconds = this.reviewForm.getRawValue().ActSecs;
+  let taskReviewWebApi;
+  if ( this.reviewForm.valid === true) {
+    taskReviewWebApi = {
+      ReviewHarvesting: {
+        TaskId:Number(this.taskid),
+        VirtualRoleId: 0,
+        CompletedPlantCount:formModel.completedPC,
+        TerminatedPlantCount: formModel.terminatedtedPC,
+        TerminationReason:  formModel.terminationReason,
+        Comment: formModel.comment,
+        MiscCost: formModel.rmisccost,
+        WetWt: formModel.wetweight,
+        DryWt: formModel.dryweight,
+        WasteWt: formModel.wasteweight,
+        RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
+      }
+    }
+  }
+  this.confirmationService.confirm({
+    message: this.assignTaskResources.taskcompleteconfirm,
+    header: 'Confirmation',
+    icon: 'fa fa-exclamation-triangle',
+    accept: () => {
+      this.loaderService.display(true);
+      this.taskCommonService.submitHarvestTaskReview(taskReviewWebApi)
+      .subscribe(data => {
+        if (data === 'NoComplete'){
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskalreadycompleted });
+          if (this.TaskModel.IsReview === true) {
+            this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
+          } 
+          else {
+            this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+          }
+          this.TaskCompleteOrReviewed.emit();
+        }
+        else if (data === 'Deleted'){
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
+          setTimeout( () => {
+            if (this._cookieService.UserRole === this.userRoles.Manager) {
+              this.router.navigate(['home/managerdashboard']);
+            }
+            else {
+              this.router.navigate(['home/empdashboard']);
+            }
+          }, 1000);
+        }
+        else if (data === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else  if (data === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else{
+          if (this.TaskModel.IsReview === true) {
+            this.TaskModel.TaskStatus =  this.taskStatus.ReviewPending;
+          } 
+          else {
+            this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+          }
+          this.msgs = [];
+          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+          detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
+           setTimeout( () => {
+                      if (this._cookieService.UserRole === this.userRoles.Manager) {
+                        this.router.navigate(['home/managerdashboard']);
+                      } else {
+                        this.router.navigate(['home/empdashboard']);
+                      }
+                    }, 1000);
+        }
+      })
+    }
+  })
+
+}
+
+completeTask(formModel){
+  let taskCompletionWebApi;
+  let assignedPC;
+  if ( this.completionForm.valid === true) {
+    taskCompletionWebApi = {
+      CompleteHarvesting:{
+        TaskId:Number(this.taskid),
+        CompletedPlantCount: formModel.completedPC,
+        TerminatedPlantCount: formModel.terminatedtedPC,
+        TerminationReason:  formModel.terminationReason,
+        Comment: formModel.comment,
+        VirtualRoleId: 0,
+        WetWt: formModel.wetweight,
+        DryWt: formModel.dryweight,
+        WasteWt: formModel.wasteweight
+      }
+    }
+  }
+  assignedPC = Number(this.taskCompletionModel.AssignedPlantCnt);
+  // if(Number(assignedPC) < Number(this.TaskModel.CompletedPlantCnt) + Number(this.TaskModel.CompletedPlantCnt))
+  
+  this.confirmationService.confirm({
+    message: this.assignTaskResources.taskcompleteconfirm,
+    header: 'Confirmation',
+    icon: 'fa fa-exclamation-triangle',
+
+    accept: () => {
+      this.loaderService.display(true);
+      this.taskCommonService.completeHarvestTask(taskCompletionWebApi)
+      .subscribe(data => {
+        if (data === 'NoComplete') {
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskalreadycompleted });
+          if (this.TaskModel.IsReview === true) {
+            this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
+          } else {
+            this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+          }
+          this.TaskCompleteOrReviewed.emit();
+        }
+        else if (data === 'Deleted'){
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
+          setTimeout( () => {
+            if (this._cookieService.UserRole === this.userRoles.Manager) {
+              this.router.navigate(['home/managerdashboard']);
+            } else {
+              this.router.navigate(['home/empdashboard']);
+            }
+          }, 1000);
+        }
+        else if (data === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else  if (data === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else{
+          if (this.TaskModel.IsReview === true) {
+            this.TaskModel.TaskStatus =  this.taskStatus.ReviewPending;
+          } 
+          else {
+            this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+          }
+          this.msgs = [];
+                  this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+                    detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
+                    setTimeout( () => {
+                      if (this._cookieService.UserRole === this.userRoles.Manager) {
+                        this.router.navigate(['home/managerdashboard']);
+                      } else {
+                        this.router.navigate(['home/empdashboard']);
+                      }
+                    }, 1000);
+        }
+        
+      });
+      this.PageFlag.showmodal = false;
+      this.loaderService.display(false);
+
+    },
+    reject: () =>{
+
+    }
+  });
+}
+
+
 
   getStrainListByTask() {
     this.dropdownDataService.getLotListByTask(this.TaskModel.task).subscribe(
@@ -230,7 +474,7 @@ export class HarvestingComponent implements OnInit {
 
   getSectionListByFieldName(event?:any){
     this.sectionList = [];
-      for(let sec of this.globalData.Fields){
+      for(let sec of this.globalData.Fields ){
         if(event.value === sec.FieldId){
           this.sectionList.push({label: sec.SectionName, value: sec.SectionId})
         }
@@ -238,7 +482,7 @@ export class HarvestingComponent implements OnInit {
     
   }
   getStrainAndPlantCount(event?: any){
-    for(let sec of this.globalData.Fields){
+    for(let sec of this.globalData.Fields ){
       if(event.value === sec.SectionId)
       {
         this.strainName = sec.StrainName;

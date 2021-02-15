@@ -22,6 +22,7 @@ import { Title } from '@angular/platform-browser';
 import { RefreshService } from '../../../../dashboard/services/refresh.service';
 import { NewSectionDetailsActionService } from '../../../services/add-section-details.service';
 import { filter } from 'rxjs/operator/filter';
+import { NewClientService } from '../../../../Masters/services/new-client.service';
 
 @Component({
   moduleId: module.id,
@@ -31,6 +32,8 @@ import { filter } from 'rxjs/operator/filter';
 })
 export class PlantingComponent implements OnInit{
   PLANTING: FormGroup;
+  completionForm: FormGroup;
+  reviewForm: FormGroup;
   // tslint:disable-next-line:no-input-rename
   @Input() TaskModel: any;
   @Input() PageFlag: any;
@@ -86,6 +89,7 @@ export class PlantingComponent implements OnInit{
   public strainName: any;
   public plantCount: any;
   public taskCompletionModel: any;
+  public taskReviewModel: any;
   public allsectionslist:any;
   private globalData = {
     lots: [],
@@ -93,7 +97,7 @@ export class PlantingComponent implements OnInit{
     strains: [],
     Fields: [],
   };
-
+  isRActSecsDisabled: boolean;
   ngOnInit() {
     this.getAllFieldsAndSections();
     // this.getAllsectionlist();
@@ -156,23 +160,47 @@ export class PlantingComponent implements OnInit{
       'notifyemployee': new FormControl(''),
       'comment': new FormControl('', Validators.maxLength(500)),
     });
+  
 
     this.ParentFormGroup.addControl('PLANTING', this.PLANTING);
     }
     else{
-      this.questions.forEach(question => {
-        if (question.key === 'BUD_WT') {
-          question.value = this.TaskModel.UsableWt;
-        } else if (question.key === 'JOINTS_WT') {
-          question.value = this.TaskModel.JointsWt;
-        } else if (question.key === 'OIL_WT') {
-          question.value = this.TaskModel.OilMaterialWt;
-        }
-      });
+     this.taskReviewModel = {
+      misccost: this.TaskModel.MiscCost,
+      CompletedPlantCnt : this.TaskModel.CompletedPlantCnt,
+      TerminatedPlantCount : this.TaskModel.TerminatedPlantCnt,
+      TerminationReason : this.TaskModel.TerminationReason,
+      comment :'',
+      racthrs: this.TaskModel.RevHrs ?  this.TaskModel.RevHrs : this.padLeft(String(Math.floor(this.TaskModel.ActHrs / 3600)), '0', 2),
+      ractmins: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) / 60)), '0', 2),
+      ractsecs: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) % 60)), '0', 2),
+     }
       this.taskCompletionModel = {
         CompletedPlantCnt : this.TaskModel.CompletedPlantCnt,
-        AssignedPlantCnt : this.TaskModel.AssignedPlantCnt
+        AssignedPlantCnt : this.TaskModel.AssignedPlantCnt,
+        TerminatedPlantCount : this.TaskModel.terminatedtedPC,
+        TerminationReason : this.TaskModel.terminationReason,
+        comment : this.TaskModel.comment
+
       }
+
+      this.completionForm = this.fb.group({
+        'completedPC': new FormControl(''),
+        'terminatedtedPC': new FormControl(''),
+        'terminationReason':new FormControl(null),
+        'comment':new FormControl(null),
+      });
+
+      this.reviewForm = this.fb.group({
+        'completedPC': new FormControl(''),
+        'terminatedtedPC': new FormControl(''),
+        'terminationReason':new FormControl(null),
+        'ActHrs': new FormControl(null),
+          'ActMins': new FormControl(null, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
+          'ActSecs': new FormControl({value: null, disabled: this.isRActSecsDisabled}, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
+          'rmisccost': new FormControl(null),
+          'rmisccomment': new FormControl(null)
+      })
     }
 
   }
@@ -194,13 +222,193 @@ export class PlantingComponent implements OnInit{
       () => console.log('Get all brands complete'));
   }
 
-//   getAllsectionlist()
-//   {
-// this.newSectionDetailsActionService.getFieldsInGrowers().subscribe(
-//   data=>{
-//     this.allsectionslist=data;
-// })
-//   }
+  
+  padLeft(text: string, padChar: string, size: number): string {
+    return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;
+  }
+
+  submitCompleteParameter(formModel) {
+    if (this.completionForm.valid) {
+      // this.CheckThreSholdValidation(formModel);
+       this.completeTask(formModel);
+    } else {
+      this.appCommonService.validateAllFields(this.completionForm);
+    }
+}
+
+submitReviewParameter(formModel) {
+  if (this.reviewForm.valid) {
+    this.submitReview(formModel);
+  } else {
+    this.appCommonService.validateAllFields(this.reviewForm);
+  }
+}
+CaluculateTotalSecs(Hours, Mins, Secs) {
+  return (Number(Hours) * 3600) + (Number(Mins) * 60) + Number(Secs);
+}
+submitReview(formModel) {
+  const ActSeconds = this.reviewForm.getRawValue().ActSecs;
+  let taskReviewWebApi;
+  if ( this.reviewForm.valid === true) {
+    taskReviewWebApi = {
+      ReviewPlant: {
+        TaskId:Number(this.taskid),
+        VirtualRoleId: 0,
+        CompletedPlantCount:formModel.completedPC,
+        TerminatedPlantCount: formModel.terminatedtedPC,
+        TerminationReason:  formModel.terminationReason,
+        Comment: formModel.comment,
+        MiscCost: formModel.rmisccost,
+        RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
+      }
+    }
+  }
+  this.confirmationService.confirm({
+    message: this.assignTaskResources.taskcompleteconfirm,
+    header: 'Confirmation',
+    icon: 'fa fa-exclamation-triangle',
+    accept: () => {
+      this.loaderService.display(true);
+      this.taskCommonService.submitPlantTaskReview(taskReviewWebApi)
+      .subscribe(data => {
+        if (data === 'NoComplete'){
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskalreadycompleted });
+          if (this.TaskModel.IsReview === true) {
+            this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
+          } 
+          else {
+            this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+          }
+          this.TaskCompleteOrReviewed.emit();
+        }
+        else if (data === 'Deleted'){
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
+          setTimeout( () => {
+            if (this._cookieService.UserRole === this.userRoles.Manager) {
+              this.router.navigate(['home/managerdashboard']);
+            }
+            else {
+              this.router.navigate(['home/empdashboard']);
+            }
+          }, 1000);
+        }
+        else if (data === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else  if (data === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else{
+          if (this.TaskModel.IsReview === true) {
+            this.TaskModel.TaskStatus =  this.taskStatus.ReviewPending;
+          } 
+          else {
+            this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+          }
+          this.msgs = [];
+          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+          detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
+           setTimeout( () => {
+                      if (this._cookieService.UserRole === this.userRoles.Manager) {
+                        this.router.navigate(['home/managerdashboard']);
+                      } else {
+                        this.router.navigate(['home/empdashboard']);
+                      }
+                    }, 1000);
+        }
+      })
+    }
+  })
+
+}
+
+completeTask(formModel){
+  let taskCompletionWebApi;
+  let assignedPC;
+  if ( this.completionForm.valid === true) {
+    taskCompletionWebApi = {
+      CompletePlant:{
+        TaskId:Number(this.taskid),
+        CompletedPlantCount: formModel.completedPC,
+        TerminatedPlantCount: formModel.terminatedtedPC,
+        TerminationReason:  formModel.terminationReason,
+        Comment: formModel.comment,
+        VirtualRoleId: 0,
+      }
+    }
+  }
+  assignedPC = Number(this.taskCompletionModel.AssignedPlantCnt);
+  // if(Number(assignedPC) < Number(this.TaskModel.CompletedPlantCnt) + Number(this.TaskModel.CompletedPlantCnt))
+  
+  this.confirmationService.confirm({
+    message: this.assignTaskResources.taskcompleteconfirm,
+    header: 'Confirmation',
+    icon: 'fa fa-exclamation-triangle',
+
+    accept: () => {
+      this.loaderService.display(true);
+      this.taskCommonService.completePlantTask(taskCompletionWebApi)
+      .subscribe(data => {
+        if (data === 'NoComplete') {
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskalreadycompleted });
+          if (this.TaskModel.IsReview === true) {
+            this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
+          } else {
+            this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+          }
+          this.TaskCompleteOrReviewed.emit();
+        }
+        else if (data === 'Deleted'){
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
+          setTimeout( () => {
+            if (this._cookieService.UserRole === this.userRoles.Manager) {
+              this.router.navigate(['home/managerdashboard']);
+            } else {
+              this.router.navigate(['home/empdashboard']);
+            }
+          }, 1000);
+        }
+        else if (data === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else  if (data === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else{
+          if (this.TaskModel.IsReview === true) {
+            this.TaskModel.TaskStatus =  this.taskStatus.ReviewPending;
+          } 
+          else {
+            this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+          }
+          this.msgs = [];
+                  this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+                    detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
+                    setTimeout( () => {
+                      if (this._cookieService.UserRole === this.userRoles.Manager) {
+                        this.router.navigate(['home/managerdashboard']);
+                      } else {
+                        this.router.navigate(['home/empdashboard']);
+                      }
+                    }, 1000);
+        }
+        
+      });
+      this.PageFlag.showmodal = false;
+      this.loaderService.display(false);
+
+    },
+    reject: () =>{
+
+    }
+  });
+}
+
+
 
   getStrainListByTask() {
     this.dropdownDataService.getLotListByTask(this.TaskModel.task).subscribe(

@@ -54,7 +54,7 @@ export const environment = {
    //Dev processor
  //redirectUri: 'https://thingbludev.thingbluapp.com/',
   //resetPwdRedirectUri: 'https://thingbludev.thingbluapp.com/resetsuccess/',
-    // tenantURL:'thingbluB2Csample.b2clogin.com'
+    tenantURL:'thingbluB2Csample.b2clogin.com'
     //End of dev testing
   
     // ** Start Hannah UAT config

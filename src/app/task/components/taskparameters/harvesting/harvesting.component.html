@@ -1,4 +1,4 @@
-<div class="ui-g " [formGroup]="HARVESTING">
+<div class="ui-g " [formGroup]="HARVESTING" *ngIf="PageFlag.page =='AssignTask'">
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="field">Field<span class="star">*</span></label>:
@@ -61,7 +61,6 @@
       
       <input type="text" 
       pInputText 
-      readonly
       autocomplete="off"
       id="strain" 
       name="strain" 
@@ -69,6 +68,7 @@
       formControlName="strain"         
           
       class="clsControl"  
+      readonly
     />
     </div>
   </div>
@@ -77,14 +77,12 @@
       <label for="plantCount">Total Plants Count<span class="star">*</span></label>:
       <input type="number" 
       pInputText 
-      autocomplete="off"
       readonly
+      autocomplete="off"
       [value]="plantCount"
       id="plantCount" 
       name="plantCount" 
-     
-      formControlName="plantCount"         
-          
+      formControlName="plantCount"              
       class="clsControl"  
     />
     </div>
@@ -230,4 +228,448 @@
           ></p-checkbox>                                                              
       </div>
   </div>
+</div>
+
+
+
+<div *ngIf="PageFlag.page =='TaskAction'">
+  <div class="ui-g">
+    <div class="ui-g-12 ui-md-6">
+      <div class="paddingRL">
+          <label>
+            <strong>Employee: </strong>
+          </label>
+          <label>
+            {{TaskModel?.EmpName}}
+        </label>
+      </div>
+    </div>
+  <div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label>
+      <strong>{{ globalResource.strain }}: </strong>
+    </label>
+        {{TaskModel?.StrainName}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label>
+      <strong>Field: </strong>
+    </label>
+        {{TaskModel?.FieldName}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label>
+      <strong>Section: </strong>
+    </label>
+        {{TaskModel?.SectionName}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label>
+      <strong>Assigned Plant Count: </strong>
+    </label>
+        {{TaskModel?.AssignedPlantCnt}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label>
+      <strong>{{ globalResource.eststartdate }}: </strong>
+    </label>
+        {{TaskModel?.EstStartDate}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label>
+      <strong>{{ globalResource.priority }}: </strong>
+    </label>
+        {{TaskModel?.TaskPriority}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
+  <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.actualstartdate }}: </strong>
+      </label>
+    
+        {{TaskModel?.ActStartDate }}
+    </div>
+  </div>
+
+<div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+  <div class="paddingRL">
+    <label>
+      <strong>{{ globalResource.actualenddate }}: </strong>
+    </label>
+  
+      {{TaskModel?.ActEndDate}}
+  </div>
+</div>
+<p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="500" [minWidth]="200" >
+  <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+      <div class="ui-grid-row"> 
+        <div class="ui-grid-col-7">
+          
+         </div>
+         
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label for="completedPC">Completed Plant Count</label>:
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div>
+          <input type="number" 
+          pInputText 
+          autocomplete="off"
+          id="completedPC" 
+          name="completedPC" 
+          formControlName="completedPC"              
+          class="clsControl"   
+        />
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label for="terminatedtedPC">Terminated Plant Count</label>:
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div>
+          <input type="number" 
+          pInputText 
+          autocomplete="off"
+          id="terminatedtedPC" 
+          name="terminatedtedPC" 
+          formControlName="terminatedtedPC"              
+          class="clsControl"   
+        />
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label for="terminationReason">Termination Reason</label>:
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div>
+          <input type="text" 
+          pInputText 
+          autocomplete="off"
+          id="terminationReason" 
+          name="terminationReason" 
+          formControlName="terminationReason"              
+          class="clsControl"   
+        />
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label for="comment">Comment</label>:
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div>
+          <input type="text" 
+          pInputText 
+          autocomplete="off"
+          id="comment" 
+          name="comment" 
+          [(ngModel)]="taskCompletionModel.miscComment"
+          formControlName="comment"              
+          class="clsControl"   
+        />
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label for="wetweight">Wet Wight</label>:
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div>
+          <input type="number" 
+          pInputText 
+          autocomplete="off"
+          id="wetweight" 
+          name="wetweight" 
+          formControlName="wetweight"              
+          class="clsControl"   
+        />
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label for="dryweight">Dry Wight</label>:
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div>
+          <input type="number" 
+          pInputText 
+          autocomplete="off"
+          id="dryweight" 
+          name="dryweight" 
+          formControlName="dryweight"              
+          class="clsControl"   
+        />
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div class="paddingRL">
+          <label for="wasteweight">Waste Wight</label>:
+        </div>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <div>
+          <input type="number" 
+          pInputText 
+          autocomplete="off"
+          id="wasteweight" 
+          name="wasteweight" 
+          formControlName="wasteweight"              
+          class="clsControl"   
+        />
+        </div>
+      </div>
+    </div>
+
+    <p-footer>
+      <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
+      <!-- [disabled]="!completionForm.valid" -->
+      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showmodal=false" label="Cancel"></button>
+    </p-footer>
+  </form>
+</p-dialog>
+
+<p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
+  <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
+    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-6">
+          <label for="completedPC">Completed Plant Count:</label>
+        </div> 
+         
+        <div class="ui-g-12 ui-md-6">
+          <div>
+            <input type="number" 
+            pInputText 
+            autocomplete="off"
+            id="completedPC" 
+            name="completedPC" 
+            [(ngModel)]="taskReviewModel.CompletedPlantCnt"
+            formControlName="completedPC"              
+            class="clsControl"   
+          />
+          </div>
+        </div> 
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <label for="terminatedtedPC">Terminated Plant Count</label>:
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div>
+            <input type="number" 
+            pInputText 
+            autocomplete="off"
+            id="terminatedtedPC" 
+            name="terminatedtedPC" 
+            [(ngModel)]="taskReviewModel.TerminatedPlantCount"
+            formControlName="terminatedtedPC"              
+            class="clsControl"   
+          />
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <label for="terminationReason">Termination Reason</label>:
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div>
+            <input type="text" 
+            pInputText 
+            autocomplete="off"
+            id="terminationReason" 
+            name="terminationReason" 
+            [(ngModel)]="taskReviewModel.TerminationReason"
+            formControlName="terminationReason"              
+            class="clsControl"   
+          />
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <label for="wetweight">Wet Weight</label>:
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div>
+            <input type="number" 
+            pInputText 
+            autocomplete="off"
+            id="wetweight" 
+            name="wetweight" 
+            [(ngModel)]="taskReviewModel.wetweight"
+            formControlName="wetweight"              
+            class="clsControl"   
+          />
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <label for="dryweight">Dry Weight</label>:
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div>
+            <input type="number" 
+            pInputText 
+            autocomplete="off"
+            id="dryweight" 
+            name="dryweight" 
+            [(ngModel)]="taskReviewModel.driweight"
+            formControlName="dryweight"              
+            class="clsControl"   
+          />
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <label for="wasteweight">Waste Weight</label>:
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div>
+            <input type="number" 
+            pInputText 
+            autocomplete="off"
+            id="wasteweight" 
+            name="wasteweight" 
+            [(ngModel)]="taskReviewModel.wasteweight"
+            formControlName="wasteweight"              
+            class="clsControl"   
+          />
+          </div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4">
+            {{ assignTaskResources.actualhrs }}:
+          </div>
+          <div class="ui-grid-col-4">
+            {{ TaskModel?.ActHrs | minutesToTime}}
+          </div>
+          <div class="ui-grid-col-4">
+            <div class="ui-inputgroup ui-inputgroup-border" >
+            <input type="number"                   
+                  pInputText 
+                  autocomplete="off"
+                  pKeyFilter="int"
+                  [(ngModel)]="taskReviewModel.racthrs"                         
+                  formControlName="ActHrs"
+                  id="acthrs"
+                  name="acthrs"                      
+                /> 
+                <span>:</span>
+                <input type="number"                  
+                  pInputText     
+                  autocomplete="off"   
+                  pKeyFilter="int"           
+                  [(ngModel)]="taskReviewModel.ractmins"                         
+                  formControlName="ActMins"
+                  id="actmins"
+                  name="actmins"                      
+                />
+          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                *ngIf="!reviewForm.controls['ActMins'].valid&&reviewForm.controls['ActMins'].dirty">
+                  <span *ngIf="reviewForm.controls['ActMins'].errors['max']">
+                    {{ globalResource.maxMinSecValue }}
+                  </span>
+          </div>
+              <span>:</span>
+              <input type="number"                  
+                pInputText         
+                autocomplete="off"      
+                pKeyFilter="int"    
+                [(ngModel)]="taskReviewModel.ractsecs"                         
+                formControlName="ActSecs"
+                id="actsecs"
+                name="actsecs"                  
+              />
+          <div class="ui-message ui-messages-error-Sec ui-corner-all" appErrorTooltip
+                  *ngIf="!reviewForm.controls['ActSecs'].valid&&reviewForm.controls['ActSecs'].dirty">
+                    <span *ngIf="reviewForm.controls['ActSecs'].errors['max']">
+                      {{ globalResource.maxMinSecValue }}
+                    </span>
+          </div>
+        </div>
+          </div>
+        </div>
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-4">
+            {{ assignTaskResources.misccost }}:
+          </div>
+          <div class="ui-grid-col-4">
+              {{ taskReviewModel.misccost | currency }}
+          </div>
+          <div class="ui-grid-col-4">
+              <input type="text"
+                OnlyNumber="true" 
+                pInputText 
+                pKeyFilter="num"
+                autocomplete="off"
+                [(ngModel)]="taskReviewModel.rmisccost"                         
+                formControlName="rmisccost"
+                id="misccost"
+                name="misccost"      
+              />                   
+              
+          </div>             
+      </div>
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-4">
+          {{ assignTaskResources.comment }}:
+        </div>
+        <div class="ui-grid-col-4">               
+            {{ taskReviewModel.comment }}
+        </div>
+        <div class="ui-grid-col-4">
+            <textarea                        
+              pInputTextarea                        
+              [(ngModel)]="taskCompletionModel.rmisccomment"
+              formControlName="rmisccomment"
+              id="rmisccomment"
+              name="rmisccomment"
+              maxlength="500"
+              class="clsControl"
+              binary="true"
+            ></textarea>                 
+            
+        </div> 
+        
+    </div>
+      </div>
+  
+    <p-footer>
+      <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
+      <!-- [disabled]="!reviewForm.valid" -->
+      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showReviewmodal=false" label="Cancel"></button>
+    </p-footer>
+  </form>
+</p-dialog>
+
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+
+
+</div>
 </div>

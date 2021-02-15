@@ -43,6 +43,15 @@ export class TaskCommonService {
    .map(data =>  data );
   }
 
+  assignHarvestTask(harvestingDataForApi: any) {
+    const url = 'api/Grower/AssignHarvestingTask';
+    console.log('assign form ');
+    console.log(harvestingDataForApi);
+    return this.http.post(url, harvestingDataForApi, this.headers)
+    // .do(data =>console.log('All : ' + JSON.stringify(data)))
+   .map(data =>  data );
+  }
+
   /// Crated By : Devdan :: 10-Oct-2018 :: Added method
   updateTask(assignTaskDetailsForWebApi: any) {
     const url = 'api/Task/TaskUpdate';
@@ -103,7 +112,38 @@ export class TaskCommonService {
     return this.http.post(apiUrl, taskCompletionWebApi, this.headers)
     .map(data =>  data );
   }
+//For completion of planting task
+completePlantTask(taskCompletionWebApi: any){
+  const apiUrl = 'api/Grower/CompletePlantTask';
 
+    taskCompletionWebApi.CompletePlant.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
+    return this.http.post(apiUrl, taskCompletionWebApi, this.headers)
+    .map(data =>  data );
+}
+//For submitting harvesting task
+completeHarvestTask(taskCompletionWebApi: any){
+  const apiUrl = 'api/Grower/CompleteHarvestingTask';
+
+    taskCompletionWebApi.CompleteHarvesting.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
+    return this.http.post(apiUrl, taskCompletionWebApi, this.headers)
+    .map(data =>  data );
+}
+//For submitting Planting Task
+submitPlantTaskReview(taskReviewWebApi) {
+  const apiUrl = 'api/Grower/ReviewPlantTask';
+
+  taskReviewWebApi.ReviewPlant.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
+  return this.http.post(apiUrl, taskReviewWebApi, this.headers)
+  .map(data =>  data );
+}
+//For submitting harvesting Task
+submitHarvestTaskReview(taskReviewWebApi) {
+  const apiUrl = 'api/Grower/ReviewHarvestingTask';
+
+  taskReviewWebApi.ReviewHarvesting.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
+  return this.http.post(apiUrl, taskReviewWebApi, this.headers)
+  .map(data =>  data );
+}
   // For Review Sumittion
   submitTaskReview(taskReviewWebApi) {
     const apiUrl = 'api/Task/TaskReview';

@@ -60,7 +60,13 @@ export class TaskactionsComponent implements OnInit {
     'FieldName': '',
     'SectionName': '',
     'AssignedPlantCnt':'',
-    'CompletedPlantCnt': ''
+    'CompletedPlantCnt': '',
+    'TerminatedPlantCount': '',
+    'TerminationReason': '',
+    'comment': '',
+    'wetweight':'',
+    'dryweight':'',
+    'wasteweight':''
   };
 
   public page: any = {
