@@ -118,7 +118,7 @@ export class HarvestingComponent implements OnInit{
         this.taskTypeId = this.TaskModel.TaskDetails.TaskTypeId;
       }
     });
-
+  
     
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
     this.priorities =  [
@@ -286,7 +286,7 @@ submitReview(formModel) {
       this.loaderService.display(true);
       this.taskCommonService.submitHarvestTaskReview(taskReviewWebApi)
       .subscribe(data => {
-        if (data === 'NoComplete'){
+        if (data[0].RESULTKEY === 'NoComplete'){
           this.msgs = [];
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskalreadycompleted });
           if (this.TaskModel.IsReview === true) {
@@ -297,7 +297,7 @@ submitReview(formModel) {
           }
           this.TaskCompleteOrReviewed.emit();
         }
-        else if (data === 'Deleted'){
+        else if (data[0].RESULTKEY === 'Deleted'){
           this.msgs = [];
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
           setTimeout( () => {
@@ -309,11 +309,14 @@ submitReview(formModel) {
             }
           }, 1000);
         }
-        else if (data === 'Failure'){
+        else if (data[0].RESULTKEY === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         }
-        else  if (data === 'Failure'){
+        else  if (data[0].RESULTKEY === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
         }
         else{
           if (this.TaskModel.IsReview === true) {
@@ -379,7 +382,7 @@ completeTask(formModel){
           }
           this.TaskCompleteOrReviewed.emit();
         }
-        else if (data === 'Deleted'){
+        else if (data[0].RESULTKEY  === 'Deleted'){
           this.msgs = [];
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
           setTimeout( () => {
@@ -390,11 +393,14 @@ completeTask(formModel){
             }
           }, 1000);
         }
-        else if (data === 'Failure'){
+        else if (data[0].RESULTKEY  === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         }
-        else  if (data === 'Failure'){
+        else  if (data[0].RESULTKEY  === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
         }
         else{
           if (this.TaskModel.IsReview === true) {

@@ -39,6 +39,7 @@ import { EmployeeAssignTaskComponent } from './components/employee-assign-task/e
 import { BudPkgAllocateEmployeeComponent } from './components/taskparameters/bud/bud-packaging/bud-pkg-allocate-employee/bud-pkg-allocate-employee.component';
 import { HarvestingComponent } from './components/taskparameters/harvesting/harvesting.component';
 import { PlantingComponent } from './components/taskparameters/planting/planting.component';
+import { PrebuckingComponent } from './components/taskparameters/prebucking/prebucking.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,9 @@ import { PlantingComponent } from './components/taskparameters/planting/planting
     EmployeeAssignTaskComponent,
     BudPkgAllocateEmployeeComponent,
     HarvestingComponent,
-    PlantingComponent
+    PlantingComponent,
+    PrebuckingComponent,
+
   ],
   imports: [
     SharedModule

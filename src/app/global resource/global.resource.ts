@@ -70,6 +70,7 @@ export class GlobalResources {
                     assignedwt: 'Assigned Weight',
                     endtime: 'End Time',
                     applicationmsg: 'Application Message',
+                    plantcountmore:'Completed Plant Count Greater Than Assigned Plant Count',
                     serverError: 'Something went wrong at server side.',
                     unit: 'Unit',
                     deliverydate: 'Delivery Date',

@@ -23,7 +23,7 @@ import { RefreshService } from '../../../../dashboard/services/refresh.service';
 import { NewSectionDetailsActionService } from '../../../services/add-section-details.service';
 import { filter } from 'rxjs/operator/filter';
 import { NewClientService } from '../../../../Masters/services/new-client.service';
-
+declare var $: any;
 @Component({
   moduleId: module.id,
   selector: 'app-planting',
@@ -91,6 +91,7 @@ export class PlantingComponent implements OnInit{
   public taskCompletionModel: any;
   public taskReviewModel: any;
   public allsectionslist:any;
+  public employeeName:'';
   private globalData = {
     lots: [],
     employees: [],
@@ -118,6 +119,7 @@ export class PlantingComponent implements OnInit{
         this.taskTypeId = this.TaskModel.TaskDetails.TaskTypeId;
       }
     });
+    
 
     
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
@@ -282,7 +284,7 @@ submitReview(formModel) {
           }
           this.TaskCompleteOrReviewed.emit();
         }
-        else if (data === 'Deleted'){
+        else if (data[0].RESULTKEY === 'Deleted'){
           this.msgs = [];
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
           setTimeout( () => {
@@ -294,11 +296,14 @@ submitReview(formModel) {
             }
           }, 1000);
         }
-        else if (data === 'Failure'){
+        else if (data[0].RESULTKEY === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         }
-        else  if (data === 'Failure'){
+        else  if (data[0].RESULTKEY === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
         }
         else{
           if (this.TaskModel.IsReview === true) {
@@ -361,7 +366,7 @@ completeTask(formModel){
           }
           this.TaskCompleteOrReviewed.emit();
         }
-        else if (data === 'Deleted'){
+        else if (data[0].RESULTKEY === 'Deleted'){
           this.msgs = [];
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
           setTimeout( () => {
@@ -375,8 +380,11 @@ completeTask(formModel){
         else if (data === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         }
-        else  if (data === 'Failure'){
+        else  if (data[0].RESULTKEY === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
         }
         else{
           if (this.TaskModel.IsReview === true) {
@@ -493,9 +501,17 @@ completeTask(formModel){
   }
 
   OnSelectingEmployees(event: any, checkedItem: any){
-    for(let employee of this.globalData.employees){
-      if(event.itemValue === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
-        this.employeeArray.push(employee.EmpName)
+    var nameValue: boolean = false;
+    for(var i = 0;i<=this.globalData.employees.length-1; i++){
+      // let employee of this.globalData.employees
+      if(event.itemValue === this.globalData.employees[i].EmpId && this.employeeArray.indexOf(this.globalData.employees[i].EmpName) === -1){
+        nameValue = true;
+        this.employeeArray.push(this.globalData.employees[i].EmpName)
+       console.log("employename is"+this.employeeName)
+      }
+      else if(this.employeeArray.indexOf(this.globalData.employees[i].EmpName) > -1 && nameValue === true){
+        var index = this.employeeArray.indexOf(this.globalData.employees[i].EmpName)
+        this.employeeArray.splice(index,1)
       }
     }
   }
