@@ -94,7 +94,6 @@
       <p-multiSelect #checkedItems
       [filter] ="true"
       [options]="employees"
-      [(ngModel)] = "employeeName"
       placeholder="-- Select --"
       (onChange)="OnSelectingEmployees($event, checkedItems)"
       formControlName="employeeList"
@@ -421,7 +420,7 @@
         </div> 
         </div>
         <div class="ui-g-12 ui-md-6">
-          <div class="paddingRL">
+          <div>
             <label for="terminatedtedPC">Terminated Plant Count</label>:
           </div>
         </div>
@@ -439,7 +438,7 @@
           </div>
         </div>
         <div class="ui-g-12 ui-md-6">
-          <div class="paddingRL">
+          <div>
             <label for="terminationReason">Termination Reason</label>:
           </div>
         </div>

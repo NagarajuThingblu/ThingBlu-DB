@@ -501,19 +501,15 @@ completeTask(formModel){
   }
 
   OnSelectingEmployees(event: any, checkedItem: any){
-    var nameValue: boolean = false;
-    for(var i = 0;i<=this.globalData.employees.length-1; i++){
-      // let employee of this.globalData.employees
-      if(event.itemValue === this.globalData.employees[i].EmpId && this.employeeArray.indexOf(this.globalData.employees[i].EmpName) === -1){
-        nameValue = true;
-        this.employeeArray.push(this.globalData.employees[i].EmpName)
-       console.log("employename is"+this.employeeName)
-      }
-      else if(this.employeeArray.indexOf(this.globalData.employees[i].EmpName) > -1 && nameValue === true){
-        var index = this.employeeArray.indexOf(this.globalData.employees[i].EmpName)
-        this.employeeArray.splice(index,1)
-      }
+    for(let employee of this.globalData.employees){
+         if(event.itemValue === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
+            this.employeeArray.push(employee.EmpName)
+         }
+        //  if(this.employeeArray.indexOf(employee.EmpName) > -1){
+        //   this.employeeArray.splice(employee.EmpName,1)
+        //  }
     }
+    
   }
   removeitem(deleteitem){
     this.employeeArray.splice(deleteitem,1)
