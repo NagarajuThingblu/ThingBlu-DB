@@ -45,6 +45,7 @@ export class SectionsComponent implements OnInit {
   public msgs: any[];
   public SectionOnEdit: any;
   submitted: boolean;
+  public Year: any;
   public SectionIdForUpdate: any = 0;
   public IsDeletedForUpdate: any = 0;
   public ActiveInActiveForUpdate: any = 0
@@ -293,7 +294,7 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
   });
  
   this.addItem();
-  
+  this.Year = new Date().getFullYear();
   if (this.appCommonService.ProductTypeBackLink && this.appCommonService.ProductTypeFormDetail) {
         this.newSectionEntryForm = this.appCommonService.ProductTypeFormDetail;
         this.appCommonService.ProductTypeFormDetail = null;

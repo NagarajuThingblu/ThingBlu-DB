@@ -127,7 +127,7 @@
       <div  class="EmployeeListBox">
         <ul class="emp-list" style='padding: 0px;'>
           <li  *ngFor="let i of employeeArray; let id=index" class="EmployeeListItem" >
-            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;<i class="fa fa-times" (click)="removeitem(id)"></i></span>
+            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
             
           </li>
         </ul>
@@ -328,6 +328,7 @@
         <div>
           <input type="number" 
           pInputText 
+          [(ngModel)]="defaultValueCompletePc"
           autocomplete="off"
           id="completedPC" 
           name="completedPC" 
@@ -345,6 +346,7 @@
         <div>
           <input type="number" 
           pInputText 
+          [(ngModel)]="defaultValueTerminatedPc"
           autocomplete="off"
           id="terminatedtedPC" 
           name="terminatedtedPC" 

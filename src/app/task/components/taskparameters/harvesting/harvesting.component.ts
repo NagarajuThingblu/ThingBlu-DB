@@ -87,6 +87,11 @@ export class HarvestingComponent implements OnInit{
   public taskType: any;
   public employeeArray:any=[];
   public strainName: any;
+  public defaultValueCompletePc: Number = 0;
+  public defaultValueTerminatedPc: Number = 0;
+  public defaultWetWt: Number = 0;
+  public defaultDryWt: Number = 0;
+  public defaultWasteWt: Number = 0;
   public plantCount: any;
   public taskCompletionModel: any;
   public taskReviewModel: any;
@@ -520,13 +525,21 @@ completeTask(formModel){
     for(let employee of this.globalData.employees){
       if(event.itemValue === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
         this.employeeArray.push(employee.EmpName)
-      }
+        return;
+     }
+     else{
+       if(event.itemValue === employee.EmpId){
+         let index = this.employeeArray.indexOf(employee.EmpName);
+         this.employeeArray.splice(index,1)
+
+       }
+     }
     }
   }
-  removeitem(deleteitem){
-    this.employeeArray.splice(deleteitem,1)
-   let element = this.checkedElements.nativeElement
-   console.log(element)
-  }
+  // removeitem(deleteitem){
+  //   this.employeeArray.splice(deleteitem,1)
+  //  let element = this.checkedElements.nativeElement
+  //  console.log(element)
+  // }
  
 }

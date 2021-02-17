@@ -226,7 +226,7 @@ public backUrl: boolean;
    description.patchValue(this.taskOnEdit[0].Description);
    this.clear='Cancel';
    this.saveButtonText='Update';
-   this.pageheading='Edit Tassk';
+   this.pageheading='Edit Task';
 
    if(!this.Tasktypes.filter(item=>item.value==this.taskOnEdit[0].TaskTypeId).length){
      this.Tasktypes.push({label:this.taskOnEdit[0].Tasktypename,value: this.taskOnEdit[0].TaskCategoryID});

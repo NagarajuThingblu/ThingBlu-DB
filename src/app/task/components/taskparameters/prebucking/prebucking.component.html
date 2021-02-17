@@ -1,3 +1,211 @@
-<p>
-  prebucking works!
-</p>
+<div class="ui-g " [formGroup]="PREBUCKING" *ngIf="PageFlag.page =='AssignTask'">
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="strain">Strain<span class="star">*</span></label>:
+      <div class="clear"></div>
+      <p-dropdown
+          [filter] ="true"
+          [options]="strains"
+          (onChange)=" getStrainListByTask()"
+          placeholder="-- Select --"
+          [autoWidth]="true"
+          formControlName="strain"
+          class="clsControl"
+          id="strain"
+          name="strain">
+      </p-dropdown>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="employeeList">Assigned To<span class="star">*</span></label>:
+      <p-multiSelect #checkedItems
+      [filter] ="true"
+      [options]="employees"
+      placeholder="-- Select --"
+      (onChange)="OnSelectingEmployees($event, checkedItems)"
+      formControlName="employeeList"
+      class="clsControl"
+      id="employeeList"
+      name="employeeList">
+      </p-multiSelect>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="estimatedstartdate">
+        Est. Start Date<span class="star">*</span>:
+      </label>
+      <small class="smallTextRed"
+          *ngIf="showPastDateLabel"
+          >Task will be get created for past date
+        </small>
+        <p-calendar  
+           [(ngModel)]="TaskModel.PREBUCKING.startdate"                      
+           [showIcon]="true"
+           [defaultDate]="defaultDate"      
+           (onSelect)="estStartDate_Select()"
+           (onInput)="estStartDate_Select()"  
+           formControlName="estimatedstartdate"          
+           class="clsControl"
+           id="estimatedstartdate"
+           name="estimatedstartdate"
+           >
+         </p-calendar>
+         <!-- <div
+           class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+           *ngIf="!SIFTING.controls['estimatedstartdate'].valid&&SIFTING.controls['estimatedstartdate'].dirty">
+            
+             <span *ngIf="SIFTING.controls['estimatedstartdate'].errors['required']">
+               {{ globalResource.startdaterequired }}
+             </span>                                                                                                                                                                            
+         </div>
+         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip 
+           *ngIf="SIFTING.hasError('invalidDate')" >
+             {{ globalResource.datecomparevalidation }}
+         </div>  -->
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="EmployeeListBox">Employee List</label>
+      <div  class="EmployeeListBox">
+        <ul class="emp-list" style='padding: 0px;'>
+          <li  *ngFor="let i of employeeArray; let id=index" class="EmployeeListItem" >
+            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
+            
+          </li>
+        </ul>
+      </div>  
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="employee">Priority</label>:
+                       
+      <p-dropdown
+        [options]="priorities"
+        [autoWidth]="true"
+        formControlName="priority"
+        id="priority"
+        class="clsControl"
+        name="priority">
+      </p-dropdown>                                  
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+        <label for="comment">Comment</label>:
+                           
+          <textarea                        
+            pInputTextarea                        
+            
+            formControlName="comment"
+            id="comment"
+            name="comment"
+            maxlength="500"
+            class="clsControl"
+            binary="true"
+          ></textarea>
+  
+          <!-- <div
+            class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+            *ngIf="!SIFTING.controls['comment'].valid&&SIFTING.controls['comment'].dirty">
+             
+              <span *ngIf="SIFTING.controls['comment'].errors['maxLength']">
+                {{ assignTaskResources.commentMaxLength }}
+              </span>                      
+        </div> -->
+      </div>
+  </div>
+  <div class="ui-g-12 ui-md-6 " >
+    <div class="paddingRL">                              
+          <p-checkbox          
+            label="Notify Manager"
+           
+            formControlName="notifymanager"
+            binary="true"
+          ></p-checkbox>
+  
+          <p-checkbox 
+            value="true"
+            label="Notify Employee"
+           
+            formControlName="notifyemployee"
+            binary="true"
+          ></p-checkbox>                                                              
+      </div>
+  </div>
+</div>
+
+<div *ngIf="PageFlag.page =='TaskAction'">
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>Employee: </strong>
+      </label>
+      <label>
+        {{TaskModel?.EmpName}}
+      </label>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.strain }}: </strong>
+      </label>
+          {{TaskModel?.StrainName}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.eststartdate }}: </strong>
+      </label>
+          {{TaskModel?.EstStartDate}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.priority }}: </strong>
+      </label>
+          {{TaskModel?.TaskPriority}}
+    </div>
+  </div>
+
+  <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
+    <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
+      <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div formArrayName="items" style="position: relative">
+          <div style="width:calc(100% - 20px);float:left;">
+            <p-table [value]="preBuckingDetailsArr?.controls" id="preBuckingDetails" name="preBuckingDetails">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th> Bin Add Update
+                    <span class="star">*</span>
+                  </th>
+                  <th> Dry Weight
+                    <span class="star">*</span>
+                  </th>
+                  <th> Waste Weight
+                     <span class="star">*</span>
+                  </th>
+                  <th> Wet Weight
+                    <span class="star">*</span>
+                 </th>
+                 <th> IsBinFull
+                  <span class="star">*</span>
+                </th>
+                <th style="width: 80px;">Action</th>
+                </tr>
+              </ng-template>
+             
+              
+            </p-table>
+          </div>
+        </div>
+      </div>
+    </form>
+  </p-dialog>
+</div>

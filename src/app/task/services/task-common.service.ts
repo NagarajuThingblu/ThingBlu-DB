@@ -52,6 +52,15 @@ export class TaskCommonService {
    .map(data =>  data );
   }
 
+  assignPrebuckingTask(prebuckingDataForApi: any) {
+    const url = 'api/Grower/PreBuckingTaskAssign';
+    console.log('assign form ');
+    console.log(prebuckingDataForApi);
+    return this.http.post(url, prebuckingDataForApi, this.headers)
+    // .do(data =>console.log('All : ' + JSON.stringify(data)))
+   .map(data =>  data );
+  }
+
   /// Crated By : Devdan :: 10-Oct-2018 :: Added method
   updateTask(assignTaskDetailsForWebApi: any) {
     const url = 'api/Task/TaskUpdate';

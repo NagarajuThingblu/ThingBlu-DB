@@ -986,10 +986,58 @@ console.log(assignTaskFormValues)
          });
      
        }
- 
+       
+       else if (this.selectedTaskTypeName === 'PREBUCKING') { 
+        let prebuckingDataForApi = {
+          PreBucking: {
+            "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
+            "StrainId": assignTaskFormValues.PREBUCKING.strain,
+            "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
+            "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
+            "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority ,
+            "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
+            "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
+            "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
+            "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
+          },
+          EmployeeTypes:[]
+        };
+        assignTaskFormValues[this.selectedTaskTypeName].employeeList
+        .forEach((element, index) => {
+          prebuckingDataForApi.EmployeeTypes.push({
+            "EmpId" : assignTaskFormValues.PREBUCKING.employeeList[index] 
+          });
+        });
+         this.loaderService.display(true);
+        this.taskCommonService.assignPrebuckingTask(prebuckingDataForApi).
+        subscribe(
+          data => {
+            this.msgs = [];
+            if (String(data[0]. RESULTKEY).toLocaleUpperCase() === 'SUCCESS') {
+              this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+              detail: this.assignTaskResources.taskassignedsuccessfully});
+              this.assignTask.task = null;
+              this.assignTask.taskcategory=null;
+              this.selectedTaskTypeName = '';
+              this.isServiceCallComplete = false;
+              this.assignTaskForm = this.fb.group({
+                'taskname': new FormControl(null, Validators.required),
+                'taskCategory':new FormControl(null,Validators.required),
+              });
+              this.loaderService.display(false);
+          }
+          else if (String(data).toLocaleUpperCase() === 'FAILURE') {
+            this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+          }
+          });
+      
+
+       }
 
           // http call starts
         
+   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING'){
+
    
           this.loaderService.display(true);
           this.taskCommonService.assignTask(assignTaskDetailsForWebApi)
@@ -1108,6 +1156,7 @@ console.log(assignTaskFormValues)
                 this.loaderService.display(false);
               });
             }
+          }
       //   },
       //   reject: () => {
       //     // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];

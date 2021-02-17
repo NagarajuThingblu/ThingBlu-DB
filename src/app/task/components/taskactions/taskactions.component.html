@@ -166,6 +166,15 @@
         >
           </app-harvesting>
 
+          <app-prebucking
+          *ngIf="taskActionDetails?.TaskTypeKey=='PREBUCKING'&&taskActionDetails" 
+              style="width:100%;"            
+              [PageFlag]="page"
+              [TaskModel]="taskActionDetails"     
+              (TaskCompleteOrReviewed)="getTaskDetaisByTask()"    
+        >
+          </app-prebucking>
+
             <!--End Dynamic Component Contents Depends on whatever the task is selected -->
 
           </div>

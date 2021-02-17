@@ -176,6 +176,19 @@ getTaskType() {
      });
   }
 
+  getStrainsByTaskType(TaskTypeId) {
+    const url = 'api/Grower/GetBinsDataByTaskType';
+
+      let params = new HttpParams();
+      params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+      params = params.append('TaskTypeId', TaskTypeId);
+      return this.http
+      .get(url, {params: params})
+     .map(data => {
+      // console.log('Strains Service success');
+      return data;
+     });
+  }
   getStrainsForLotEdit(StrainId) {
     const url = 'api/Strain/GetStrainListForLotEdit';
 
