@@ -381,12 +381,18 @@ completeTask(formModel){
         }
         else if (data === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+          this.PageFlag.showmodal = false;
+          this.loaderService.display(false);
         }
         else  if (data[0].RESULTKEY === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+          this.PageFlag.showmodal = false;
+          this.loaderService.display(false);
         }
         else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
+          this.PageFlag.showmodal = false;
+          this.loaderService.display(false);
         }
         else{
           if (this.TaskModel.IsReview === true) {

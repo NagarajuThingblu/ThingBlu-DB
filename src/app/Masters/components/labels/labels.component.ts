@@ -92,6 +92,7 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
     this.getAllLabelslist();
     // this.getAllPackageType();
   // this.skewType_InChange();
+  // this. TaskType_InChange();
   }
   items = new FormArray([], this.customGroupValidation );
   arrayItems: FormArray;
@@ -102,7 +103,7 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
   ngOnInit() {
     console.log("TaskType list "+this.globalData.TaskType);
     this.saveButtonText = 'Save';
-    this.pageheading="Add New Label";
+    this.pageheading="Add Bin";
     this.clear = 'Clear';
     this.newLabelResources = MastersResource.getResources().en.newlabel;
     // this.newProductTypeResources = MastersResource.getResources().en.newproductype;
@@ -272,11 +273,11 @@ createItem(): FormGroup {
           LabelId: this.LabelIdForUpdate,
           BinNo: element.value.binNo,
           StrainId:  element.value.strain,
-          SkewType: element.value.skewType,
+          SkewType: this.enableDropDown == true? null:element.value.skewType,
           SkewTypeId: this.skewTypeID,
           IsLightDeprevation:element.value.lightDept? 1: 0,
-          IsHandTrimmed:element.value.TrimmingMethod == 'HT'? 1:0,
-          IsMachineTrimmed:element.value.TrimmingMethod == 'MT'? 1:0,
+          IsHandTrimmed:this.enableDropDown == true? 0:element.value.TrimmingMethod == 'HT'? 1:0,
+          IsMachineTrimmed:this.enableDropDown == true? 0:element.value.TrimmingMethod == 'MT'? 1:0,
           IsActive: element.value.chkSelectAll ? 1 : 0,
           IsDeleted:this.IsDeletedForUpdate,
           ActiveInactive:this.ActiveInActiveForUpdate
@@ -294,6 +295,13 @@ createItem(): FormGroup {
         if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.newLabelResources.newlabelsavedsuccess });
+         
+          this.resetForm();
+          this.getAllLabelslist();
+          this.LabelIdForUpdate = 0;
+        } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'UPDATED') {
+          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+          detail: this.newLabelResources.updated });
          
           this.resetForm();
           this.getAllLabelslist();
@@ -404,7 +412,8 @@ createItem(): FormGroup {
 
         this.clear = 'Cancel';
        this.saveButtonText = 'Update';
-       this.pageheading = 'Edit Section';
+       this.pageheading = 'Edit Bin';
+      
     }else {
       this.allLabelslist = [];
       }

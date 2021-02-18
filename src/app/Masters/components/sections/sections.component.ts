@@ -18,6 +18,7 @@ import { routing } from '../../../app.routing';
 import { Router } from '@angular/router';
 import { routerNgProbeToken } from '@angular/router/src/router_module';
 import { NewSectionDetailsActionService } from '../../../task/services/add-section-details.service';
+import { element } from 'protractor';
 
 @Component({
   moduleId: module.id,
@@ -49,6 +50,7 @@ export class SectionsComponent implements OnInit {
   public Year: any;
   public SectionIdForUpdate: any = 0;
   public IsDeletedForUpdate: any = 0;
+  public duplicateSection: any;
   public ActiveInActiveForUpdate: any = 0;
   public event: any;
   pageheading: any;
@@ -187,7 +189,7 @@ this.Year = new Date().getFullYear();
 
 
     this.SectionDetailsArr.controls.forEach((element, index) => {
-
+      this.duplicateSection = element.value.section
         newSectionForApi.SectionsTypeDetails.push({
           SectionId: this.SectionIdForUpdate,
             SectionName: element.value.section,
@@ -217,7 +219,19 @@ this.Year = new Date().getFullYear();
                
                 this.resetForm();
                 this.getAllsectionlist();
-              } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
+                this.SectionIdForUpdate = 0;
+              } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'UPDATED') {
+                this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+                detail: this.newSectionResources.updated });
+               
+                this.resetForm();
+                this.getAllsectionlist();
+                this.SectionIdForUpdate = 0;
+              } else if (String(data).toLocaleUpperCase()  === this.duplicateSection+" Section Already Existed") {
+                this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.duplicateSection+this.newSectionResources.duplicateSection });
+              } else if (String(data).toLocaleUpperCase() === 'already deleted') {
+                this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.newSectionResources.alreadydeleted });
+              }else if (String(data).toLocaleUpperCase() === 'FAILURE') {
                 this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
               } else if (String(data[0].ResultKey).toUpperCase() === 'INUSE') {
                 this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
@@ -242,6 +256,8 @@ this.Year = new Date().getFullYear();
                   this.loaderService.display(false);
                 }
               } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'DUPLICATE') {
+                this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.duplicateSection+this.newSectionResources.duplicateSection });
+                this.loaderService.display(false);
                 data.forEach(dataItem => {
                 let formGroup;
                 formGroup = (<FormGroup>this.newSectionEntryForm.get('items.' + dataItem.IndexCode));
@@ -274,11 +290,11 @@ this.Year = new Date().getFullYear();
     customGroupValidation (formArray) {
       let isError = false;
       const result = _.groupBy( formArray.controls , c => {
-        return [c.value.section, c.value.plantcount];
+        return [c.value.section];
       });
 
       for (const prop in result) {
-          if (result[prop].length > 1 && result[prop][0].controls['section'].value !== null && result[prop][0].controls['plantcount'].value !== null) {
+          if (result[prop].length > 1 && result[prop][0].controls['section'].value !== null) {
             isError = true;
               _.forEach(result[prop], function (item: any, index) {
                

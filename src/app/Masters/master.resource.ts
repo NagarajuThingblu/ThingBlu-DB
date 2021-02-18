@@ -12,12 +12,13 @@ export class MastersResource {
                     trimmingMethod:'Trimming Method',
                     header:'Bins List',
                     newlabelsavedsuccess:'Successfully saved',
-                    deleteLabelMsg: 'Do you want to delete this Bin Label?',
-                    newlabeldeletedsuccess:'Bin Label deleted successfully',
-                    labeldeactivatesuccess:'Bin Label is deactivated',
-                 labelactivatesuccess:'Bin Label is activated',
-                 activeLabelMsg: 'Do you want to activate this Bin Label?',
-                 deactivateLabelMsg: 'Do you want to inactivate this Bin Label?',
+                    deleteLabelMsg: 'Do you want to delete this Bin?',
+                    newlabeldeletedsuccess:'Bin deleted successfully',
+                    labeldeactivatesuccess:'Bin deactivated',
+                 labelactivatesuccess:'Bin activated',
+                 activeLabelMsg: 'Do you want to activate this Bin?',
+                 deactivateLabelMsg: 'Do you want to inactivate this Bin?',
+                 updated: 'Updated Successfully'
                 },
                 newproductype: {
                     pageheading: 'Add New Product Type',
@@ -85,7 +86,9 @@ export class MastersResource {
                  sectionactivatesuccess:'section is activated',
                  activeSectionMsg: 'Do you want to activate this Section?',
                  deactivateSectionMsg: 'Do you want to inactivate this Section?',
-
+                    duplicateSection: 'Section Already Existed',
+                    alreadydeleted: 'Already Deleted',
+                    updated: 'Updated Successfully'
 
                 },
                 addnewbrand: {

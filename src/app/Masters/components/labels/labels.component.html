@@ -119,16 +119,16 @@
                       
                     
                   </td>
-                  <!-- <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
-                    This section already exists.
-                  </div>   -->
+                  <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
+                    This Bin already exists.
+                  </div>  
                   </tr>
                 </ng-template>
               </p-table>
             </div>
-            <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="SectionDetailsArr.hasError('duplicate')">
+            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="labelDetailsArr.hasError('duplicate')">
               duplicate entries
-            </div>   -->
+            </div>  
             <div class="ui-g" style="width:100%;text-align:right;">
               <div class="ui-g-12">
                 <button pButton type="submit" label="{{saveButtonText}}" ></button>
