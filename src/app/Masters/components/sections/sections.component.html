@@ -1,7 +1,7 @@
 <div class="content-section implementation GridDemo">
   <div class="ui-g">
     <div class="ui-g-12">
-      <p-panel header="{{ newSectionResources.pageheading }}" [(collapsed)]="collapsed" [toggleable]="true">
+      <p-panel header="{{ pageheading }}" [(collapsed)]="collapsed" [toggleable]="true">
         <p-header>
           
         </p-header>
@@ -75,7 +75,7 @@
                         class="clsControl"       
                         formControlName="plantcount"
                         placeholder="Enter Plant Count "
-                        min="0.1">
+                        >
                     </td>
                     <td>
                       <input pInputText
@@ -100,7 +100,7 @@
                           </span>
                       </a> 
                       <!-- <div style="position: absolute;right: 0px;bottom: 42px;"> -->
-                        <a (click)="addItem()" *ngIf="newSectionEntryForm.get('items').valid  ">
+                        <a (click)="addItem()" *ngIf="newSectionEntryForm.get('items').valid&&plusOnEdit === true">
                             <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
                             </span>
                         </a>
@@ -124,7 +124,7 @@
             </div> -->
             <div class="ui-g" style="width:100%;text-align:right;">
               <div class="ui-g-12">
-                <button pButton type="submit" label="Save" ></button>
+                <button pButton type="submit" label="{{saveButtonText}}" ></button>
                 <button 
                     pButton 
                     (click)="resetForm()" 

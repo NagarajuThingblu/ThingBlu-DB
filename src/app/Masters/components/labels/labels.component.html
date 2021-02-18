@@ -1,7 +1,7 @@
 <div class="content-section implementation GridDemo">
   <div class="ui-g">
     <div class="ui-g-12">
-      <p-panel header="{{ newLabelResources.pageheading }}" [(collapsed)]="collapsed" [toggleable]="true">
+      <p-panel header="{{pageheading }}" [(collapsed)]="collapsed" [toggleable]="true">
         <p-header>
           
         </p-header>
@@ -112,7 +112,7 @@
                           <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
                           </span>
                       </a> 
-                        <a (click)="addItem()" *ngIf="newLabelsEntryForm.get('items').valid">
+                        <a (click)="addItem()" *ngIf="newLabelsEntryForm.get('items').valid&&plusOnEdit === true">
                             <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
                             </span>
                         </a>
@@ -131,7 +131,7 @@
             </div>   -->
             <div class="ui-g" style="width:100%;text-align:right;">
               <div class="ui-g-12">
-                <button pButton type="submit" label="Save" ></button>
+                <button pButton type="submit" label="{{saveButtonText}}" ></button>
                 <button 
                     pButton 
                     (click)="resetForm()" 

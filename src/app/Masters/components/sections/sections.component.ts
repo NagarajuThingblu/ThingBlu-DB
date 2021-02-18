@@ -44,11 +44,13 @@ export class SectionsComponent implements OnInit {
   public newSectionForm_copy: any;
   public msgs: any[];
   public SectionOnEdit: any;
+  public plusOnEdit: boolean = true;
   submitted: boolean;
   public Year: any;
   public SectionIdForUpdate: any = 0;
   public IsDeletedForUpdate: any = 0;
-  public ActiveInActiveForUpdate: any = 0
+  public ActiveInActiveForUpdate: any = 0;
+  public event: any;
   pageheading: any;
   collapsed: any;
   sysmbol:any;
@@ -58,6 +60,7 @@ export class SectionsComponent implements OnInit {
       strain: null,
       plantcount: null,
       year: null,
+      // Year: new Date().getFullYear()
       
     };
     private globalData = {
@@ -131,15 +134,28 @@ export class SectionsComponent implements OnInit {
   {
 this.newSectionDetailsActionService.Getsectionlist().subscribe(
   data=>{
-    this.allsectionslist=data;
-})
+    if (data !== 'No data found!') {
+      this.allsectionslist=data;
+      this.paginationValues = AppConstants.getPaginationOptions;
+    if (this.allsectionslist.length > 20) {
+      this.paginationValues[AppConstants.getPaginationOptions.length] = this.allsectionslist.length;
+    }
+  } else {
+    this.allsectionslist = [];
+   }
+   this.loaderService.display(false);
+  },
+   error => { console.log(error);  this.loaderService.display(false); },
+   () => console.log('getAllStrainsbyClient complete'));
   }
 
   
  resetForm() {
     this.newSectionEntryForm.reset({ chkSelectAll: true });
-   
-
+    
+this.saveButtonText ="save"
+this.pageheading = "Add New Section"
+this.Year = new Date().getFullYear();
     const control = <FormArray>this.newSectionEntryForm.controls['items'];
     
     let length = control.length;
@@ -252,7 +268,9 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
       }
     }
  
-
+    onPageChange(e) {
+      this.event = e;
+    }
     customGroupValidation (formArray) {
       let isError = false;
       const result = _.groupBy( formArray.controls , c => {
@@ -320,8 +338,8 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
     return this.fb.group({
       section: new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
       strain: new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
-      plantcount: new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
-      year: new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
+      plantcount: new FormControl(null, Validators.compose([Validators.required, Validators.max(999999999999999), Validators.min(0.1)])),
+      year: new FormControl(this.Year, Validators.compose([ Validators.max(99999), Validators.min(0.1)])),
       chkSelectAll: new FormControl(true)
     });
   }
@@ -365,6 +383,7 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
     this.router.navigate(['../home/strainmaster']);
   }
   getSectionOnEdit(SectionId) {
+    this.plusOnEdit = false;
     console.log(this.allsectionslist)
     const data = this.allsectionslist.filter(x => x.SectionId === SectionId);
     console.log(data);
@@ -481,15 +500,15 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
         detail: this.newSectionResources.sectionisassigned });
         this.loaderService.display(false);
       } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS' && ActiveInactiveFlag === 1) {
-        if (data[0].IsActiveFlag !== true) {
+        if (section.IsActive === true) {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
-          detail: this.newSectionResources.sectiondeactivatesuccess });
+          detail: this.newSectionResources.sectionactivatesuccess });
           this.resetForm();
          
           this.loaderService.display(false);
         } else {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
-          detail: this.newSectionResources.sectionactivatesuccess });
+          detail: this.newSectionResources.sectiondeactivatesuccess });
           this.resetForm();
          
           this.loaderService.display(false);

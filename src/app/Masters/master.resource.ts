@@ -77,7 +77,7 @@ export class MastersResource {
                 addnewsection: {
                     pageheading: 'Add New Section',
                     tableheading: 'Section List',
-                    newsectionsavedsuccess:'secton saved successfully',
+                    newsectionsavedsuccess:'section saved successfully',
                     deleteSectionMsg: 'Do you want to delete this Section?',
                     newsectiondeletedsuccess:'section deleted successfully',
                    sectionisassigned: 'section is in use',

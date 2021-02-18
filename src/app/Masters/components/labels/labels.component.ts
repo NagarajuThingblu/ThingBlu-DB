@@ -45,6 +45,7 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
   skewtype: any[];
   public skewTypeID: any = 0;
   TaskTypeDetails: any;
+  public event: any;
   chkIsActive: boolean;
   public saveButtonText: any;
   public newLabelResources: any;
@@ -55,6 +56,7 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
   public IsDeletedForUpdate: any =0;
   public ActiveInActiveForUpdate: any = 0;
   public newLabelForm_copy: any;
+  public plusOnEdit: boolean = true;
   submitted: boolean;
   collapsed: any;
   taskTypeNameValue = '';
@@ -141,7 +143,7 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
 
 createItem(): FormGroup {
   return this.fb.group({
-    binNo: new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
+    binNo: new FormControl(null, Validators.compose([Validators.required])),
     strain:new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
     skewType: new FormControl(
       this.taskTypeNameValue === 'Trimming' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
@@ -169,6 +171,9 @@ createItem(): FormGroup {
       } ,
       error => { console.log(error); },
       () => console.log('Get all TaskType complete'));
+  }
+  onPageChange(e) {
+    this.event = e;
   }
   getAllStrains() {
     this.dropdownDataService.getStrains().subscribe(
@@ -292,6 +297,7 @@ createItem(): FormGroup {
          
           this.resetForm();
           this.getAllLabelslist();
+          this.LabelIdForUpdate = 0;
         } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         } else if (String(data[0].ResultKey).toUpperCase() === 'INUSE') {
@@ -341,6 +347,8 @@ createItem(): FormGroup {
       } 
    }
    resetForm() {
+    this.saveButtonText ="save"
+    this.pageheading = "Add New Bin"
     this.newLabelsEntryForm.reset({ chkSelectAll: true });
    
 
@@ -370,6 +378,7 @@ createItem(): FormGroup {
    
   }
   getLabelsOnEdit(LabelId){
+    this.plusOnEdit = false;
     console.log(this.allLabelslist)
     const data = this.allLabelslist.filter(x => x.LabelId === LabelId);
     console.log(data);
@@ -482,7 +491,7 @@ createItem(): FormGroup {
         detail: this.newLabelResources.sectionisassigned });
         this.loaderService.display(false);
       } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS' && ActiveInactiveFlag === 1) {
-        if (data[0].IsActiveFlag !== true) {
+        if (label.IsActive!== true) {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.newLabelResources.labeldeactivatesuccess });
           this.resetForm();
