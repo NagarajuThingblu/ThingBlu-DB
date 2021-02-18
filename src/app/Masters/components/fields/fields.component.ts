@@ -139,7 +139,7 @@ public RoomTypeDisabled:any;
         else if (data == 'failue') {
           this.msg.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.error })
         }
-        else if (data == 'duplicate') {
+        else if (data == 'Duplicate') {
           this.msg.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.newFieldresource.FieldAlreadyExists })
         }
         else if (String(data === 'NOTUPDATED')) {
@@ -310,6 +310,9 @@ public RoomTypeDisabled:any;
             this.resetAll();
             this.loadService.display(false);
           });
+  }
+  onPageChange(e) {
+    this.event = e;
   }
   showConformationMessaegForDeactive(FieldId, Field, rowIndex, IsDeleted, ActiveInactiveFlag) {
     console.log(Field);

@@ -218,11 +218,11 @@ createItem(): FormGroup {
   customGroupValidation (formArray) {
     let isError = false;
     const result = _.groupBy( formArray.controls , c => {
-      return [c.value.binNo, c.value.strain];
+      return [c.value.binNo];
     });
 
     for (const prop in result) {
-        if (result[prop].length > 1 && result[prop][0].controls['binNo'].value !== null && result[prop][0].controls['strain'].value !== null) {
+        if (result[prop].length > 1 && result[prop][0].controls['binNo'].value !== null) {
           isError = true;
             _.forEach(result[prop], function (item: any, index) {
               // alert(index);
