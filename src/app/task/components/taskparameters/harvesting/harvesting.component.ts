@@ -127,6 +127,7 @@ export class HarvestingComponent implements OnInit{
     
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
     this.priorities =  [
+      {label:'select', value:'null'},
       {label: 'Normal', value: 'Normal'},
       {label: 'Important', value: 'Important'},
       {label: 'Critical', value: 'Critical'}
@@ -322,6 +323,7 @@ submitReview(formModel) {
         }
         else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
+          this.loaderService.display(false);
         }
         else{
           if (this.TaskModel.IsReview === true) {

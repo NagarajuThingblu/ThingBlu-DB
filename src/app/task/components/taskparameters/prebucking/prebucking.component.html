@@ -175,37 +175,25 @@
   </div>
 
   <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
-    <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
-      <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-        <div formArrayName="items" style="position: relative">
-          <div style="width:calc(100% - 20px);float:left;">
-            <p-table [value]="preBuckingDetailsArr?.controls" id="preBuckingDetails" name="preBuckingDetails">
-              <ng-template pTemplate="header">
-                <tr>
-                  <th> Bin Add Update
-                    <span class="star">*</span>
-                  </th>
-                  <th> Dry Weight
-                    <span class="star">*</span>
-                  </th>
-                  <th> Waste Weight
-                     <span class="star">*</span>
-                  </th>
-                  <th> Wet Weight
-                    <span class="star">*</span>
-                 </th>
-                 <th> IsBinFull
-                  <span class="star">*</span>
-                </th>
-                <th style="width: 80px;">Action</th>
-                </tr>
-              </ng-template>
-             
-              
-            </p-table>
-          </div>
-        </div>
-      </div>
-    </form>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Bin Add Update
+          <span class="star">*</span>
+        </th>
+        <th>Dry Weight
+          <span class="star">*</span>
+        </th>
+        <th>Waste Weight
+           <span class="star">*</span>
+        </th>
+        <th>Wet Weight
+          <span class="star">*</span>
+        </th>
+        <th style="width: 80px;">IsBinFull
+            <span class="star">*</span>
+        </th>
+        <th style="width: 80px;">Action</th> 
+      </tr>
+    </ng-template>
   </p-dialog>
 </div>
