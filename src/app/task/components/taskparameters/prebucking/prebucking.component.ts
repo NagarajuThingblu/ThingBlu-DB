@@ -94,6 +94,8 @@ export class PrebuckingComponent implements OnInit {
    public employeeArray:any=[];
    public strainName: any;
    public defaultWtWeight = 0;
+   public defaulDryWeight = 0;
+   public defaultWasteWeight = 0;
    private globalData = {
     employees: [],
     strains: [],
@@ -307,6 +309,37 @@ export class PrebuckingComponent implements OnInit {
       () => console.log('Get all employees by client complete'));
   }
 
+  resetForm() {
+    
+    this.completionForm.reset({ isStrainComplete: false });
+   
+
+    const control = <FormArray>this.completionForm.controls['items'];
+    
+    let length = control.length;
+    while (length > 0) {
+      length = Number(length) - 1;
+      this.deleteItemAll(length);
+    }
+   
+    this.addItem();
+  }
+  deleteItemAll(index: number) {
+   
+    const control = <FormArray>this.completionForm.controls['items'];
+    control.removeAt(index);
+  }
+  deleteItem(index: number) {
+    
+    const control = <FormArray>this.completionForm.controls['items'];
+   
+    if (control.length !== 1) {
+      control.removeAt(index);
+    }
+    console.log(this.completionForm.get('items'))
+   
+  }
+
   OnSelectingEmployees(event: any, checkedItem: any){
     
     for(let employee of this.globalData.employees){
@@ -510,6 +543,13 @@ completeTask(formModel){
         }
         else if (data[0].RESULTKEY ==='Success'){
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
+          setTimeout( () => {
+            if (this._cookieService.UserRole === this.userRoles.Manager) {
+              this.router.navigate(['home/managerdashboard']);
+            } else {
+              this.router.navigate(['home/empdashboard']);
+            }
+          }, 1000);
           this.PageFlag.showmodal = false;
           this.loaderService.display(false);
         }

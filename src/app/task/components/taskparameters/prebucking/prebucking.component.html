@@ -199,7 +199,7 @@
                 <th>Waste Weight
                    <span class="star">*</span>
                 </th>
-                <th>Wet Weight
+                <th style="display: none;">Wet Weight
                   <span class="star">*</span>
                 </th>
                 <th style="width: 80px;">IsBinFull
@@ -225,6 +225,7 @@
                     <input pInputText
                         name="dryweight"
                         id="dryweight"
+                        [(ngModel)]="defaulDryWeight"
                         type="number"
                         autocomplete="off"
                         class="clsControl"       
@@ -236,6 +237,7 @@
                     <input pInputText
                         name="wasteweight"
                         id="wasteweight"
+                        [(ngModel)]="defaultWasteWeight"
                         type="number"
                         autocomplete="off"
                         class="clsControl"       
@@ -243,7 +245,7 @@
                         placeholder="Enter Waste weight "
                         min="0.1">
                     </td>
-                    <td>
+                    <td style="display: none;">
                     <input pInputText
                         name="wetweight"
                         id="wetweight"
