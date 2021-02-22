@@ -127,7 +127,6 @@ export class HarvestingComponent implements OnInit{
     
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
     this.priorities =  [
-      {label:'select', value:'null'},
       {label: 'Normal', value: 'Normal'},
       {label: 'Important', value: 'Important'},
       {label: 'Critical', value: 'Critical'}

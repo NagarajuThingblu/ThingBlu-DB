@@ -175,25 +175,340 @@
   </div>
 
   <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Bin Add Update
-          <span class="star">*</span>
-        </th>
-        <th>Dry Weight
-          <span class="star">*</span>
-        </th>
-        <th>Waste Weight
-           <span class="star">*</span>
-        </th>
-        <th>Wet Weight
-          <span class="star">*</span>
-        </th>
-        <th style="width: 80px;">IsBinFull
-            <span class="star">*</span>
-        </th>
-        <th style="width: 80px;">Action</th> 
-      </tr>
-    </ng-template>
+    <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
+      <div class="ui-g"  style="width:100%;text-align:right;">
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <p-checkbox value="true" label="IsStrainComplete"
+            formControlName="isStrainComplete" checked="true"
+           binary="true"></p-checkbox>  
+          </div>
+        </div>
+      </div>
+      <div formArrayName="items" style="position: relative">
+        <div style="width:calc(100% - 20px);float:left;">
+          <p-table [value]="preBuckingDetailsArr?.controls" id="preBuckingDetailsArr" name="preBuckingDetailsArr">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Bin Add Update
+                  <span class="star">*</span>
+                </th>
+                <th>Dry Weight
+                  <span class="star">*</span>
+                </th>
+                <th>Waste Weight
+                   <span class="star">*</span>
+                </th>
+                <th>Wet Weight
+                  <span class="star">*</span>
+                </th>
+                <th style="width: 80px;">IsBinFull
+                    <span class="star">*</span>
+                </th>
+                <th style="width: 80px;">Action</th> 
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item let-i="rowIndex">
+                <tr [formGroupName]="i">
+                  <td>
+                  <p-dropdown
+                  id="binId"
+                  formControlName="binId"
+                  [options]="bins"
+                  placeholder="-- Select --"
+                  [autoWidth]="false"
+                  class="clsControl"
+                  name="binId">
+                </p-dropdown>
+                    </td>
+                    <td>
+                    <input pInputText
+                        name="dryweight"
+                        id="dryweight"
+                        type="number"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="dryweight"
+                        placeholder="Enter Dry Weight "
+                        min="0.1">
+                    </td>
+                    <td>
+                    <input pInputText
+                        name="wasteweight"
+                        id="wasteweight"
+                        type="number"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="wasteweight"
+                        placeholder="Enter Waste weight "
+                        min="0.1">
+                    </td>
+                    <td>
+                    <input pInputText
+                        name="wetweight"
+                        id="wetweight"
+                        [(ngModel)]="defaultWtWeight"
+                        type="number"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="wetweight"
+                        placeholder="Enter Wet Weight "
+                        min="0.1"
+                        >
+                    </td>
+                    <td>
+                      <p-checkbox value="true"
+                       formControlName="binFull" checked="true"
+                      binary="true"></p-checkbox>                                      
+                    </td>
+                    <td>
+                      <a (click)="deleteItem(i)" >                                                    
+                          <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                          </span>
+                      </a> 
+                        <a (click)="addItem()" *ngIf="completionForm.get('items').valid&&plusOnEdit === true">
+                            <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                            </span>
+                        </a>
+                  </td>
+                  <!-- <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
+                    This section already exists.
+                  </div>   -->
+                </tr>
+            </ng-template>
+        </p-table>
+        </div>
+        <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="preBuckingDetailsArr.hasError('duplicate')">
+          duplicate entries
+        </div>   -->
+        
+        <div class="ui-g" style="width:100%;text-align:right;">
+          <div class="ui-g-12">
+            <button pButton type="submit" label="Save" ></button>
+            <button 
+                pButton 
+                (click)="resetForm()" 
+                type="button" 
+                label="Clear" 
+                class="ui-button-secondary">
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
   </p-dialog>
+
+  <p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
+    <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
+      <div formArrayName="items" style="position: relative">
+        <div style="width:calc(100% - 20px);float:left;">
+          <p-table [value]="preBuckingDetailsArr?.controls" id="preBuckingDetailsArr" name="preBuckingDetailsArr">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Bin Add Update
+                  <span class="star">*</span>
+                </th>
+                <th>Dry Weight
+                  <span class="star">*</span>
+                </th>
+                <th>Waste Weight
+                   <span class="star">*</span>
+                </th>
+                <th>Wet Weight
+                  <span class="star">*</span>
+                </th>
+                <th style="width: 80px;">IsBinFull
+                    <span class="star">*</span>
+                </th>
+                <th style="width: 80px;">Action</th> 
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item let-i="rowIndex">
+                <tr [formGroupName]="i">
+                  <td>
+                  <p-dropdown
+                  id="binId"
+                  formControlName="binId"
+                  [options]="bins"
+                  placeholder="-- Select --"
+                  [autoWidth]="false"
+                  class="clsControl"
+                  name="binId">
+                </p-dropdown>
+                    </td>
+                    <td>
+                    <input pInputText
+                        name="dryweight"
+                        id="dryweight"
+                        type="number"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="dryweight"
+                        placeholder="Enter Dry Weight "
+                        min="0.1">
+                    </td>
+                    <td>
+                    <input pInputText
+                        name="wasteweight"
+                        id="wasteweight"
+                        type="number"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="wasteweight"
+                        placeholder="Enter Waste weight "
+                        min="0.1">
+                    </td>
+                    <td>
+                    <input pInputText
+                        name="wetweight"
+                        id="wetweight"
+                        [(ngModel)]="defaultWtWeight"
+                        type="number"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="wetweight"
+                        placeholder="Enter Wet Weight "
+                        min="0.1"
+                        >
+                    </td>
+                    <td>
+                      <p-checkbox value="true"
+                       formControlName="binFull" checked="true"
+                      binary="true"></p-checkbox>                                      
+                    </td>
+                    <td>
+                      <a (click)="deleteItem(i)" >                                                    
+                          <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                          </span>
+                      </a> 
+                        <a (click)="addItem()" *ngIf="reviewForm.get('items').valid&&plusOnEdit === true">
+                            <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                            </span>
+                        </a>
+                  </td>
+                  <!-- <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
+                    This section already exists.
+                  </div>   -->
+                </tr>
+            </ng-template>
+          </p-table>
+        </div>
+        <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="preBuckingDetailsArr.hasError('duplicate')">
+          duplicate entries
+        </div>   -->
+        
+      </div>
+      <div class="ui-grid-row" style="padding-top:120px;">
+        <div class="ui-grid-col-4">
+          {{ assignTaskResources.actualhrs }}:
+        </div>
+        <div class="ui-grid-col-2">
+          {{ TaskModel?.ActHrs | minutesToTime}}
+        </div>
+        <div class="ui-grid-col-2">
+          <div class="ui-inputgroup ui-inputgroup-border" >
+          <input type="number"                   
+                pInputText 
+                autocomplete="off"
+                pKeyFilter="int"
+                [(ngModel)]="taskReviewModel.racthrs"                         
+                formControlName="ActHrs"
+                id="acthrs"
+                name="acthrs"                      
+              /> 
+              <span>:</span>
+              <input type="number"                  
+                pInputText     
+                autocomplete="off"   
+                pKeyFilter="int"           
+                [(ngModel)]="taskReviewModel.ractmins"                         
+                formControlName="ActMins"
+                id="actmins"
+                name="actmins"                      
+              />
+        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+              *ngIf="!reviewForm.controls['ActMins'].valid&&reviewForm.controls['ActMins'].dirty">
+                <span *ngIf="reviewForm.controls['ActMins'].errors['max']">
+                  {{ globalResource.maxMinSecValue }}
+                </span>
+        </div>
+            <span>:</span>
+            <input type="number"                  
+              pInputText         
+              autocomplete="off"      
+              pKeyFilter="int"    
+              [(ngModel)]="taskReviewModel.ractsecs"                         
+              formControlName="ActSecs"
+              id="actsecs"
+              name="actsecs"                  
+            />
+        <div class="ui-message ui-messages-error-Sec ui-corner-all" appErrorTooltip
+                *ngIf="!reviewForm.controls['ActSecs'].valid&&reviewForm.controls['ActSecs'].dirty">
+                  <span *ngIf="reviewForm.controls['ActSecs'].errors['max']">
+                    {{ globalResource.maxMinSecValue }}
+                  </span>
+        </div>
+      </div>
+        </div>
+      </div>
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-4">
+          {{ assignTaskResources.misccost }}:
+        </div>
+        <div class="ui-grid-col-4">
+            {{ taskReviewModel.misccost | currency }}
+        </div>
+        <div class="ui-grid-col-4">
+            <input type="text"
+              OnlyNumber="true" 
+              pInputText 
+              pKeyFilter="num"
+              autocomplete="off"
+              [(ngModel)]="taskReviewModel.rmisccost"                         
+              formControlName="rmisccost"
+              id="misccost"
+              name="misccost"      
+            />                   
+            
+        </div>             
+    </div>
+    <div class="ui-grid-row">
+      <div class="ui-grid-col-4">
+        {{ assignTaskResources.comment }}:
+      </div>
+      <div class="ui-grid-col-4">               
+          {{ taskReviewModel.comment }}
+      </div>
+      <div class="ui-grid-col-4">
+          <textarea                        
+            pInputTextarea                        
+            [(ngModel)]="taskCompletionModel.rmisccomment"
+            formControlName="rmisccomment"
+            id="rmisccomment"
+            name="rmisccomment"
+            maxlength="500"
+            class="clsControl"
+            binary="true"
+          ></textarea>                 
+          
+      </div> 
+      
+  </div>
+  <div class="ui-g"  style="width:100%;text-align:right;">
+    <div class="ui-g-12 ui-md-6">
+      <div class="paddingRL">
+        <p-checkbox value="true" label="IsStrainComplete"
+        formControlName="isStrainComplete" checked="true"
+       binary="true"></p-checkbox>  
+      </div>
+    </div>
+  </div>
+  <p-footer>
+    <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
+    <!-- [disabled]="!reviewForm.valid" -->
+    <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showReviewmodal=false" label="Cancel"></button>
+  </p-footer>
+    </form>
+  </p-dialog>
+  <p-growl [(value)]="msgs" life='5000'></p-growl>
 </div>

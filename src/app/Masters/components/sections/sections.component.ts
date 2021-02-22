@@ -355,7 +355,7 @@ this.Year = new Date().getFullYear();
       section: new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
       strain: new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
       plantcount: new FormControl(null, Validators.compose([Validators.required, Validators.max(999999999999999), Validators.min(0.1)])),
-      year: new FormControl(this.Year, Validators.compose([ Validators.max(99999), Validators.min(0.1)])),
+      year: new FormControl(null, Validators.compose([ Validators.max(99999), Validators.min(0.1)])),
       chkSelectAll: new FormControl(true)
     });
   }

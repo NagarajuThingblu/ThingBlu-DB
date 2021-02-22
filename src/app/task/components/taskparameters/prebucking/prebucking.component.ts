@@ -74,20 +74,26 @@ export class PrebuckingComponent implements OnInit {
     private render: Renderer2,
     private elref: ElementRef
   ) {
+   
     this._cookieService = this.appCommonService.getUserProfile();
    }
    items = new FormArray([], this.customGroupValidation );
    arrayItems: FormArray;
    display = false;
    public strains: any[];
+   public bins: any[];
    public employees: any[];
    public globalResource: any;
    public msgs: Message[] = [];
    public taskid: any;
+   public plusOnEdit: boolean = true;
     taskTypeId: any;
    public taskType: any;
+   public taskCompletionModel: any;
+   public taskReviewModel: any;
    public employeeArray:any=[];
    public strainName: any;
+   public defaultWtWeight = 0;
    private globalData = {
     employees: [],
     strains: [],
@@ -96,7 +102,8 @@ export class PrebuckingComponent implements OnInit {
 
   ngOnInit() {
     this.employeeListByClient();
-    this.getStrainListByTask()
+    this.getStrainListByTask();
+    this.getAllBins();
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle(this.assignTaskResources.siftingtitle);
@@ -148,14 +155,73 @@ export class PrebuckingComponent implements OnInit {
       });
       this.ParentFormGroup.addControl('PREBUCKING', this.PREBUCKING);
     }
+    else{
+      this.taskReviewModel = {
+        wetweight : this.TaskModel.wetweight,
+        driweight : this.TaskModel.dryweight,
+        wasteweight : this.TaskModel.wasteweight,
+        binId: this.TaskModel.binId,
+        binFull: this.TaskModel.binFull,
+        isStrainComplete: this.TaskModel.isStrainComplete,
+        racthrs: this.TaskModel.RevHrs ?  this.TaskModel.RevHrs : this.padLeft(String(Math.floor(this.TaskModel.ActHrs / 3600)), '0', 2),
+        ractmins: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) / 60)), '0', 2),
+        ractsecs: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) % 60)), '0', 2),
+       }
+      this.taskCompletionModel = {
+        wetweight : this.TaskModel.wetweight,
+        driweight : this.TaskModel.dryweight,
+        wasteweight : this.TaskModel.wasteweight,
+        binId: this.TaskModel.binId,
+        binFull: this.TaskModel.binFull,
+        isStrainComplete: this.TaskModel.isStrainComplete
+
+      }
+      this.completionForm  = this.fb.group({
+        'isStrainComplete': new FormControl(''),
+        'items': new FormArray([
+          this.createItem()
+        ], this.customGroupValidation),
+      });
+
+      this.reviewForm = this.fb.group({
+        'isStrainComplete': new FormControl(''),
+        'items': new FormArray([
+          this.createItem()
+        ], this.customGroupValidation),
+        'ActHrs': new FormControl(null),
+          'ActMins': new FormControl(null, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
+          'ActSecs': new FormControl({value: null, disabled: this.isRActSecsDisabled}, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
+          'rmisccost': new FormControl(null),
+          'rmisccomment': new FormControl(null)
+      })
+      
+      // this.addItem();
+    }
   }
+  addItem(): void {
+    this.arrayItems = this.completionForm.get('items') as FormArray;
+    this.arrayItems.push(this.createItem());
+  }
+  createItem(): FormGroup {
+    return this.fb.group({
+      'binId': new FormControl(null, Validators.compose([Validators.required])),
+      'wetweight': new FormControl(''),
+      'dryweight': new FormControl(''),
+      'wasteweight': new FormControl(''),
+      'binFull': new FormControl(''),
+    });
+    
+  }
+  padLeft(text: string, padChar: string, size: number): string {
+    return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;
+  }
+
   CaluculateTotalSecs(Hours, Mins, Secs) {
     return (Number(Hours) * 3600) + (Number(Mins) * 60) + Number(Secs);
   }
   get preBuckingDetailsArr(): FormArray {
     return this.completionForm.get('items') as FormArray;
   }
-
   removeDuplicatesById(dataObject) {
     // To get unique record according brand and strain
     const newArr = [];
@@ -174,11 +240,11 @@ export class PrebuckingComponent implements OnInit {
   customGroupValidation (formArray) {
     let isError = false;
     const result = _.groupBy( formArray.controls , c => {
-      return [c.value.binNo, c.value.isOp];
+      return [c.value.binId];
     });
 
     for (const prop in result) {
-        if (result[prop].length > 1 && result[prop][0].controls['binNo'].value !== null && result[prop][0].controls['isOp'].value !== null) {
+        if (result[prop].length > 1 && result[prop][0].controls['binId'].value !== null) {
           isError = true;
             _.forEach(result[prop], function (item: any, index) {
               // alert(index);
@@ -190,6 +256,23 @@ export class PrebuckingComponent implements OnInit {
         }
     }
     if (isError) { return {'duplicate': 'duplicate entries'}; }
+  }
+
+  getAllBins(){
+    let TaskId =this.TaskModel.TaskId
+    this.dropdownDataService.getBins(TaskId).subscribe(
+      data => {
+        // let newdata: any[];
+        // newdata = this.removeDuplicatesById(data);
+   
+        if (data !== 'No Data Found') {
+          this.bins = this.dropdwonTransformService.transform(data, 'LabelName', 'LabelId', '-- Select --');
+        } else {
+          this.bins = [];
+        }
+      } ,
+      error => { console.log(error); },
+      () => console.log('Get all bins complete'));
   }
 
   getStrainListByTask() {
@@ -252,20 +335,135 @@ export class PrebuckingComponent implements OnInit {
 
     
 }
+
+submitReviewParameter(formModel) {
+  if (this.reviewForm.valid) {
+    this.submitReview(formModel);
+  } else {
+    this.appCommonService.validateAllFields(this.reviewForm);
+  }
+}
+
+submitReview(formModel) {
+  const ActSeconds = this.reviewForm.getRawValue().ActSecs;
+  let taskReviewWebApi;
+  if ( this.reviewForm.valid === true) {
+    taskReviewWebApi = {
+      PreBucking: {
+        TaskId:Number(this.taskid),
+        VirtualRoleId:Number(this._cookieService.VirtualRoleId),
+        Comment: formModel.rmisccomment,
+        IsStrainCompleted:formModel.isStrainComplete == " "?0:1,
+        MiscCost: formModel.rmisccost,
+        RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
+      },
+      BinDetails:[]
+    };
+    this.preBuckingDetailsArr.controls.forEach((element, index) => {
+      // this.duplicateSection = element.value.section
+      taskReviewWebApi.BinDetails.push({
+        BinId:element.value.binId,
+        DryWt: element.value.dryweight,
+        WetWt: 0,
+        WasteWt: element.value.wasteweight,
+        IsOpBinFilledCompletely: element.value.binFull == true?1:0
+            
+         });
+    
+     });
+  }
+  this.confirmationService.confirm({
+    message: this.assignTaskResources.taskcompleteconfirm,
+    header: 'Confirmation',
+    icon: 'fa fa-exclamation-triangle',
+    accept: () => {
+      this.loaderService.display(true);
+      this.taskCommonService.submitPrebuckingTaskReview(taskReviewWebApi)
+      .subscribe(data => {
+        if (data === 'NoComplete'){
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskalreadycompleted });
+          if (this.TaskModel.IsReview === true) {
+            this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
+          } 
+          else {
+            this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+          }
+          this.TaskCompleteOrReviewed.emit();
+        }
+        else if (data[0].RESULTKEY === 'Deleted'){
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
+          setTimeout( () => {
+            if (this._cookieService.UserRole === this.userRoles.Manager) {
+              this.router.navigate(['home/managerdashboard']);
+            }
+            else {
+              this.router.navigate(['home/empdashboard']);
+            }
+          }, 1000);
+        }
+        else if (data[0].RESULTKEY === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else  if (data[0].RESULTKEY === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
+          this.loaderService.display(false);
+        }
+        else{
+          if (this.TaskModel.IsReview === true) {
+            this.TaskModel.TaskStatus =  this.taskStatus.ReviewPending;
+          } 
+          else {
+            this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+          }
+          this.msgs = [];
+          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+          detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
+           setTimeout( () => {
+                      if (this._cookieService.UserRole === this.userRoles.Manager) {
+                        this.router.navigate(['home/managerdashboard']);
+                      } else {
+                        this.router.navigate(['home/empdashboard']);
+                      }
+                    }, 1000);
+        }
+      })
+    }
+  })
+
+}
+
+
 completeTask(formModel){
   let taskCompletionWebApi;
-  let assignedPC;
   if ( this.completionForm.valid === true) {
     taskCompletionWebApi = {
-      CompletePlant:{
+      PreBucking:{
         TaskId:Number(this.taskid),
-        CompletedPlantCount: formModel.completedPC,
-        TerminatedPlantCount: formModel.terminatedtedPC,
-        TerminationReason:  formModel.terminationReason,
-        Comment: formModel.comment,
-        VirtualRoleId: 0,
-      }
-    }
+        Comment:" ",
+        VirtualRoleId: Number(this._cookieService.VirtualRoleId),
+        IsStrainCompleted:formModel.isStrainComplete == " "?0:1
+      },
+      BinDetails:[]
+    };
+    this.preBuckingDetailsArr.controls.forEach((element, index) => {
+      // this.duplicateSection = element.value.section
+      taskCompletionWebApi.BinDetails.push({
+        BinId:element.value.binId,
+        DryWt: element.value.dryweight,
+        WetWt: 0,
+        WasteWt: element.value.wasteweight,
+        IsOpBinFilledCompletely: element.value.binFull == true?1:0
+            
+         });
+    
+     });
+   
+
   }
   // assignedPC = Number(this.taskCompletionModel.AssignedPlantCnt);
   // if(Number(assignedPC) < Number(this.TaskModel.CompletedPlantCnt) + Number(this.TaskModel.CompletedPlantCnt))
@@ -277,7 +475,7 @@ completeTask(formModel){
 
     accept: () => {
       this.loaderService.display(true);
-      this.taskCommonService.completePlantTask(taskCompletionWebApi)
+      this.taskCommonService.completePrebuckingTask(taskCompletionWebApi)
       .subscribe(data => {
         if (data === 'NoComplete') {
           this.msgs = [];
@@ -302,12 +500,18 @@ completeTask(formModel){
         }
         else if (data === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+          this.PageFlag.showmodal = false;
+          this.loaderService.display(false);
         }
         else  if (data[0].RESULTKEY === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+          this.PageFlag.showmodal = false;
+          this.loaderService.display(false);
         }
-        else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
+        else if (data[0].RESULTKEY ==='Success'){
+          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
+          this.PageFlag.showmodal = false;
+          this.loaderService.display(false);
         }
         else{
           if (this.TaskModel.IsReview === true) {

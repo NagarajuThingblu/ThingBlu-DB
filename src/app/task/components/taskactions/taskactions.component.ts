@@ -66,7 +66,11 @@ export class TaskactionsComponent implements OnInit {
     'comment': '',
     'wetweight':'',
     'dryweight':'',
-    'wasteweight':''
+    'wasteweight':'',
+    'binId':'',
+    'binFull': true,
+    'isStrainComplete': true
+   
   };
 
   public page: any = {

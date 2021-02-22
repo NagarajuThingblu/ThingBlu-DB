@@ -32,7 +32,7 @@ export class FieldsComponent implements OnInit {
   public msg: any[];
   // public RoomTypeforupdate: any = 0;
   // public RoomTypeEdit: any;
-  public saveButtontext = 'save';
+  public saveButtontext = 'Save';
   public clear = 'Clear';
   paginationvalues: any;
   chkIsActive: any;

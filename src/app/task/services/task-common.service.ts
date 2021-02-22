@@ -129,6 +129,14 @@ completePlantTask(taskCompletionWebApi: any){
     return this.http.post(apiUrl, taskCompletionWebApi, this.headers)
     .map(data =>  data );
 }
+//for completing prebucking task
+completePrebuckingTask(taskCompletionWebApi: any){
+  const apiUrl = 'api/Grower/PreBuckingTaskComplete';
+
+    taskCompletionWebApi.PreBucking.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
+    return this.http.post(apiUrl, taskCompletionWebApi, this.headers)
+    .map(data =>  data );
+}
 //For submitting harvesting task
 completeHarvestTask(taskCompletionWebApi: any){
   const apiUrl = 'api/Grower/CompleteHarvestingTask';
@@ -142,6 +150,14 @@ submitPlantTaskReview(taskReviewWebApi) {
   const apiUrl = 'api/Grower/ReviewPlantTask';
 
   taskReviewWebApi.ReviewPlant.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
+  return this.http.post(apiUrl, taskReviewWebApi, this.headers)
+  .map(data =>  data );
+}
+//for submitting prebucking task
+submitPrebuckingTaskReview(taskReviewWebApi) {
+  const apiUrl = 'api/Grower/PreBuckingTaskReview';
+
+  taskReviewWebApi.PreBucking.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
   return this.http.post(apiUrl, taskReviewWebApi, this.headers)
   .map(data =>  data );
 }

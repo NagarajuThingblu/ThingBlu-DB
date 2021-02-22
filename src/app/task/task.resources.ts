@@ -191,6 +191,7 @@ export class TaskResources {
                     reviewedwt: 'Reviewed Weight',
                     qafail: 'QA Fail',
                     issuetype: 'Issue Type',
+                    assignedcountmore:'Assigned Plant Count Greater than Total Plant Count',
                     notampedjointslotavail: 'Sorry, No tamped joints lot is present against',
                     nolotpresent: 'Sorry, No lot is present against',
                     qafailed: 'QA Failed',

@@ -126,7 +126,6 @@ export class PlantingComponent implements OnInit{
     
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
     this.priorities =  [
-      {label:'select', value:'null'},
       {label: 'Normal', value: 'Normal'},
       {label: 'Important', value: 'Important'},
       {label: 'Critical', value: 'Critical'}
@@ -170,6 +169,7 @@ export class PlantingComponent implements OnInit{
     this.ParentFormGroup.addControl('PLANTING', this.PLANTING);
     }
     else{
+      
      this.taskReviewModel = {
       misccost: this.TaskModel.MiscCost,
       CompletedPlantCnt : this.TaskModel.CompletedPlantCnt,

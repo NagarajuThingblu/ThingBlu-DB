@@ -899,7 +899,7 @@ console.log(assignTaskFormValues)
           "AssignedPlantsCount": assignTaskFormValues.PLANTING.assignedPC,
           "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
           "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
-          "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority ,
+          "Priority":assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority  ,
           "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
           "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
           "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
@@ -929,11 +929,16 @@ console.log(assignTaskFormValues)
               'taskname': new FormControl(null, Validators.required),
               'taskCategory':new FormControl(null,Validators.required),
             });
-            this.loaderService.display(false);
+            // this.loaderService.display(false);
         }
-        else if (String(data).toLocaleUpperCase() === 'FAILURE') {
+        else if (String(data[0]. RESULTKEY).toLocaleUpperCase() === 'FAILURE') {
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         }
+        else if (String(data[0]. RESULTKEY) === 'Assigned Plant Count Greater than Total Plant Count') {
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.assignedcountmore });
+         
+        }
+        this.loaderService.display(false);
         });
     
       }
@@ -948,7 +953,7 @@ console.log(assignTaskFormValues)
            "AssignedPlantsCount": assignTaskFormValues.HARVESTING.assignedPC,
            "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
            "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
-           "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority ,
+           "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority ,
            "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
            "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
            "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
@@ -978,11 +983,16 @@ console.log(assignTaskFormValues)
                'taskname': new FormControl(null, Validators.required),
                'taskCategory':new FormControl(null,Validators.required),
              });
-             this.loaderService.display(false);
+            
          }
          else if (String(data).toLocaleUpperCase() === 'FAILURE') {
            this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
          }
+         else if (String(data[0]. RESULTKEY) === 'Assigned Plant Count Greater than Total Plant Count') {
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.assignedcountmore });
+         
+        }
+        this.loaderService.display(false);
          });
      
        }
