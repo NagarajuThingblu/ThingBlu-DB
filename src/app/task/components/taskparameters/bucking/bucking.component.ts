@@ -35,16 +35,23 @@ import { FormArray } from '@angular/forms';
 })
 export class BuckingComponent implements OnInit {
   BUCKING: FormGroup;
-
+  completionForm: FormGroup;
   //input and output decorators
+  @Input() BinData: any;
   @Input() TaskModel: any;
   @Input() PageFlag: any;
   @Input() ParentFormGroup: FormGroup;
+  @Input() questions: any[];
   @ViewChild('checkedItems') private checkedElements: ElementRef;
+  @Output() TaskCompleteOrReviewed: EventEmitter<any> = new EventEmitter<any>();
 
   public _cookieService: UserModel;
   public assignTaskResources: any;
   public userRoles: any;
+  public taskid: any;
+  arrayItems: FormArray;
+  public taskCompletionModel: any;
+  public taskReviewModel: any;
   public taskStatus: any;
   public defaultDate: Date = new Date();
   public showPastDateLabel = false;
@@ -99,6 +106,16 @@ export class BuckingComponent implements OnInit {
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
     
+    this.route.params.forEach((urlParams) => {
+      // Modified by Devdan :: 05-Oct-2018 :: Getting Tasktype and task id from Edit Task Component
+      this.taskid = urlParams['id'];
+      this.taskType = urlParams['taskType'];
+      // Get the task type id from data received from resolver
+      if (this.TaskModel.TaskDetails) {
+        this.taskTypeId = this.TaskModel.TaskDetails.TaskTypeId;
+      }
+    });
+
     this.priorities =  [
       {label: 'Normal', value: 'Normal'},
       {label: 'Important', value: 'Important'},
@@ -128,8 +145,65 @@ export class BuckingComponent implements OnInit {
         'notifyemployee': new FormControl(''),
         'comment': new FormControl('', Validators.maxLength(500)),
       });
+      this.ParentFormGroup.addControl('BUCKING', this.BUCKING);
+    }
+    else{
+      this.taskCompletionModel = {
+        BinName: this.TaskModel.IPLabelName,
+        BinWeight: this.TaskModel.IPBinWt,
+        CompletedBinWt:'', 
+        WasteWt:'',
+        binId: this.TaskModel.binId,
+        binsId:'',
+        weight:'',
+        binFull: this.TaskModel.binFull,
+
+      }
+
+      this.completionForm = this.fb.group({
+        'inputBin': new FormControl(null),
+        'binWt': new FormControl(''),
+        'completeWt':new FormControl(''),
+        'wasteWt':new FormControl(''),
+        'items': new FormArray([
+          this.createItem()
+        ], this.customGroupValidation),
+      });
     }
 
+  }
+
+  createItem(): FormGroup {
+    return this.fb.group({
+      'binsId': new FormControl(null, Validators.compose([Validators.required])),
+      'weight': new FormControl(''),
+      'binFull': new FormControl(''),
+    }); 
+  }
+
+  customGroupValidation (formArray) {
+    let isError = false;
+    const result = _.groupBy( formArray.controls , c => {
+      return [c.value.binsId];
+    });
+
+    for (const prop in result) {
+        if (result[prop].length > 1 && result[prop][0].controls['binsId'].value !== null) {
+          isError = true;
+            _.forEach(result[prop], function (item: any, index) {
+              // alert(index);
+              item._status = 'INVALID';
+            });
+        } else {
+            result[prop][0]._status = 'VALID';
+            // console.log(result[prop].length);
+        }
+    }
+    if (isError) { return {'duplicate': 'duplicate entries'}; }
+  }
+
+  get buckingDetailsArr(): FormArray {
+    return this.completionForm.get('items') as FormArray;
   }
  
   //method to get bins dropdown
@@ -162,23 +236,155 @@ export class BuckingComponent implements OnInit {
       error => { console.log(error); },
       () => console.log('Get all employees by client complete'));
   }
-  // OnSelectingBins(event?: any){
+  deleteItem(index: number) {
     
-  //   for(let binlist of this.bins){
-  //     if(event.itemValue === binlist.value && this.binsArray.indexOf(binlist.label) === -1){
-  //       this.binsArray.push(binlist.label)
-  //       return;
-  //    }
-  //    else{
-  //     if(event.itemValue === binlist.value){
-  //       let index = this.binsArray.indexOf(binlist.label);
-  //       this.binsArray.splice(index,1)
-
-  //     }
-  //   }
-  //   }
-  // }
-  hello(){
-    console.log("hi hello")
+    const control = <FormArray>this.completionForm.controls['items'];
+   
+    if (control.length !== 1) {
+      control.removeAt(index);
+    }
+    console.log(this.completionForm.get('items'))
+   
   }
+  addItem(): void {
+    this.arrayItems = this.completionForm.get('items') as FormArray;
+    this.arrayItems.push(this.createItem());
+  }
+
+  submitCompleteParameter(formModel) {
+    if (this.completionForm.valid) {
+      // this.CheckThreSholdValidation(formModel);
+       this.completeTask(formModel);
+    } else {
+      this.appCommonService.validateAllFields(this.completionForm);
+    }
+}
+
+completeTask(formModel){
+  let taskCompletionWebApi;
+  if ( this.completionForm.valid === true) {
+    taskCompletionWebApi = {
+      Bucking:{
+        TaskId:Number(this.taskid),
+        Comment:" ",
+        VirtualRoleId: Number(this._cookieService.VirtualRoleId),
+      },
+      InputBinDetails:[],
+      OutputBinDetails:[]
+    };
+   
+      // this.duplicateSection = element.value.section
+      taskCompletionWebApi.InputBinDetails.push({
+        BinId:this.TaskModel.InputBinId,
+        DryWt: Number(formModel.completeWt),
+        WetWt: 0,
+        WasteWt:Number(formModel.wasteWt) ,
+            
+         });
+        
+   
+    
+     this.buckingDetailsArr.controls.forEach((element, index) => {
+      // this.duplicateSection = element.value.section
+      taskCompletionWebApi.OutputBinDetails.push({
+        BinId:element.value.binsId,
+        DryWt: element.value.weight,
+        IsOpBinFilledCompletely: element.value.binFull == true?1:0
+            
+         });
+        
+     });
+   
+     
+
+  }
+  // assignedPC = Number(this.taskCompletionModel.AssignedPlantCnt);
+  // if(Number(assignedPC) < Number(this.TaskModel.CompletedPlantCnt) + Number(this.TaskModel.CompletedPlantCnt))
+  
+  this.confirmationService.confirm({
+    message: this.assignTaskResources.taskcompleteconfirm,
+    header: 'Confirmation',
+    icon: 'fa fa-exclamation-triangle',
+
+    accept: () => {
+      this.loaderService.display(true);
+      this.taskCommonService.completeBuckingTask(taskCompletionWebApi)
+      .subscribe(data => {
+        if (data[0].RESULTKEY  === 'This status already exist') {
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskCompleted });
+          if (this.TaskModel.IsReview === true) {
+            this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
+          } else {
+            this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+          }
+          this.TaskCompleteOrReviewed.emit();
+        }
+       else    if (data[0].RESULTKEY  === 'Completed weight is greater than Assigned bin weight') {
+        this.msgs = [];
+        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.completewtgreaterthantotal });
+        if (this.TaskModel.IsReview === true) {
+          this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
+        } else {
+          this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+        }
+        this.TaskCompleteOrReviewed.emit();
+      }
+      else    if (data[0].RESULTKEY  === 'Output Bin weight is greater than Input Bin weight') {
+        this.msgs = [];
+        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.morebinweight });
+        if (this.TaskModel.IsReview === true) {
+          this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
+        } else {
+          this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+        }
+        this.TaskCompleteOrReviewed.emit();
+      }
+        else if (data === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+          this.PageFlag.showmodal = false;
+          this.loaderService.display(false);
+        }
+      
+        else if (data[0].RESULTKEY ==='Success'){
+          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
+          setTimeout( () => {
+            if (this._cookieService.UserRole === this.userRoles.Manager) {
+              this.router.navigate(['home/managerdashboard']);
+            } else {
+              this.router.navigate(['home/empdashboard']);
+            }
+          }, 1000);
+          this.PageFlag.showmodal = false;
+          this.loaderService.display(false);
+        }
+        else{
+          if (this.TaskModel.IsReview === true) {
+            this.TaskModel.TaskStatus =  this.taskStatus.ReviewPending;
+          } 
+          else {
+            this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+          }
+          this.msgs = [];
+                  this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+                    detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
+                    setTimeout( () => {
+                      if (this._cookieService.UserRole === this.userRoles.Manager) {
+                        this.router.navigate(['home/managerdashboard']);
+                      } else {
+                        this.router.navigate(['home/empdashboard']);
+                      }
+                    }, 1000);
+        }
+        
+      });
+      this.PageFlag.showmodal = false;
+      this.loaderService.display(false);
+
+    },
+    reject: () =>{
+
+    }
+  });
+}
 }

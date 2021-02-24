@@ -70,8 +70,10 @@ export class TaskactionsComponent implements OnInit {
     'wasteweight':'',
     'binId':'',
     'binFull': true,
-    'isStrainComplete': true
-   
+    'isStrainComplete': true,
+   'IPLabelName':'',
+   'IPBinWt':'',
+   'InputBinId':''
   };
 
   public page: any = {

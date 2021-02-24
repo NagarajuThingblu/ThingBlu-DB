@@ -65,6 +65,7 @@ export class GlobalResources {
                     action: 'Action',
                     assignwt: 'Assigned Wt.',
                     time: 'Time',
+                    bin:'Bin Name',
                     emprate: 'Rate/Hr.',
                     empestcost: 'Est. Cost',
                     assignedwt: 'Assigned Weight',

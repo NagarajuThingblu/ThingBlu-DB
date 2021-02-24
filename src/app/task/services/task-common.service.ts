@@ -61,6 +61,14 @@ export class TaskCommonService {
    .map(data =>  data );
   }
 
+  assignbuckingTask(buckingDataForApi: any) {
+    const url = 'api/Grower/BuckingTaskAssign';
+    console.log('assign form ');
+    console.log(buckingDataForApi);
+    return this.http.post(url, buckingDataForApi, this.headers)
+    // .do(data =>console.log('All : ' + JSON.stringify(data)))
+   .map(data =>  data );
+  }
   /// Crated By : Devdan :: 10-Oct-2018 :: Added method
   updateTask(assignTaskDetailsForWebApi: any) {
     const url = 'api/Task/TaskUpdate';
@@ -134,6 +142,15 @@ completePrebuckingTask(taskCompletionWebApi: any){
   const apiUrl = 'api/Grower/PreBuckingTaskComplete';
 
     taskCompletionWebApi.PreBucking.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
+    return this.http.post(apiUrl, taskCompletionWebApi, this.headers)
+    .map(data =>  data );
+}
+
+//for completing bucking task
+completeBuckingTask(taskCompletionWebApi: any){
+  const apiUrl = 'api/Grower/BuckingTaskComplete';
+
+    taskCompletionWebApi.Bucking.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
     return this.http.post(apiUrl, taskCompletionWebApi, this.headers)
     .map(data =>  data );
 }

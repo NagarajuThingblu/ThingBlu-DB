@@ -1054,7 +1054,8 @@ console.log(assignTaskFormValues)
         let buckingDataForApi = {
           Bucking:{
             "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
-            // "BinId": assignTaskFormValues.BUCKING.section,
+            "BinId": assignTaskFormValues.BUCKING.bins,
+            "EmpId": assignTaskFormValues.BUCKING.employeeList,
             "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
             "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
             "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority ,
@@ -1065,7 +1066,7 @@ console.log(assignTaskFormValues)
           }
         };
         this.loaderService.display(true);
-        this.taskCommonService.assignPrebuckingTask(buckingDataForApi).
+        this.taskCommonService.assignbuckingTask(buckingDataForApi).
         subscribe(
           data => {
             this.msgs = [];
