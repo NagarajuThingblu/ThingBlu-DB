@@ -28,9 +28,9 @@ import { FormArray } from '@angular/forms';
 
 
 @Component({
-  selector: 'app-trimming',
-  templateUrl: './trimming.component.html',
-  styleUrls: ['./trimming.component.css']
+  selector: 'app-growertrimming',
+  templateUrl: './growertrimming.component.html',
+  styleUrls: ['./growertrimming.component.css']
 })
 export class GrowertrimmingComponent  implements OnInit {
   GROWERTRIMMING: FormGroup;
