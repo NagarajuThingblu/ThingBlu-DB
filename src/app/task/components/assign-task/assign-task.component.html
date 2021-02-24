@@ -410,6 +410,15 @@
           >
           </app-bucking>
 
+        <app-trimming
+        *ngIf="selectedTaskTypeName=='GROWERTRIMMING'&&this.isServiceCallComplete&&assignTaskForm.controls['taskCategory'] == 'Growing'" 
+        style="width:100%;"   
+        [TaskModel]="assignTask" 
+        [PageFlag]="page"  
+        [ParentFormGroup] = "assignTaskForm"          
+      >
+      </app-trimming>
+
               <!--End Dynamic Component Contents Depends on whatever the task is selected -->
               <div class="ui-g-12 ui-md-12 marginTop-15" style="text-align:right;padding-right: 20px;">
                 <button pButton type="submit" label="Assign Task" ></button>

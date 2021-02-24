@@ -41,6 +41,7 @@ import { HarvestingComponent } from './components/taskparameters/harvesting/harv
 import { PlantingComponent } from './components/taskparameters/planting/planting.component';
 import { PrebuckingComponent } from './components/taskparameters/prebucking/prebucking.component';
 import { BuckingComponent } from './components/taskparameters/bucking/bucking.component';
+import { GrowertrimmingComponent } from './components/taskparameters/growertrimming/growertrimming.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import { BuckingComponent } from './components/taskparameters/bucking/bucking.co
     PlantingComponent,
     PrebuckingComponent,
     BuckingComponent,
+    GrowertrimmingComponent,
 
   ],
   imports: [
