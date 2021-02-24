@@ -59,7 +59,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
   public labelQty: any;
 
   public tasktypelist:any;
-
+  taskcategoriesMap: Map<number,string> = new Map<number,string>();
   constructor(
     private fb: FormBuilder,
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -90,6 +90,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
     // this.loaderService.display(true);
     this.getAllTasks();
+  
   }
 
   private submitted: boolean;
@@ -295,6 +296,11 @@ else{
             'CategoryName','TaskCategoryID','-- Select --', false
 
           );
+        }
+        if(this.taskcategories){
+          for(let item of this.taskcategories){
+            this.taskcategoriesMap.set(item.value,item.label)
+          }
         }
       },
       error => { console.log(error); },
