@@ -127,4 +127,174 @@
           ></p-checkbox>                                                              
       </div>
   </div>
+
+  <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
+    
+    <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
+      <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div  class="ui-g-12">
+          <span><b>Input Bin</b></span>
+        </div>
+        <div class="ui-g-12 ui-md-3">
+          <div class="paddingRL">
+            <label for="inputBin">InputBin</label>
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-3">
+          <div class="paddingRL">
+            <label for="binWt">TotalBinWeight(lb)</label>
+            <span class="star">*</span>
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-3">
+          
+            <label for="completeWt">CompletedWeight(lb)</label>
+            <span class="star">*</span>
+         
+        </div>
+        <div class="ui-g-12 ui-md-3">
+          <div class="paddingRL">
+            <label for="wasteWt">WasteWeight(lb)</label>
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-3">
+          <div>
+            <input type="text" 
+            pInputText 
+            [(ngModel)]="taskCompletionModel.BinName"
+            autocomplete="off"
+            id="inputBin" 
+            name="inputBin" 
+            formControlName="inputBin"              
+            class="clsControl"  
+            readonly 
+          />
+          </div>
+        </div>
+       
+        <div class="ui-g-12 ui-md-3">
+          <div>
+            <input type="text" 
+            pInputText 
+            [(ngModel)]="taskCompletionModel.BinWeight"
+            autocomplete="off"
+            id="binWt" 
+            placeholder="Enter Bin Weight"
+            name="binWt" 
+            formControlName="binWt"              
+            class="clsControl"  
+            readonly  
+          />
+          </div>
+        </div>
+     
+        <div class="ui-g-12 ui-md-3">
+          <div>
+            <input type="text" 
+            pInputText 
+            autocomplete="off"
+            id="completeWt" 
+            placeholder="Enter Completed Weight"
+            name="completeWt" 
+            formControlName="completeWt"              
+            class="clsControl"   
+          />
+          </div>
+        </div>
+       
+        <div class="ui-g-12 ui-md-3">
+          <div>
+            <input type="text" 
+            pInputText 
+            autocomplete="off"
+            id="wasteWt" 
+            placeholder="Enter Waste Weight"
+            name="wasteWt" 
+            formControlName="wasteWt"              
+            class="clsControl"   
+          />
+          </div>
+        </div>
+
+        <div formArrayName="items" style="position: relative">
+          <div style="width:calc(100% - 20px);float:left;">
+            <div style="padding:5px;">
+              <span><b>Output Bin</b></span>
+            </div>
+            <p-table [value]="buckingDetailsArr?.controls" id="buckingDetailsArr" name="preBuckingDetailsArr">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Bin
+                    <span class="star">*</span>
+                  </th>
+                  <th>Weight (pounds)
+                    <span class="star">*</span>
+                  </th>
+                  <th style="width: 80px;">IsBinFull
+                </th>
+                <th style="width: 80px;">Action</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item let-i="rowIndex">
+                <tr [formGroupName]="i">
+                  <td>
+                    <p-dropdown
+                    id="binsId"
+                    formControlName="binsId"
+                    [options]="bins"
+                    placeholder="-- Select --"
+                    [autoWidth]="false"
+                    class="clsControl"
+                    name="binsId">
+                    </p-dropdown>
+                  </td>
+                  <td>
+                    <input pInputText
+                      name="weight"
+                      id="weight"
+                      type="number"
+                      autocomplete="off"
+                      class="clsControl"       
+                      formControlName="weight"
+                      placeholder="Enter  Weight "
+                      min="0.1">
+                  </td>
+                  <td>
+                    <p-checkbox value="true"
+                     formControlName="binFull" checked="true"
+                    binary="true"></p-checkbox>                                      
+                  </td>
+                  <td>
+                      <a (click)="deleteItem(i)" >                                                    
+                          <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                          </span>
+                      </a> 
+                        <a (click)="addItem()" *ngIf="completionForm.get('items').valid">
+                            <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                            </span>
+                        </a>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+           <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="buckingDetailsArr.hasError('duplicate')">
+          duplicate entries
+        </div>  
+        </div>
+      </div>
+      <div class="ui-g" style="width:100%;text-align:right;">
+        <div class="ui-g-12">
+          <button pButton type="submit" label="Save" ></button>
+          <button 
+              pButton 
+              (click)="resetForm()" 
+              type="button" 
+              label="Clear" 
+              class="ui-button-secondary">
+          </button>
+        </div>
+      </div>
+    </form>
+  </p-dialog>
 </div>
