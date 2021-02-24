@@ -1,0 +1,114 @@
+<div class="ui-g " [formGroup]="BUCKING" >
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="bins">Bins<span class="star">*</span></label>:
+      <div class="clear"></div>
+      <p-dropdown #checkedItems
+      placeholder="-- Select --"
+      [filter] ="true"
+      [options]="bins"
+      formControlName="bins"
+      class="clsControl"
+      id="bins"
+      name="bins"
+      >
+      </p-dropdown>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="employeeList">Assigned To<span class="star">*</span></label>:
+      <p-dropdown
+      [(ngModel)]="TaskModel.BUCKING.startdate"
+      [filter] ="true"
+      [options]="employees"
+      placeholder="-- Select --"
+      [autoWidth]="true"
+      formControlName="employeeList"
+      class="clsControl"
+      id="employeeList"
+      name="employeeList">
+      </p-dropdown>
+    </div>
+  </div>
+  <!-- <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="BinsListBox">Bins List</label>
+      <div  class="BinsListBox">
+        <ul class="bins-list" style='padding: 0px;'>
+          <li  *ngFor="let i of binsArray; let id=index" class="BinsListItem" >
+            <span class="badge badge-pill badge-light binslisttext">{{i}}&nbsp;</span>
+            
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div> -->
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="estimatedstartdate">
+        Est. Start Date<span class="star">*</span>:
+      </label>
+      <small class="smallTextRed"
+      *ngIf="showPastDateLabel"
+      >Task will be get created for past date
+      </small>
+      <p-calendar  
+                                
+           [showIcon]="true"
+           [defaultDate]="defaultDate"      
+            
+           formControlName="estimatedstartdate"          
+           class="clsControl"
+           id="estimatedstartdate"
+           name="estimatedstartdate"
+           >
+         </p-calendar>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="employee">Priority</label>:
+      <p-dropdown
+        [options]="priorities"
+        [autoWidth]="true"
+        formControlName="priority"
+        id="priority"
+        class="clsControl"
+        name="priority">
+      </p-dropdown> 
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="comment">Comment</label>:
+      <textarea                        
+            pInputTextarea                        
+            formControlName="comment"
+            id="comment"
+            name="comment"
+            maxlength="500"
+            class="clsControl"
+            binary="true"
+          ></textarea>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6 " >
+    <div class="paddingRL">                              
+          <p-checkbox          
+            label="Notify Manager"
+           
+            formControlName="notifymanager"
+            binary="true"
+          ></p-checkbox>
+  
+          <p-checkbox 
+            value="true"
+            label="Notify Employee"
+           
+            formControlName="notifyemployee"
+            binary="true"
+          ></p-checkbox>                                                              
+      </div>
+  </div>
+</div>

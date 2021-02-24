@@ -327,6 +327,7 @@ console.log(assignTaskFormValues)
    
 
     if (this.assignTaskForm.valid) {
+     
       assignTaskDetailsForWebApi = {
         TaskDetails: {
           ClientId: this._cookieService.ClientId,
@@ -352,6 +353,7 @@ console.log(assignTaskFormValues)
         }
         // DynamicDetails: {
       };
+    
 
       if (this.selectedTaskTypeName === 'TRIMMING') { // TRIMMING TASK
         assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = 0;
@@ -1038,15 +1040,55 @@ console.log(assignTaskFormValues)
           }
           else if (String(data).toLocaleUpperCase() === 'FAILURE') {
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+            this.loaderService.display(false);
+          }
+          else if (String(data) === 'Something went wrong  at server side!'){
+            this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+            this.loaderService.display(false);
           }
           });
       
 
        }
+       else if (this.selectedTaskTypeName === 'BUCKING') {
+        let buckingDataForApi = {
+          Bucking:{
+            "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
+            // "BinId": assignTaskFormValues.BUCKING.section,
+            "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
+            "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
+            "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority ,
+            "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
+            "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
+            "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
+            "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
+          }
+        };
+        this.loaderService.display(true);
+        this.taskCommonService.assignPrebuckingTask(buckingDataForApi).
+        subscribe(
+          data => {
+            this.msgs = [];
+            if (String(data[0]. RESULTKEY).toLocaleUpperCase() === 'SUCCESS') {
+              this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+              detail: this.assignTaskResources.taskassignedsuccessfully});
+              this.assignTask.task = null;
+              this.assignTask.taskcategory=null;
+              this.selectedTaskTypeName = '';
+              this.isServiceCallComplete = false;
+              this.assignTaskForm = this.fb.group({
+                'taskname': new FormControl(null, Validators.required),
+                'taskCategory':new FormControl(null,Validators.required),
+              });
+              this.loaderService.display(false);
+            }
+          }
+        )
+        }
 
           // http call starts
         
-   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING'){
+   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING' && this.selectedTaskTypeName != 'BUCKING'){
 
    
           this.loaderService.display(true);

@@ -27,6 +27,7 @@ export class TaskactionsComponent implements OnInit {
   public taskType;
   public taskActionDetails1: any;
   public taskStatusHistory: any;
+  public binDetails: any;
 
   taskActionDetails = {
     'LotId': '',
@@ -229,6 +230,7 @@ export class TaskactionsComponent implements OnInit {
         } else {
           this.taskActionDetails = Object.assign(this.taskActionDetails, this.taskActionDetails1);
           this.taskStatusHistory =  data.Table2 ? data.Table2 : [];
+          this.binDetails = data.Table1? data.Table1 : [];
         }
         this.AssignRole = this.taskStatusHistory.filter(d => d.RoleName === 'Employee' && d.TaskStatus === 'ASSIGNED' );
        // http call starts

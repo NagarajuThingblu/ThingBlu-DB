@@ -39,6 +39,7 @@ export class PrebuckingComponent implements OnInit {
   reviewForm: FormGroup;
 
   //input and output decorators
+  @Input() BinData: any;
   @Input() TaskModel: any;
   @Input() PageFlag: any;
   @Input() ParentFormGroup: FormGroup;
@@ -105,7 +106,7 @@ export class PrebuckingComponent implements OnInit {
   ngOnInit() {
     this.employeeListByClient();
     this.getStrainListByTask();
-    this.getAllBins();
+    console.log("bins details : "+this.BinData)
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle(this.assignTaskResources.siftingtitle);
@@ -158,13 +159,14 @@ export class PrebuckingComponent implements OnInit {
       this.ParentFormGroup.addControl('PREBUCKING', this.PREBUCKING);
     }
     else{
+      this.getAllBins();
       this.taskReviewModel = {
         wetweight : this.TaskModel.wetweight,
         driweight : this.TaskModel.dryweight,
         wasteweight : this.TaskModel.wasteweight,
         binId: this.TaskModel.binId,
         binFull: this.TaskModel.binFull,
-        isStrainComplete: this.TaskModel.isStrainComplete,
+        // isStrainComplete: this.TaskModel.isStrainComplete,
         racthrs: this.TaskModel.RevHrs ?  this.TaskModel.RevHrs : this.padLeft(String(Math.floor(this.TaskModel.ActHrs / 3600)), '0', 2),
         ractmins: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) / 60)), '0', 2),
         ractsecs: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) % 60)), '0', 2),
@@ -186,7 +188,7 @@ export class PrebuckingComponent implements OnInit {
       });
 
       this.reviewForm = this.fb.group({
-        'isStrainComplete': new FormControl(''),
+        // 'isStrainComplete': new FormControl(''),
         'items': new FormArray([
           this.createItem()
         ], this.customGroupValidation),
@@ -214,6 +216,17 @@ export class PrebuckingComponent implements OnInit {
     });
     
   }
+  // createItemsForReview(){
+  //   for(let i = 0; i<= this.BinData.length(); i++){
+  //     return this.fb.group({
+  //       'binId': new FormControl(this.BinData[i].BinId, Validators.compose([Validators.required])),
+  //       'wetweight': new FormControl(0),
+  //       'dryweight': new FormControl(this.BinData[i].BinWt),
+  //       'wasteweight': new FormControl(0),
+  //       'binFull': new FormControl(''),
+  //     });
+  //   }
+  // }
   padLeft(text: string, padChar: string, size: number): string {
     return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;
   }
@@ -277,6 +290,14 @@ export class PrebuckingComponent implements OnInit {
       () => console.log('Get all bins complete'));
   }
 
+  getBinsOnEdit(BinId){
+    const data = this.BinData.filter(x => x.BinId === BinId);
+    if (data !== 'No data found!') {
+     let binName = this.BinData[0].LabelName
+      binName.patchValue(this.BinData[0].LabelName);
+    }
+
+  }
   getStrainListByTask() {
     let TaskTypeId = this.ParentFormGroup != undefined?
     this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
@@ -312,7 +333,7 @@ export class PrebuckingComponent implements OnInit {
   resetForm() {
     
     this.completionForm.reset({ isStrainComplete: false });
-   
+   this.defaulDryWeight = 0;
 
     const control = <FormArray>this.completionForm.controls['items'];
     

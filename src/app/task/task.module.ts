@@ -40,6 +40,7 @@ import { BudPkgAllocateEmployeeComponent } from './components/taskparameters/bud
 import { HarvestingComponent } from './components/taskparameters/harvesting/harvesting.component';
 import { PlantingComponent } from './components/taskparameters/planting/planting.component';
 import { PrebuckingComponent } from './components/taskparameters/prebucking/prebucking.component';
+import { BuckingComponent } from './components/taskparameters/bucking/bucking.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { PrebuckingComponent } from './components/taskparameters/prebucking/preb
     HarvestingComponent,
     PlantingComponent,
     PrebuckingComponent,
+    BuckingComponent,
 
   ],
   imports: [
