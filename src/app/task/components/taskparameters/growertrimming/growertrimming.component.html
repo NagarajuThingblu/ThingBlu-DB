@@ -127,6 +127,53 @@
           ></p-checkbox>                                                              
       </div>
   </div>
+</div>
+
+<div *ngIf="PageFlag.page =='TaskAction'">
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>Employee: </strong>
+      </label>
+      <label>
+        {{TaskModel?.EmpName}}
+      </label>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.strain }}: </strong>
+      </label>
+          {{TaskModel?.StrainName}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.bin }}: </strong>
+      </label>
+          {{TaskModel?.IPLabelName}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.eststartdate }}: </strong>
+      </label>
+          {{TaskModel?.EstStartDate}}
+    </div>
+  </div>
+
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.priority }}: </strong>
+      </label>
+          {{TaskModel?.TaskPriority}}
+    </div>
+  </div>
+
 
   <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
     
