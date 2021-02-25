@@ -361,7 +361,7 @@ console.log(assignTaskFormValues)
       };
     
 
-      if (this.selectedTaskTypeName === 'TRIMMING') { // TRIMMING TASK
+      if (this.selectedTaskTypeName === 'TRIMMING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Processing') { // TRIMMING TASK
         assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = 0;
         assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'TRIM';
 
@@ -1012,7 +1012,7 @@ console.log(assignTaskFormValues)
             "StrainId": assignTaskFormValues.PREBUCKING.strain,
             "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
             "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
-            "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority ,
+            "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority ,
             "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
             "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
             "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
@@ -1073,6 +1073,42 @@ console.log(assignTaskFormValues)
         };
         this.loaderService.display(true);
         this.taskCommonService.assignbuckingTask(buckingDataForApi).
+        subscribe(
+          data => {
+            this.msgs = [];
+            if (String(data[0]. RESULTKEY).toLocaleUpperCase() === 'SUCCESS') {
+              this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+              detail: this.assignTaskResources.taskassignedsuccessfully});
+              this.assignTask.task = null;
+              this.assignTask.taskcategory=null;
+              this.selectedTaskTypeName = '';
+              this.isServiceCallComplete = false;
+              this.assignTaskForm = this.fb.group({
+                'taskname': new FormControl(null, Validators.required),
+                'taskCategory':new FormControl(null,Validators.required),
+              });
+              this.loaderService.display(false);
+            }
+          }
+        )
+        }
+        else if(this.selectedTaskTypeName === 'TRIMMING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+          let trimmingDataForApi = {
+            Trimming:{
+              "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
+              "BinId": assignTaskFormValues.TRIMMING.bins,
+              "EmpId": assignTaskFormValues.TRIMMING.employeeList,
+              "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
+              "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
+              "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority ,
+              "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
+              "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
+              "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
+              "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
+            }
+          };
+          this.loaderService.display(true);
+        this.taskCommonService.assignTrimmingTask(trimmingDataForApi).
         subscribe(
           data => {
             this.msgs = [];

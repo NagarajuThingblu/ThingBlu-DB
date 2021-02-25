@@ -165,6 +165,52 @@
           {{TaskModel?.EstStartDate}}
     </div>
   </div>
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
+    <div class="paddingRL">
+        <label>
+          <strong>{{ globalResource.actualstartdate }}: </strong>
+        </label>
+      
+          {{TaskModel?.ActStartDate }}
+      </div>
+    </div>
+  
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.actualenddate }}: </strong>
+      </label>
+    
+        {{TaskModel?.ActEndDate}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.actualhrs }}: </strong>
+      </label>
+    
+        {{TaskModel?.ActHrs}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.misccost }}: </strong>
+      </label>
+    
+        {{TaskModel?.MiscCost}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ assignTaskResources.actualcost }}:: </strong>
+      </label>
+    
+      {{TaskModel?.EmpFinalCost | currency}}
+    </div>
+  </div>
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label>
@@ -190,6 +236,14 @@
         </label>
       
           {{TaskModel?.ActEndDate}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6">
+      <div class="paddingRL">
+        <label>
+          <strong>{{ globalResource.ipbinwt }}: </strong>
+        </label>
+            {{TaskModel?.BinWt}}
       </div>
     </div>
 
@@ -304,9 +358,9 @@
             </ng-template>
         </p-table>
         </div>
-        <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="preBuckingDetailsArr.hasError('duplicate')">
+        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="preBuckingDetailsArr.hasError('duplicate')">
           duplicate entries
-        </div>   -->
+        </div>  
         
         <div class="ui-g" style="width:100%;text-align:right;">
           <div class="ui-g-12">
@@ -325,22 +379,23 @@
   </p-dialog>
 
   <p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" > 
-    <div class="ui-g"  style="width:100%;">
-      <div class="ui-g-12 ui-md-6" style="text-align:left;">
-        <div class="paddingRL">
-          <span>Strain :- </span><span> {{BinData[0].StrainName}}</span>
-        </div>
-      </div>
-        <div class="ui-g-12 ui-md-6"style="text-align:right;">
-          <div class="paddingRL">
-            <p-checkbox value="BinData[0].IsStrainCompleted" label="IsStrainComplete"
-            formControlName="isStrainComplete" checked="true"
-           binary="true"></p-checkbox>  
-          </div>
-        </div>
-    </div>
+   
     
     <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
+      <div class="ui-g"  style="width:100%;">
+        <div class="ui-g-12 ui-md-6" style="text-align:left;">
+          <div class="paddingRL">
+            <span>Strain :- </span><span></span>
+          </div>
+        </div>
+          <div class="ui-g-12 ui-md-6"style="text-align:right;">
+            <div class="paddingRL">
+              <p-checkbox value="BinData[0].IsStrainCompleted" label="IsStrainComplete"
+              formControlName="isStrainComplete" checked="true"
+             binary="true"></p-checkbox>  
+            </div>
+          </div>
+      </div>
       <div formArrayName="items" style="position: relative">
         <p-table [value]="preBuckingDetailsArr?.controls" id="preBuckingDetailsArr" name="preBuckingDetailsArr">
           <ng-template pTemplate="header">

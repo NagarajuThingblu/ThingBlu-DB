@@ -86,7 +86,7 @@ export class HarvestingComponent implements OnInit{
    taskTypeId: any;
   public taskType: any;
   public employeeArray:any=[];
-  public strainName: any;
+  public strain: any;
   public defaultValueCompletePc: Number = 0;
   public defaultValueTerminatedPc: Number = 0;
   public defaultWetWt: Number = 0;
@@ -152,7 +152,7 @@ export class HarvestingComponent implements OnInit{
       };
    
     this.HARVESTING = this.fb.group({
-      'strain': new FormControl('', Validators.required),
+      'strain': new FormControl(null, Validators.required),
       'field' : new FormControl('', Validators.required),
       'section': new FormControl('', Validators.required),
       'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
@@ -222,6 +222,24 @@ export class HarvestingComponent implements OnInit{
 
   }
 
+  // getAllFieldsAndSections() {
+  //   this.fields = [];
+
+  //   let TaskTypeId = this.ParentFormGroup != undefined?
+  //   this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
+  //   this.dropdownDataService.getFieldsSectionsInGrowers(TaskTypeId).subscribe(
+  //     data => {
+  //       this.globalData.Fields = data;
+  //       this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --',false);
+  //       const fieldsfilter = Array.from(data.reduce((m, t) => m.set(t.FieldName, t), new Map()).values())
+  //       this.fields = this.dropdwonTransformService.transform(fieldsfilter,'FieldName', 'FieldId', '-- Select --',false)
+  //       console.log("fields"+JSON.stringify(this.Fields));
+  //     } ,
+  //     error => { console.log(error); },
+  //     () => console.log('Get all brands complete'));
+  // }
+
+  
   getAllFieldsAndSections() {
     this.fields = [];
 
@@ -238,8 +256,6 @@ export class HarvestingComponent implements OnInit{
       error => { console.log(error); },
       () => console.log('Get all brands complete'));
   }
-
-  
   padLeft(text: string, padChar: string, size: number): string {
     return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;
   }
@@ -497,11 +513,11 @@ completeTask(formModel){
     for(let sec of this.globalData.Fields ){
       if(event.value === sec.SectionId)
       {
-        this.strainName = sec.StrainName;
+        this.strain = sec.StrainName;
         this.plantCount =sec.AvilablePlantCount;
         this.TaskModel.HARVESTING.section = sec.SectionName
-        this.TaskModel.HARVESTING.strain =  this.strainName
-        this.HARVESTING.controls["strain"].setValue(this.strainName)
+        this.TaskModel.HARVESTING.strain =  this.strain
+        this.HARVESTING.controls["strain"].setValue(this.strain)
         this.TaskModel.HARVESTING.totalPC  = this.plantCount
         this.HARVESTING.controls["plantCount"].setValue(this.plantCount)
       }

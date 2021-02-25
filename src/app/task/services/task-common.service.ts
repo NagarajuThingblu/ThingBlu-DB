@@ -69,6 +69,15 @@ export class TaskCommonService {
     // .do(data =>console.log('All : ' + JSON.stringify(data)))
    .map(data =>  data );
   }
+
+  assignTrimmingTask(trimmingDataForApi: any) {
+    const url = 'api/Grower/TrimmingTaskAssign';
+    console.log('assign form ');
+    console.log(trimmingDataForApi);
+    return this.http.post(url, trimmingDataForApi, this.headers)
+    // .do(data =>console.log('All : ' + JSON.stringify(data)))
+   .map(data =>  data );
+  }
   /// Crated By : Devdan :: 10-Oct-2018 :: Added method
   updateTask(assignTaskDetailsForWebApi: any) {
     const url = 'api/Task/TaskUpdate';

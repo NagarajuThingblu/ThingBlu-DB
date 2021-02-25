@@ -86,7 +86,7 @@ export class PlantingComponent implements OnInit{
    taskTypeId: any;
   public taskType: any;
   public employeeArray:any=[];
-  public strainName: any;
+  public strainName: '';
   public defaultValueCompletePc: Number = 0;
   public defaultValueTerminatedPc: Number = 0;
   public plantCount: any;
@@ -138,6 +138,7 @@ export class PlantingComponent implements OnInit{
         section: '',
         assignedPC: '',
         strain: '',
+        strainName:'',
         employeeList:'',
         startdate: this.TaskModel.startdate,
         enddate: '',

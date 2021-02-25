@@ -147,13 +147,76 @@
           {{TaskModel?.EstStartDate}}
     </div>
   </div>
-
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
+    <div class="paddingRL">
+        <label>
+          <strong>{{ globalResource.actualstartdate }}: </strong>
+        </label>
+      
+          {{TaskModel?.ActStartDate }}
+      </div>
+    </div>
+  
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.actualenddate }}: </strong>
+      </label>
+    
+        {{TaskModel?.ActEndDate}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.actualhrs }}: </strong>
+      </label>
+    
+        {{TaskModel?.ActHrs}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.misccost }}: </strong>
+      </label>
+    
+        {{TaskModel?.MiscCost}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ assignTaskResources.actualcost }}:: </strong>
+      </label>
+    
+      {{TaskModel?.EmpFinalCost | currency}}
+    </div>
+  </div>
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label>
         <strong>{{ globalResource.priority }}: </strong>
       </label>
           {{TaskModel?.TaskPriority}}
+    </div>
+  </div>
+
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.ipbinwt }}: </strong>
+      </label>
+          {{TaskModel?.IPBinWt}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.revHrs }}: </strong>
+      </label>
+    
+      {{TaskModel?.RevHrs}}
     </div>
   </div>
 
@@ -257,7 +320,7 @@
                   <th>Bin
                     <span class="star">*</span>
                   </th>
-                  <th>Weight (pounds)
+                  <th>Weight (lb)
                     <span class="star">*</span>
                   </th>
                   <th style="width: 80px;">IsBinFull
@@ -271,7 +334,7 @@
                     <p-dropdown
                     id="binsId"
                     formControlName="binsId"
-                    [options]="bins"
+                    [options]="binslist"
                     placeholder="-- Select --"
                     [autoWidth]="false"
                     class="clsControl"

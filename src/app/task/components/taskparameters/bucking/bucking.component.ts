@@ -81,7 +81,7 @@ export class BuckingComponent implements OnInit {
 
   display = false;
   public bins: any[];
-  
+  public binslist: any[];
   public globalResource: any;
    public msgs: Message[] = [];
    public employees: any[];
@@ -98,6 +98,7 @@ export class BuckingComponent implements OnInit {
   ngOnInit() {
     this.binsListByClient();
     this.employeeListByClient();
+    
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle(this.assignTaskResources.siftingtitle);
@@ -148,6 +149,7 @@ export class BuckingComponent implements OnInit {
       this.ParentFormGroup.addControl('BUCKING', this.BUCKING);
     }
     else{
+      this.getAllBins();
       this.taskCompletionModel = {
         BinName: this.TaskModel.IPLabelName,
         BinWeight: this.TaskModel.IPBinWt,
@@ -206,14 +208,17 @@ export class BuckingComponent implements OnInit {
     return this.completionForm.get('items') as FormArray;
   }
  
-  //method to get bins dropdown
+  //method to get bins dropdown in assign page
   binsListByClient() {
     
     let TaskTypeId = this.ParentFormGroup != undefined?
     this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
     this.dropdownDataService. getStrainsByTaskType(TaskTypeId).subscribe(
       data => {
-        if (data !== 'No data found!') {
+        // let newdata: any[];
+        // // newdata = this.removeDuplicatesById(data);
+        // this.globalData.bins = newdata;
+        if (data !== 'No data found') {
           this.bins = this.dropdwonTransformService.transform(data, 'LabelName', 'BinId', '-- Select --');
         } else {
           this.bins = [];
@@ -221,6 +226,24 @@ export class BuckingComponent implements OnInit {
       } ,
       error => { console.log(error); },
       () => console.log('GetPrscrStrainListByTask complete'));
+  }
+ 
+//method to get bins dropdown in complete page
+  getAllBins(){
+    let TaskId =this.TaskModel.TaskId
+    this.dropdownDataService.getBins(TaskId).subscribe(
+      data => {
+        // let newdata: any[];
+        // newdata = this.removeDuplicatesById(data);
+   
+        if (data !== 'No Data Found') {
+          this.binslist = this.dropdwonTransformService.transform(data, 'LabelName', 'LabelId', '-- Select --');
+        } else {
+          this.binslist = [];
+        }
+      } ,
+      error => { console.log(error); },
+      () => console.log('Get all bins complete'));
   }
   //method to get employes dropdown
   employeeListByClient(){

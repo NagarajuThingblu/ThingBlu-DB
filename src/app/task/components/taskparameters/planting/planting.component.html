@@ -64,7 +64,7 @@
       autocomplete="off"
       id="strain" 
       name="strain" 
-      [value]="strainName"
+      [ngModel]="strainName"
       formControlName="strain"         
           
       class="clsControl"  
@@ -270,14 +270,6 @@
 <div class="ui-g-12 ui-md-6">
   <div class="paddingRL">
     <label>
-      <strong>Assigned Plant Count: </strong>
-    </label>
-        {{TaskModel?.AssignedPlantCnt}}
-  </div>
-</div>
-<div class="ui-g-12 ui-md-6">
-  <div class="paddingRL">
-    <label>
       <strong>{{ globalResource.eststartdate }}: </strong>
     </label>
         {{TaskModel?.EstStartDate}}
@@ -291,6 +283,41 @@
         {{TaskModel?.TaskPriority}}
   </div>
 </div>
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label>
+      <strong>Assigned Plant Count: </strong>
+    </label>
+        {{TaskModel?.AssignedPlantCnt}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
+  <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.completedpc }}: </strong>
+      </label>
+    
+        {{TaskModel?.CompletedPlantCnt }}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
+    <div class="paddingRL">
+        <label>
+          <strong>{{ globalResource.terminatedpc }}: </strong>
+        </label>
+      
+          {{TaskModel?.TerminatedPlantCnt }}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
+      <div class="paddingRL">
+          <label>
+            <strong>{{ globalResource.terminatedreason }}: </strong>
+          </label>
+        
+            {{TaskModel?.TerminationReason }}
+        </div>
+      </div>
 <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
   <div class="paddingRL">
       <label>
@@ -308,6 +335,42 @@
     </label>
   
       {{TaskModel?.ActEndDate}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+  <div class="paddingRL">
+    <label>
+      <strong>{{ globalResource.actualhrs }}: </strong>
+    </label>
+  
+      {{TaskModel?.ActHrs}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+  <div class="paddingRL">
+    <label>
+      <strong>{{ globalResource.misccost }}: </strong>
+    </label>
+  
+      {{TaskModel?.MiscCost}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+  <div class="paddingRL">
+    <label>
+      <strong>{{ assignTaskResources.actualcost }}:: </strong>
+    </label>
+  
+    {{TaskModel?.EmpFinalCost | currency}}
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+  <div class="paddingRL">
+    <label>
+      <strong>{{ globalResource.revHrs }}: </strong>
+    </label>
+  
+    {{TaskModel?.RevHrs}}
   </div>
 </div>
 <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="500" [minWidth]="200" >
@@ -451,7 +514,6 @@
             autocomplete="off"
             id="terminationReason" 
             name="terminationReason" 
-            [(ngModel)]="taskReviewModel.TerminationReason"
             formControlName="terminationReason"              
             class="clsControl"   
           />

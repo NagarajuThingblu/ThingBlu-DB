@@ -188,7 +188,7 @@ export class PrebuckingComponent implements OnInit {
       });
 
       this.reviewForm = this.fb.group({
-        // 'isStrainComplete': new FormControl(''),
+        'isStrainComplete': new FormControl(''),
         'items': new FormArray([
           this.createItem()
         ], this.customGroupValidation),
@@ -280,7 +280,7 @@ export class PrebuckingComponent implements OnInit {
         // let newdata: any[];
         // newdata = this.removeDuplicatesById(data);
    
-        if (data !== 'No Data Found') {
+        if (data !== 'No Data Found!') {
           this.bins = this.dropdwonTransformService.transform(data, 'LabelName', 'LabelId', '-- Select --');
         } else {
           this.bins = [];

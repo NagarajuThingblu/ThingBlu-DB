@@ -33,7 +33,7 @@ import { FormArray } from '@angular/forms';
   styleUrls: ['./growertrimming.component.css']
 })
 export class GrowertrimmingComponent implements OnInit {
-  BUCKING: FormGroup;
+  GROWERTRIMMING: FormGroup;
   completionForm: FormGroup;
   //input and output decorators
   @Input() BinData: any;
@@ -122,7 +122,7 @@ export class GrowertrimmingComponent implements OnInit {
     ];
 
     if (this.PageFlag.page !== 'TaskAction') {
-      this.TaskModel.BUCKING = {
+      this.TaskModel.GROWERTRIMMING = {
         bins:'',
         employeeList:'',
         startdate: this.TaskModel.startdate,
@@ -135,7 +135,7 @@ export class GrowertrimmingComponent implements OnInit {
         notifyemployee: this.TaskModel.IsEmployeeNotify ? this.TaskModel.IsEmployeeNotify : false,
         usercomment: '',
       };
-      this.BUCKING = this.fb.group({
+      this.GROWERTRIMMING = this.fb.group({
         'bins': new FormControl('', Validators.required),
         'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
         'employeeList': new FormControl('', Validators.required),
@@ -144,7 +144,7 @@ export class GrowertrimmingComponent implements OnInit {
         'notifyemployee': new FormControl(''),
         'comment': new FormControl('', Validators.maxLength(500)),
       });
-      this.ParentFormGroup.addControl('BUCKING', this.BUCKING);
+      this.ParentFormGroup.addControl('TRIMMING', this.GROWERTRIMMING);
     }
     else{
       this.taskCompletionModel = {
@@ -212,6 +212,7 @@ export class GrowertrimmingComponent implements OnInit {
     this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
     this.dropdownDataService. getStrainsByTaskType(TaskTypeId).subscribe(
       data => {
+       
         if (data !== 'No data found!') {
           this.bins = this.dropdwonTransformService.transform(data, 'LabelName', 'BinId', '-- Select --');
         } else {

@@ -203,7 +203,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-section let-rowData let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-            <td> <p-cellEditor>{{section?.FieldName}}</p-cellEditor></td>
+            <td>{{section?.FieldName}}</td>
             <td>{{section?.SectionName}}</td>
             <td>{{section?.StrainName}}</td>
             <td>{{section?.PlantsCount }}</td>

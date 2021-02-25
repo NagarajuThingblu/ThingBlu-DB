@@ -1,7 +1,7 @@
-<div class="ui-g " [formGroup]="GROWERTRIMMING" >
+<div class="ui-g " [formGroup]="GROWERTRIMMING" *ngIf="PageFlag.page =='AssignTask'">
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
-      <label for="bins">Bin<span class="star">*</span></label>:
+      <label for="bins">Bins<span class="star">*</span></label>:
       <div class="clear"></div>
       <p-dropdown #checkedItems
       placeholder="-- Select --"
@@ -17,25 +17,8 @@
   </div>
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
-      <label for="binweight">Bin Weight<span class="star">*</span></label>:
-      <p-dropdown
-      [(ngModel)]="TaskModel.GROWERTRIMMING.startdate"
-      [filter] ="true"
-      [options]="binweight"
-      placeholder="-- Select --"
-      [autoWidth]="true"
-      formControlName="binweightList"
-      class="clsControl"
-      id="binweightList"
-      name="binweightList">
-      </p-dropdown>
-    </div>
-  </div>
-  <div class="ui-g-12 ui-md-6">
-    <div class="paddingRL">
       <label for="employeeList">Assigned To<span class="star">*</span></label>:
       <p-dropdown
-      [(ngModel)]="TaskModel.GROWERTRIMMING.startdate"
       [filter] ="true"
       [options]="employees"
       placeholder="-- Select --"
@@ -73,7 +56,7 @@
                                 
            [showIcon]="true"
            [defaultDate]="defaultDate"      
-            
+           [(ngModel)]="TaskModel.GROWERTRIMMING.startdate"
            formControlName="estimatedstartdate"          
            class="clsControl"
            id="estimatedstartdate"
