@@ -285,7 +285,8 @@ export class TaskResources {
                     tpSplitTask: 'Split Task',
                     tpUndoTask: 'Undo Task',
                     viewChangeLots: 'View/Change Lots',
-                    preRollSize: 'Assigned weight should be greater or equal to pre-roll size.'
+                    preRollSize: 'Assigned weight should be greater or equal to pre-roll size.',
+                    viewaddbin:'View/Add Bins'
 
                 },
                 searchtask: {

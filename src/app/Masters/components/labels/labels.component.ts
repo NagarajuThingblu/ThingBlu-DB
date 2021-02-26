@@ -331,13 +331,8 @@ createItem(): FormGroup {
                   this.loaderService.display(false);
                 }
               } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'DUPLICATE') {
-                data.forEach(dataItem => {
-                let formGroup;
-                formGroup = (<FormGroup>this.newLabelsEntryForm.get('items.' + dataItem.IndexCode));
-
-                (formGroup as FormGroup).setErrors({ 'prototypenotpresent': true });
-                this.loaderService.display(false);
-                });
+                this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg,
+                detail: this.newLabelResources.duplicate });
 
                 
               } else {

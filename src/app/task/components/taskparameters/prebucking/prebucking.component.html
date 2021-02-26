@@ -189,8 +189,12 @@
       <label>
         <strong>{{ globalResource.actualhrs }}: </strong>
       </label>
+      
+        {{ TaskModel?.ActHrs | minutesToTime }}
     
-        {{TaskModel?.ActHrs}}
+    <span  *ngIf="showToManager">                
+        {{ taskReviewModel?.racthrs | minutesToTime }}
+    </span> 
     </div>
   </div>
   <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
@@ -238,15 +242,25 @@
           {{TaskModel?.ActEndDate}}
       </div>
     </div>
-    <div class="ui-g-12 ui-md-6">
-      <div class="paddingRL">
-        <label>
-          <strong>{{ globalResource.ipbinwt }}: </strong>
-        </label>
-            {{TaskModel?.BinWt}}
-      </div>
-    </div>
-
+    <div style="padding-top: 5px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
+      <div><b>Ouput Bin Details</b></div>
+    <p-table [value]="BinData">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Bin Name</th>
+          <th>Bin Weight</th>
+          <th>Is Bin Full</th>
+      </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-TaskModel>
+        <tr>
+            <td>{{TaskModel.LabelName}}</td>
+            <td>{{TaskModel.BinWt}}</td>
+            <td>{{TaskModel.IsOpBinFilledCompletely}}</td>
+        </tr>
+    </ng-template>
+    </p-table>
+  </div>
   <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
     <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
       <div class="ui-g"  style="width:100%;">
@@ -270,6 +284,7 @@
               <tr>
                 <th>Bin
                   <span class="star">*</span>
+                 <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ assignTaskResources.viewaddbin}}" id="btn_binshow" (click)="viewBinsList()"  name="btnviewbins"></p-button>
                 </th>
                 <th>Dry Weight
                   <span class="star">*</span>

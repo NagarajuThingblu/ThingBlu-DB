@@ -1092,12 +1092,12 @@ console.log(assignTaskFormValues)
           }
         )
         }
-        else if(this.selectedTaskTypeName === 'TRIMMING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+        else if(this.selectedTaskTypeName === 'TRIM'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
           let trimmingDataForApi = {
             Trimming:{
               "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
-              "BinId": assignTaskFormValues.TRIMMING.bins,
-              "EmpId": assignTaskFormValues.TRIMMING.employeeList,
+              "BinId": assignTaskFormValues.TRIM.bins,
+              "EmpId": assignTaskFormValues.TRIM.employeeList,
               "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
               "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
               "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority ,
@@ -1131,7 +1131,7 @@ console.log(assignTaskFormValues)
 
           // http call starts
         
-   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING' && this.selectedTaskTypeName != 'BUCKING'){
+   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING' && this.selectedTaskTypeName != 'BUCKING'&& this.selectedTaskTypeName != 'TRIM'){
 
    
           this.loaderService.display(true);

@@ -10,7 +10,7 @@ export class GlobalResources {
                     tasknamerequired: 'Select Task.',
                     terminatedpc:'Terminated Plant Count',
                     completedpc:'Completed Plant Count',
-                    terminatedreason:'Terminated Reason',
+                    terminatedreason:'Termination Reason',
                     brand: 'Brand',
                     brandrequired: 'Select Brand.',
                     subbrand: 'Sub-Brand',

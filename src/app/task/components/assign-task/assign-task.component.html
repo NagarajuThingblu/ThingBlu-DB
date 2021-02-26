@@ -378,7 +378,7 @@
 
 
               <app-planting
-              *ngIf="selectedTaskTypeName=='PLANTING'&&this.isServiceCallComplete" 
+              *ngIf="selectedTaskTypeName=='PLANTING'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Growing'" 
               style="width:100%;"                 
               [TaskModel]="assignTask"       
               [PageFlag]="page"     
@@ -386,7 +386,7 @@
             >
             </app-planting>
             <app-harvesting
-              *ngIf="selectedTaskTypeName=='HARVESTING'&&this.isServiceCallComplete" 
+              *ngIf="selectedTaskTypeName=='HARVESTING'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Growing'" 
               style="width:100%;"                 
               [TaskModel]="assignTask"       
               [PageFlag]="page"     
@@ -394,7 +394,7 @@
             >
             </app-harvesting>
             <app-prebucking
-              *ngIf="selectedTaskTypeName=='PREBUCKING'&&this.isServiceCallComplete" 
+              *ngIf="selectedTaskTypeName=='PREBUCKING'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Growing'" 
               style="width:100%;"   
               [TaskModel]="assignTask" 
               [PageFlag]="page"  
@@ -403,7 +403,7 @@
             </app-prebucking>
 
             <app-bucking
-            *ngIf="selectedTaskTypeName=='BUCKING'&&this.isServiceCallComplete" 
+            *ngIf="selectedTaskTypeName=='BUCKING'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Growing'" 
             style="width:100%;"   
             [TaskModel]="assignTask" 
             [PageFlag]="page"  
@@ -412,7 +412,7 @@
           </app-bucking>
 
           <app-growertrimming
-            *ngIf="selectedTaskTypeName=='TRIMMING'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Growing'
+            *ngIf="selectedTaskTypeName=='TRIM'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Growing'
             
             " 
             style="width:100%;"   

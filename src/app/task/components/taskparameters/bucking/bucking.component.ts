@@ -269,6 +269,9 @@ export class BuckingComponent implements OnInit {
     console.log(this.completionForm.get('items'))
    
   }
+  viewBinsList(){
+    this.router.navigate(['../home/labels']);
+  }
   addItem(): void {
     this.arrayItems = this.completionForm.get('items') as FormArray;
     this.arrayItems.push(this.createItem());

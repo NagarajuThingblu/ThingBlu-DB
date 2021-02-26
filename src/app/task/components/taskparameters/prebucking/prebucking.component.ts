@@ -216,17 +216,9 @@ export class PrebuckingComponent implements OnInit {
     });
     
   }
-  // createItemsForReview(){
-  //   for(let i = 0; i<= this.BinData.length(); i++){
-  //     return this.fb.group({
-  //       'binId': new FormControl(this.BinData[i].BinId, Validators.compose([Validators.required])),
-  //       'wetweight': new FormControl(0),
-  //       'dryweight': new FormControl(this.BinData[i].BinWt),
-  //       'wasteweight': new FormControl(0),
-  //       'binFull': new FormControl(''),
-  //     });
-  //   }
-  // }
+  viewBinsList(){
+    this.router.navigate(['../home/labels']);
+  }
   padLeft(text: string, padChar: string, size: number): string {
     return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;
   }

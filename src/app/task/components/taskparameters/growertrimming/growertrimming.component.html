@@ -134,19 +134,60 @@
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label>
-        <strong>{{ globalResource.bin }}: </strong>
-      </label>
-          {{TaskModel?.IPLabelName}}
-    </div>
-  </div>
-  <div class="ui-g-12 ui-md-6">
-    <div class="paddingRL">
-      <label>
         <strong>{{ globalResource.eststartdate }}: </strong>
       </label>
           {{TaskModel?.EstStartDate}}
     </div>
   </div>
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
+    <div class="paddingRL">
+        <label>
+          <strong>{{ globalResource.actualstartdate }}: </strong>
+        </label>
+      
+          {{TaskModel?.ActStartDate }}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+      <div class="paddingRL">
+        <label>
+          <strong>{{ globalResource.actualenddate }}: </strong>
+        </label>
+      
+          {{TaskModel?.ActEndDate}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+      <div class="paddingRL">
+        <label>
+          <strong>{{ globalResource.actualhrs }}: </strong>
+        </label>
+        
+          {{ TaskModel?.ActHrs | minutesToTime }}
+      
+      <span  *ngIf="showToManager">                
+          {{ taskReviewModel?.racthrs | minutesToTime }}
+      </span> 
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+      <div class="paddingRL">
+        <label>
+          <strong>{{ globalResource.misccost }}: </strong>
+        </label>
+      
+          {{TaskModel?.MiscCost}}
+      </div>
+    </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+      <div class="paddingRL">
+        <label>
+          <strong>{{ assignTaskResources.actualcost }}:: </strong>
+        </label>
+      
+        {{TaskModel?.EmpFinalCost | currency}}
+      </div>
+    </div>
 
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
@@ -156,7 +197,55 @@
           {{TaskModel?.TaskPriority}}
     </div>
   </div>
-
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.revHrs }}: </strong>
+      </label>
+    
+      {{TaskModel?.RevHrs}}
+    </div>
+  </div>
+  <div class="ui-g-12" style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+    <div><b>Input Bin Details</b></div>
+  <p-table [value]="BinData">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Input Bin Name</th>
+        <th>Total Weight</th>
+        <th>Completed Weight</th>
+        <th>Waste Weight</th>
+    </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-TaskModel>
+      <tr>
+          <td>{{TaskModel.IPLabelName}}</td>
+          <td>{{TaskModel.IPBinWt}}</td>
+          <td>{{TaskModel.OPBinWt}}</td>
+          <td>{{TaskModel.WasteWt}}</td>
+      </tr>
+  </ng-template>
+  </p-table>
+</div>
+  <div style="padding-top: 10px;"*ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
+    <div><b>Output Bin Details</b></div>
+  <p-table [value]="BinData">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Ouput Bin Name</th>
+        <th>Bin Weight</th>
+        <th>Is Bin Full</th>
+    </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-TaskModel>
+      <tr>
+          <td>{{TaskModel.OPLabelName}}</td>
+          <td>{{TaskModel.OPBinWt}}</td>
+          <td>{{TaskModel.IsOpBinFilledCompletely}}</td>
+      </tr>
+  </ng-template>
+  </p-table>
+</div>
 
   <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
     
@@ -164,6 +253,7 @@
       <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div  class="ui-g-12">
           <span><b>Input Bin</b></span>
+          <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ assignTaskResources.viewaddbin}}" id="btn_binshow" (click)="viewBinsList()"  name="btnviewbins"></p-button>
         </div>
         <div class="ui-g-12 ui-md-3">
           <div class="paddingRL">
@@ -251,13 +341,13 @@
             <div style="padding:5px;">
               <span><b>Output Bin</b></span>
             </div>
-            <p-table [value]="buckingDetailsArr?.controls" id="buckingDetailsArr" name="preBuckingDetailsArr">
+            <p-table [value]="trimmingDetailsArr?.controls" id="trimmingDetailsArr" name="trimmingDetailsArr">
               <ng-template pTemplate="header">
                 <tr>
                   <th>Bin
                     <span class="star">*</span>
                   </th>
-                  <th>Weight (pounds)
+                  <th>Weight (lb)
                     <span class="star">*</span>
                   </th>
                   <th style="width: 80px;">IsBinFull
@@ -271,7 +361,7 @@
                     <p-dropdown
                     id="binsId"
                     formControlName="binsId"
-                    [options]="bins"
+                    [options]="binslist"
                     placeholder="-- Select --"
                     [autoWidth]="false"
                     class="clsControl"
@@ -308,7 +398,7 @@
               </ng-template>
             </p-table>
           </div>
-           <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="buckingDetailsArr.hasError('duplicate')">
+           <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="trimmingDetailsArr.hasError('duplicate')">
           duplicate entries
         </div>  
         </div>

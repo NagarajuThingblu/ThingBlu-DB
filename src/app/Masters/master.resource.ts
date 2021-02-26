@@ -18,7 +18,8 @@ export class MastersResource {
                  labelactivatesuccess:'Bin activated',
                  activeLabelMsg: 'Do you want to activate this Bin?',
                  deactivateLabelMsg: 'Do you want to inactivate this Bin?',
-                 updated: 'Updated Successfully'
+                 updated: 'Updated Successfully',
+                 duplicate:'Duplicate Bin'
                 },
                 newproductype: {
                     pageheading: 'Add New Product Type',

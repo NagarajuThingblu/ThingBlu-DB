@@ -80,7 +80,7 @@ export class GrowertrimmingComponent implements OnInit {
 
   display = false;
   public bins: any[];
-  
+  public binslist: any[];
   public globalResource: any;
    public msgs: Message[] = [];
    public employees: any[];
@@ -144,9 +144,10 @@ export class GrowertrimmingComponent implements OnInit {
         'notifyemployee': new FormControl(''),
         'comment': new FormControl('', Validators.maxLength(500)),
       });
-      this.ParentFormGroup.addControl('TRIMMING', this.GROWERTRIMMING);
+      this.ParentFormGroup.addControl('TRIM', this.GROWERTRIMMING);
     }
     else{
+      this.getAllBins();
       this.taskCompletionModel = {
         BinName: this.TaskModel.IPLabelName,
         BinWeight: this.TaskModel.IPBinWt,
@@ -222,6 +223,24 @@ export class GrowertrimmingComponent implements OnInit {
       error => { console.log(error); },
       () => console.log('GetPrscrStrainListByTask complete'));
   }
+
+  //method to get bins dropdown in complete page
+  getAllBins(){
+    let TaskId =this.TaskModel.TaskId
+    this.dropdownDataService.getBins(TaskId).subscribe(
+      data => {
+        // let newdata: any[];
+        // newdata = this.removeDuplicatesById(data);
+   
+        if (data !== 'No Data Found!') {
+          this.binslist = this.dropdwonTransformService.transform(data, 'LabelName', 'LabelId', '-- Select --');
+        } else {
+          this.binslist = [];
+        }
+      } ,
+      error => { console.log(error); },
+      () => console.log('Get all bins complete'));
+  }
   //method to get employes dropdown
   employeeListByClient(){
     this.dropdownDataService.getEmployeeListByClient().subscribe(
@@ -245,6 +264,9 @@ export class GrowertrimmingComponent implements OnInit {
     }
     console.log(this.completionForm.get('items'))
    
+  }
+  viewBinsList(){
+    this.router.navigate(['../home/labels']);
   }
   addItem(): void {
     this.arrayItems = this.completionForm.get('items') as FormArray;

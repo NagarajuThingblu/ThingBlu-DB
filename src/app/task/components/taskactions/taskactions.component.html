@@ -186,6 +186,16 @@
         >
           </app-bucking>
 
+          <app-growertrimming
+          *ngIf="taskActionDetails?.TaskTypeKey=='TRIM'&&taskActionDetails" 
+              style="width:100%;"            
+              [PageFlag]="page"
+              [TaskModel]="taskActionDetails"     
+              [BinData]="binDetails"
+              (TaskCompleteOrReviewed)="getTaskDetaisByTask()"    
+        >
+          </app-growertrimming>
+
             <!--End Dynamic Component Contents Depends on whatever the task is selected -->
 
           </div>
