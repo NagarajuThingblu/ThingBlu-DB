@@ -59,6 +59,7 @@ export class TaskactionsComponent implements OnInit {
     'IsLotCompleted': null,
     // Added by Devdan :: 08-Oct-2018 :: To get task type id
     'TaskTypeId': 0,
+    'RevCompletedPlantCnt':0,
     'FieldName': '',
     'SectionName': '',
     'AssignedPlantCnt':'',

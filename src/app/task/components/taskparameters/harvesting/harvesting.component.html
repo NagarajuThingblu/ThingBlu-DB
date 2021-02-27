@@ -267,6 +267,7 @@
         {{TaskModel?.SectionName}}
   </div>
 </div>
+
 <div class="ui-g-12 ui-md-6">
   <div class="paddingRL">
     <label>
@@ -293,6 +294,15 @@
           {{TaskModel?.TerminatedPlantCnt }}
       </div>
     </div>
+    <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess" >
+      <div class="paddingRL">
+          <label>
+            <strong>{{ globalResource.RevCompletedPlantCnt }}: </strong>
+          </label>
+        
+            {{TaskModel?.RevCompletedPlantCnt }}
+        </div>
+      </div>
     <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
       <div class="paddingRL">
           <label>
@@ -334,11 +344,15 @@
     <label>
       <strong>{{ globalResource.actualhrs }}: </strong>
     </label>
+    
+      {{ TaskModel?.ActHrs | minutesToTime }}
   
-      {{TaskModel?.ActHrs}}
+  <span  *ngIf="showToManager">                
+      {{ taskReviewModel?.racthrs | minutesToTime }}
+  </span> 
   </div>
 </div>
-<div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+<div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
   <div class="paddingRL">
     <label>
       <strong>{{ globalResource.misccost }}: </strong>
@@ -347,7 +361,7 @@
       {{TaskModel?.MiscCost}}
   </div>
 </div>
-<div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+<div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
   <div class="paddingRL">
     <label>
       <strong>{{ assignTaskResources.actualcost }}:: </strong>
@@ -382,13 +396,13 @@
           {{TaskModel?.WasteWt }}
       </div>
     </div>
-    <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+    <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
       <div class="paddingRL">
         <label>
           <strong>{{ globalResource.revHrs }}: </strong>
         </label>
       
-        {{TaskModel?.RevHrs}}
+        {{TaskModel?.RevHrs | minutesToTime}}
       </div>
     </div>
 
@@ -410,7 +424,7 @@
         <div>
           <input type="number" 
           pInputText 
-          [(ngModel)]="defaultValueCompletePc"
+          [ngModel]="defaultValueCompletePc"
           autocomplete="off"
           id="completedPC" 
           name="completedPC" 

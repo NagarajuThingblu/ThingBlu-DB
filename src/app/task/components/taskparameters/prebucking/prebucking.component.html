@@ -197,7 +197,7 @@
     </span> 
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
     <div class="paddingRL">
       <label>
         <strong>{{ globalResource.misccost }}: </strong>
@@ -206,7 +206,16 @@
         {{TaskModel?.MiscCost}}
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.revHrs }}: </strong>
+      </label>
+    
+      {{TaskModel?.RevHrs  | minutesToTime}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
     <div class="paddingRL">
       <label>
         <strong>{{ assignTaskResources.actualcost }}:: </strong>
@@ -224,25 +233,9 @@
     </div>
   </div>
 
-  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
-    <div class="paddingRL">
-        <label>
-          <strong>{{ globalResource.actualstartdate }}: </strong>
-        </label>
-      
-          {{TaskModel?.ActStartDate }}
-      </div>
-    </div>
-    <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
-      <div class="paddingRL">
-        <label>
-          <strong>{{ globalResource.actualenddate }}: </strong>
-        </label>
-      
-          {{TaskModel?.ActEndDate}}
-      </div>
-    </div>
-    <div style="padding-top: 5px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
+ 
+  
+    <div  class="ui-g-12" style="padding-top: 5px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
       <div><b>Ouput Bin Details</b></div>
     <p-table [value]="BinData">
       <ng-template pTemplate="header">

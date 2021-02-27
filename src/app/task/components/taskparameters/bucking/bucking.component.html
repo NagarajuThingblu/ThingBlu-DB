@@ -134,6 +134,14 @@
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label>
+        <strong>{{ globalResource.inputBinName }}: </strong>
+      </label>
+          {{TaskModel?.IPLabelName}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
         <strong>{{ globalResource.eststartdate }}: </strong>
       </label>
           {{TaskModel?.EstStartDate}}
@@ -171,7 +179,7 @@
     </span> 
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
     <div class="paddingRL">
       <label>
         <strong>{{ globalResource.misccost }}: </strong>
@@ -180,7 +188,7 @@
         {{TaskModel?.MiscCost}}
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
     <div class="paddingRL">
       <label>
         <strong>{{ assignTaskResources.actualcost }}:: </strong>
@@ -198,13 +206,13 @@
     </div>
   </div>
 
-  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+  <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
     <div class="paddingRL">
       <label>
         <strong>{{ globalResource.revHrs }}: </strong>
       </label>
     
-      {{TaskModel?.RevHrs}}
+      {{TaskModel?.RevHrs  | minutesToTime}}
     </div>
   </div>
   <div class="ui-g-12" style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
@@ -253,7 +261,6 @@
       <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div  class="ui-g-12">
           <span><b>Input Bin</b></span>
-          <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ assignTaskResources.viewaddbin}}" id="btn_binshow" (click)="viewBinsList()"  name="btnviewbins"></p-button>
         </div>
         <div class="ui-g-12 ui-md-3">
           <div class="paddingRL">
@@ -340,6 +347,7 @@
           <div style="width:calc(100% - 20px);float:left;">
             <div style="padding:5px;">
               <span><b>Output Bin</b></span>
+              <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ assignTaskResources.viewaddbin}}" id="btn_binshow" (click)="viewBinsList()"  name="btnviewbins"></p-button>
             </div>
             <p-table [value]="buckingDetailsArr?.controls" id="buckingDetailsArr" name="preBuckingDetailsArr">
               <ng-template pTemplate="header">

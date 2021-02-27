@@ -135,6 +135,15 @@ public RoomTypeDisabled:any;
           });
           this.resetAll();
           this.GetFields();
+          this.Fieldforupdate = 0;
+        }
+        else if (String(data[0].ResultKey).toLocaleUpperCase() === 'UPDATED') {
+          this.msg.push({severity: 'success', summary: this.globalResource.applicationmsg,
+          detail: this.newFieldresource.updated });
+         
+          this.resetForm();
+          this.GetFields();
+          this.Fieldforupdate = 0;
         }
         else if (data == 'failue') {
           this.msg.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.error })

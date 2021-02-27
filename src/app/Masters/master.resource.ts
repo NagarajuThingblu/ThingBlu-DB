@@ -880,6 +880,7 @@ export class MastersResource {
                     activeFieldMsg: 'Do you want to activate this Field?',
                     deactivateFieldMsg: 'Do you want to inactivate this Field?',
                     FieldDeletedSuccess: 'Field deleted successfully.',
+                    updated:'Field Updated Successfully'
                     // FieldtypeOrZonesIsInactive: 'Can not activate this Field. Might be Field is inactive.',
                 },
             }

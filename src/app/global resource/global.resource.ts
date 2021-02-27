@@ -3,10 +3,12 @@ export class GlobalResources {
         return {
             en: {
                     grower: 'Grower',
+                    inputBinName:'Input Bin Name',
                     wetwt:'Wet Weight',
                     wastewt:'Waste Weight',
                     taskname: 'Task Name',
                     tasktype: 'Type',
+                    RevCompletedPlantCnt:'Reviewed Plant Count',
                     tasknamerequired: 'Select Task.',
                     terminatedpc:'Terminated Plant Count',
                     completedpc:'Completed Plant Count',
