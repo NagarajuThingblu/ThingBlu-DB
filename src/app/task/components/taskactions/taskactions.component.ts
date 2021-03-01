@@ -69,13 +69,14 @@ export class TaskactionsComponent implements OnInit {
     'comment': '',
     'WetWt':0,
     'dryweight':0,
+    'OPBinWt':0,
     'WasteWt':0,
     'binId':'',
     'binFull': true,
     'isStrainComplete': true,
    'IPLabelName':'',
-   'IPBinWt':'',
-   'BinWt':'',
+   'IPBinWt':0,
+   'BinWt':0,
    'InputBinId':''
   };
 

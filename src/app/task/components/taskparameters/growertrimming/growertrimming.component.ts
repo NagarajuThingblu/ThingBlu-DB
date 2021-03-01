@@ -163,7 +163,7 @@ export class GrowertrimmingComponent implements OnInit {
       this.completionForm = this.fb.group({
         'inputBin': new FormControl(null),
         'binWt': new FormControl(''),
-        'completeWt':new FormControl(''),
+        'completeWt':new FormControl('',Validators.compose([Validators.required])),
         'wasteWt':new FormControl(''),
         'items': new FormArray([
           this.createItem()
@@ -176,7 +176,7 @@ export class GrowertrimmingComponent implements OnInit {
   createItem(): FormGroup {
     return this.fb.group({
       'binsId': new FormControl(null, Validators.compose([Validators.required])),
-      'weight': new FormControl(''),
+      'weight': new FormControl('',Validators.compose([Validators.required])),
       'binFull': new FormControl(''),
     }); 
   }

@@ -1107,7 +1107,7 @@ console.log(assignTaskFormValues)
               "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
             }
           };
-          this.loaderService.display(true);
+          // this.loaderService.display(true);
         this.taskCommonService.assignTrimmingTask(trimmingDataForApi).
         subscribe(
           data => {

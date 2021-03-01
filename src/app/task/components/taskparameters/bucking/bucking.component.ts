@@ -180,7 +180,7 @@ export class BuckingComponent implements OnInit {
       this.completionForm = this.fb.group({
         'inputBin': new FormControl(null),
         'binWt': new FormControl(''),
-        'completeWt':new FormControl(''),
+        'completeWt':new FormControl('',Validators.compose([Validators.required])),
         'wasteWt':new FormControl(''),
         'items': new FormArray([
           this.createItem()
@@ -190,7 +190,7 @@ export class BuckingComponent implements OnInit {
       this.reviewForm = this.fb.group({
         'inputBin': new FormControl(null),
         'binWt': new FormControl(''),
-        'completeWt':new FormControl(''),
+        'completeWt':new FormControl('',Validators.compose([Validators.required])),
         'wasteWt':new FormControl(''),
         'items': new FormArray([
           this.createItem()
@@ -208,7 +208,7 @@ export class BuckingComponent implements OnInit {
   createItem(): FormGroup {
     return this.fb.group({
       'binsId': new FormControl(null, Validators.compose([Validators.required])),
-      'weight': new FormControl(''),
+      'weight': new FormControl('',Validators.compose([Validators.required])),
       'binFull': new FormControl(''),
     }); 
   }
@@ -383,22 +383,26 @@ completeTask(formModel){
        else    if (data[0].RESULTKEY  === 'Completed weight is greater than Assigned bin weight') {
         this.msgs = [];
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.completewtgreaterthantotal });
-        if (this.TaskModel.IsReview === true) {
-          this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
-        } else {
-          this.TaskModel.TaskStatus =  this.taskStatus.Completed;
-        }
-        this.TaskCompleteOrReviewed.emit();
+        // if (this.TaskModel.IsReview === true) {
+        //   this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
+        // } else {
+        //   this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+        // }
+        // this.TaskCompleteOrReviewed.emit();
+        this.PageFlag.showmodal = false;
+        this.loaderService.display(false);
       }
       else    if (data[0].RESULTKEY  === 'Output Bin weight is greater than Input Bin weight') {
         this.msgs = [];
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.morebinweight });
-        if (this.TaskModel.IsReview === true) {
-          this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
-        } else {
-          this.TaskModel.TaskStatus =  this.taskStatus.Completed;
-        }
-        this.TaskCompleteOrReviewed.emit();
+        // if (this.TaskModel.IsReview === true) {
+        //   this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
+        // } else {
+        //   this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+        // }
+        // this.TaskCompleteOrReviewed.emit();
+        this.PageFlag.showmodal = false;
+        this.loaderService.display(false);
       }
         else if (data === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
@@ -406,18 +410,18 @@ completeTask(formModel){
           this.loaderService.display(false);
         }
       
-        else if (data[0].RESULTKEY ==='Success'){
-          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
-          setTimeout( () => {
-            if (this._cookieService.UserRole === this.userRoles.Manager) {
-              this.router.navigate(['home/managerdashboard']);
-            } else {
-              this.router.navigate(['home/empdashboard']);
-            }
-          }, 1000);
-          this.PageFlag.showmodal = false;
-          this.loaderService.display(false);
-        }
+        // else if (data[0].RESULTKEY ==='Success'){
+        //   this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
+        //   setTimeout( () => {
+        //     if (this._cookieService.UserRole === this.userRoles.Manager) {
+        //       this.router.navigate(['home/managerdashboard']);
+        //     } else {
+        //       this.router.navigate(['home/empdashboard']);
+        //     }
+        //   }, 1000);
+        //   this.PageFlag.showmodal = false;
+        //   this.loaderService.display(false);
+        // }
         else{
           if (this.TaskModel.IsReview === true) {
             this.TaskModel.TaskStatus =  this.taskStatus.ReviewPending;
