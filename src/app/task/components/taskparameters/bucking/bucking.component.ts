@@ -36,6 +36,7 @@ import { FormArray } from '@angular/forms';
 export class BuckingComponent implements OnInit {
   BUCKING: FormGroup;
   completionForm: FormGroup;
+  reviewForm: FormGroup;
   //input and output decorators
   @Input() BinData: any;
   @Input() TaskModel: any;
@@ -93,7 +94,7 @@ export class BuckingComponent implements OnInit {
     bins: [],
     employees:[]
   };
-  
+  isRActSecsDisabled: boolean;
 
   ngOnInit() {
     this.binsListByClient();
@@ -161,6 +162,20 @@ export class BuckingComponent implements OnInit {
         binFull: this.TaskModel.binFull,
 
       }
+      this.taskReviewModel = {
+        misccost: this.TaskModel.MiscCost,
+        BinName: this.TaskModel.IPLabelName,
+        BinWeight: this.TaskModel.IPBinWt,
+        CompletedBinWt:this.TaskModel.IPBinWt, 
+        WasteWt:this.TaskModel.WasteWt,
+        binId: this.TaskModel.InputBinId,
+        binsId: this.TaskModel.binId,
+        weight:this.TaskModel.dryweight,
+        binFull: this.TaskModel.binFull,
+        racthrs: this.TaskModel.RevHrs ?  this.TaskModel.RevHrs : this.padLeft(String(Math.floor(this.TaskModel.ActHrs / 3600)), '0', 2),
+        ractmins: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) / 60)), '0', 2),
+        ractsecs: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) % 60)), '0', 2),
+       }
 
       this.completionForm = this.fb.group({
         'inputBin': new FormControl(null),
@@ -171,6 +186,21 @@ export class BuckingComponent implements OnInit {
           this.createItem()
         ], this.customGroupValidation),
       });
+
+      this.reviewForm = this.fb.group({
+        'inputBin': new FormControl(null),
+        'binWt': new FormControl(''),
+        'completeWt':new FormControl(''),
+        'wasteWt':new FormControl(''),
+        'items': new FormArray([
+          this.createItem()
+        ], this.customGroupValidation),
+        'ActHrs': new FormControl(null),
+          'ActMins': new FormControl(null, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
+          'ActSecs': new FormControl({value: null, disabled: this.isRActSecsDisabled}, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
+          'rmisccost': new FormControl(null),
+          'rmisccomment': new FormControl(null)
+      })
     }
 
   }
@@ -207,6 +237,10 @@ export class BuckingComponent implements OnInit {
   get buckingDetailsArr(): FormArray {
     return this.completionForm.get('items') as FormArray;
   }
+  padLeft(text: string, padChar: string, size: number): string {
+    return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;
+  }
+
  
   //method to get bins dropdown in assign page
   binsListByClient() {

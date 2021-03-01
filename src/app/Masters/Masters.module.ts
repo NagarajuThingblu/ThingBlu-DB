@@ -67,6 +67,7 @@ import { SectionsComponent } from './components/sections/sections.component';
 import{NewSectionDetailsActionService} from './../task/services/add-section-details.service';
 import { NewLabelDetailsActionService } from './../task/services/add-label-details.service';
 import { LabelsComponent } from './components/labels/labels.component';
+import { HelpComponent } from './components/help/help.component';
 
 
 @NgModule({
@@ -107,11 +108,12 @@ import { LabelsComponent } from './components/labels/labels.component';
     RoomsTablesComponent,
     FieldsComponent,
     SectionsComponent,
-    LabelsComponent
+    LabelsComponent,
+    HelpComponent
    
   ],
   imports: [
-    SharedModule
+    SharedModule,
   ],
   providers: [
     NewProductTypeDetailsActionService,

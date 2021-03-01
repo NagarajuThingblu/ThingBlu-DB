@@ -666,4 +666,8 @@ encode64(input) {
           }
         });
       }
+
+      navinfo(){
+        this.router.navigate(['../home/help']);
+      }
 }
