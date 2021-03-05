@@ -223,6 +223,7 @@ calcUTCTime(date1, offset) {
 
   getUserProfile() {
     if (this.cookieService.get('userProfile' + environment.clientCode) !== '') {
+     
      return <UserModel>JSON.parse(this.Decrypt(this.cookieService.get('userProfile' + environment.clientCode)));
     } else {
         return <UserModel>JSON.parse(null);

@@ -198,6 +198,7 @@ this.Year = new Date().getFullYear();
             PlantsCount:element.value.plantcount,
             year:element.value.year,
             IsDeleted:this.IsDeletedForUpdate,
+            IsLightDeprevation:element.value.lightDept? 1: 0,
             ActiveInactive:this.ActiveInActiveForUpdate
             
          });
@@ -356,6 +357,7 @@ this.Year = new Date().getFullYear();
       strain: new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
       plantcount: new FormControl(null, Validators.compose([Validators.required, Validators.max(999999999999999), Validators.min(0.1)])),
       year: new FormControl(null, Validators.compose([ Validators.max(99999), Validators.min(0.1)])),
+      lightDept: new FormControl(false),
       chkSelectAll: new FormControl(true)
     });
   }
@@ -412,12 +414,14 @@ this.Year = new Date().getFullYear();
        const strainName =  itemlist[0].controls["strain"];
        const plantsCount =  itemlist[0].controls["plantcount"];
        const year = itemlist[0].controls["year"];
+       const lightDept =  itemlist[0].controls["lightDept"];
        const chkIsActive =   itemlist[0].controls["chkSelectAll"];
         
        fieldName.patchValue(this.SectionOnEdit[0].FieldId);
        sectionName.patchValue(this.SectionOnEdit[0].SectionName);
        strainName.patchValue(this.SectionOnEdit[0].StrainId);
        plantsCount.patchValue(this.SectionOnEdit[0].PlantsCount);
+       lightDept.patchValue(this.SectionOnEdit[0].IsLightDeprevation);
        year.patchValue(this.SectionOnEdit[0].Year);
         chkIsActive.patchValue(this.SectionOnEdit[0].IsActive);
        
@@ -490,6 +494,7 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
         StrainId:section.StrainId,
         IsActive:section.IsActive,
         PlantsCount:section.PlantsCount,
+        IsLightDeprevation:section.IsLightDeprevation? 1: 0,
         year:section.Year,
         IsDeleted:IsDeleted,
         ActiveInactive:ActiveInactiveFlag

@@ -82,6 +82,8 @@ export class PrebuckingComponent implements OnInit {
    arrayItems: FormArray;
    display = false;
    public strains: any[];
+   public sections: any[];
+   public lightdept: boolean;
    public bins: any[];
    public employees: any[];
    public globalResource: any;
@@ -99,7 +101,7 @@ export class PrebuckingComponent implements OnInit {
    public defaultWasteWeight = 0;
    private globalData = {
     employees: [],
-    strains: [],
+    sections: [],
   };
   isRActSecsDisabled: boolean;
 
@@ -135,7 +137,9 @@ export class PrebuckingComponent implements OnInit {
 
     if (this.PageFlag.page !== 'TaskAction') {
       this.TaskModel.PREBUCKING = {
+        section:'',
         strain: '',
+        lightdept:'',
         employeeList:'',
         startdate: this.TaskModel.startdate,
         enddate: '',
@@ -148,7 +152,9 @@ export class PrebuckingComponent implements OnInit {
         usercomment: '',
       };
       this.PREBUCKING = this.fb.group({
-        'strain': new FormControl('null', Validators.required),
+        'section': new FormControl('null',Validators.required),
+        'strain': new FormControl('', Validators.required),
+        'lightdept': new FormControl('',Validators.required),
         'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
         'employeeList': new FormControl('', Validators.required),
         'priority': new FormControl(''),
@@ -295,17 +301,30 @@ export class PrebuckingComponent implements OnInit {
     this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
     this.dropdownDataService. getStrainsByTaskType(TaskTypeId).subscribe(
       data => {
-        let newdata: any[];
-        newdata = this.removeDuplicatesById(data);
-        this.globalData.strains = newdata;
+        // let newdata: any[];
+        // newdata = this.removeDuplicatesById(data);
+        this.globalData.sections = data;
         if (data !== 'No data found!') {
-          this.strains = this.dropdwonTransformService.transform(newdata, 'StrainName', 'StrainId', '-- Select --');
+          this.sections = this.dropdwonTransformService.transform(data, 'SectionName', 'SectionId', '-- Select --');
         } else {
-          this.strains = [];
+          this.sections = [];
         }
       } ,
       error => { console.log(error); },
       () => console.log('GetPrscrStrainListByTask complete'));
+  }
+  getStrainAndLightDept(event?: any){
+    for(let sec of this.globalData.sections ){
+      if(event.value === sec.SectionId){
+        this.strainName = sec.StrainName;
+        this.lightdept =sec.IsLightDeprevation;
+        this.TaskModel.PREBUCKING.section = sec.SectionName
+        this.TaskModel.PREBUCKING.strain =  this.strainName
+        this.PREBUCKING.controls["strain"].setValue(this.strainName)
+        this.TaskModel.PREBUCKING.lightdept  = this.lightdept
+        this.PREBUCKING.controls["lightdept"].setValue(this.lightdept)
+      }
+    }
   }
 
   employeeListByClient() {

@@ -54,6 +54,7 @@ export class RetailerComponent implements OnInit {
   selectedCountry: number;
   selectedState: number;
   selectedRetailer: any;
+  public taskCategory: any;
   displayInfoDialog = false;
   IsActive: boolean;
   SaveButtonText = 'Save';
@@ -62,7 +63,7 @@ export class RetailerComponent implements OnInit {
   RetailerID: any = 0;
   event: any;
   PaginationValues: any;
-
+  public priorities:any;
   private globalData = {
     // Removed by Devdan :: 28-Sep-2018
     // Clients: [],
@@ -93,6 +94,11 @@ export class RetailerComponent implements OnInit {
     // Added by Devdan :: 28-Sep-2018
     this.getAllRetailerTypes();
     this.getRetailerDetailListByClient();
+    this.priorities =  [
+      {label: 'Normal', value: 'Normal'},
+      {label: 'Important', value: 'Important'},
+      {label: 'Critical', value: 'Critical'}
+    ];
     // By Defalt Set IsActive = true :: Added by Devdan :: 28-Sep-2018
     this.IsActive = true;
     this.retailerResources = MastersResource.getResources().en.retailer;
@@ -100,6 +106,7 @@ export class RetailerComponent implements OnInit {
     this.AppComponentData.setTitle('Retailer');
 
     this._cookieService = this.appCommonService.getUserProfile();
+    this.taskCategory = this._cookieService.TaskCategory,
     this.retailerForm = this.fb.group({
       // Removed by Devdan :: 28-Sep-2018
       // 'client': new FormControl(null, Validators.required),
@@ -108,12 +115,13 @@ export class RetailerComponent implements OnInit {
       'licenseNo': new FormControl(null, Validators.required),
       'ubiNo': new FormControl(null, Validators.required),
       'officePhone': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
-      'cellPhone': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
+      'cellPhone': new FormControl('', Validators.compose([Validators.maxLength(15)])),
       // Removed by Devdan :: 28-Sep-2018
       // 'faxPhone': new FormControl(null),
       'primaryEmail': new FormControl(null),
       'secondaryEmail': new FormControl(null),
       'contactPerson': new FormControl(null),
+      'shippingPre': new FormControl(),
       'address': new FormControl(null, Validators.required),
       'country': new FormControl({value: this.selectedCountry }, Validators.required),
       'state': new FormControl({value: this.selectedState}, Validators.required),
@@ -232,7 +240,7 @@ export class RetailerComponent implements OnInit {
     RetailerDetailsForApi = {
       RetailerDetails: {
           RetlrId: this.RetailerID,
-          VirtualRoleId: this._cookieService.VirtualRoleId,
+          // VirtualRoleId: this._cookieService.VirtualRoleId,
           // Added by Devdan :: 28-Sep-2018 :: Get the client id from User Profile cookie
           ClientId: this._cookieService.ClientId,
           RetailerTypeId: this.retailerForm.value.retailerType,
@@ -244,8 +252,9 @@ export class RetailerComponent implements OnInit {
           cellPhone: this.retailerForm.value.cellPhone,
           // Removed by Devdan :: 28-Sep-2018
           // faxPhone: this.retailerForm.value.faxPhone,
-          primaryEmail: this.retailerForm.value.primaryEmail,
-          secondaryEmail: this.retailerForm.value.secondaryEmail,
+          // primaryEmail: this.retailerForm.value.primaryEmail,
+          // secondaryEmail: this.retailerForm.value.secondaryEmail,
+          ShippingPreference: this.retailerForm.value.shippingPre,
           contactPerson: this.retailerForm.value.contactPerson,
           address: this.retailerForm.value.address,
           zipCode: this.retailerForm.value.zipCode,
@@ -257,8 +266,23 @@ export class RetailerComponent implements OnInit {
           IsDeleted: 0,
           IsActive: this.retailerForm.value.chkIsActive ? 1 : 0
       },
-
+      ContactDetails:[]
+   
     };
+    RetailerDetailsForApi.ContactDetails.push({
+      FirstName:this.retailerForm.value.retailer,
+      LastName :this.retailerForm.value.retailer,
+      JobTitle :null,
+      primaryEmail: this.retailerForm.value.primaryEmail,
+      secondaryEmail: this.retailerForm.value.secondaryEmail,
+      PrimaryPhone:this.retailerForm.value.cellPhone,
+      PrimaryPhoneTypeId :0,
+    SecondaryPhone :this.retailerForm.value.contactPerson,
+      SecondaryPhoneTypeId :0,
+     IsDeleted:false,
+   VirtualRoleId :this._cookieService.VirtualRoleId,
+  IsPrimaryContact :false
+    });
 
     this.retailerForm_copy = JSON.parse(JSON.stringify(Object.assign({}, this.retailerForm.value)));
 
@@ -310,6 +334,7 @@ export class RetailerComponent implements OnInit {
       data => {
        if (data !== 'No data found!') {
           this.allretailerList = data;
+         
           this.PaginationValues = AppConstants.getPaginationOptions;
           if (this.allretailerList.length > 20) {
             this.PaginationValues[AppConstants.getPaginationOptions.length] = this.allretailerList.length;
@@ -354,6 +379,7 @@ export class RetailerComponent implements OnInit {
         cellPhone: data[0].CellPhone,
         primaryEmail: data[0].PrimaryEmail,
         secondaryEmail: data[0].SecondaryEmail,
+        shippingPre: data[0].shippingPre,
         contactPerson: data[0].ContactPerson,
         address: data[0].Address,
         country: data[0].CountryID,
@@ -420,15 +446,53 @@ export class RetailerComponent implements OnInit {
     // console.log(this.growerForm.value);
 
     RetailersDetailsForApi = {
+      // RetailerDetails: {
+      //   RetlrId: RetailerId,
+      //   VirtualRoleId: this._cookieService.VirtualRoleId,
+      //   ClientId: Number(this._cookieService.ClientId),
+      //   IsDeleted: IsDeleted,
+      //   IsActive: retailer.IsActive,
+      //   ActiveInactive: ActiveInactiveFlag
+      // }
       RetailerDetails: {
-        RetlrId: RetailerId,
-        VirtualRoleId: this._cookieService.VirtualRoleId,
-        ClientId: Number(this._cookieService.ClientId),
-        IsDeleted: IsDeleted,
+        RetlrId:RetailerId,
+        ClientId: this._cookieService.ClientId,
+        RetailerTypeId: retailer.retailerType,
+        RetailerName: retailer.RetailerName,
+        RetailerCode: 0,
+        LicenseNo: retailer.License,
+        UBINo: retailer.UBINo,
+        officePhone: retailer.OfficePhone,
+        cellPhone: retailer.cellPhone,
+        ShippingPreference: retailer.ShippingPreference == null? 'Normal': retailer.ShippingPreference,
+        contactPerson: retailer.contactPerson,
+        address: retailer.address,
+        zipCode:retailer.zipCode,
+        CityId:retailer.city,
+        description: retailer.description,
+        IsDeleted: 0,
         IsActive: retailer.IsActive,
-        ActiveInactive: ActiveInactiveFlag
-      }
+    },
+    ContactDetails:[]
     };
+    RetailersDetailsForApi.ContactDetails.push({
+      FirstName: retailer.retailer,
+      LastName : retailer.retailer,
+      JobTitle :null,
+      primaryEmail: retailer.primaryEmail,
+      secondaryEmail: retailer.secondaryEmail,
+      PrimaryPhone:retailer.cellPhone,
+      PrimaryPhoneTypeId :0,
+    SecondaryPhone :retailer.contactPerson,
+      SecondaryPhoneTypeId :0,
+    //  IsDeleted:false,
+   VirtualRoleId :this._cookieService.VirtualRoleId,
+  IsPrimaryContact :false,
+  IsDeleted:IsDeleted,
+  // IsActive:retailer.IsActive,
+  ActiveInactive:ActiveInactiveFlag
+    });
+  
 
     // console.log(RetailersDetailsForApi);
     this.loaderService.display(true);

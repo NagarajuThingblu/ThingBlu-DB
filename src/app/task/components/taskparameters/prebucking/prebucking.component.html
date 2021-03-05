@@ -1,9 +1,27 @@
 <div class="ui-g " [formGroup]="PREBUCKING" *ngIf="PageFlag.page =='AssignTask'">
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
-      <label for="strain">Strain<span class="star">*</span></label>:
+      <label for="section">Section<span class="star">*</span></label>:
       <div class="clear"></div>
       <p-dropdown
+          [filter] ="true"
+          [options]="sections"
+          (onChange)=" getStrainAndLightDept($event)"
+          placeholder="-- Select --"
+          [autoWidth]="true"
+          formControlName="section"
+          class="clsControl"
+          id="section"
+          name="section">
+      </p-dropdown>
+    </div>
+  </div>
+  
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="strain">Strain<span class="star">*</span></label>:
+      <div class="clear"></div>
+      <!-- <p-dropdown
           [filter] ="true"
           [options]="strains"
           (onChange)=" getStrainListByTask()"
@@ -13,7 +31,32 @@
           class="clsControl"
           id="strain"
           name="strain">
-      </p-dropdown>
+      </p-dropdown> -->
+      <input type="text" 
+      pInputText 
+      autocomplete="off"
+      id="strain" 
+      name="strain" 
+      [ngModel]="strainName"
+      formControlName="strain"         
+      class="clsControl"  
+      readonly
+    />
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="lightdept">Light Dept<span class="star">*</span></label>:
+      <input type="text" 
+      pInputText 
+      autocomplete="off"
+      id="lightdept" 
+      name="lightdept" 
+      [value]="lightdept"
+      formControlName="lightdept"         
+      class="clsControl"  
+      readonly
+    />
     </div>
   </div>
   <div class="ui-g-12 ui-md-6">
@@ -279,7 +322,7 @@
                   <span class="star">*</span>
                  <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ assignTaskResources.viewaddbin}}" id="btn_binshow" (click)="viewBinsList()"  name="btnviewbins"></p-button>
                 </th>
-                <th>Dry Weight
+                <th>Dry Weight(lb)
                   <span class="star">*</span>
                 </th>
                 <th style="display: none;">Waste Weight

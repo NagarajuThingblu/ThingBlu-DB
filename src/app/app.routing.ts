@@ -73,6 +73,7 @@ import { FieldsComponent } from './Masters/components/fields/fields.component';
 import { SectionsComponent } from './Masters/components/sections/sections.component';
 import { LabelsComponent } from './Masters/components/labels/labels.component';
 import { HelpComponent } from './Masters/components/help/help.component';
+import { OrderformComponent } from './order/components/orderform/orderform.component';
 //import{ HarvestingComponent} from './task/components/taskparameters/harvesting/harvesting.component';
 // import { PlantingComponent } from './task/components/taskparameters/planting/planting.component';
 const appRoutes: Routes = [
@@ -122,6 +123,7 @@ const appRoutes: Routes = [
       { path: 'city', component: CityComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'tpprocessor', component: TpProcessorComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'retailer', component: RetailerComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'customer', component: RetailerComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'client', component: AddNewClientComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'addemployee', component: AddNewEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'strainmaster', component: StrainMasterComponent, canActivate: [AuthGuard, RoleGuard] },
@@ -160,6 +162,7 @@ const appRoutes: Routes = [
       {path:'sections', component:SectionsComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'labels', component:LabelsComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'help', component:HelpComponent},
+      {path:'orderform', component:OrderformComponent},
       // {path:'planting', component:PlantingComponent}
      // {path:'harvesting',component:HarvestingComponent}
 

@@ -38,6 +38,8 @@
                     <th>Year
                         <span class="star">*</span>
                     </th>
+                    <th style="width: 80px;">Light Dept
+                    </th>
                     <th style="width: 80px;">Is Active</th>
                     <th style="width: 60px;">Action</th>  
                   </tr>
@@ -88,6 +90,11 @@
                         formControlName="year"
                         placeholder="Enter year"
                         min="0.1">
+                    </td>
+                    <td>
+                      <p-checkbox value="true"
+                       formControlName="lightDept" checked="true"
+                      binary="true"></p-checkbox>                                      
                     </td>
                     <td>
                       <p-checkbox value="true"
@@ -146,7 +153,7 @@
       <p-table #dtSecList [value]="allsectionslist" sortMode="single" [responsive]="true" [paginator]="true"
     [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
     (onPage)="onPageChange($event)"
-    [globalFilterFields]="['FieldName','SectionName','StrainName','PlantsCount','Year']">
+    [globalFilterFields]="['FieldName','SectionName','StrainName','PlantsCount','IsLightDeprevation','Year']">
         <ng-template pTemplate="caption">
           <div style="text-align: right">
             <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
@@ -167,6 +174,8 @@
             <th [pSortableColumn]="'PlantsCount'"> Plant Count <p-sortIcon [field]="'PlantsCount'"></p-sortIcon>
             </th>
             <th [pSortableColumn]="'Year'"> Year <p-sortIcon [field]="'Year'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'IsLightDeprevation'">Light Dept <p-sortIcon [field]="'IsLightDeprevation'"></p-sortIcon>
             </th>
             <th style="width:100px;">Action </th>
           </tr>
@@ -196,6 +205,10 @@
               <input pInputText type="text" autocomplete="off"
                 (input)="dtSecList.filter($event.target.value, 'Year', 'contains')" class="clsControl">
             </th>
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtLabelList.filter($event.target.value, 'IsLightDeprevation', 'contains')" class="clsControl">
+            </th>
           
             <th rowspan="2"></th>
     
@@ -208,6 +221,7 @@
             <td>{{section?.StrainName}}</td>
             <td>{{section?.PlantsCount }}</td>
             <td>{{section?.Year }}</td>
+            <td>{{section?.IsLightDeprevation }}</td>
             <td style="width:65px;">
               <span class="ui-column-title">edit</span>
               <a href="#" [routerLink]="" (click)="getSectionOnEdit(section?.SectionId)">

@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoaderService } from '../../../shared/services/loader.service';
 import { GlobalResources } from '../../../global resource/global.resource';
 import { MastersResource } from '../../master.resource';
-import { FormBuilder, FormControl, Validators, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormControl, Validators, FormGroup, FormArray, FormArrayName } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
 import { DropdownValuesService } from '../../../shared/services/dropdown-values.service';
 import { DropdwonTransformService } from '../../../shared/services/dropdown-transform.service';
@@ -63,6 +63,7 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
   enableDropDown = true;
   taskTypeValueAndLabelMap: Map<number,string> = new Map<number,string>()
   pageheading: any;
+  public placeholder ='-- Select --';
   public taskKeyName: any = '';
   public allLabelslist:any;
   public count:number = 0;
@@ -148,7 +149,7 @@ createItem(): FormGroup {
     strain:new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
     skewType: new FormControl(
       this.taskTypeNameValue === 'Trimming' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
-    lightDept: new FormControl(true),
+    lightDept: new FormControl(false),
     TrimmingMethod: new FormControl(
       this.taskTypeNameValue === 'Trimming' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
     
@@ -210,7 +211,8 @@ createItem(): FormGroup {
   addItem(): void {
     // this.sysmbol=0;
     // this.SectionDetailsArr.push(this.createItem());
-   this.count++;
+   this.count++; 
+  //  this.placeholder = 
     console.log(this.count)
     this.arrayItems = this.newLabelsEntryForm.get('items') as FormArray;
     this.arrayItems.push(this.createItem());

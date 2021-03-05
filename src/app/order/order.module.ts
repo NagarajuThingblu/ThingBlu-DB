@@ -15,6 +15,8 @@ import { DynamicValueFilterPipe } from './pipe/dynamic-value-filter.pipe';
 import { IdentifyOrderComponent } from './components/order-automation/identify-order/identify-order.component';
 import { AcceptOrderComponent } from './components/order-automation/accept-order/accept-order.component';
 import { ChangeOrderComponent } from './components/order-automation/change-order/change-order.component';
+import { OrderformComponent } from './components/orderform/orderform.component';
+
 
 @NgModule({
   declarations: [
@@ -27,7 +29,10 @@ import { ChangeOrderComponent } from './components/order-automation/change-order
     AcceptOrderComponent,
     ChangeOrderComponent,
     PkgAllocateEmployeeComponent,
-    PkgAllocateSubstractionEmployeeComponent
+    PkgAllocateSubstractionEmployeeComponent,
+    OrderformComponent,
+    
+ 
   ],
   imports: [
     SharedModule,
