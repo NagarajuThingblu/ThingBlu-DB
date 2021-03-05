@@ -32,9 +32,10 @@ export class RoomsComponent implements OnInit {
   public RoomTypeEdit: any;
   public saveButtontext = 'save';
   public clear = 'Clear';
-  paginationvalues: any;
+  public paginationValues: any;
   chkIsActive: any;
   public event: any;
+  public backUrl:any;
   newRoomTypedetails: {
     roomType: null,
     Description: null
@@ -77,16 +78,21 @@ public RoomTypeDisabled:any;
     });
 
   }
+
+  onPageChange(e) {
+    this.event = e;
+  }
+
   GetRoomTypes()
   {
     this.loadService.display(true);
     this.NewRoomgeneration.GetRoomTypes().subscribe(data=>{
       if(data!="No Data found!"){
         this.RoomTypes=this.dropdwonTransformService.transform(data, 'RoomTypeName', 'RoomTypeId', '-- Select --');;
-        this.paginationvalues=AppConstants.getPaginationOptions;
+        this.paginationValues=AppConstants.getPaginationOptions;
         if(this.RoomTypes.length>20)
         {
-          this.paginationvalues[AppConstants.getPaginationOptions.length] = this.allRoomtypelist.length;
+          this.paginationValues[AppConstants.getPaginationOptions.length] = this.allRoomtypelist.length;
         }
       }
       else{
@@ -103,10 +109,10 @@ public RoomTypeDisabled:any;
     this.NewRoomgeneration.GetZonelist().subscribe(data=>{
       if(data!="No Data found!"){
         this.Zonestypes=this.dropdwonTransformService.transform(data, 'ZoneName', 'ZoneId', '-- Select --');;
-        this.paginationvalues=AppConstants.getPaginationOptions;
+        this.paginationValues=AppConstants.getPaginationOptions;
         if(this.Zonestypes.length>20)
         {
-          this.paginationvalues[AppConstants.getPaginationOptions.length] = this.allRoomtypelist.length;
+          this.paginationValues[AppConstants.getPaginationOptions.length] = this.allRoomtypelist.length;
         }
       }
       else{
@@ -122,10 +128,10 @@ public RoomTypeDisabled:any;
     this.NewRoomgeneration.GetRoomList().subscribe(data=>{
       if(data!="No Data found!"){
         this.allRoomtypelist=data;
-        this.paginationvalues=AppConstants.getPaginationOptions;
+        this.paginationValues=AppConstants.getPaginationOptions;
         if(this.allRoomtypelist.length>20)
         {
-          this.paginationvalues[AppConstants.getPaginationOptions.length] = this.allRoomtypelist.length;
+          this.paginationValues[AppConstants.getPaginationOptions.length] = this.allRoomtypelist.length;
         }
       }
       else{

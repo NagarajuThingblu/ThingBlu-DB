@@ -27,6 +27,8 @@ public allYtdlist:any;
 public allProductstatslist:any;
 public ytdlistdist:any;
 public prdctlistdist:any;
+public paginationValues:any;
+public event:any;
 TodayDate = new Date();
   constructor(private loaderService: LoaderService,
     private titleService: Title,
@@ -44,6 +46,9 @@ TodayDate = new Date();
     this.GetProductionDashboardDetails();
     this.GetYtdProductStatsDetails();
    
+  }
+  onPageChange(e) {
+    this.event = e;
   }
 
   GetProductionDashboardDetails()

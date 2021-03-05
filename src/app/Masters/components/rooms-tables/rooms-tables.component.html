@@ -4,7 +4,7 @@
         <p-panel header="{{pageheading}}" [toggleable]="true" >
            <p-header>
            </p-header>
-           <form [formGroup]="RoomtableMasterform" (ngSubmit)="saveRoomtble()" >
+           <form [formGroup]="RoomtableMasterform" (ngSubmit)="saveRoomtble(RoomtableMasterform.value)" >
            <div class="ui-g">
               <!--Room-->
               <div class="ui-g-12 ui-md-6">

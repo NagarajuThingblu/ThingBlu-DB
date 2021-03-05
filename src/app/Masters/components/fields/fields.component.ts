@@ -29,12 +29,13 @@ export class FieldsComponent implements OnInit {
   public submitted: boolean;
   public _Cookieservice: any;
   public allFieldslist: any
+  public backUrl:any;
   public msg: any[];
   // public RoomTypeforupdate: any = 0;
   // public RoomTypeEdit: any;
   public saveButtontext = 'Save';
   public clear = 'Clear';
-  paginationvalues: any;
+  paginationValues: any;
   chkIsActive: any;
   public event: any;
   newFielddetails: {
@@ -87,10 +88,10 @@ public RoomTypeDisabled:any;
     this.NewFieldgeneration.GetFieldList().subscribe(data=>{
       if(data!="No Data found!"){
         this.allFieldslist=data;
-        this.paginationvalues=AppConstants.getPaginationOptions;
+        this.paginationValues=AppConstants.getPaginationOptions;
         if(this.allFieldslist.length>20)
         {
-          this.paginationvalues[AppConstants.getPaginationOptions.length] = this.allFieldslist.length;
+          this.paginationValues[AppConstants.getPaginationOptions.length] = this.allFieldslist.length;
         }
       }
       else{

@@ -37,9 +37,12 @@ export const environment = {
   signUpPolicy: 'B2C_1_SignUpV2',
   resetPolicy: 'B2C_1_PasswordReset',
   b2cScopes: 'https://thingbluB2Csample.onmicrosoft.com/access-api/user_impersonation',
-   redirectUri: 'https://thingbludev.thingbluapp.com/',
-  resetPwdRedirectUri: 'https://thingbludev.thingbluapp.com/resetsuccess/',
-  tenantURL:'thingbluB2Csample.b2clogin.com'
+  //  redirectUri: 'https://thingbludev.thingbluapp.com/',
+  // resetPwdRedirectUri: 'https://thingbludev.thingbluapp.com/resetsuccess/',
+  redirectUri: 'http://localhost:8000/',
+  resetPwdRedirectUri: 'http://localhost:8000/resetsuccess/',
+  tenantURL:'thingbluB2Csample.b2clogin.com',
+  reportURL: 'https://thingbludemoapplication.navizanalytics.com/ThingbluDev'
   //End of dev testing
 
   // ** Start Hannah UAT config

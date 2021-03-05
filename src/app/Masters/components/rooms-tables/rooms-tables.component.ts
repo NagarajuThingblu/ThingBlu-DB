@@ -32,7 +32,7 @@ public RoomTableforupdate:any=0;
 public RoomTableEdit:any;
 public savebuttontext='save';
 public clear='Clear';
-paginationvalues:any;
+paginationValues:any;
 chkIsActive:any;
 public event:any;
 newRoomTabledetails:{
@@ -82,6 +82,10 @@ public ZoneVisible:boolean=false;
 
   }
 
+  onPageChange(e) {
+    this.event = e;
+  }
+
 GetRoomTables()
 {
 this.loaderservice.display(true);
@@ -89,10 +93,10 @@ this.NewRoomgeneration.GetRoomTableList().subscribe(data=>{
   if(data!="No Data found!")
   {
     this.RoomTableList=data;
-    this.paginationvalues=AppConstants.getPaginationOptions;
+    this.paginationValues=AppConstants.getPaginationOptions;
         if(this.RoomTableList.length>20)
         {
-          this.paginationvalues[AppConstants.getPaginationOptions.length] = this.allRoomTablelist.length;
+          this.paginationValues[AppConstants.getPaginationOptions.length] = this.allRoomTablelist.length;
         }
       }
         else{
