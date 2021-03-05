@@ -30,7 +30,7 @@ export class ZonesComponent implements OnInit {
   public ZoneTypeEdit: any;
   public saveButtontext = 'save';
   public clear = 'Clear';
-  paginationvalues: any;
+  public paginationValues: any;
   chkIsActive: any;
   public event: any;
   newZoneTypedetails: {
@@ -75,6 +75,11 @@ export class ZonesComponent implements OnInit {
     });
 
   }
+
+  onPageChange(e) {
+    this.event = e;
+  }
+
   GetRoomlist()
   {
 this.NewRoomgeneration.GetRoomList().subscribe(data=>{
@@ -189,9 +194,9 @@ this.Roomlist=this.dropdwonTransformService.transform(data,"RoomName","RoomId",'
     this.NewRoomgeneration.GetZonelist().subscribe(data => {
       if (data !== 'No Data found') {
         this.allZonestypelist = data;
-        this.paginationvalues = AppConstants.getPaginationOptions;
+        this.paginationValues = AppConstants.getPaginationOptions;
         if (this.allZonestypelist.length > 20) {
-          this.paginationvalues[AppConstants.getPaginationOptions.length] = this.allZonestypelist.length;
+          this.paginationValues[AppConstants.getPaginationOptions.length] = this.allZonestypelist.length;
 
         }
       }
