@@ -1009,7 +1009,9 @@ console.log(assignTaskFormValues)
         let prebuckingDataForApi = {
           PreBucking: {
             "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
-            "StrainId": assignTaskFormValues.PREBUCKING.strain,
+            "SectionId": assignTaskFormValues.PREBUCKING.section,
+            "StrainId": assignTaskFormValues.PREBUCKING.strainid,
+            // "LightDept": assignTaskFormValues.PREBUCKING.lightdept,
             "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
             "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
             "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority ,

@@ -95,9 +95,10 @@ export class RetailerComponent implements OnInit {
     this.getAllRetailerTypes();
     this.getRetailerDetailListByClient();
     this.priorities =  [
-      {label: 'Normal', value: 'Normal'},
-      {label: 'Important', value: 'Important'},
-      {label: 'Critical', value: 'Critical'}
+      {label: 'Ground', value: 'Ground'},
+      {label: 'FedEx', value: 'FedEx'},
+      {label: 'UPS', value: 'UPS'},
+      {label: 'USPS', value: 'USPS'}
     ];
     // By Defalt Set IsActive = true :: Added by Devdan :: 28-Sep-2018
     this.IsActive = true;
@@ -118,7 +119,7 @@ export class RetailerComponent implements OnInit {
       'cellPhone': new FormControl('', Validators.compose([Validators.maxLength(15)])),
       // Removed by Devdan :: 28-Sep-2018
       // 'faxPhone': new FormControl(null),
-      'primaryEmail': new FormControl(null),
+      'primaryEmail': new FormControl(null,Validators.required),
       'secondaryEmail': new FormControl(null),
       'contactPerson': new FormControl(null),
       'shippingPre': new FormControl(),
@@ -254,7 +255,7 @@ export class RetailerComponent implements OnInit {
           // faxPhone: this.retailerForm.value.faxPhone,
           // primaryEmail: this.retailerForm.value.primaryEmail,
           // secondaryEmail: this.retailerForm.value.secondaryEmail,
-          ShippingPreference: this.retailerForm.value.shippingPre,
+          ShippingPreference: this.retailerForm.value.shippingPre == null? 'Ground':this.retailerForm.value.shippingPre,
           contactPerson: this.retailerForm.value.contactPerson,
           address: this.retailerForm.value.address,
           zipCode: this.retailerForm.value.zipCode,
@@ -464,7 +465,7 @@ export class RetailerComponent implements OnInit {
         UBINo: retailer.UBINo,
         officePhone: retailer.OfficePhone,
         cellPhone: retailer.cellPhone,
-        ShippingPreference: retailer.ShippingPreference == null? 'Normal': retailer.ShippingPreference,
+        ShippingPreference: retailer.ShippingPreference == null? 'Ground': retailer.ShippingPreference,
         contactPerson: retailer.contactPerson,
         address: retailer.address,
         zipCode:retailer.zipCode,

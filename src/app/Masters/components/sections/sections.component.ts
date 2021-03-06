@@ -198,7 +198,7 @@ this.Year = new Date().getFullYear();
             PlantsCount:element.value.plantcount,
             year:element.value.year,
             IsDeleted:this.IsDeletedForUpdate,
-            IsLightDeprevation:element.value.lightDept? 1: 0,
+            LightDept:element.value.lightDept? 1: 0,
             ActiveInactive:this.ActiveInActiveForUpdate
             
          });
@@ -494,7 +494,7 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
         StrainId:section.StrainId,
         IsActive:section.IsActive,
         PlantsCount:section.PlantsCount,
-        IsLightDeprevation:section.IsLightDeprevation? 1: 0,
+        LightDept:section.LightDept? 1: 0,
         year:section.Year,
         IsDeleted:IsDeleted,
         ActiveInactive:ActiveInactiveFlag

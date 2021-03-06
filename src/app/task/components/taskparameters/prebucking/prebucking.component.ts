@@ -81,8 +81,9 @@ export class PrebuckingComponent implements OnInit {
    items = new FormArray([], this.customGroupValidation );
    arrayItems: FormArray;
    display = false;
-   public strains: any[];
+   public strainid: any[];
    public sections: any[];
+   public strainId:any;
    public lightdept: boolean;
    public bins: any[];
    public employees: any[];
@@ -154,6 +155,7 @@ export class PrebuckingComponent implements OnInit {
       this.PREBUCKING = this.fb.group({
         'section': new FormControl('null',Validators.required),
         'strain': new FormControl('', Validators.required),
+        'strainid':new FormControl(''),
         'lightdept': new FormControl('',Validators.required),
         'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
         'employeeList': new FormControl('', Validators.required),
@@ -318,9 +320,13 @@ export class PrebuckingComponent implements OnInit {
       if(event.value === sec.SectionId){
         this.strainName = sec.StrainName;
         this.lightdept =sec.IsLightDeprevation;
+        this.strainid = sec.StrainId;
+      
         this.TaskModel.PREBUCKING.section = sec.SectionName
-        this.TaskModel.PREBUCKING.strain =  this.strainName
+        this.TaskModel.PREBUCKING.strain =  sec.StrainId
+        // this.TaskModel.PREBUCKING.strainId =  this.strainId
         this.PREBUCKING.controls["strain"].setValue(this.strainName)
+        this.PREBUCKING.controls["strainid"].setValue(this.strainid)
         this.TaskModel.PREBUCKING.lightdept  = this.lightdept
         this.PREBUCKING.controls["lightdept"].setValue(this.lightdept)
       }

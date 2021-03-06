@@ -227,7 +227,7 @@
                               <!-- Primary Email-->
                               <div class="ui-g-12 ui-md-6">
                                 <div class="paddingRL">
-                                    <label for="primaryemail"> {{ retailerResources.primaryemail}}</label>:
+                                    <label for="primaryemail"> {{ retailerResources.primaryemail}}<span class="star">*</span></label>:
             
                                     <input pInputText
                                       name="primaryemail"
@@ -614,12 +614,12 @@
                       <!-- <td>{{retailer?.ClientName}}</td> -->
                       <!-- <td>{{retailer?.RetailerType}}</td> -->
                       <td>{{retailer?.RetailerName }}</td>
-                      <td>{{retailer?.LicenseNo }}</td>   
+                      <td>{{retailer?.License }}</td>   
                       <td>{{retailer?.UBINo }}</td>   
                       <td>{{retailer?.OfficePhone }}  </td>                  
                       <td>{{retailer?.StateName }}  </td>
                       <td>{{retailer?.CityName }}</td>
-                      <td *ngIf="taskCategory == 'GROWING'">{{retailer?.shippingPre }}</td>
+                      <td *ngIf="taskCategory == 'GROWING'">{{retailer?.ShippingPreference }}</td>
                       <td style="width:65px;" (click)="$event.stopPropagation();"> 
                         <span class="ui-column-title">edit</span>
                         <a href="#" [routerLink]="" (click)="GetRetailerOnEdit(retailer?.RetailerId)" >                             

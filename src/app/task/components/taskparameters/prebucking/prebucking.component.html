@@ -42,6 +42,17 @@
       class="clsControl"  
       readonly
     />
+    <input type="text" 
+    pInputText 
+    autocomplete="off"
+    id="strainid" 
+    name="strainid" 
+ 
+    formControlName="strainid"         
+    class="clsControl"  
+    readonly
+    style="display: none;"
+  />
     </div>
   </div>
   <div class="ui-g-12 ui-md-6">
@@ -52,7 +63,7 @@
       autocomplete="off"
       id="lightdept" 
       name="lightdept" 
-      [value]="lightdept"
+      [ngModel]="lightdept"
       formControlName="lightdept"         
       class="clsControl"  
       readonly
