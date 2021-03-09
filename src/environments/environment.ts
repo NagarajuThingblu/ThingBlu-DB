@@ -42,7 +42,8 @@ export const environment = {
     signUpPolicy: 'B2C_1_SignUpV2',
     resetPolicy: 'B2C_1_PasswordReset',
     b2cScopes: 'https://thingbluB2Csample.onmicrosoft.com/access-api/user_impersonation', 
-    reportURL: 'https://thingbludemoapplication.navizanalytics.com/ThingbluDev',
+    reportURL: 'https://thingbludemoapplication.navizanalytics.com/Grow',
+    
     //Local
   redirectUri: 'http://localhost:8000/',
  resetPwdRedirectUri: 'http://localhost:8000/resetsuccess/',
