@@ -77,7 +77,8 @@ export class TaskactionsComponent implements OnInit {
    'IPLabelName':'',
    'IPBinWt':0,
    'BinWt':0,
-   'InputBinId':''
+   'InputBinId':'',
+   'IsLightDeprevation':''
   };
 
   public page: any = {

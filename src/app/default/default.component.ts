@@ -106,73 +106,73 @@ export class DefaultComponent implements OnInit, OnDestroy {
     this.titleService.setTitle('Default');
     this.globalResource = GlobalResources.getResources().en;
 
-    if (this.msalService.isOnline()) {
-      this.loaderService.display(true);
+    // if (this.msalService.isOnline()) {
+    //   this.loaderService.display(true);
 
-      let params = new HttpParams();
-      params = params.append('AzureUserId', this.msalService.getUser().idToken['oid']);
-      this.httpMethodsService.get('api/Login/GetSignInUserDetails', { params: params })
-        .subscribe(
-          (data: any) => {
-            if (String(data.Table[0].ResultMsg).toLocaleUpperCase() !== 'NO DATA FOUND!') {
-              this.userModel = <UserModel>data.Table[0];
+    //   let params = new HttpParams();
+    //   params = params.append('AzureUserId', this.msalService.getUser().idToken['oid']);
+    //   this.httpMethodsService.get('api/Login/GetSignInUserDetails', { params: params })
+    //     .subscribe(
+    //       (data: any) => {
+    //         if (String(data.Table[0].ResultMsg).toLocaleUpperCase() !== 'NO DATA FOUND!') {
+    //           this.userModel = <UserModel>data.Table[0];
 
-              const expires_in = this.msalService.getUser().idToken['exp'];
+    //           const expires_in = this.msalService.getUser().idToken['exp'];
 
-              const expireDate = new Date(new Date().getTime() + ((expires_in))).toUTCString();
-              this.appCommonService.encryptDecryptKey = this.userModel.EncryptDecryptKey;
+    //           const expireDate = new Date(new Date().getTime() + ((expires_in))).toUTCString();
+    //           this.appCommonService.encryptDecryptKey = this.userModel.EncryptDecryptKey;
 
-              localStorage.setItem('EncryptDecryptKey', this.appCommonService.EncryptKey(this.userModel.EncryptDecryptKey));
+    //           localStorage.setItem('EncryptDecryptKey', this.appCommonService.EncryptKey(this.userModel.EncryptDecryptKey));
 
-              this.appCommonService.setCookie('userProfile' + this.appCommonService.getEnvData().clientCode,
-                this.appCommonService.Encrypt(JSON.stringify(this.userModel)), expireDate);
+    //           this.appCommonService.setCookie('userProfile' + this.appCommonService.getEnvData().clientCode,
+    //             this.appCommonService.Encrypt(JSON.stringify(this.userModel)), expireDate);
 
-              // Added Employee page access list in localstorage
-              if (data.Table1.length > 0) {
-                this.rolewiseMenuItem(data.Table1);
-              } else {
-                this.addSuperAdminPage();
-              }
+    //           // Added Employee page access list in localstorage
+    //           if (data.Table1.length > 0) {
+    //             this.rolewiseMenuItem(data.Table1);
+    //           } else {
+    //             this.addSuperAdminPage();
+    //           }
 
-              this.menuItems = [];
-              if (this.appCommonService.getRoleAccess()) {
-                this.menuItems = this.appCommonService.getRoleAccess();
-              }
-              if (this.userModel.IsFirstTimeSignIn && String(location.href).indexOf('resetsuccess') > 0) {
-                this.router.navigate(['/resetsuccess']);
-              } else if (this.userModel.IsFirstTimeSignIn && String(location.href).indexOf('resetsuccess') <= 0) {
-                this.router.navigate(['/resetpassword']);
-              } else {
-                if (this.menuItems.length > 0) {
-                  this.menuItems = this.menuItems.filter(r => r.IsDefaultPage === 1);
-                  let routeName;
-                  if (this.menuItems.length > 0) {
-                    routeName = this.menuItems[0].RouterLink;
-                    this.router.navigate(['home/' + routeName]);
-                  } else {
-                    this.router.navigate(['home/erroraccessdenieded']);
-                  }
-                } else {
-                  if (this.userModel.UserRole.toString() === this.userRoles.Manager) {
-                    this.router.navigate(['home/managerdashboard']);
-                  } else if (this.userModel.UserRole.toString() === this.userRoles.SuperAdmin) {
-                    this.router.navigate(['home/managerdashboard']);
-                  } else {
-                    this.router.navigate(['home/empdashboard']);
-                  }
-                }
-              }
+    //           this.menuItems = [];
+    //           if (this.appCommonService.getRoleAccess()) {
+    //             this.menuItems = this.appCommonService.getRoleAccess();
+    //           }
+    //           if (this.userModel.IsFirstTimeSignIn && String(location.href).indexOf('resetsuccess') > 0) {
+    //             this.router.navigate(['/resetsuccess']);
+    //           } else if (this.userModel.IsFirstTimeSignIn && String(location.href).indexOf('resetsuccess') <= 0) {
+    //             this.router.navigate(['/resetpassword']);
+    //           } else {
+    //             if (this.menuItems.length > 0) {
+    //               this.menuItems = this.menuItems.filter(r => r.IsDefaultPage === 1);
+    //               let routeName;
+    //               if (this.menuItems.length > 0) {
+    //                 routeName = this.menuItems[0].RouterLink;
+    //                 this.router.navigate(['home/' + routeName]);
+    //               } else {
+    //                 this.router.navigate(['home/erroraccessdenieded']);
+    //               }
+    //             } else {
+    //               if (this.userModel.UserRole.toString() === this.userRoles.Manager) {
+    //                 this.router.navigate(['home/managerdashboard']);
+    //               } else if (this.userModel.UserRole.toString() === this.userRoles.SuperAdmin) {
+    //                 this.router.navigate(['home/managerdashboard']);
+    //               } else {
+    //                 this.router.navigate(['home/empdashboard']);
+    //               }
+    //             }
+    //           }
 
-              this.loaderService.display(false);
-            } else {
-              this.msalService.logout();
-            }
-          });
-    }
+    //           this.loaderService.display(false);
+    //         } else {
+    //           this.msalService.logout();
+    //         }
+    //       });
+    // }
 
-    this.newReloginForm = this.fb.group({
-      'password': new FormControl(null, Validators.required)
-    });
+    // this.newReloginForm = this.fb.group({
+    //   'password': new FormControl(null, Validators.required)
+    // });
   }
 
   ngOnDestroy() {

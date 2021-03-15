@@ -81,7 +81,7 @@
                                       type="text"
                                       class="clsControl"
                                       formControlName="retailer"
-                                      placeholder="Enter Retailer Name"
+                                      placeholder="Enter Customer Name"
                                     />
                                     <div class="ui-message ui-messages-error ui-corner-all" style="top:67px;" appErrorTooltip
                                     *ngIf="!retailerForm.controls['retailer'].valid&&retailerForm.controls['retailer'].dirty">
@@ -97,7 +97,7 @@
                               <!-- License No -->
                               <div class="ui-g-12 ui-md-6">
                                 <div class="paddingRL">
-                                    <label for="licenseno"> {{ retailerResources.licenseno}}<span class="star">*</span></label>:
+                                    <label for="licenseno"> {{ retailerResources.licenseno}}</label>:
             
                                     <input pInputText
                                       name="licenseno"
@@ -125,7 +125,7 @@
                                   <!-- UBI No -->
                                   <div class="ui-g-12 ui-md-6">
                                     <div class="paddingRL">
-                                        <label for="ubino"> {{ retailerResources.ubino}}<span class="star">*</span></label>:
+                                        <label for="ubino"> {{ retailerResources.ubino}}</label>:
                 
                                         <input pInputText
                                           name="ubino"

@@ -47,7 +47,7 @@ export class AuthenticationService {
         return data;
     });
     }
-
+ 
     getBuildNumber(clientCode) {
         const url = 'api/Login/BuildDetails';
         const reqHeaders = new HttpHeaders({ 'Content-Type': 'application/json', 'No-Auth': 'true' });
@@ -96,9 +96,9 @@ export class AuthenticationService {
             return data;
         });
     }
-
+    
     getUserProfile() {
-        const url = 'api/login/GetUserDetails';
+        const url = 'api/Login/GetUserDetails';
         return this.http
         .get(url)
         // .do(data =>console.log('All : ' + JSON.stringify(data)))

@@ -34,91 +34,91 @@ export class AuthInterceptor implements HttpInterceptor {
     private msalService: MsalService
   ) { }
 
-  // intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-  //   if (req.headers.get('No-Auth') === 'true') {
-  //     return next.handle(req.clone());
-  //   }
-
-  //   if (this.appCommonService.checkCurrentUser() !== false) {
-  //     const clonerequest = req.clone({
-  //       // tslint:disable-next-line:max-line-length
-  //       headers: req.headers.set('Authorization', 'bearer ' + this.appCommonService.getCurrentUser().access_token + '')
-  //       // setHeaders: {
-  //       //     'Authorization': 'Bearer '+ localStorage.getItem("currentUser") +'}'
-  //       // }
-  //     });
-
-  //     // return next.handle(clonerequest)
-  //     return next.handle(clonerequest).do((event: HttpEvent<any>) => {
-  //       if (event instanceof HttpResponse) {
-  //         // do stuff with response if you want
-  //       }
-  //     }, (err: any) => {
-  //       if (err instanceof HttpErrorResponse) {
-  //         if (err.status === 401) {
-  //           this.router.navigate(['/login']);
-  //           this.loaderService.display(false);
-  //         }
-  //       }
-  //     })
-  //       .catch((response: any) => {
-  //         this.handleError(response);
-  //         return Observable.throw(response);
-  //       });
-  //   } else {
-  //     this.router.navigate(['/login']);
-  //     this.loaderService.display(false);
-  //   }
-  // }
-
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     if (req.headers.get('No-Auth') === 'true') {
-        return next.handle(req.clone());
+      return next.handle(req.clone());
     }
 
-    if (this.msalService.isOnline()) {
+    if (this.appCommonService.checkCurrentUser() !== false) {
+      const clonerequest = req.clone({
+        // tslint:disable-next-line:max-line-length
+        headers: req.headers.set('Authorization', 'bearer ' + this.appCommonService.getCurrentUser().access_token + '')
+        // setHeaders: {
+        //     'Authorization': 'Bearer '+ localStorage.getItem("currentUser") +'}'
+        // }
+      });
 
-    return Observable.fromPromise(this.msalService.getAuthenticationToken())
-        .switchMap(token => {
-
-      // const token = localStorage.getItem(this.msalService.B2CTodoAccessTokenKey);
-            req = req.clone({
-                setHeaders: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            return next.handle(req)
-            .do((event: HttpEvent<any>) => {
-              if (event instanceof HttpResponse) {
-                // do stuff with response if you want
-                // alert(event);
-              }
-            }, (err: any) => {
-              if (err instanceof HttpErrorResponse) {
-                if (err.status === 401) {
-                  if (this.msalService.isOnline()) {
-                    this.msalService.logout();
-                  } else {
-                    this.msalService.login();
-                  }
-                 // this.router.navigate(['/login']);
-
-                  // Set Loader to false
-                  this.loaderService.display(false);
-                }
-              }
-            })
-            .catch((response: any) => {
-              this.handleError(response);
-              return Observable.throw(response);
-            });
+      // return next.handle(clonerequest)
+      return next.handle(clonerequest).do((event: HttpEvent<any>) => {
+        if (event instanceof HttpResponse) {
+          // do stuff with response if you want
+        }
+      }, (err: any) => {
+        if (err instanceof HttpErrorResponse) {
+          if (err.status === 401) {
+            this.router.navigate(['/login']);
+            this.loaderService.display(false);
+          }
+        }
+      })
+        .catch((response: any) => {
+          this.handleError(response);
+          return Observable.throw(response);
         });
-      } else {
-        this.msalService.login();
-      }
-}
+    } else {
+      this.router.navigate(['/login']);
+      this.loaderService.display(false);
+    }
+  }
+
+//   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+//     if (req.headers.get('No-Auth') === 'true') {
+//         return next.handle(req.clone());
+//     }
+
+//     if (this.msalService.isOnline()) {
+
+//     return Observable.fromPromise(this.msalService.getAuthenticationToken())
+//         .switchMap(token => {
+
+//       // const token = localStorage.getItem(this.msalService.B2CTodoAccessTokenKey);
+//             req = req.clone({
+//                 setHeaders: {
+//                     Authorization: `Bearer ${token}`
+//                 }
+//             });
+//             return next.handle(req)
+//             .do((event: HttpEvent<any>) => {
+//               if (event instanceof HttpResponse) {
+//                 // do stuff with response if you want
+//                 // alert(event);
+//               }
+//             }, (err: any) => {
+//               if (err instanceof HttpErrorResponse) {
+//                 if (err.status === 401) {
+//                   if (this.msalService.isOnline()) {
+//                     this.msalService.logout();
+//                   } else {
+//                     this.msalService.login();
+//                   }
+//                  // this.router.navigate(['/login']);
+
+//                   // Set Loader to false
+//                   this.loaderService.display(false);
+//                 }
+//               }
+//             })
+//             .catch((response: any) => {
+//               this.handleError(response);
+//               return Observable.throw(response);
+//             });
+//         });
+//       } else {
+//         this.msalService.login();
+//       }
+// }
 
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof Response) {

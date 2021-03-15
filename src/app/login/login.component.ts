@@ -141,12 +141,12 @@ export class LoginComponent implements OnInit {
               // return false to indicate failed login
               this.isAuthenticated = false;
               this.isUnAuthenticatedLogin = false;
-              if (this.msalService.isOnline()) {
-                this.msalService.logout();
-              } else {
-                this.msalService.login();
-              }
-              // this.router.navigate(['/login']);
+              // if (this.msalService.isOnline()) {
+              //   this.msalService.logout();
+              // } else {
+              //   this.msalService.login();
+              // }
+              this.router.navigate(['/login']);
             }
 
           },

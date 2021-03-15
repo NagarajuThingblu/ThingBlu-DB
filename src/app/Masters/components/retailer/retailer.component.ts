@@ -113,8 +113,8 @@ export class RetailerComponent implements OnInit {
       // 'client': new FormControl(null, Validators.required),
       'retailerType': new FormControl(null, Validators.required),
       'retailer': new FormControl(null, Validators.required),
-      'licenseNo': new FormControl(null, Validators.required),
-      'ubiNo': new FormControl(null, Validators.required),
+      'licenseNo': new FormControl(null),
+      'ubiNo': new FormControl(null),
       'officePhone': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
       'cellPhone': new FormControl('', Validators.compose([Validators.maxLength(15)])),
       // Removed by Devdan :: 28-Sep-2018

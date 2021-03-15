@@ -392,6 +392,7 @@ completeTask(formModel){
         this.PageFlag.showmodal = false;
         this.loaderService.display(false);
       }
+      
       else    if (data[0].RESULTKEY  === 'Output Bin weight is greater than Input Bin weight') {
         this.msgs = [];
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.morebinweight });

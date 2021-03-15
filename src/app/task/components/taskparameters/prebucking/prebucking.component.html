@@ -206,9 +206,25 @@
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label>
+        <strong>Section: </strong>
+      </label>
+          {{TaskModel?.SectionName}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
         <strong>{{ globalResource.strain }}: </strong>
       </label>
           {{TaskModel?.StrainName}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>Light Deprevation: </strong>
+      </label>
+          {{TaskModel?.IsLightDeprevation}}
     </div>
   </div>
   <div class="ui-g-12 ui-md-6">

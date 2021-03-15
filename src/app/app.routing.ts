@@ -74,18 +74,16 @@ import { SectionsComponent } from './Masters/components/sections/sections.compon
 import { LabelsComponent } from './Masters/components/labels/labels.component';
 import { HelpComponent } from './Masters/components/help/help.component';
 import { OrderformComponent } from './order/components/orderform/orderform.component';
-//import{ HarvestingComponent} from './task/components/taskparameters/harvesting/harvesting.component';
-// import { PlantingComponent } from './task/components/taskparameters/planting/planting.component';
 const appRoutes: Routes = [
-  { path: '', redirectTo: 'default', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // { path: 'login', component: LoginComponent },
   { path: 'forgotpassword', component: ForgotPasswordComponent },
   { path: 'forgotpassword/:token', component: ForgotPasswordComponent, canActivate: [] },
   { path: 'resetpassword', component: ResetPasswordComponent, canActivate: [AuthGuard] },
   { path: 'convertpwd', component: EncDecPwdComponent },
   { path: 'resetsuccess', component: MsalComponent },
   {
-    path: 'default', component: DefaultComponent, canActivate: [AuthGuard],
+    path: 'login', component: LoginComponent,
     children: [
       { path: '', redirectTo: 'home/lotentry', pathMatch: 'full' },
       { path: 'signup', component: AppSignupComponent },

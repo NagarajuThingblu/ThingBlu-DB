@@ -42,13 +42,13 @@ import { promise } from 'protractor';
 //   return () => startupService.load();
 // }
 
-export function init_app(appLoadService: AppLoadService) {
-  return () => appLoadService.initializeApp();
-}
+// export function init_app(appLoadService: AppLoadService) {
+//   return () => appLoadService.initializeApp();
+// }
 
-export function init_app_resetpassword(appLoadFOrgotPasswordService: AppLoadFOrgotPasswordService) {
-  return () => appLoadFOrgotPasswordService.initializeApp();
-}
+// export function init_app_resetpassword(appLoadFOrgotPasswordService: AppLoadFOrgotPasswordService) {
+//   return () => appLoadFOrgotPasswordService.initializeApp();
+// }
 
 @NgModule({
   declarations: [
@@ -90,8 +90,8 @@ export function init_app_resetpassword(appLoadFOrgotPasswordService: AppLoadFOrg
     ResetPasswordMsalService,
     AppLoadService,
     AppLoadFOrgotPasswordService,
-    { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppLoadService], multi: true },
-    { provide: APP_INITIALIZER, useFactory: init_app_resetpassword, deps: [AppLoadFOrgotPasswordService], multi: true }
+    // { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppLoadService], multi: true },
+    // { provide: APP_INITIALIZER, useFactory: init_app_resetpassword, deps: [AppLoadFOrgotPasswordService], multi: true }
     // {
     //   provide: LOCALE_ID,
     //   useValue: 'en-US'

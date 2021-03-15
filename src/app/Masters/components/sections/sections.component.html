@@ -11,12 +11,15 @@
               <div class="paddingRL">
                 <label for="Field" class="towlable">Field List<span class="star">*</span></label>
                   <p-dropdown
-                    id="Field"
-                    formControlName="Field"
-                    placeholder="-- Select --"
-                    [options]="Fields"
-                    class="clsControl"
-                    name="Field">
+                  [filter] ="true"
+                  id="Field"
+                  [options]="Fields"
+                  formControlName="Field"
+                  placeholder="-- Select --"
+                  [autoWidth]="false"
+                  class="clsControl"                                    
+                  name="Field"
+                  >
                   </p-dropdown>
               </div>
             </div>

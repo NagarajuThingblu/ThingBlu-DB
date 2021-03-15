@@ -131,7 +131,7 @@ export class HeaderComponent implements OnInit {
             icon: 'fa-sign-out',
             command: () => {
                 this.logOut();
-                this.msalLogout();
+                // this.msalLogout();
             }
         },
         // {
@@ -620,7 +620,7 @@ encode64(input) {
             this.appCommonService.clearUserSession();
 
             this.idleUserService.logout();
-            this.msalService.logout();
+            // this.msalService.logout();
 
             // console.log( this.cookieService.get('currentUser'));
             console.log('logout api success');

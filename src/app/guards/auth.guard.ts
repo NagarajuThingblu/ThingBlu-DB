@@ -18,28 +18,29 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     // Observable<boolean> | Promise<boolean> |
     state: RouterStateSnapshot):  boolean {
-      // if (this.appCommonService.checkCurrentUser() !== false) {
-      //   // console.log('authguard true');
-      //   this.loaderService.display(true);
-      //   return true;
-      // } else {
-      //   console.log('authguard false');
-
-      //   this.appCommonService.clearUserSession();
-
-      //   this.router.navigated = false;
-      //   this.loaderService.display(false);
-      //   this.router.navigate(['/login']);
-      //   return false;
-      // }
-      if ((this.msalService.isOnline())) {
+      if (this.appCommonService.checkCurrentUser() !== false) {
         // console.log('authguard true');
         this.loaderService.display(true);
         return true;
       } else {
         console.log('authguard false');
 
-        this.msalService.login();
+        this.appCommonService.clearUserSession();
+
+        this.router.navigated = false;
+        this.loaderService.display(false);
+        this.router.navigate(['/login']);
+        return false;
       }
-  }
+  //     if ((this.msalService.isOnline())) {
+  //       // console.log('authguard true');
+  //       this.loaderService.display(true);
+  //       return true;
+  //     } else {
+  //       console.log('authguard false');
+
+  //       this.msalService.login();
+  //     }
+  // }
+}
 }
