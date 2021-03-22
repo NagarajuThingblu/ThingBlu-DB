@@ -8,8 +8,8 @@ export const environment = {
   // apiEndpoint: 'http://localhost/thingbluwebapinew/'
   // apiEndpoint: 'https://thingbluapiuat.azurewebsites.net/',
   tolerance: 5,
-   apiEndpoint: 'https://tbappapihannah.azurewebsites.net/',
-  // apiEndpoint: 'https://tbappapitest.azurewebsites.net/',
+  //  apiEndpoint: 'https://tbappapihannah.azurewebsites.net/',
+  apiEndpoint: 'https://tbappapitest.azurewebsites.net/',
   //  apiEndpoint: 'https://tbdemowebapi.azurewebsites.net/',
 
   sessionTimeout: 86399,
@@ -39,10 +39,13 @@ export const environment = {
   b2cScopes: 'https://thingbluB2Csample.onmicrosoft.com/access-api/user_impersonation',
   //  redirectUri: 'https://thingbludev.thingbluapp.com/',
   // resetPwdRedirectUri: 'https://thingbludev.thingbluapp.com/resetsuccess/',
-  redirectUri: 'http://localhost:8000/',
-  resetPwdRedirectUri: 'http://localhost:8000/resetsuccess/',
+  redirectUri: 'https://test.thingbluapp.com/',
+ resetPwdRedirectUri: 'https://test.thingbluapp.com/resetsuccess/',
+//  redirectUri: 'http://localhost:8000/',
+//  resetPwdRedirectUri: 'http://localhost:8000/resetsuccess/',
   tenantURL:'thingbluB2Csample.b2clogin.com',
-  reportURL: 'https://thingbludemoapplication.navizanalytics.com/ThingbluDev'
+  // reportURL: 'https://thingbludemoapplication.navizanalytics.com/ThingbluDev'
+  reportURL: 'https://thingbludemoapplication.navizanalytics.com/Grow',
   //End of dev testing
 
   // ** Start Hannah UAT config

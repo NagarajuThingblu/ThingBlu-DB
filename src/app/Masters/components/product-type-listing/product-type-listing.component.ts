@@ -14,12 +14,14 @@ import { ConfirmationService } from 'primeng/api';
 export class ProductTypeListingComponent implements OnInit {
   @Input() PaginationValues: any;
   @Input() allProductTypeList: any;
+  @Input() taskCategory: any;
   @Output() ProductTypeEditEvent = new EventEmitter();
   @Output() ProductTypeDeleteEvent = new EventEmitter();
   @Output() ProductTypeDeactivateEvent = new EventEmitter();
 
   public newProductTypeResources: any;
   public globalResource: any;
+  public taskCategoryType: any;
   event: any;
   // Commented by Devdan :: 21-Nov-2018
   // public LotInfo: any = {
@@ -38,7 +40,7 @@ export class ProductTypeListingComponent implements OnInit {
     this.newProductTypeResources = MastersResource.getResources().en.newproductype;
     this.globalResource = GlobalResources.getResources().en;
     this.appComponentData.setTitle('Product Type');
-
+    this.taskCategoryType = this.taskCategory;
     // this.getAllProductTypeListByClient();
   }
 

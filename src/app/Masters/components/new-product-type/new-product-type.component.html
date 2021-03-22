@@ -15,7 +15,7 @@
               <div class="ui-g ">
                 <!--Brand -->
                   <div class="ui-g-12 ui-md-6">
-                      <div class="paddingRL">
+                      <div class="paddingRL" *ngIf="taskCategory != 'GROWING'">
                         <label for="brand" class="towlable">{{ newProductTypeResources.brand}}<span class="star">*</span></label>:
 
                         <p-dropdown
@@ -49,7 +49,7 @@
                 <!--End Brand -->
                 <!-- Sub Brand  -->
                 <div class="ui-g-12 ui-md-6">
-                    <div class="paddingRL">
+                    <div class="paddingRL" *ngIf="taskCategory != 'GROWING'">
                       <label for="subbrand">{{ newProductTypeResources.subbrand }}</label>:
                       <p-dropdown
                         [filter] ="true"
@@ -342,9 +342,9 @@
                                         <span *ngIf="item.controls['packageUnit'].hasError('invalidinput')">
                                             {{ newProductTypeResources.packageunitval }}
                                           </span>  
-                                          <span *ngIf="item.controls['packageUnit'].hasError('brandnotpresent')">
+                                          <!-- <span *ngIf="item.controls['packageUnit'].hasError('brandnotpresent')">
                                               This product type already exists.
-                                           </span>                          
+                                           </span>                           -->
                                       </div>
                                     </td>
 
@@ -581,4 +581,5 @@
 (ProductTypeDeleteEvent)="productTypeDeleteEvent($event,1,0)"
 (ProductTypeDeactivateEvent)="productTypeDeleteEvent($event,0,1)"
 [allProductTypeList]="allProductTypeList"
+[taskCategory]="taskCategory"
 [PaginationValues]="paginationValues"></app-product-type-listing>

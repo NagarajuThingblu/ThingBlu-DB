@@ -29,7 +29,27 @@ export class OrderService {
     return this.http.post(url, orderDetailsForApi, this.headers)
     .map(data =>  data );
   }
+  addNewOrderEntry(orderFormForApi){
+    const url = 'api/Grower/OrderSave';
 
+    return this.http.post(url, orderFormForApi, this.headers)
+    .map(data =>  data );
+  }
+
+  getAllProductTypeListByClient() {
+    const url = 'api/ClientProductType/GetClientProductTypeList';
+    let params = new HttpParams();
+    params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+    return this.http
+    .get(url, {params: params})
+
+    .map(data => {
+      console.log('GetAllProductTypeListByClient Service success');
+      // console.log(data);
+      return data;
+    });
+  }
   getAllOrders(): Observable<any> {
     const url = 'api/Order/GetOrderListByClient';
     let params = new HttpParams();
@@ -44,6 +64,8 @@ export class OrderService {
         return data;
       }
     );
+
+    
     // return new Observable<any>((subscriber: Subscriber<any>) => subscriber.next(
     //   [
     //     { OrderId: 1, OrderRefId: 'O0001', RetailerName: 'Walmart', OrderDate: '05/04/2018', DeliveryDate: '05/07/2018'},
@@ -51,6 +73,21 @@ export class OrderService {
     //   ]
     // )
     // );
+  }
+  getAllOrdersByClient(): Observable<any> {
+    const url = 'api/Grower/GetOrderListForAssignTask';
+    let params = new HttpParams();
+
+    params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+    return this.http
+    .get(url, {params: params})
+    .map(
+      data => {
+        console.log('Get All Orders Service success');
+        return data;
+      }
+    );
   }
 
   getABudPackagingOrders(EditMode: any) {

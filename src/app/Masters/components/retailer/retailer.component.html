@@ -81,7 +81,7 @@
                                       type="text"
                                       class="clsControl"
                                       formControlName="retailer"
-                                      placeholder="Enter Customer Name"
+                                      placeholder="Enter Name"
                                     />
                                     <div class="ui-message ui-messages-error ui-corner-all" style="top:67px;" appErrorTooltip
                                     *ngIf="!retailerForm.controls['retailer'].valid&&retailerForm.controls['retailer'].dirty">
@@ -354,7 +354,6 @@
                                     placeholder="-- Select --"
                                     [autoWidth]="false"
                                     class="clsControl"
-                                    [ngModel] = "selectedState"
                                     name="state">
                                     </p-dropdown>
             
@@ -410,6 +409,7 @@
                                     [filter] ="true"
                                     id="city"
                                     formControlName="city"
+                                    autocomplete="off"
                                     [options]="Cities"
                                     placeholder="-- Select --"
                                     [autoWidth]="false"

@@ -73,6 +73,23 @@ getEmployeeListByClient() {
   });
 }
 
+GetAllRetailerListByClient(){
+  const url = 'api/Retailer/GetRetailerListByClient';
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+  return this.http
+  .get(url, {params: params})
+
+  .map(data => {
+
+    console.log('GetAllRetailerListByClient Service success');
+    // console.log(data);
+    return data;
+  });
+
+}
+
 
 getEmployeeListByTaskTypeKey(TaskTypeKey: any) {
   const url = 'api/Employee/GetEmployeeListByTaskTypeKey';

@@ -22,8 +22,8 @@
           </ng-template>
           <ng-template pTemplate="header">
               <tr>
-                  <th [pSortableColumn]="'BrandName'">{{ newProductTypeResources.brand}} <p-sortIcon [field]="'BrandName'"></p-sortIcon></th>
-                  <th [pSortableColumn]="'SubBrandName'">{{ newProductTypeResources.subbrand}} <p-sortIcon [field]="'SubBrandName'"></p-sortIcon></th>                  
+                  <th *ngIf="taskCategoryType != 'GROWING'" [pSortableColumn]="'BrandName'">{{ newProductTypeResources.brand}} <p-sortIcon [field]="'BrandName'"></p-sortIcon></th>
+                  <th *ngIf="taskCategoryType != 'GROWING'" [pSortableColumn]="'SubBrandName'">{{ newProductTypeResources.subbrand}} <p-sortIcon [field]="'SubBrandName'"></p-sortIcon></th>                  
                   <th [pSortableColumn]="'StrainName'">{{ newProductTypeResources.strain}} <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>              
                   <th [pSortableColumn]="'SkewKeyName'">{{ newProductTypeResources.skewtype}} <p-sortIcon [field]="'SkewKeyName'"></p-sortIcon></th>  
                   <th [pSortableColumn]="'PkgTypeName'">{{ newProductTypeResources.packagetype}} <p-sortIcon [field]="'PkgTypeName'"></p-sortIcon></th>
@@ -35,10 +35,10 @@
               </tr>
     
               <tr>
-                  <th>
+                  <th *ngIf="taskCategoryType != 'GROWING'">
                       <input pInputText autocomplete="off" type="text" (input)="dtNewProductTypeListing.filter($event.target.value, 'BrandName', 'contains')" class="clsControl">
                   </th>
-                  <th>
+                  <th *ngIf="taskCategoryType != 'GROWING'">
                       <input pInputText autocomplete="off" type="text" (input)="dtNewProductTypeListing.filter($event.target.value, 'SubBrandName', 'contains')" class="clsControl">
                   </th>
                   <th>
@@ -66,8 +66,8 @@
           </ng-template>
           <ng-template pTemplate="body" let-newproducttype let-rowData let-columns="columns" let-rowIndex="rowIndex">
               <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-                  <td>{{newproducttype?.BrandName}}</td>
-                  <td>{{newproducttype?.SubBrandName}}</td>
+                  <td *ngIf="taskCategoryType != 'GROWING'">{{newproducttype?.BrandName}}</td>
+                  <td *ngIf="taskCategoryType != 'GROWING'">{{newproducttype?.SubBrandName}}</td>
                   <td>{{newproducttype?.StrainName }}</td>
                   <td>{{newproducttype?.SkewKeyName }}</td>                  
                   <td>{{newproducttype?.PkgTypeName }}</td>

@@ -206,7 +206,7 @@ export class RetailerComponent implements OnInit {
         this.selectedState = this._cookieService.StateId;
         if (this.selectedState > 0) {
           this.retailerForm.controls['state'].patchValue(this.selectedState);
-          this.StateChange();
+          // this.StateChange();
         }
       } ,
       error => { console.log(error); },
@@ -297,9 +297,19 @@ export class RetailerComponent implements OnInit {
        this.msgs = [];
        if (data === 'Success') {
         if (this.RetailerID === 0 ) {
-          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg , detail: this.retailerResources.retailersuccess });
+          if(this.taskCategory == 'GROWING'){
+            this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg , detail: this.retailerResources.customersuccess });
+          }
+          else{
+            this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg , detail: this.retailerResources.retailersuccess });
+          }
         } else {
-          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg , detail: this.retailerResources.updateSuccess });
+          if(this.taskCategory == 'GROWING'){
+            this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg , detail: this.retailerResources.custupdateSuccess });
+          }
+          else{
+            this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg , detail: this.retailerResources.updateSuccess });
+          }
         }
 
       this.ResetForm();
@@ -307,9 +317,19 @@ export class RetailerComponent implements OnInit {
        } else if (data === 'Failure') {
          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
        } else if (data === 'Duplicate') {
-         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.retailerResources.retailerexists });
+        if(this.taskCategory == 'GROWING'){
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.retailerResources.customerexists });
+        }
+        else{
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.retailerResources.retailerexists });
+        }
        } else if (data === 'NotUpdated') {
-        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.retailerResources.updateFailure });
+        if(this.taskCategory == 'GROWING'){
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.retailerResources.custupdateFailure });
+        }
+        else{
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.retailerResources.updateFailure });
+        }
        } else {
          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data });
        }
@@ -372,18 +392,18 @@ export class RetailerComponent implements OnInit {
       // this.retailerForm.controls['retailerType'].patchValue(data[0].RetlrTypeID);
       // this.retailerForm.controls['retailer'].patchValue(data[0].RetailerName);
       this.retailerForm.patchValue({
-        retailerType: data[0].RetlrTypeID,
+        retailerType: data[0].RetlrTypeId,
         retailer: data[0].RetailerName,
-        licenseNo: data[0].LicenseNo,
+        licenseNo: data[0].License,
         ubiNo: data[0].UBINo,
         officePhone: data[0].OfficePhone,
-        cellPhone: data[0].CellPhone,
+        cellPhone: data[0].PrimaryPhone,
         primaryEmail: data[0].PrimaryEmail,
         secondaryEmail: data[0].SecondaryEmail,
         shippingPre: data[0].shippingPre,
         contactPerson: data[0].ContactPerson,
         address: data[0].Address,
-        country: data[0].CountryID,
+        country: data[0].CountryId,
         state: data[0].StateId,
         city: data[0].CityId,
         zipCode: data[0].ZipCode,
@@ -403,7 +423,13 @@ export class RetailerComponent implements OnInit {
   ShowConformationMessaegForDelete(RetailerId, retailer, IsDeleted, ActiveInactiveFlag) {
     event.stopPropagation();
     let strMessage: any;
-    strMessage = 'Do you want to delete this retailer?';
+    if(this.taskCategory == 'GROWING'){
+      strMessage = 'Do you want to delete this customer?';
+    }
+    else{
+      strMessage = 'Do you want to delete this retailer?';
+    }
+    
     this.confirmationService.confirm({
       message: strMessage,
       header: 'Confirmation',
@@ -420,9 +446,21 @@ export class RetailerComponent implements OnInit {
     event.stopPropagation();
     let strMessage: any;
     if (this.allretailerList[rowIndex].IsActive === true) {
-      strMessage = 'Do you want to activate this Retailer?';
+      if(this.taskCategory == 'GROWING'){
+        strMessage = 'Do you want to activate this Customer?';
+      }
+      else{
+        strMessage = 'Do you want to activate this Retailer?';
+      }
+      
     } else {
-      strMessage = 'Do you want to inactivate this Retailer?';
+      if(this.taskCategory == 'GROWING'){
+        strMessage = 'Do you want to inactivate this Customer?';
+      }
+      else{
+        strMessage = 'Do you want to inactivate this Retailer?';
+      }
+     
     }
     this.confirmationService.confirm({
       message: strMessage,
@@ -447,95 +485,100 @@ export class RetailerComponent implements OnInit {
     // console.log(this.growerForm.value);
 
     RetailersDetailsForApi = {
-      // RetailerDetails: {
-      //   RetlrId: RetailerId,
-      //   VirtualRoleId: this._cookieService.VirtualRoleId,
-      //   ClientId: Number(this._cookieService.ClientId),
-      //   IsDeleted: IsDeleted,
-      //   IsActive: retailer.IsActive,
-      //   ActiveInactive: ActiveInactiveFlag
-      // }
-      RetailerDetails: {
+      RetailerDeleteActive:{
         RetlrId:RetailerId,
-        ClientId: this._cookieService.ClientId,
-        RetailerTypeId: retailer.retailerType,
-        RetailerName: retailer.RetailerName,
-        RetailerCode: 0,
-        LicenseNo: retailer.License,
-        UBINo: retailer.UBINo,
-        officePhone: retailer.OfficePhone,
-        cellPhone: retailer.cellPhone,
-        ShippingPreference: retailer.ShippingPreference == null? 'Ground': retailer.ShippingPreference,
-        contactPerson: retailer.contactPerson,
-        address: retailer.address,
-        zipCode:retailer.zipCode,
-        CityId:retailer.city,
-        description: retailer.description,
-        IsDeleted: 0,
-        IsActive: retailer.IsActive,
-    },
-    ContactDetails:[]
+        VirtualRoleId:this._cookieService.VirtualRoleId,
+        IsActive:retailer.IsActive,
+        IsDeleted:IsDeleted
+      },
+    
     };
-    RetailersDetailsForApi.ContactDetails.push({
-      FirstName: retailer.retailer,
-      LastName : retailer.retailer,
-      JobTitle :null,
-      primaryEmail: retailer.primaryEmail,
-      secondaryEmail: retailer.secondaryEmail,
-      PrimaryPhone:retailer.cellPhone,
-      PrimaryPhoneTypeId :0,
-    SecondaryPhone :retailer.contactPerson,
-      SecondaryPhoneTypeId :0,
-    //  IsDeleted:false,
-   VirtualRoleId :this._cookieService.VirtualRoleId,
-  IsPrimaryContact :false,
-  IsDeleted:IsDeleted,
-  // IsActive:retailer.IsActive,
-  ActiveInactive:ActiveInactiveFlag
-    });
-  
 
-    // console.log(RetailersDetailsForApi);
     this.loaderService.display(true);
-    this.retailerActionService.addRetailerDetails(RetailersDetailsForApi)
+    this.retailerActionService.RetailerDeleteActive(RetailersDetailsForApi)
     .subscribe(
       data => {
         // console.log(data);
         this.msgs = [];
         if (data === 'Success' && ActiveInactiveFlag === 1) {
           if (retailer.IsActive !== true) {
-            this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+            if(this.taskCategory == 'GROWING'){
+              this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+              detail: this.retailerResources.custinactivated });
+            }
+            else{
+              this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
             detail: this.retailerResources.inactivated });
+            }
+            
             this.getRetailerDetailListByClient();
             this.loaderService.display(false);
           } else {
-            this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
-            detail: this.retailerResources.activated });
+            if(this.taskCategory == 'GROWING'){
+              this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+              detail: this.retailerResources.custactivated });
+            }
+            else{
+              this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+              detail: this.retailerResources.activated });
+            }
             this.getRetailerDetailListByClient();
             this.loaderService.display(false);
           }
         } if (data === 'Success' && IsDeleted === 1) {
+          if(this.taskCategory == 'GROWING'){
+            this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+            detail: this.retailerResources.custdeletedSuccess });
+          }
+          else{
             this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
             detail: this.retailerResources.deletedSuccess });
+          }
             this.getRetailerDetailListByClient();
             this.loaderService.display(false);
         } else if (data === 'NotUpdated') {
           if (IsDeleted === 1) {
-            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+            if(this.taskCategory == 'GROWING'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+            detail: this.retailerResources.custcannotdelete });
+            }
+            else{
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
             detail: this.retailerResources.cannotdelete });
+            }
           } else if (retailer.IsActive === 1) {
-            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+            if(this.taskCategory == 'GROWING'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+            detail: this.retailerResources.custcannotInactivate });
+            }
+            else{
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
             detail: this.retailerResources.cannotInactivate });
+            }
             retailer.IsActive = !retailer.IsActive;
           } else {
-            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-            detail: this.retailerResources.cannotActivate });
+            if(this.taskCategory == 'GROWING'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail: this.retailerResources.custcannotActivate });
+            }
+            else{
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail: this.retailerResources.cannotActivate });
+            }
+           
             retailer.IsActive = !retailer.IsActive;
           }
         } else if (data === 'InUse') {
           this.msgs = [];
-          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+          if(this.taskCategory == 'GROWING'){
+            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+          detail: this.retailerResources.custinuse });
+          }
+          else{
+            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
           detail: this.retailerResources.inuse });
+          }
+          
         }
           this.loaderService.display(false);
       },

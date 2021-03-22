@@ -37,6 +37,7 @@ export class NewProductTypeComponent implements OnInit {
   skewtypes: any[];
   packagetypes: any[];
   packageunit: any[];
+  public taskCategory: any;
   public allProductTypeList: any;
   public oilReturnProcessingResource: any;
   showBrandModal = false;
@@ -367,8 +368,8 @@ export class NewProductTypeComponent implements OnInit {
         ClientProductType: {
             ProductTypeId: this.productTypeIdForUpdate,
             ClientId: Number(this._cookieService.ClientId),
-            BrandId: Number(this.newProductTypeEntryForm.value.brand),
-            subBrandId: Number(this.newProductTypeEntryForm.value.subBrand),
+            BrandId:this.taskCategory =='GROWING'?null: Number(this.newProductTypeEntryForm.value.brand),
+            subBrandId:this.taskCategory =='GROWING'?null: Number(this.newProductTypeEntryForm.value.subBrand),
             StrainId: Number(this.newProductTypeEntryForm.value.strain),
             SkwTypeId: Number(this.newProductTypeEntryForm.value.skewType),
             SkewKeyName: (this.skewtypes.filter(x => x.value === this.newProductTypeEntryForm.value.skewType))[0].label,
@@ -631,12 +632,13 @@ export class NewProductTypeComponent implements OnInit {
     this.globalResource = GlobalResources.getResources().en;
     this.appComponentData.setTitle('Product Type');
     this._cookieService = this.appCommonService.getUserProfile();
+    this.taskCategory = this._cookieService.TaskCategory,
     setTimeout(() => {this.loaderService.display(true);
     }, 0);
     this.getAllProductTypeListByClient();
   // new product type form defination(reactive form)
   this.newProductTypeEntryForm = this.fb.group({
-    'brand': new FormControl(null, Validators.required),
+    'brand': new FormControl(null),
     'subBrand': new FormControl(null),
     'strain': new FormControl(null, Validators.required),
     'skewType': new FormControl(null, Validators.required),

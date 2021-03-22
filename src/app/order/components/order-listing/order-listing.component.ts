@@ -31,7 +31,8 @@ export class OrderListingComponent implements OnInit, OnDestroy {
   incomingpaginationValues: any;
   ChangeOrderpaginationValues: any;
   eventChangeOrder: any;
-
+  public taskCategory: any;
+  public _cookieService: any;
   public allOrders: any;
   public showOrderDetailsModel = false;
 
@@ -68,6 +69,8 @@ export class OrderListingComponent implements OnInit, OnDestroy {
     this.orderrequestResource = OrderResource.getResources().en.orderrequest;
     this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle(this.orderrequestResource.orderlisttitle);
+    this._cookieService = this.appCommonService.getUserProfile();
+    this.taskCategory = this._cookieService.TaskCategory,
     this.getAllOrders();
      this.getAllDreaftOrders();
      this.getAllIncomingOrders();

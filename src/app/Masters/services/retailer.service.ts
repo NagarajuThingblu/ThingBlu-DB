@@ -38,5 +38,12 @@ export class RetailerService {
     // .do(data =>console.log('All : ' + JSON.stringify(data)))
    .map(data =>  data );
   }
+  RetailerDeleteActive(RetailerDetailsForApi: any) {
+    const url = 'api/Retailer/RetailerDeleteActive';
+
+    return this.http.post(url, RetailerDetailsForApi, this.headers)
+    // .do(data =>console.log('All : ' + JSON.stringify(data)))
+   .map(data =>  data );
+  }
 
 }

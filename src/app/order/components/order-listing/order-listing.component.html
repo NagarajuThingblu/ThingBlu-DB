@@ -29,7 +29,7 @@
                             <th [pSortableColumn]="'OrderRefId'">{{orderrequestResource.orderid}} 
                                 <p-sortIcon [field]="'OrderRefId'"></p-sortIcon>                                
                             </th>
-                            <th [pSortableColumn]="'RetailerName'">{{orderrequestResource.retailername}}
+                            <th [pSortableColumn]="'RetailerName'"><span  *ngIf="taskCategory != 'GROWING'">{{orderrequestResource.retailername}}</span><span  *ngIf="taskCategory == 'GROWING'">Customer Name</span>
                                 <p-sortIcon [field]="'RetailerName'"></p-sortIcon></th>
                             <th class="datewidth" [pSortableColumn]="'OrderDate1'">{{orderrequestResource.orderrequestdate}} 
                                 <p-sortIcon [field]="'OrderDate1'" class="icon-sort"></p-sortIcon>
@@ -122,7 +122,7 @@
                                 <th style="width:20%" [pSortableColumn]="'DraftOrderNo'">{{orderrequestResource.orderid}} 
                                     <p-sortIcon [field]="'DraftOrderNo'"></p-sortIcon>                                
                                 </th>
-                                <th style="width:35%" [pSortableColumn]="'RetailerName'">{{orderrequestResource.retailername}}
+                                <th style="width:35%" [pSortableColumn]="'RetailerName'"><span  *ngIf="taskCategory != 'GROWING'">{{orderrequestResource.retailername}}</span><span  *ngIf="taskCategory == 'GROWING'">Customer Name</span>
                                     <p-sortIcon [field]="'RetailerName'"></p-sortIcon></th>
                                 <th style="width:20%" [pSortableColumn]="'CreatedDate'"><!--{{orderrequestResource.orderrequestdate}} --> Draft Creation Date
                                     <p-sortIcon [field]="'OrderDate1'"></p-sortIcon>
@@ -188,7 +188,7 @@
                 <!-- End draft order tab -->
 
                   <!-- Start Incoming Order -->
-                  <p-tabPanel header="Incoming" [selected] = "incomingTabSelected" >
+                  <p-tabPanel header="Incoming" [selected] = "incomingTabSelected" *ngIf="taskCategory != 'GROWING'" >
                     <p-table #dtIncomingOrderListing [value]="allIncomingOrders" 
                     class="clsTableSelection"
                     sortMode="single"                      
@@ -284,7 +284,7 @@
                 <!-- End Incoming Order -->
 
                  <!-- Start Order Change-->
-                 <p-tabPanel header="Order Changes"  [selected] = "changeTabSelected"s>
+                 <p-tabPanel header="Order Changes"  [selected] = "changeTabSelected"s *ngIf="taskCategory != 'GROWING'">
                     <p-table #dtChangeOrderListing [value]="allChangeOrders" 
                     class="clsTableSelection"
                     sortMode="single"                      
