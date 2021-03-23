@@ -424,7 +424,7 @@ submitReview(formModel) {
         TaskId:Number(this.taskid),
         VirtualRoleId:Number(this._cookieService.VirtualRoleId),
         Comment: formModel.rmisccomment,
-        IsStrainCompleted:formModel.isStrainComplete == " "?0:1,
+        IsStrainCompleted:formModel.isStrainComplete == ""?0:1,
         MiscCost: formModel.rmisccost,
         RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
       },
@@ -517,7 +517,7 @@ completeTask(formModel){
         TaskId:Number(this.taskid),
         Comment:" ",
         VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-        IsStrainCompleted:formModel.isStrainComplete == " "?0:1
+        IsStrainCompleted:formModel.isStrainComplete == ""?0:1
       },
       BinDetails:[]
     };

@@ -401,10 +401,15 @@
   
                                     <!-- Remove Row Entry -->
                                     <td>
-                                        <a (click)="deleteItem(i)" >                                                    
+                                        <a (click)="deleteItem(i)" *ngIf="!newProductTypeEntryForm.get('items').valid || sysmbol == 0">                                                  
                                             <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
                                             </span>
                                         </a>   
+
+                                        <a (click)="addItem()" *ngIf="newProductTypeEntryForm.get('items').valid">
+                                          <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                                          </span>
+                                        </a>
                                     </td>
                                     
                                     <!-- End of Remove Row Entry -->
@@ -427,12 +432,12 @@
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="productTypeDetailsArr.hasError('duplicate')">
                       duplicate entries
                     </div>  
-                    <div style="position: absolute;right: 0px;bottom: 42px;">
+                    <!-- <div style="position: absolute;right: 0px;bottom: 42px;">
                         <a (click)="addItem()" *ngIf="newProductTypeEntryForm.get('items').valid">
                             <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
                             </span>
                         </a>
-                    </div>
+                    </div> -->
                     <div class="ui-g" style="width:100%;text-align:right;">
                         <div class="ui-g-12">
                             <button pButton type="submit" label="Save" ></button>

@@ -34,7 +34,7 @@
                             <th class="datewidth" [pSortableColumn]="'OrderDate1'">{{orderrequestResource.orderrequestdate}} 
                                 <p-sortIcon [field]="'OrderDate1'" class="icon-sort"></p-sortIcon>
                             </th>
-                            <th class="datewidth" [pSortableColumn]="'DeliveryDate'">{{orderrequestResource.deliverydate}} 
+                            <th  class="datewidth" [pSortableColumn]="'DeliveryDate'">{{orderrequestResource.deliverydate}} 
                                 <p-sortIcon [field]="'DeliveryDate'"></p-sortIcon>
                             </th>              
                             <th>{{orderrequestResource.packagingsatus}}</th>
@@ -98,7 +98,7 @@
                 <!-- End order tab -->
 
                 <!-- Draft order tab -->
-                <p-tabPanel header="Drafts" [selected] = "draftTabSelected">
+                <p-tabPanel header="Drafts" [selected] = "draftTabSelected" *ngIf="taskCategory != 'GROWING'">
                     <p-table #dtDraftOrderListing [value]="allDraftOrders" 
                         sortMode="single"                      
                         [responsive]="true" 
@@ -386,7 +386,7 @@
       <p-dialog header="Order Details" [(visible)]="showOrderDetailsModel" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
             <!--RetailerName -->
             <div class="ui-g-12 ui-md-6">
-            <label for="grower" class="towlable"><b>Retailer Name:</b> {{ retailerName}}</label>
+            <label for="grower" class="towlable"><span *ngIf="taskCategory != 'GROWING'"><b>Retailer Name:</b></span><span *ngIf="taskCategory == 'GROWING'"><b>Customer Name:</b></span> {{ retailerName}}</label>
             </div>
             <!--End RetailerName -->
             <!--OrderRefId -->
@@ -404,6 +404,35 @@
             <label for="grower" class="towlable"><b>Delivery Date:</b> {{ delvryDate}}</label>
             </div>
             <!--End OrderRefId -->
+             <!--Growers Info Tabel-->
+             <p-table [value]="totalData1">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Strain</th>
+                        <th>Skew Type</th>
+                        <th>Package Type</th>
+                        <th>Package Size</th>
+                        <th>Order Quantity</th>
+                        <th>Order Cost</th>
+                    </tr>
+                </ng-template> -->
+                <ng-template pTemplate="body" let-taskstatus>
+                    <tr>
+                        <td>{{taskstatus.StrainName}}</td>
+                       
+                        <td>{{taskstatus.SkewKeyName}}</td>
+                        <td>{{taskstatus.PkgTypeName}}</td>
+                        <td>{{taskstatus.PackageSize}}</td>
+                        <td>{{taskstatus.RequiredQty}}</td>
+                        <td>{{taskstatus.UnitPrice}}</td>
+                    </tr>
+                </ng-template>
+             </p-table>
+            <!--End Growers Info Tabel-->
+
+            <!-- <div class="ui-g-12 ui-md-6">
+                <label for="grower" class="towlable"><b>Strain:</b> {{ strain}}</label>
+                </div> -->
 
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
 

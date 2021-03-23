@@ -100,6 +100,7 @@ export class TaskResources {
                     editPageHeading: 'Update Task',
                     // ---------- Done ---------
                     employee: 'Employee',
+                    morebinweight:'Output Bin weight is greater than Input Bin weight',
                     employeerequired: 'Select employee.',
                     eststartdate: 'Estimated Start Date',
                     estenddate: 'Est. End Date',

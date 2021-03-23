@@ -387,10 +387,12 @@ export class RetailerComponent implements OnInit {
   GetRetailerOnEdit(RetailerId) {
     event.stopPropagation();
     const data = this.allretailerList.filter(x => x.RetailerId === RetailerId);
+    // var itemlist = this.retailerForm.get('controls');
     if (data !== null) {
       this.RetailerID = RetailerId;
       // this.retailerForm.controls['retailerType'].patchValue(data[0].RetlrTypeID);
       // this.retailerForm.controls['retailer'].patchValue(data[0].RetailerName);
+      // const state =   itemlist[0].controls["state"];
       this.retailerForm.patchValue({
         retailerType: data[0].RetlrTypeId,
         retailer: data[0].RetailerName,
@@ -400,7 +402,7 @@ export class RetailerComponent implements OnInit {
         cellPhone: data[0].PrimaryPhone,
         primaryEmail: data[0].PrimaryEmail,
         secondaryEmail: data[0].SecondaryEmail,
-        shippingPre: data[0].shippingPre,
+        shippingPre: data[0].ShippingPreference,
         contactPerson: data[0].ContactPerson,
         address: data[0].Address,
         country: data[0].CountryId,

@@ -332,8 +332,8 @@ completeTask(formModel){
       this.loaderService.display(true);
       this.taskCommonService.completeTrimmingTask(taskCompletionWebApi)
       .subscribe(data => {
+        this.msgs = [];
         if (data[0].RESULTKEY  === 'This status already exist') {
-          this.msgs = [];
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskCompleted });
           if (this.TaskModel.IsReview === true) {
             this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
@@ -343,7 +343,6 @@ completeTask(formModel){
           this.TaskCompleteOrReviewed.emit();
         }
        else    if (data[0].RESULTKEY  === 'Completed weight is greater than Assigned bin weight') {
-        this.msgs = [];
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.completewtgreaterthantotal });
         if (this.TaskModel.IsReview === true) {
           this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
@@ -352,8 +351,7 @@ completeTask(formModel){
         }
         this.TaskCompleteOrReviewed.emit();
       }
-      else    if (data[0].RESULTKEY  === 'Output Bin weight is greater than Input Bin weight') {
-        this.msgs = [];
+      else if (data[0].RESULTKEY  === 'Output Bin weight is greater than Input Bin weight') {
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.morebinweight });
         if (this.TaskModel.IsReview === true) {
           this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
@@ -361,6 +359,7 @@ completeTask(formModel){
           this.TaskModel.TaskStatus =  this.taskStatus.Completed;
         }
         this.TaskCompleteOrReviewed.emit();
+       
       }
         else if (data === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });

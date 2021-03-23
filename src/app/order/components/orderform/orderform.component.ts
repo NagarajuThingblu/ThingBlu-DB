@@ -48,21 +48,24 @@ export class OrderformComponent implements OnInit {
   Customers: any[];
   strains: any[];
   producttype: any[];
+  productType: any[];
   // skewtype:any[];
   public skewtype = [];
-  public SkewType =[];
+  public Skewtype =[];
   public packagetype =[];
   public packagesize =[];
   // packagetypes: any[];
   // packagetype: any[];
   // packagesizes:any[];
   productIds:any[];
+  datafiltered:any;
   shippingaddress:any;
   email:any;
   country:any;
   state:any;
   city:any;
   cityid:any;
+  packagetypeid:any;
   zipcode:any;
   shippingpref:any;
   public priorities:any;
@@ -75,6 +78,7 @@ export class OrderformComponent implements OnInit {
   paginationValues: any;
   public saveButtonText = 'save';
   submitted: boolean;
+  public LabelOnEdit: any;
   public newSectionForm_copy: any;
   public msgs: any[];
   
@@ -193,6 +197,7 @@ export class OrderformComponent implements OnInit {
       strain: new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
       skewtype: new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
       packagetype: new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
+      packagetypeid: new FormControl(null),
       packagesize: new FormControl(null, Validators.compose([Validators.required, Validators.max(999999999999999), Validators.min(0.1)])),
       orderqt: new FormControl(null, Validators.compose([ Validators.max(99999), Validators.min(0.1)])),
       producttype: new FormControl(null, Validators.compose([ Validators.max(99999), Validators.min(0.1)])),
@@ -255,16 +260,14 @@ export class OrderformComponent implements OnInit {
         this.allProductTypeList = [];
        }
       //  this.loaderService.display(false);
-      this.getAllProducts()
-      // this.getPackageType()
-      // this.getPackageSize()
-      // this.getAllSkewType()
-      // this.getProductTypeId()
+      this.getAllStrains()
+      this.getAllProductTypes()
+      
       } ,
       error => { console.log(error);  this.loaderService.display(false); },
       () => console.log('Get All  New Product Type List By Client complete'));
   }
-  getAllProducts() {
+  getAllStrains() {
     const data = this.dropdownsData
         if (data) {
         this.globalData.dropdownsData = data
@@ -273,7 +276,38 @@ export class OrderformComponent implements OnInit {
         this.strains = this.dropdwonTransformService.transform(fieldsfilter, 'StrainName', 'StrainId', '-- Select --',false);
       }
   }
+  
+getAllProductTypes(){
+  const data = this.dropdownsData
+  if(data){
+    this.producttype = this.dropdwonTransformService.transform(data, 'ProductName', 'ProductTypeId', '-- Select --',false);
+    const fieldsfilter = Array.from(data.reduce((m, t) => m.set(t.ProductName, t), new Map()).values())
+    this.producttype = this.dropdwonTransformService.transform(fieldsfilter, 'ProductName', 'ProductTypeId', '-- Select --',false);
+  }
+}
 
+
+// getAllDetails(index  , event?:any){
+
+//      this.datafiltered = this.globalData.dropdownsData.filter(d=> d.StrainId === event.value)
+//      this.producttype = this.dropdwonTransformService.transform(this.datafiltered, 'ProductName', 'ProductTypeId', '-- Select --',false);
+//     //  this.orderForm.get('items')['controls'][index].controls['producttype'].setValue(this.producttype)
+//     //  this.orderForm.get('items')['controls'][index].controls['producttype'] =    this.producttype 
+//    }
+getAllDetailsOnProducType(index, event?:any){
+for(let data of this.globalData.dropdownsData){
+  if(event.value === data.ProductTypeId){
+    this.skewtype = data.SkewKeyName
+    this.orderForm.get('items')['controls'][index].controls['skewtype'].setValue(this.skewtype)
+    this.packagetype = data.PkgTypeName
+    this.orderForm.get('items')['controls'][index].controls['packagetype'].setValue(this.packagetype)
+    this.packagetypeid = data.PkgTypeId
+    this.orderForm.get('items')['controls'][index].controls['packagetypeid'].setValue(this.packagetypeid)
+    this.packagesize = data.UnitValue
+    this.orderForm.get('items')['controls'][index].controls['packagesize'].setValue(this.packagesize)
+  }
+}
+}
 
   deleteItem(index: number) {
     
@@ -305,34 +339,8 @@ this.saveButtonText ="save"
     const control = <FormArray>this.orderForm.controls['items'];
     control.removeAt(index);
   }
-  getAllDetails(event?:any){
-    this.producttype = [];
-    this.SkewType = [];
-    this.packagetype =[];
-    this.packagesize =[];
-    for(let skew of  this.globalData.dropdownsData ){
-      if(event.value === skew.StrainId){
-      //  const data = skew
-      //   const fiterdata = Array.from(data.reduce((m, t) => m.set(t.SkewKeyName, t), new Map()).values())
-      //  this.SkewType = this.dropdwonTransformService.transform(fiterdata, 'SkewKeyName', 'SkewKeyName', '-- Select --',false);
-      this.producttype.push({label: skew.ProductName, value: skew.ProductTypeId}) 
-      this.SkewType.push({label: skew.SkewKeyName, value: skew.SkewKeyName})
-      this.packagetype.push({label: skew.PkgTypeName, value: skew.PkgTypeId})
-      this.packagesize.push({label:skew.UnitValue, value:skew.UnitValue})
-      }
-    }
-    this.SkewType =  this.SkewType .filter((thing, index, self) =>
-  index === self.findIndex((t) => (
-    t.label === thing.label && t.value === thing.value
-  ))
-)
-this.packagetype =  this.packagetype .filter((thing, index, self) =>
-index === self.findIndex((t) => (
-  t.label === thing.label && t.value === thing.value
-))
-)
-  }
 
+  
   onSubmit(value: string){
     this.submitted = true;
     let orderFormForApi;
@@ -361,7 +369,7 @@ index === self.findIndex((t) => (
         "SkewKeyName":element.value.skewtype,
         "StrainId":  element.value.strain,
         "Description": null,
-        "PkgTypeId": element.value.packagetype,
+        "PkgTypeId": element.value.packagetypeid,
         "PackageSize":  element.value.packagesize,
         "OrderQty":  Number(element.value.orderqt)
          });

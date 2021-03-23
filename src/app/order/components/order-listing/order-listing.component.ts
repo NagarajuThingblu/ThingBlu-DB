@@ -23,6 +23,8 @@ export class OrderListingComponent implements OnInit, OnDestroy {
   retailerName: any;
   ordReqDate: any;
   delvryDate: any;
+  strain: any;
+  skewtype: any;
   event: any;
   eventdraft: any;
   paginationValues: any;
@@ -34,6 +36,8 @@ export class OrderListingComponent implements OnInit, OnDestroy {
   public taskCategory: any;
   public _cookieService: any;
   public allOrders: any;
+  public totalData: any;
+  public totalData1: any;
   public showOrderDetailsModel = false;
 
   public budOrderDetails: any = [];
@@ -119,7 +123,8 @@ export class OrderListingComponent implements OnInit, OnDestroy {
     this.orderService.getAllOrders().subscribe(
       data => {
        if (data !== 'No data found!') {
-          this.allOrders = data;
+         this.totalData = data.Table1;
+          this.allOrders = data.Table;
           this.paginationValues = AppConstants.getPaginationOptions;
           if (this.allOrders.length > 20) {
             this.paginationValues[AppConstants.getPaginationOptions.length] = this.allOrders.length;
@@ -159,7 +164,11 @@ export class OrderListingComponent implements OnInit, OnDestroy {
     this.orderRefId = Order['OrderRefId'];
     this.ordReqDate = Order['OrderDate'];
     this.delvryDate = Order['DeliveryDate'];
-
+    if(this.taskCategory === 'GROWING'){
+     this.totalData1= this.totalData.filter(d => d.OrderId === OrderId );
+      console.log(this.totalData1)
+    }
+   
     this.orderService.getOrderInfo(OrderId).subscribe(
       (data) => {
        if (data !== 'No data found!') {

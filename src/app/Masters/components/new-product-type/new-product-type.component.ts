@@ -37,6 +37,7 @@ export class NewProductTypeComponent implements OnInit {
   skewtypes: any[];
   packagetypes: any[];
   packageunit: any[];
+  sysmbol:any;
   public taskCategory: any;
   public allProductTypeList: any;
   public oilReturnProcessingResource: any;
@@ -689,6 +690,7 @@ export class NewProductTypeComponent implements OnInit {
     });
   }
   addItem(): void {
+    this.sysmbol = 0
     // this.productTypeDetailsArr.push(this.createItem());
     this.arrayItems = this.newProductTypeEntryForm.get('items') as FormArray;
     this.arrayItems.push(this.createItem());
