@@ -48,21 +48,21 @@
         <p-table [value]="budOrderPackets?.controls" id="tblPkgQtyDetails" name="tblPkgQtyDetails">
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="width:15%">{{globalResource.brand}}</th>
-                    <th style="width:15%">{{globalResource.subbrand}}</th>
-                    <th style="width:15%">{{globalResource.strain}}</th>
-                    <th style="width:15%">{{globalResource.pkgtype}}</th>
-                    <th style="width:15%">{{globalResource.pkgsize}}</th>
+                    <th *ngIf="taskCategory != 'GROWING'" style="width:15%">{{globalResource.brand}}</th>
+                    <th *ngIf="taskCategory != 'GROWING'" style="width:15%">{{globalResource.subbrand}}</th>
+                    <th >{{globalResource.strain}}</th>
+                    <th>{{globalResource.pkgtype}}</th>
+                    <th >{{globalResource.pkgsize}}</th>
                     <!-- <th style="width:15%">{{globalResource.itemqty}}</th> -->
-                    <th style="width:15%">{{globalResource.orderqty}}</th>
-                    <th style="width:15%">{{globalResource.requirewt}}</th>
+                    <th >{{globalResource.orderqty}}</th>
+                    <th >{{globalResource.requirewt}}</th>
                     <!-- <th style="width:15%">{{globalResource.assignqty}}</th> -->
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-budOrderPacket let-i="rowIndex" >
                 <tr [formGroupName]="i">
-                    <td>{{orderDetails[i].BrandName}}</td>
-                    <td>{{orderDetails[i].SubBrandName}}</td>
+                    <td *ngIf="taskCategory != 'GROWING'">{{orderDetails[i].BrandName}}</td>
+                    <td *ngIf="taskCategory != 'GROWING'">{{orderDetails[i].SubBrandName}}</td>
                     <td>{{orderDetails[i].StrainName}}</td>
                     <td>{{orderDetails[i].PkgTypeName}}</td>
                     <td>{{orderDetails[i].UnitValue}} {{globalResource.listgramunit}}</td>
@@ -84,7 +84,7 @@
                     <!-- </td> -->
                 </tr>
             </ng-template>
-            <ng-template pTemplate="emptymessage" let-columns>
+            <ng-template *ngIf="taskCategory != 'GROWING'" pTemplate="emptymessage" let-columns>
               <tr>
                   <td [attr.colspan]="9">
                      {{ globalResource.norecordsfound }}
@@ -102,10 +102,15 @@
       <!-- Allocate multiple employee for bud packaging task -->
       <!-- {{ globalData.orderDetail | json  }} -->
       <app-bud-pkg-allocate-employee 
-        *ngIf="TaskModel.BUDPACKAGING.orderno&&globalData.orderDetails?.Table?.length"
+        *ngIf="TaskModel.BUDPACKAGING.orderno&&globalData.orderDetails?.Table?.length&&taskCategory != 'GROWING'"
         [AllocateEmpData]="globalData"
         [BudPkgForm]="BUDPACKAGING"
       ></app-bud-pkg-allocate-employee>
+      <!-- <app-bud-pkg-allocate-employee 
+      *ngIf="TaskModel.BUDPACKAGING.orderno&&globalData.orderDetails?.length&&taskCategory === 'GROWING'"
+      [AllocateEmpData]="globalData"
+      [BudPkgForm]="BUDPACKAGING"
+    ></app-bud-pkg-allocate-employee> -->
 
       <!--Employee-->
       <!-- <div class="ui-g-12 ui-md-6">

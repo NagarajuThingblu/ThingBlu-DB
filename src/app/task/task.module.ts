@@ -43,6 +43,7 @@ import { PrebuckingComponent } from './components/taskparameters/prebucking/preb
 import { BuckingComponent } from './components/taskparameters/bucking/bucking.component';
 import { GrowertrimmingComponent } from './components/taskparameters/growertrimming/growertrimming.component';
 
+
 @NgModule({
   declarations: [
     AssignTaskComponent,
@@ -75,7 +76,7 @@ import { GrowertrimmingComponent } from './components/taskparameters/growertrimm
     PrebuckingComponent,
     BuckingComponent,
     GrowertrimmingComponent,
-
+    
   ],
   imports: [
     SharedModule

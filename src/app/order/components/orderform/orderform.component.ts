@@ -47,8 +47,8 @@ export class OrderformComponent implements OnInit {
   customersList: any[];
   Customers: any[];
   strains: any[];
-  producttype: any[];
-  productType: any[];
+  producttype = [];
+  // productType: any[];
   // skewtype:any[];
   public skewtype = [];
   public Skewtype =[];
@@ -115,6 +115,7 @@ export class OrderformComponent implements OnInit {
    }
   items = new FormArray([], this.customGroupValidation );
   arrayItems: FormArray;
+  productTypeDropdown: Map<number, any> = new Map<number, any>()
   customGroupValidation (formArray) {
     let isError = false;
     const result = _.groupBy( formArray.controls , c => {
@@ -261,7 +262,7 @@ export class OrderformComponent implements OnInit {
        }
       //  this.loaderService.display(false);
       this.getAllStrains()
-      this.getAllProductTypes()
+      // this.getAllProductTypes()
       
       } ,
       error => { console.log(error);  this.loaderService.display(false); },
@@ -277,23 +278,28 @@ export class OrderformComponent implements OnInit {
       }
   }
   
-getAllProductTypes(){
-  const data = this.dropdownsData
-  if(data){
-    this.producttype = this.dropdwonTransformService.transform(data, 'ProductName', 'ProductTypeId', '-- Select --',false);
-    const fieldsfilter = Array.from(data.reduce((m, t) => m.set(t.ProductName, t), new Map()).values())
-    this.producttype = this.dropdwonTransformService.transform(fieldsfilter, 'ProductName', 'ProductTypeId', '-- Select --',false);
+// getAllProductTypes(){
+//   const data = this.dropdownsData
+//   if(data){
+//     this.producttype = this.dropdwonTransformService.transform(data, 'ProductName', 'ProductTypeId', '-- Select --',false);
+//     const fieldsfilter = Array.from(data.reduce((m, t) => m.set(t.ProductName, t), new Map()).values())
+//     this.producttype = this.dropdwonTransformService.transform(fieldsfilter, 'ProductName', 'ProductTypeId', '-- Select --',false);
+//   }
+// }
+
+
+getAllDetails(index  , event?:any){
+    this.producttype = [];
+for(let value of this.globalData.dropdownsData){
+  if( value.StrainId === event.value){
+    this.producttype.push({label:value.ProductName, value:value.ProductTypeId})
+    this.productTypeDropdown.set(index,this.producttype )
   }
 }
+    
+   }
 
 
-// getAllDetails(index  , event?:any){
-
-//      this.datafiltered = this.globalData.dropdownsData.filter(d=> d.StrainId === event.value)
-//      this.producttype = this.dropdwonTransformService.transform(this.datafiltered, 'ProductName', 'ProductTypeId', '-- Select --',false);
-//     //  this.orderForm.get('items')['controls'][index].controls['producttype'].setValue(this.producttype)
-//     //  this.orderForm.get('items')['controls'][index].controls['producttype'] =    this.producttype 
-//    }
 getAllDetailsOnProducType(index, event?:any){
 for(let data of this.globalData.dropdownsData){
   if(event.value === data.ProductTypeId){

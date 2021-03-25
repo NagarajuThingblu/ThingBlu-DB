@@ -41,6 +41,8 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   completionForm: FormGroup;
   reviewForm: FormGroup;
   public orderDetails: any;
+  public growerOrderDetails:any;
+  public growerOrderDetailsComplete:any;
   public orderDetailsBS: any;
   public orderDetailsBS_filteredData: any = [];
   public allOrders: any;
@@ -49,7 +51,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   public showLotCompletiionModal = false;
   public showMixLotSelectionModel = false;
   public enabledReturnwtbox = false;
-
+  public taskCategory: any;
   public taskId: any;
   public taskType: any;
   public _cookieService: UserModel;
@@ -179,7 +181,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     this.userRoles = AppConstants.getUserRoles;
     this.titleService.setTitle(this.assignTaskResources.budpackagingtitle);
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
-
+    this.taskCategory = this._cookieService.TaskCategory,
     this.route.params.forEach((urlParams) => {
       this.taskId = urlParams['id'];
       this.taskType = urlParams['taskType'];
@@ -1010,7 +1012,14 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   }
 
   createItem(object, index, AutoPopulate): FormGroup {
-    const counts  = this.globalData.orderDetails['Table1'].filter(result => result.StrainId === object.StrainId).length;
+  var counts
+    if(this.taskCategory === 'GROWING'){
+      counts  = this.globalData.orderDetails.filter(result => result.StrainId === object.StrainId).length;
+    }
+    else{
+      counts  = this.globalData.orderDetails['Table1'].filter(result => result.StrainId === object.StrainId).length;
+    }
+   
     let tBPDetailsId;
     // Added by Devdan :: 15-Oct-2018 :: For bud packaging edit
     if (this.taskTypeId > 0 && object.OrderId === this.TaskModel.BudPckgOrderDetails[index].OrderId) {
@@ -1151,68 +1160,150 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     } else {
       editmode = false;
     }
-
-    this.orderService.getSelectedOrderDetails(OrderId, 'BUD', editmode, this.taskId).subscribe(
-      data => {
-        if (data !== 'No data found!') {
-          this.globalData.orderDetails = data;
-          this.orderDetails = data.Table;
-          this.allocateEmpData.orderDetails = data;
-
-          const newArr = [];
-          // To get unique record according brand and strain :: By Devdan 22-Nov-2018
-          if (this.taskTypeId > 0) {
-            this.orderDetailsBS = this.removeDuplicatesByName(this.TaskModel.BudPckgLotDetails);
-          } else {
-            this.orderDetailsBS = this.removeDuplicatesByName(this.orderDetails);
-          }
-          // End of getting unique record accroding brand and strain
-
-          // To map assign wt textbox in table for each row
-          // this.budOrderPackets.reset();
-          // this.BUDPACKAGING. budOrderPackets = this.fb.array([]);
-          (this.ParentFormGroup.controls['BUDPACKAGING'] as FormGroup).setControl('budOrderPackets', this.fb.array([]));
-
-          // this.budOrderPackets.push(this.fb.array(this.orderDetails.map(this.createItem(this.fb))));
-          this.orderDetails.map((object, index) => {
-            this.budOrderPackets.push(this.createItem(object, index, AutoPopulate));
-          });
-
-          // End To map assign wt textbox in table for each row
-
-          // Unique Brand Strain Combination
-          this.orderDetailsBS_filteredData = [];
-          this.selectedLotsArray = [];
-
-          const filterItems = this.budOrderPackets.value.filter(result => {
-            return result.assignPackageWt !== null;
-          });
-
-          this.orderDetailsBS.forEach((value, key) => {
-            let exists = false;
-            this.budOrderPackets.value.forEach((val2, key1) => {
-              if (value.StrainId === val2.strainid || this.taskTypeId > 0) { exists = true; }
+    if(this.taskCategory != 'GROWING'){
+      this.orderService.getSelectedOrderDetails(OrderId, 'BUD', editmode, this.taskId).subscribe(
+        data => {
+          if (data !== 'No data found!') {
+              this.globalData.orderDetails = data;
+              this.orderDetails = data.Table;
+              this.allocateEmpData.orderDetails = data;
+          
+  
+            const newArr = [];
+            // To get unique record according brand and strain :: By Devdan 22-Nov-2018
+            if (this.taskTypeId > 0) {
+              this.orderDetailsBS = this.removeDuplicatesByName(this.TaskModel.BudPckgLotDetails);
+            } else {
+              this.orderDetailsBS = this.removeDuplicatesByName(this.orderDetails);
+            }
+            // End of getting unique record accroding brand and strain
+  
+            // To map assign wt textbox in table for each row
+            // this.budOrderPackets.reset();
+            // this.BUDPACKAGING. budOrderPackets = this.fb.array([]);
+            (this.ParentFormGroup.controls['BUDPACKAGING'] as FormGroup).setControl('budOrderPackets', this.fb.array([]));
+  
+            // this.budOrderPackets.push(this.fb.array(this.orderDetails.map(this.createItem(this.fb))));
+            this.orderDetails.map((object, index) => {
+              this.budOrderPackets.push(this.createItem(object, index, AutoPopulate));
             });
-            const counts  = this.globalData.orderDetails['Table1'].filter(result => result.StrainId === value.StrainId).length;
-            value['LotCount'] = counts;
-            if (exists && value.StrainId !== '') { this.orderDetailsBS_filteredData.push(value); }
-          });
+  
+            // End To map assign wt textbox in table for each row
+  
+            // Unique Brand Strain Combination
+            this.orderDetailsBS_filteredData = [];
+            this.selectedLotsArray = [];
+  
+            const filterItems = this.budOrderPackets.value.filter(result => {
+              return result.assignPackageWt !== null;
+            });
+  
+            this.orderDetailsBS.forEach((value, key) => {
+              let exists = false;
+              this.budOrderPackets.value.forEach((val2, key1) => {
+                if (value.StrainId === val2.strainid || this.taskTypeId > 0) { exists = true; }
+              });
+              var counts;
+              if(this.taskCategory === 'GROWING'){
+                 counts  = this.globalData.orderDetails.filter(result => result.StrainId === value.StrainId).length;
+              }
+              else{
+                counts  = this.globalData.orderDetails['Table1'].filter(result => result.StrainId === value.StrainId).length;
+              }
+             
+              value['LotCount'] = counts;
+              if (exists && value.StrainId !== '') { this.orderDetailsBS_filteredData.push(value); }
+            });
+  
+            // End Unique Brand Strain Combination
+            //// localStorage.setItem('uniqueOrderStrains', this.orderDetailsBS_filteredData);
+          }
+          // Added by Devdan :: 15-Oct-2018 :: Getting the selected lots and assigning it to ngmodel
+          if (this.taskTypeId > 0 && AutoPopulate) {
+            this.TaskModel.BudPckgOrderDetails.forEach(order => {
+              this.openLotSelection(order.StrainId, order.GeneticsId, 0);
+            });
+            this.setSelectedLotDetails(this.orderDetails);
+            this.showLotSelectionModel = false;
+            this.readOnlyFlag = true;
+          }
+        },
+        error => { console.log(error); },
+        () => console.log('sucess'));
+    }
 
-          // End Unique Brand Strain Combination
-          //// localStorage.setItem('uniqueOrderStrains', this.orderDetailsBS_filteredData);
-        }
-        // Added by Devdan :: 15-Oct-2018 :: Getting the selected lots and assigning it to ngmodel
-        if (this.taskTypeId > 0 && AutoPopulate) {
-          this.TaskModel.BudPckgOrderDetails.forEach(order => {
-            this.openLotSelection(order.StrainId, order.GeneticsId, 0);
-          });
-          this.setSelectedLotDetails(this.orderDetails);
-          this.showLotSelectionModel = false;
-          this.readOnlyFlag = true;
-        }
-      },
-      error => { console.log(error); },
-      () => console.log('sucess'));
+    else{
+      this.orderService.GetProductTypeByOrder(OrderId).subscribe(
+        data => {
+          if (data !== 'No data found!') {
+              this.globalData.orderDetails = data;
+              this.orderDetails = data;
+              this.allocateEmpData.orderDetails = data;
+          
+  
+            const newArr = [];
+            // To get unique record according brand and strain :: By Devdan 22-Nov-2018
+            if (this.taskTypeId > 0) {
+              this.orderDetailsBS = this.removeDuplicatesByName(this.TaskModel.BudPckgLotDetails);
+            } else {
+              this.orderDetailsBS = this.removeDuplicatesByName(this.orderDetails);
+            }
+            // End of getting unique record accroding brand and strain
+  
+            // To map assign wt textbox in table for each row
+            // this.budOrderPackets.reset();
+            // this.BUDPACKAGING. budOrderPackets = this.fb.array([]);
+            (this.ParentFormGroup.controls['BUDPACKAGING'] as FormGroup).setControl('budOrderPackets', this.fb.array([]));
+  
+            // this.budOrderPackets.push(this.fb.array(this.orderDetails.map(this.createItem(this.fb))));
+            this.orderDetails.map((object, index) => {
+              this.budOrderPackets.push(this.createItem(object, index, AutoPopulate));
+            });
+  
+            // End To map assign wt textbox in table for each row
+  
+            // Unique Brand Strain Combination
+            this.orderDetailsBS_filteredData = [];
+            this.selectedLotsArray = [];
+  
+            const filterItems = this.budOrderPackets.value.filter(result => {
+              return result.assignPackageWt !== null;
+            });
+  
+            this.orderDetailsBS.forEach((value, key) => {
+              let exists = false;
+              this.budOrderPackets.value.forEach((val2, key1) => {
+                if (value.StrainId === val2.strainid || this.taskTypeId > 0) { exists = true; }
+              });
+              var counts;
+              if(this.taskCategory === 'GROWING'){
+                 counts  = this.globalData.orderDetails.filter(result => result.StrainId === value.StrainId).length;
+              }
+              else{
+                counts  = this.globalData.orderDetails['Table1'].filter(result => result.StrainId === value.StrainId).length;
+              }
+             
+              value['LotCount'] = counts;
+              if (exists && value.StrainId !== '') { this.orderDetailsBS_filteredData.push(value); }
+            });
+  
+            // End Unique Brand Strain Combination
+            //// localStorage.setItem('uniqueOrderStrains', this.orderDetailsBS_filteredData);
+          }
+          // Added by Devdan :: 15-Oct-2018 :: Getting the selected lots and assigning it to ngmodel
+          if (this.taskTypeId > 0 && AutoPopulate) {
+            this.TaskModel.BudPckgOrderDetails.forEach(order => {
+              this.openLotSelection(order.StrainId, order.GeneticsId, 0);
+            });
+            this.setSelectedLotDetails(this.orderDetails);
+            this.showLotSelectionModel = false;
+            this.readOnlyFlag = true;
+          }
+        },
+        error => { console.log(error); },
+        () => console.log('sucess'));
+    }
+    
   }
 
   removeDuplicatesByName(dataObject) {
@@ -1267,21 +1358,43 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     } else {
       editmode = false;
     }
-    this.orderService.getABudPackagingOrders(editmode).subscribe(
-      data => {
-        if (data !== 'No data found!') {
-          this.allOrders = data;
-          this.allOrderNos = this.dropdwonTransformService.transform(data, 'OrderRefId', 'OrderId', '-- Select --');
-        }
-
-        // Added by Devdan :: 08-Oct-2018 :: Load Stain Change Event
-        if (this.taskTypeId > 0) {
-          this.setFormInEditMode(0);
-          this.onOrderChange('onLoad');
-        }
-      },
-      error => { console.log(error); },
-      () => console.log('Get All Orders complete'));
+    if(this.taskCategory === 'GROWING'){
+      this.orderService.getAllOrdersByClient().subscribe(
+        data => {
+          if (data !== 'No data found!') {
+            this.allOrders = data;
+            // this.growerOrderDetailsComplete =  data;
+            // this.growerOrderDetails = data.Table;
+            this.allOrderNos = this.dropdwonTransformService.transform(data, 'OrderRefId', 'OrderId', '-- Select --');
+          }
+  
+          // Added by Devdan :: 08-Oct-2018 :: Load Stain Change Event
+          if (this.taskTypeId > 0) {
+            this.setFormInEditMode(0);
+            this.onOrderChange('onLoad');
+          }
+        },
+        error => { console.log(error); },
+        () => console.log('Get All Orders complete'));
+    }
+    else{
+      this.orderService.getABudPackagingOrders(editmode).subscribe(
+        data => {
+          if (data !== 'No data found!') {
+            this.allOrders = data;
+            this.allOrderNos = this.dropdwonTransformService.transform(data, 'OrderRefId', 'OrderId', '-- Select --');
+          }
+  
+          // Added by Devdan :: 08-Oct-2018 :: Load Stain Change Event
+          if (this.taskTypeId > 0) {
+            this.setFormInEditMode(0);
+            this.onOrderChange('onLoad');
+          }
+        },
+        error => { console.log(error); },
+        () => console.log('Get All Orders complete'));
+    }
+   
   }
 
   onOrderChange(value) {

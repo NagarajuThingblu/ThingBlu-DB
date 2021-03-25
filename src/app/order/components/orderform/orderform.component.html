@@ -237,7 +237,7 @@
                       placeholder="-- Select --"
                       [autoWidth]="false"
                       class="clsControl"
-                  
+                      (onChange)="getAllDetails( i,$event)"
                       [options]="strains"
                       name="strain">
                       
@@ -252,7 +252,7 @@
                     [autoWidth]="false"
                     (onChange)="getAllDetailsOnProducType( i,$event)"
                     class="clsControl"
-                    [options]="producttype"
+                    [options]="productTypeDropdown.get(i)"
                     name="producttype">
                   </p-dropdown>
                 </td>

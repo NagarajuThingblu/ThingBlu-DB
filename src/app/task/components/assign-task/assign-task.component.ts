@@ -1130,7 +1130,41 @@ console.log(assignTaskFormValues)
           }
         )
         }
-
+        else if(this.selectedTaskTypeName === 'BUDPACKAGING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+          let trimmingDataForApi = {
+            Packaging:{
+              "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
+              "OrderId": assignTaskFormValues.BUDPACKAGING.OrderId,
+              "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
+              "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
+              "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
+              "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority ,
+              "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
+              "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
+              "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
+            }
+          };
+          // this.loaderService.display(true);
+        this.taskCommonService.assignTrimmingTask(trimmingDataForApi).
+        subscribe(
+          data => {
+            this.msgs = [];
+            if (String(data[0]. RESULTKEY).toLocaleUpperCase() === 'SUCCESS') {
+              this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+              detail: this.assignTaskResources.taskassignedsuccessfully});
+              this.assignTask.task = null;
+              this.assignTask.taskcategory=null;
+              this.selectedTaskTypeName = '';
+              this.isServiceCallComplete = false;
+              this.assignTaskForm = this.fb.group({
+                'taskname': new FormControl(null, Validators.required),
+                'taskCategory':new FormControl(null,Validators.required),
+              });
+              this.loaderService.display(false);
+            }
+          }
+        )
+        }
           // http call starts
         
    if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING' && this.selectedTaskTypeName != 'BUCKING'&& this.selectedTaskTypeName != 'TRIM'){

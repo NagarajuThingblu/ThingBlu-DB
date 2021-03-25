@@ -252,12 +252,12 @@ export class ForgotPasswordComponent implements OnInit {
               detail: this.forgotpasswordResources.passwordchangesuccess });
               this.resetForm();
               setTimeout(() => {
-                if (this.msalService.isOnline()) {
-                  this.msalService.logout();
-                } else {
-                  this.msalService.login();
-                }
-               // this.router.navigate(['/login']);
+                // if (this.msalService.isOnline()) {
+                //   this.msalService.logout();
+                // } else {
+                //   this.msalService.login();
+                // }
+                this.router.navigate(['/login']);
               }, 5000);
               this.loaderService.display(false);
             } else if (data === 'LinkExpired') {

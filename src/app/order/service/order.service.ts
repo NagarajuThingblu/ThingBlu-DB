@@ -64,6 +64,7 @@ export class OrderService {
         return data;
       }
     );
+  
 
     
     // return new Observable<any>((subscriber: Subscriber<any>) => subscriber.next(
@@ -74,6 +75,7 @@ export class OrderService {
     // )
     // );
   }
+  
   getAllOrdersByClient(): Observable<any> {
     const url = 'api/Grower/GetOrderListForAssignTask';
     let params = new HttpParams();
@@ -204,6 +206,24 @@ export class OrderService {
           return data;
         }
       );
+    }
+
+    GetProductTypeByOrder(OrderId){
+      const url = 'api/Grower/GetProductTypeByOrder';
+      let params = new HttpParams();
+
+      params = params.append('OrderId', OrderId);
+      params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+      return this.http
+      .get(url, {params: params})
+      .map(
+        data => {
+          console.log('Get Order Info Service success');
+          return data;
+        }
+      );
+
     }
 
     getSelectedTubeLabelingOrderDetails(selectedOrderDetails: any) {

@@ -411,6 +411,15 @@
           >
           </app-bucking>
 
+          <app-bud-packaging
+                *ngIf="selectedTaskTypeName=='PACKAGING'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Growing'"
+                style="width:100%;"                 
+                [TaskModel]="assignTask"       
+                [PageFlag]="page"     
+                [ParentFormGroup] = "assignTaskForm"
+              >
+          </app-bud-packaging>
+
           <app-growertrimming
             *ngIf="selectedTaskTypeName=='TRIM'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Growing'
             
@@ -421,6 +430,8 @@
             [ParentFormGroup] = "assignTaskForm"          
           >
           </app-growertrimming>
+
+        
               <!--End Dynamic Component Contents Depends on whatever the task is selected -->
               <div class="ui-g-12 ui-md-12 marginTop-15" style="text-align:right;padding-right: 20px;">
                 <button pButton type="submit" label="Assign Task" ></button>
