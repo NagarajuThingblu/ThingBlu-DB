@@ -225,6 +225,24 @@ export class OrderService {
       );
 
     }
+    getBinDetails(StrainId, skewKeyName){
+      const url = 'api/Grower/GetBinsListForTaskAssign';
+      let params = new HttpParams();
+
+    
+      params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+      params = params.append('StrainId', StrainId);
+      params = params.append('SkewType', skewKeyName);
+
+      return this.http
+      .get(url, {params: params})
+      .map(
+        data => {
+          console.log('Get Order Info Service success');
+          return data;
+        }
+      );
+    }
 
     getSelectedTubeLabelingOrderDetails(selectedOrderDetails: any) {
       let url;

@@ -276,6 +276,7 @@ export class TaskResources {
                     lblPreroll: 'pre-roll',
                     lblAssignToAll: 'Assign To All',
                     lnkSelectLots: 'Select Lots',
+                    lnkSelectBins:'Select Bins',
                     lblNoLotPresent: 'No lot available.',
                     errSameEmpForTask: 'Same Employee for Split Task',
                     lblRequiredWeight: 'Required Weight',
@@ -286,6 +287,7 @@ export class TaskResources {
                     tpSplitTask: 'Split Task',
                     tpUndoTask: 'Undo Task',
                     viewChangeLots: 'View/Change Lots',
+                    viewChangeBins:'View/Change Bins',
                     preRollSize: 'Assigned weight should be greater or equal to pre-roll size.',
                     viewaddbin:'View/Add Bins'
 

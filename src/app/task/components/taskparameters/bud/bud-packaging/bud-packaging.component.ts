@@ -41,6 +41,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   completionForm: FormGroup;
   reviewForm: FormGroup;
   public orderDetails: any;
+  public binDetails: any;
   public growerOrderDetails:any;
   public growerOrderDetailsComplete:any;
   public orderDetailsBS: any;
@@ -139,7 +140,8 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
 
   public globalData = {
     employees: [],
-    orderDetails: []
+    orderDetails: [],
+    binDetails:[]
   };
 
   public brandStrainLots: any;
@@ -171,7 +173,8 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
 
   allocateEmpData = {
     showDialog: false,
-    orderDetails: {}
+    orderDetails: {},
+    binDetails: {}
   };
 
   ngOnInit() {
@@ -238,8 +241,11 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
         { label: 'Important', value: 'Important' },
         { label: 'Critical', value: 'Critical' }
       ];
-
-      this.ParentFormGroup.addControl('BUDPACKAGING', this.BUDPACKAGING);
+     
+      
+        this.ParentFormGroup.addControl('BUDPACKAGING', this.BUDPACKAGING);
+      
+      
     } else {
 
       this.lotListForm = this.fb.group({
@@ -457,6 +463,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
         LotId: object.LotId,
         AssignedWt: object.AssignedWt,
         GrowerLotNo: object.GrowerLotNo,
+        LabelName:object.LabelName,
         processedLotWt: processedLotWt,
         lotReturnedWt: lotReturnedWt
       });
@@ -883,13 +890,13 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
       if (flag === 'Complete') {
         checkbox = [null, Validators.compose([Validators.min(0)])];
         return fb.group({
-          LotId: object.LotId, lotCompletedWt: checkbox, GrowerLotNo: object.GrowerLotNo,
+          LotId: object.LotId, lotCompletedWt: checkbox, GrowerLotNo: object.GrowerLotNo, LabelName: object.LabelName,
           AssignedWt: object.AssignedWt, LotNoteCount: object.LotNoteCount
         });
       } else {
         checkbox = [object.ProcessedQty ? object.ProcessedQty : 0, Validators.compose([Validators.min(0)])];
         return fb.group({
-          LotId: object.LotId, lotReviewedWt: checkbox, GrowerLotNo: object.GrowerLotNo,
+          LotId: object.LotId, lotReviewedWt: checkbox, GrowerLotNo: object.GrowerLotNo,LabelName: object.LabelName,
           AssignedWt: object.AssignedWt, ProcessedQty: object.ProcessedQty, LotNoteCount: object.LotNoteCount
         });
       }
@@ -1203,13 +1210,13 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
               this.budOrderPackets.value.forEach((val2, key1) => {
                 if (value.StrainId === val2.strainid || this.taskTypeId > 0) { exists = true; }
               });
-              var counts;
-              if(this.taskCategory === 'GROWING'){
-                 counts  = this.globalData.orderDetails.filter(result => result.StrainId === value.StrainId).length;
-              }
-              else{
-                counts  = this.globalData.orderDetails['Table1'].filter(result => result.StrainId === value.StrainId).length;
-              }
+              // const counts;
+              // if(this.taskCategory === 'GROWING'){
+              //    counts  = this.globalData.orderDetails.filter(result => result.StrainId === value.StrainId).length;
+              // }
+              // else{
+               const counts  = this.globalData.orderDetails['Table1'].filter(result => result.StrainId === value.StrainId).length;
+              // }
              
               value['LotCount'] = counts;
               if (exists && value.StrainId !== '') { this.orderDetailsBS_filteredData.push(value); }
@@ -1233,6 +1240,8 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     }
 
     else{
+    //  this.getBinDetails(OrderId);
+ 
       this.orderService.GetProductTypeByOrder(OrderId).subscribe(
         data => {
           if (data !== 'No data found!') {
@@ -1275,13 +1284,13 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
               this.budOrderPackets.value.forEach((val2, key1) => {
                 if (value.StrainId === val2.strainid || this.taskTypeId > 0) { exists = true; }
               });
-              var counts;
-              if(this.taskCategory === 'GROWING'){
-                 counts  = this.globalData.orderDetails.filter(result => result.StrainId === value.StrainId).length;
-              }
-              else{
-                counts  = this.globalData.orderDetails['Table1'].filter(result => result.StrainId === value.StrainId).length;
-              }
+              // var counts;
+              // if(this.taskCategory === 'GROWING'){
+                const counts  = this.globalData.binDetails.filter(result => result.StrainId === value.StrainId).length;
+              // }
+              // else{
+                // counts  = this.globalData.orderDetails['Table1'].filter(result => result.StrainId === value.StrainId).length;
+              // }
              
               value['LotCount'] = counts;
               if (exists && value.StrainId !== '') { this.orderDetailsBS_filteredData.push(value); }
@@ -1303,9 +1312,90 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
         error => { console.log(error); },
         () => console.log('sucess'));
     }
+
+    // this.orderService.getBinDetails(this.orderDetails.StrainId, this.orderDetails.SkewKeyName ).subscribe(
+    //   data1 =>{
+    //     if (data1 !== 'No data found!') {
+    //       this.globalData.binDetails = data1;
+    //       this.binDetails = data1;
+    //       this.allocateEmpData.binDetails = data1;
+    //     }
+    //   }
+    // )
     
   }
 
+  // getBinDetails(OrderId){
+  //   this.orderService.GetProductTypeByOrder(OrderId).subscribe(
+  //     data => {
+  //       if (data !== 'No data found!') {
+  //           this.globalData.binDetails = data;
+  //           this.binDetails = data.Table;
+  //           this.allocateEmpData.binDetails = data;
+        
+
+  //         const newArr = [];
+  //         // To get unique record according brand and strain :: By Devdan 22-Nov-2018
+  //         if (this.taskTypeId > 0) {
+  //           this.orderDetailsBS = this.removeDuplicatesByName(this.TaskModel.BudPckgLotDetails);
+  //         } else {
+  //           this.orderDetailsBS = this.removeDuplicatesByName(this.orderDetails);
+  //         }
+  //         // End of getting unique record accroding brand and strain
+
+  //         // To map assign wt textbox in table for each row
+  //         // this.budOrderPackets.reset();
+  //         // this.BUDPACKAGING. budOrderPackets = this.fb.array([]);
+  //         (this.ParentFormGroup.controls['BUDPACKAGING'] as FormGroup).setControl('budOrderPackets', this.fb.array([]));
+
+  //         // this.budOrderPackets.push(this.fb.array(this.orderDetails.map(this.createItem(this.fb))));
+  //         this.orderDetails.map((object, index) => {
+  //           this.budOrderPackets.push(this.createItem(object, index, AutoPopulate));
+  //         });
+
+  //         // End To map assign wt textbox in table for each row
+
+  //         // Unique Brand Strain Combination
+  //         this.orderDetailsBS_filteredData = [];
+  //         this.selectedLotsArray = [];
+
+  //         const filterItems = this.budOrderPackets.value.filter(result => {
+  //           return result.assignPackageWt !== null;
+  //         });
+
+  //         this.orderDetailsBS.forEach((value, key) => {
+  //           let exists = false;
+  //           this.budOrderPackets.value.forEach((val2, key1) => {
+  //             if (value.StrainId === val2.strainid || this.taskTypeId > 0) { exists = true; }
+  //           });
+  //           var counts;
+  //           if(this.taskCategory === 'GROWING'){
+  //              counts  = this.globalData.orderDetails.filter(result => result.StrainId === value.StrainId).length;
+  //           }
+  //           else{
+  //             counts  = this.globalData.orderDetails['Table1'].filter(result => result.StrainId === value.StrainId).length;
+  //           }
+           
+  //           value['LotCount'] = counts;
+  //           if (exists && value.StrainId !== '') { this.orderDetailsBS_filteredData.push(value); }
+  //         });
+
+  //         // End Unique Brand Strain Combination
+  //         //// localStorage.setItem('uniqueOrderStrains', this.orderDetailsBS_filteredData);
+  //       }
+  //       // Added by Devdan :: 15-Oct-2018 :: Getting the selected lots and assigning it to ngmodel
+  //       if (this.taskTypeId > 0 && AutoPopulate) {
+  //         this.TaskModel.BudPckgOrderDetails.forEach(order => {
+  //           this.openLotSelection(order.StrainId, order.GeneticsId, 0);
+  //         });
+  //         this.setSelectedLotDetails(this.orderDetails);
+  //         this.showLotSelectionModel = false;
+  //         this.readOnlyFlag = true;
+  //       }
+  //     },
+  //     error => { console.log(error); },
+  //     () => console.log('sucess'));
+  // }
   removeDuplicatesByName(dataObject) {
     // To get unique record according brand and strain
     const newArr = [];

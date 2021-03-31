@@ -78,6 +78,15 @@ export class TaskCommonService {
     // .do(data =>console.log('All : ' + JSON.stringify(data)))
    .map(data =>  data );
   }
+
+  assignPackagingTask(packagingDataForApi: any) {
+    const url = 'api/Grower/PackagingTaskAssign';
+    console.log('assign form ');
+    console.log(packagingDataForApi);
+    return this.http.post(url, packagingDataForApi, this.headers)
+    // .do(data =>console.log('All : ' + JSON.stringify(data)))
+   .map(data =>  data );
+  }
   /// Crated By : Devdan :: 10-Oct-2018 :: Added method
   updateTask(assignTaskDetailsForWebApi: any) {
     const url = 'api/Task/TaskUpdate';

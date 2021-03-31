@@ -333,7 +333,7 @@ console.log(assignTaskFormValues)
    
 
     if (this.assignTaskForm.valid) {
-     
+    
       assignTaskDetailsForWebApi = {
         TaskDetails: {
           ClientId: this._cookieService.ClientId,
@@ -377,7 +377,7 @@ console.log(assignTaskFormValues)
           return;
         }
 
-      } else if (this.selectedTaskTypeName === 'BUDPACKAGING') { // BUDPACKAGING TASK
+      } else if (this.selectedTaskTypeName === 'BUDPACKAGING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) != 'Growing') { // BUDPACKAGING TASK
         // Changed added by Devdan :: Calling common methods to get n set local storage :: 27-Sep-2018
         // let lotDetails = JSON.parse(localStorage.getItem('selectedLotsArray'));
         let lotDetails = null;
@@ -1131,10 +1131,10 @@ console.log(assignTaskFormValues)
         )
         }
         else if(this.selectedTaskTypeName === 'BUDPACKAGING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
-          let trimmingDataForApi = {
+          let packagingDataForApi = {
             Packaging:{
               "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
-              "OrderId": assignTaskFormValues.BUDPACKAGING.OrderId,
+              "OrderId": assignTaskFormValues.BUDPACKAGING.orderno,
               "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
               "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
               "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
@@ -1142,10 +1142,31 @@ console.log(assignTaskFormValues)
               "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
               "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
               "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
-            }
+            },
+            BinTypeDetails:[],
+            ProductTypeDetails:[],
           };
+          assignTaskFormValues[this.selectedTaskTypeName].allocateEmpArr.forEach((element, index) =>
+          {
+            packagingDataForApi.BinTypeDetails.push({
+              BinId:89,
+              AssignedWt:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].totalQty,
+              ProductTypeId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].productTypeId,
+              UniqueId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].uniqueId,
+            })
+          });
+          assignTaskFormValues[this.selectedTaskTypeName].allocateEmpArr.forEach((element, index) =>
+          {
+            packagingDataForApi.ProductTypeDetails.push({
+              BinId:89,
+              EmployeeId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].employee,
+              ProductTypeId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].productTypeId,
+              UniqueId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].uniqueId,
+            })
+          });
+          
           // this.loaderService.display(true);
-        this.taskCommonService.assignTrimmingTask(trimmingDataForApi).
+        this.taskCommonService.assignPackagingTask(packagingDataForApi).
         subscribe(
           data => {
             this.msgs = [];

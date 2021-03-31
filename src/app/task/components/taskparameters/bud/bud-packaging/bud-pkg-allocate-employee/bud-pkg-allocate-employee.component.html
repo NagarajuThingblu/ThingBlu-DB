@@ -42,9 +42,12 @@
                 <tr>                                   
                   <th style="width: 20%;"> {{globalResource.strain}} </th>
                   <th style="width: 12%;"> {{globalResource.pkgsize}} </th>
-                  <th style="width: 8%;"> {{globalResource.total}} </th>
-                  <th style="width: 15%;"> {{globalResource.assignqty}} <span class="star">*</span> </th>
-                  <th style="width: 15%;"> {{globalResource.lot + '(s)'}} </th>
+                  <th *ngIf="taskCategory != 'GROWING'" style="width: 8%;"> {{globalResource.total}} </th>
+                  <th *ngIf="taskCategory === 'GROWING'" style="width: 8%;"> Total Weight</th>
+                  <th *ngIf="taskCategory != 'GROWING'" style="width: 15%;"> {{globalResource.assignqty}} <span class="star">*</span> </th>
+                  <th *ngIf="taskCategory === 'GROWING'" style="width: 15%;"> Assigned Weight(lb) <span class="star">*</span> </th>
+                  <th *ngIf="taskCategory != 'GROWING'" style="width: 15%;"> {{globalResource.lot + '(s)'}} </th>
+                  <th *ngIf="taskCategory === 'GROWING'" style="width: 15%;"> Bin(s) </th>
                   <th style="width: 20%;"> {{globalResource.employee}} <span class="star">*</span> </th>
                   <th style="width: 5%;"> </th>
                   <th style="width: 5%;"> </th>
@@ -65,14 +68,19 @@
                       {{rowData.value.pkgSize}} {{globalResource.listgramunits}}
                     </a>                    
                   </td>
-                  <td>
-                      <span class="ui-column-title">{{globalResource.total}}</span>
+                  <td *ngIf="taskCategory != 'GROWING'">
+                      <span  class="ui-column-title">{{globalResource.total}}</span>
                       {{rowData.value.requiredQty}}
+                    </td>
+                    <td *ngIf="taskCategory === 'GROWING'">
+                      <span  class="ui-column-title">Total Weight</span>
+                      {{rowData.value.totalQty}}
                     </td>
                     <td>
                         <span class="ui-column-title">{{globalResource.assignqty}}</span>
                         
                         <input pInputText 
+                        *ngIf="taskCategory != 'GROWING'"
                           autocomplete="off"
                           (change)="assignQtyChange(rowData, i)"
                           maxlength="6"
@@ -80,6 +88,17 @@
                           type="number"
                           pKeyFilter="pint"
                           formControlName="assignQty"
+                          class="clsControl"
+                         />
+                         <input pInputText
+                         *ngIf="taskCategory === 'GROWING'" 
+                          autocomplete="off"
+                          (change)="assignQtyChange(rowData, i)"
+                          maxlength="6"
+                          name="TotalWt"
+                          type="number"
+                          pKeyFilter="pint"
+                          formControlName="TotalWt"
                           class="clsControl"
                          />
                          <div
@@ -101,9 +120,9 @@
                           </div>
                     </td>
                   <td>
-                      <span class="ui-column-title">{{globalResource.lot + '(s)'}}</span>
-
-                      <div>
+                      <span *ngIf="taskCategory != 'GROWING'" class="ui-column-title">{{globalResource.lot + '(s)'}}</span>
+                      <span *ngIf="taskCategory === 'GROWING'" class="ui-column-title">Bin(s)</span>
+                      <div   *ngIf="taskCategory != 'GROWING'">
                         <span  *ngIf="rowData.value.lotCount > 0&&rowData.value.assignQty > 0" >
                           <a 
                             class="btn-link anchor"
@@ -114,7 +133,7 @@
                             <span *ngIf="selectedLotsArray.get(rowData.value.uniqueId)?.length <= 0">
                               {{assignTaskResources.lnkSelectLots}}
                             </span>
-                            <span *ngIf="selectedLotsArray.get(rowData.value.uniqueId)?.length > 0">
+                            <span style="color:forestgreen" *ngIf="selectedLotsArray.get(rowData.value.uniqueId)?.length > 0">
                               {{assignTaskResources.viewChangeLots}}
                             </span>
                           </a>
@@ -125,6 +144,28 @@
                         <span class="star"  *ngIf="!rowData.value.lotCount" >
                           {{assignTaskResources.lblNoLotPresent}}
                         </span>
+                      </div>
+                      <div   *ngIf="taskCategory === 'GROWING'">
+                        <span >
+                          <a 
+                            class="btn-link anchor"
+                            [routerLink]="" 
+                            (click)="getSelectedBin(rowData,i)"
+                          > 
+                          <span *ngIf="selectedLotsArray.get(rowData.value.uniqueId)?.length <= 0">
+                            {{assignTaskResources.lnkSelectBins}}
+                          </span>
+                          <span *ngIf="selectedLotsArray.get(rowData.value.uniqueId)?.length > 0">
+                            {{assignTaskResources.viewChangeBins}}
+                          </span>
+                          </a>
+                        </span>
+                        <span  *ngIf="rowData.value.TotalWt == 0" >
+                           {{assignTaskResources.lnkSelectBins}}
+                        </span>
+                        <!-- <span class="star"  *ngIf="!rowData.value.LotCount" >
+                         No Bin available
+                        </span> -->
                       </div>
 
                       <div
@@ -226,7 +267,7 @@
   </div>
 
 
-  <p-dialog header="Select Lots"
+  <p-dialog [header]="taskCategory === 'GROWING'?'Select Bins':'Select Lots'"
   [(visible)]="showLotSelectionModel"
   modal="modal"
   [resizable]="true"
@@ -263,7 +304,8 @@
           <ng-template pTemplate="header">
               <tr>
                   <th style="width:150px">{{globalResource.strain}}</th>
-                  <th style="width:170px">{{globalResource.lotno}}</th>
+                  <th style="width:170px" *ngIf="taskCategory != 'GROWING'">{{globalResource.lotno}}</th>
+                  <th style="width:170px" *ngIf="taskCategory === 'GROWING'">Bin No</th>
                   <th style="width:33.33333333%">{{assignTaskResources.lblAvailWeight}}</th>
                   <th style="width:33.33333333%">{{assignTaskResources.lblSelectedWeight}}</th>
               </tr>
@@ -278,15 +320,24 @@
                         (ngModelChange)="changeValidator($event, i)"
                         binary="true"
                       ></p-checkbox> -->
-                      <label>{{ brandStrainLots[i].GrowerLotNo  }}</label>
+                      <label *ngIf="taskCategory != 'GROWING'">{{ brandStrainLots[i].GrowerLotNo  }}</label>
+                      <label *ngIf="taskCategory === 'GROWING'">{{ brandStrainLots[i].LabelName  }}</label>
 
                       <app-lot-comment
+                      *ngIf="taskCategory != 'GROWING'"
                           [LotId]="question.value.LotNo"
                           [LotCommentsCount]="brandStrainLots[i].LotNoteCount"
                           (CommentIconClicked)="commentIconClicked($event)"
                       ></app-lot-comment>
+                      <!-- <app-lot-comment
+                      *ngIf="taskCategory === 'GROWING'"
+                          [LotId]="question.value.LotNo"
+                          [LotCommentsCount]="brandStrainLots[i].LotNoteCount"
+                          (CommentIconClicked)="commentIconClicked($event)"
+                      ></app-lot-comment> -->
 
                       <app-lot-note-icon
+                      *ngIf="taskCategory != 'GROWING'"
                         [LotId]="question.value.LotNo"                                
                         (NoteIconClicked)="showLotNote($event)"
                       ></app-lot-note-icon>
@@ -297,6 +348,9 @@
                     <ng-container *ngIf="taskId && taskId > 0">
                       {{ question.value.AvailWt  }} {{globalResource.listgramunit}}
                     </ng-container>
+                    <!-- <ng-container *ngIf="taskId && taskId > 0 &&taskCategory === 'GROWING'">
+                      {{brandStrainLots[i].AvilableWeight  }} {{globalResource.listgramunit}}
+                    </ng-container> -->
                     
                     <ng-container *ngIf="!taskId">
                       <!-- {{ lotSyncWtArr.get(parseInt(brandStrainLots[i].LotId)) || 0 }} {{globalResource.listgramunit}} -->
@@ -353,6 +407,9 @@
 </p-dialog>
 <!-- </p-dialog> -->
 
+
+
+
 <!-- p dialog product -->
 
 <p-dialog header="Product Information"
@@ -362,8 +419,8 @@
   [responsive]="true" [width]="400" [minWidth]="300" [blockScroll]="true">
   <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
 
-    <div class="ui-g">
-            <div class="ui-g-12 ui-md-6">
+    <div class="ui-g" >
+            <div class="ui-g-12 ui-md-6" *ngIf="taskCategory != 'GROWING'">
                  <label>
                   <strong>{{globalResource.brand}}</strong>
                  </label>
@@ -372,7 +429,7 @@
                    {{productTypeData?.brandName}}
                 </label>
             </div>
-            <div class="ui-g-12 ui-md-6">                
+            <div class="ui-g-12 ui-md-6" *ngIf="taskCategory != 'GROWING'">                
                   <label>
                     <strong>{{globalResource.subbrand}}</strong>
                   </label>
