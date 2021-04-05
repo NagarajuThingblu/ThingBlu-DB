@@ -209,7 +209,7 @@ export class OrderService {
     }
 
     GetProductTypeByOrder(OrderId){
-      const url = 'api/Grower/GetProductTypeByOrder';
+      const url = 'api/Grower/GetOrderDetails';
       let params = new HttpParams();
 
       params = params.append('OrderId', OrderId);

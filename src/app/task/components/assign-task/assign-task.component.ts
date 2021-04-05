@@ -138,6 +138,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
     this.globalResource = GlobalResources.getResources().en;
     this.userRoles = AppConstants.getUserRoles;
     this.titleService.setTitle(this.assignTaskResources.title);
+    
     if (this.prodDBRouteParams) {
       // console.log(this.prodDBRouteParams);
       this.assignTask.task = this.prodDBRouteParams.TaskTypeId;
@@ -1131,6 +1132,8 @@ console.log(assignTaskFormValues)
         )
         }
         else if(this.selectedTaskTypeName === 'BUDPACKAGING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+         let BinTypeDetails
+         BinTypeDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
           let packagingDataForApi = {
             Packaging:{
               "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
@@ -1143,27 +1146,60 @@ console.log(assignTaskFormValues)
               "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
               "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
             },
-            BinTypeDetails:[],
-            ProductTypeDetails:[],
           };
-          assignTaskFormValues[this.selectedTaskTypeName].allocateEmpArr.forEach((element, index) =>
-          {
-            packagingDataForApi.BinTypeDetails.push({
-              BinId:89,
-              AssignedWt:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].totalQty,
-              ProductTypeId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].productTypeId,
-              UniqueId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].uniqueId,
-            })
-          });
-          assignTaskFormValues[this.selectedTaskTypeName].allocateEmpArr.forEach((element, index) =>
-          {
-            packagingDataForApi.ProductTypeDetails.push({
-              BinId:89,
-              EmployeeId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].employee,
-              ProductTypeId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].productTypeId,
-              UniqueId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].uniqueId,
-            })
-          });
+          packagingDataForApi['BinTypeDetails'] = [];
+          packagingDataForApi['ProductTypeDetails'] = [];
+          if (BinTypeDetails !== null) {
+            BinTypeDetails
+            .forEach((item, index) => {
+              if (item !== null && item.length) {
+                // tslint:disable-next-line:no-shadowed-variable
+                item.forEach((element, lotIndex) => {
+                  packagingDataForApi['BinTypeDetails'].push(
+                    {
+                      BinId: element.BinNo,
+                      AssignedWt: element.SelectedWt,
+                      ProductTypeId: element.ProductTypeId,
+                      UniqueId: element.UniqueId
+                    }
+                  );
+                });
+              }
+            });
+        }
+
+        assignTaskFormValues.BUDPACKAGING.allocateEmpArr
+        .forEach((item, rowIndex) => {
+          if (item !== null && item.TotalWt > 0) {
+            packagingDataForApi['ProductTypeDetails'].push(
+              // { RawSupId: item.brandid, StrainId: item.strainid, PkgTypeId: item.packagetypeid,
+              //      UnitValue: item.packageunit, Qty: item.assignPackageWt}
+              {
+                ProductTypeId: item.productTypeId,
+                EmployeeId: item.employee,
+                UniqueId: item.uniqueId,
+              }
+            );
+          }
+        })
+          // assignTaskFormValues[this.selectedTaskTypeName].allocateEmpArr.forEach((element, index) =>
+          // {
+          //   packagingDataForApi.BinTypeDetails.push({
+          //     BinId:binDetails[index][index].BinNo,
+          //     AssignedWt:binDetails[index][index].BinNo,
+          //     ProductTypeId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].productTypeId,
+          //     UniqueId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].uniqueId,
+          //   })
+          // });
+          // assignTaskFormValues[this.selectedTaskTypeName].allocateEmpArr.forEach((element, index) =>
+          // {
+          //   packagingDataForApi.ProductTypeDetails.push({
+          //     BinId:binDetails[index][index].BinNo,
+          //     EmployeeId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].employee,
+          //     ProductTypeId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].productTypeId,
+          //     UniqueId:assignTaskFormValues.BUDPACKAGING.allocateEmpArr[index].uniqueId,
+          //   })
+          // });
           
           // this.loaderService.display(true);
         this.taskCommonService.assignPackagingTask(packagingDataForApi).
@@ -1188,7 +1224,7 @@ console.log(assignTaskFormValues)
         }
           // http call starts
         
-   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING' && this.selectedTaskTypeName != 'BUCKING'&& this.selectedTaskTypeName != 'TRIM'){
+   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING' && this.selectedTaskTypeName != 'BUCKING'&& this.selectedTaskTypeName != 'TRIM'&& (this.selectedTaskTypeName != 'BUDPACKAGING' && this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) != 'Growing')){
 
    
           this.loaderService.display(true);

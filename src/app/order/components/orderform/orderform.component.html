@@ -306,13 +306,15 @@
                 <input pInputText
                   name="orderqt"
                   id="orderqt"
-                  type="text"
+                  type="number"
                   autocomplete="off"
                   class="clsControl"       
                   formControlName="orderqt"
                   placeholder="Enter Quantity "
-                  min="0.1">
-
+                  min="1"
+                  onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57"
+                 >
+                 <!-- step="1" -->
               </td>
               <!-- <td>
                 <input pInputText

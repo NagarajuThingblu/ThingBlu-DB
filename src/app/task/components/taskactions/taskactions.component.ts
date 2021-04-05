@@ -28,6 +28,7 @@ export class TaskactionsComponent implements OnInit {
   public taskActionDetails1: any;
   public taskStatusHistory: any;
   public binDetails: any;
+  public taskCategory: any;
 
   taskActionDetails = {
     'LotId': '',
@@ -164,7 +165,7 @@ export class TaskactionsComponent implements OnInit {
 
 
           this.taskStatusHistory =  data.Table1 ? data.Table1 : [];
-        } else if (this.taskActionDetails.TaskTypeKey === 'GRINDING') {
+        }else if (this.taskActionDetails.TaskTypeKey === 'GRINDING') {
           this.taskActionDetails1 =  data.Table2[0];
           this.taskActionDetails = Object.assign(this.taskActionDetails, this.taskActionDetails1);
 
@@ -256,6 +257,7 @@ export class TaskactionsComponent implements OnInit {
     this.TaskStatus = AppConstants.getStatusList;
     this.userRoles = AppConstants.getUserRoles;
     this.titleService.setTitle(this.taskActionResource.title);
+    this.taskCategory = this._cookieService.TaskCategory,
 
     this.getTaskDetaisByTask();
 

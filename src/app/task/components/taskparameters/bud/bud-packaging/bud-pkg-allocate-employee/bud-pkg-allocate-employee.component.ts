@@ -75,6 +75,7 @@ export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
     GeneticsName: null,
     // Added by Devdan :: 15-Oct-2018
     LotListId: null,
+    BinNo:null,
     ProductTypeId: null,
     UniqueId: null
   };
@@ -103,7 +104,8 @@ public reqWt:any;
     // Added by Devdan :: 15-Oct-2018
     LotListId: null,
     ProductTypeId: null,
-    UniqueId: null
+    UniqueId: null,
+    BinNo:null
   };
 
   constructor(
@@ -127,25 +129,22 @@ public reqWt:any;
     this.taskCategory = this._cookieService.TaskCategory,
     this.employees = this.dropdwonTransformService.transform(this.AllocateEmpData.employees, 'EmpName', 'EmpId', '-- Select --');
 
-    if(this.taskCategory === 'GROWING'){
-      this.AllocateEmpData.orderDetails.map((object, index) => {
-        this.allocateEmpArr.push(this.createItem(object, null));
-      });
-    }
-    else{
+   
+      // this.AllocateEmpData.orderDetails.map((object, index) => {
+      //   this.allocateEmpArr.push(this.createItem(object, null));
+      // });
+    
+   
       this.AllocateEmpData.orderDetails.Table.map((object, index) => {
         this.allocateEmpArr.push(this.createItem(object, null));
       });
-    }
+   
     
 
     this.questionForm = this.fb.group({
       questions: new FormArray([])
     });
-    this.BinsForm = this.fb.group({
-      binsFormArray: new FormArray([])
-    })
-    this.addItem();
+   
    
    
     // }
@@ -192,14 +191,11 @@ public reqWt:any;
   }
 
   createItem(object, parentUniqueId): FormGroup {
-    var lotCount
+    // var lotCount
     // var binCount
-    if(this.taskCategory === 'GROWING'){
-      lotCount = this.AllocateEmpData.orderDetails.filter(result => result.GeneticsId === object.GeneticsId).length;
-    }
-    else{
-      lotCount = this.AllocateEmpData.orderDetails['Table1'].filter(result => result.GeneticsId === object.GeneticsId).length;
-    }
+   
+    const  lotCount = this.AllocateEmpData.orderDetails['Table1'].filter(result => result.GeneticsId === object.GeneticsId).length;
+   
      
     return this.fb.group({
       uniqueId: this.appCommonService.randomNumber(),
@@ -212,15 +208,15 @@ public reqWt:any;
       geneticsId: object.GeneticsId || null,
       geneticsName: object.GeneticsName || null,
       strainName: object.StrainName || null,
-      LabelName: object.LabelName || null, 
+      // LabelName: object.LabelName || null, 
       pkgTypId: object.PkgTypId || null,
       pkgTypeName: object.PkgTypeName || null,
       pkgSize: object.UnitValue || null,
-      requiredQty: object.RequiredQty || null,
+      requiredQty: object.RequiredQty ||null,
       totalQty:object.TotalWt || null,
       itemQty: object.ItemQty || null,
       SkewKeyName: object.SkewKeyName || null,
-      binid:object.InputBinId || 0,
+      // binid:object.InputBinId || 0,
       TotalWt: new FormControl(parentUniqueId ? object.splitQty : object.TotalWt || null),
       previousWt: new FormControl(parentUniqueId ? object.splitQty : object.TotalWt || null),
       assignQty: new FormControl(parentUniqueId ? object.splitQty : object.RequiredQty || null),
@@ -241,7 +237,7 @@ public reqWt:any;
 
   openLotSelection(rowData, rowIndex) {
     this.brandStrainLots = [];
-    if(this.taskCategory != 'GROWING'){
+    
       this.brandStrainLots = this.AllocateEmpData.orderDetails['Table1'].filter(result => {
         if (rowData.value.strainId) {
           return result.StrainId === rowData.value.strainId;
@@ -249,7 +245,7 @@ public reqWt:any;
           return result.GeneticsId === rowData.value.geneticsId;
       }
       });
-    }
+    
     // if(this.taskCategory === 'GROWING'){
     //   // this.brandStrainLots = this.selectedBinDetails;
     // }
@@ -282,9 +278,15 @@ public reqWt:any;
       let totalPkgWt = 0;
         // if ((result.strainid === rowData.value.strainId) && Number(result.assignPackageWt) > 0) {
         if ((result.productTypeId === rowData.value.productTypeId) && Number(result.assignQty) > 0 && index === rowIndex) {
-        
-            totalPkgWt = Number(result.assignQty) * Number(result.pkgSize) * Number(result.itemQty);
-            this.selLotBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
+        if(this.taskCategory === 'GROWING'){
+          totalPkgWt = Number(result.TotalWt)
+          this.selLotBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
+        }
+        else{
+          totalPkgWt = Number(result.assignQty) * Number(result.pkgSize) * Number(result.itemQty);
+          this.selLotBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
+        }
+           
         
      
         }
@@ -339,12 +341,9 @@ public reqWt:any;
           checkbox = question.selected;
           // answerbox = question.selected ? [null, Validators.compose([Validators.required, Validators.min(0.1), Validators.max(question.AvailableWt)])]
           //   : null;
-          if(this.taskCategory === 'GROWING'){
+          
             answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
-          }
-          else{
-            answerbox = [null, Validators.compose([Validators.max(question.AvailableWt)])];
-          }
+          
         
         }
       } else {
@@ -411,24 +410,36 @@ public reqWt:any;
 
           let totalSelectedLotWt = 0;
           let totalSelectedLotWt1 = 0;
-          if(this.taskCategory === 'GROWING'){
-            this.selectedLotsArray.forEach(result1 => {
-              result1.forEach(result3 => {
-                if (result3.InputBinId ===  result.InputBinId ) {
-                  totalSelectedLotWt += Number(result3.SelectedWt);
-                }
+          // if(this.taskCategory === 'GROWING'){
+          //   this.selectedLotsArray.forEach(result1 => {
+          //     result1.forEach(result3 => {
+          //       if (result3.InputBinId ===  result.InputBinId ) {
+          //         totalSelectedLotWt += Number(result3.SelectedWt);
+          //       }
+          //     });
+          //   });
+          // }
+          // else{
+            if(this.taskCategory === 'GROWING'){
+              this.selectedLotsArray.forEach(result1 => {
+                result1.forEach(result3 => {
+                  if (result3.BinNo ===  result.BinNo ) {
+                    totalSelectedLotWt += Number(result3.SelectedWt);
+                  }
+                });
               });
-            });
-          }
-          else{
-            this.selectedLotsArray.forEach(result1 => {
-              result1.forEach(result3 => {
-                if (result3.LotNo ===  result.LotNo ) {
-                  totalSelectedLotWt += Number(result3.SelectedWt);
-                }
+            }
+            else{
+              this.selectedLotsArray.forEach(result1 => {
+                result1.forEach(result3 => {
+                  if (result3.LotNo ===  result.LotNo ) {
+                    totalSelectedLotWt += Number(result3.SelectedWt);
+                  }
+                });
               });
-            });
-          }
+            }
+           
+          // }
          
 
           totalSelectedLotWt1 = totalSelectedLotWt;
@@ -457,6 +468,7 @@ public reqWt:any;
             {
               LotListId: lotListId,
               LotNo: result.LotNo,
+              BinNo: result.BinNo,
               GrowerLotNo: result.GrowerLotNo,
               LabelName: result.LabelName,
               AvailWt: result.AvailWt,
@@ -554,12 +566,18 @@ public reqWt:any;
 
     for (const control in allocateEmpArrControls) {
       if (allocateEmpArrControls[control].value.productTypeId === formRowGroup.value.productTypeId) {
-        if(this.taskCategory === 'GROWING'){
-          totalAssigedQty += Number(allocateEmpArrControls[control].value.TotalWt);
-        }
-        else{
-          totalAssigedQty += Number(allocateEmpArrControls[control].value.assignQty);
-        }
+        // if(this.taskCategory === 'GROWING'){
+        //   totalAssigedQty += Number(allocateEmpArrControls[control].value.TotalWt);
+        // }
+        // else{
+          if(this.taskCategory === 'GROWING'){
+            totalAssigedQty += Number(allocateEmpArrControls[control].value.TotalWt);
+          }
+          else{
+            totalAssigedQty += Number(allocateEmpArrControls[control].value.assignQty);
+          }
+         
+        // }
        
         splitCount += 1;
       }
@@ -569,64 +587,74 @@ public reqWt:any;
     // if (totalAssigedQty < Number(formRowGroup.value.requiredQty)) {
     //   formRowGroup.controls['assignQty'].setErrors({ 'lessQty': { totalAssigedQty: totalAssigedQty, totalRequiredQty: formRowGroup.value.requiredQty } });
     // }
-    if(this.taskCategory === 'GROWING'){
-      if (totalAssigedQty > Number(formRowGroup.value.totalQty)) {
-        formRowGroup.controls['TotalWt'].setErrors(
-            {
-                'greaterQty':
-                  {
-                      isSplitted: splitCount > 1 ? true : false,
-                      totalAssigedQty: totalAssigedQty,
-                      totalRequiredQty: formRowGroup.value.totalQty
-                  }
-            });
-      } else {
-        
-        this.selectedLotsArray.set(formRowGroup.value.uniqueId, []);
+   if(this.taskCategory === 'GROWING'){
+    if (totalAssigedQty > Number(formRowGroup.value.totalQty)) {
+      formRowGroup.controls['TotalWt'].setErrors(
+          {
+              'greaterQty':
+                {
+                    isSplitted: splitCount > 1 ? true : false,
+                    totalAssigedQty: totalAssigedQty,
+                    totalRequiredQty: formRowGroup.value.totalQty
+                }
+          });
+    } else {
+      // if (this.selectedLotsArray.get(formRowGroup.value.uniqueId)) {
+      //   this.selectedLotsArray.get(formRowGroup.value.uniqueId).forEach(rowItem => {
+      //     this.setLotSyncWt(rowItem.LotNo,
+      //         this.getLotSyncWt(rowItem.LotNo) + Number(rowItem.SelectedWt)
+      //       );
+      //   });
+      // }
+      this.selectedLotsArray.set(formRowGroup.value.uniqueId, []);
   
-        const employeeBox = formRowGroup.controls['employee'];
-        const validators = formRowGroup.value.TotalWt ? Validators.compose([Validators.required]) : null;
-        employeeBox.setValidators(validators);
-        employeeBox.updateValueAndValidity();
+      const employeeBox = formRowGroup.controls['employee'];
+      const validators = formRowGroup.value.TotalWt ? Validators.compose([Validators.required]) : null;
+      employeeBox.setValidators(validators);
+      employeeBox.updateValueAndValidity();
   
-        this.syncAllLotWeight();
+      this.syncAllLotWeight();
   
-        this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
-      }
+      this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
     }
-else{
-  if (totalAssigedQty > Number(formRowGroup.value.requiredQty)) {
-    formRowGroup.controls['assignQty'].setErrors(
-        {
-            'greaterQty':
-              {
-                  isSplitted: splitCount > 1 ? true : false,
-                  totalAssigedQty: totalAssigedQty,
-                  totalRequiredQty: formRowGroup.value.requiredQty
-              }
-        });
-  } else {
-    // if (this.selectedLotsArray.get(formRowGroup.value.uniqueId)) {
-    //   this.selectedLotsArray.get(formRowGroup.value.uniqueId).forEach(rowItem => {
-    //     this.setLotSyncWt(rowItem.LotNo,
-    //         this.getLotSyncWt(rowItem.LotNo) + Number(rowItem.SelectedWt)
-    //       );
-    //   });
-    // }
-    this.selectedLotsArray.set(formRowGroup.value.uniqueId, []);
-
-    const employeeBox = formRowGroup.controls['employee'];
-    const validators = formRowGroup.value.assignQty ? Validators.compose([Validators.required]) : null;
-    employeeBox.setValidators(validators);
-    employeeBox.updateValueAndValidity();
-
-    this.syncAllLotWeight();
-
-    this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
-  }
-}
+   }
+   else{
+    if (totalAssigedQty > Number(formRowGroup.value.requiredQty)) {
+      formRowGroup.controls['assignQty'].setErrors(
+          {
+              'greaterQty':
+                {
+                    isSplitted: splitCount > 1 ? true : false,
+                    totalAssigedQty: totalAssigedQty,
+                    totalRequiredQty: formRowGroup.value.requiredQty
+                }
+          });
+    } else {
+      // if (this.selectedLotsArray.get(formRowGroup.value.uniqueId)) {
+      //   this.selectedLotsArray.get(formRowGroup.value.uniqueId).forEach(rowItem => {
+      //     this.setLotSyncWt(rowItem.LotNo,
+      //         this.getLotSyncWt(rowItem.LotNo) + Number(rowItem.SelectedWt)
+      //       );
+      //   });
+      // }
+      this.selectedLotsArray.set(formRowGroup.value.uniqueId, []);
+  
+      const employeeBox = formRowGroup.controls['employee'];
+      const validators = formRowGroup.value.assignQty ? Validators.compose([Validators.required]) : null;
+      employeeBox.setValidators(validators);
+      employeeBox.updateValueAndValidity();
+  
+      this.syncAllLotWeight();
+  
+      this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
+    }
+   }
     
   }
+ 
+
+    
+  
 
   splitTask(formRow: FormGroup, index: number): void {
     // if (!this.validateDuplicateRows()) {
@@ -663,14 +691,11 @@ else{
           const parentUniqueId = formRow.value.uniqueId;
           const splitObject =  this.allocateEmpArr.value.filter(item => item.uniqueId === parentUniqueId)[0];
           var splitObj
-          if(this.taskCategory === 'GROWING'){
-            splitObj = this.AllocateEmpData.orderDetails
-            .filter(data => data.ProductTypeId === splitObject.productTypeId)[0];
-          }
-          else{
+          
+        
             splitObj = this.AllocateEmpData.orderDetails.Table
           .filter(data => data.ProductTypeId === splitObject.productTypeId)[0];
-          }
+        
           
   
           const results: number[] = [];
@@ -694,14 +719,11 @@ else{
           const parentUniqueId = formRow.value.uniqueId;
           const splitObject =  this.allocateEmpArr.value.filter(item => item.uniqueId === parentUniqueId)[0];
           var splitObj
-          if(this.taskCategory === 'GROWING'){
-            splitObj = this.AllocateEmpData.orderDetails
-            .filter(data => data.ProductTypeId === splitObject.productTypeId)[0];
-          }
-          else{
+    
+       
             splitObj = this.AllocateEmpData.orderDetails.Table
           .filter(data => data.ProductTypeId === splitObject.productTypeId)[0];
-          }
+        
           
   
           const results: number[] = [];
@@ -725,35 +747,69 @@ else{
   }
 
   undoTask(formRow: FormGroup, index: number) {
-    const parentUniqueId = formRow.value.parentUniqueId;
-    let undoValue = 0;
-    // Find Parent Row of current row to add current assign qty to parent assign qty
-    const splitObject =  this.allocateEmpArr.controls.filter(item => item.value.uniqueId === parentUniqueId)[0];
-
-    // If Parent row is undo then assign current row parentUniqueId to all children to current row.
-    this.allocateEmpArr.controls.filter(formGroupControl => formGroupControl.value.parentUniqueId === formRow.value.uniqueId)
-    .map((filteredControl: FormGroup) => {
-      filteredControl.controls['parentUniqueId'].patchValue(formRow.value.parentUniqueId);
-    });
-
-    // if (formRow.controls['assignQty'].hasError('greaterQty')) {
-    //     const errorValue = formRow.controls['assignQty'].errors['greaterQty'];
-
-    //     undoValue = (Number(formRow.value.assignQty) + Number(splitObject.value.assignQty))
-    //     - Number(errorValue.totalAssigedQty - errorValue.totalRequiredQty);
-    // } else {
-    //     undoValue = (Number(formRow.value.assignQty) + Number(splitObject.value.assignQty));
-    // }
-    undoValue = (Number(formRow.value.previousQty) + Number(splitObject.value.previousQty));
-
-    (<FormGroup>splitObject).controls['assignQty'].patchValue(undoValue);
-    (<FormGroup>splitObject).controls['previousQty'].patchValue(undoValue);
-    this.allocateEmpArr.removeAt(index);
-
-    this.selectedLotsArray.set(parentUniqueId, []);
-    this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
-
-    this.validateDuplicateRows();
+    if(this.taskCategory === 'GROWING'){
+      const parentUniqueId = formRow.value.parentUniqueId;
+      let undoValue = 0;
+      // Find Parent Row of current row to add current assign qty to parent assign qty
+      const splitObject =  this.allocateEmpArr.controls.filter(item => item.value.uniqueId === parentUniqueId)[0];
+  
+      // If Parent row is undo then assign current row parentUniqueId to all children to current row.
+      this.allocateEmpArr.controls.filter(formGroupControl => formGroupControl.value.parentUniqueId === formRow.value.uniqueId)
+      .map((filteredControl: FormGroup) => {
+        filteredControl.controls['parentUniqueId'].patchValue(formRow.value.parentUniqueId);
+      });
+  
+      // if (formRow.controls['assignQty'].hasError('greaterQty')) {
+      //     const errorValue = formRow.controls['assignQty'].errors['greaterQty'];
+  
+      //     undoValue = (Number(formRow.value.assignQty) + Number(splitObject.value.assignQty))
+      //     - Number(errorValue.totalAssigedQty - errorValue.totalRequiredQty);
+      // } else {
+      //     undoValue = (Number(formRow.value.assignQty) + Number(splitObject.value.assignQty));
+      // }
+      undoValue = (Number(formRow.value.previousWt) + Number(splitObject.value.previousWt));
+  
+      (<FormGroup>splitObject).controls['assignQty'].patchValue(undoValue);
+      (<FormGroup>splitObject).controls['previousWt'].patchValue(undoValue);
+      this.allocateEmpArr.removeAt(index);
+  
+      this.selectedLotsArray.set(parentUniqueId, []);
+      this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
+  
+      this.validateDuplicateRows();
+    }
+    else{
+      const parentUniqueId = formRow.value.parentUniqueId;
+      let undoValue = 0;
+      // Find Parent Row of current row to add current assign qty to parent assign qty
+      const splitObject =  this.allocateEmpArr.controls.filter(item => item.value.uniqueId === parentUniqueId)[0];
+  
+      // If Parent row is undo then assign current row parentUniqueId to all children to current row.
+      this.allocateEmpArr.controls.filter(formGroupControl => formGroupControl.value.parentUniqueId === formRow.value.uniqueId)
+      .map((filteredControl: FormGroup) => {
+        filteredControl.controls['parentUniqueId'].patchValue(formRow.value.parentUniqueId);
+      });
+  
+      // if (formRow.controls['assignQty'].hasError('greaterQty')) {
+      //     const errorValue = formRow.controls['assignQty'].errors['greaterQty'];
+  
+      //     undoValue = (Number(formRow.value.assignQty) + Number(splitObject.value.assignQty))
+      //     - Number(errorValue.totalAssigedQty - errorValue.totalRequiredQty);
+      // } else {
+      //     undoValue = (Number(formRow.value.assignQty) + Number(splitObject.value.assignQty));
+      // }
+      undoValue = (Number(formRow.value.previousQty) + Number(splitObject.value.previousQty));
+  
+      (<FormGroup>splitObject).controls['assignQty'].patchValue(undoValue);
+      (<FormGroup>splitObject).controls['previousQty'].patchValue(undoValue);
+      this.allocateEmpArr.removeAt(index);
+  
+      this.selectedLotsArray.set(parentUniqueId, []);
+      this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
+  
+      this.validateDuplicateRows();
+    }
+    
   }
 
   // Product Information pop up
@@ -763,110 +819,51 @@ else{
     this.showProductInfoModel = true;
    
   }
-  // getbinDetails(rowData,rowIndex){
-  //   this.selectedBinDetails = [];
-   
-  // }
-  getSelectedBin(rowData, rowIndex){
-  this.brandStrainLots = []
-  const strainid = rowData.controls.strainId
-  const skewKeyName = rowData.controls.SkewKeyName
-  if(this.taskCategory === 'GROWING'){
-    this.orderService.getBinDetails( strainid.value, skewKeyName.value).subscribe(
-      data=>{
-        if (data !== 'No data found!') {
-        this.brandStrainLots = data
-        this.questionForm = this.fb.group({
-          questions: this.fb.array(this.brandStrainLots.map(this.createQuestionControl(this.fb)))
-        });
-      //  console.log(this.brandStrainLots)
-        }
-      }
-    )
-  }
-  console.log(this.brandStrainLots)
-      this.showLotSelectionModel = true; 
-      this.selLotBrandStrainRow.BrandId = 0;
-    this.selLotBrandStrainRow.StrainId = rowData.value.strainId;
-    this.selLotBrandStrainRow.selectedRowIndex = rowIndex;
-
-    this.selLotBrandStrainRow.RequireWt = 0;
-    this.selLotBrandStrainRow.combinationTotalAssignedWt = 0;
-
-    this.selLotBrandStrainRow.ProductTypeId = rowData.value.productTypeId;
-    this.selLotBrandStrainRow.UniqueId = rowData.value.uniqueId;
-
-    this.AllocateEmpData.orderDetails.filter((value, key) => {
-        // return value.StrainId === rowData.value.strainId;
-        return value.ProductTypeId === rowData.value.productTypeId;
-    })
-      .map(value => {
-        this.selLotBrandStrainRow.RequireWt += value.TotalWt;
-        this.selLotBrandStrainRow.BrandName = '';
-        this.selLotBrandStrainRow.StrainName = value.StrainName;
-        this.selLotBrandStrainRow.GeneticsId = value.GeneticsId;
-        this.selLotBrandStrainRow.GeneticsName = value.GeneticsName;
-      });
-    // this.questionForm = this.fb.group({
-    //   questions: this.fb.array(this.brandStrainLots.map(this.createQuestionControl(this.fb)))
-    // });
-    this.allocateEmpArr.value.forEach((result, index) => {
-      let totalPkgWt = 0;
-        // if ((result.strainid === rowData.value.strainId) && Number(result.assignPackageWt) > 0) {
-        if ((result.productTypeId === rowData.value.productTypeId) && Number(result.assignQty) > 0 && index === rowIndex) {
-          if(this.taskCategory === 'GROWING'){
-            totalPkgWt = Number(result.TotalWt) ;
-            this.selLotBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
-          }
-          else{
-            totalPkgWt = Number(result.assignQty) * Number(result.pkgSize) * Number(result.itemQty);
-            this.selLotBrandStrainRow.combinationTotalAssignedWt = Number(totalPkgWt);
-          }
-        }
-    });
-
-    this.syncAllLotWeight();
-
-    this.showLotSelectionModel = true;
-  }
-  addItem(){
-    var i=0;
-    this.arrayItems = this.BinsForm.get('binsFormArray') as FormArray;
-    this.arrayItems.push(this.createItemForBin());
-    // if(i< this.selectedBinDetails.length){
-    //   this.addItem();
-    // }
-  }
-
-  createItemForBin(): FormGroup {
-    return this.fb.group({
-      binNo: new FormControl(null, Validators.compose([Validators.required])),
-      strain:new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
-      availableWt: new FormControl(null,Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
-      selectedWt: new FormControl(false),
-    });
-    
-  }
+  
   syncAllLotWeight() {
-    const selectedLots = Array.from(this.selectedLotsArray.values());
-    if (selectedLots !== null) {
-      this.lotSyncWtArr.clear();
-      selectedLots
-      .forEach((item, index) => {
-        if (item !== null && item.length) {
-          item.forEach((element, lotIndex) => {
-            if (this.lotSyncWtArr.has(element.LotNo)) {
-              this.lotSyncWtArr.set(element.LotNo ,
-                Number(this.lotSyncWtArr.get(element.LotNo)) -
-                Number(element.SelectedWt) );
-            } else {
-              this.lotSyncWtArr.set(element.LotNo ,
-                Number(element.AvailWt) - Number(element.SelectedWt));
-            }
-          });
-        }
-      });
+    if(this.taskCategory === 'GROWING'){
+      const selectedLots = Array.from(this.selectedLotsArray.values());
+      if (selectedLots !== null) {
+        this.lotSyncWtArr.clear();
+        selectedLots
+        .forEach((item, index) => {
+          if (item !== null && item.length) {
+            item.forEach((element, lotIndex) => {
+              if (this.lotSyncWtArr.has(element.BinNO)) {
+                this.lotSyncWtArr.set(element.BinNO ,
+                  Number(this.lotSyncWtArr.get(element.BinNO)) -
+                  Number(element.SelectedWt) );
+              } else {
+                this.lotSyncWtArr.set(element.BinNO ,
+                  Number(element.AvailWt) - Number(element.SelectedWt));
+              }
+            });
+          }
+        });
+      }
     }
+    else{
+      const selectedLots = Array.from(this.selectedLotsArray.values());
+      if (selectedLots !== null) {
+        this.lotSyncWtArr.clear();
+        selectedLots
+        .forEach((item, index) => {
+          if (item !== null && item.length) {
+            item.forEach((element, lotIndex) => {
+              if (this.lotSyncWtArr.has(element.LotNo)) {
+                this.lotSyncWtArr.set(element.LotNo ,
+                  Number(this.lotSyncWtArr.get(element.LotNo)) -
+                  Number(element.SelectedWt) );
+              } else {
+                this.lotSyncWtArr.set(element.LotNo ,
+                  Number(element.AvailWt) - Number(element.SelectedWt));
+              }
+            });
+          }
+        });
+      }
+    }
+    
   }
 
   lotWeightOnChange(rowItem) {
@@ -891,20 +888,20 @@ else{
       }
     }
     else{
-      if (this.lotSyncWtArr.has(rowItem.value.InputBinId)) {
+      if (this.lotSyncWtArr.has(rowItem.value.BinNo)) {
 
-        updatedWt = (Number(this.lotSyncWtArr.get(rowItem.value.InputBinId)) + Number(rowItem.value.previousValue) )
+        updatedWt = (Number(this.lotSyncWtArr.get(rowItem.value.BinNo)) + Number(rowItem.value.previousValue) )
         - Number(rowItem.value.answer);
   
         if (updatedWt <= 0) { updatedWt = 0; }
-        this.lotSyncWtArr.set(rowItem.value.InputBinId , updatedWt);
+        this.lotSyncWtArr.set(rowItem.value.BinNo , updatedWt);
   
           rowItem.controls['previousValue'].patchValue(rowItem.value.answer);
       } else {
         updatedWt = Number(rowItem.value.AvailWt) - Number(rowItem.value.answer);
   
         if (updatedWt <= 0) { updatedWt = 0; }
-        this.lotSyncWtArr.set(rowItem.value.InputBinId , updatedWt);
+        this.lotSyncWtArr.set(rowItem.value.BinNo , updatedWt);
   
           rowItem.controls['previousValue'].patchValue(rowItem.value.answer);
       }
