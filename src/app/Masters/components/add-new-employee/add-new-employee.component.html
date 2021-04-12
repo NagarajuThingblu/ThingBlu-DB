@@ -568,6 +568,7 @@
                       [options]="roles"
                       placeholder="-- Select --"
                       [autoWidth]="false"
+                      (onChange)="Managerdrpdwnchng($event)"
                       class="clsControl"
                       name="userrole">
                     </p-dropdown>
@@ -610,6 +611,30 @@
                   </div>
                 </div>
                 <!-- End Hourly labour Rate -->
+                <!--Manager List-->
+                <div class="ui-g-12 ui-md-6" *ngIf="(this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole) || showMangFlc === true">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="managerlist" class="towlable fwLabelBold">ManagerList<span class="star"> *</span></label>
+                      <p-dropdown [filter]="true" id="managerlist" [options]="Managerlist" placeholder="-- Select --"
+                      [autoWidth]="false" [tabindex]="10" class="clsControl" name="managerlist" formControlName="Managerlist">
+                    </p-dropdown>
+                    </div>
+                  </div>
+                </div>
+                <!--End Manager List-->
+                 <!--FLC List-->
+                 <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp==this.selectedRole || showMangFlc === true">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="flclist" class="towlable fwLabelBold">FLC List<span class="star"> *</span></label>
+                      <p-dropdown [filter]="true" id="flclist" [options]="flclist" placeholder="-- Select --"
+                      [autoWidth]="false" [tabindex]="10" class="clsControl" name="flclist" formControlName="flclist">
+                    </p-dropdown>
+                    </div>
+                  </div>
+                 </div>
+                <!--End FLC List-->
                 <!-- IsActive -->
                 <div class="ui-g-12 ui-md-12">
                   <div class="paddingRL">

@@ -414,10 +414,17 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   generateCompletionParams(fb: FormBuilder) {
     return (object, index) => {
       let completedBox, packageCodeBox;
-
-      completedBox = [null, Validators.compose([Validators.min(0), Validators.max(object.AssignedQty)])];
-      packageCodeBox = [null];
-      this.disableCompletedWtArr[index] = object.AssignedQty;
+if(this.taskCategory === 'GROWING'){
+  completedBox = [null, Validators.compose([Validators.min(0), Validators.max(object.AssignedWt)])];
+  packageCodeBox = [null];
+  this.disableCompletedWtArr[index] = object.AssignedWt;
+}
+else{
+  completedBox = [null, Validators.compose([Validators.min(0), Validators.max(object.AssignedQty)])];
+  packageCodeBox = [null];
+  this.disableCompletedWtArr[index] = object.AssignedQty;
+}
+      
 
       return fb.group({
         uniqueId: index,
@@ -430,6 +437,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
         packageCode: packageCodeBox,
         ProductTypeId: object.ProductTypeId,
         AssignedQty: object.AssignedQty,
+        AssignedWt:object.AssignedWt,
         LotDetails: this.fb.array(
           this.TaskModel.AssignQtyLotDetails
           .filter(result => {
@@ -498,7 +506,13 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
 
       if (this.TaskModel.TaskStatus === this.taskStatus.ReviewPending) {
         this.disableCompletedWtArr[index] = 0;
-        this.disableCompletedWtArr[index] = Number(object.CompletedQty);
+        if(this.taskCategory === 'GROWING'){
+          this.disableCompletedWtArr[index] = Number(object.CompletedWt);
+        }
+        else{
+          this.disableCompletedWtArr[index] = Number(object.CompletedQty);
+        }
+       
         }
 
       // this.TaskModel.ReviewQtyLotDetails
@@ -519,14 +533,16 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
         ItemQty: object.ItemQty,
         PackageCode: object.PackageCode,
         ProductTypeId: object.ProductTypeId,
+        
         LotDetails: this.fb.array(
           this.TaskModel.ReviewQtyLotDetails
             .filter(result => result.StrainId === object.StrainId
-              && result.PkgTypeId === object.PkgTypeId && result.UnitValue === object.UnitValue)
+              && result.PkgTypeId === object.PkgTypeId && (result.UnitValue === object.UnitValue ||result.UnitValue === object.PackageSize))
             .map((object1, index1) => {
                 return this.createLotControls(this.fb, object1, index1, 'Review');
               })
           ),
+         
           MixLotDetails: this.fb.array(
             _.uniqBy(this.TaskModel.MixedLotPkgDetails, 'MixPkgId')
             .filter(result => result.ProductTypeId === object.ProductTypeId)
@@ -536,6 +552,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
                 if (data.MixPkgId === childObject.MixPkgId) {
                   this.selectedMixLotsArray[index + '' + childIndex].push({
                       LotNo: data.LotId,
+                      BinNo:data.BinId,
                       GrowerLotNo: data.GrowerLotNo,
                       AvailWt: data.AvailWt ? data.AvailWt : 0,
                       SelectedWt: Number(data.LotUsedWt),
@@ -564,6 +581,19 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
       lotTotalWeight = 0;
       // Iterate throught every lot in above product type
       (productTypeItem as FormArray).controls['LotDetails'].controls.forEach(lotDetails => {
+        if(this.taskCategory === 'GROWING'){
+          if (!this.lotMap.has(String(lotDetails.value.BinId))) {
+            lotTotalWeight += Number(lotDetails.value.lotReviewedWt)
+                              * (Number(productTypeItem.value.UnitValue)
+                              * Number(productTypeItem.value.ItemQty));
+        } else {
+          lotTotalWeight += Number(this.lotMap.get(String(lotDetails.value.BinId)))
+                            +  Number(lotDetails.value.lotReviewedWt)
+                            * (Number(productTypeItem.value.UnitValue)
+                            * Number(productTypeItem.value.ItemQty));
+        }
+        }
+        else{
           if (!this.lotMap.has(String(lotDetails.value.LotId))) {
             lotTotalWeight += Number(lotDetails.value.lotReviewedWt)
                               * (Number(productTypeItem.value.UnitValue)
@@ -574,6 +604,8 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
                             * (Number(productTypeItem.value.UnitValue)
                             * Number(productTypeItem.value.ItemQty));
         }
+        }
+        
 
         this.lotMap.set(lotDetails.value.LotId, lotTotalWeight);
       });
@@ -582,15 +614,47 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
 
   calculateMixLotWt(question, Flag) {
     let lotTotalWeight = 0;
+    let lotCompletedWeight = 0;
 
     if (String(Flag).toLocaleUpperCase() === 'SPECIFIC') {
         // Iterate throught each product type
         this.completeParamArr.controls.forEach((productTypeItem, parentIndex) => {
           // Iterate throught every lot in above product type
+          if(this.taskCategory === 'GROWING'){
+            (productTypeItem as FormArray).controls['LotDetails'].controls.forEach(lotDetails => {
+              if (lotDetails.value.BinId === question.value.BinNo) {
+                lotCompletedWeight = Number(lotDetails.value.lotCompletedWt)
+                lotTotalWeight += Number(lotDetails.value.lotCompletedWt) * Number(productTypeItem.value.UnitValue) * Number(productTypeItem.value.ItemQty);
+              }
+            });
+            (productTypeItem as FormArray).controls['MixLotDetails'].controls.forEach((mixLotDetails, childIndex) => {
+              if (this.selectedMixLotsArray.length > 0) {
+                this.selectedMixLotsArray[this.selMixLotPkgRow.ParentRowIndex + '' + this.selMixLotPkgRow.selectedRowIndex].forEach(element => {
+                  if (element.BinNo === question.value.BinNo) {
+                    lotTotalWeight += Number(element.SelectedWt);
+                  }
+                });
+              }else {
+                lotTotalWeight += Number(question.value.answer);
+              }
+            });
+            this.lotMap.set(question.value.BinNo, lotTotalWeight);
+
+        // lot total balanced wt
+       
+        
+          this.lotBalancedWtMap.set(question.value.BinNo, Number(question.value.assignedWt) - lotCompletedWeight);
+
+          }
+          else{
+            
+          
           (productTypeItem as FormArray).controls['LotDetails'].controls.forEach(lotDetails => {
-            if (lotDetails.value.LotId === question.value.LotNo) {
-              lotTotalWeight += Number(lotDetails.value.lotCompletedWt) * Number(productTypeItem.value.UnitValue) * Number(productTypeItem.value.ItemQty);
-            }
+              if (lotDetails.value.LotId === question.value.LotNo) {
+               
+                lotTotalWeight += Number(lotDetails.value.lotCompletedWt) * Number(productTypeItem.value.UnitValue) * Number(productTypeItem.value.ItemQty);
+              }
+
           });
 
             (productTypeItem as FormArray).controls['MixLotDetails'].controls.forEach((mixLotDetails, childIndex) => {
@@ -604,14 +668,22 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
                 lotTotalWeight += Number(question.value.answer);
               }
             });
-        });
-
-        // lot total processed wt
+             // lot total processed wt
         this.lotMap.set(question.value.LotNo, lotTotalWeight);
 
         // lot total balanced wt
-        this.lotBalancedWtMap.set(question.value.LotNo, Number(question.value.assignedWt) - lotTotalWeight);
-    } else if (String(Flag).toLocaleUpperCase() === 'ALL') {
+       
+        
+          this.lotBalancedWtMap.set(question.value.LotNo, Number(question.value.assignedWt) - lotTotalWeight);
+        
+          }
+          
+        });
+      
+       
+       } 
+    
+    else if (String(Flag).toLocaleUpperCase() === 'ALL') {
 
           this.lotMap.clear();
           this.lotBalancedWtMap.clear();
@@ -619,32 +691,63 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
           // Iterate throught each product type
           this.completeParamArr.controls.forEach((productTypeItem, parentIndex) => {
             // Iterate throught every lot in above product type
-            (productTypeItem as FormArray).controls['LotDetails'].controls.forEach(lotDetails => {
-              if (this.lotMap.has(lotDetails.value.LotId)) {
-                this.lotMap.set(lotDetails.value.LotId ,
-                  Number(this.lotMap.get(lotDetails.value.LotId)) +
-                  Number(lotDetails.value.lotCompletedWt) *
-                  Number(productTypeItem.value.UnitValue) *
-                  Number(productTypeItem.value.ItemQty));
-
-                  this.lotBalancedWtMap.set(lotDetails.value.LotId, Number(lotDetails.value.AssignedWt) - Number(this.lotMap.get(lotDetails.value.LotId)));
-              } else {
-                this.lotMap.set(lotDetails.value.LotId ,
-                  Number(lotDetails.value.lotCompletedWt) *
-                  Number(productTypeItem.value.UnitValue) *
-                  Number(productTypeItem.value.ItemQty));
-
-                  this.lotBalancedWtMap.set(lotDetails.value.LotId, Number(lotDetails.value.AssignedWt) - Number(this.lotMap.get(lotDetails.value.LotId)));
-              }
-
-              if (this.productTypeQtyMap.has(productTypeItem.value.ProductTypeId)) {
-                this.productTypeQtyMap.set(productTypeItem.value.ProductTypeId,
-                  (Number(this.productTypeQtyMap.get(productTypeItem.value.ProductTypeId)) + Number(lotDetails.value.lotCompletedWt)));
-              } else {
-                this.productTypeQtyMap.set(productTypeItem.value.ProductTypeId,
-                  Number(lotDetails.value.lotCompletedWt));
-              }
-            });
+            if(this.taskCategory === 'GROWING'){
+              (productTypeItem as FormArray).controls['LotDetails'].controls.forEach(lotDetails => {
+                if (this.lotMap.has(lotDetails.value.BinId)) {
+                  this.lotMap.set(lotDetails.value.BinId ,
+                    Number(this.lotMap.get(lotDetails.value.BinId)) +
+                    Number(lotDetails.value.lotCompletedWt) *
+                    Number(productTypeItem.value.UnitValue) *
+                    Number(productTypeItem.value.ItemQty));
+  
+                    this.lotBalancedWtMap.set(lotDetails.value.BinId, Number(lotDetails.value.AssignedWt) -  Number(lotDetails.value.lotCompletedWt));
+                } else {
+                  this.lotMap.set(lotDetails.value.BinId ,
+                    Number(lotDetails.value.lotCompletedWt) *
+                    Number(productTypeItem.value.UnitValue) *
+                    Number(productTypeItem.value.ItemQty));
+  
+                    this.lotBalancedWtMap.set(lotDetails.value.BinId, Number(lotDetails.value.AssignedWt) - Number(lotDetails.value.lotCompletedWt));
+                }
+  
+                if (this.productTypeQtyMap.has(productTypeItem.value.ProductTypeId)) {
+                  this.productTypeQtyMap.set(productTypeItem.value.ProductTypeId,
+                    (Number(this.productTypeQtyMap.get(productTypeItem.value.ProductTypeId)) + Number(lotDetails.value.lotCompletedWt)));
+                } else {
+                  this.productTypeQtyMap.set(productTypeItem.value.ProductTypeId,
+                    Number(lotDetails.value.lotCompletedWt));
+                }
+              });
+            }
+            else{
+              (productTypeItem as FormArray).controls['LotDetails'].controls.forEach(lotDetails => {
+                if (this.lotMap.has(lotDetails.value.LotId)) {
+                  this.lotMap.set(lotDetails.value.LotId ,
+                    Number(this.lotMap.get(lotDetails.value.LotId)) +
+                    Number(lotDetails.value.lotCompletedWt) *
+                    Number(productTypeItem.value.UnitValue) *
+                    Number(productTypeItem.value.ItemQty));
+  
+                    this.lotBalancedWtMap.set(lotDetails.value.LotId, Number(lotDetails.value.AssignedWt) - Number(this.lotMap.get(lotDetails.value.LotId)));
+                } else {
+                  this.lotMap.set(lotDetails.value.LotId ,
+                    Number(lotDetails.value.lotCompletedWt) *
+                    Number(productTypeItem.value.UnitValue) *
+                    Number(productTypeItem.value.ItemQty));
+  
+                    this.lotBalancedWtMap.set(lotDetails.value.LotId, Number(lotDetails.value.AssignedWt) - Number(this.lotMap.get(lotDetails.value.LotId)));
+                }
+  
+                if (this.productTypeQtyMap.has(productTypeItem.value.ProductTypeId)) {
+                  this.productTypeQtyMap.set(productTypeItem.value.ProductTypeId,
+                    (Number(this.productTypeQtyMap.get(productTypeItem.value.ProductTypeId)) + Number(lotDetails.value.lotCompletedWt)));
+                } else {
+                  this.productTypeQtyMap.set(productTypeItem.value.ProductTypeId,
+                    Number(lotDetails.value.lotCompletedWt));
+                }
+              });
+            
+           
 
             (productTypeItem as FormArray).controls['MixLotDetails'].controls.forEach((mixLotDetails, childIndex) => {
               if (this.selectedMixLotsArray[parentIndex + '' + childIndex]) {
@@ -670,6 +773,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
                 this.productTypeQtyMap.set(productTypeItem.value.ProductTypeId, 1);
               }
             });
+          }
           });
     }
   }
@@ -891,14 +995,21 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
       if (flag === 'Complete') {
         checkbox = [null, Validators.compose([Validators.min(0)])];
         return fb.group({
-          LotId: object.LotId, lotCompletedWt: checkbox, GrowerLotNo: object.GrowerLotNo, LabelName: object.LabelName,
-          AssignedWt: object.AssignedWt, LotNoteCount: object.LotNoteCount
+          LotId: object.LotId, lotCompletedWt: checkbox, GrowerLotNo: object.GrowerLotNo, LabelName: object.BinName,
+          AssignedWt: object.AssignedWt, LotNoteCount: object.LotNoteCount, BinId: object.BinId, OrderRefId:object.OrderRefId
         });
       } else {
-        checkbox = [object.ProcessedQty ? object.ProcessedQty : 0, Validators.compose([Validators.min(0)])];
+        if(this.taskCategory === 'GROWING'){
+          checkbox = [object.CompletedWt ? object.CompletedWt : 0, Validators.compose([Validators.min(0)])];
+        }
+        else{
+          checkbox = [object.ProcessedQty ? object.ProcessedQty : 0, Validators.compose([Validators.min(0)])];
+        }
+       
         return fb.group({
-          LotId: object.LotId, lotReviewedWt: checkbox, GrowerLotNo: object.GrowerLotNo,LabelName: object.LabelName,
-          AssignedWt: object.AssignedWt, ProcessedQty: object.ProcessedQty, LotNoteCount: object.LotNoteCount
+          LotId: object.LotId, lotReviewedWt: checkbox, GrowerLotNo: object.GrowerLotNo,LabelName: object.BinName,
+          AssignedWt: object.AssignedWt, CompletedWt:object.CompletedWt,ProcessedQty: object.ProcessedQty, LotNoteCount: object.LotNoteCount, BinId: object.BinId, 
+          OrderRefId:object.OrderRefId,
         });
       }
     // };
@@ -1752,9 +1863,88 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     }
   }
   // End of Mix Lot Details
+  submitCompleteForm(formModel){
+    console.log(formModel)
+    let taskCompletionWebApi;
+    if (this.completionForm.valid === true) {
+      taskCompletionWebApi = {
+        Packaging:{
+          TaskId: Number(this.taskId),
+          VirtualRoleId:Number(this._cookieService.VirtualRoleId),
+          Comment:formModel.MiscComment ? formModel.MiscComment : '',
+          MiscCost:0
+        },
+        BinTypeDetails:[],
+        ProductTypeDetails:[]
+      };
+      formModel.completeParamArr.forEach((object, index) => {
+        object.LotDetails.forEach(LotObject => {
+          if (LotObject.lotCompletedWt > 0) {
+            taskCompletionWebApi.BinTypeDetails.push({
 
+              ProductTypeId: object.ProductTypeId,
+              BinId: LotObject.BinId,
+              Weight: LotObject.lotCompletedWt ? LotObject.lotCompletedWt : 0,
+              UniqueId: object.uniqueId
+            });
+          }
+        })
+      });
+      formModel.completeParamArr.forEach((object, index) => {
+        taskCompletionWebApi.ProductTypeDetails.push({
+          ProductTypeId: object.ProductTypeId,
+          UniqueId: object.uniqueId,
+          EmployeeId: null,
+        });
+      })
+
+
+      
+    }
+    this.confirmationService.confirm({
+      message: this.assignTaskResources.taskcompleteconfirm,
+      header: 'Confirmation',
+      icon: 'fa fa-exclamation-triangle',
+
+      accept: () => {
+        this.loaderService.display(true);
+        this.taskCommonService.completePackagingCompleteTask(taskCompletionWebApi)
+        .subscribe(data => {
+          this.msgs = [];
+          if (data[0].RESULTKEY ==='SUCCESS'){
+            if (this.TaskModel.IsReview === true) {
+              this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
+            } else {
+              this.TaskModel.TaskStatus = this.taskStatus.Completed;
+            }
+            this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
+            setTimeout( () => {
+              if (this._cookieService.UserRole === this.userRoles.Manager) {
+                this.router.navigate(['home/managerdashboard']);
+              } else {
+                this.router.navigate(['home/empdashboard']);
+              }
+            }, 1000);
+          }
+          else if (String(data).toLocaleUpperCase() === 'FAILURE') {
+            this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+          }
+        });
+        this.PageFlag.showmodal = false;
+        this.loaderService.display(false);
+      },
+      reject: () =>{
+
+      } 
+    });
+  }
+  
   // Submit Completion Parameters
   submitCompleteParameter(formModel) {
+    if(this.taskCategory === 'GROWING'){
+      this.submitCompleteForm(formModel)
+    }
+    else{
     let countMisMatch = false;
     let completeLotDetailsForApi;
     const lotProductListArr = [];
@@ -2067,6 +2257,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
       this.appCommonService.validateAllFields(this.completionForm);
     }
   }
+}
 
   // Commented by Devdan :: Sec to Min change :: 06-Nov-2018
   // CaluculateTotalMins(Hours, Mins) {
@@ -2076,8 +2267,82 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   CaluculateTotalSecs(Hours, Mins, Secs) {
     return (Number(Hours) * 3600) + (Number(Mins) * 60) + Number(Secs);
   }
+  submitreviewtask(formModel){
+    let reviewLotDetailsForApi;
+    const ActSeconds = this.reviewForm.getRawValue().ActSecs;
+    if (this.reviewForm.valid === true) {
+      reviewLotDetailsForApi = {
+        Packaging: {
+          TaskId: Number(this.taskId),
+        VirtualRoleId: Number(this._cookieService.VirtualRoleId),
+        Comment: formModel.MiscComment,
+        MiscCost: formModel.MiscCost ? Number(formModel.MiscCost) : 0,
+        // Modified by Devdan :: Sec to Min change :: 06-Nov-2018
+        RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
+        },
+        BinTypeDetails:[],
+        ProductTypeDetails:[]
+      };
+      formModel.reviewParamArr.forEach((object, index) => {
+        reviewLotDetailsForApi.ProductTypeDetails.push({
+          ProductTypeId: object.ProductTypeId,
+          EmployeeId:null,
+          UniqueId: String(index),
+        });
+      });
 
+      formModel.reviewParamArr.forEach((object, index) => {
+        object.LotDetails.forEach(LotObject => {
+  
+          if (LotObject.lotReviewedWt > 0) {
+            reviewLotDetailsForApi.BinTypeDetails.push({
+              ProductTypeId: object.ProductTypeId,
+              BinId: LotObject.BinId,
+              Weight: LotObject.lotReviewedWt ? LotObject.lotReviewedWt : 0,
+              UniqueId: String(index)
+            });
+          }
+  
+        });
+      });
+  
+
+    }
+    this.confirmationService.confirm({
+      message: this.assignTaskResources.taskcompleteconfirm,
+      header: 'Confirmation',
+      icon: 'fa fa-exclamation-triangle',
+
+      accept: () => {
+        this.loaderService.display(true);
+        this.taskCommonService.submitTaskReviewTask(reviewLotDetailsForApi)
+      .subscribe(data => {
+        this.msgs = [];
+        if (data[0].RESULTKEY  === 'SUCCESS') {
+          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
+          setTimeout( () => {
+            if (this._cookieService.UserRole === this.userRoles.Manager) {
+              this.router.navigate(['home/managerdashboard']);
+            } else {
+              this.router.navigate(['home/empdashboard']);
+            }
+          }, 1000);
+        }
+        else if(data[0].RESULTKEY  === 'Completed Weight Is Greater Than Assigned Weight'){
+          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.CompletedwtGreater });
+
+        }
+      })
+      }
+    })
+  }
   submitReviewParameter(formModel) {
+    if(this.taskCategory === 'GROWING'){
+      this.submitreviewtask(formModel)
+    }
+    else{
+
+ 
     let reviewLotDetailsForApi;
     const lotProductListArr = [];
    // let thresholdExceed = false;
@@ -2381,9 +2646,11 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
               // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
           }
       });
+      
     } else {
       this.appCommonService.validateAllFields(this.reviewForm);
     }
+  }
   }
 
   // Created by Devdan :: 12-Oct-2018 :: to set the ng model values
@@ -2456,3 +2723,5 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   // }
 
 }
+
+

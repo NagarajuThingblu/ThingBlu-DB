@@ -51,6 +51,7 @@
                     <th *ngIf="taskCategory != 'GROWING'" style="width:15%">{{globalResource.brand}}</th>
                     <th *ngIf="taskCategory != 'GROWING'" style="width:15%">{{globalResource.subbrand}}</th>
                     <th >{{globalResource.strain}}</th>
+                    <th *ngIf="taskCategory === 'GROWING'">SkewName</th>
                     <th>{{globalResource.pkgtype}}</th>
                     <th >{{globalResource.pkgsize}}</th>
                     <!-- <th style="width:15%">{{globalResource.itemqty}}</th> -->
@@ -63,7 +64,8 @@
                 <tr [formGroupName]="i">
                     <td *ngIf="taskCategory != 'GROWING'">{{orderDetails[i].BrandName}}</td>
                     <td *ngIf="taskCategory != 'GROWING'">{{orderDetails[i].SubBrandName}}</td>
-                    <td>{{orderDetails[i].StrainName}}</td>
+                    <td *ngIf="taskCategory === 'GROWING'">{{orderDetails[i].StrainName}}</td>
+                    <td>{{orderDetails[i].SkewKeyName}}</td>
                     <td>{{orderDetails[i].PkgTypeName}}</td>
                     <td *ngIf="taskCategory != 'GROWING'">{{orderDetails[i].UnitValue}} {{globalResource.listgramunit}}</td>
                     <td *ngIf="taskCategory === 'GROWING'">{{orderDetails[i].UnitValue}} (lb)</td>
@@ -569,11 +571,16 @@
                         <th style="width:20%">{{globalResource.pkgsize}}</th>
                         <!-- <th style="width:20%">{{globalResource.itemqty}}</th> -->
                         <!-- <th style="width:20%">Order Qty</th> -->
-                        <th style="width:20%">{{globalResource.assignqty}}</th>
-                        <th style="width:20%" *ngIf="(TaskModel?.TaskStatus === taskStatus.Completed||TaskModel?.TaskStatus === taskStatus.ReviewPending)&&TaskModel?.TaskStatus !== ''">
+                        <th *ngIf="taskCategory != 'GROWING'" style="width:20%">{{globalResource.assignqty}}</th>
+                        <th *ngIf="taskCategory === 'GROWING'" style="width:20%">Assign Wt</th>
+                        <th style="width:20%" *ngIf="(TaskModel?.TaskStatus === taskStatus.Completed||TaskModel?.TaskStatus === taskStatus.ReviewPending)&&TaskModel?.TaskStatus !== ''&&taskCategory != 'GROWING'">
                           {{globalResource.completedqty}}
                         </th>
-                        <th style="width:20%" *ngIf="showToManager">{{globalResource.revqty}}</th>
+                        <th style="width:20%" *ngIf="(TaskModel?.TaskStatus === taskStatus.Completed||TaskModel?.TaskStatus === taskStatus.ReviewPending)&&TaskModel?.TaskStatus !== ''&&taskCategory === 'GROWING'">
+                          Completed Wt
+                        </th>
+                        <th *ngIf="taskCategory != 'GROWING'&&showToManager" style="width:20%" >{{globalResource.revqty}}</th>
+                        <th *ngIf="taskCategory === 'GROWING'&&showToManager"style="width:20%">Review Wt</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-details let-i="rowIndex" >
@@ -589,22 +596,40 @@
                         <td *ngIf="taskCategory === 'GROWING'">{{details.AssignedWt}}</td>                                                
                         <td 
                           pTooltip="View Completion Details" tooltipPosition="left"
-                          *ngIf="(TaskModel?.TaskStatus === taskStatus.Completed||TaskModel?.TaskStatus === taskStatus.ReviewPending)&&TaskModel?.TaskStatus !== ''">  
+                          *ngIf="(TaskModel?.TaskStatus === taskStatus.Completed||TaskModel?.TaskStatus === taskStatus.ReviewPending)&&TaskModel?.TaskStatus !== ''&&taskCategory != 'GROWING'">  
                           <a *ngIf="details.CompletedQty > 0" [routerLink]="" (click)="getLotsInfo(details?.ProductTypeId)" >
                               <u>{{(details.CompletedQty)}}</u>
                           </a>
                           <span *ngIf="details.CompletedQty === 0">
                               {{(details.CompletedQty)}}
                           </span>
-                        </td>                    
-                        <td *ngIf="showToManager" pTooltip="View Review Details" tooltipPosition="left">  
+                        </td>  
+                        <td 
+                        pTooltip="View Completion Details" tooltipPosition="left"
+                        *ngIf="(TaskModel?.TaskStatus === taskStatus.Completed||TaskModel?.TaskStatus === taskStatus.ReviewPending)&&TaskModel?.TaskStatus !== ''&&taskCategory === 'GROWING'">  
+                        <a *ngIf="details.CompletedWt > 0" [routerLink]="" (click)="getLotsInfo(details?.ProductTypeId)" >
+                            <u>{{(details.CompletedWt)}}</u>
+                        </a>
+                        <span *ngIf="details.CompletedWt === 0">
+                            {{(details.CompletedWt)}}
+                        </span>
+                      </td>                   
+                        <td *ngIf="showToManager&&taskCategory != 'GROWING'" pTooltip="View Review Details" tooltipPosition="left">  
                           <a *ngIf="details.RevQty" [routerLink]="" (click)="getLotsInfo(details?.ProductTypeId)" >
                             <u>{{(details.RevQty)}}</u>
                           </a>
                           <span *ngIf="details.RevQty === 0">
                               {{(details.CompletedQty)}}
                           </span>
-                        </td>                                                         
+                        </td>   
+                        <td *ngIf="showToManager&&taskCategory === 'GROWING'" pTooltip="View Review Details" tooltipPosition="left">  
+                          <a *ngIf="details.RevCompletedWt" [routerLink]="" (click)="getLotsInfo(details?.ProductTypeId)" >
+                            <u>{{(details.RevCompletedWt)}}</u>
+                          </a>
+                          <span *ngIf="details.RevCompletedWt === 0">
+                              {{(details.CompletedWt)}}
+                          </span>
+                        </td>                                                      
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage" let-columns>
@@ -621,7 +646,7 @@
 
           <p-dialog header="{{globalResource.pkgdetails}}" [(visible)]="showProductTypeLotDetailsModal" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
               <div class="ui-g">
-                  <div class="ui-g-12 ui-md-4">
+                  <div *ngIf="taskCategory != 'GROWING'" class="ui-g-12 ui-md-4">
                       <div class="paddingRL">
                           <label>
                             <strong>{{ globalResource.brand  }}: </strong>
@@ -631,7 +656,7 @@
                           </label>
                         </div>
                   </div>
-                  <div class="ui-g-12 ui-md-4">
+                  <div *ngIf="taskCategory != 'GROWING'" class="ui-g-12 ui-md-4">
                       <div class="paddingRL">
                           <label>
                             <strong>{{ globalResource.subbrand  }}: </strong>
@@ -666,19 +691,26 @@
                           <label>
                             <strong>{{ globalResource.pkgsize  }}: </strong>
                           </label>
-                          <label>
+                          <label *ngIf="taskCategory != 'GROWING'">
                               {{LotDetails?.UnitValue}}{{globalResource.listgramunit}}
                           </label>
+                          <label *ngIf="taskCategory === 'GROWING'">
+                            {{LotDetails?.PackageSize}}(lb)
+                        </label>
                         </div>
                   </div>
                   <div class="ui-g-12 ui-md-4">
                       <div class="paddingRL">
                           <label>
-                            <strong>{{ globalResource.assignqty  }}: </strong>
+                            <strong *ngIf="taskCategory != 'GROWING'">{{ globalResource.assignqty  }}: </strong>
+                            <strong *ngIf="taskCategory === 'GROWING'">Assign Wt: </strong>
                           </label>
-                          <label>
+                          <label *ngIf="taskCategory != 'GROWING'">
                               {{LotDetails?.AssignedQty}}  
                           </label>
+                          <label *ngIf="taskCategory === 'GROWING'">
+                            {{LotDetails?.AssignedWt}}  
+                        </label>
                         </div>
                   </div>
       </div>
@@ -693,20 +725,24 @@
                           <tr>
                               <th style="width:10%;"> {{ globalResource.srno }} </th>
                               <!-- <th> {{globalResource.pkgcode }} </th> -->
-                              <th style="width:20%">{{globalResource.completedqty}}</th>
+                              <th *ngIf="taskCategory != 'GROWING'" style="width:20%">{{globalResource.completedqty}}</th>
+                              <th *ngIf="taskCategory === 'GROWING'" style="width:20%">Completed Wt</th>
                               <th style="width:20%">{{globalResource.strain}}</th>
-                              <th style="width:205px;">{{globalResource.lotno}}</th>                                                            
-                              <th style="width:20%" *ngIf="showToManager">{{globalResource.revqty}}</th>                              
+                              <th *ngIf="taskCategory != 'GROWING'"style="width:205px;">{{globalResource.lotno}}</th>    
+                              <th *ngIf="taskCategory === 'GROWING'"style="width:205px;">Bin Name</th>                                                         
+                              <th style="width:20%" *ngIf="showToManager&&taskCategory != 'GROWING'">{{globalResource.revqty}}</th>                              
                           </tr>
                       </ng-template>
                       <ng-template pTemplate="body" let-LotDetails let-i="rowIndex">
                           <tr>
                             <td> {{ i + 1 }} </td>
                             <!-- <td>{{LotDetails?.PackageCode}}</td> -->
-                            <td>{{LotDetails?.ProcessedQty}}</td>  
+                            <td *ngIf="taskCategory != 'GROWING'">{{LotDetails?.ProcessedQty}}</td>  
+                            <td *ngIf="taskCategory === 'GROWING'">{{LotDetails?.CompletedWt}}</td> 
                             <td>{{LotDetails?.StrainName}}</td>
-                            <td style="width:205px;"><span>{{LotDetails?.GrowerLotNo}}</span></td>                          
-                            <td *ngIf="showToManager">{{LotDetails?.RevQty}}</td>                           
+                            <td *ngIf="taskCategory != 'GROWING'" style="width:205px;"><span>{{LotDetails?.GrowerLotNo}}</span></td>  
+                            <td  *ngIf="taskCategory === 'GROWING'"style="width:205px;"><span>{{LotDetails?.BinName}}</span></td>                         
+                            <td *ngIf="showToManager&&taskCategory != 'GROWING'">{{LotDetails?.RevQty}}</td>                           
                           </tr>
                       </ng-template>
                       <ng-template pTemplate="emptymessage">
@@ -861,9 +897,11 @@
                                         </td>                                         
                                           <td *ngIf="taskCategory != 'GROWING'">{{lotDetails.AssignedWt}} {{globalResource.listgramunit}}</td>
                                           <td *ngIf="taskCategory === 'GROWING'">{{lotDetails.AssignedWt}} (lb)</td>  
-                                          <td *ngIf="TaskModel?.TaskStatus == taskStatus.ReviewPending||TaskModel?.TaskStatus == taskStatus.Completed">{{lotDetails.ProcessedWt}} {{globalResource.listgramunit}}</td>
+                                          <td *ngIf="(TaskModel?.TaskStatus == taskStatus.ReviewPending||TaskModel?.TaskStatus == taskStatus.Completed)&&taskCategory != 'GROWING'">{{lotDetails.ProcessedWt}} {{globalResource.listgramunit}}</td>
+                                          <td *ngIf="(TaskModel?.TaskStatus == taskStatus.ReviewPending||TaskModel?.TaskStatus == taskStatus.Completed)&&taskCategory === 'GROWING'">{{lotDetails.CompletedWt}}(lb)</td>
                                           <!-- <td *ngIf="TaskModel?.TaskStatus == taskStatus.ReviewPending||TaskModel?.TaskStatus == taskStatus.Completed">{{lotDetails?.ReturnWt}}{{globalResource.listgramunit}}</td> -->
-                                          <td *ngIf="showToManager">{{lotDetails?.RevProcessedWt}}{{globalResource.listgramunit}}</td>
+                                          <td *ngIf="showToManager&&taskCategory != 'GROWING'">{{lotDetails?.RevProcessedWt}}{{globalResource.listgramunit}}</td>
+                                          <td *ngIf="showToManager&&taskCategory === 'GROWING'">{{lotDetails?.RevCompletedWt}}(lb)</td>
                                           <!-- <td *ngIf="showToManager">{{lotDetails?.RevReturnWt}}{{globalResource.listgramunit}}</td> -->
                                       </tr>
                                   </ng-template>
@@ -945,18 +983,24 @@
               <p-header class="accordionHeader">  
                 <div class="ui-helper-clearfix"  >
                   <p class="panel-titleCompletion">
-                    <span class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px">
+                    <span *ngIf="taskCategory != 'GROWING'" class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px">
                         <span pTooltip="Brand Name">{{ TaskModel.AssignQtyDetails[i].BrandName }}</span>: <span pTooltip="Sub-Brand">{{ TaskModel.AssignQtyDetails[i].SubBrandName }}</span>
                         : <span pTooltip="Strain Name">{{ TaskModel.AssignQtyDetails[i].StrainName }}</span>
                         : <span pTooltip="Pkg Type Name">{{ TaskModel.AssignQtyDetails[i].PkgTypeName }}</span>: <span pTooltip="Package Size">{{ TaskModel.AssignQtyDetails[i].UnitValue }}{{globalResource.listgramunit}}</span>
                         <!-- : <span pTooltip="Item Qty">{{ TaskModel.AssignQtyDetails[i].ItemQty }}</span>                          -->
                     </span>
+                    <span *ngIf="taskCategory === 'GROWING'" class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px">
+                      <span pTooltip="Strain Name">{{ TaskModel.AssignQtyDetails[i].StrainName }}</span>
+                      : <span pTooltip="Pkg Type Name">{{ TaskModel.AssignQtyDetails[i].PkgTypeName }}</span>
+                      <!-- : <span pTooltip="Item Qty">{{ TaskModel.AssignQtyDetails[i].ItemQty }}</span>                          -->
+                  </span>
 
-                    <span class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px">                    
+                    <span *ngIf="taskCategory != 'GROWING'"class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px">                    
                       Assign Qty:{{ TaskModel.AssignQtyDetails[i].AssignedQty }}
                   </span>
+                  
                 </p>  
-                <div style="display: inline-block;vertical-align: top;">
+                <div style="display: inline-block;vertical-align: top;" *ngIf="taskCategory != 'GROWING'">
                   <input                    
                       type="text"
                       pTooltip="Package Code"                      
@@ -979,7 +1023,7 @@
                       </span>
                   </div>
                 </div>  
-                <div style="display: inline-block;vertical-align: top;">
+                <div style="display: inline-block;vertical-align: top;" *ngIf="taskCategory != 'GROWING'">
                     <!-- readonly="true" -->
                     <input
                       pTooltip="Completed Qty"           
@@ -1017,10 +1061,12 @@
                 <table class="table table-bordered">
                   <thead>
                     <tr>
-                      <th>{{ globalResource.lotno }}</th>
+                      <th *ngIf="taskCategory != 'GROWING'">{{ globalResource.lotno }}</th>
+                      <th *ngIf="taskCategory === 'GROWING'">Bin No</th>
                       <th>{{ globalResource.assignwt }}</th>
-                      <th>{{ globalResource.pkgcompletedqty }}</th>
-                      <th>{{ globalResource.completedwt }}</th>
+                      <th *ngIf="taskCategory != 'GROWING'">{{ globalResource.pkgcompletedqty }}</th>
+                      <th *ngIf="taskCategory === 'GROWING'">pkg. Completed Wt</th>
+                      <th *ngIf="taskCategory != 'GROWING'">{{ globalResource.completedwt }}</th>
                       <th>{{ globalResource.balancedwt }}</th>
                     </tr>
                   </thead>                  
@@ -1029,7 +1075,8 @@
                       *ngFor="let lot of lotInnerFormArray(comp).controls; let j=index;" 
                       [formGroupName]="j"                      
                       >                                                                
-                          <td  pTooltip="Grower Lot No." style="width:205px;">                                                      
+                          <td  
+                          *ngIf="taskCategory != 'GROWING'" pTooltip="Grower Lot No." style="width:205px;">                                                      
                             <label>
                                 {{ lot.value.GrowerLotNo }}
       
@@ -1043,6 +1090,24 @@
                                   [LotId]="lot.value.LotId"                            
                                   (NoteIconClicked)="showLotNote($event)"
                                 ></app-lot-note-icon>
+      
+                            </label>
+                          </td>
+                          <td 
+                          *ngIf="taskCategory === 'GROWING'" pTooltip="Bin No." style="width:205px;">                                                      
+                            <label>
+                                {{ lot.value.LabelName }}
+      
+                                <!-- <app-lot-comment
+                                    [LotId]="lot.value.LotId"
+                                    [LotCommentsCount]="lot.value.LotNoteCount"
+                                    (CommentIconClicked)="commentIconClicked($event)"
+                                ></app-lot-comment>
+
+                                <app-lot-note-icon
+                                  [LotId]="lot.value.LotId"                            
+                                  (NoteIconClicked)="showLotNote($event)"
+                                ></app-lot-note-icon> -->
       
                             </label>
                           </td>
@@ -1070,11 +1135,15 @@
                             </div>                  
                         
                           </td>   
-                          <td pTooltip="Completed Weight" >    
+                          <td 
+                          *ngIf="taskCategory != 'GROWING'" pTooltip="Completed Weight" >    
                               <label>{{ lotMap.get(lot.value.LotId ) || 0 }}{{globalResource.listgramunit}}</label>
                           </td>
                           <td pTooltip="Balanced Weight" >    
-                              <label>{{ lotBalancedWtMap.get(lot.value.LotId) || 0 }}{{globalResource.listgramunit}}</label>
+                              <label 
+                              *ngIf="taskCategory != 'GROWING'">{{ lotBalancedWtMap.get(lot.value.LotId) || 0 }}{{globalResource.listgramunit}}</label>
+                              <label 
+                              *ngIf="taskCategory === 'GROWING'">{{ lotBalancedWtMap.get(lot.value.BinId) || 0 }}(lb)</label>
                           </td>      
                     </tr>
                   </tbody>
@@ -1082,7 +1151,7 @@
             </div>
 
             <!-- Lot Mixing -->
-            <div class="divLotMixing panel-content" formArrayName="MixLotDetails" *ngIf="comp.value.completedWt > 0 && lotInnerFormArray(comp).controls.length > 1">
+            <div class="divLotMixing panel-content" formArrayName="MixLotDetails" *ngIf="comp.value.completedWt > 0 && lotInnerFormArray(comp).controls.length > 1 && taskCategory != 'GROWING'">
                 <strong><span class="ui-dialog-title">{{ assignTaskResources.mixlotdetails }}</span></strong>
                 <hr>
 <div  style="position: relative;">
@@ -1169,7 +1238,7 @@
           </div>
             
           <!-- Return Weight Entries -->
-           <div class="ui-g-12" *ngIf="lotReturnWtArr?.controls.length &&  enabledReturnwtbox " formArrayName="lotReturnWtArr">
+           <div class="ui-g-12" *ngIf="lotReturnWtArr?.controls.length &&  enabledReturnwtbox && taskCategory != 'GROWING' " formArrayName="lotReturnWtArr">
             <h5>Lot Return Weight Details</h5>
             <p-table [value]="lotReturnWtArr?.controls">
                 <ng-template pTemplate="header">
@@ -1279,6 +1348,7 @@
       <div formArrayName="reviewParamArr">
         <div class="ui-grid-row" *ngFor="let comp of reviewParamArr?.controls; let i=index">                         
             <p-panel
+          
               [toggleable]="true" 
               [style]="{'margin-bottom':'20px','width': '100%'}"
               [formGroupName]="i"
@@ -1286,7 +1356,7 @@
             <p-header class="accordionHeader">  
               <div class="ui-helper-clearfix" >
                 <p class="panel-title">
-                  <span class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px">
+                  <span *ngIf="taskCategory != 'GROWING'"class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px">
                       <span pTooltip="Brand Name">{{ TaskModel.AssignQtyDetails[i].BrandName }}</span>
                       : <span pTooltip="Sub-Brand">{{ TaskModel.AssignQtyDetails[i].SubBrandName }}</span>
                       : <span pTooltip="Strain Name">{{ TaskModel.AssignQtyDetails[i].StrainName }}</span>
@@ -1295,12 +1365,18 @@
                       <!-- : <span pTooltip="Item Qty">{{ TaskModel.AssignQtyDetails[i].ItemQty }}</span>                         -->
                   </span>
 
-                  <span class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px"
+                  <span *ngIf="taskCategory === 'GROWING'"class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px">
+                    <span pTooltip="Strain Name">{{ TaskModel.AssignQtyDetails[i].StrainName }}</span>
+                    : <span pTooltip="Pkg Type Name">{{ TaskModel.AssignQtyDetails[i].PkgTypeName }}</span>
+                    <!-- : <span pTooltip="Item Qty">{{ TaskModel.AssignQtyDetails[i].ItemQty }}</span>                         -->
+                  </span>
+
+                  <span *ngIf="taskCategory != 'GROWING'"class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px"
                   pTooltip="Completed Qty"
                   >                    
                     Completed Qty:{{ TaskModel.AssignQtyDetails[i].CompletedQty }} 
                   </span>
-                  <span class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px"
+                  <span *ngIf="taskCategory != 'GROWING'"class="ui-panel-title" style="font-size:16px;display:inline-block;margin-top:2px"
                   pTooltip="Package Code"
                   >                    
                     Pkg Code: {{ TaskModel.AssignQtyDetails[i].PackageCode }} 
@@ -1336,7 +1412,7 @@
             <tr *ngFor="let lot of lotInnerFormArray(comp).controls; let j=index;" [formGroupName]="j">               
               <td style="width:205px;">  
                                                                   
-                    <label>
+                    <label *ngIf="taskCategory != 'GROWING'">
                         {{ lot.value.GrowerLotNo }}
 
                         <app-lot-comment
@@ -1351,9 +1427,14 @@
                         ></app-lot-note-icon>
 
                     </label>
+                    <label *ngIf="taskCategory === 'GROWING'">
+                      {{ lot.value.LabelName }}
+
+                  </label>
                   </td>
                   <td > 
-                        <label>{{ lot.value.ProcessedQty }}</label>
+                        <label *ngIf="taskCategory != 'GROWING'">{{ lot.value.ProcessedQty }}</label>
+                        <label *ngIf="taskCategory === 'GROWING'">{{ lot.value.CompletedWt }}</label>
                   </td>
                   <td> 
                     <input                    
@@ -1470,7 +1551,7 @@
         </div>
 
         <!-- Return Weight Entries -->
-         <div class="ui-g-12" *ngIf="enabledReturnwtbox "  formArrayName="lotReturnWtArr">
+         <div class="ui-g-12" *ngIf="enabledReturnwtbox&&taskCategory != 'GROWING' "  formArrayName="lotReturnWtArr">
           <h5>Lot Return Weight Details</h5>
           <p-table [value]="lotReturnWtRevArr?.controls">
               <ng-template pTemplate="header">

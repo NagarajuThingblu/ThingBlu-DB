@@ -59,6 +59,11 @@ export class AddNewEmployeeComponent implements OnInit {
   public empIdForUpdate: any = 0;
   public _cookieService: any;
   public newEmployeeResources: any;
+  public constantusrRole:any;
+  public selectedRole:any;
+  public Managerlist:any;
+  public flclist:any;
+  public showMangFlc: boolean =false;
   public globalResource: any;
   collapsed: any;
   constructor(
@@ -78,7 +83,9 @@ export class AddNewEmployeeComponent implements OnInit {
     this.getCountryList();
     this.getStateList();
     this.getCityList();
+    this.GetManagerlist();
     this.getAllEmployee();
+    this.GetFLClist();
     this.saveButtonText = 'Save';
     this.dateTime.setDate(this.dateTime.getDate());
    }
@@ -161,7 +168,10 @@ export class AddNewEmployeeComponent implements OnInit {
           VirtualRoleId: Number(this._cookieService.VirtualRoleId),
           IsActive: this.newEmployeeForm.value.chkIsActive ? 1 : 0,
           // EditorType: 'Manager'
-          EditorType: this._cookieService.UserRole
+          EditorType: this._cookieService.UserRole,
+          ManagerId:this.newEmployeeForm.value.Managerlist,
+          FLCId:this.newEmployeeForm.value.flclist,
+
       }
     };
     // this.NewProductTypeForm_copy = JSON.parse(JSON.stringify(Object.assign({}, this.newEmployeeForm.value)));
@@ -327,6 +337,17 @@ export class AddNewEmployeeComponent implements OnInit {
       error => { console.log(error);  this.loaderService.display(false); },
       () => console.log('Get All  Employee List complete'));
   }
+  GetManagerlist()
+{
+  this.dropdownDataService.getManagerList().subscribe(data=>{
+    this.Managerlist=this.dropdwonTransformService.transform(data,'ManagerName','ManagerId','--Select--');
+  }
+  ,
+      error => { console.log(error);
+        this.loaderService.display(false); },
+      () => console.log('Get all Managerlist complete'));
+  
+}
 
   decode64 (input) {
     let output = '';
@@ -372,6 +393,7 @@ export class AddNewEmployeeComponent implements OnInit {
   }
   GetEmployeeOnEdit(EmpId) {
     // this.newEmployeeService.GetAllEmployeeList().subscribe(
+      this.showMangFlc = false;
       this.showTextbox = false;
       const data = this.allEmployeeList.filter(x => x.EmpId === EmpId);
        if (data !== 'No data found!') {
@@ -380,6 +402,9 @@ export class AddNewEmployeeComponent implements OnInit {
           this.getCityList();
 
           this.employeeOnEdit = data.filter(x => x.EmpId === EmpId);
+          if( this.employeeOnEdit[0].FLCId != null){
+             this. showMangFlc = true
+          }
           const decryptedpwd = this.decode64(this.employeeOnEdit[0].Password);
           const clientname = this.newEmployeeForm.controls['clientname'];
           const firstname = this.newEmployeeForm.controls['firstname'];
@@ -399,6 +424,8 @@ export class AddNewEmployeeComponent implements OnInit {
           const username = this.newEmployeeForm.controls['empusername'];
           const password = this.newEmployeeForm.controls['emppassword'];
           const userrole = this.newEmployeeForm.controls['userrole'];
+          const managerlist = this.newEmployeeForm.controls['Managerlist'];
+          const flclist = this.newEmployeeForm.controls['flclist'];
           const hourlylabourrate = this.newEmployeeForm.controls['hourlylabourrate'];
           const chkIsActive = this.newEmployeeForm.controls['chkIsActive'];
 
@@ -420,6 +447,8 @@ export class AddNewEmployeeComponent implements OnInit {
           username.patchValue(this.employeeOnEdit[0].Username);
           password.patchValue(decryptedpwd);
           userrole.patchValue(this.employeeOnEdit[0].RoleId);
+          managerlist.patchValue(this.employeeOnEdit[0].ManagerId);
+          flclist.patchValue(this.employeeOnEdit[0].FLCId);
           hourlylabourrate.patchValue(this.employeeOnEdit[0].HourlyRate);
           chkIsActive.patchValue(this.employeeOnEdit[0].IsActive);
           this.saveButtonText = 'Update';
@@ -545,6 +574,24 @@ export class AddNewEmployeeComponent implements OnInit {
       () => console.log('Get all roles complete'));
   }
 
+
+  Managerdrpdwnchng(event)
+{
+  // this.showMangFlc = false;
+  const selectedRole=this.roles.filter(ur=>ur.value==event.value);
+  this.selectedRole=selectedRole[0].label;
+const managerdata = this.newEmployeeForm.get('Managerlist');
+if(this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole)
+{
+  managerdata.setValidators(Validators.required);
+  // this.showMangFlc = true;
+}
+else{
+  managerdata.clearValidators();
+  }
+  managerdata.updateValueAndValidity();
+}
+
   ngOnInit() {
     this.saveButtonText = 'Save';
     this.clear = 'Clear';
@@ -554,7 +601,7 @@ export class AddNewEmployeeComponent implements OnInit {
     this.loaderService.display(false);
     this.appComponentData.setTitle('Employee');
     this._cookieService = this.appCommonService.getUserProfile();
-
+    this.constantusrRole=  AppConstants.getUserRoles;
     // new product type form defination(reactive form)
   this.newEmployeeForm = this.fb.group({
     'clientname': new FormControl(null, Validators.required),
@@ -576,9 +623,11 @@ export class AddNewEmployeeComponent implements OnInit {
     'emppassword': new FormControl(null, Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)])),
     'userrole': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
     'hourlylabourrate': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
-    'chkIsActive': new FormControl(null)
+    'chkIsActive': new FormControl(null),
+    'Managerlist': new FormControl(null),
+    'flclist':new FormControl(null),
   });
-
+  // const managerdata = this.newEmployeeForm.get('Managerlist');
   const clientname = this.newEmployeeForm.controls['clientname'];
   clientname.patchValue(Number(this._cookieService.ClientId));
 
@@ -592,6 +641,8 @@ export class AddNewEmployeeComponent implements OnInit {
   const state = this.newEmployeeForm.controls['state'];
   state.patchValue(16);
   }
+
+  
 
 
 
@@ -635,7 +686,14 @@ getCityList() {
     }
   );
 }
-
+GetFLClist(){
+  this.dropdownDataService.GetFLClist().subscribe(data=>{
+    this.flclist=this.dropdwonTransformService.transform(data,'FLCName','FLCId','--Select--');
+  },
+  error => { console.log(error);
+    this.loaderService.display(false); },
+  () => console.log('Get all FLClist complete'));
+}
 OnUserRoleSave(RoleId: any) {
 this.getAllRoles();
 const userrole = this.newEmployeeForm.controls['userrole'];

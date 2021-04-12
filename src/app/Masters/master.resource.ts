@@ -444,8 +444,21 @@ export class MastersResource {
                     custupdateFailure: 'Can not update this Customer. Might be it does not exist.',
                     // End of Added by DEVDAN
                 },
+                flc:{
+                    contractorsuccess:'FLC added successfully',
+                    updateSuccess: 'FLC updated successfully.',
+                    inactivated:'FLC inactivated successfully.',
+                    flcinactivated:'FLC inactivated successfully.',
+                    activated: 'FLC activated successfully.',
+                    alreadydlt:'FLC Already Deleted',
+                    deletedSuccess: 'FLC deleted successfully.',
+                    cannotActivate: 'Can not activate this FLC. Might be it does not exist.',
+                    cannotdelete: 'Can not delete this FLC. Might be it does not exist.',
+                    cannotInactivate: 'Can not inactivate this FLC. Might be it does not exist.',
+                    inuse: 'Can not delete this FLC. It is in use.',
+                },
 
-                addnewclient: {
+         addnewclient: {
                     pageheading: 'Add New Client',
                     countrylist: 'City List',
                     clientlist: 'Client List',

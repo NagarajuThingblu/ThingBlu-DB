@@ -239,11 +239,23 @@ public reqWt:any;
     this.brandStrainLots = [];
     
       this.brandStrainLots = this.AllocateEmpData.orderDetails['Table1'].filter(result => {
-        if (rowData.value.strainId) {
-          return result.StrainId === rowData.value.strainId;
-          } else {
-          return result.GeneticsId === rowData.value.geneticsId;
-      }
+        if(this.taskCategory === 'GROWING'){
+          if (rowData.value.strainId) {
+            if(rowData.value.SkewKeyName.toLocaleUpperCase() == result.SkewType.toLocaleUpperCase()){
+              return result.StrainId === rowData.value.strainId;
+            }
+            } else {
+            return result.GeneticsId === rowData.value.geneticsId;
+        }
+        }
+        else{
+          if (rowData.value.strainId) {
+            return result.StrainId === rowData.value.strainId;
+            } else {
+            return result.GeneticsId === rowData.value.geneticsId;
+        }
+        }
+       
       });
     
     // if(this.taskCategory === 'GROWING'){
@@ -531,23 +543,42 @@ public reqWt:any;
               c.value.pkgTypeId,
               c.value.pkgSize,
               c.value.itemQty,
-              c.value.employee
+              c.value.employee,
+              c.value.SkewKeyName
             ];
     });
     for (const prop in result) {
-        if (result[prop].length > 1 && (result[prop][0].controls['employee'].value )) {
-            isError = true;
-            _.forEach(result[prop], function (item: any, index) {
-              item._status = 'INVALID';
-              (<FormControl>result[prop][index].controls['employee']).setErrors({ 'duplicateProductEmployee': true});
-              (<FormControl>result[prop][index].controls['employee']).markAsDirty();
-            });
+      if(this.taskCategory === 'GROWING'){
+        if (result[prop].length > 1 && (result[prop][0].controls['employee'].value && result[prop][0].controls['SkewKeyName'].value)) {
+          isError = true;
+          _.forEach(result[prop], function (item: any, index) {
+            item._status = 'INVALID';
+            (<FormControl>result[prop][index].controls['employee']).setErrors({ 'duplicateProductEmployee': true});
+            (<FormControl>result[prop][index].controls['employee']).markAsDirty();
+          });
 
-            // console.log(result);
-        } else {
-            result[prop][0]._status = 'VALID';
-            result[prop][0].controls['employee'].updateValueAndValidity();
-        }
+          // console.log(result);
+      } else {
+          result[prop][0]._status = 'VALID';
+          result[prop][0].controls['employee'].updateValueAndValidity();
+      }
+      }
+      else{
+        if (result[prop].length > 1 && (result[prop][0].controls['employee'].value)) {
+          isError = true;
+          _.forEach(result[prop], function (item: any, index) {
+            item._status = 'INVALID';
+            (<FormControl>result[prop][index].controls['employee']).setErrors({ 'duplicateProductEmployee': true});
+            (<FormControl>result[prop][index].controls['employee']).markAsDirty();
+          });
+
+          // console.log(result);
+      } else {
+          result[prop][0]._status = 'VALID';
+          result[prop][0].controls['employee'].updateValueAndValidity();
+      }
+      }
+        
     }
 
     return isError;

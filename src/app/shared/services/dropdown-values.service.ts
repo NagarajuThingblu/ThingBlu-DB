@@ -396,4 +396,15 @@ getManagerList() {
   return data;
  });
 }
+GetFLClist() {
+  const url = 'api/Grower/GetFLCList';
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+  return this.http
+  .get(url, {params: params})
+ .map(data => {
+  // console.log('GetRoleList Service success');
+  return data;
+ });
+}
 }

@@ -72,6 +72,7 @@ import{ProductiondashboardsummaryComponent} from './dashboard/components/product
 import { FieldsComponent } from './Masters/components/fields/fields.component';
 import { SectionsComponent } from './Masters/components/sections/sections.component';
 import { LabelsComponent } from './Masters/components/labels/labels.component';
+import {FlcComponent} from './Masters/components/flc/flc.component';
 import { HelpComponent } from './Masters/components/help/help.component';
 import { OrderformComponent } from './order/components/orderform/orderform.component';
 const appRoutes: Routes = [
@@ -159,6 +160,7 @@ const appRoutes: Routes = [
       {path:'fields', component:FieldsComponent, canActivate:[AuthGuard,RoleGuard]},
       {path:'sections', component:SectionsComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'labels', component:LabelsComponent,canActivate:[AuthGuard,RoleGuard]},
+      {path:'flc', component:FlcComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'help', component:HelpComponent},
       {path:'orderform', component:OrderformComponent},
       // {path:'planting', component:PlantingComponent}

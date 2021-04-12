@@ -44,7 +44,11 @@ export class GrowerDetailsActionService {
     // .do(data =>console.log('All : ' + JSON.stringify(data)))
     .map(data =>  data );
   }
-
+  addNewUser(employeeForApi: any){
+    const url = 'api/Employee/AddNewAzureUser';
+    return this.http.post(url, employeeForApi, this.headers)
+    .map(data =>  data );
+  }
   getRowSuplierDetailList() {
       const url = 'api/Rawsuplr/GetGrowerListByClient';
       let params = new HttpParams();

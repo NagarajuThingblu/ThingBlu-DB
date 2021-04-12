@@ -13,7 +13,7 @@
           sortOrder="-1"
           [rowsPerPageOptions]="PaginationValues"
           (onPage)="onPageChange($event)"
-          [globalFilterFields]="['FirstName','LastName','Gender','DOB','Role','CityName','CellPhone']"
+          [globalFilterFields]="['FirstName','LastName','Gender','DOB','Role','FLCName','CityName','CellPhone']"
           >                    
           <ng-template pTemplate="caption">
               <div style="text-align: right">
@@ -29,6 +29,7 @@
                   <th [pSortableColumn]="'Gender'">{{ newEmployeeResources.gender}} <p-sortIcon [field]="'Gender'"></p-sortIcon></th>  
                   <th [pSortableColumn]="'DOB'">{{ newEmployeeResources.dob}} <p-sortIcon [field]="'DOB'"></p-sortIcon></th>
                   <th [pSortableColumn]="'Role'">{{ newEmployeeResources.userrole}} <p-sortIcon [field]="'Role'"></p-sortIcon></th>
+                  <th [pSortableColumn]="'FLCName'">FLC Name <p-sortIcon [field]="'Role'"></p-sortIcon></th>
                   <th [pSortableColumn]="'CityName'">{{ newEmployeeResources.city}} <p-sortIcon [field]="'CityName'"></p-sortIcon></th>           
                   <th [pSortableColumn]="'CellPhone'">{{ newEmployeeResources.cellphone}} <p-sortIcon [field]="'CellPhone'"></p-sortIcon></th>
                   <!-- <th [pSortableColumn]="'PrimaryEmail'">{{ newEmployeeResources.primaryemail}} <p-sortIcon [field]="'PrimaryEmail'"></p-sortIcon></th> -->
@@ -55,6 +56,9 @@
                     <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'Role', 'contains')" class="clsControl">
                 </th>
                 <th>
+                  <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'FLCName', 'contains')" class="clsControl">
+              </th>
+                <th>
                   <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'CityName', 'contains')" class="clsControl">
                 </th>
                 <th>
@@ -73,6 +77,7 @@
                   <td>{{newemployee?.GenderName }}</td>                  
                   <td>{{newemployee?.DOB | date: 'MM/dd/yyyy' }}</td>
                   <td>{{newemployee?.Role}}</td>
+                  <td>{{newemployee?.FLCName}}</td>
                   <td>{{newemployee?.CityName}}</td>
                   <td>{{newemployee?.CellPhone}}</td>
                   <!-- <td>{{newemployee?.PrimaryEmail}}</td>    -->

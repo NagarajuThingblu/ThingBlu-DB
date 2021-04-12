@@ -50,6 +50,7 @@ export class AddEmployeeComponent implements OnInit {
   public PhoneNoName = 'Phone No';
   public EmailIdlbName = 'Email Id';
   public Managerlist:any;
+  public flclist:any;
   public selectedRole:any;
   public constantusrRole:any;
 
@@ -81,6 +82,7 @@ export class AddEmployeeComponent implements OnInit {
     this.defaultDate.setDate(this.defaultDate.getDate() + 1);
     this.getAllRoles();
     this.GetManagerlist();
+    this.GetFLClist();
     this.constantusrRole=  AppConstants.getUserRoles;
 
     this.genders = [
@@ -109,7 +111,8 @@ export class AddEmployeeComponent implements OnInit {
       'hireDate': new FormControl(this.defaultDate),
       'userRole': new FormControl(null, Validators.compose([Validators.required])),
       'hourlyRate': new FormControl(null, Validators.compose([Validators.required])),
-      'Managerlist': new FormControl(null)
+      'Managerlist': new FormControl(null),
+      'flclist':new FormControl(null),
     });
 
     if (!this.isUpdateMode) {
@@ -143,10 +146,12 @@ export class AddEmployeeComponent implements OnInit {
       'hireDate': new FormControl(this.userDetails[0].HireDate),
       'userRole': new FormControl(this.userDetails[0].RoleId, Validators.compose([Validators.required])),
       'hourlyRate': new FormControl(this.userDetails[0].HourlyRate, Validators.compose([Validators.required])),
-      'Managerlist': new FormControl(this.userDetails[0].ManagerId)
+      'Managerlist': new FormControl(this.userDetails[0].ManagerId),
+      'flclist': new FormControl(this.userDetails[0].FLCId),
       
     });
     const managerdata = this.addEmpForm.get('Managerlist');
+    const flcdata =this.addEmpForm.get('flclist');
 if( this.addEmpForm.get('userRole').value == 10 || this.addEmpForm.get('userRole').value == 14 )
 {
   if(this.addEmpForm.get('userRole').value == 10){
@@ -157,6 +162,7 @@ if( this.addEmpForm.get('userRole').value == 10 || this.addEmpForm.get('userRole
   }
  
 managerdata.setValidators(Validators.required);
+flcdata.setValidators(Validators.required);
 }
   }
 
@@ -203,6 +209,7 @@ managerdata.setValidators(Validators.required);
    if (this.addEmpForm.valid) {
       employeeForApi = {
         addEmpApiDetails: {
+          AzureUserId:null,
           FirstName: this.addEmpForm.value.firstName || '',
           LastName: this.addEmpForm.value.lastName || '',
           Gender: this.addEmpForm.value.gender,
@@ -218,8 +225,9 @@ managerdata.setValidators(Validators.required);
           HourlyLabourRate: this.addEmpForm.value.hourlyRate || 0,
           VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
           ClientId: this.cookie_clientId,
-          InviteToken: encodeURIComponent(this.addEmpForm.value.email) || '',
-          ManagerId:this.addEmpForm.value.Managerlist
+          // InviteToken: encodeURIComponent(this.addEmpForm.value.emailId) || '',
+          ManagerId:this.addEmpForm.value.Managerlist,
+          FLCId:this.addEmpForm.value.flclist,
         }
       };
 
@@ -232,6 +240,8 @@ managerdata.setValidators(Validators.required);
           this.loaderService.display(true);
           this.httpMethodsService.post('api/Employee/AddNewAzureUser', employeeForApi)
             .subscribe((result: any) => {
+                // console.log(result);
+                // this.msgs = []; 
               if (String(result[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
                 this.msgs = [];
                 this.msgs.push({
@@ -298,6 +308,59 @@ managerdata.setValidators(Validators.required);
       this.loaderService.display(false);
     }
   }
+  // onAddSubmit(){
+  //   let employeeForApi;
+  //   if (this.addEmpForm.value.cellPhone) {
+  //     if (this.addEmpForm.value.cellPhone.replace(/\D+/g, '').length !== 10) {
+  //           this.addEmpForm.controls['cellPhone'].reset();
+  //         }
+  //   }
+
+  //   if (this.addEmpForm.valid) {
+  //     employeeForApi = {
+  //             addEmpApiDetails: {
+  //               FirstName: this.addEmpForm.value.firstName || '',
+  //               LastName: this.addEmpForm.value.lastName || '',
+  //               Gender: this.addEmpForm.value.gender,
+  //              // CellPhone: this.addEmpForm.value.cellPhone,
+  //               CellPhone: this.addEmpForm.value.cellPhone ? this.addEmpForm.value.cellPhone.replace(/\D+/g, '') : null,
+  //               PrimaryEmail: this.addEmpForm.value.emailId || '',
+  //               UserName: this.addEmpForm.value.userName,
+  //               // tslint:disable-next-line:max-line-length
+  //               DOB: this.addEmpForm.value.birthDate ? this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.birthDate).toLocaleDateString()) : null,
+  //               // tslint:disable-next-line:max-line-length
+  //               HireDate: this.addEmpForm.value.hireDate ? this.appCommonService.replaceStringChars(new Date(this.addEmpForm.value.hireDate).toLocaleDateString()) : null,
+  //               UserRoleId: this.addEmpForm.value.userRole || '',
+  //               HourlyLabourRate: this.addEmpForm.value.hourlyRate || 0,
+  //               VirtualRoleId: this.appCommonService.getUserProfile().VirtualRoleId,
+  //               ClientId: this.cookie_clientId,
+  //               InviteToken: encodeURIComponent(this.addEmpForm.value.email) || '',
+  //               ManagerId:this.addEmpForm.value.Managerlist,
+  //               FLCId:this.addEmpForm.value.flclist,
+  //             }
+  //           };
+  //           this.confirmationService.confirm({
+  //             key: 'draftdelete',
+  //              message: 'Are you sure you want create new user?',
+  //               header: this.globalResource.applicationmsg,
+  //               icon: 'fa fa-exclamation-triangle',
+  //               accept: () => {
+  //                 this.loaderService.display(true);
+  //                 this.growerDetailsActionService.addNewUser(employeeForApi)
+  //                 .subscribe(
+  //                   data => {
+  //                     this.msgs = [];
+  //                     if (data[0]. RESULTKEY === 'SUCCESS') {
+  //                       this.msgs.push({ severity: 'success', summary: this.globalResource.applicationmsg,
+  //                       detail: 'An account creation email has been sent to: ' + this.addEmpForm.value.emailId});
+                      
+  //                     }
+  //                   }
+  //                 )
+  //               }
+  //           })
+  //   }
+  // }
 
   onUpdateSubmit() {
     let employeeForApi;
@@ -437,7 +500,8 @@ this.backToList();
       'hireDate': new FormControl(this.defaultDate),
       'userRole': new FormControl(null, Validators.compose([Validators.required])),
       'hourlyRate': new FormControl(null, Validators.compose([Validators.required])),
-      'Managerlist': new FormControl(null)
+      'Managerlist': new FormControl(null),
+      'flclist':new FormControl(null),
       
     });
   }
@@ -541,6 +605,16 @@ GetManagerlist()
       () => console.log('Get all Managerlist complete'));
   
 }
+
+GetFLClist(){
+  this.dropdownDataService.GetFLClist().subscribe(data=>{
+    this.flclist=this.dropdwonTransformService.transform(data,'FLCName','FLCId','--Select--');
+  },
+  error => { console.log(error);
+    this.loaderService.display(false); },
+  () => console.log('Get all FLClist complete'));
+}
+
 Managerdrpdwnchng(event)
 {
 const selectedRole=this.userRoles.filter(ur=>ur.value==event.value);
@@ -550,6 +624,7 @@ if(this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp=
 {
 
 managerdata.setValidators(Validators.required);
+
 }
 else{
 managerdata.clearValidators();

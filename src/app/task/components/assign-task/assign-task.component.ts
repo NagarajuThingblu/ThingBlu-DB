@@ -1158,7 +1158,7 @@ console.log(assignTaskFormValues)
                   packagingDataForApi['BinTypeDetails'].push(
                     {
                       BinId: element.BinNo,
-                      AssignedWt: element.SelectedWt,
+                      Weight: element.SelectedWt,
                       ProductTypeId: element.ProductTypeId,
                       UniqueId: element.UniqueId
                     }
@@ -1217,6 +1217,11 @@ console.log(assignTaskFormValues)
                 'taskname': new FormControl(null, Validators.required),
                 'taskCategory':new FormControl(null,Validators.required),
               });
+              this.loaderService.display(false);
+            }
+            else if(String(data[0]. RESULTKEY) === 'No Bins are Selected'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail: this.assignTaskResources.nobinselected});
               this.loaderService.display(false);
             }
           }

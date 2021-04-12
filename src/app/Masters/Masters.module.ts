@@ -23,6 +23,7 @@ import { TpProcessorComponent } from './components/tp-processor/tp-processor.com
 import { TpprocessorService } from './services/tpprocessor.service';
 import { RetailerComponent } from './components/retailer/retailer.component';
 import { RetailerService } from './services/retailer.service';
+import { FLCService } from './services/flc.service';
 import { AddNewClientComponent } from './components/add-new-client/add-new-client.component';
 import { NewClientService } from './services/new-client.service';
 import { CityService } from './services/city.service';
@@ -68,6 +69,7 @@ import{NewSectionDetailsActionService} from './../task/services/add-section-deta
 import { NewLabelDetailsActionService } from './../task/services/add-label-details.service';
 import { LabelsComponent } from './components/labels/labels.component';
 import { HelpComponent } from './components/help/help.component';
+import { FlcComponent } from './components/flc/flc.component';
 
 
 @NgModule({
@@ -109,7 +111,8 @@ import { HelpComponent } from './components/help/help.component';
     FieldsComponent,
     SectionsComponent,
     LabelsComponent,
-    HelpComponent
+    HelpComponent,
+    FlcComponent
    
   ],
   imports: [
@@ -125,6 +128,7 @@ import { HelpComponent } from './components/help/help.component';
     NewProductTypeService,
     TpprocessorService,
     RetailerService,
+    FLCService,
     NewClientService,
     CityService,
     NewRoleActionService,
