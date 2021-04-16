@@ -166,11 +166,11 @@ getFLCDetailListByClient() {
      this.loaderService.display(false);
     } ,
     error => { console.log(error);  this.loaderService.display(false); },
-    () => console.log('getRetailerDetailListByClient complete'));
+    () => console.log('getFLCDetailListByClient complete'));
 }
 
 ResetForm() {
-  this.flcForm.reset({TrimmedYesNo: false });
+  this.flcForm.reset({chkIsActive: true });
 
   this.pageheading = 'Add New FLC';
   this.Clear = 'Clear';
@@ -225,6 +225,9 @@ onSubmit(value: string){
           else{
             this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg , detail: this.flcResources.updateSuccess });
           }
+        }
+        else if(data[0].RESULTKEY ===' Duplicate record found'){
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg , detail: this.flcResources.duplicate });
         }
         this.ResetForm(),
         this.getFLCDetailListByClient(),

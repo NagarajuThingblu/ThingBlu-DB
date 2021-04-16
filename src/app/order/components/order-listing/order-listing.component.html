@@ -82,6 +82,9 @@
                             </td>
                             <td>{{order?.OrderStatus}}</td>
                             <td class="iconwidth">
+                                <a *ngIf="order?.OrderStatus != 'COMPLETED'"  href="#" [routerLink]="" (click)="GetOrderOnEdit(order)" >                             
+                                    <span class="fa fa-edit"></span>
+                                  </a>
                               <u><a [routerLink]="" (click)="getOrderInfo(order?.OrderId,order)" ><i class='fa fa-info-circle'></i></a></u>
                           </td>         
                         </tr>
@@ -413,7 +416,7 @@
                         <th>Package Type</th>
                         <th>Package Size</th>
                         <th>Order Quantity</th>
-                        <th>Order Cost</th>
+                        <th>Order Cost($)</th>
                     </tr>
                 </ng-template> -->
                 <ng-template pTemplate="body" let-taskstatus>

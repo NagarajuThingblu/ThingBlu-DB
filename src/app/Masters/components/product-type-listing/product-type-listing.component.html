@@ -12,7 +12,7 @@
           sortOrder="-1"
           [rowsPerPageOptions]="PaginationValues"
           (onPage)="onPageChange($event)"
-          [globalFilterFields]="['BrandName','SubBrandName','StrainName','SkewKeyName','PkgTypeName','UnitValue','ItemQty','CreatedDate','IsActiveFlag']"
+          [globalFilterFields]="['BrandName','SubBrandName','StrainName','SkewKeyName','PkgTypeName','UnitPrice','UnitValue','ItemQty','CreatedDate','IsActiveFlag']"
           >                    
           <ng-template pTemplate="caption">
               <div style="text-align: right">
@@ -27,6 +27,7 @@
                   <th [pSortableColumn]="'StrainName'">{{ newProductTypeResources.strain}} <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>              
                   <th [pSortableColumn]="'SkewKeyName'">{{ newProductTypeResources.skewtype}} <p-sortIcon [field]="'SkewKeyName'"></p-sortIcon></th>  
                   <th [pSortableColumn]="'PkgTypeName'">{{ newProductTypeResources.packagetype}} <p-sortIcon [field]="'PkgTypeName'"></p-sortIcon></th>
+                  <th [pSortableColumn]="'UnitPrice'">Package Unit Price($) <p-sortIcon [field]="'UnitPrice'"></p-sortIcon></th>
                   <th class="wtg" [pSortableColumn]="'UnitValue'">{{ newProductTypeResources.packageunit}} <p-sortIcon [field]="'UnitValue'"></p-sortIcon></th>
                   <th class="wtg" [pSortableColumn]="'ItemQty'">{{ newProductTypeResources.packageitemqty}} <p-sortIcon [field]="'ItemQty'"></p-sortIcon></th>           
                   <th class="datewidth" [pSortableColumn]="'CreatedDate'">{{ newProductTypeResources.createddate}} <p-sortIcon [field]="'CreatedDate'"></p-sortIcon></th>
@@ -51,6 +52,9 @@
                       <input pInputText autocomplete="off" type="text" (input)="dtNewProductTypeListing.filter($event.target.value, 'PkgTypeName', 'contains')" class="clsControl">
                   </th>
                   <th>
+                    <input pInputText autocomplete="off" type="text" (input)="dtNewProductTypeListing.filter($event.target.value, 'UnitPrice', 'contains')" class="clsControl">
+                </th>
+                  <th>
                     <input pInputText autocomplete="off" type="text" (input)="dtNewProductTypeListing.filter($event.target.value, 'UnitValue', 'contains')" class="clsControl">
                 </th>
                 <th>
@@ -71,6 +75,7 @@
                   <td>{{newproducttype?.StrainName }}</td>
                   <td>{{newproducttype?.SkewKeyName }}</td>                  
                   <td>{{newproducttype?.PkgTypeName }}</td>
+                  <td>{{newproducttype?.UnitPrice }}</td>
                   <td class="wtg">{{newproducttype?.UnitValue}}</td>
                   <td class="wtg">{{newproducttype?.ItemQty}}</td>
                   <td class="datewidth">{{newproducttype?.CreatedDate | date: 'MM/dd/yyyy'}}</td>

@@ -353,6 +353,11 @@ export class OrderListingComponent implements OnInit, OnDestroy {
       }
   });
   }
+  GetOrderOnEdit(order){
+   
+      this.router.navigate(['../home/orderform' , order]);
+    
+  }
 
   removeIncomingOrder(incomingOrderId) {
     //   this.deleteClick = false;

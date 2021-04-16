@@ -14,6 +14,8 @@ export class GlobalResources {
                     completedpc:'Completed Plant Count',
                     terminatedreason:'Termination Reason',
                     brand: 'Brand',
+                    invalid:'Invalid Termination Reason',
+                    outputBinWtIsMore:'Output Bin weight is greater than Input Bin weight',
                     brandrequired: 'Select Brand.',
                     subbrand: 'Sub-Brand',
                     growerrequired: 'Select Grower.',

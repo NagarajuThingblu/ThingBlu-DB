@@ -187,13 +187,13 @@ export class RetailerComponent implements OnInit {
       () => console.log('Get all country complete'));
   }
   CountryChange() {
-    this.retailerForm.value.state = null;
-    this.retailerForm.value.city = null;
+    // this.retailerForm.value.state = null;
+    // this.retailerForm.value.city = null;
     this.getAllStates();
     this.getAllCities();
  }
   StateChange() {
-    this.retailerForm.value.city = null;
+    // this.retailerForm.value.city = null;
     this.getAllCities();
   }
   getAllStates() {
@@ -406,6 +406,7 @@ export class RetailerComponent implements OnInit {
         contactPerson: data[0].ContactPerson,
         address: data[0].Address,
         country: data[0].CountryId,
+        // this.getAllStates();
         state: data[0].StateId,
         city: data[0].CityId,
         zipCode: data[0].ZipCode,

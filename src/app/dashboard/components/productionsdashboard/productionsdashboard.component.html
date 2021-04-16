@@ -36,7 +36,7 @@
       <tr>
         <th [pSortableColumn]="'Order'">Order  <p-sortIcon [field]="'Order'"></p-sortIcon></th>
         <th [pSortableColumn]="'Store'">Store<p-sortIcon [field]="'Store'"></p-sortIcon></th>
-        <th [pSortableColumn]="'Brand'">Brand<p-sortIcon [field]="'Brand'"></p-sortIcon></th>
+        <!-- <th [pSortableColumn]="'Brand'">Brand<p-sortIcon [field]="'Brand'"></p-sortIcon></th> -->
         <th [pSortableColumn]="'Units'">Units<p-sortIcon [field]="'Units'"></p-sortIcon></th>
         <th [pSortableColumn]="'Priority'">Priority<p-sortIcon [field]="'Priority'"></p-sortIcon></th>
         <th [pSortableColumn]="'AssignedTo'">AssignedTo<p-sortIcon [field]="'AssignedTo'"></p-sortIcon></th>
@@ -52,9 +52,9 @@
     <th>
       <input pInputText type="text" autocomplete="off" (input)="dtRoomtypelist.filter($event.target.value, 'Store', 'contains')" class="clsControl">
   </th>
-  <th>
+  <!-- <th>
     <input pInputText type="text" autocomplete="off" (input)="dtRoomtypelist.filter($event.target.value, 'Brand', 'contains')" class="clsControl">
-</th>
+</th> -->
 <th>
   <input pInputText type="text" autocomplete="off" (input)="dtRoomtypelist.filter($event.target.value, 'Units', 'contains')" class="clsControl">
 </th>
@@ -83,7 +83,7 @@
 <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" >  
   <td>{{ProductionDashboardtype?.Order}}</td>
   <td>{{ProductionDashboardtype?.Store}}</td>
-  <td>{{ProductionDashboardtype?.Brand}}</td>
+  <!-- <td>{{ProductionDashboardtype?.Brand}}</td> -->
   <td>{{ProductionDashboardtype?.Units}}</td>
   <td>{{ProductionDashboardtype?.Priority}}</td>
   <td>{{ProductionDashboardtype?.AssignedTo}}</td>

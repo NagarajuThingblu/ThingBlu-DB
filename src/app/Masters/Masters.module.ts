@@ -24,6 +24,7 @@ import { TpprocessorService } from './services/tpprocessor.service';
 import { RetailerComponent } from './components/retailer/retailer.component';
 import { RetailerService } from './services/retailer.service';
 import { FLCService } from './services/flc.service';
+import { PTRService } from './services/ptr.service';
 import { AddNewClientComponent } from './components/add-new-client/add-new-client.component';
 import { NewClientService } from './services/new-client.service';
 import { CityService } from './services/city.service';
@@ -70,6 +71,7 @@ import { NewLabelDetailsActionService } from './../task/services/add-label-detai
 import { LabelsComponent } from './components/labels/labels.component';
 import { HelpComponent } from './components/help/help.component';
 import { FlcComponent } from './components/flc/flc.component';
+import { PlantTerminationReasonsComponent } from './components/plant-termination-reasons/plant-termination-reasons.component';
 
 
 @NgModule({
@@ -112,7 +114,8 @@ import { FlcComponent } from './components/flc/flc.component';
     SectionsComponent,
     LabelsComponent,
     HelpComponent,
-    FlcComponent
+    FlcComponent,
+    PlantTerminationReasonsComponent
    
   ],
   imports: [
@@ -129,6 +132,7 @@ import { FlcComponent } from './components/flc/flc.component';
     TpprocessorService,
     RetailerService,
     FLCService,
+    PTRService,
     NewClientService,
     CityService,
     NewRoleActionService,

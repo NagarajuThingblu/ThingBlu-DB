@@ -456,7 +456,24 @@ export class MastersResource {
                     cannotdelete: 'Can not delete this FLC. Might be it does not exist.',
                     cannotInactivate: 'Can not inactivate this FLC. Might be it does not exist.',
                     inuse: 'Can not delete this FLC. It is in use.',
+                    duplicate:'Duplicate record found'
                 },
+                ptr:{
+                    contractorsuccess:'Plant Termination Reason added successfully',
+                    updateSuccess: 'Plant Termination Reason updated successfully.',
+                    inactivated:'Plant Termination Reason inactivated successfully.',
+                    ptrinactivated:'Plant Termination Reason inactivated successfully.',
+                    activated: 'Plant Termination Reason activated successfully.',
+                    alreadydlt:'Plant Termination Reason Already Deleted',
+                    deletedSuccess: 'Plant Termination Reason deleted successfully.',
+                    cannotActivate: 'Can not activate this Plant Termination Reason. Might be it does not exist.',
+                    cannotdelete: 'Can not delete this Plant Termination Reason. Might be it does not exist.',
+                    cannotInactivate: 'Can not inactivate this Plant Termination Reason. Might be it does not exist.',
+                    inuse: 'Can not delete this Plant Termination Reason. It is in use.',
+                    duplicate:'Duplicate record found',
+                    AlreadyDeleted:'Plant Termination Reason Already Deleted'
+                },
+                
 
          addnewclient: {
                     pageheading: 'Add New Client',

@@ -184,6 +184,9 @@
                        id="dob"
                        placeholder="Select DOB"
                        name="dob"
+                       [monthNavigator]="true"
+                       [yearNavigator]="true" 
+                       yearRange="1800:4030"
                        required
                        [maxDate]="dateTime"
                       >
@@ -612,7 +615,7 @@
                 </div>
                 <!-- End Hourly labour Rate -->
                 <!--Manager List-->
-                <div class="ui-g-12 ui-md-6" *ngIf="(this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole) || showMangFlc === true">
+                <div class="ui-g-12 ui-md-6" *ngIf="(this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole) || showMang === true">
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="managerlist" class="towlable fwLabelBold">ManagerList<span class="star"> *</span></label>
@@ -624,7 +627,7 @@
                 </div>
                 <!--End Manager List-->
                  <!--FLC List-->
-                 <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp==this.selectedRole || showMangFlc === true">
+                 <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp==this.selectedRole || showFlc === true">
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="flclist" class="towlable fwLabelBold">FLC List<span class="star"> *</span></label>

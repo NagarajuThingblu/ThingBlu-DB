@@ -35,7 +35,21 @@ export class OrderService {
     return this.http.post(url, orderFormForApi, this.headers)
     .map(data =>  data );
   }
+getOrderDetailsByClient(OrderId){
+  const url = 'api/Grower/GetOrderDetailstByClient';
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+  params = params.append('OrderId', OrderId);
 
+  return this.http
+  .get(url, {params: params})
+
+  .map(data => {
+    console.log('GetAllProductTypeListByClient Service success');
+    // console.log(data);
+    return data;
+  });
+}
   getAllProductTypeListByClient() {
     const url = 'api/ClientProductType/GetClientProductTypeList';
     let params = new HttpParams();

@@ -18,7 +18,9 @@ export const environment = {
     encryptDecryptKey: 'mechsoft@12',
     parentEncryptionKey: 'm3ch50ft',
     clientCode: 'HANNAH',
+    // clientCode: 'HWG',
     clientKey: 'Hannah Industries',
+    //  clientKey:'HWG',
   
     // ** Start  Demo Test config (demo processors)
   //     tenant: 'thingblub2ctest.onmicrosoft.com',

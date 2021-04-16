@@ -1,0 +1,138 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel [header]="pageheading"  [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+        <form [formGroup]="ptrForm" (ngSubmit)="onSubmit(ptrForm.value)">
+          <div class="ui-g">
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="terminationReason">Termination Reason</label>:
+                <input pInputText
+                name="terminationReason"
+                autocomplete="off"
+                id="terminationReason"
+                type="text"
+                class="clsControl"
+                formControlName="terminationReason"                                      
+                placeholder="Enter Termination Reason"
+                />
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="description">Description</label>:
+                <textarea 
+                pInputTextarea           
+                formControlName="description"
+                placeholder="Add Description..."
+                autocomplete="off"
+                maxLength="500"
+                name="description"
+                class="clsControl"
+              ></textarea>
+              </div>
+            </div>
+
+              <!-- IsActive -->
+              <div class="ui-g-12 ui-md-12">
+                <div class="paddingRL">
+                  <p-checkbox value="true" 
+                  [(ngModel)]="IsActive" 
+                  label="{{globalResource.IsActiveFlag}}" 
+                  formControlName="chkIsActive" 
+                  binary="true"></p-checkbox>
+                </div>
+              </div>
+
+                <!--End IsActive -->
+
+                <div class="ui-g-12 ui-md-12" style="text-align:right;">
+                  <div class="paddingRL">
+                    <p-button  type="submit" id="btnetailerSave" 
+                    label="{{ SaveButtonText}}"  name="btnRetailerSave" ></p-button>
+                    <button pButton (click)="ResetForm()" type="button" label="{{ Clear }}"
+                      class="ui-button-secondary"></button>
+                </div>
+              </div>
+          </div>
+        </form>
+
+        <p-panel header="Plant Termination Reasons List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+          <p-table #dtPTRList [value]="allptrList" 
+          sortMode="single"                      
+          [responsive]="true" 
+          [paginator]="true" 
+          [rows]="10"          
+          sortOrder="-1"
+          [globalFilterFields]="['Reason','Description']"
+          selectionMode="single"
+          (onPage)="onPageChange($event)"
+          [rowsPerPageOptions]="PaginationValues"
+          dataKey="PTRID"
+          class="clsTableSelection"
+          >
+          <ng-template pTemplate="caption">
+            <div style="text-align: right">
+                <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" 
+                  (input)="dtPTRList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th [pSortableColumn]="'Reason'">Reason  <p-sortIcon [field]="'FLCName'"></p-sortIcon></th>   
+            <th [pSortableColumn]="'Description'">Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>    
+            <th style="width:100px;">Action</th>
+          </tr>
+          <tr>
+            <th>
+              <input pInputText type="text" autocomplete="off" (input)="dtFLCList.filter($event.target.value, 'Reason', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off"  (input)="dtFLCList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+          </th> 
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-ptr let-rowData let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+            <td>{{ptr?.TerminationReason }}</td>
+              
+            <td>{{ptr?.Description }}</td>   
+           
+            <td style="width:65px;" (click)="$event.stopPropagation();"> 
+              <span class="ui-column-title">edit</span>
+              <a href="#" [routerLink]="" (click)="GetPtrOnEdit(ptr?.TerminationId)" >                             
+                <span class="fa fa-edit"></span>
+              </a>
+              <a href="#" [routerLink]="" 
+                (click)="ShowConformationMessaegForDelete(ptr?.TerminationId,ptr,1,0)" >
+                <span class="fa fa-trash"></span>
+              </a>
+              <div class="clsToggleButtonDiv">
+                <p-toggleButton 
+                  [(ngModel)]="ptr.IsActive" 
+                  onLabel="Active" offLabel="InActive"  
+                  [style]="{'width':'90px'}"
+                  id
+                  (onChange)="ShowConformationMessaegForDeactive(ptr?.TerminationId,ptr,
+                    rowIndex,0,1)">                    
+                </p-toggleButton>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+        </p-panel>
+      </p-panel>
+    </div>
+  </div>
+  <p-growl [(value)]="msgs" life='5000'></p-growl>
+  <p-confirmDialog 
+  header="Confirmation" 
+  icon="fa fa-question-circle" 
+  width="425" 
+  *ngIf="true"
+  class="clsConfirmBox" >
+</p-confirmDialog> 
+</div>

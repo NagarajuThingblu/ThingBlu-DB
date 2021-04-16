@@ -354,6 +354,7 @@ createItem(): FormGroup {
    resetForm() {
     this.saveButtonText ="save"
     this.pageheading = "Add New Bin"
+    this.enableDropDown = true;
     this.newLabelsEntryForm.reset({ chkSelectAll: true });
    
 
@@ -384,6 +385,7 @@ createItem(): FormGroup {
   }
   getLabelsOnEdit(LabelId){
     this.plusOnEdit = false;
+    this.enableDropDown = true;
     console.log(this.allLabelslist)
     const data = this.allLabelslist.filter(x => x.LabelId === LabelId);
     console.log(data);
@@ -410,10 +412,12 @@ createItem(): FormGroup {
         this.clear = 'Cancel';
        this.saveButtonText = 'Update';
        this.pageheading = 'Edit Bin';
+     
       
     }else {
       this.allLabelslist = [];
       }
+      
       this.loaderService.display(false);
   }
   showConformationMessaegForDelete(LabelId,label, IsDeleted: number, ActiveInactiveFlag){

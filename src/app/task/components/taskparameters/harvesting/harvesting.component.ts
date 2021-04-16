@@ -23,6 +23,7 @@ import { RefreshService } from '../../../../dashboard/services/refresh.service';
 import { NewSectionDetailsActionService } from '../../../services/add-section-details.service';
 import { filter } from 'rxjs/operator/filter';
 import { NewClientService } from '../../../../Masters/services/new-client.service';
+import { PTRService } from '../../../../Masters/services/ptr.service';
 
 @Component({
   moduleId: module.id,
@@ -51,6 +52,7 @@ export class HarvestingComponent implements OnInit{
   public defaultDate: Date = new Date();
   public showPastDateLabel = false;
   public priorities: SelectItem[];
+  public termination:SelectItem[];
   constructor(
     private fb: FormBuilder,
     private dropdownDataService: DropdownValuesService,
@@ -64,6 +66,7 @@ export class HarvestingComponent implements OnInit{
     private dropdwonTransformService: DropdwonTransformService,
     private lotService: LotService,
     private loaderService: LoaderService,
+    private ptrActionService: PTRService,
     private appCommonService: AppCommonService,
     private confirmationService: ConfirmationService,
     private titleService: Title,
@@ -96,17 +99,20 @@ export class HarvestingComponent implements OnInit{
   public taskCompletionModel: any;
   public taskReviewModel: any;
   public allsectionslist:any;
+  public TerminatioReasons: any[];
   private globalData = {
     lots: [],
     employees: [],
     strains: [],
     Fields: [],
+    TerminationReasons: [],
   };
   isRActSecsDisabled: boolean;
   ngOnInit() {
     this.getAllFieldsAndSections();
     // this.getAllsectionlist();
     this.employeeListByClient();
+    this.getTerminationReasons();
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle(this.assignTaskResources.siftingtitle);
@@ -259,7 +265,16 @@ export class HarvestingComponent implements OnInit{
   padLeft(text: string, padChar: string, size: number): string {
     return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;
   }
+  getTerminationReasons(){
+    this.ptrActionService.GetAllPTRListByClient().subscribe(
+      data => {
+        this.globalData.TerminationReasons = data;
+        this.TerminatioReasons = this.dropdwonTransformService.transform(data, 'TerminationReason', 'TerminationId', '-- Select --',false);
+       } ,
+       error => { console.log(error);  this.loaderService.display(false); },
+       () => console.log('getTerminationReasons complete'));
 
+  }
   submitCompleteParameter(formModel) {
     if (this.completionForm.valid) {
       // this.CheckThreSholdValidation(formModel);
@@ -289,7 +304,7 @@ submitReview(formModel) {
         VirtualRoleId: 0,
         CompletedPlantCount:formModel.completedPC,
         TerminatedPlantCount: formModel.terminatedtedPC,
-        TerminationReason:  formModel.terminationReason,
+        TerminationId:  formModel.terminationReason,
         Comment: formModel.comment,
         MiscCost: formModel.rmisccost,
         WetWt: formModel.wetweight,
@@ -336,6 +351,9 @@ submitReview(formModel) {
         else  if (data[0].RESULTKEY === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         }
+        else  if (data[0].RESULTKEY === 'Invalid Termination Reason'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.invalid });
+        }
         else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
           this.loaderService.display(false);
@@ -373,7 +391,7 @@ completeTask(formModel){
         TaskId:Number(this.taskid),
         CompletedPlantCount: formModel.completedPC,
         TerminatedPlantCount: formModel.terminatedtedPC,
-        TerminationReason:  formModel.terminationReason,
+        TerminationId:  formModel.terminationReason,
         Comment: formModel.comment,
         VirtualRoleId: 0,
         WetWt: formModel.wetweight,
@@ -420,6 +438,9 @@ completeTask(formModel){
         }
         else  if (data[0].RESULTKEY  === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else  if (data[0].RESULTKEY === 'Invalid Termination Reason'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.invalid });
         }
         else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });

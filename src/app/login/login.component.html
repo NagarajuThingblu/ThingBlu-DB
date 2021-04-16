@@ -15,7 +15,7 @@
 
     <div class='row justify-content-center'>
         <div class='col-md-5 col-sm-12'>
-            <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+            <form [formGroup]="loginForm" autocomplete="off" (ngSubmit)="onSubmit(loginForm.value)">
 
                 <span style="color: red" *ngIf="isUnAuthenticatedLogin==true">* {{ loginResources.accountAlreadyLoggedInMsg }}
                     <a class="links" id="btn_brandshow" name="btnshow" style="color: blue;cursor: pointer;" (click)="clickhere()">
@@ -74,7 +74,8 @@
                             <label>{{ loginResources.username }}</label>
                             <div class="clear"></div>
 
-                            <input id="username" autocomplete="off" formControlName="username" type="text" pInputText />
+                            <input id="username" readonly 
+                            onfocus="this.removeAttribute('readonly');" formControlName="username" type="text" pInputText />
                             <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="!loginForm.controls['username'].valid&&loginForm.controls['username'].dirty">
                                 {{loginResources.usernameRequired}}
                             </div>
@@ -87,7 +88,8 @@
                         <div class="paddingRL">
                             <label>{{loginResources.password}}</label>
                             <div class="clear"></div>
-                            <input type="password" pPassword formControlName="password" [feedback]="false" />
+                            <input type="password"  readonly 
+                            onfocus="this.removeAttribute('readonly');"  pPassword formControlName="password" [feedback]="false" />
 
                             <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="!loginForm.controls['password'].valid&&loginForm.controls['password'].dirty">
                                 <span *ngIf="loginForm.controls['password'].errors['required']">{{loginResources.passwordRequired}}</span>

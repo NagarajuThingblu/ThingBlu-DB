@@ -1349,12 +1349,128 @@ console.log(assignTaskFormValues)
                 this.loaderService.display(false);
               });
             }
+
+      else  if(this.selectedTaskTypeName === 'CUSTOMTASK' &&  this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+
+   
+        this.loaderService.display(true);
+        this.taskCommonService.assignTask(assignTaskDetailsForWebApi)
+          .subscribe(
+            data => {
+              // this.router.navigate(['']);
+              
+              if (String(data[0]['Result']).toLocaleUpperCase() === 'NOBALANCE') {
+                this.msgs = [];
+                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.incorrectassignwt });
+              } if (String(data[0]['Result']).toLocaleUpperCase() === 'NOTASSIGNED') {
+                this.msgs = [];
+                if (this.selectedTaskTypeName === 'TUBELABELING') {
+                  this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.tasknotassigned });
+                } else {
+                  this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.tasknotassigned });
+                }
+              } else if (String(data[0]['Result']).toLocaleUpperCase() === 'FAILURE' || String(data[0]['Result']).toLocaleUpperCase() === 'ERROR') {
+                this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+              } else if (String(data[0]['Result']).toLocaleUpperCase() === 'TRIMCOMPLETED') {
+                this.msgs = [];
+                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.trimcompleted });
+              } else if (String(data[0]['Result']).toLocaleUpperCase() === 'LOTDELETED') {
+                this.msgs = [];
+                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotdeleted });
+              } else if (String(data[0]['Result']).toLocaleUpperCase() === 'JOINTSHORTAGE') {
+                this.msgs = [];
+                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.jointshortage });
+
+                this.assignTask.task = null;
+                this.selectedTaskTypeName = '';
+                this.isServiceCallComplete = false;
+
+                this.assignTaskForm = this.fb.group({
+                  'taskname': new FormControl(null, Validators.required),
+                  'taskCategory':new FormControl(null,Validators.required),
+                });
+
+                this.taskcategorychange();
+              } else if (String(data[0]['Result']).toLocaleUpperCase() === 'A-PACKAGE') {
+                this.msgs = [];
+                this.msgs.push({
+                  severity: 'warn',
+                  summary: this.globalResource.applicationmsg,
+                  detail: data[0]['ErrMsg']
+               });
+
+               let deleteRowIndex = 0;
+               let deleteItemCount = 0;
+                if (String(data[0]['ErrName']).toLocaleUpperCase() === 'REQUIREDQTYNOTAVAILABLE') {
+                  (<FormArray>(<FormGroup>this.assignTaskForm.controls[this.selectedTaskTypeName])
+                        .controls['allocateEmpArr']).controls
+                  .forEach((item, rowIndex) => {
+                    if (item !== null && Number(item.value.productTypeId) === Number(data[0]['ErrRowIndex'])) {
+                      if (item.value.parentUniqueId) {
+                        deleteItemCount += 1;
+                        // (<FormArray>(<FormGroup>this.assignTaskForm.controls[this.selectedTaskTypeName])
+                        // .controls['allocateEmpArr']).removeAt(rowIndex);
+
+                      } else {
+                        deleteRowIndex = rowIndex + 1;
+                        (<FormGroup>(<FormArray>(<FormGroup>this.assignTaskForm.controls[this.selectedTaskTypeName])
+                        .controls['allocateEmpArr'])
+                        .controls[rowIndex]).controls['assignQty'].patchValue(item.value.requiredQty);
+                      }
+                    }
+                  });
+
+                  for (let i = 0; i < deleteItemCount; i++) {
+                    (<FormArray>(<FormGroup>this.assignTaskForm.controls[this.selectedTaskTypeName])
+                    .controls['allocateEmpArr']).removeAt(deleteRowIndex);
+
+                    // (<FormArray>(<FormGroup>this.assignTaskForm.controls[this.selectedTaskTypeName])
+                    // .controls['allocateEmpArr']).removeAt(i);
+                  }
+                }
+              } else {
+                this.msgs = [];
+                this.msgs.push({
+                  severity: 'success',
+                  summary: this.globalResource.applicationmsg,
+                  detail: this.assignTaskResources.taskassignedsuccessfully
+                });
+
+                this.assignTask.task = null;
+                this.assignTask.taskcategory=null;
+                this.selectedTaskTypeName = '';
+                this.isServiceCallComplete = false;
+                this.assignTaskForm = this.fb.group({
+                  'taskname': new FormControl(null, Validators.required),
+                  'taskCategory':new FormControl(null,Validators.required),
+                });
+
+                if (this.prodDBRouteParams) {
+                  setTimeout(() => {
+                    // this.router.navigate(['home/jointsproductiondashboard']);
+                    this.router.navigate(['../home/taskaction',
+                      String(data[0]['TaskKeyName']).toLocaleUpperCase(), data[0]['TaskId']]);
+
+                  }, 2000);
+                }
+                this.taskcategorychange();
+              }
+              // http call ends
+              // Commented by DEVDAN :: 26-Sep2018 :: Optimizing API Calls
+              // this.refreshService.PushChange().subscribe(
+              //   msg => {
+              //   });
+              this.loaderService.display(false);
+            },
+        
+            error => {
+              this.msgs = [];
+              this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
+              // http call ends
+              this.loaderService.display(false);
+            });
           }
-      //   },
-      //   reject: () => {
-      //     // this.msgs = [{severity: 'info', summary: 'Rejected', detail: 'You have rejected'}];
-      //   }
-      // });
+          }
      else {
       this.appCommonService.validateAllFields(this.assignTaskForm);
     }

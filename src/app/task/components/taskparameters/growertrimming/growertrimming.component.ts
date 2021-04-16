@@ -344,21 +344,13 @@ completeTask(formModel){
         }
        else    if (data[0].RESULTKEY  === 'Completed weight is greater than Assigned bin weight') {
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.completewtgreaterthantotal });
-        if (this.TaskModel.IsReview === true) {
-          this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
-        } else {
-          this.TaskModel.TaskStatus =  this.taskStatus.Completed;
-        }
-        this.TaskCompleteOrReviewed.emit();
+        this.PageFlag.showmodal = false;
+        this.loaderService.display(false);
       }
       else if (data[0].RESULTKEY  === 'Output Bin weight is greater than Input Bin weight') {
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.morebinweight });
-        if (this.TaskModel.IsReview === true) {
-          this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
-        } else {
-          this.TaskModel.TaskStatus =  this.taskStatus.Completed;
-        }
-        this.TaskCompleteOrReviewed.emit();
+        this.PageFlag.showmodal = false;
+        this.loaderService.display(false);
        
       }
         else if (data === 'Failure'){

@@ -9,12 +9,14 @@ import { DropdownValuesService } from '../../../shared/services/dropdown-values.
 import * as _ from 'lodash';
 import { OrderResource } from '../../order.resource';
 import { GlobalResources } from '../../../global resource/global.resource';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponent } from '../../../app.component';
 import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { ConfirmationService } from 'primeng/api';
 import { Title } from '@angular/platform-browser';
 import { OrderService } from './../../service/order.service';
 import { AppConstants } from '../../../shared/models/app.constants';
+
 
 
 
@@ -59,6 +61,7 @@ export class OrderformComponent implements OnInit {
   // packagesizes:any[];
   productIds:any[];
   datafiltered:any;
+  public orderOnEdit: any;
   shippingaddress:any;
   email:any;
   country:any;
@@ -81,7 +84,7 @@ export class OrderformComponent implements OnInit {
   public LabelOnEdit: any;
   public newSectionForm_copy: any;
   public msgs: any[];
-  
+  public editData;
   public allOrders: any;
   public orderTabSelected = true;
   event: any;
@@ -100,6 +103,8 @@ export class OrderformComponent implements OnInit {
     dropdownsData: [],
   };
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
     private loaderService: LoaderService,
     private fb: FormBuilder,
     private appCommonService: AppCommonService,
@@ -112,6 +117,10 @@ export class OrderformComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private scrolltopservice: ScrollTopService
   ) {
+    this.route.params.forEach((urlParams) => {
+  this.editData = urlParams['OrderId'];
+  // this.taskType = urlParams['taskType'];
+});
    }
   items = new FormArray([], this.customGroupValidation );
   arrayItems: FormArray;
@@ -179,12 +188,65 @@ export class OrderformComponent implements OnInit {
       this.orderForm = this.appCommonService.ProductTypeFormDetail;
       this.appCommonService.ProductTypeFormDetail = null;
 }
-
+if(this.editData != null){
+  this.EditFields(this.editData);
+}
     // this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
   }
 
   get OrderFormDetailsArr(): FormArray {
     return this.orderForm.get('items') as FormArray;
+  }
+  EditFields(OrderId){
+  
+    this.orderformservice.getOrderDetailsByClient(OrderId).subscribe(
+      data => {
+        console.log(data)
+        var itemlist = this.orderForm.get('items')['controls'];
+        if (data !== null) {
+          this.orderOnEdit = data
+          const customer = this.orderForm.controls['customer'];
+          const shippingaddr = this.orderForm.controls['shippingaddr'];
+          const email = this.orderForm.controls['email'];
+          const country = this.orderForm.controls['country'];
+          const city = this.orderForm.controls['city'];
+          const state = this.orderForm.controls['state'];
+          const zipcode = this.orderForm.controls['zipcode'];
+          const deliverydate = this.orderForm.controls['deliverydate'];
+          const orderno = this.orderForm.controls['orderno'];
+          const shippingpref = this.orderForm.controls['shippingpref'];
+          const strain = itemlist[0].controls['strain'];
+            customer.patchValue(this.orderOnEdit.Table[0].RetlrId);
+            shippingaddr.patchValue(this.orderOnEdit.Table2[0].ShippingAdress);
+            email.patchValue(this.orderOnEdit.Table2[0].PrimaryEmail);
+            country.patchValue(this.orderOnEdit.Table2[0].CountryName);
+            city.patchValue(this.orderOnEdit.Table2[0].CityName);
+            state.patchValue(this.orderOnEdit.Table2[0].StateName);
+            zipcode.patchValue(this.orderOnEdit.Table2[0].ZipCode);
+            // deliverydate.patchValue(this.orderOnEdit.Table[0].DeliveryDate);
+            orderno.patchValue(this.orderOnEdit.Table2[0].OrderRefId);
+            shippingpref.patchValue(this.orderOnEdit.Table2[0].ShippingPreference);
+           
+         
+          for(let value of this.orderOnEdit.Table1){
+            this.addItem();
+            // this.orderForm.patchValue({
+            //   strain: data.Table1[value].StrainId,
+            //   skewtype: data.Table1[value].SkwTypeId,
+            //   packagetype: data.Table1[value].PkgTypeName,
+            //   packagetypeid: data.Table1[value].PkgTypeId,
+            //   packagesize: data.Table1[value].PackageSize,
+            //   orderqt: data.Table1[value].RequiredQty,
+            //   producttype: data.Table1[value].ProductTypeId,
+            //   ordercost: data.Table1[value].UnitPrice,
+            // })
+            strain.patchValue(this.orderOnEdit[0].strain);
+          }
+        }
+      }
+    )
+    
+
   }
 
   addItem(): void {
@@ -399,7 +461,7 @@ this.saveButtonText ="save"
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.orderrequestResource.duplicateorder});
           }
           else if (String(data[0].ResultKey)  === "INACTIVE CUSTOMER") {
-            this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.orderrequestResource.duplicateorder});
+            this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.orderrequestResource.inactivecustomer});
           }
           else if (String(data[0].ResultKey) === "PRODUCT TYPE NOT PRESENT") {
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.orderrequestResource.prodtypenotpresent});

@@ -458,14 +458,15 @@
       </div>
       <div class="ui-g-12 ui-md-6">
         <div>
-          <input type="text" 
-          pInputText 
-          autocomplete="off"
-          id="terminationReason" 
-          name="terminationReason" 
-          formControlName="terminationReason"              
-          class="clsControl"   
-        />
+          <p-dropdown
+          [options]="TerminatioReasons"
+        
+          [autoWidth]="true"
+          formControlName="terminationReason"
+          id="terminationReason"
+          class="clsControl"
+          name="terminationReason">
+        </p-dropdown>
         </div>
       </div>
       <div class="ui-g-12 ui-md-6">
@@ -598,14 +599,15 @@
         </div>
         <div class="ui-g-12 ui-md-6">
           <div>
-            <input type="text" 
-            pInputText 
-            autocomplete="off"
-            id="terminationReason" 
-            name="terminationReason" 
-            formControlName="terminationReason"              
-            class="clsControl"   
-          />
+            <p-dropdown
+        [options]="TerminatioReasons"
+      
+        [autoWidth]="true"
+        formControlName="terminationReason"
+        id="terminationReason"
+        class="clsControl"
+        name="terminationReason">
+      </p-dropdown>
           </div>
         </div>
         <div class="ui-g-12 ui-md-6">

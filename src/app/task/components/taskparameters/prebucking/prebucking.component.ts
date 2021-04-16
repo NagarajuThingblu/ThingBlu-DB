@@ -574,8 +574,8 @@ completeTask(formModel){
           this.PageFlag.showmodal = false;
           this.loaderService.display(false);
         }
-        else  if (data[0].RESULTKEY === 'Failure'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        else  if (data[0].RESULTKEY === 'Output Bin weight is greater than Input Bin weight'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.outputBinWtIsMore });
           this.PageFlag.showmodal = false;
           this.loaderService.display(false);
         }

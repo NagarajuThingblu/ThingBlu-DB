@@ -347,9 +347,9 @@ export class GrowerComponent implements OnInit {
           const contactperson = this.growerForm.controls['contactPerson'];
           const address = this.growerForm.controls['address'];
           const country = this.growerForm.controls['country'];
-          this.getAllStates();
+          // this.getAllStates();
           const state = this.growerForm.controls['state'];
-          this.getAllCities();
+          // this.getAllCities();
           const city = this.growerForm.controls['city'];
           const zipcode = this.growerForm.controls['zipCode'];
           const latitude = this.growerForm.controls['latitude'];

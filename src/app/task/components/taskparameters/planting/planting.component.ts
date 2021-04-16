@@ -23,6 +23,7 @@ import { RefreshService } from '../../../../dashboard/services/refresh.service';
 import { NewSectionDetailsActionService } from '../../../services/add-section-details.service';
 import { filter } from 'rxjs/operator/filter';
 import { NewClientService } from '../../../../Masters/services/new-client.service';
+import { PTRService } from '../../../../Masters/services/ptr.service';
 declare var $: any;
 @Component({
   moduleId: module.id,
@@ -51,6 +52,7 @@ export class PlantingComponent implements OnInit{
   public defaultDate: Date = new Date();
   public showPastDateLabel = false;
   public priorities: SelectItem[];
+  public termination:SelectItem[];
   constructor(
     private fb: FormBuilder,
     private dropdownDataService: DropdownValuesService,
@@ -58,6 +60,7 @@ export class PlantingComponent implements OnInit{
     private service: QuestionService,
     private taskCommonService: TaskCommonService,
     private route: ActivatedRoute,
+    private ptrActionService: PTRService,
     private cookieService: CookieService,
     private newSectionDetailsActionService: NewSectionDetailsActionService, 
     private router: Router,
@@ -77,6 +80,7 @@ export class PlantingComponent implements OnInit{
   display = false;
   public sectionList = [];
   public  Fields: any[];
+  public TerminatioReasons: any[];
   public fields: any[];
   public strains: any[];
   public employees: any[];
@@ -99,12 +103,14 @@ export class PlantingComponent implements OnInit{
     employees: [],
     strains: [],
     Fields: [],
+    TerminationReasons: [],
   };
   isRActSecsDisabled: boolean;
   ngOnInit() {
     this.getAllFieldsAndSections();
     // this.getAllsectionlist();
     this.employeeListByClient();
+    this.getTerminationReasons();
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle(this.assignTaskResources.siftingtitle);
@@ -227,6 +233,16 @@ export class PlantingComponent implements OnInit{
       error => { console.log(error); },
       () => console.log('Get all brands complete'));
   }
+  getTerminationReasons(){
+    this.ptrActionService.GetAllPTRListByClient().subscribe(
+      data => {
+        this.globalData.TerminationReasons = data;
+        this.TerminatioReasons = this.dropdwonTransformService.transform(data, 'TerminationReason', 'TerminationId', '-- Select --',false);
+       } ,
+       error => { console.log(error);  this.loaderService.display(false); },
+       () => console.log('getTerminationReasons complete'));
+
+  }
 
   
   padLeft(text: string, padChar: string, size: number): string {
@@ -262,7 +278,7 @@ submitReview(formModel) {
         VirtualRoleId: 0,
         CompletedPlantCount:formModel.completedPC,
         TerminatedPlantCount: formModel.terminatedtedPC,
-        TerminationReason:  formModel.terminationReason,
+        TerminationId:  formModel.terminationReason,
         Comment: formModel.comment,
         MiscCost: formModel.rmisccost,
         RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
@@ -303,8 +319,14 @@ submitReview(formModel) {
         else if (data[0].RESULTKEY === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         }
+        else  if (data[0].RESULTKEY === 'Invalid Termination Reason'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.invalid });
+        }
         else  if (data[0].RESULTKEY === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else  if (data[0].RESULTKEY === 'Invalid Termination Reason'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.invalid });
         }
         else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
@@ -343,7 +365,7 @@ completeTask(formModel){
         TaskId:Number(this.taskid),
         CompletedPlantCount: formModel.completedPC,
         TerminatedPlantCount: formModel.terminatedtedPC,
-        TerminationReason:  formModel.terminationReason,
+        TerminationId:  formModel.terminationReason,
         Comment: formModel.comment,
         VirtualRoleId: 0,
       }

@@ -63,7 +63,8 @@ export class AddNewEmployeeComponent implements OnInit {
   public selectedRole:any;
   public Managerlist:any;
   public flclist:any;
-  public showMangFlc: boolean =false;
+  public showMang: boolean =false;
+  public showFlc: boolean =false;
   public globalResource: any;
   collapsed: any;
   constructor(
@@ -393,7 +394,8 @@ export class AddNewEmployeeComponent implements OnInit {
   }
   GetEmployeeOnEdit(EmpId) {
     // this.newEmployeeService.GetAllEmployeeList().subscribe(
-      this.showMangFlc = false;
+      this.showMang = false;
+      this.showFlc = false;
       this.showTextbox = false;
       const data = this.allEmployeeList.filter(x => x.EmpId === EmpId);
        if (data !== 'No data found!') {
@@ -403,7 +405,8 @@ export class AddNewEmployeeComponent implements OnInit {
 
           this.employeeOnEdit = data.filter(x => x.EmpId === EmpId);
           if( this.employeeOnEdit[0].FLCId != null){
-             this. showMangFlc = true
+             this. showMang = true
+             this. showFlc = true
           }
           const decryptedpwd = this.decode64(this.employeeOnEdit[0].Password);
           const clientname = this.newEmployeeForm.controls['clientname'];
@@ -577,14 +580,20 @@ export class AddNewEmployeeComponent implements OnInit {
 
   Managerdrpdwnchng(event)
 {
-  // this.showMangFlc = false;
+  this.showMang = false;
+  this.showFlc = false;
   const selectedRole=this.roles.filter(ur=>ur.value==event.value);
   this.selectedRole=selectedRole[0].label;
 const managerdata = this.newEmployeeForm.get('Managerlist');
-if(this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole)
+if(this.constantusrRole.Employee==this.selectedRole )
 {
   managerdata.setValidators(Validators.required);
-  // this.showMangFlc = true;
+  this.showMang = true;
+  
+}
+else if(this.constantusrRole.Temp==this.selectedRole){
+  managerdata.setValidators(Validators.required);
+  this.showFlc = true;
 }
 else{
   managerdata.clearValidators();

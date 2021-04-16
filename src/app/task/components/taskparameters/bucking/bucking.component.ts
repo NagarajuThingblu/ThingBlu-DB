@@ -402,8 +402,8 @@ completeTask(formModel){
         //   this.TaskModel.TaskStatus =  this.taskStatus.Completed;
         // }
         // this.TaskCompleteOrReviewed.emit();
-        this.PageFlag.showmodal = false;
-        this.loaderService.display(false);
+        // this.PageFlag.showmodal = false;
+        // this.loaderService.display(false);
       }
         else if (data === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
