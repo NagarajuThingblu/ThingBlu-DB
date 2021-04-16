@@ -621,7 +621,7 @@ else{
     'dob': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
     'cellphone': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
     'homephone': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
-    'primaryemail': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(30)])),
+    'primaryemail': new FormControl(null),
     'secondaryemail': new FormControl(null, Validators.compose([Validators.maxLength(30)])),
     'address': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(50)])),
     'country': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),

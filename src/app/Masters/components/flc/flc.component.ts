@@ -84,7 +84,7 @@ export class FlcComponent implements OnInit {
     this.flcForm = this.fb.group({
       'flc': new FormControl(null, Validators.required),
       'cellPhone': new FormControl('', Validators.compose([Validators.maxLength(15)])),
-      'primaryEmail': new FormControl(null,Validators.required),
+      'primaryEmail': new FormControl(null),
       'secondaryEmail': new FormControl(null),
       'address': new FormControl(null, Validators.required),
       'country': new FormControl({value: this.selectedCountry }, Validators.required),

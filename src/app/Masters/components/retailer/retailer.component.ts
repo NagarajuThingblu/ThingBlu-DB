@@ -390,6 +390,8 @@ export class RetailerComponent implements OnInit {
     // var itemlist = this.retailerForm.get('controls');
     if (data !== null) {
       this.RetailerID = RetailerId;
+      // this.getAllCities();
+      // this.getAllStates();
       // this.retailerForm.controls['retailerType'].patchValue(data[0].RetlrTypeID);
       // this.retailerForm.controls['retailer'].patchValue(data[0].RetailerName);
       // const state =   itemlist[0].controls["state"];
@@ -406,7 +408,7 @@ export class RetailerComponent implements OnInit {
         contactPerson: data[0].ContactPerson,
         address: data[0].Address,
         country: data[0].CountryId,
-        // this.getAllStates();
+       
         state: data[0].StateId,
         city: data[0].CityId,
         zipCode: data[0].ZipCode,
