@@ -3,19 +3,19 @@
 
     <div class='container containerLogo'>
         <div class='row'>
-            <div class='col-sm-12'>
+            <div class='col-sm-12' >
                 <div class='text-center'>
-                    <div class="image-wrapper" style="margin: 30px 0px 50px 0px;">
+                    <div class="image-wrapper" style="margin: 30px 0px 15px 0px;">
                         <!-- <img src="assets/img/ThingBluLogoWithBlack-06.png" class="img-responsive imgResCenter" alt=""> -->
-                        <img src="assets/img/HWG1.png" class="img-responsive imgResCenter" alt="" width="200" height="70">
+                        <img src="assets/img/HWG1.png" class="img-responsive imgResCenter" alt="" width="200" height="70" >
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class='row justify-content-center'>
-        <div class='col-md-5 col-sm-12'>
+    <div class='row justify-content-center' >
+        <div class='col-md-5 col-sm-12' >
             <form [formGroup]="loginForm" autocomplete="off" (ngSubmit)="onSubmit(loginForm.value)">
 
                 <span style="color: red" *ngIf="isUnAuthenticatedLogin==true">* {{ loginResources.accountAlreadyLoggedInMsg }}
@@ -70,7 +70,7 @@
                             </p-table>
                         </div>
                     </div>
-                    <div class="ui-g-12" *ngIf="isUnAuthenticatedLogin!==true">
+                    <div class="ui-g-12" *ngIf="isUnAuthenticatedLogin!==true" >
                         <div class="paddingRL">
                             <label>{{ loginResources.username }}</label>
                             <div class="clear"></div>
@@ -84,7 +84,7 @@
                     </div>
                 </div>
 
-                <div class="ui-g" *ngIf="isUnAuthenticatedLogin!==true">
+                <div class="ui-g" *ngIf="isUnAuthenticatedLogin!==true" >
                     <div class="ui-g-12">
                         <div class="paddingRL">
                             <label>{{loginResources.password}}</label>

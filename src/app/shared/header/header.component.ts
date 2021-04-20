@@ -80,7 +80,9 @@ export class HeaderComponent implements OnInit {
   public globalResource: any;
   msgs: any[];
   isYes: any = false;
+  public IsFirstTimeSignIn: any;
   heading: any;
+  public closable: boolean = true;
   public loggedInUsername: string;
   public userInterface: UserInterface;
   public userModel: UserModel;
@@ -93,7 +95,7 @@ export class HeaderComponent implements OnInit {
     this.isYes = false;
     // this.autoLogoutService.display(false);
     // this.autoLogoutService.showLogoutModal.subscribe(data => this.showLogoutModal = data);
-
+// this.ShowForgotPasswordPopup();
     this.username = this.appCommonService.getUserProfile().UserName;
     this.ClientId= String(this.appCommonService.getUserProfile().ClientId);
     this.headerimagtail="assets/img/"+this.ClientId+"ThingBluNoTagline.png";
@@ -102,7 +104,11 @@ export class HeaderComponent implements OnInit {
 
     this.userModel = this.appCommonService.getUserProfile();
     this.userRoles = AppConstants.getUserRoles;
-
+   
+if(this.userModel.IsFirstTimeSignIn != false){
+this.closable = false;
+  this.ShowForgotPasswordPopup();
+}
     this.globalResource = GlobalResources.getResources().en;
 
     // this.userIdle.setConfigValues({idle: 30, timeout: 30, ping: 10});
@@ -134,13 +140,13 @@ export class HeaderComponent implements OnInit {
                 // this.msalLogout();
             }
         },
-        // {
-        //     label: 'Reset password',
-        //     icon: 'fa-sign-out',
-        //     command: () => {
-        //         this.ShowForgotPasswordPopup();
-        //     }
-        // }
+        {
+            label: 'Reset password',
+            icon: 'fa-sign-out',
+            command: () => {
+                this.ShowForgotPasswordPopup();
+            }
+        }
     ];
 
     this.note = [
@@ -588,6 +594,7 @@ encode64(input) {
                 this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
                 detail: this.loginResources.passwordResertSuccess });
                 this.hideResetPasswordPopup();
+                this.router.navigate(['login']);
               } else if (String(data).toLocaleUpperCase() === 'NOTMATCHED') {
                 this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                 detail: this.loginResources.invalidDetails });

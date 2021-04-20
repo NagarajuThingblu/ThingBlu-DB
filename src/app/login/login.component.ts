@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
   public model: any = {};
   public returnUrl: string;
   public menuItems: any = [];
-
+ public IsFirstTimeSignIn: any;
   public loginResources: any;
   public token: string;
   cookieValue;
@@ -114,7 +114,7 @@ export class LoginComponent implements OnInit {
       this.authenticationService.login(form)
         .subscribe(
           (data: any) => {
-            // console.log(data);
+            console.log(data);
             // this.router.navigate(['']);
             // login successful if there's a jwt token in the response
             const token = data.access_token;
@@ -181,6 +181,7 @@ export class LoginComponent implements OnInit {
         }
       }
     }
+    this.loaderService.display(false);
   }
   onSignOutClick(id) {
     const LogOutObject = {
@@ -237,6 +238,7 @@ export class LoginComponent implements OnInit {
             this.setCookie('userProfile' + this.appCommonService.getEnvData().clientCode ,
             this.appCommonService.Encrypt(JSON.stringify(this.userModel)), expireDate);
 
+         
             // Added Employee page access list in localstorage
             if (data.Table1.length > 0) {
               this.rolewiseMenuItem(data.Table1);
@@ -253,7 +255,7 @@ export class LoginComponent implements OnInit {
               let routeName;
               if (this.menuItems.length > 0) {
                   routeName = this.menuItems[0].RouterLink;
-                  this.router.navigate(['home/' + routeName]);
+                  this.router.navigate(['home/' + routeName] );
                 } else {
                   this.router.navigate(['home/erroraccessdenieded']);
               }

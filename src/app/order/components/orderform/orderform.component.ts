@@ -201,6 +201,7 @@ if(this.editData != null){
   
     this.orderformservice.getOrderDetailsByClient(OrderId).subscribe(
       data => {
+        let i =0;
         console.log(data)
         var itemlist = this.orderForm.get('items')['controls'];
         if (data !== null) {
@@ -215,7 +216,7 @@ if(this.editData != null){
           const deliverydate = this.orderForm.controls['deliverydate'];
           const orderno = this.orderForm.controls['orderno'];
           const shippingpref = this.orderForm.controls['shippingpref'];
-          const strain = itemlist[0].controls['strain'];
+          // const strain = itemlist[0].controls['strain'];
             customer.patchValue(this.orderOnEdit.Table[0].RetlrId);
             shippingaddr.patchValue(this.orderOnEdit.Table2[0].ShippingAdress);
             email.patchValue(this.orderOnEdit.Table2[0].PrimaryEmail);
@@ -223,13 +224,14 @@ if(this.editData != null){
             city.patchValue(this.orderOnEdit.Table2[0].CityName);
             state.patchValue(this.orderOnEdit.Table2[0].StateName);
             zipcode.patchValue(this.orderOnEdit.Table2[0].ZipCode);
-            // deliverydate.patchValue(this.orderOnEdit.Table[0].DeliveryDate);
+             deliverydate.patchValue(new Date(this.orderOnEdit.Table[0].DeliveryDate));
             orderno.patchValue(this.orderOnEdit.Table2[0].OrderRefId);
             shippingpref.patchValue(this.orderOnEdit.Table2[0].ShippingPreference);
            
          
           for(let value of this.orderOnEdit.Table1){
-            this.addItem();
+            
+            // this.addItem();
             // this.orderForm.patchValue({
             //   strain: data.Table1[value].StrainId,
             //   skewtype: data.Table1[value].SkwTypeId,
@@ -240,7 +242,22 @@ if(this.editData != null){
             //   producttype: data.Table1[value].ProductTypeId,
             //   ordercost: data.Table1[value].UnitPrice,
             // })
-            strain.patchValue(this.orderOnEdit[0].strain);
+            // strain.patchValue(this.orderOnEdit[0].strain);
+            itemlist[i].controls.strain.patchValue(value.StrainId);
+            itemlist[i].controls.producttype.patchValue(value.ProductTypeId);
+            itemlist[i].controls.skewtype.patchValue(value.SkewKeyName);
+            itemlist[i].controls.packagetype.patchValue(value.PkgTypeName);
+            itemlist[i].controls.packagesize.patchValue(value.PackageSize);
+            itemlist[i].controls.orderqt.patchValue(value.RequiredQty);
+            if(this.orderOnEdit.Table1.length > i+1){
+              i++;
+              this.addItem();
+
+            }
+
+            // if(this.orderOnEdit.Table1.length){
+
+            // }
           }
         }
       }

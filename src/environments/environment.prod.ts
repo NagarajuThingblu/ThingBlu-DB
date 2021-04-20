@@ -9,7 +9,8 @@ export const environment = {
   // apiEndpoint: 'https://thingbluapiuat.azurewebsites.net/',
   tolerance: 5,
   //  apiEndpoint: 'https://tbappapihannah.azurewebsites.net/',
-  apiEndpoint: 'https://tbappapitest.azurewebsites.net/',
+    apiEndpoint: 'https://tbappapitest.azurewebsites.net/',
+  // apiEndpoint:'https://hwg-api.azurewebsites.net/',
   //  apiEndpoint: 'https://tbdemowebapi.azurewebsites.net/',
 
   sessionTimeout: 86399,
@@ -18,7 +19,9 @@ export const environment = {
   parentEncryptionKey: 'm3ch50ft',
   clientCode: 'HANNAH',
  clientKey: 'Hannah Industries',
-  // clientKey:'HWG',
+// clientCode:'HWG',
+// clientKey:'HWG',
+  
 
   // ** Start Hannah LocalDev Test config
     // tenant: 'thingblub2ctest.onmicrosoft.com',

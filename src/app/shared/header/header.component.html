@@ -8,7 +8,7 @@
                
                 <a class="navbar-brand" (click)="logoClick()" routerLink="" >
                 <!-- <img [src]=headerimagtail alt="ThingBlu" style="height:40px;"> -->
-                <img src="assets/img/HWG1.png" class="img-responsive imgResCenter" alt="" width="110" height="40">
+                <img src="assets/img/hempWW.png"  class="img-responsive" alt="ThingBlu" >
                 </a>
                 <!-- <a href="javascript:void(0);" class="bars"></a> -->
             </div>
@@ -134,8 +134,10 @@
     [width]="600" 
     [minWidth]="200" 
     class="notecontrol"
-    (onHide)="hideResetPasswordPopup()"
+    [closable]="closable"
+ (onHide)="hideResetPasswordPopup()" 
   >
+  
   <form
   [formGroup]="resetPasswordForm"   autocomplete="off"
   (ngSubmit)="submitResetPassword()" novalidate >
