@@ -152,7 +152,7 @@
       <p-table #dtLabelList [value]="allLabelslist" sortMode="single" [responsive]="true" [paginator]="true"
     [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
     (onPage)="onPageChange($event)"
-    [globalFilterFields]="['TaskTypeName','BinNo','StrainName','skewType','IsLightDeprevation','TrimmingMethod']">
+    [globalFilterFields]="['TaskTypeName','BinNo','TotalWt','AvilableWt','StrainName','SkewType','IsLightDeprevation','TrimmingMethod']">
         <ng-template pTemplate="caption">
           <div style="text-align: right">
             <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
@@ -170,11 +170,15 @@
             </th>
             <th [pSortableColumn]="'StrainName'">Strain<p-sortIcon [field]="'StrainName'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'skewType'">Skew Type <p-sortIcon [field]="'skewType'"></p-sortIcon>
+            <th [pSortableColumn]="'SkewType'">Skew Type <p-sortIcon [field]="'SkewType'"></p-sortIcon>
             </th>
             <th [pSortableColumn]="'IsLightDeprevation'">Light Dept <p-sortIcon [field]="'IsLightDeprevation'"></p-sortIcon>
             </th>
             <th [pSortableColumn]="'TrimmingMethod'"> Trimming Method <p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'TotalWt'">Total Bin Wt <p-sortIcon [field]="'TotalWt'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'AvilableWt'">Available Bin Wt <p-sortIcon [field]="'AvilableWt'"></p-sortIcon>
             </th>
             <th style="width:100px;">Action </th>
           </tr>
@@ -197,7 +201,7 @@
             </th>
             <th>
               <input pInputText type="text" autocomplete="off"
-                (input)="dtLabelList.filter($event.target.value, 'skewType', 'contains')" class="clsControl">
+                (input)="dtLabelList.filter($event.target.value, 'SkewType', 'contains')" class="clsControl">
             </th>
            
             <th>
@@ -207,6 +211,14 @@
             <th>
               <input pInputText type="text" autocomplete="off"
                 (input)="dtLabelList.filter($event.target.value, 'TrimmingMethod', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtLabelList.filter($event.target.value, 'TotalWt', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtLabelList.filter($event.target.value, 'AvilableWt', 'contains')" class="clsControl">
             </th>
           
             <th rowspan="2"></th>
@@ -221,6 +233,8 @@
             <td>{{label?.SkewType }}</td>
             <td>{{label?.IsLightDeprevation }}</td>
             <td>{{label?.TrimmingMethod }}</td>
+            <td>{{label?.TotalWt}}</td>
+            <td>{{label?.AvilableWt}}</td>
             <td style="width:65px;">
               <span class="ui-column-title">edit</span>
               <a href="#" [routerLink]="" (click)="getLabelsOnEdit(label?.LabelId)">

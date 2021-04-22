@@ -86,7 +86,7 @@ public backUrl: boolean;
     this.saveButtonText='Save';
     this.pageheading='Add New Task';
     this.clear='Clear';
-    this.appComponentData.setTitle('Strain');
+    this.appComponentData.setTitle('Task');
     this.chkIsActive=true;
     this.taskTypeDisabled=false;
   }
@@ -167,7 +167,7 @@ public backUrl: boolean;
         data=>{
           this.msgs=[];
           if(data[0]['Result']==='Success'){
-            this.msgs.push({severity:'success', summary: this.globalResource.applicationmsg, details: this.newTaskResources.newTasksavedsuccess});
+            this.msgs.push({severity:'success', summary: this.globalResource.applicationmsg, detail: this.newTaskResources.newTasksavedsuccess});
 
              this.resetAll();
              this.getAllTasksbyClient();

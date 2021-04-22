@@ -104,10 +104,14 @@ export class RetailerComponent implements OnInit {
     this.IsActive = true;
     this.retailerResources = MastersResource.getResources().en.retailer;
     this.globalResource = GlobalResources.getResources().en;
-    this.AppComponentData.setTitle('Retailer');
-
     this._cookieService = this.appCommonService.getUserProfile();
-    this.taskCategory = this._cookieService.TaskCategory,
+    this.taskCategory = this._cookieService.TaskCategory;
+    if(this.taskCategory === 'GROWING'){
+      this.AppComponentData.setTitle('Customer');
+    }
+    else{
+      this.AppComponentData.setTitle('Retailer');
+    }
     this.retailerForm = this.fb.group({
       // Removed by Devdan :: 28-Sep-2018
       // 'client': new FormControl(null, Validators.required),

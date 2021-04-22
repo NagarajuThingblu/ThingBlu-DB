@@ -44,6 +44,22 @@ export class DropdownValuesService {
     //   return data;
     //  })
   }
+  getAllDetails(){
+    const url = 'api/Grower/GetStrainDetailsLD';
+    let params = new HttpParams();
+    params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+  
+    return this.http
+    .get(url, {params: params})
+  
+    .map(data => {
+  
+      console.log('GetAllDetails Service success');
+      // console.log(data);
+      return data;
+    });
+
+  }
 
   getAllTask() {
     const url = 'api/TaskType/GetTaskTypeByClient';

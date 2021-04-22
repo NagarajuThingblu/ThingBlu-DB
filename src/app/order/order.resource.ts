@@ -35,7 +35,7 @@ export class OrderResource {
                     prodtypenotpresent: 'product type is deleted or inactive.',
                     // Added by DEVDAN :: 03-Oct-2018 :: Error Message for Inactive Retailer
                     inactiveretailer: 'Selected Retailer might be deleted or inactive.',
-                    inactivecustomer:'Selected Customer might be deleted or inactive.',
+                    inactivecustomer:'Selected Customer is  inactive.',
                     orderdreaft: 'Order CheckOut',
                     savedraft: 'Save as Draft',
                     updatesuccessfully: 'Draft order updated successfully.',

@@ -278,7 +278,7 @@ submitReview(formModel) {
         VirtualRoleId: 0,
         CompletedPlantCount:formModel.completedPC,
         TerminatedPlantCount: formModel.terminatedtedPC,
-        TerminationId:  formModel.terminationReason,
+        TerminationId:  formModel.terminationReason?formModel.terminationReason:0,
         Comment: formModel.comment,
         MiscCost: formModel.rmisccost,
         RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
@@ -365,7 +365,7 @@ completeTask(formModel){
         TaskId:Number(this.taskid),
         CompletedPlantCount: formModel.completedPC,
         TerminatedPlantCount: formModel.terminatedtedPC,
-        TerminationId:  formModel.terminationReason,
+        TerminationId:  formModel.terminationReason?formModel.terminationReason:0,
         Comment: formModel.comment,
         VirtualRoleId: 0,
       }

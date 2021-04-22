@@ -109,7 +109,7 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
     this.newLabelResources = MastersResource.getResources().en.newlabel;
     // this.newProductTypeResources = MastersResource.getResources().en.newproductype;
     this.globalResource = GlobalResources.getResources().en;
-    this.appComponentData.setTitle('Product Type');
+    this.appComponentData.setTitle('Labels');
     this._cookieService = this.appCommonService.getUserProfile();
     setTimeout(() => {this.loaderService.display(true);
     }, 0);
@@ -408,6 +408,9 @@ createItem(): FormGroup {
        lightDept.patchValue(this.LabelOnEdit[0].IsLightDeprevation);
        TrimminMethod.patchValue(this.LabelOnEdit[0].TrimmingMethod);
         chkIsActive.patchValue(this.LabelOnEdit[0].IsActive);
+        if(this.LabelOnEdit[0].TaskTypeName === 'Trimming'){
+            this.enableDropDown = false
+        }
 
         this.clear = 'Cancel';
        this.saveButtonText = 'Update';

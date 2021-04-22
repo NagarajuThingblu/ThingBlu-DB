@@ -63,7 +63,14 @@ export class HeaderComponent implements OnInit {
   public note: MenuItem[];
   public setting: MenuItem[];
   public showLogoutModal = false;
-
+passwordType: string = 'password';
+passwordShown: boolean= false;
+public showeye: boolean = false;
+public hideeye: boolean = true;
+confirmpasswordShown: boolean= false;
+public confirmshoweye: boolean = false;
+public confirmhideeye: boolean = true;
+confirmpasswordType: string = 'password';
   public ngpassword: any;
   public loginResources: any;
   public username: any;
@@ -290,6 +297,35 @@ this.closable = false;
     'confirmPassword': new FormControl(null, Validators.required),
   });
   }
+
+ public  togglepw(){
+  if(this.passwordShown){
+    this.passwordShown = false;
+    this.passwordType = 'text';
+    this.showeye = true
+    this.hideeye = false;
+  }
+  else{
+    this.passwordShown = true;
+    this.passwordType = 'password';
+    this.showeye = false
+    this.hideeye = true;
+  }
+  }
+  public  togglepw1(){
+    if(this.confirmpasswordShown){
+      this.confirmpasswordShown = false;
+      this.confirmpasswordType = 'text';
+      this.confirmshoweye = true
+      this.confirmhideeye = false;
+    }
+    else{
+      this.confirmpasswordShown = true;
+      this.confirmpasswordType = 'password';
+      this.confirmshoweye = false
+      this.confirmhideeye = true;
+    }
+    }
 
   // stop() {
   //   this.userIdle.stopTimer();

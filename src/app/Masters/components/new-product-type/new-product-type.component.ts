@@ -32,14 +32,19 @@ export class NewProductTypeComponent implements OnInit {
   public newProductTypeEntryForm: FormGroup;
   brands: any[];
   chkIsActive: boolean;
+  public skewtypeList = [];
+  public trimmingMethod = [];
+  public lightDept = [];
   subbrands: any[];
   strains: any[];
   skewtypes: any[];
   packagetypes: any[];
+  trimmingMethods: any[];
   packageunit: any[];
   sysmbol:any;
   public taskCategory: any;
   public allProductTypeList: any;
+  public allData: any;
   public oilReturnProcessingResource: any;
   showBrandModal = false;
   showPackageTypeModal = false;
@@ -106,7 +111,8 @@ export class NewProductTypeComponent implements OnInit {
       brands: [],
       strains: [],
       skewtypes: [],
-      packagetypes: []
+      packagetypes: [],
+      trimmingMethods: [],
     };
   // NewSubBrandEntryForm: any; // Commented by Devdan :: 31-Oct-2018 :: Unused
   public newEmployeeResources: any;
@@ -126,8 +132,9 @@ export class NewProductTypeComponent implements OnInit {
   ) {
     this.getAllBrands();
     this.getAllStrains();
-    this.getAllSkew();
+    // this.getAllSkew();
     this.getAllPackageType();
+    
   // this.skewType_InChange();
   }
   items = new FormArray([], this.customGroupValidation );
@@ -146,6 +153,8 @@ export class NewProductTypeComponent implements OnInit {
     return newArr;
     // End of getting unique record accroding brand and strain
   }
+
+ 
   getAllBrands() {
     this.dropdownDataService.getBrands().subscribe(
       data => {
@@ -157,6 +166,7 @@ export class NewProductTypeComponent implements OnInit {
       error => { console.log(error); },
       () => console.log('Get all brands complete'));
   }
+ 
 
   getSubBrands() {
     // console.log('Get all sub brands complete');
@@ -170,41 +180,82 @@ export class NewProductTypeComponent implements OnInit {
   }
 
   getAllStrains() {
-    this.dropdownDataService.getStrains().subscribe(
+    this.dropdownDataService.getAllDetails().subscribe(
       data => {
         // alert('');
         this.globalData.strains = data;
-        this.strains = this.dropdwonTransformService.transform(data, 'StrainName', 'StrainId', '-- Select --');
+        this.globalData.skewtypes = data;
+        this.globalData.trimmingMethods = data;
+        this.strains = this.dropdwonTransformService.transform(this.allData, 'StrainName', 'StrainId', '-- Select --');
+        const strainsfilter = Array.from(data.reduce((m, t) => m.set(t.StrainName, t), new Map()).values())
+        this.strains = this.dropdwonTransformService.transform(strainsfilter,'StrainName', 'StrainId', '-- Select --',false)
       } ,
       error => { console.log(error); },
       () => console.log('Get all strains complete'));
   }
 
-  getAllSkew() {
-    //     this.skewtypes = [
-    //   { label: '-- Select --', value: null },
-    //   { label: 'Bud', value: 1 },
-    //   { label: 'Joints', value: 2 },
-    //   { label: 'Oil', value: 3 }
-    // ];
-    this.dropdownDataService.getSkewListByClient().subscribe(
-      data => {
-        if (String(data).toLocaleUpperCase() !== 'NO DATA FOUND!') {
-        this.globalData.skewtypes = data;
-        this.skewTypesDetails = data;
-        this.skewtypes = this.dropdwonTransformService.transform(data, 'SkwTypeName', 'SkwTypeId', '-- Select --');
-        if (this.skewTypesDetails) {
-          this.skewType_InChange();
-          }
-      } else {
-        this.globalData.skewtypes = [];
-        this.skewtypes = [];
+  getSkewTypeByStrainName(event?:any){
+    this.skewtypes = null;
+    this.skewtypeList = [];
+      for(let sec of this.globalData.strains ){
+        if(event.value === sec.StrainId){
+          this.skewtypeList.push({label: sec.SkewType, value: sec.SkewTypeId})
+        }
       }
-     // this.loaderService.display(false);
-    },
-      error => { console.log(error); },
-      () => console.log('Get all skew types complete'));
+      const skewfilter = Array.from(this.skewtypeList.reduce((m, t) => m.set(t.label, t), new Map()).values())
+      this.skewtypes = this.dropdwonTransformService.transform(skewfilter,'label', 'value', '-- Select --',false)
+    
   }
+
+  getTMOnSkewTypeChange(event?:any){
+    this.trimmingMethods = null;
+    this.trimmingMethod = [];
+    for(let skew of this.globalData.skewtypes){
+      if(skew.SkewTypeId === event.value && skew.StrainId ===this.newProductTypeEntryForm.value.strain){
+        this.trimmingMethod.push({label: skew.TrimmingMethod, value:skew.TrimmingMethod})
+      }
+    }
+    const tmfilter = Array.from(this.trimmingMethod.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.trimmingMethods = this.dropdwonTransformService.transform(tmfilter,'label', 'value', '-- Select --',false)
+
+  }
+  getLDOnTMChange(event?:any){
+    this.lightDept = null;
+    this.lightDept = [];
+    for(let lightdept of this.globalData.trimmingMethods){
+      if(lightdept.TrimmingMethod === event.value && lightdept.StrainId ===this.newProductTypeEntryForm.value.strain && lightdept.SkewTypeId === this.newProductTypeEntryForm.value.skewType){
+        this.lightDept.push({label: lightdept.IsLightDeprevation, value:lightdept.IsLightDeprevation})
+      }
+    }
+    const ldfilter = Array.from(this.lightDept.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.lightDept = this.dropdwonTransformService.transform(ldfilter,'label', 'value', '-- Select --',false)
+  }
+
+  // getAllSkew() {
+  //   //     this.skewtypes = [
+  //   //   { label: '-- Select --', value: null },
+  //   //   { label: 'Bud', value: 1 },
+  //   //   { label: 'Joints', value: 2 },
+  //   //   { label: 'Oil', value: 3 }
+  //   // ];
+  //   this.dropdownDataService.getSkewListByClient().subscribe(
+  //     data => {
+  //       if (String(data).toLocaleUpperCase() !== 'NO DATA FOUND!') {
+  //       this.globalData.skewtypes = data;
+  //       this.skewTypesDetails = data;
+  //       this.skewtypes = this.dropdwonTransformService.transform(data, 'SkwTypeName', 'SkwTypeId', '-- Select --');
+  //       if (this.skewTypesDetails) {
+  //         this.skewType_InChange();
+  //         }
+  //     } else {
+  //       this.globalData.skewtypes = [];
+  //       this.skewtypes = [];
+  //     }
+  //    // this.loaderService.display(false);
+  //   },
+  //     error => { console.log(error); },
+  //     () => console.log('Get all skew types complete'));
+  // }
 
 
   getAllPackageType() {
@@ -335,7 +386,7 @@ export class NewProductTypeComponent implements OnInit {
       length = Number(length) - 1;
       this.deleteItemAll(length);
     }
-    this.getAllSkew();
+    // this.getAllSkew();
     this.addItem();
   }
   doOPenPanel() {
@@ -378,7 +429,9 @@ export class NewProductTypeComponent implements OnInit {
             // UnitValue: Number(this.newProductTypeEntryForm.value.packageUnit),
             // ItemQty: Number(this.newProductTypeEntryForm.value.packageItemQty),
             // PackageLabel: this.appCommonService.trimString(this.newProductTypeEntryForm.value.packageLable),
-            VirtualRoleId: Number(this._cookieService.VirtualRoleId)
+            VirtualRoleId: Number(this._cookieService.VirtualRoleId),
+            TrimmingMethod:this.newProductTypeEntryForm.value.trimmingmethod,
+            IsLD:this.newProductTypeEntryForm.value.lightdept,
             // IsActive: this.newProductTypeEntryForm.value.chkSelectAll ? 1 : 0,
         },
         productTyepeNewDetails: []
@@ -644,6 +697,8 @@ export class NewProductTypeComponent implements OnInit {
     'strain': new FormControl(null, Validators.required),
     'skewType': new FormControl(null, Validators.required),
     'packageType': new FormControl(null, Validators.required),
+    'trimmingmethod': new FormControl(null, Validators.required),
+    'lightdept':new FormControl(null, Validators.required),
     // 'packageUnit': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(8), Validators.min(0.1)])),
     // 'packageItemQty': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(8), Validators.min(1)])),
     // 'packageLable': new FormControl(null, Validators.maxLength(50)),

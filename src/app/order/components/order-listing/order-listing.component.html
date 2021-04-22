@@ -412,6 +412,8 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Strain</th>
+                        <th>Trimming Method</th>
+                        <th>Light Dept</th>
                         <th>Skew Type</th>
                         <th>Package Type</th>
                         <th>Package Size</th>
@@ -422,7 +424,8 @@
                 <ng-template pTemplate="body" let-taskstatus>
                     <tr>
                         <td>{{taskstatus.StrainName}}</td>
-                       
+                        <td>{{taskstatus.TrimmingMethod}}</td>
+                        <td>{{taskstatus.IsLD}}</td>
                         <td>{{taskstatus.SkewKeyName}}</td>
                         <td>{{taskstatus.PkgTypeName}}</td>
                         <td>{{taskstatus.PackageSize}}</td>

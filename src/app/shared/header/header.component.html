@@ -185,22 +185,32 @@
                 <!-- newPassword -->
                 <div class="ui-g-12 ui-md-12">
                     <div class="paddingRL">
-                        <div class="le-su-12">
+                        <div class="le-su-12" >
                             <label for="enterbrand">
                             
                             {{ loginResources.EnterNewPassword }}
                             <span class="star">*</span>:
                             </label>
-    
-                            <input pPassword
-                            name="newPassword"
-                            autocomplete="new-password"
-                            id="newPassword"
-                            placeholder="Enter new password"
-                            type="text"
-                            class="clsControl"
-                            formControlName="newPassword"
-                            />
+                            <div class="input-container">
+                                <input
+                                name="newPassword"
+                                autocomplete="new-password"
+                                id="newPassword"
+                                placeholder="Enter new password"
+                                [type]="passwordType"
+                                class="inputfield"
+                                formControlName="newPassword"
+                               
+                                />
+                                <!-- class="clsControl" -->
+                                <span class="p-viewer2" *ngIf="showeye === true">
+                                    <i class="fa fa-eye eyeicon"   ria-hidden="true" (click)="togglepw()">    </i>
+                                </span>
+                                <span class="p-viewer2" *ngIf="hideeye === true">
+                                    <i class="fa fa-eye-slash eyeicon"  ria-hidden="true" (click)="togglepw()">                     </i>
+                                </span>
+                            </div>
+                            
     
                             <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                             *ngIf="!resetPasswordForm.controls['newPassword'].valid&&resetPasswordForm.controls['newPassword'].dirty">
@@ -231,17 +241,25 @@
                                 {{ loginResources.ConfirmPassword }}
                                 <span class="star">*</span>:
                           </label>
-  
-                          <input pInputText
-                            name="confirmPassword"
-                            autocomplete="off"
-                            id="confirmPassword"
-                            placeholder="Confirm password"
-                            type="text"
-                            class="clsControl"
-                            formControlName="confirmPassword"
-                          />
-  
+  <div  class="input-container">
+    <input 
+    name="confirmPassword"
+    autocomplete="off"
+    id="confirmPassword"
+    placeholder="Confirm password"
+    [type]="confirmpasswordType"
+    class="inputfield"
+   
+    formControlName="confirmPassword"
+  />
+  <span class="p-viewer2" *ngIf="confirmshoweye === true">
+    <i class="fa fa-eye eyeicon"   ria-hidden="true" (click)="togglepw1()">    </i>
+</span>
+<span class="p-viewer2" *ngIf="confirmhideeye === true">
+    <i class="fa fa-eye-slash eyeicon"  ria-hidden="true" (click)="togglepw1()">                     </i>
+</span>
+  </div>
+                          
                           <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                             *ngIf="!resetPasswordForm.controls['confirmPassword'].valid&&resetPasswordForm.controls['confirmPassword'].dirty">
                               <span *ngIf="resetPasswordForm.controls['confirmPassword'].errors['required']">

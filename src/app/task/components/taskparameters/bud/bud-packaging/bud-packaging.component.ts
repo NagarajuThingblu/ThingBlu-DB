@@ -1930,7 +1930,7 @@ else{
             this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
           }
           else if (data[0].RESULTKEY === 'Completed Weight Is Greater Than Assigned Weight') {
-            this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.outputBinWtIsMore });
+            this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.completedBinWtIsMore });
           }
         });
         this.PageFlag.showmodal = false;

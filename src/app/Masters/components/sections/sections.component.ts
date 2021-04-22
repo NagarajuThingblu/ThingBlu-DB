@@ -318,7 +318,7 @@ this.Year = new Date().getFullYear();
     this.newProductTypeResources = MastersResource.getResources().en.newproductype;
     this.newSectionResources = MastersResource.getResources().en.addnewsection;
     this.globalResource = GlobalResources.getResources().en;
-    this.appComponentData.setTitle('Product Type');
+    this.appComponentData.setTitle('Sections');
     this._cookieService = this.appCommonService.getUserProfile();
     setTimeout(() => {this.loaderService.display(true);
     }, 0);

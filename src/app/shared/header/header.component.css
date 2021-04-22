@@ -9,7 +9,13 @@ body {
 .fixed-top {
   padding: 0px !important;
 }
-
+ /* .p-viewer2{
+  float: right;
+  margin-top: -55px;
+  position: relative;
+  z-index: 1;
+  cursor:pointer;
+} */
 .navbar {
   font-family: "Roboto", sans-serif;
   -webkit-border-radius: 0;
@@ -155,4 +161,20 @@ ul.rightMenu > li {
 }
 @media (min-width: 769px){
   .mask{display: none;}
+}
+.inputfield{
+  padding: 5px;
+  width: 100%;
+  font-size: 16px;
+  border: 0;
+  outline:none;
+}
+.eyeicon{
+  margin: 0 10px; 
+}
+.input-container{
+  display: flex; 
+  align-items: center; 
+  border: 1px solid #aaa; 
+  border-radius: 3px;
 }

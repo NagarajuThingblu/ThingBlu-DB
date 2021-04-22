@@ -87,6 +87,7 @@
                         [options]="strains"
                         placeholder="-- Select --"
                         [autoWidth]="false"
+                        (onChange)=" getSkewTypeByStrainName($event)"
                         class="clsControl"
                         name="strain">
                       </p-dropdown>
@@ -117,7 +118,7 @@
                       id="skewType"
                       formControlName="skewType"
                       [options]="skewtypes"
-                      (onChange) = "skewType_InChange()"
+                      (onChange) = "getTMOnSkewTypeChange($event)"
                       placeholder="-- Select --"
                       [autoWidth]="false"
                       class="clsControl"
@@ -167,46 +168,90 @@
                       
                     </div>
                   </div>
+
+                  <!-- <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <div class="ui-g-6 ui-md-3">
+                      
+                        <label for="trimmgmethod">Trimming Method<span class="star">*</span></label>:
+                        <p-dropdown
+                        [filter] ="true"
+                        id="packageType"
+                        formControlName="packageType"
+                        [options]="packagetypes"
+                        placeholder="-- Select --"
+                        [autoWidth]="false"
+                        class="clsControl"
+                        name="packageType">
+                      </p-dropdown>
+                   
+                    </div>
+                    <div class="ui-g-6 ui-md-3">
+                     
+                        <label for="lightdepr">Light Dept<span class="star">*</span></label>:
+                        <p-dropdown
+                        [filter] ="true"
+                        id="packageType"
+                        formControlName="packageType"
+                        [options]="packagetypes"
+                        placeholder="-- Select --"
+                        [autoWidth]="false"
+                        class="clsControl"
+                        name="packageType">
+                      </p-dropdown>
+                      
+                    </div>
+                    </div>
+                    
+
+                  </div> -->
                   <!-- End Package Type -->
                 <!-- Package Unit -->
-                <!-- <div class="ui-g-12 ui-md-6">
+                <div class="ui-g-6 ui-md-3">
                     <div class="paddingRL">
                       <div class="le-su-12">
-                        <label for="packageunit">
-                          {{ newProductTypeResources.packageunit}}<span class="star">*</span>:
+                        <label for="trimmingmethod">
+                          Trimming Method<span class="star">*</span>:
                         </label>
 
-                        <input pInputText
-                          name="packageunit"
-                          id="packageunit"
-                          type="number"
-                          autocomplete="off"
-                          class="clsControl"
-                          OnlyNumber="true"                          
-                          formControlName="packageUnit"
-                          placeholder="Enter Package Unit"
-                          min="0.1"
-                        />
+                        <p-dropdown
+                      [filter] ="true"
+                      id="trimmingmethod"
+                      formControlName="trimmingmethod"
+                      [options]="trimmingMethods"
+                      placeholder="-- Select --"
+                      (onChange) = "getLDOnTMChange($event)"
+                      [autoWidth]="false"
+                      class="clsControl"
+                      name="trimmingmethod">
+                    </p-dropdown>
 
-                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                          *ngIf="!newProductTypeEntryForm.controls['packageUnit'].valid&&newProductTypeEntryForm.controls['packageUnit'].dirty">
-
-                            <span *ngIf="newProductTypeEntryForm.controls['packageUnit'].errors['required']">
-                              {{newProductTypeResources.packageunitrequired}}
-                            </span>
-                            <span *ngIf="newProductTypeEntryForm.controls['packageUnit'].errors['maxlength']">
-                              {{newProductTypeResources.packageUnitLength}}
-                            </span>
-                            <span *ngIf="newProductTypeEntryForm.controls['packageUnit'].errors['min']">
-                              {{ newProductTypeResources.packageunitval }}
-                            </span>
-                            <span *ngIf="newProductTypeEntryForm.controls['packageUnit'].hasError('invalidinput')">
-                                {{ newProductTypeResources.packageunitval }}
-                              </span>
-                          </div>
+                       
                       </div>
                   </div>
-                </div> -->
+                </div>
+                <div class="ui-g-6 ui-md-3">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="lightdept">
+                        Light Dept<span class="star">*</span>:
+                      </label>
+
+                      <p-dropdown
+                    [filter] ="true"
+                    id="lightdept"
+                    formControlName="lightdept"
+                    [options]="lightDept"
+                    placeholder="-- Select --"
+                    [autoWidth]="false"
+                    class="clsControl"
+                    name="lightdept">
+                  </p-dropdown>
+
+                     
+                    </div>
+                </div>
+              </div>
                 <!--End Package Unit -->
                 <!-- Package Item Quantity -->
                 <!-- <div class="ui-g-12 ui-md-6">
