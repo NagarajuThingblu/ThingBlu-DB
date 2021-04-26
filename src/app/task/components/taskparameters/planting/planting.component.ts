@@ -113,7 +113,7 @@ export class PlantingComponent implements OnInit{
     this.getTerminationReasons();
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
-    this.titleService.setTitle(this.assignTaskResources.siftingtitle);
+    this.titleService.setTitle('Planting');
     this.taskStatus = AppConstants.getStatusList;
     this.userRoles = AppConstants.getUserRoles;
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);

@@ -265,8 +265,8 @@ export class GrowertrimmingComponent implements OnInit {
     console.log(this.completionForm.get('items'))
    
   }
-  viewBinsList(){
-    this.router.navigate(['../home/labels']);
+  viewBinsList(e){
+    this.router.navigate(['../home/labels', e]);
   }
   addItem(): void {
     this.arrayItems = this.completionForm.get('items') as FormArray;

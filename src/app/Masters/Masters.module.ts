@@ -68,10 +68,12 @@ import { FieldsComponent } from './components/fields/fields.component';
 import { SectionsComponent } from './components/sections/sections.component';
 import{NewSectionDetailsActionService} from './../task/services/add-section-details.service';
 import { NewLabelDetailsActionService } from './../task/services/add-label-details.service';
+import{NewARMDetailsActionService} from './../task/services/add-raw-material.service';
 import { LabelsComponent } from './components/labels/labels.component';
 import { HelpComponent } from './components/help/help.component';
 import { FlcComponent } from './components/flc/flc.component';
 import { PlantTerminationReasonsComponent } from './components/plant-termination-reasons/plant-termination-reasons.component';
+import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-material.component';
 
 
 @NgModule({
@@ -115,7 +117,8 @@ import { PlantTerminationReasonsComponent } from './components/plant-termination
     LabelsComponent,
     HelpComponent,
     FlcComponent,
-    PlantTerminationReasonsComponent
+    PlantTerminationReasonsComponent,
+    AddRawMaterialComponent
    
   ],
   imports: [
@@ -153,7 +156,8 @@ import { PlantTerminationReasonsComponent } from './components/plant-termination
     NewRoomGenerationService,
     NewFieldGenerationService,
     NewSectionDetailsActionService,
-    NewLabelDetailsActionService
+    NewLabelDetailsActionService,
+    NewARMDetailsActionService
   ],
   exports: [
     NewProductTypeComponent,

@@ -49,6 +49,19 @@ export class GrowerDetailsActionService {
     return this.http.post(url, employeeForApi, this.headers)
     .map(data =>  data );
   }
+  getEmptyBins(){
+    const url = 'api/Grower/GetEmptyBins';
+    let params = new HttpParams();
+    params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+    return this.http
+    .get(url, {params: params})
+
+    .map(data => {
+      console.log('GetRowSuplierDetailList Service success');
+      return data;
+    });
+  }
   getRowSuplierDetailList() {
       const url = 'api/Rawsuplr/GetGrowerListByClient';
       let params = new HttpParams();

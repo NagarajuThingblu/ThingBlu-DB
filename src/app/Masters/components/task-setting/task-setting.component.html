@@ -78,7 +78,7 @@
             [paginator]="true" 
             [rows]="10"          
             sortOrder="-1"
-            [globalFilterFields]="['TaskTypeName','IsReview','IsNotification']"              
+            [globalFilterFields]="['TaskCategory','TaskTypeName','IsReview','IsNotification']"              
             [rowsPerPageOptions]="paginationValues"
             class="clsTableSelection"
             dataKey="taskId">
@@ -91,6 +91,7 @@
           </ng-template>
           <ng-template pTemplate="header">
             <tr>
+              <th [pSortableColumn]="'TaskCategory'"> Task Category <p-sortIcon [field]="'TaskCategory'"></p-sortIcon></th>
               <th [pSortableColumn]="'TaskTypeName'"> Task Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon></th>
               <th [pSortableColumn]="'IsReview'">Is Review <p-sortIcon [field]="'IsReview'"></p-sortIcon></th>    
               <th [pSortableColumn]="'IsNotification'">Is Notification<p-sortIcon [field]="'IsNotification'"></p-sortIcon></th>              
@@ -113,6 +114,7 @@
           </ng-template>
           <ng-template pTemplate="body" let-task let-rowData let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+              <td>{{task?.CategoryName }}</td>
               <td>{{task?.TaskTypeName }}</td>
               <td>{{task?.IsReview }}</td>   
               <td>{{task?.IsNotification }}</td>            

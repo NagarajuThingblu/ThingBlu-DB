@@ -99,6 +99,7 @@ export class PrebuckingComponent implements OnInit {
    public strainName: any;
    public defaultWtWeight = 0;
    public defaulDryWeight = 0;
+   public pagename: 'taskaction/PREBUCKING'
    public defaultWasteWeight = 0;
    private globalData = {
     employees: [],
@@ -224,8 +225,9 @@ export class PrebuckingComponent implements OnInit {
     });
     
   }
-  viewBinsList(){
-    this.router.navigate(['../home/labels']);
+  viewBinsList(e){
+    this.router.navigate(['../home/labels', e]);
+    // this.router.navigate(['../home/taskaction', e.TaskTypeKey, e.TaskId]);
   }
   padLeft(text: string, padChar: string, size: number): string {
     return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;

@@ -259,13 +259,13 @@ this.Year = new Date().getFullYear();
               } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'DUPLICATE') {
                 this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.duplicateSection+this.newSectionResources.duplicateSection });
                 this.loaderService.display(false);
-                data.forEach(dataItem => {
-                let formGroup;
-                formGroup = (<FormGroup>this.newSectionEntryForm.get('items.' + dataItem.IndexCode));
+                // data.forEach(dataItem => {
+                // let formGroup;
+                // formGroup = (<FormGroup>this.newSectionEntryForm.get('items.' + dataItem.IndexCode));
 
-                (formGroup as FormGroup).setErrors({ 'prototypenotpresent': true });
-                this.loaderService.display(false);
-                });
+                // (formGroup as FormGroup).setErrors({ 'prototypenotpresent': true });
+                // this.loaderService.display(false);
+                // });
 
                 
               } else {

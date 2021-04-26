@@ -347,7 +347,7 @@
           <div style="width:calc(100% - 20px);float:left;">
             <div style="padding:5px;">
               <span><b>Output Bin</b></span>
-              <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ assignTaskResources.viewaddbin}}" id="btn_binshow" (click)="viewBinsList()"  name="btnviewbins"></p-button>
+              <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ assignTaskResources.viewaddbin}}" id="btn_binshow" (click)="viewBinsList(TaskModel)"  name="btnviewbins"></p-button>
             </div>
             <p-table [value]="buckingDetailsArr?.controls" id="buckingDetailsArr" name="preBuckingDetailsArr">
               <ng-template pTemplate="header">
@@ -518,7 +518,7 @@
         <div style="width:calc(100% - 20px);float:left;">
           <div style="padding:5px;">
             <span><b>Output Bin</b></span>
-            <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ assignTaskResources.viewaddbin}}" id="btn_binshow" (click)="viewBinsList()"  name="btnviewbins"></p-button>
+            <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ assignTaskResources.viewaddbin}}" id="btn_binshow" (click)="viewBinsList(TaskModel)"  name="btnviewbins"></p-button>
           </div>
           <p-table [value]="buckingDetailsArr?.controls" id="buckingDetailsArr" name="preBuckingDetailsArr">
             <ng-template pTemplate="header">

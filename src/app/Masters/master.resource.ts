@@ -19,7 +19,8 @@ export class MastersResource {
                  activeLabelMsg: 'Do you want to activate this Bin?',
                  deactivateLabelMsg: 'Do you want to inactivate this Bin?',
                  updated: 'Updated Successfully',
-                 duplicate:'Duplicate Bin'
+                 duplicate:'Duplicate Bin',
+                 binisbeingused:'This bin is in use so you can not delete this bin'
                 },
                 newproductype: {
                     pageheading: 'Add New Product Type',
@@ -87,10 +88,16 @@ export class MastersResource {
                  sectionactivatesuccess:'section is activated',
                  activeSectionMsg: 'Do you want to activate this Section?',
                  deactivateSectionMsg: 'Do you want to inactivate this Section?',
-                    duplicateSection: 'Section Already Existed',
+                    duplicateSection: 'Duplicate Section',
                     alreadydeleted: 'Already Deleted',
                     updated: 'Updated Successfully'
 
+                },
+                addNewRawMaterial: {
+                    newRawMaterialavedsuccess:'Raw Material saved successfully',
+                    BinWtMoreWtThanReceivedWt :'Total Recevied Weight is not equal to Total Bins Weight',
+                    binsNotAvail:'Bins Not Avilable',
+                    growerdeleted:'Grower Deleted'
                 },
                 addnewbrand: {
                     pageheading: 'Add New Brand',

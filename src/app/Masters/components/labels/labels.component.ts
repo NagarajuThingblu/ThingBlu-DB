@@ -16,7 +16,7 @@ import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { AppConstants } from '../../../shared/models/app.constants';
 import * as _ from 'lodash';
 import { routing } from '../../../app.routing';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { routerNgProbeToken } from '@angular/router/src/router_module';
 import {NewLabelDetailsActionService} from '../../../task/services/add-label-details.service'
 
@@ -37,6 +37,9 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
   public newLabelsEntryForm: FormGroup;
   strains: any[];
   TaskType: any[];
+  public taskid;
+  public taskType;
+  public visible: boolean = false
   public TaskTypeID: any = 0;
   public TaskTypeName: any = '';
   public LabelOnEdit: any;
@@ -60,7 +63,8 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
   submitted: boolean;
   collapsed: any;
   taskTypeNameValue = '';
-  enableDropDown = true;
+  enableDropDown = true
+  public e:any;
   taskTypeValueAndLabelMap: Map<number,string> = new Map<number,string>()
   pageheading: any;
   public placeholder ='-- Select --';
@@ -74,6 +78,7 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
   
 
   constructor(
+    private route: ActivatedRoute,
     private fb: FormBuilder,
     private loaderService: LoaderService,
     private cookieService: CookieService,
@@ -86,7 +91,12 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
     private scrolltopservice: ScrollTopService,
     private router: Router
   ) {
-    
+    this.route.params.forEach((urlParams) => {
+      this.e = urlParams
+      this.visible = true;
+      this.taskid = urlParams['TaskTypeId'];
+      this.taskType = urlParams['TaskTypeKey'];
+    });
     this.getAllStrains();
     this.getAllTaskType();
     this.getAllSkew();
@@ -142,7 +152,19 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
   get labelDetailsArr(): FormArray {
     return this.newLabelsEntryForm.get('items') as FormArray;
   }
-
+  backtotaskpage(){
+    this.back(this.e)
+   
+    // this.router.navigate(['../home/taskaction', e.TaskTypeKey, e.TaskId]);
+  }
+  back(e){
+    if(e.TaskTypeKey!= null){
+      this.router.navigate(['home/taskaction/', e.TaskTypeKey, e.TaskId]);
+    }
+    else{
+      this.router.navigate(['home/addrawmaterial']);
+    }
+  }
 createItem(): FormGroup {
   return this.fb.group({
     binNo: new FormControl(null, Validators.compose([Validators.required])),
@@ -517,6 +539,10 @@ createItem(): FormGroup {
          
           this.loaderService.display(false);
         }
+      }else if(String(data[0].ResultKey) === 'This bin used so you can not delete this bin'){
+        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+        detail: this.newLabelResources.binisbeingused });
+        this.loaderService.display(false);
       } else {
         this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data });
       }

@@ -61,6 +61,7 @@ export class OrderformComponent implements OnInit {
   // packagesizes:any[];
   productIds:any[];
   datafiltered:any;
+  public data:any;
   public orderOnEdit: any;
   shippingaddress:any;
   email:any;
@@ -86,6 +87,7 @@ export class OrderformComponent implements OnInit {
   public msgs: any[];
   public editData;
   public allOrders: any;
+  public OrderId = 0;
   public orderTabSelected = true;
   event: any;
   public orderrequestResource: any;
@@ -117,6 +119,7 @@ export class OrderformComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private scrolltopservice: ScrollTopService
   ) {
+    this.getAllProductTypeListByClient();
     this.route.params.forEach((urlParams) => {
   this.editData = urlParams['OrderId'];
   // this.taskType = urlParams['taskType'];
@@ -155,7 +158,7 @@ export class OrderformComponent implements OnInit {
     ];
     
     this.getRetailerDetailListByClient();
-    this.getAllProductTypeListByClient();
+    
     // this.getAllOrders();
     this.orderTabSelected = true;
     // this.getAllStrains();
@@ -197,8 +200,20 @@ if(this.editData != null){
   get OrderFormDetailsArr(): FormArray {
     return this.orderForm.get('items') as FormArray;
   }
+
+  getAllDetails1(index, value){
+    this.skewtype = null;
+    this.packagetype = null;
+    this.packagesize = null;
+    
+    this.producttype = [];
+    this.producttype.push({label:value.ProductName, value:value.ProductTypeId})
+    this.productTypeDropdown.set(index,this.producttype )
+ 
+    
+   }
   EditFields(OrderId){
-  
+  this.OrderId = OrderId
     this.orderformservice.getOrderDetailsByClient(OrderId).subscribe(
       data => {
         let i =0;
@@ -211,6 +226,7 @@ if(this.editData != null){
           const email = this.orderForm.controls['email'];
           const country = this.orderForm.controls['country'];
           const city = this.orderForm.controls['city'];
+          const cityid =this.orderForm.controls['cityid'];
           const state = this.orderForm.controls['state'];
           const zipcode = this.orderForm.controls['zipcode'];
           const deliverydate = this.orderForm.controls['deliverydate'];
@@ -222,6 +238,7 @@ if(this.editData != null){
             email.patchValue(this.orderOnEdit.Table2[0].PrimaryEmail);
             country.patchValue(this.orderOnEdit.Table2[0].CountryName);
             city.patchValue(this.orderOnEdit.Table2[0].CityName);
+            cityid.patchValue(this.orderOnEdit.Table2[0].CityId);
             state.patchValue(this.orderOnEdit.Table2[0].StateName);
             zipcode.patchValue(this.orderOnEdit.Table2[0].ZipCode);
              deliverydate.patchValue(new Date(this.orderOnEdit.Table[0].DeliveryDate));
@@ -244,9 +261,11 @@ if(this.editData != null){
             // })
             // strain.patchValue(this.orderOnEdit[0].strain);
             itemlist[i].controls.strain.patchValue(value.StrainId);
+            this.getAllDetails1(i,value)
             itemlist[i].controls.producttype.patchValue(value.ProductTypeId);
             itemlist[i].controls.skewtype.patchValue(value.SkewKeyName);
             itemlist[i].controls.packagetype.patchValue(value.PkgTypeName);
+            itemlist[i].controls.packagetypeid.patchValue(value.PkgTypeId);
             itemlist[i].controls.packagesize.patchValue(value.PackageSize);
             itemlist[i].controls.orderqt.patchValue(value.RequiredQty);
             if(this.orderOnEdit.Table1.length > i+1){
@@ -370,13 +389,15 @@ if(this.editData != null){
 getAllDetails(index  , event?:any){
     this.producttype = [];
 for(let value of this.globalData.dropdownsData){
-  if( value.StrainId === event.value){
+  if( value.StrainId === event.value || value.StrainId === event){
     this.producttype.push({label:value.ProductName, value:value.ProductTypeId})
     this.productTypeDropdown.set(index,this.producttype )
   }
 }
     
    }
+
+   
 
 
 getAllDetailsOnProducType(index, event?:any){
@@ -441,7 +462,8 @@ this.saveButtonText ="save"
         "ShippingAdress": this.orderForm.value.shippingaddr,
         "ShippingPreference": this.orderForm.value.shippingpref,
         "DeliveryDate":this.orderForm.value.deliverydate,
-        "DraftOrderId": 0
+        "DraftOrderId": 0,
+        "OrderId":Number(this.OrderId)
          
       },
       OrderDetails: []
@@ -471,6 +493,12 @@ this.saveButtonText ="save"
           if (String(data[0].ResultKey) === 'SUCCESS') {
             this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
             detail: this.orderrequestResource.ordersubmitted });
+           
+            this.resetForm();
+          }
+          else     if (String(data[0].RESULTKEY) === 'Order Updated Successfully') {
+            this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+            detail: this.orderrequestResource.orderupdated });
            
             this.resetForm();
           }

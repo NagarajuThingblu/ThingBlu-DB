@@ -1,0 +1,287 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel [header]="pageheading"  [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+        <form [formGroup]="ARMForm" (ngSubmit)="onSubmit(ARMForm.value)">
+          <div class="ui-g">
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="grower">Grower</label> <span class="star">*</span>:
+                <p-dropdown
+                [filter] ="true"
+                id="grower"
+                formControlName="grower"
+               [options]="Growers"
+                placeholder="-- Select --"
+                [autoWidth]="false"
+                class="clsControl"
+                name="grower">
+              </p-dropdown>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="receivedwt">Received Weight</label> <span class="star">*</span>:
+                <input pInputText
+                name="receivedwt"
+                autocomplete="off"
+                id="receivedwt"
+                type="text"
+                class="clsControl"
+                formControlName="receivedwt"                                      
+                placeholder="Enter Weight"
+                />
+              </div>
+            </div>
+
+            <div formArrayName="items" style="position: relative">
+              <div style="width:calc(100% - 20px);float:left;">
+                <p-table  [value]="RawmaterialDetailsArr?.controls" id="RawmaterialDetailsArr" name="RawmaterialDetailsArr">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>Bin
+                        <span class="star">*</span>
+                        <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="Add Bins"  id="btn_binshow" (click)="GoToBinsPage()"  name="btnviewbins"></p-button>
+                      </th>
+                      <th>Task Type
+                        <span class="star">*</span>
+                      </th>
+                      <th>Strain
+                        <span class="star">*</span>
+                      </th>
+                      <th>SkewType
+                       
+                      </th>
+                      <th>HT/MT
+                      
+                      </th>
+                      <th>Light Dept
+                      </th>
+                      <th>Weight
+                        <span class="star">*</span>
+                      </th>
+                      <th style="width: 80px;">Action
+                      </th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-item let-i="rowIndex" >
+                    <tr [formGroupName]="i">
+                      <td>
+                        <p-dropdown
+                        id="binNo"
+                        formControlName="binNo"
+                        placeholder="-- Select --"
+                        [options]="bins"
+                        [autoWidth]="false"
+                        class="clsControl"
+                        (onChange)="showData(i,$event)"
+                        name="binNo">
+                      </p-dropdown>
+                    </td>
+                    <td>
+                      <input pInputText
+                        name="tasktype"
+                        id="tasktype"
+                        type="text"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="tasktype"
+                        placeholder=" Task Type Name"
+                        readonly
+                        >
+                    </td>
+                    <td>
+                      <input pInputText
+                        name="strain"
+                        id="strain"
+                        type="text"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="strain"
+                        placeholder=" Strain"
+                        readonly
+                        >
+                    </td>
+                    <td>
+                      <input pInputText
+                        name="skewType"
+                        id="skewType"
+                        type="text"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="skewType"
+                        placeholder=" Skew Type"
+                        readonly
+                        >
+                    </td>
+                    <td Style="text-align:center">
+                       
+                      <div class="radio" *ngFor="let TrimmingMethod of TrimmingMethods;" >
+                        <p-radioButton [name]=i
+                         [value]="TrimmingMethod" 
+                         label={{TrimmingMethod}} 
+                         [disabled]="enableDropDown"
+                         formControlName="TrimmingMethod"
+                         ></p-radioButton >
+                       </div>  
+                     
+                                 
+                    </td>
+                    <td>
+                      <p-checkbox value="true"
+                       formControlName="lightDept" 
+                       [disabled]="enableDropDown"
+                        checked="true"
+                      binary="true"></p-checkbox>                                      
+                    </td>
+                    <td>
+                      <input pInputText
+                        name="weight"
+                        id="weight"
+                        type="text"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="weight"
+                        placeholder="Enter Weight"
+                        >
+                    </td>
+                    <td>
+                      <a (click)="deleteItem(i)" >                                                    
+                          <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                          </span>
+                      </a> 
+                        <a (click)="addItem()" *ngIf="ARMForm.get('items').valid&&plusOnEdit === true">
+                            <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                            </span>
+                        </a>
+                      
+                    
+                  </td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+              <div class="ui-g" style="width:100%;text-align:right;">
+                <div class="ui-g-12">
+                  <button pButton type="submit" label="{{saveButtonText}}" ></button>
+                  <button 
+                    pButton 
+                    (click)="resetForm()" 
+                    type="button" 
+                    label="Clear" 
+                    class="ui-button-secondary">
+                </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </p-panel>
+    </div>
+  </div>
+</div>
+
+<div class="ui-g">
+  <div class="ui-g-12">
+    <p-panel header="Raw Matwrial List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+      <p-table #dtRaMaterialList [value]="allRawMateriallist" sortMode="single" [responsive]="true" [paginator]="true"
+      [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
+      (onPage)="onPageChange($event)"
+      [globalFilterFields]="['GrowerName','TaskName','BinNo','Strain','SkewType','TrimmingMethod','IsLightDeprevation','Weight']">
+      <ng-template pTemplate="caption">
+        <div style="text-align: right">
+          <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+          <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter"
+          (input)="dtRaMaterialList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th [pSortableColumn]="'GrowerName'">Grower Name <p-sortIcon [field]="'GrowerName'"></p-sortIcon>
+          </th>
+          <th [pSortableColumn]="'TaskName'">Task Name <p-sortIcon [field]="'TaskName'"></p-sortIcon>
+          </th>
+          <th [pSortableColumn]="'BinNo'">BinNo <p-sortIcon [field]="'BinNo'"></p-sortIcon>
+          </th>
+          <th [pSortableColumn]="'Strain'">Strain <p-sortIcon [field]="'Strain'"></p-sortIcon>
+          </th>
+          <th [pSortableColumn]="'SkewType'">SkewType <p-sortIcon [field]="'SkewType'"></p-sortIcon>
+          </th>
+          <th [pSortableColumn]="'TrimmingMethod'">TrimmingMethod <p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon>
+          </th>
+          <th [pSortableColumn]="'IsLightDeprevation'">Light Dept <p-sortIcon [field]="'IsLightDeprevation'"></p-sortIcon>
+          </th>
+          <th [pSortableColumn]="'Weight'">Weight <p-sortIcon [field]="'Weight'"></p-sortIcon>
+          </th>
+          <th style="width:100px;">Action </th>
+        </tr>
+        <tr>
+          <th>
+            <input pInputText type="text" autocomplete="off"
+              (input)="dtRaMaterialList.filter($event.target.value, 'GrowerName', 'contains')" class="clsControl">
+          </th>
+          <th>
+            <input pInputText type="text" autocomplete="off"
+              (input)="dtRaMaterialList.filter($event.target.value, 'TaskName', 'contains')" class="clsControl">
+          </th>
+          <th>
+            <input pInputText type="text" autocomplete="off"
+              (input)="dtRaMaterialList.filter($event.target.value, 'BinNo', 'contains')" class="clsControl">
+          </th>
+          <th>
+            <input pInputText type="text" autocomplete="off"
+              (input)="dtRaMaterialList.filter($event.target.value, 'Strain', 'contains')" class="clsControl">
+          </th>
+          <th>
+            <input pInputText type="text" autocomplete="off"
+              (input)="dtRaMaterialList.filter($event.target.value, 'SkewType', 'contains')" class="clsControl">
+          </th>
+          <th>
+            <input pInputText type="text" autocomplete="off"
+              (input)="dtRaMaterialList.filter($event.target.value, 'TrimmingMethod', 'contains')" class="clsControl">
+          </th>
+          <th>
+            <input pInputText type="text" autocomplete="off"
+              (input)="dtRaMaterialList.filter($event.target.value, 'IsLightDeprevation', 'contains')" class="clsControl">
+          </th>
+          <th>
+            <input pInputText type="text" autocomplete="off"
+              (input)="dtRaMaterialList.filter($event.target.value, 'Weight', 'contains')" class="clsControl">
+          </th>
+          <th rowspan="2"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rawmaterial let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+          <td>{{rawmaterial?.RawSupplierName}}</td>
+          <td>{{rawmaterial?.TaskTypeName}}</td>
+          <td>{{rawmaterial?.BinNo}}</td>
+          <td>{{rawmaterial?.StrainName}}</td>
+          <td>{{rawmaterial?.SkewType}}</td>
+          <td>{{rawmaterial?.TrimmingMethod}}</td>
+          <td>{{rawmaterial?.LightDeprevation}}</td>
+          <td>{{rawmaterial?.Weight}}</td>
+          <td style="width:65px;">
+            <span class="ui-column-title">edit</span>
+            <a href="#" [routerLink]="">
+              <span class="fa fa-edit"></span>
+            </a>
+            <a href="#" [routerLink]="">
+              <span class="fa fa-trash"></span>
+            </a>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft" let-state>
+        <pagination-counts *ngIf="allRawMateriallist?.length" [inputData]="allRawMateriallist" [inputEvent]="event">
+        </pagination-counts>
+      </ng-template>
+      </p-table>
+    </p-panel>
+  </div>
+</div>
+
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" *ngIf="true" class="clsConfirmBox">
+</p-confirmDialog>

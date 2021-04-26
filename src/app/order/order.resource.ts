@@ -9,6 +9,7 @@ export class OrderResource {
                     orderqtyrequired: 'Order qty is required.',
                     orderqty: 'Order qty',
                     ordersubmitted: 'Order submitted successfully.',
+                    orderupdated: 'Order Updated successfully.',
                     retailerisrequired: 'Retailer name is required.',
                     deliverydateisrequired: 'Delivery date is required.',
                     filloneorderdetails: 'Please fill order details first.',

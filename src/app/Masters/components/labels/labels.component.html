@@ -21,6 +21,10 @@
                   </p-dropdown>
               </div>
             </div>
+            <div *ngIf = "visible === true" class="ui-g-12 ui-md-6" style="float:right;">
+              <p-button  style="float: right;" class="toplinks" type="button" icon="fa fa-list-ul" label="Back"  id="btn_binshow" (click)="backtotaskpage()"  name="btnviewbins"></p-button>
+            </div>
+           
           </div>
           <div formArrayName="items" style="position: relative">
             <div style="width:calc(100% - 20px);float:left;">

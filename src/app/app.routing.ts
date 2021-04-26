@@ -74,6 +74,7 @@ import { SectionsComponent } from './Masters/components/sections/sections.compon
 import { LabelsComponent } from './Masters/components/labels/labels.component';
 import {FlcComponent} from './Masters/components/flc/flc.component';
 import {PlantTerminationReasonsComponent} from './Masters/components/plant-termination-reasons/plant-termination-reasons.component';
+import {AddRawMaterialComponent} from './Masters/components/add-raw-material/add-raw-material.component';
 import { HelpComponent } from './Masters/components/help/help.component';
 import { OrderformComponent } from './order/components/orderform/orderform.component';
 const appRoutes: Routes = [
@@ -163,6 +164,7 @@ const appRoutes: Routes = [
       {path:'labels', component:LabelsComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'flc', component:FlcComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'plantterminationreasons', component:PlantTerminationReasonsComponent,canActivate:[AuthGuard,RoleGuard]},
+      {path:'addrawmaterial', component:AddRawMaterialComponent},
       {path:'help', component:HelpComponent},
       {path:'orderform', component:OrderformComponent},
       // {path:'planting', component:PlantingComponent}
