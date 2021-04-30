@@ -31,7 +31,7 @@
                 *ngIf="!cityForm.controls['country'].valid&&cityForm.controls['country'].dirty">
                 {{ globalResource.countryrequired }}
                 </div>
-                <p-button class="links" type="button" icon="fa fa-plus" label="{{ cityResources.addnewcountry}}" id="btn_countryshow" (click)="showCountryPopup()" name="btnshow" ></p-button>
+                <p-button class="links" type="button" icon="fa fa-plus" label="Add New" id="btn_countryshow" (click)="showCountryPopup()" name="btnshow" ></p-button>
                        
               </div>
             </div>
@@ -42,7 +42,7 @@
       <div class="ui-g-12 ui-md-4">
         <div class="paddingRL">
             <div class="le-su-12">
-                <label for="state" class="towlable">{{ globalResource.state}}<span class="star">*</span></label>:
+                <label for="state" class="towlable">{{ globalResource.state}}/Province<span class="star">*</span></label>:
   
                 <p-dropdown
                 [filter] ="true"
@@ -60,7 +60,7 @@
                 *ngIf="!cityForm.controls['state'].valid&&cityForm.controls['state'].dirty">
                 {{ globalResource.staterequired }}
                 </div>
-                <p-button class="links" type="button" icon="fa fa-plus" label="{{ cityResources.addnewstate}}" id="btn_stateshow" (click)="showStatePopup()" name="btnshow" ></p-button>
+                <p-button class="links" type="button" icon="fa fa-plus" label="Add New" id="btn_stateshow" (click)="showStatePopup()" name="btnshow" ></p-button>
               </div>
             </div>
          </div>
@@ -103,7 +103,7 @@
   
                </div>
             </form>
-            <p-panel header="{{ cityResources.citylist }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+            <p-panel header="City, State/Province, Country List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
               <p-table #dtCityList [value]="allCityList" 
               sortMode="single"                      
               [responsive]="true" 
@@ -121,7 +121,7 @@
               <ng-template pTemplate="header">
                   <tr> 
                       <th [pSortableColumn]="'CountryName'">Country <p-sortIcon [field]="'CountryName'"></p-sortIcon></th>                  
-                      <th [pSortableColumn]="'StateName'">State  <p-sortIcon [field]="'StateName'"></p-sortIcon></th>              
+                      <th [pSortableColumn]="'StateName'">State/Province<p-sortIcon [field]="'StateName'"></p-sortIcon></th>              
                       <th [pSortableColumn]="'CityName'">City <p-sortIcon [field]="'CityName'"></p-sortIcon></th>              
                        
                   </tr>

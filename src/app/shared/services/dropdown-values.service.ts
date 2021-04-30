@@ -181,6 +181,13 @@ getBins(TaskId) {
     return data;
    });
 }
+
+getBinsAtReview(){
+  const url='api/Grower/GetBinLabelsList';
+    let params = new HttpParams();
+    params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
+    return this.http.get(url,{params: params}).map(data=>data);
+}
 getFieldsSectionsInGrowers(TaskTypeId) {
   const url = 'api/Grower/GetFieldsSectionList';
 

@@ -210,7 +210,32 @@ export class PrebuckingComponent implements OnInit {
       
       // this.addItem();
     }
+
+    // if(this.BinData.length > 0){
+    //   this.getBinsAtReview();
+    // }
   }
+
+  // getBinsAtReview(){
+
+    
+  //   this.dropdownDataService.getBinsAtReview().subscribe(
+  //     data => {
+  //       // let newdata: any[];
+  //       // newdata = this.removeDuplicatesById(data);
+   
+  //       if (data !== 'No Data Found!') {
+  //         this.bins = this.dropdwonTransformService.transform(data, 'BinName', 'BinNo', '-- Select --');
+  //       } else {
+  //         this.bins = [];
+  //       }
+  //     } ,
+  //     error => { console.log(error); },
+  //     () => console.log('Get all bins complete'));
+    
+  // }
+
+
   addItem(): void {
     this.arrayItems = this.completionForm.get('items') as FormArray;
     this.arrayItems.push(this.createItem());
@@ -225,6 +250,7 @@ export class PrebuckingComponent implements OnInit {
     });
     
   }
+  
   viewBinsList(e){
     this.router.navigate(['../home/labels', e]);
     // this.router.navigate(['../home/taskaction', e.TaskTypeKey, e.TaskId]);
@@ -274,6 +300,7 @@ export class PrebuckingComponent implements OnInit {
     }
     if (isError) { return {'duplicate': 'duplicate entries'}; }
   }
+ 
 
   getAllBins(){
     let TaskId =this.TaskModel.TaskId
@@ -308,7 +335,7 @@ export class PrebuckingComponent implements OnInit {
         // let newdata: any[];
         // newdata = this.removeDuplicatesById(data);
         this.globalData.sections = data;
-        if (data !== 'No data found!') {
+        if (data !== 'No Data Found') {
           this.sections = this.dropdwonTransformService.transform(data, 'SectionName', 'SectionId', '-- Select --');
         } else {
           this.sections = [];

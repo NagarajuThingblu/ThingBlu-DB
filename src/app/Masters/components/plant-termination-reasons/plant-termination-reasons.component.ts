@@ -86,7 +86,7 @@ export class PlantTerminationReasonsComponent implements OnInit {
     this.loaderService.display(true);
     this.ptrActionService.GetAllPTRListByClient().subscribe(
       data => {
-        if (data !== 'No data found!') {
+        if (data !== 'No Data Found!') {
            this.allptrList = data;
           
            this.PaginationValues = AppConstants.getPaginationOptions;

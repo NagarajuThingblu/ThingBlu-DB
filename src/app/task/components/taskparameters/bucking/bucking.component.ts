@@ -252,7 +252,7 @@ export class BuckingComponent implements OnInit {
         // let newdata: any[];
         // // newdata = this.removeDuplicatesById(data);
         // this.globalData.bins = newdata;
-        if (data !== 'No data found') {
+        if (data !== 'No Data Found') {
           this.bins = this.dropdwonTransformService.transform(data, 'LabelName', 'BinId', '-- Select --');
         } else {
           this.bins = [];
@@ -270,7 +270,7 @@ export class BuckingComponent implements OnInit {
         // let newdata: any[];
         // newdata = this.removeDuplicatesById(data);
    
-        if (data !== 'No Data Found') {
+        if (data !== 'No Data Found!') {
           this.binslist = this.dropdwonTransformService.transform(data, 'LabelName', 'LabelId', '-- Select --');
         } else {
           this.binslist = [];
@@ -383,16 +383,21 @@ completeTask(formModel){
        else    if (data[0].RESULTKEY  === 'Completed weight is greater than Assigned bin weight') {
         this.msgs = [];
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.completewtgreaterthantotal });
-        // if (this.TaskModel.IsReview === true) {
-        //   this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
-        // } else {
-        //   this.TaskModel.TaskStatus =  this.taskStatus.Completed;
-        // }
-        // this.TaskCompleteOrReviewed.emit();
         this.PageFlag.showmodal = false;
         this.loaderService.display(false);
       }
-      
+      else    if (data[0].RESULTKEY  === 'Output Bin weight is greater than Completed weight') {
+        this.msgs = [];
+        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY });
+        this.PageFlag.showmodal = false;
+        this.loaderService.display(false);
+      }
+      else    if (data[0].RESULTKEY  === 'Output Bin weight and Input Bin Completed weight Not Same') {
+        this.msgs = [];
+        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY });
+        this.PageFlag.showmodal = false;
+        this.loaderService.display(false);
+      }
       else    if (data[0].RESULTKEY  === 'Output Bin weight is greater than Input Bin weight') {
         this.msgs = [];
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.morebinweight });

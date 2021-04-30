@@ -15,6 +15,7 @@ import * as _ from 'lodash';
 import { AppConstants } from '../../../shared/models/app.constants';
 import { NewARMDetailsActionService } from '../../../task/services/add-raw-material.service';
 import { GrowerDetailsActionService } from '../../../task/services/grower-details-action.service';
+import {NewLabelDetailsActionService} from '../../../task/services/add-label-details.service'
 
 @Component({
   moduleId: module.id,
@@ -62,6 +63,11 @@ export class AddRawMaterialComponent implements OnInit {
   public addNewRawMaterial: any;
   public plusOnEdit: boolean = true;
   public event: any;
+  public LabelIdForUpdate: any = 0;
+  public LabelOnEdit: any;
+  public GrowBinMapId = 0;
+  public Editor = 0;
+  public allLabelslist:any;
   private globalData = {
     binsData: [],
   };
@@ -73,6 +79,7 @@ export class AddRawMaterialComponent implements OnInit {
     private newARMDetailsActionService: NewARMDetailsActionService, 
     private cookieService: CookieService,
     private router: Router,
+    private newLabelDetailsActionService: NewLabelDetailsActionService,
     private dropdwonTransformService: DropdwonTransformService,
     private dropdownDataService: DropdownValuesService, // For common used dropdown service
     private AppComponentData: AppComponent,
@@ -188,6 +195,10 @@ this.ARMForm.get('items')['controls'][index].controls['lightDept'].setValue(this
   this.ARMForm.reset({ chkSelectAll: true });
 this.saveButtonText ="Save"
 this.pageheading = "Add Raw Material"
+this.plusOnEdit = true;
+this.getBinsData();
+this.Editor = 0;
+ this.GrowBinMapId = 0;
 const control = <FormArray>this.ARMForm.controls['items'];
 let length = control.length;
 while (length > 0) {
@@ -223,13 +234,15 @@ GoToBinsPage(){
       ClientId: Number(this._cookieService.ClientId),
       GrowerId: Number(this.ARMForm.value.grower),
       ReceivedWt: Number(this.ARMForm.value.receivedwt),
+      GrowerBinMapId : this.GrowBinMapId,
+      Editor:this.Editor,
     },
     OutputBinData: []
    };
    this.RawmaterialDetailsArr.controls.forEach((element, index) => {
    newAddRawMaterialsForApi.OutputBinData.push({
     BinId:element.value.binNo,
-    DryWt:element.value.weight,
+    DryWt:Number(element.value.weight),
     IsOpBinFilledCompletely:0
    });
    });
@@ -246,18 +259,21 @@ GoToBinsPage(){
          
           this.resetForm();
           this.getAllRawMaterialList();
-          // this.SectionIdForUpdate = 0;
+          this.getBinsData();
+          this.GrowBinMapId = 0;
+          this.Editor = 0;
+          this.plusOnEdit = true;
         }
         else if (String(data[0].RESULTKEY) === 'Total Recevied Weight is not equal to Total Bins Weight') {
-          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
           detail: this.addNewRawMaterial.BinWtMoreWtThanReceivedWt });
         }
         else if (String(data[0].RESULTKEY) === 'Bins Not Avilable') {
-          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
           detail: this.addNewRawMaterial.binsNotAvail });
         }
         else if (String(data[0].RESULTKEY) === 'Grower Deleted') {
-          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
           detail: this.addNewRawMaterial.growerdeleted });
         }
         this.loaderService.display(false);
@@ -295,6 +311,134 @@ GoToBinsPage(){
 
   onPageChange(e) {
     this.event = e;
+  }
+
+  getAllLabelslist(){
+    this.newLabelDetailsActionService.GetLabelslist().subscribe(
+      data=>{
+        this.globalData.binsData = data
+        this.bins =  this.dropdwonTransformService.transform(data, 'BinName', 'LabelId', '-- Select --');
+    })
+  }
+
+  getLabelsOnEdit(LabelId){
+    this.plusOnEdit = false;
+    this.enableDropDown = true;
+   
+    console.log(this.allRawMateriallist)
+    const data = this.allRawMateriallist.filter(x => x.LabelId === LabelId);
+    console.log(data);
+    var itemlist = this.ARMForm.get('items')['controls'];
+    if (data !== 'No data found!') {
+      this.LabelIdForUpdate = LabelId;
+      this.GrowBinMapId = data[0].GrowBinMapId;
+      this.Editor = 1;
+      this.LabelOnEdit = data;
+      const grower = this.ARMForm.controls['grower'];
+      const receivedwt =  this.ARMForm.controls['receivedwt'];
+      const binNo =  itemlist[0].controls["binNo"];
+      const tasktype =  itemlist[0].controls["tasktype"];
+      const strain =  itemlist[0].controls["strain"];
+      const skewType =  itemlist[0].controls["skewType"];
+      const lightDept =  itemlist[0].controls["lightDept"];
+      const TrimminMethod =  itemlist[0].controls["TrimmingMethod"];
+      const weight =   itemlist[0].controls["weight"];
+
+       grower.patchValue(this.LabelOnEdit[0].GrowerId);
+       receivedwt.patchValue(this.LabelOnEdit[0].TotalWeight);
+       this.getAllLabelslist();
+       binNo.patchValue(this.LabelOnEdit[0].LabelId);
+      tasktype.patchValue(this.LabelOnEdit[0].TaskTypeName);
+      strain.patchValue(this.LabelOnEdit[0].StrainName);
+      skewType.patchValue(this.LabelOnEdit[0].SkewType);
+      lightDept.patchValue(this.LabelOnEdit[0].LightDeprevation);
+      TrimminMethod.patchValue(this.LabelOnEdit[0].TrimmingMethod);
+      weight.patchValue(this.LabelOnEdit[0].Weight);
+  
+        this.clear = 'Cancel';
+       this.saveButtonText = 'Update';
+       this.pageheading = 'Edit Add Raw Material';
+     
+      
+    }else {
+      this.allRawMateriallist = [];
+      }
+      
+      this.loaderService.display(false);
+  }
+
+  showConformationMessaegForDelete(LabelId,rawmaterial, IsDeleted: number, ActiveInactiveFlag){
+    let strMessage: any;
+    strMessage = this.addNewRawMaterial.deleteARMMsg;
+    this.confirmationService.confirm({
+      message: strMessage,
+      header: 'Confirmation',
+      icon: 'fa fa-exclamation-triangle',
+      accept: () => {
+        this.activateDeleteARM(LabelId, rawmaterial, IsDeleted, ActiveInactiveFlag);
+      },
+      reject: () => {
+      }
+    });
+  }
+  activateDeleteARM(LabelId, rawmaterial, IsDeleted, ActiveInactiveFlag) {
+    let newARMDetailsForApi;
+    newARMDetailsForApi= {
+      RawMaterial: {
+        GrowerId:rawmaterial.GrowerId,
+        GrowerBinMapId:rawmaterial.GrowBinMapId,
+        ReceivedWt:rawmaterial.TotalWeight,
+        IsDeleted:IsDeleted,
+        Editor:0,
+        ClientId: Number(this._cookieService.ClientId),
+        VirtualRoleId: Number(this._cookieService.VirtualRoleId),
+      },
+      OutputBinData:[]
+    };
+    this.RawmaterialDetailsArr.controls.forEach((element, index) => 
+    {
+      
+      newARMDetailsForApi.OutputBinData.push({
+        BinId:LabelId,
+        DryWt: Number(rawmaterial.Weight),
+        IsOpBinFilledCompletely: 0, 
+        });
+    });
+    this.loaderService.display(true);
+    this.newARMDetailsActionService.addRawMaterial(newARMDetailsForApi)
+     .subscribe(
+       data => {
+       this.msgs = [];
+      if (String(data[0].RESULTKEY) === 'SUCCESS' && IsDeleted === 1) {
+      
+        this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+        detail: this.addNewRawMaterial.newARWdeletedsuccess  });
+        
+        this.resetForm();
+        this.getAllRawMaterialList();
+        
+      } else if (String(data[0].RESULTKEY) === 'Bin Is In Processed State') {
+        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+        detail: this.addNewRawMaterial.binisinuse });
+        this.loaderService.display(false);
+      }else if(String(data[0].RESULTKEY) === 'This bin used so you can not delete this bin'){
+        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+        detail: this.addNewRawMaterial.binisbeingused });
+        this.loaderService.display(false);
+      } else {
+        this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data });
+      }
+        
+        this.loaderService.display(false);
+    },
+    error => {
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
+      
+      this.loaderService.display(false);
+    });
+     
+  
   }
 
 }

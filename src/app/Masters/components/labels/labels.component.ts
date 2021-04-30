@@ -127,6 +127,7 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
       'TaskType': new FormControl(null, Validators.required),
       items: new FormArray([], this.customGroupValidation),
     });
+    
     this.addItem();
     if (this.appCommonService.ProductTypeBackLink && this.appCommonService.ProductTypeFormDetail) {
       this.newLabelsEntryForm = this.appCommonService.ProductTypeFormDetail;
@@ -214,12 +215,17 @@ createItem(): FormGroup {
   getAllSkew() {
     this.dropdownDataService.getSkewListByClient().subscribe(
       data => {
-        
-        this.skewtype = data;
-        this.skewtype = this.dropdwonTransformService.transform(data, 'SkwTypeName', 'SkwTypeName', '-- Select --');
-        console.log( this.skewtype )
-        this.skewtypes = this.skewtype.filter(x => x.label == 'Shakes' || x.label == 'A Buds' ||x.label == 'Smalls' )
-        console.log(this.skewtypes);
+        if(data != 'No data found!'){
+          this.skewtype = data;
+          this.skewtype = this.dropdwonTransformService.transform(data, 'SkwTypeName', 'SkwTypeName', '-- Select --');
+          console.log( this.skewtype )
+          this.skewtypes = this.skewtype.filter(x => x.label == 'Shakes' || x.label == 'A Buds' ||x.label == 'Smalls' )
+          console.log(this.skewtypes);
+        }
+        else{
+          this.skewtypes = [];
+        }
+      
     },
       error => { console.log(error); },
       () => console.log('Get all skew types complete'));
@@ -227,7 +233,12 @@ createItem(): FormGroup {
   getAllLabelslist(){
     this.newLabelDetailsActionService.GetLabelslist().subscribe(
       data=>{
-        this.allLabelslist=data;
+        if(data != 'No Data Found'){
+          this.allLabelslist=data;
+        }
+       else{
+         this.allLabelslist = [];
+       }
     })
   }
   addItem(): void {
@@ -356,7 +367,12 @@ createItem(): FormGroup {
                 }
               } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'DUPLICATE') {
                 this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg,
-                detail: this.newLabelResources.duplicate });
+                detail: data[0].ResultMsg + ' '+ this.newLabelResources.duplicate });
+
+                
+              }else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'Not Existed') {
+                this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg,
+                detail: data[0].ResultMsg + ' '+ data[0].RESULTKEY });
 
                 
               } else {
@@ -378,7 +394,7 @@ createItem(): FormGroup {
     this.pageheading = "Add New Bin"
     this.enableDropDown = true;
     this.newLabelsEntryForm.reset({ chkSelectAll: true });
-   
+   this.plusOnEdit = true;
 
     const control = <FormArray>this.newLabelsEntryForm.controls['items'];
     

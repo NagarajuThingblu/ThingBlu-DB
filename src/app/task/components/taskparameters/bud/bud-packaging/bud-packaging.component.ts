@@ -993,7 +993,7 @@ else{
       let checkbox;
 
       if (flag === 'Complete') {
-        checkbox = [null, Validators.compose([Validators.min(0)])];
+        checkbox = [null, Validators.compose([Validators.required])];
         return fb.group({
           LotId: object.LotId, lotCompletedWt: checkbox, GrowerLotNo: object.GrowerLotNo, LabelName: object.BinName,
           AssignedWt: object.AssignedWt, LotNoteCount: object.LotNoteCount, BinId: object.BinId, OrderRefId:object.OrderRefId
@@ -1560,7 +1560,7 @@ else{
     if(this.taskCategory === 'GROWING'){
       this.orderService.getAllOrdersByClient().subscribe(
         data => {
-          if (data !== 'No data found!') {
+          if (data !== 'No Data Found') {
             this.allOrders = data;
             // this.growerOrderDetailsComplete =  data;
             // this.growerOrderDetails = data.Table;

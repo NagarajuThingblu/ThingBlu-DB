@@ -20,7 +20,7 @@ export class MastersResource {
                  deactivateLabelMsg: 'Do you want to inactivate this Bin?',
                  updated: 'Updated Successfully',
                  duplicate:'Duplicate Bin',
-                 binisbeingused:'This bin is in use so you can not delete this bin'
+                 binisbeingused:'This bin is in use so you cannot delete this bin'
                 },
                 newproductype: {
                     pageheading: 'Add New Product Type',
@@ -97,7 +97,10 @@ export class MastersResource {
                     newRawMaterialavedsuccess:'Raw Material saved successfully',
                     BinWtMoreWtThanReceivedWt :'Total Recevied Weight is not equal to Total Bins Weight',
                     binsNotAvail:'Bins Not Avilable',
-                    growerdeleted:'Grower Deleted'
+                    growerdeleted:'Grower Deleted',
+                    deleteARMMsg: 'Do you want to delete this Raw Material?',
+                    newARWdeletedsuccess:'Raw Material deleted successfully',
+                    binisinuse:'Bin Is In Processed State',
                 },
                 addnewbrand: {
                     pageheading: 'Add New Brand',

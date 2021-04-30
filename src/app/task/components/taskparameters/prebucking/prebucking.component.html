@@ -306,7 +306,7 @@
  
   
     <div  class="ui-g-12" style="padding-top: 5px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
-      <div><b>Ouput Bin Details</b></div>
+      <div><b>Output Bin Details</b></div>
     <p-table [value]="BinData">
       <ng-template pTemplate="header">
         <tr>
@@ -463,7 +463,7 @@
       <div class="ui-g"  style="width:100%;">
         <div class="ui-g-12 ui-md-6" style="text-align:left;">
           <div class="paddingRL">
-            <span>Strain :- </span><span></span>
+            <span>Strain :- </span><span> {{TaskModel?.StrainName}}</span>
           </div>
         </div>
           <div class="ui-g-12 ui-md-6"style="text-align:right;">

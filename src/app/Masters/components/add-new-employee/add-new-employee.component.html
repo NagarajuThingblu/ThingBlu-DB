@@ -559,6 +559,75 @@
                 </div>
                 <!-- End Password -->
 
+                 <!-- Hire Date -->
+                 <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="hiredate">
+                        Hire Date<span class="star">*</span>:
+                      </label>
+
+                      <p-calendar                                                            
+                       [showIcon]="true"                                     
+                       formControlName="hiredate"          
+                       class="clsControl"
+                       id="hiredate"
+                       placeholder="Select Hire Date"
+                       name="hiredate"
+                       [monthNavigator]="true"
+                       [yearNavigator]="true" 
+                       yearRange="1800:4030"
+                       required
+                       [maxDate]="dateTime"
+                      >
+                      </p-calendar>
+
+                      <div
+                      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!newEmployeeForm.controls['hiredate'].valid&&newEmployeeForm.controls['hiredate'].dirty">
+                      <span *ngIf="newEmployeeForm.controls['hiredate'].errors['required']">
+                          Hire date required
+                      </span>                      
+                  </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Hire Date -->
+
+                 <!-- Termination Date -->
+                 <div class="ui-g-12 ui-md-6" *ngIf = "showTerminationDate === true" >
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <label for="terminationdate">
+                        Termination Date:
+                      </label>
+
+                      <p-calendar                                                            
+                       [showIcon]="true"                                     
+                       formControlName="terminationdate"          
+                       class="clsControl"
+                       id="terminationdate"
+                       placeholder="Select Termination Date"
+                       name="terminationdate"
+                       [monthNavigator]="true"
+                       [yearNavigator]="true" 
+                       yearRange="2021:4030"
+                       [maxDate]="dateTime"
+                      >
+                      </p-calendar>
+
+                      <!-- <div
+                      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!newEmployeeForm.controls['hiredate'].valid&&newEmployeeForm.controls['hiredate'].dirty">
+                      <span *ngIf="newEmployeeForm.controls['hiredate'].errors['required']">
+                          Termination date required
+                      </span>                      
+                  </div> -->
+                    </div>
+                  </div>
+                </div>
+                <!-- End Termination Date -->
+
                 <!-- User Role -->
                 <div class="ui-g-12 ui-md-6">
                   <div class="paddingRL">

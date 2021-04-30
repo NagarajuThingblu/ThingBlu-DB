@@ -54,7 +54,7 @@
                     <div class="paddingRL">
                         <div class="le-su-12">
                           <label for="genetics">
-                              {{ newStrainResources.genetics}}<span class="star">*</span>:
+                              {{ newStrainResources.genetics}}:
                           </label>
                           <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ newStrainResources.viewaddgenetic}}" id="btn_geneticshow" (click)="viewGeneticList()"  name="btnviewGenetics" ></p-button>
 
@@ -70,7 +70,7 @@
                             name="genetics">
                         </p-dropdown>
 
-                            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                            <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                             *ngIf="!strainmasterForm.controls['genetics'].valid&&strainmasterForm.controls['genetics'].dirty">
                             <span *ngIf="strainmasterForm.controls['genetics'].errors['required']">
                                 {{newStrainResources.geneticsrequired}}
@@ -78,7 +78,7 @@
                           <span *ngIf="strainmasterForm.controls['genetics'].hasError('geneticsnotpresent')">
                               {{ newStrainResources.geneticsnotpresent }} 
                            </span>
-                          </div>
+                          </div> -->
                          
                         </div>
                     </div>

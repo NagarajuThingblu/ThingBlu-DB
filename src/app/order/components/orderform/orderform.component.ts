@@ -216,6 +216,7 @@ if(this.editData != null){
   this.OrderId = OrderId
     this.orderformservice.getOrderDetailsByClient(OrderId).subscribe(
       data => {
+        if(data != 'No Data Found!'){
         let i =0;
         console.log(data)
         var itemlist = this.orderForm.get('items')['controls'];
@@ -280,6 +281,10 @@ if(this.editData != null){
           }
         }
       }
+      else{
+        this.orderOnEdit = [];
+      }
+      }
     )
     
 
@@ -308,14 +313,20 @@ if(this.editData != null){
     this.loaderService.display(true);
     this.dropdownDataService.GetAllRetailerListByClient().subscribe(
       data => {
-        this.globalData.Customers = data;
-        this.Customers = this.dropdwonTransformService.transform(
-          data, 'RetailerName', 'RetailerId', '-- Select --');
-          const customerFilter = Array.from(data.reduce((m, t) => m.set(t.RetailerName, t), new Map()).values())
-        this.customersList = this.dropdwonTransformService.transform(
-          customerFilter, 'RetailerName', 'RetailerId', '-- Select --');
-          console.log("customers list"+JSON.stringify(this.customersList));
-       this.loaderService.display(false);
+        if(data != 'No data found!'){
+          this.globalData.Customers = data;
+          this.Customers = this.dropdwonTransformService.transform(
+            data, 'RetailerName', 'RetailerId', '-- Select --');
+            const customerFilter = Array.from(data.reduce((m, t) => m.set(t.RetailerName, t), new Map()).values())
+          this.customersList = this.dropdwonTransformService.transform(
+            customerFilter, 'RetailerName', 'RetailerId', '-- Select --');
+            console.log("customers list"+JSON.stringify(this.customersList));
+         this.loaderService.display(false);
+        }
+        else{
+          this.Customers = [];
+        }
+       
       } ,
       error => { console.log(error);  this.loaderService.display(false); },
       () => console.log('getRetailerDetailListByClient complete'));
@@ -347,8 +358,9 @@ if(this.editData != null){
     this.loaderService.display(true);
     this.orderformservice.getAllProductTypeListByClient().subscribe(
       data => {
-        this.dropdownsData = data;
+        console.log(data)
        if (data !== 'No data found!') {
+        this.dropdownsData = data;
         this.globalData.dropdownsData = data
           this.allProductTypeList = data;
           this.paginationValues = AppConstants.getPaginationOptions;
@@ -356,6 +368,7 @@ if(this.editData != null){
             this.paginationValues[AppConstants.getPaginationOptions.length] = this.allProductTypeList.length;
           }
        } else {
+        this.dropdownsData = [];
         this.allProductTypeList = [];
        }
       //  this.loaderService.display(false);

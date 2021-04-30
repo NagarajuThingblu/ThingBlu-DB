@@ -44,4 +44,5 @@ export class NewARMDetailsActionService {
         params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
         return this.http.get(url,{params: params}).map(data=>data);
     }
+
 }

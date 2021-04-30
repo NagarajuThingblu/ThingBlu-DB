@@ -681,12 +681,12 @@ encode64(input) {
           },
           () => {
           //  if (this.msalService.isOnline()) {
-              this.msalService.logout();
+              // this.msalService.logout();
            // } else {
           //    this.msalService.login();
           //
         //  }
-           // this.router.navigate(['/login']);
+           this.router.navigate(['/login']);
           }
       );
 

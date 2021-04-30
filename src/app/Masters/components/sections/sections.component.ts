@@ -86,9 +86,7 @@ export class SectionsComponent implements OnInit {
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {
-    this.getAllFields();
-    this.getAllStrains();
-    this.getAllsectionlist();
+    
    
   }
   items = new FormArray([], this.customGroupValidation );
@@ -136,7 +134,7 @@ export class SectionsComponent implements OnInit {
   {
 this.newSectionDetailsActionService.Getsectionlist().subscribe(
   data=>{
-    if (data !== 'No data found!') {
+    if (data !== 'No Data Found') {
       this.allsectionslist=data;
       this.paginationValues = AppConstants.getPaginationOptions;
     if (this.allsectionslist.length > 20) {
@@ -320,6 +318,9 @@ this.Year = new Date().getFullYear();
     this.globalResource = GlobalResources.getResources().en;
     this.appComponentData.setTitle('Sections');
     this._cookieService = this.appCommonService.getUserProfile();
+    this.getAllFields();
+    this.getAllStrains();
+    this.getAllsectionlist();
     setTimeout(() => {this.loaderService.display(true);
     }, 0);
     
@@ -520,7 +521,12 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
         detail: this.newSectionResources.sectionisassigned });
         this.loaderService.display(false);
-      } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS' && ActiveInactiveFlag === 1) {
+      }
+      else if (String(data[0].RESULTKEY) === 'The Section Is In Use you Cannot delete') {
+        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+        detail: data[0].RESULTKEY });
+        this.loaderService.display(false);
+      }  else if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS' && ActiveInactiveFlag === 1) {
         if (section.IsActive === true) {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.newSectionResources.sectionactivatesuccess });

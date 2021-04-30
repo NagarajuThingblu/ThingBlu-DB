@@ -66,6 +66,7 @@ export class AddNewEmployeeComponent implements OnInit {
   public showMang: boolean =false;
   public showFlc: boolean =false;
   public globalResource: any;
+  public showTerminationDate: boolean = false;
   collapsed: any;
   constructor(
     private fb: FormBuilder,
@@ -168,6 +169,8 @@ export class AddNewEmployeeComponent implements OnInit {
           HourlyLabourRate: this.newEmployeeForm.value.hourlylabourrate,
           VirtualRoleId: Number(this._cookieService.VirtualRoleId),
           IsActive: this.newEmployeeForm.value.chkIsActive ? 1 : 0,
+          HireDate: new Date(this.newEmployeeForm.value.hiredate).toLocaleDateString().replace(/\u200E/g, ''),
+          TerminationDate: new Date(this.newEmployeeForm.value.terminationdate).toLocaleDateString().replace(/\u200E/g, '') ? new Date(this.newEmployeeForm.value.terminationdate).toLocaleDateString().replace(/\u200E/g, '') : null,
           // EditorType: 'Manager'
           EditorType: this._cookieService.UserRole,
           ManagerId:this.newEmployeeForm.value.Managerlist,
@@ -191,10 +194,12 @@ export class AddNewEmployeeComponent implements OnInit {
               detail: this.newEmployeeResources.newemployeesavedsuccess });
               this.NewEmployeeSave = data;
               this.resetForm();
+              this.showTerminationDate = false;
               this.getAllEmployee();
             } else if (String(data).toLocaleUpperCase() === 'NOTUPDATED') {
                 this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                 detail: this.newEmployeeResources.noupdate });
+                this.showTerminationDate = false;
                 this.loaderService.display(false);
             } else if (data === 'Failure') {
               this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
@@ -397,6 +402,7 @@ export class AddNewEmployeeComponent implements OnInit {
       this.showMang = false;
       this.showFlc = false;
       this.showTextbox = false;
+      this.showTerminationDate = true;
       const data = this.allEmployeeList.filter(x => x.EmpId === EmpId);
        if (data !== 'No data found!') {
           this.empIdForUpdate = EmpId;
@@ -415,6 +421,8 @@ export class AddNewEmployeeComponent implements OnInit {
           const lastname = this.newEmployeeForm.controls['lastname'];
           const gender = this.newEmployeeForm.controls['gender'];
           const dob = this.newEmployeeForm.controls['dob'];
+          const hiredate = this.newEmployeeForm.controls['hiredate'];
+          const terminationdate = this.newEmployeeForm.controls['terminationdate'];
           const cellphone = this.newEmployeeForm.controls['cellphone'];
           const homephone = this.newEmployeeForm.controls['homephone'];
           const primaryemail = this.newEmployeeForm.controls['primaryemail'];
@@ -438,6 +446,10 @@ export class AddNewEmployeeComponent implements OnInit {
           lastname.patchValue(this.employeeOnEdit[0].LastName);
           gender.patchValue(this.employeeOnEdit[0].Gender);
           dob.patchValue(new Date(this.employeeOnEdit[0].DOB));
+          hiredate.patchValue(new Date(this.employeeOnEdit[0].HireDate));
+          if(this.employeeOnEdit[0].TerminationDate != null){
+            terminationdate.patchValue(new Date(this.employeeOnEdit[0].TerminationDate));
+          }
           cellphone.patchValue(this.employeeOnEdit[0].CellPhone);
           homephone.patchValue(this.employeeOnEdit[0].HomePhone);
           primaryemail.patchValue(this.employeeOnEdit[0].PrimaryEmail);
@@ -532,6 +544,7 @@ export class AddNewEmployeeComponent implements OnInit {
     this.empIdForUpdate = 0;
     this.saveButtonText = 'Save';
     this.clear = 'Clear';
+    this.showTerminationDate = false;
     this.newEmployeeResources.pageheading = 'Add New Employee';
     this.resetForm();
     this.showTextbox = true;
@@ -619,7 +632,9 @@ else{
     'lastname': new FormControl(null, Validators.required),
     'gender': new FormControl(null, Validators.required),
     'dob': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
-    'cellphone': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
+    'hiredate': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
+    'terminationdate': new FormControl(null),
+    'cellphone': new FormControl(null, Validators.compose([ Validators.maxLength(15)])),
     'homephone': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
     'primaryemail': new FormControl(null),
     'secondaryemail': new FormControl(null, Validators.compose([Validators.maxLength(30)])),
@@ -697,7 +712,12 @@ getCityList() {
 }
 GetFLClist(){
   this.dropdownDataService.GetFLClist().subscribe(data=>{
-    this.flclist=this.dropdwonTransformService.transform(data,'FLCName','FLCId','--Select--');
+    if(data != 'No Data Found'){
+      this.flclist=this.dropdwonTransformService.transform(data,'FLCName','FLCId','--Select--');
+    }
+   else{
+    this.flclist = [];
+   }
   },
   error => { console.log(error);
     this.loaderService.display(false); },

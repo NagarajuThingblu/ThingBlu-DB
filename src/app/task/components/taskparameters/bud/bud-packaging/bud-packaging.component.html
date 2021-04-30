@@ -1065,7 +1065,7 @@
                       <th *ngIf="taskCategory === 'GROWING'">Bin No</th>
                       <th>{{ globalResource.assignwt }}</th>
                       <th *ngIf="taskCategory != 'GROWING'">{{ globalResource.pkgcompletedqty }}</th>
-                      <th *ngIf="taskCategory === 'GROWING'">pkg. Completed Wt</th>
+                      <th *ngIf="taskCategory === 'GROWING'">pkg. Completed Wt<span class="star">*</span></th>
                       <th *ngIf="taskCategory != 'GROWING'">{{ globalResource.completedwt }}</th>
                       <th>{{ globalResource.balancedwt }}</th>
                     </tr>
@@ -1129,9 +1129,9 @@
                             /> 
                             <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                             *ngIf="!lot.controls['lotCompletedWt'].valid&&lot.controls['lotCompletedWt'].dirty"> 
-                              <span *ngIf="lot.controls['lotCompletedWt'].hasError('min')">
-                                  Qty less than 0 not allowed.
-                              </span> 
+                              <!-- <span *ngIf="lot.controls['lotCompletedWt'].hasError('min')"> -->
+                                  This Field Is Mandatory.
+                              <!-- </span>  -->
                             </div>                  
                         
                           </td>   

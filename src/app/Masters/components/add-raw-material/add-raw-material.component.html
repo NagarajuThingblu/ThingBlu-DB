@@ -22,7 +22,7 @@
 
             <div class="ui-g-12 ui-md-6">
               <div class="paddingRL">
-                <label for="receivedwt">Received Weight</label> <span class="star">*</span>:
+                <label for="receivedwt">Received Weight (lb)</label> <span class="star">*</span>:
                 <input pInputText
                 name="receivedwt"
                 autocomplete="off"
@@ -58,7 +58,7 @@
                       </th>
                       <th>Light Dept
                       </th>
-                      <th>Weight
+                      <th>Weight (lb)
                         <span class="star">*</span>
                       </th>
                       <th style="width: 80px;">Action
@@ -158,10 +158,16 @@
                       
                     
                   </td>
+                  <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
+                    This Bin already exists.
+                  </div> 
                     </tr>
                   </ng-template>
                 </p-table>
               </div>
+              <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="RawmaterialDetailsArr.hasError('duplicate')">
+                duplicate entries
+              </div> 
               <div class="ui-g" style="width:100%;text-align:right;">
                 <div class="ui-g-12">
                   <button pButton type="submit" label="{{saveButtonText}}" ></button>
@@ -184,11 +190,11 @@
 
 <div class="ui-g">
   <div class="ui-g-12">
-    <p-panel header="Raw Matwrial List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+    <p-panel header="Raw Material List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
       <p-table #dtRaMaterialList [value]="allRawMateriallist" sortMode="single" [responsive]="true" [paginator]="true"
       [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
       (onPage)="onPageChange($event)"
-      [globalFilterFields]="['GrowerName','TaskName','BinNo','Strain','SkewType','TrimmingMethod','IsLightDeprevation','Weight']">
+      [globalFilterFields]="['RawSupplierName','TaskTypeName','BinName','StrainName','SkewType','TrimmingMethod','LightDeprevation','Weight']">
       <ng-template pTemplate="caption">
         <div style="text-align: right">
           <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
@@ -198,40 +204,42 @@
       </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th [pSortableColumn]="'GrowerName'">Grower Name <p-sortIcon [field]="'GrowerName'"></p-sortIcon>
+          <th [pSortableColumn]="'RawSupplierName'">Grower Name <p-sortIcon [field]="'RawSupplierName'"></p-sortIcon>
           </th>
-          <th [pSortableColumn]="'TaskName'">Task Name <p-sortIcon [field]="'TaskName'"></p-sortIcon>
+          <th [pSortableColumn]="'TaskTypeName'">Task Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
           </th>
-          <th [pSortableColumn]="'BinNo'">BinNo <p-sortIcon [field]="'BinNo'"></p-sortIcon>
+        
+          <th [pSortableColumn]="'BinName'">Bin Name <p-sortIcon [field]="'BinName'"></p-sortIcon>
           </th>
-          <th [pSortableColumn]="'Strain'">Strain <p-sortIcon [field]="'Strain'"></p-sortIcon>
+          <th [pSortableColumn]="'StrainName'">Strain <p-sortIcon [field]="'StrainName'"></p-sortIcon>
           </th>
           <th [pSortableColumn]="'SkewType'">SkewType <p-sortIcon [field]="'SkewType'"></p-sortIcon>
           </th>
           <th [pSortableColumn]="'TrimmingMethod'">TrimmingMethod <p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon>
           </th>
-          <th [pSortableColumn]="'IsLightDeprevation'">Light Dept <p-sortIcon [field]="'IsLightDeprevation'"></p-sortIcon>
+          <th [pSortableColumn]="'LightDeprevation'">Light Dept <p-sortIcon [field]="'LightDeprevation'"></p-sortIcon>
           </th>
-          <th [pSortableColumn]="'Weight'">Weight <p-sortIcon [field]="'Weight'"></p-sortIcon>
+          <th [pSortableColumn]="'Weight'">Weight (lb)<p-sortIcon [field]="'Weight'"></p-sortIcon>
           </th>
           <th style="width:100px;">Action </th>
         </tr>
         <tr>
           <th>
             <input pInputText type="text" autocomplete="off"
-              (input)="dtRaMaterialList.filter($event.target.value, 'GrowerName', 'contains')" class="clsControl">
+              (input)="dtRaMaterialList.filter($event.target.value, 'RawSupplierName', 'contains')" class="clsControl">
           </th>
           <th>
             <input pInputText type="text" autocomplete="off"
-              (input)="dtRaMaterialList.filter($event.target.value, 'TaskName', 'contains')" class="clsControl">
+              (input)="dtRaMaterialList.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
+          </th>
+         
+          <th>
+            <input pInputText type="text" autocomplete="off"
+              (input)="dtRaMaterialList.filter($event.target.value, 'BinName', 'contains')" class="clsControl">
           </th>
           <th>
             <input pInputText type="text" autocomplete="off"
-              (input)="dtRaMaterialList.filter($event.target.value, 'BinNo', 'contains')" class="clsControl">
-          </th>
-          <th>
-            <input pInputText type="text" autocomplete="off"
-              (input)="dtRaMaterialList.filter($event.target.value, 'Strain', 'contains')" class="clsControl">
+              (input)="dtRaMaterialList.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
           </th>
           <th>
             <input pInputText type="text" autocomplete="off"
@@ -243,7 +251,7 @@
           </th>
           <th>
             <input pInputText type="text" autocomplete="off"
-              (input)="dtRaMaterialList.filter($event.target.value, 'IsLightDeprevation', 'contains')" class="clsControl">
+              (input)="dtRaMaterialList.filter($event.target.value, 'LightDeprevation', 'contains')" class="clsControl">
           </th>
           <th>
             <input pInputText type="text" autocomplete="off"
@@ -256,7 +264,8 @@
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td>{{rawmaterial?.RawSupplierName}}</td>
           <td>{{rawmaterial?.TaskTypeName}}</td>
-          <td>{{rawmaterial?.BinNo}}</td>
+        
+          <td>{{rawmaterial?.BinName}}</td>
           <td>{{rawmaterial?.StrainName}}</td>
           <td>{{rawmaterial?.SkewType}}</td>
           <td>{{rawmaterial?.TrimmingMethod}}</td>
@@ -265,10 +274,10 @@
           <td style="width:65px;">
             <span class="ui-column-title">edit</span>
             <a href="#" [routerLink]="">
-              <span class="fa fa-edit"></span>
+              <span class="fa fa-edit" (click)="getLabelsOnEdit(rawmaterial?.LabelId)"></span>
             </a>
             <a href="#" [routerLink]="">
-              <span class="fa fa-trash"></span>
+              <span class="fa fa-trash"(click)="showConformationMessaegForDelete(rawmaterial?.LabelId,rawmaterial,1,0)"></span>
             </a>
           </td>
         </tr>

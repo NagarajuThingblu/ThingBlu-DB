@@ -9,7 +9,8 @@ export const environment = {
     // apiEndpoint: 'http://localhost/thingbluwebapinew/'
     // apiEndpoint: 'https://thingbluapiuat.azurewebsites.net/',
     tolerance: 5,
-   apiEndpoint: 'https://tbappapitest.azurewebsites.net/', // Growers dev
+     apiEndpoint:'https://hwg-api.azurewebsites.net/',
+  // apiEndpoint: 'https://tbappapitest.azurewebsites.net/', // Growers dev
     // apiEndpoint: 'https://tbappapihannah.azurewebsites.net/', //Processor dev
     //  apiEndpoint: 'https://tbdemowebapi.azurewebsites.net/',
   
@@ -17,10 +18,10 @@ export const environment = {
     refreshTime: 1, // refresh time in minutes,
     encryptDecryptKey: 'mechsoft@12',
     parentEncryptionKey: 'm3ch50ft',
-    clientCode: 'HANNAH',
-    // clientCode: 'HWG',
-    clientKey: 'Hannah Industries',
-    //  clientKey:'HWG',
+    // clientCode: 'HANNAH',
+    // clientKey: 'Hannah Industries',
+    clientCode: 'HWG',
+     clientKey:'HWG',
   
     // ** Start  Demo Test config (demo processors)
   //     tenant: 'thingblub2ctest.onmicrosoft.com',

@@ -9,8 +9,8 @@ export const environment = {
   // apiEndpoint: 'https://thingbluapiuat.azurewebsites.net/',
   tolerance: 5,
   //  apiEndpoint: 'https://tbappapihannah.azurewebsites.net/',
-    apiEndpoint: 'https://tbappapitest.azurewebsites.net/',
-  // apiEndpoint:'https://hwg-api.azurewebsites.net/',
+     apiEndpoint: 'https://tbappapitest.azurewebsites.net/',
+  //  apiEndpoint:'https://hwg-api.azurewebsites.net/',
   //  apiEndpoint: 'https://tbdemowebapi.azurewebsites.net/',
 
   sessionTimeout: 86399,

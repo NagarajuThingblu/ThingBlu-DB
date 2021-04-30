@@ -86,7 +86,7 @@ public RoomTypeDisabled:any;
   GetFields() {
     this.loadService.display(true);
     this.NewFieldgeneration.GetFieldList().subscribe(data=>{
-      if(data!="No Data found!"){
+      if(data!="No Data Found"){
         this.allFieldslist=data;
         this.paginationValues=AppConstants.getPaginationOptions;
         if(this.allFieldslist.length>20)
@@ -308,7 +308,7 @@ public RoomTypeDisabled:any;
               this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg,
               detail: 'Can`t delete. Record is in use.'});
             } else {
-              this.msg.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data });
+              this.msg.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: data });
             }
               // http call end
               this.loadService.display(false);

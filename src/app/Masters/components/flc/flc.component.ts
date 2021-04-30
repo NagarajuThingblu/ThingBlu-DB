@@ -153,7 +153,7 @@ getFLCDetailListByClient() {
   this.loaderService.display(true);
   this.flcActionService.GetAllFLCListByClient().subscribe(
     data => {
-     if (data !== 'No data found!') {
+     if (data !== 'No Data Found') {
         this.allcontractorList = data;
        
         this.PaginationValues = AppConstants.getPaginationOptions;

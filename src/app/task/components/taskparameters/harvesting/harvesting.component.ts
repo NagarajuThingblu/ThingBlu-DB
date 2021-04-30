@@ -253,11 +253,18 @@ export class HarvestingComponent implements OnInit{
     this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
     this.dropdownDataService.getFieldsSectionsInGrowers(TaskTypeId).subscribe(
       data => {
-        this.globalData.Fields = data;
-        this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --',false);
-        const fieldsfilter = Array.from(data.reduce((m, t) => m.set(t.FieldName, t), new Map()).values())
-        this.fields = this.dropdwonTransformService.transform(fieldsfilter,'FieldName', 'FieldId', '-- Select --',false)
-        console.log("fields"+JSON.stringify(this.Fields));
+        if(data != 'No Data Found'){
+          this.globalData.Fields = data;
+          this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --',false);
+          const fieldsfilter = Array.from(data.reduce((m, t) => m.set(t.FieldName, t), new Map()).values())
+          this.fields = this.dropdwonTransformService.transform(fieldsfilter,'FieldName', 'FieldId', '-- Select --',false)
+          console.log("fields"+JSON.stringify(this.Fields));
+        }
+        else{
+          this.globalData.Fields = [];
+          this.fields = [];
+        }
+       
       } ,
       error => { console.log(error); },
       () => console.log('Get all brands complete'));
@@ -268,8 +275,15 @@ export class HarvestingComponent implements OnInit{
   getTerminationReasons(){
     this.ptrActionService.GetAllPTRListByClient().subscribe(
       data => {
-        this.globalData.TerminationReasons = data;
-        this.TerminatioReasons = this.dropdwonTransformService.transform(data, 'TerminationReason', 'TerminationId', '-- Select --',false);
+        if(data != 'No Data Found!'){
+          this.globalData.TerminationReasons = data;
+          this.TerminatioReasons = this.dropdwonTransformService.transform(data, 'TerminationReason', 'TerminationId', '-- Select --',false);
+        }
+        else{
+          this.globalData.TerminationReasons = [];
+          this.TerminatioReasons = [];
+        }
+      
        } ,
        error => { console.log(error);  this.loaderService.display(false); },
        () => console.log('getTerminationReasons complete'));
@@ -348,8 +362,8 @@ submitReview(formModel) {
         else if (data[0].RESULTKEY === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         }
-        else  if (data[0].RESULTKEY === 'Failure'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        else  if (data[0].RESULTKEY === 'Please Select Termination Reason'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY });
         }
         else  if (data[0].RESULTKEY === 'Invalid Termination Reason'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.invalid });
@@ -436,8 +450,8 @@ completeTask(formModel){
         else if (data[0].RESULTKEY  === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         }
-        else  if (data[0].RESULTKEY  === 'Failure'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        else  if (data[0].RESULTKEY  === 'Please Select Termination Reason'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY  });
         }
         else  if (data[0].RESULTKEY === 'Invalid Termination Reason'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.invalid });

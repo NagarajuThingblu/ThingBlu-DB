@@ -88,7 +88,7 @@ export class StrainMasterComponent implements OnInit {
       }
       this.strainmasterForm = this.fb.group({
         'straintype': new FormControl(null, Validators.required),
-        'genetics': new FormControl(null, [Validators.required]),
+        'genetics': new FormControl(null),
         'strain': new FormControl(null, [Validators.required, Validators.maxLength(50)]),
         'description': new FormControl(null),
         // 'thc': new FormControl(null, [Validators.required, Validators.maxLength(5)]),
@@ -165,7 +165,7 @@ export class StrainMasterComponent implements OnInit {
             // CBDA: this.strainmasterForm.value.cbda,
             // Total: this.strainmasterForm.value.total,
             VirtualRoleId: this._cookieService.VirtualRoleId,
-            GeneticsId: this.strainmasterForm.value.genetics,
+            GeneticsId: this.strainmasterForm.value.genetics?this.strainmasterForm.value.genetics:0,
             IsActive: this.strainmasterForm.value.chkIsActive ? 1 : 0,
             ClientId: Number(this._cookieService.ClientId)
           }

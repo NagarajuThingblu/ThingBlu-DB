@@ -214,7 +214,7 @@ export class GrowertrimmingComponent implements OnInit {
     this.dropdownDataService. getStrainsByTaskType(TaskTypeId).subscribe(
       data => {
        
-        if (data !== 'No data found!') {
+        if (data !== 'No Data Found') {
           this.bins = this.dropdwonTransformService.transform(data, 'LabelName', 'BinId', '-- Select --');
         } else {
           this.bins = [];
@@ -347,8 +347,13 @@ completeTask(formModel){
         this.PageFlag.showmodal = false;
         this.loaderService.display(false);
       }
-      else if (data[0].RESULTKEY  === 'Output Bin weight is greater than Input Bin weight') {
-        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.morebinweight });
+      else if (data[0].RESULTKEY  === 'Output Bin weight is greater than Completed weight') {
+        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY});
+        this.PageFlag.showmodal = false;
+        this.loaderService.display(false);
+       
+      }else if (data[0].RESULTKEY  === 'Output Bin weight and Input Bin Completed weight Not Same') {
+        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY});
         this.PageFlag.showmodal = false;
         this.loaderService.display(false);
        

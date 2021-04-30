@@ -608,7 +608,12 @@ GetManagerlist()
 
 GetFLClist(){
   this.dropdownDataService.GetFLClist().subscribe(data=>{
-    this.flclist=this.dropdwonTransformService.transform(data,'FLCName','FLCId','--Select--');
+    if(data != 'No Data Found'){
+      this.flclist=this.dropdwonTransformService.transform(data,'FLCName','FLCId','--Select--');
+    }
+  else{
+    this.flclist = [];
+  }
   },
   error => { console.log(error);
     this.loaderService.display(false); },
