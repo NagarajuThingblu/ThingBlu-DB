@@ -70,7 +70,7 @@ import { OnlyNumberWithoutZeroDirective } from './directives/only-number-without
 import { LotNoteComponent } from '../lot/components/lotlisting/lot-note.component';
 import { MinutesToTimePipe } from './pipes/minutes-to-time.pipe';
 import { LotNoteIconComponent } from '../lot/components/lotlisting/lot-note-icon/lot-note-icon.component';
-import { BrowserModule } from '@angular/platform-browser';
+// import { BrowserModule } from '@angular/platform-browser';
 import { InprocessStatusPipe } from './pipes/inprocess-status.pipe';
 import { EncDecPwdComponent } from './components/enc-dec-pwd/enc-dec-pwd.component';
 import { NumberValidationMsgsComponent } from './components/number-validation-msgs/number-validation-msgs.component';
@@ -124,8 +124,8 @@ import { CanDeactivateGuard } from '../guards/can-deactivate.guard';
     SplitButtonModule,
     FormsModule,
     ReactiveFormsModule,
-    BrowserModule,
-    BrowserAnimationsModule,
+    // BrowserModule,
+    // BrowserAnimationsModule,
     MenubarModule,
     CheckboxModule,
     RadioButtonModule,
@@ -167,8 +167,8 @@ import { CanDeactivateGuard } from '../guards/can-deactivate.guard';
     SplitButtonModule,
     FormsModule,
     ReactiveFormsModule,
-    BrowserModule,
-    BrowserAnimationsModule,
+    // BrowserModule,
+    // BrowserAnimationsModule,
     HeaderComponent,
     SidebarComponent,
     MenubarModule,

@@ -287,7 +287,7 @@
                         name="primaryemail"
                         id="primaryemail"
                         type="text"
-                        autocomplete="off"
+                        autocomplete="new-password"
                         class="clsControl"
                         formControlName="primaryemail"
                         placeholder="Enter Primary Email"
@@ -328,7 +328,7 @@
                         name="secondaryemail"
                         id="secondaryemail"
                         type="text"
-                        autocomplete="off"
+                        autocomplete="new-password"
                         class="clsControl"
                         formControlName="secondaryemail"
                         placeholder="Enter Secondary Email"
@@ -370,7 +370,7 @@
                         maxLength="500"
                         name="address"
                         id="address"
-                        autocomplete="off"
+                        autocomplete="new-password"
                         class="clsControl"
                         placeholder="Enter Address"
                         formControlName="address"
@@ -474,7 +474,7 @@
                           name="zipcode"
                           id="zipcode"
                           type="number"
-                          autocomplete="off"
+                          autocomplete="new-password"
                           class="clsControl"
                           formControlName="zipcode"
                           placeholder="Enter ZIP Code"
@@ -568,7 +568,8 @@
                       </label>
 
                       <p-calendar                                                            
-                       [showIcon]="true"                                     
+                       [showIcon]="true"    
+                       [defaultDate]="defaultDate"                                   
                        formControlName="hiredate"          
                        class="clsControl"
                        id="hiredate"
@@ -578,7 +579,7 @@
                        [yearNavigator]="true" 
                        yearRange="1800:4030"
                        required
-                       [maxDate]="dateTime"
+                      
                       >
                       </p-calendar>
 
@@ -612,7 +613,7 @@
                        [monthNavigator]="true"
                        [yearNavigator]="true" 
                        yearRange="2021:4030"
-                       [maxDate]="dateTime"
+                     
                       >
                       </p-calendar>
 

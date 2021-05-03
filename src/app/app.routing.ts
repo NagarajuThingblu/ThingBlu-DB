@@ -11,9 +11,9 @@ import { OilInwordListingComponent } from './task/components/taskparameters/oil/
 import { EncDecPwdComponent } from './shared/components/enc-dec-pwd/enc-dec-pwd.component';
 import { EditTaskComponent } from './task/components/edit-task/edit-task.component';
 import { EmployeedashboardComponent } from './dashboard/components/employeedashboard/employeedashboard.component';
-import { OrderReturnComponent } from './order/components/order-return/order-return.component';
+// import { OrderReturnComponent } from './order/components/order-return/order-return.component';
 
-import { OrderRequestFormComponent } from './order/components/order-request-form/order-request-form.component';
+// import { OrderRequestFormComponent } from './order/components/order-request-form/order-request-form.component';
 import { AuthGuard } from './guards/auth.guard';
 import { SearchtaskComponent } from './task/components/searchtask/searchtask.component';
 import { LoginComponent } from './login/login.component';
@@ -26,7 +26,7 @@ import { WhiteboardDetailsComponent } from './dashboard/components/whiteboards/c
 import { HomeComponent } from './home/home.component';
 import { TaskResolver } from './task/resolvers/task.resolvers';
 import { SkewListResolver } from './task/resolvers/skew-list.resolver';
-import { OrderListingComponent } from './order/components/order-listing/order-listing.component';
+// import { OrderListingComponent } from './order/components/order-listing/order-listing.component';
 import { LotEntryFormComponent } from './lot/components/lotentryform/lot-entry-form.component';
 import { LotTrackingComponent } from './lot/components/lot-tracking/lot-tracking.component';
 import { LotlistingComponent } from './lot/components/lotlisting/lotlisting.component';
@@ -58,9 +58,9 @@ import { ResetPasswordComponent } from './azureb2c/reset-password/reset-password
 import { AppSignupComponent } from './azureb2c/app-signup/app-signup.component';
 import { InviteNewEmployeeComponent } from './employee/components/invite-new-employee/invite-new-employee.component';
 import { EmployeesComponent } from './employee/components/employees/employees.component';
-import { IdentifyOrderComponent } from './order/components/order-automation/identify-order/identify-order.component';
-import { AcceptOrderComponent } from './order/components/order-automation/accept-order/accept-order.component';
-import { ChangeOrderComponent } from './order/components/order-automation/change-order/change-order.component';
+// import { IdentifyOrderComponent } from './order/components/order-automation/identify-order/identify-order.component';
+// import { AcceptOrderComponent } from './order/components/order-automation/accept-order/accept-order.component';
+// import { ChangeOrderComponent } from './order/components/order-automation/change-order/change-order.component';
 import{AddNewTaskComponent} from './Masters/components/add-new-task/add-new-task.component';
 import{RoomtypeMasterComponent} from './Masters/components/roomtype-master/roomtype-master.component';
 import{ZonesComponent} from './Masters/components/zones/zones.component';
@@ -76,7 +76,7 @@ import {FlcComponent} from './Masters/components/flc/flc.component';
 import {PlantTerminationReasonsComponent} from './Masters/components/plant-termination-reasons/plant-termination-reasons.component';
 import {AddRawMaterialComponent} from './Masters/components/add-raw-material/add-raw-material.component';
 import { HelpComponent } from './Masters/components/help/help.component';
-import { OrderformComponent } from './order/components/orderform/orderform.component';
+// import { OrderformComponent } from './order/components/orderform/orderform.component';
 const appRoutes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   // { path: 'login', component: LoginComponent },
@@ -101,24 +101,24 @@ const appRoutes: Routes = [
         canDeactivate: [CanDeactivateGuard]
       },
       { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-      { path: 'assigntask', component: AssignTaskComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'assigntask/:id', component: EditTaskComponent, resolve: { data: TaskResolver } },
-      { path: 'managerdashboard', component: ManagerdashboardComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'searchtask', component: SearchtaskComponent, canActivate: [AuthGuard] },
-      { path: 'taskaction/:taskType/:id', component: TaskactionsComponent, resolve: { data: SkewListResolver }, canActivate: [AuthGuard] },
-      { path: 'whiteboards', component: WhiteboardsComponent, canActivate: [AuthGuard] },
-      { path: 'whiteboard/:flag', component: WhiteboardDetailsComponent },
-      { path: 'orderrequestform', component: OrderRequestFormComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'orderrequestform/:draftOrderId', component: OrderRequestFormComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'orderreturn', component: OrderReturnComponent, canActivate: [AuthGuard] },
-      { path: 'oilmaterialsout', component: OilMaterialsOutComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'oilmaterialsin', component: OilMaterialsInComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'assigntask', component: AssignTaskComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'assigntask/:id', component: EditTaskComponent, resolve: { data: TaskResolver } },
+      // { path: 'managerdashboard', component: ManagerdashboardComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'searchtask', component: SearchtaskComponent, canActivate: [AuthGuard] },
+      // { path: 'taskaction/:taskType/:id', component: TaskactionsComponent, resolve: { data: SkewListResolver }, canActivate: [AuthGuard] },
+      // { path: 'whiteboards', component: WhiteboardsComponent, canActivate: [AuthGuard] },
+      // { path: 'whiteboard/:flag', component: WhiteboardDetailsComponent },
+      // { path: 'orderrequestform', component: OrderRequestFormComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'orderrequestform/:draftOrderId', component: OrderRequestFormComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'orderreturn', component: OrderReturnComponent, canActivate: [AuthGuard] },
+      // { path: 'oilmaterialsout', component: OilMaterialsOutComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'oilmaterialsin', component: OilMaterialsInComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'lottracking', component: LotTrackingComponent, canActivate: [AuthGuard] },
-      { path: 'empdashboard', component: EmployeedashboardComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'orderlisting', component: OrderListingComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'empdashboard', component: EmployeedashboardComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'orderlisting', component: OrderListingComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'lotlisting', component: LotlistingComponent, canActivate: [AuthGuard, RoleGuard], resolve: { data: SkewListResolver } },
       { path: 'oiloutword', component: OilOutwordListingComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'oilinword', component: OilInwordListingComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'oilinword', component: OilInwordListingComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'newproducttype', component: NewProductTypeComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'grower', component: GrowerComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'city', component: CityComponent, canActivate: [AuthGuard, RoleGuard] },
@@ -134,31 +134,31 @@ const appRoutes: Routes = [
       { path: 'addnewsubbrand', component: AddNewSubBrandFormComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'addnewsgenetics', component: GeneticsMasterComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'addtpppackagetype', component: TppPackageTypeMappingMasterComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'jointsproductiondashboard', component: JointsDashboardComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'jointsproductiondashboard', component: JointsDashboardComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'tasksetting', component: TaskSettingComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'masteruserroleaccess', component: MasterUserRoleAccessComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'erroraccessdenieded', component: ErrorAccessDeniededComponent, canActivate: [AuthGuard] },
-      { path: 'empassigntask', component: EmployeeAssignTaskComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'report/order', component: OrderReportComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'report/preroll', component: PrerollReportComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'report/flower', component: FlowerReportComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'empassigntask', component: EmployeeAssignTaskComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'report/order', component: OrderReportComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'report/preroll', component: PrerollReportComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'report/flower', component: FlowerReportComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'userlist', component: EmployeesComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'inviteemployee', component: InviteNewEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'adduser', component: AddEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'adduser/:UserId', component: AddEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'identifyorder', component: IdentifyOrderComponent, canActivate: [AuthGuard] },
-      { path: 'identifyorder/:incomingOrderId', component: IdentifyOrderComponent, canActivate: [AuthGuard]},
-      { path: 'acceptorder', component: AcceptOrderComponent, canActivate: [AuthGuard] },
-      { path: 'acceptorder/:incomingOrderId', component: AcceptOrderComponent, canActivate: [AuthGuard] },
-      { path: 'changeOrder/:incomingOrderId', component: ChangeOrderComponent, canActivate: [AuthGuard] },
+      // { path: 'identifyorder', component: IdentifyOrderComponent, canActivate: [AuthGuard] },
+      // { path: 'identifyorder/:incomingOrderId', component: IdentifyOrderComponent, canActivate: [AuthGuard]},
+      // { path: 'acceptorder', component: AcceptOrderComponent, canActivate: [AuthGuard] },
+      // { path: 'acceptorder/:incomingOrderId', component: AcceptOrderComponent, canActivate: [AuthGuard] },
+      // { path: 'changeOrder/:incomingOrderId', component: ChangeOrderComponent, canActivate: [AuthGuard] },
       {path:'Taskmaster',component:AddNewTaskComponent, canActivate:[AuthGuard]},
       { path: 'Roomtypes', component: RoomtypeMasterComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'Zones', component: ZonesComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'Rooms', component: RoomsComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'RoomTables', component: RoomsTablesComponent, canActivate: [AuthGuard, RoleGuard] },
-      {path:'productiondashboard',component:ProductionsdashboardComponent,canActivate:[AuthGuard,RoleGuard]},
-      {path:'employeeperformancedashBoard', component:EmpPerformanceDashboardComponent, canActivate:[AuthGuard,RoleGuard] },
-      {path:'productiondashboardsummary', component:ProductiondashboardsummaryComponent,canActivate:[AuthGuard,RoleGuard]},
+      // {path:'productiondashboard',component:ProductionsdashboardComponent,canActivate:[AuthGuard,RoleGuard]},
+      // {path:'employeeperformancedashBoard', component:EmpPerformanceDashboardComponent, canActivate:[AuthGuard,RoleGuard] },
+      // {path:'productiondashboardsummary', component:ProductiondashboardsummaryComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'fields', component:FieldsComponent, canActivate:[AuthGuard,RoleGuard]},
       {path:'sections', component:SectionsComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'labels', component:LabelsComponent,canActivate:[AuthGuard,RoleGuard]},
@@ -166,10 +166,27 @@ const appRoutes: Routes = [
       {path:'plantterminationreasons', component:PlantTerminationReasonsComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'addrawmaterial', component:AddRawMaterialComponent},
       {path:'help', component:HelpComponent},
-      {path:'orderform', component:OrderformComponent},
+      // {path:'orderform', component:OrderformComponent},
       // {path:'planting', component:PlantingComponent}
      // {path:'harvesting',component:HarvestingComponent}
 
+
+     {
+      path:'order',
+      loadChildren:'./order/order.module#OrderModule'
+    },
+     {
+      path:'task',
+      loadChildren:'./task/task.module#TaskModule'
+    },
+    {
+      path:'dashboard',
+      loadChildren:'./dashboard/dashboard.module#DashboardModule'
+    },
+    {
+      path:'reports',
+      loadChildren:'./reports/reports.module#ReportsModule'
+    },
     ]
   }
 ];

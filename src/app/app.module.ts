@@ -19,11 +19,11 @@ import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 
 import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
-import { TaskModule } from './task/task.module';
-import { OrderModule } from './order/order.module';
+// import { TaskModule } from './task/task.module';
+// import { OrderModule } from './order/order.module';
 
 import { SharedModule } from './shared/shared.module';
-import { DashboardModule } from './dashboard/dashboard.module';
+// import { DashboardModule } from './dashboard/dashboard.module';
 import { StartupService } from './shared/services/startup.service';
 import {HttpModule} from '@angular/http';
 import { LotModule } from './lot/lot.module';
@@ -58,11 +58,11 @@ import { promise } from 'protractor';
     BrowserModule,
     LoginModule,
     SharedModule.forRoot(),
-    TaskModule,
+    // TaskModule,
     LotModule,
-    OrderModule,
+    // OrderModule,
     HomeModule,
-    DashboardModule,
+    // DashboardModule,
     routing,
     HttpClientModule,
     HttpModule,
@@ -77,7 +77,7 @@ import { promise } from 'protractor';
     // and `ping` is 120 (2 minutes).
     // UserIdleModule.forRoot({idle: 300, timeout: 300, ping: 100})
     AdminModule,
-    ReportsModule,
+    // ReportsModule,
     Azureb2cModule,
     EmployeeModule,
     MsalModule

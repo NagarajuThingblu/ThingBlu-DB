@@ -399,10 +399,10 @@ getRoleList() {
 }
 getNewTaskType() {
   const url = 'api/TaskType/GetTaskCategory';
-
-   
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
     return this.http
-    .get(url)
+    .get(url, {params: params})
    .map(data => {
     // // console.log('Strains Service success');
     return data;

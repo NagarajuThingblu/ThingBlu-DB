@@ -255,17 +255,17 @@ export class LoginComponent implements OnInit {
               let routeName;
               if (this.menuItems.length > 0) {
                   routeName = this.menuItems[0].RouterLink;
-                  this.router.navigate(['home/' + routeName] );
+                  this.router.navigate(['home/dashboard/' + routeName] );
                 } else {
                   this.router.navigate(['home/erroraccessdenieded']);
               }
             } else {
               if (this.userModel.UserRole.toString() === this.userRoles.Manager) {
-                this.router.navigate(['home/managerdashboard']);
+                this.router.navigate(['home/dashboard/managerdashboard']);
               } else if (this.userModel.UserRole.toString() === this.userRoles.SuperAdmin) {
-                this.router.navigate(['home/managerdashboard']);
+                this.router.navigate(['home/dashboard/managerdashboard']);
               } else {
-                this.router.navigate(['home/empdashboard']);
+                this.router.navigate(['home/dashboard/empdashboard']);
               }
             }
 

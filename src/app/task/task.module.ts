@@ -42,7 +42,8 @@ import { PlantingComponent } from './components/taskparameters/planting/planting
 import { PrebuckingComponent } from './components/taskparameters/prebucking/prebucking.component';
 import { BuckingComponent } from './components/taskparameters/bucking/bucking.component';
 import { GrowertrimmingComponent } from './components/taskparameters/growertrimming/growertrimming.component';
-
+import { TaskRoutingModule } from './task.routing';
+import { DashboardModule } from '../dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
@@ -79,7 +80,9 @@ import { GrowertrimmingComponent } from './components/taskparameters/growertrimm
     
   ],
   imports: [
-    SharedModule
+    SharedModule,
+    TaskRoutingModule,
+    DashboardModule
   ],
   providers: [GrowerDetailsActionService, TaskCommonService, TaskResolver, SkewListResolver, OilService],
   entryComponents: [ QuarantineComponent ],
