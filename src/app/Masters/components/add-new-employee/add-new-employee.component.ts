@@ -329,7 +329,7 @@ export class AddNewEmployeeComponent implements OnInit {
     this.loaderService.display(true);
     this.newEmployeeService.getAllEmployeeList().subscribe(
       data => {
-       if (data !== 'No data found!') {
+       if (data != 'No data found!') {
           this.allEmployeeList = data;
           this.paginationValues = AppConstants.getPaginationOptions;
           if (this.allEmployeeList.length > 20) {
