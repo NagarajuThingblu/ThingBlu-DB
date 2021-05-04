@@ -142,10 +142,10 @@ const appRoutes: Routes = [
       // { path: 'report/order', component: OrderReportComponent, canActivate: [AuthGuard, RoleGuard] },
       // { path: 'report/preroll', component: PrerollReportComponent, canActivate: [AuthGuard, RoleGuard] },
       // { path: 'report/flower', component: FlowerReportComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'userlist', component: EmployeesComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'inviteemployee', component: InviteNewEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'adduser', component: AddEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
-      { path: 'adduser/:UserId', component: AddEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'userlist', component: EmployeesComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'inviteemployee', component: InviteNewEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'adduser', component: AddEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'adduser/:UserId', component: AddEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
       // { path: 'identifyorder', component: IdentifyOrderComponent, canActivate: [AuthGuard] },
       // { path: 'identifyorder/:incomingOrderId', component: IdentifyOrderComponent, canActivate: [AuthGuard]},
       // { path: 'acceptorder', component: AcceptOrderComponent, canActivate: [AuthGuard] },
@@ -186,6 +186,10 @@ const appRoutes: Routes = [
     {
       path:'reports',
       loadChildren:'./reports/reports.module#ReportsModule'
+    },
+    {
+      path:'employee',
+      loadChildren:'./employee/employee.module#EmployeeModule'
     },
     ]
   }

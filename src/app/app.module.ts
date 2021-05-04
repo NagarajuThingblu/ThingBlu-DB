@@ -79,7 +79,7 @@ import { promise } from 'protractor';
     AdminModule,
     // ReportsModule,
     Azureb2cModule,
-    EmployeeModule,
+    // EmployeeModule,
     MsalModule
   ],
   exports: [NgIdleModule],
