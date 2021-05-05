@@ -44,6 +44,10 @@ import { BuckingComponent } from './components/taskparameters/bucking/bucking.co
 import { GrowertrimmingComponent } from './components/taskparameters/growertrimming/growertrimming.component';
 import { TaskRoutingModule } from './task.routing';
 import { DashboardModule } from '../dashboard/dashboard.module';
+import {PTRService} from '../Masters/services/ptr.service';
+import  { NewSectionDetailsActionService } from './services/add-section-details.service';
+import { LotService } from '../lot/services/lot.service'
+import { OrderService } from '../order/service/order.service'
 
 @NgModule({
   declarations: [
@@ -84,7 +88,7 @@ import { DashboardModule } from '../dashboard/dashboard.module';
     TaskRoutingModule,
     DashboardModule
   ],
-  providers: [GrowerDetailsActionService, TaskCommonService, TaskResolver, SkewListResolver, OilService],
+  providers: [GrowerDetailsActionService, TaskCommonService, TaskResolver, SkewListResolver, OilService,PTRService,NewSectionDetailsActionService,LotService,OrderService],
   entryComponents: [ QuarantineComponent ],
   exports: [
      AssignTaskComponent, LoadComponentDirective, EmployeeAssignTaskComponent

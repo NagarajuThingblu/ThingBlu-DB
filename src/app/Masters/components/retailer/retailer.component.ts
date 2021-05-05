@@ -357,7 +357,7 @@ export class RetailerComponent implements OnInit {
     this.loaderService.display(true);
     this.retailerActionService.GetAllRetailerListByClient().subscribe(
       data => {
-       if (data !== 'No data found!') {
+       if (data != 'No data found!') {
           this.allretailerList = data;
          
           this.PaginationValues = AppConstants.getPaginationOptions;

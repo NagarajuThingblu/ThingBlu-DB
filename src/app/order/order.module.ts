@@ -1,7 +1,7 @@
 // tslint:disable-next-line:max-line-length
 import { PkgAllocateSubstractionEmployeeComponent } from './components/order-automation/change-order/pkg-allocate-substraction-employee/pkg-allocate-substraction-employee.component';
 import { PkgAllocateEmployeeComponent } from './components/order-automation/change-order/pkg-allocate-employee/pkg-allocate-employee.component';
-import { MastersModule } from './../Masters/Masters.module';
+// import { MastersModule } from './../Masters/Masters.module';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
@@ -37,7 +37,7 @@ import { OrdersRoutingModule } from './order.routing';
   imports: [
     CommonModule,
     SharedModule,
-    MastersModule,
+    // MastersModule,
     OrdersRoutingModule
   ],
   providers: [OrderService],

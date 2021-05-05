@@ -1,9 +1,9 @@
 import { AppLoadFOrgotPasswordService } from './azureb2c/app-load-forgot-password.service';
 import { MsalModule } from './msal.module';
-import { EmployeeModule } from './employee/employee.module';
+// import { EmployeeModule } from './employee/employee.module';
 import { Azureb2cModule } from './azureb2c/azureb2c.module';
 import { AppLoadService } from './azureb2c/app-load.service';
-import { ReportsModule } from './reports/reports.module';
+// import { ReportsModule } from './reports/reports.module';
 import { AdminModule } from './admin/admin.module';
 import { HomeModule } from './home/home.module';
 import { BrowserModule } from '@angular/platform-browser';
@@ -26,9 +26,9 @@ import { SharedModule } from './shared/shared.module';
 // import { DashboardModule } from './dashboard/dashboard.module';
 import { StartupService } from './shared/services/startup.service';
 import {HttpModule} from '@angular/http';
-import { LotModule } from './lot/lot.module';
+// import { LotModule } from './lot/lot.module';
 import { LoaderService } from './shared/services/loader.service';
-import { MastersModule } from './Masters/Masters.module';
+// import { MastersModule } from './Masters/Masters.module';
 
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import { NgIdleModule } from '@ng-idle/core';
@@ -59,14 +59,14 @@ import { promise } from 'protractor';
     LoginModule,
     SharedModule.forRoot(),
     // TaskModule,
-    LotModule,
+    // LotModule,
     // OrderModule,
     HomeModule,
     // DashboardModule,
     routing,
     HttpClientModule,
     HttpModule,
-    MastersModule,
+    // MastersModule,
     BrowserAnimationsModule,
     ProgressSpinnerModule,
    

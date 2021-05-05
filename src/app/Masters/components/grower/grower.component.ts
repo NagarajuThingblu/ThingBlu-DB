@@ -290,7 +290,7 @@ export class GrowerComponent implements OnInit {
      this.growerDetailsActionService.getRowSuplierDetailList().subscribe(
        data => {
         // console.log(data);
-        if (data !== 'No data found!') {
+        if (data != 'No data found!') {
            this.allGrowerList = data;
            this.paginationValues = AppConstants.getPaginationOptions;
           if (this.allGrowerList.length > 20) {

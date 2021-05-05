@@ -17,6 +17,7 @@ import { NewStrainTypeActionService } from '../task/services/new-strain-type-act
 import { ProductTypeListingComponent } from './components/product-type-listing/product-type-listing.component';
 import { NewProductTypeService } from './services/new-product-type.service';
 import { GrowerComponent } from './components/grower/grower.component';
+import { GrowerDetailsActionService } from '../task/services/grower-details-action.service'
 import { CityComponent } from './components/city/city.component';
 import { AddNewCountryComponent } from './components/add-new-country/add-new-country.component';
 import { TpProcessorComponent } from './components/tp-processor/tp-processor.component';
@@ -74,7 +75,7 @@ import { HelpComponent } from './components/help/help.component';
 import { FlcComponent } from './components/flc/flc.component';
 import { PlantTerminationReasonsComponent } from './components/plant-termination-reasons/plant-termination-reasons.component';
 import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-material.component';
-
+import { MastersRoutingModule } from './Masters.routing';
 
 @NgModule({
   declarations: [
@@ -123,6 +124,7 @@ import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-m
   ],
   imports: [
     SharedModule,
+    MastersRoutingModule
   ],
   providers: [
     NewProductTypeDetailsActionService,
@@ -157,7 +159,8 @@ import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-m
     NewFieldGenerationService,
     NewSectionDetailsActionService,
     NewLabelDetailsActionService,
-    NewARMDetailsActionService
+    NewARMDetailsActionService,
+    GrowerDetailsActionService
   ],
   exports: [
     NewProductTypeComponent,

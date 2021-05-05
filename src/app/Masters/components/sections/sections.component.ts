@@ -399,7 +399,7 @@ this.Year = new Date().getFullYear();
   viewAllStrains() {
   this.appCommonService.ProductTypeBackLink = true;
   this.appCommonService.ProductTypeFormDetail = this.newSectionEntryForm;
-    this.router.navigate(['../home/strainmaster']);
+    this.router.navigate(['../home/master/strainmaster']);
   }
   getSectionOnEdit(SectionId) {
     this.plusOnEdit = false;

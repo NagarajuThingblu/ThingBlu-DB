@@ -304,7 +304,7 @@ export class BuckingComponent implements OnInit {
    
   }
   viewBinsList(e){
-    this.router.navigate(['../home/labels', e]);
+    this.router.navigate(['../home/master/labels', e]);
   }
   addItem(): void {
     this.arrayItems = this.completionForm.get('items') as FormArray;
@@ -440,9 +440,9 @@ completeTask(formModel){
                     detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
                     setTimeout( () => {
                       if (this._cookieService.UserRole === this.userRoles.Manager) {
-                        this.router.navigate(['home/managerdashboard']);
+                        this.router.navigate(['home/dashboard/managerdashboard']);
                       } else {
-                        this.router.navigate(['home/empdashboard']);
+                        this.router.navigate(['home/dashboard/empdashboard']);
                       }
                     }, 1000);
         }
