@@ -7,9 +7,9 @@ import { OrderReportComponent } from "./order-report/order-report.component";
 import { PrerollReportComponent } from "./preroll-report/preroll-report.component";
 
 const routes:Routes =[
-    { path: 'order', component: OrderReportComponent },
-    { path: 'preroll', component: PrerollReportComponent},
-    { path: 'flower', component: FlowerReportComponent},
+    { path: 'order', component: OrderReportComponent , canActivate: [AuthGuard, RoleGuard] },
+    { path: 'preroll', component: PrerollReportComponent , canActivate: [AuthGuard, RoleGuard]  },
+    { path: 'flower', component: FlowerReportComponent , canActivate: [AuthGuard, RoleGuard] },
 ]
 @NgModule({
     imports:[RouterModule.forChild(routes)],
