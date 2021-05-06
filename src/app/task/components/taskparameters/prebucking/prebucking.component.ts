@@ -170,11 +170,14 @@ export class PrebuckingComponent implements OnInit {
     else{
       this.getAllBins();
       this.taskReviewModel = {
-        wetweight : this.TaskModel.wetweight,
-        driweight : this.TaskModel.dryweight,
-        wasteweight : this.TaskModel.wasteweight,
-        binId: this.TaskModel.binId,
-        binFull: this.TaskModel.binFull,
+        wetweight : this.TaskModel.WetWt,
+        driweight : this.TaskModel.BinWt,
+        wasteweight : this.TaskModel.WasteWt,
+        binName : this.TaskModel.LabelName,
+        binId: this.TaskModel.BinId,
+        comments : this.TaskModel.Comments,
+        miscost: this.TaskModel.MiscCost,
+        binFull: this.TaskModel.IsOpBinFilledCompletely === 1? true: false,
         // isStrainComplete: this.TaskModel.isStrainComplete,
         racthrs: this.TaskModel.RevHrs ?  this.TaskModel.RevHrs : this.padLeft(String(Math.floor(this.TaskModel.ActHrs / 3600)), '0', 2),
         ractmins: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) / 60)), '0', 2),
@@ -198,9 +201,9 @@ export class PrebuckingComponent implements OnInit {
 
       this.reviewForm = this.fb.group({
         'isStrainComplete': new FormControl(''),
-        'items': new FormArray([
-          this.createItem()
-        ], this.customGroupValidation),
+        // 'items': new FormArray([
+        //   this.createItem()
+        // ], this.customGroupValidation),
         'ActHrs': new FormControl(null),
           'ActMins': new FormControl(null, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
           'ActSecs': new FormControl({value: null, disabled: this.isRActSecsDisabled}, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
@@ -452,21 +455,21 @@ submitReview(formModel) {
       PreBucking: {
         TaskId:Number(this.taskid),
         VirtualRoleId:Number(this._cookieService.VirtualRoleId),
-        Comment: formModel.rmisccomment,
-        IsStrainCompleted:formModel.isStrainComplete == ""?0:1,
-        MiscCost: formModel.rmisccost,
+        Comment: formModel.rmisccomment === null? "": formModel.rmisccomment,
+        IsStrainCompleted:formModel.isStrainComplete === ""?0:1,
+        MiscCost: formModel.rmisccost === null?0:formModel.rmisccost,
         RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
       },
       BinDetails:[]
     };
-    this.preBuckingDetailsArr.controls.forEach((element, index) => {
+    this.BinData.forEach((element, index) => {
       // this.duplicateSection = element.value.section
       taskReviewWebApi.BinDetails.push({
-        BinId:element.value.binId,
-        DryWt: element.value.dryweight,
+        BinId:element.BinId,
+        DryWt: element.BinWt,
         WetWt: 0,
-        WasteWt: element.value.wasteweight,
-        IsOpBinFilledCompletely: element.value.binFull == true?1:0
+        WasteWt: element.WasteWt,
+        IsOpBinFilledCompletely: element.IsOpBinFilledCompletely == true?1:0
             
          });
     

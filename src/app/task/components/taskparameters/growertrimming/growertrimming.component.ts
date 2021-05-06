@@ -35,6 +35,7 @@ import { FormArray } from '@angular/forms';
 export class GrowertrimmingComponent implements OnInit {
   GROWERTRIMMING: FormGroup;
   completionForm: FormGroup;
+  reviewForm: FormGroup;
   //input and output decorators
   @Input() BinData: any;
   @Input() TaskModel: any;
@@ -92,7 +93,7 @@ export class GrowertrimmingComponent implements OnInit {
     bins: [],
     employees:[]
   };
-  
+  isRActSecsDisabled: boolean;
 
   ngOnInit() {
     this.binsListByClient();
@@ -159,6 +160,20 @@ export class GrowertrimmingComponent implements OnInit {
         binFull: this.TaskModel.binFull,
 
       }
+      this.taskReviewModel = {
+        misccost: this.TaskModel.MiscCost,
+        BinName: this.TaskModel.IPLabelName,
+        BinWeight: this.TaskModel.IPBinWt,
+        CompletedBinWt:this.TaskModel.IPBinWt, 
+        WasteWt:this.TaskModel.WasteWt,
+        binId: this.TaskModel.InputBinId,
+        binsId: this.TaskModel.binId,
+        weight:this.TaskModel.dryweight,
+        binFull: this.TaskModel.binFull,
+        racthrs: this.TaskModel.RevHrs ?  this.TaskModel.RevHrs : this.padLeft(String(Math.floor(this.TaskModel.ActHrs / 3600)), '0', 2),
+        ractmins: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) / 60)), '0', 2),
+        ractsecs: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) % 60)), '0', 2),
+       }
 
       this.completionForm = this.fb.group({
         'inputBin': new FormControl(null),
@@ -169,6 +184,22 @@ export class GrowertrimmingComponent implements OnInit {
           this.createItem()
         ], this.customGroupValidation),
       });
+
+      this.reviewForm = this.fb.group({
+        // 'inputBin': new FormControl(null),
+        // 'binWt': new FormControl(''),
+        // 'completeWt':new FormControl('',Validators.compose([Validators.required])),
+        // 'wasteWt':new FormControl(''),
+        // 'items': new FormArray([
+        //   this.createItem()
+        // ], this.customGroupValidation),
+        'isStrainComplete': new FormControl(''),
+        'ActHrs': new FormControl(null),
+          'ActMins': new FormControl(null, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
+          'ActSecs': new FormControl({value: null, disabled: this.isRActSecsDisabled}, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
+          'rmisccost': new FormControl(null),
+          'rmisccomment': new FormControl(null)
+      })
     }
 
   }
@@ -204,6 +235,9 @@ export class GrowertrimmingComponent implements OnInit {
 
   get trimmingDetailsArr(): FormArray {
     return this.completionForm.get('items') as FormArray;
+  }
+  padLeft(text: string, padChar: string, size: number): string {
+    return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;
   }
  
   //method to get bins dropdown
@@ -268,6 +302,9 @@ export class GrowertrimmingComponent implements OnInit {
   viewBinsList(e){
     this.router.navigate(['../home/labels', e]);
   }
+  CaluculateTotalSecs(Hours, Mins, Secs) {
+    return (Number(Hours) * 3600) + (Number(Mins) * 60) + Number(Secs);
+  }
   addItem(): void {
     this.arrayItems = this.completionForm.get('items') as FormArray;
     this.arrayItems.push(this.createItem());
@@ -280,6 +317,118 @@ export class GrowertrimmingComponent implements OnInit {
     } else {
       this.appCommonService.validateAllFields(this.completionForm);
     }
+}
+submitReviewParameter(formModel) {
+  if (this.reviewForm.valid) {
+    this.submitReview(formModel);
+  } else {
+    this.appCommonService.validateAllFields(this.reviewForm);
+  }
+}
+
+submitReview(formModel) {
+  const ActSeconds = this.reviewForm.getRawValue().ActSecs;
+  let taskReviewWebApi;
+  if ( this.reviewForm.valid === true) {
+    taskReviewWebApi = {
+      Bucking: {
+        TaskId:Number(this.taskid),
+        VirtualRoleId:Number(this._cookieService.VirtualRoleId),
+        Comment: formModel.rmisccomment === null? "": formModel.rmisccomment,
+        IsStrainCompleted:formModel.isStrainComplete === ""?0:1,
+        MiscCost: Number(formModel.rmisccost) === null?0:Number(formModel.rmisccost) ,
+        RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
+      },
+      InputBinDetails:[],
+      OutputBinDetails:[]
+    };
+   
+      // this.duplicateSection = element.value.section
+      taskReviewWebApi.InputBinDetails.push({
+        BinId:this.BinData[0].InputBinId,
+        DryWt: this.BinData[0].IPBinWt,
+        WetWt: 0,
+        WasteWt: this.BinData[0].WasteWt,
+            
+         });
+    
+   
+     this.BinData.forEach((element, index) => {
+      // this.duplicateSection = element.value.section
+      taskReviewWebApi.OutputBinDetails.push({
+        BinId:element.InputBinId,
+        DryWt: element.OPBinWt,
+        WetWt: 0,
+        WasteWt: element.WasteWt,
+        IsOpBinFilledCompletely: element.IsOpBinFilledCompletely == true?1:0
+            
+         });
+    
+     });
+  }
+  this.confirmationService.confirm({
+    message: this.assignTaskResources.taskcompleteconfirm,
+    header: 'Confirmation',
+    icon: 'fa fa-exclamation-triangle',
+    accept: () => {
+      this.loaderService.display(true);
+      this.taskCommonService.submitbuckingTaskReview(taskReviewWebApi)
+      .subscribe(data => {
+        if (data === 'NoComplete'){
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskalreadycompleted });
+          if (this.TaskModel.IsReview === true) {
+            this.TaskModel.TaskStatus = this.taskStatus.ReviewPending;
+          } 
+          else {
+            this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+          }
+          this.TaskCompleteOrReviewed.emit();
+        }
+        else if (data[0].RESULTKEY === 'Deleted'){
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
+          setTimeout( () => {
+            if (this._cookieService.UserRole === this.userRoles.Manager) {
+              this.router.navigate(['home/managerdashboard']);
+            }
+            else {
+              this.router.navigate(['home/empdashboard']);
+            }
+          }, 1000);
+        }
+        else if (data[0].RESULTKEY === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else  if (data[0].RESULTKEY === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
+          this.loaderService.display(false);
+        }
+        else{
+          if (this.TaskModel.IsReview === true) {
+            this.TaskModel.TaskStatus =  this.taskStatus.ReviewPending;
+          } 
+          else {
+            this.TaskModel.TaskStatus =  this.taskStatus.Completed;
+          }
+          this.msgs = [];
+          this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+          detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
+           setTimeout( () => {
+                      if (this._cookieService.UserRole === this.userRoles.Manager) {
+                        this.router.navigate(['home/managerdashboard']);
+                      } else {
+                        this.router.navigate(['home/empdashboard']);
+                      }
+                    }, 1000);
+        }
+      })
+    }
+  })
+
 }
 
 completeTask(formModel){

@@ -216,7 +216,7 @@
   </div>
   <div class="ui-g-12" style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
     <div><b>Input Bin Details</b></div>
-  <p-table [value]="BinData">
+  <p-table [value]="BinData" >
     <ng-template pTemplate="header">
       <tr>
         <th>Input Bin Name</th>
@@ -231,6 +231,7 @@
           <td>{{TaskModel.IPBinWt}}</td>
           <td>{{TaskModel.OPBinWt}}</td>
           <td>{{TaskModel.WasteWt}}</td>
+           
       </tr>
   </ng-template>
   </p-table>
@@ -423,6 +424,144 @@
           </button>
         </div>
       </div>
+    </form>
+  </p-dialog>
+
+  <p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
+    <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
+      <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div class="ui-g-12 ui-md-6" style="text-align:left;">
+          <div class="paddingRL">
+            <span>Strain :- </span><span>{{TaskModel?.StrainName}}</span>
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6"style="text-align:right;">
+          <div class="paddingRL">
+            <p-checkbox value="BinData[0].IsStrainCompleted" label="IsStrainComplete"
+            formControlName="isStrainComplete" checked="true"
+           binary="true"></p-checkbox>  
+          </div>
+        </div>
+
+        <div class="ui-g-12"  style="padding-top: 10px;" >
+          <div><b>Output Bin Details</b></div>
+            <p-table [value]="BinData">
+             <ng-template pTemplate="header">
+               <tr>
+                  <th>Ouput Bin Name</th>
+                  <th>Bin Weight</th>
+                  <th>Is Bin Full</th>
+                </tr>
+            </ng-template>
+              <ng-template pTemplate="body" let-TaskModel>
+                <tr>
+                <td>{{TaskModel.OPLabelName}}</td>
+                <td>{{TaskModel.OPBinWt}}</td>
+                <td>{{TaskModel.IsOpBinFilledCompletely}}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+       </div>
+       <div class="ui-grid-row" style="padding-top: 20px;">
+        <div class="ui-grid-col-4">
+          {{ assignTaskResources.actualhrs }}:
+        </div>
+        <div class="ui-grid-col-2">
+          {{ TaskModel?.ActHrs | minutesToTime}}
+        </div>
+        <div class="ui-g-4">
+          <div class="ui-inputgroup ui-inputgroup-border" >
+            <input type="number"                   
+            pInputText 
+            autocomplete="off"
+            pKeyFilter="int"
+            [(ngModel)]="taskReviewModel.racthrs"                         
+            formControlName="ActHrs"
+            id="acthrs"
+            name="acthrs"
+            style="width:100px;"                      
+          /> 
+            <span>:</span>
+            <input type="number"                  
+            pInputText     
+            autocomplete="off"   
+            pKeyFilter="int"           
+            [(ngModel)]="taskReviewModel.ractmins"                         
+            formControlName="ActMins"
+            id="actmins"
+            name="actmins"
+            style="width:100px;"                      
+          />
+          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+              *ngIf="!reviewForm.controls['ActMins'].valid&&reviewForm.controls['ActMins'].dirty">
+                <span *ngIf="reviewForm.controls['ActMins'].errors['max']">
+                  {{ globalResource.maxMinSecValue }}
+                </span>
+          </div>
+          <span>:</span>
+          <input type="number"                  
+          pInputText         
+          autocomplete="off"      
+          pKeyFilter="int"    
+          [(ngModel)]="taskReviewModel.ractsecs"                         
+          formControlName="ActSecs"
+          id="actsecs"
+          name="actsecs" 
+          style="width:100px;"                 
+        />
+          <div class="ui-message ui-messages-error-Sec ui-corner-all" appErrorTooltip
+                *ngIf="!reviewForm.controls['ActSecs'].valid&&reviewForm.controls['ActSecs'].dirty">
+                  <span *ngIf="reviewForm.controls['ActSecs'].errors['max']">
+                    {{ globalResource.maxMinSecValue }}
+                  </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-4">
+          {{ assignTaskResources.misccost }}:
+        </div>
+        <div class="ui-grid-col-4">
+          {{ taskReviewModel.misccost | currency }}
+        </div>
+        <div class="ui-grid-col-4">
+          <input type="text"
+          OnlyNumber="true" 
+          pInputText 
+          pKeyFilter="num"
+          autocomplete="off"                       
+          formControlName="rmisccost"
+          id="misccost"
+          name="misccost"      
+        />   
+        </div>
+      </div>
+      <div class="ui-grid-row">
+        <div class="ui-grid-col-4">
+          {{ assignTaskResources.comment }}:
+        </div>
+        <!-- <div class="ui-grid-col-4">               
+          {{ taskReviewModel.comments }}
+      </div> -->
+      <div class="ui-g-4 ui-g-offset-3">
+        <textarea                        
+          pInputTextarea                        
+          formControlName="rmisccomment"
+          id="rmisccomment"
+          name="rmisccomment"
+          maxlength="500"
+          class="clsControl"
+          binary="true"
+        ></textarea>                  
+    </div> 
+  </div>
+     <p-footer>
+    <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
+    <!-- [disabled]="!completionForm.valid" -->
+    <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showReviewmodal=false" label="Cancel"></button>
+  </p-footer>
     </form>
   </p-dialog>
   

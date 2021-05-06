@@ -22,7 +22,7 @@ import { AppCommonService } from '../services/app-common.service';
       })),
       state('active', style({
         overflow: 'hidden',
-        height: '*'
+        height: '*',
       })),
       transition('active <=> inactive', animate('400ms ease-in-out'))
     ])

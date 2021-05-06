@@ -220,6 +220,22 @@ submitPrebuckingTaskReview(taskReviewWebApi) {
   return this.http.post(apiUrl, taskReviewWebApi, this.headers)
   .map(data =>  data );
 }
+
+submitbuckingTaskReview(taskReviewWebApi) {
+  const apiUrl = 'api/Grower/BuckingTaskReview';
+
+  taskReviewWebApi.Bucking.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
+  return this.http.post(apiUrl, taskReviewWebApi, this.headers)
+  .map(data =>  data );
+}
+
+submittrimmingTaskReview(taskReviewWebApi) {
+  const apiUrl = 'api/Grower/TrimmingTaskReview';
+
+  taskReviewWebApi.Trimming.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
+  return this.http.post(apiUrl, taskReviewWebApi, this.headers)
+  .map(data =>  data );
+}
 //For submitting harvesting Task
 submitHarvestTaskReview(taskReviewWebApi) {
   const apiUrl = 'api/Grower/ReviewHarvestingTask';
