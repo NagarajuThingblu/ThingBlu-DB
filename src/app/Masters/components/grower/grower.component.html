@@ -106,7 +106,36 @@
                         </div>
                     </div>
                  
-                    <!--End cell phone -->                    
+                    <!--End cell phone -->    
+                    
+                     <!-- License No -->
+                     <div class="ui-g-12 ui-md-6">
+                      <div class="paddingRL">
+                          <label for="licenseno">License Number
+                            <span class="star">*</span>
+                          </label>:
+  
+                          <input pInputText
+                            name="licenseno"
+                            id="licenseno"
+                            type="text"
+                            autocomplete="new-password"
+                            class="clsControl"
+                            formControlName="licenseNo"
+                            placeholder="Enter License Number"
+                          />
+  
+                          <!-- <div class="ui-message ui-messages-error ui-corner-all" style="top:67px;" appErrorTooltip
+                            *ngIf="!retailerForm.controls['licenseNo'].valid&&retailerForm.controls['licenseNo'].dirty">
+                            <span *ngIf="retailerForm.controls['licenseNo'].errors['required']">
+                              {{retailerResources.licenserequired}}
+                            </span>
+                          </div> -->
+                          
+                        </div>
+                    </div>
+                   
+                    <!--End License No -->
                     <!-- Primary Email-->
                     <div class="ui-g-12 ui-md-6">
                       <div class="paddingRL">

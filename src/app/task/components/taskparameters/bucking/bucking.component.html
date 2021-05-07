@@ -226,12 +226,12 @@
         <th>Waste Weight</th>
     </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-TaskModel>
+    <ng-template pTemplate="body">
       <tr>
-          <td>{{TaskModel.IPLabelName}}</td>
-          <td>{{TaskModel.IPBinWt}}</td>
-          <td>{{TaskModel.OPBinWt}}</td>
-          <td>{{TaskModel.WasteWt}}</td>
+          <td>{{BinData[0].IPLabelName}}</td>
+          <td>{{BinData[0].IPBinWt}}</td>
+          <td>{{BinData[0].OPBinWt}}</td>
+          <td>{{BinData[0].WasteWt}}</td>
       </tr>
   </ng-template>
   </p-table>

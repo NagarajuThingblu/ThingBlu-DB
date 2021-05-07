@@ -56,6 +56,7 @@ export class GrowertrimmingComponent implements OnInit {
   public defaultDate: Date = new Date();
   public showPastDateLabel = false;
   public priorities: SelectItem[];
+ 
   constructor(
     private fb: FormBuilder,
     private dropdownDataService: DropdownValuesService,
@@ -94,6 +95,7 @@ export class GrowertrimmingComponent implements OnInit {
     employees:[]
   };
   isRActSecsDisabled: boolean;
+  // public inputBinDetails: [];
 
   ngOnInit() {
     this.binsListByClient();
@@ -201,7 +203,13 @@ export class GrowertrimmingComponent implements OnInit {
           'rmisccomment': new FormControl(null)
       })
     }
-
+    // this.inputBinDetails = this.BinData[0];
+    // if(this.BinData != null){
+    //   this.inputBinDetails.OPBinWt = 0;
+    //   for(let i of this.BinData){
+    //     this.inputBinDetails.OPBinWt = this.inputBinDetails.OPBinWt + i.OPBinWt
+    //   }
+    // }
   }
 
   createItem(): FormGroup {

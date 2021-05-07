@@ -103,6 +103,7 @@ export class GrowerComponent implements OnInit {
       'grower': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(30)])),
       'officePhone': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
       'cellPhone': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
+      'licenseNo':new FormControl(null, Validators.compose([Validators.maxLength(15)])),
       'faxPhone': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
       'primaryEmail': new FormControl(null, Validators.maxLength(50)),
       'secondaryEmail': new FormControl(null, Validators.maxLength(50)),
@@ -224,6 +225,7 @@ export class GrowerComponent implements OnInit {
         BrandCode: 0,
         officePhone: this.appCommonService.trimString(this.growerForm.value.officePhone),
         cellPhone: this.appCommonService.trimString(this.growerForm.value.cellPhone),
+        LicenseNo: this.appCommonService.trimString(this.growerForm.value.licenseNo),
         faxPhone: '',
         primaryEmail: this.appCommonService.trimString(this.growerForm.value.primaryEmail),
         secondaryEmail: this.appCommonService.trimString(this.growerForm.value.secondaryEmail),
@@ -341,6 +343,7 @@ export class GrowerComponent implements OnInit {
           const grower = this.growerForm.controls['grower'];
           const officephone = this.growerForm.controls['officePhone'];
           const cellphone = this.growerForm.controls['cellPhone'];
+          const LicenseNo =   this.growerForm.controls['licenseNo']; 
           const faxphone = this.growerForm.controls['faxPhone'];
           const primaryemail = this.growerForm.controls['primaryEmail'];
           const secondaryemail = this.growerForm.controls['secondaryEmail'];
@@ -360,6 +363,7 @@ export class GrowerComponent implements OnInit {
           clientname.patchValue(this.growerOnEdit[0].ClientId);
           grower.patchValue(this.growerOnEdit[0].RawSupplierName);
           cellphone.patchValue(this.growerOnEdit[0].CellPhone);
+          LicenseNo.patchValue(this.growerOnEdit[0].LicenseNo);
           officephone.patchValue(this.growerOnEdit[0].OfficePhone);
           faxphone.patchValue(this.growerOnEdit[0].FaxPhone);
           primaryemail.patchValue(this.growerOnEdit[0].PrimaryEmail);
