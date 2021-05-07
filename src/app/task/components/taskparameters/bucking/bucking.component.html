@@ -217,7 +217,7 @@
   </div>
   <div class="ui-g-12" style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
     <div><b>Input Bin Details</b></div>
-  <p-table [value]="BinData">
+  <p-table [value]="inputBinDetails">
     <ng-template pTemplate="header">
       <tr>
         <th>Input Bin Name</th>

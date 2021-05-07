@@ -95,7 +95,7 @@ export class BuckingComponent implements OnInit {
     employees:[]
   };
   isRActSecsDisabled: boolean;
-
+  public inputBinDetails :any[];
   ngOnInit() {
     this.binsListByClient();
     this.employeeListByClient();
@@ -202,6 +202,12 @@ export class BuckingComponent implements OnInit {
           'rmisccost': new FormControl(null),
           'rmisccomment': new FormControl(null)
       })
+    }
+    if(this.BinData != null){
+      this.inputBinDetails = []
+      for(let i =0; i<1; i++){
+       this.inputBinDetails[i] = this.BinData[i]
+     }
     }
 
   }

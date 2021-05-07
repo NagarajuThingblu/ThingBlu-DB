@@ -95,7 +95,7 @@ export class GrowertrimmingComponent implements OnInit {
     employees:[]
   };
   isRActSecsDisabled: boolean;
-  // public inputBinDetails: [];
+  public inputBinDetails :any[];
 
   ngOnInit() {
     this.binsListByClient();
@@ -203,13 +203,22 @@ export class GrowertrimmingComponent implements OnInit {
           'rmisccomment': new FormControl(null)
       })
     }
-    // this.inputBinDetails = this.BinData[0];
-    // if(this.BinData != null){
-    //   this.inputBinDetails.OPBinWt = 0;
-    //   for(let i of this.BinData){
-    //     this.inputBinDetails.OPBinWt = this.inputBinDetails.OPBinWt + i.OPBinWt
-    //   }
-    // }
+
+   if(this.BinData != null){
+     this.inputBinDetails = []
+     for(let i =0; i<1; i++){
+      this.inputBinDetails[i] = this.BinData[i]
+    }
+   }
+   
+// if(this.BinData != null){
+//   this.inputBinDetails.inputBinName = this.BinData[0].IPLabelName;
+//   this.inputBinDetails.totalWeight = this.BinData[0].IPBinWt;
+//   this.wastewt = this.BinData[0].WasteWt
+// for (let i of this.BinData){
+//   this.completedWt = this.completedWt +i.OPBinWt
+// }
+// }
   }
 
   createItem(): FormGroup {

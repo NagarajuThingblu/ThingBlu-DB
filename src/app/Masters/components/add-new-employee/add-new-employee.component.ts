@@ -414,7 +414,7 @@ export class AddNewEmployeeComponent implements OnInit {
              this. showMang = true
              this. showFlc = true
           }
-          const decryptedpwd = this.decode64(this.employeeOnEdit[0].Password);
+           const decryptedpwd = this.decode64(this.employeeOnEdit[0].Password);
           const clientname = this.newEmployeeForm.controls['clientname'];
           const firstname = this.newEmployeeForm.controls['firstname'];
           const middlename = this.newEmployeeForm.controls['middlename'];

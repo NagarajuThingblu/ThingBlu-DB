@@ -99,6 +99,7 @@ export class LoginComponent implements OnInit {
     this.msgs = [];
     this.msgs.push({ severity: 'info', summary: this.globalResource.applicationmsg, detail: 'Form Submitted' });
     const encryptedPwd = this.encode64(value.password);
+ 
     const decryptedpwd = this.decode64(encryptedPwd);
 
     const form = {
