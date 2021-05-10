@@ -45,8 +45,10 @@
                     <th>{{ newLabelResources.trimmingMethod }}
                       <span class="star">*</span>
                    </th>
+                   <th>No Of Bins
+                 </th>
                     <th style="width: 80px;">Is Active</th>
-                    <th style="width: 80px;">Action</th>
+                    <th style="width: 100px;">Action</th>
                     
                   </tr>
                 </ng-template>
@@ -85,6 +87,7 @@
                       class="clsControl"
                       name="skewType">
                       </p-dropdown>
+                      
                     </td>
                     <td>
                       <p-checkbox value="true"
@@ -106,6 +109,17 @@
                                  
                     </td>
                     <td>
+                      <input pInputText
+                        name="bincount"
+                        [value]="defaultValue"
+                        id="bincount"
+                        type="number"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="bincount"
+                      >
+                    </td>
+                    <td>
                       <p-checkbox value="true"
                        formControlName="chkSelectAll" checked="true"
                       binary="true"></p-checkbox>                                      
@@ -119,16 +133,23 @@
                             <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
                             </span>
                         </a>
+                        <!-- <a (click)="createBulkBins(i)" *ngIf="newLabelsEntryForm.get('items').valid">
+                          <span class="fa fa-th-list" style="font-size: 1.4rem;">
+                          </span>
+                          
+                      </a> -->
                       
                     
                   </td>
                   <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
                     This Bin already exists.
                   </div>  
+
                   </tr>
-                </ng-template>
+                </ng-template>  
               </p-table>
             </div>
+           
             <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="labelDetailsArr.hasError('duplicate')">
               duplicate entries
             </div>  
@@ -139,12 +160,84 @@
                     pButton 
                     (click)="resetForm()" 
                     type="button" 
+                    label="Cancel" 
+                    class="ui-button-secondary">
+                </button>
+              </div>
+            </div>
+          </div>
+         
+            <!-- <div formArrayName="items1">
+              <p-dialog header="Multiple Bins" [(visible)]="displayPopUp" modal="modal" [resizable]="true" [responsive]="true" [width]="500" [minWidth]="200">
+              
+                <div class="ui-g-12">
+            <div class="ui-g-12" >
+               
+              <div class="ui-g-3">
+                <b> Bin Number:-</b>
+             
+              </div>
+              <div class="ui-g-3">
+                {{popupbinNo}}
+              </div>
+              <div class="ui-g-3">
+                <b> Skew Type:-</b>
+             
+              </div>
+              <div class="ui-g-3">
+                {{popupSkew}}
+              </div>
+            </div>
+
+            <div class="ui-g-12">
+              <div class="ui-g-3">
+                <b>TM:-</b>
+             
+              </div>
+              <div class="ui-g-3">
+                {{popupTm}}
+              </div>
+              <div class="ui-g-3">
+                <b>LD:-</b>
+               </div>
+               <div class="ui-g-3">
+                 {{popupld}}
+               </div>
+            </div>
+
+            <div class="ui-g-12">
+              <div class="ui-g-6">
+               <b>Total Bins To Be Created:-</b>
+              </div>
+              <div class="ui-g-2">
+               <input pInputText
+                                   name="bincount"
+                                   id="bincount"
+                                   type="text"
+                                   autocomplete="off"
+                                   class="clsControl"       
+                                   formControlName="bincount"
+                                   min="0.1">
+              </div>
+             </div>
+
+             <div class="ui-g" style="width:100%;text-align:right;">
+              <div class="ui-g-12">
+                <button pButton type="submit" label="{{saveButtonText}}" ></button>
+                <button 
+                    pButton 
+                    (click)="closepopup()" 
+                    type="button" 
                     label="Clear" 
                     class="ui-button-secondary">
                 </button>
               </div>
             </div>
           </div>
+ 
+        </p-dialog>
+          </div> -->
+         
         </form>
       </p-panel>
     </div>
@@ -257,6 +350,7 @@
             </td>
           </tr>
         </ng-template>
+        
         <ng-template pTemplate="paginatorleft" let-state>
           <pagination-counts *ngIf="allLabelslist?.length" [inputData]="allLabelslist" [inputEvent]="event">
           </pagination-counts>
@@ -265,6 +359,7 @@
     </p-panel>
   </div>
 </div>
+
 <p-growl [(value)]="msgs" life='5000'></p-growl>
 <p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" *ngIf="true" class="clsConfirmBox">
 </p-confirmDialog>

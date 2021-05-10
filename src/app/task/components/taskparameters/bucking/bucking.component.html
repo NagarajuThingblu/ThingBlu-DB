@@ -217,7 +217,7 @@
   </div>
   <div class="ui-g-12" style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
     <div><b>Input Bin Details</b></div>
-  <p-table [value]="inputBinDetails">
+  <p-table [value]="inpubinData">
     <ng-template pTemplate="header">
       <tr>
         <th>Input Bin Name</th>
@@ -228,10 +228,10 @@
     </ng-template>
     <ng-template pTemplate="body">
       <tr>
-          <td>{{BinData[0].IPLabelName}}</td>
-          <td>{{BinData[0].IPBinWt}}</td>
-          <td>{{BinData[0].OPBinWt}}</td>
-          <td>{{BinData[0].WasteWt}}</td>
+          <td>{{inpubinData[0].IPLabelName}}</td>
+          <td>{{inpubinData[0].IPBinWt}}</td>
+          <td>{{inpubinData[0].TotalOpBinWt}}</td>
+          <td>{{inpubinData[0].TotalWasteWt}}</td>
       </tr>
   </ng-template>
   </p-table>

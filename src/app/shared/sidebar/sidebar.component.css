@@ -323,6 +323,10 @@ color: #fff !important;
       top: 50%;
       margin-top: -7px;
   }
+  /* .selected{
+    background-color:#00ACEC !important;
+    color:white;
+  } */
 
   .sidebar .menu .list a > .pull-right-containerr > .fa {
     -webkit-transform: rotate(-90deg);

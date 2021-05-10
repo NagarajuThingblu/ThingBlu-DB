@@ -46,6 +46,7 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
   public skewtypes:any[];
   public tasktypes: any[];
   skewtype: any[];
+  public displayPopUp: boolean = false;
   public skewTypeID: any = 0;
   TaskTypeDetails: any;
   public event: any;
@@ -64,6 +65,8 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
   collapsed: any;
   taskTypeNameValue = '';
   enableDropDown = true
+  enabletextbox = true;
+  public defaultValue: number =0;
   public e:any;
   taskTypeValueAndLabelMap: Map<number,string> = new Map<number,string>()
   pageheading: any;
@@ -71,6 +74,13 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
   public taskKeyName: any = '';
   public allLabelslist:any;
   public count:number = 0;
+  public popupTaskType: any;
+  public popupbinNo: any;
+  public popupStrain:any;
+  public popupSkew:any;
+  public popupld:any;
+  public popupTm:any;
+
   TrimmingMethods =['HT','MT']
   private globalData = {
     TaskType: [],
@@ -126,6 +136,9 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
     this.newLabelsEntryForm = this.fb.group({
       'TaskType': new FormControl(null, Validators.required),
       items: new FormArray([], this.customGroupValidation),
+      // 'bincount':  new FormControl(null),
+      
+      // items1: new FormArray([]),
     });
     
     this.addItem();
@@ -169,17 +182,24 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
 createItem(): FormGroup {
   return this.fb.group({
     binNo: new FormControl(null, Validators.compose([Validators.required])),
+    bincount: new FormControl(null),
     strain:new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
     skewType: new FormControl(
       this.taskTypeNameValue === 'Trimming' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
     lightDept: new FormControl(false),
     TrimmingMethod: new FormControl(
       this.taskTypeNameValue === 'Trimming' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
-    
     chkSelectAll: new FormControl(true)
   });
   
 }
+// createItem1(): FormGroup {
+//   return this.fb.group({
+//     bincount: new FormControl(null),
+//   });
+  
+// }
+
     
   getAllTaskType() {
     this.dropdownDataService.getAllTask().subscribe(
@@ -249,6 +269,21 @@ createItem(): FormGroup {
     console.log(this.count)
     this.arrayItems = this.newLabelsEntryForm.get('items') as FormArray;
     this.arrayItems.push(this.createItem());
+  }
+
+  createBulkBins(index): void {
+    // this.arrayItems = this.newLabelsEntryForm.get('items1') as FormArray;
+    // this.arrayItems.push(this.createItem1());
+    this.displayPopUp = true;
+    this.popupTaskType = this.newLabelsEntryForm.value.TaskType;
+    this.popupbinNo = this.newLabelsEntryForm.value.items[index].binNo;
+    this.popupStrain = this.newLabelsEntryForm.value.items[index].strain;
+    this.popupSkew = this.newLabelsEntryForm.value.items[index].skewType != null?this.newLabelsEntryForm.value.items[index].skewType :'';
+    this.popupTm = this.newLabelsEntryForm.value.items[index].TrimmingMethod!= null?this.newLabelsEntryForm.value.items[index].TrimmingMethod :'';
+    this.popupld = this.newLabelsEntryForm.value.items[index].lightDept;
+  }
+  closepopup(){
+    this.displayPopUp = false;
   }
   customGroupValidation (formArray) {
     let isError = false;

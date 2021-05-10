@@ -17,7 +17,7 @@
                 <li class="header">
                     <span>MAIN NAVIGATION</span>
                 </li>
-                <li *ngFor="let item of items  ; let i= index">
+                <li *ngFor="let item of items  ; let i= index" [class.selected]="item===plottedmenuItems[i]">
                     <div>
                         <a (click)="toggleNavigationSub(i, $event)" *ngIf="item.items?.length > 0">
                             <label class="fa {{item.icon}} material-icons"></label>

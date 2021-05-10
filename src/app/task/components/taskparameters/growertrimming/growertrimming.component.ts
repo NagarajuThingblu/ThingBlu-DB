@@ -38,6 +38,7 @@ export class GrowertrimmingComponent implements OnInit {
   reviewForm: FormGroup;
   //input and output decorators
   @Input() BinData: any;
+  @Input() inpubinData:any;
   @Input() TaskModel: any;
   @Input() PageFlag: any;
   @Input() ParentFormGroup: FormGroup;
