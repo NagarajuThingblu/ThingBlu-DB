@@ -63,10 +63,11 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
   public plusOnEdit: boolean = true;
   submitted: boolean;
   collapsed: any;
+  public viewNoOfBins:boolean = true;
   taskTypeNameValue = '';
   enableDropDown = true
   enabletextbox = true;
-  public defaultValue: number =0;
+  public defaultValue: number =1;
   public e:any;
   taskTypeValueAndLabelMap: Map<number,string> = new Map<number,string>()
   pageheading: any;
@@ -350,6 +351,7 @@ createItem(): FormGroup {
           IsMachineTrimmed:this.enableDropDown == true? 0:element.value.TrimmingMethod == 'MT'? 1:0,
           IsActive: element.value.chkSelectAll ? 1 : 0,
           IsDeleted:this.IsDeletedForUpdate,
+          NoOfBins:element.value.bincount ? element.value.bincount : 1,
           ActiveInactive:this.ActiveInActiveForUpdate
         });
     });
@@ -369,6 +371,7 @@ createItem(): FormGroup {
           this.resetForm();
           this.getAllLabelslist();
           this.LabelIdForUpdate = 0;
+          this.viewNoOfBins = true;
         } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'UPDATED') {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.newLabelResources.updated });
@@ -428,6 +431,7 @@ createItem(): FormGroup {
     this.saveButtonText ="save"
     this.pageheading = "Add New Bin"
     this.enableDropDown = true;
+    this.viewNoOfBins = true;
     this.newLabelsEntryForm.reset({ chkSelectAll: true });
    this.plusOnEdit = true;
 
@@ -458,6 +462,7 @@ createItem(): FormGroup {
   }
   getLabelsOnEdit(LabelId){
     this.plusOnEdit = false;
+    this.viewNoOfBins = false;
     this.enableDropDown = true;
     console.log(this.allLabelslist)
     const data = this.allLabelslist.filter(x => x.LabelId === LabelId);
@@ -468,6 +473,7 @@ createItem(): FormGroup {
       this.LabelOnEdit = data;
       const taskType = this.newLabelsEntryForm.controls['TaskType'];
       const binNo = itemlist[0].controls['binNo'];
+      const bincount = itemlist[0].controls['bincount'];
       const strainName =  itemlist[0].controls["strain"];
       const skewType =  itemlist[0].controls["skewType"];
       const lightDept =  itemlist[0].controls["lightDept"];
@@ -476,6 +482,7 @@ createItem(): FormGroup {
 
       taskType.patchValue(this.LabelOnEdit[0].TaskTypeId);
       binNo.patchValue(this.LabelOnEdit[0].BinNo);
+      bincount.patchValue(this.LabelOnEdit[0].NoOfBins);
        strainName.patchValue(this.LabelOnEdit[0].StrainId);
        skewType.patchValue(this.LabelOnEdit[0].SkewType);
        lightDept.patchValue(this.LabelOnEdit[0].IsLightDeprevation);

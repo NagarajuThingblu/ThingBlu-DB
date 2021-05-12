@@ -45,7 +45,7 @@
                     <th>{{ newLabelResources.trimmingMethod }}
                       <span class="star">*</span>
                    </th>
-                   <th>No Of Bins
+                   <th *ngIf="viewNoOfBins">No Of Bins
                  </th>
                     <th style="width: 80px;">Is Active</th>
                     <th style="width: 100px;">Action</th>
@@ -108,8 +108,9 @@
                      
                                  
                     </td>
-                    <td>
+                    <td *ngIf="viewNoOfBins">
                       <input pInputText
+                      
                         name="bincount"
                         [value]="defaultValue"
                         id="bincount"
