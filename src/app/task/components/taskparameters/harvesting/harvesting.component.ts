@@ -107,6 +107,8 @@ export class HarvestingComponent implements OnInit{
     Fields: [],
     TerminationReasons: [],
   };
+
+ 
   isRActSecsDisabled: boolean;
   ngOnInit() {
     this.getAllFieldsAndSections();
@@ -115,7 +117,7 @@ export class HarvestingComponent implements OnInit{
     this.getTerminationReasons();
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
-    this.titleService.setTitle(this.assignTaskResources.siftingtitle);
+    this.titleService.setTitle('Harvesting');
     this.taskStatus = AppConstants.getStatusList;
     this.userRoles = AppConstants.getUserRoles;
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);

@@ -103,7 +103,7 @@ export class BuckingComponent implements OnInit {
     
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
-    this.titleService.setTitle(this.assignTaskResources.siftingtitle);
+    this.titleService.setTitle('Bucking');
     this.taskStatus = AppConstants.getStatusList;
     this.userRoles = AppConstants.getUserRoles;
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
@@ -355,13 +355,13 @@ submitReview(formModel) {
       InputBinDetails:[],
       OutputBinDetails:[]
     };
-    this.BinData.forEach((element, index) => {
+    this.inpubinData.forEach((element, index) => {
       // this.duplicateSection = element.value.section
       taskReviewWebApi.InputBinDetails.push({
         BinId:element.InputBinId,
         DryWt: element.IPBinWt,
         WetWt: 0,
-        WasteWt: element.WasteWt,
+        WasteWt: element.TotalWasteWt,
             
          });
     
@@ -369,7 +369,7 @@ submitReview(formModel) {
      this.BinData.forEach((element, index) => {
       // this.duplicateSection = element.value.section
       taskReviewWebApi.OutputBinDetails.push({
-        BinId:element.InputBinId,
+        BinId:element.OPBinId,
         DryWt: element.OPBinWt,
         WetWt: 0,
         WasteWt: element.WasteWt,
@@ -418,6 +418,10 @@ submitReview(formModel) {
         }
         else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
+          this.loaderService.display(false);
+        }
+        else if (data[0].RESULTKEY ==='Output Bin weight and Input Bin Completed weight Not Same'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY });
           this.loaderService.display(false);
         }
         else{

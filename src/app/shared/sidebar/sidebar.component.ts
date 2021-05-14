@@ -42,7 +42,9 @@ export class SidebarComponent implements OnInit {
   public userModel: UserModel;
   public userRoles: any;
   public userRoleName: any;
-  public xyz:boolean = false;
+  public xyz ={
+    hight : ''
+  } 
 
   navigationSubState: any = {
     1: 'inactive',
@@ -77,10 +79,12 @@ export class SidebarComponent implements OnInit {
   }
 
   toggleNavigationSub(index: number, event: Event) {
+    this.xyz.hight = 'Nothighlight'
       event.preventDefault();
       this.plottedmenuItems[index].subState = (this.plottedmenuItems[index].subState === 'inactive' ? 'active' : 'inactive');
       this.plottedmenuItems[index].arrow = (this.plottedmenuItems[index].arrow === 'pull-right-container' ? 'pull-right-containerr' : 'pull-right-container');
-    this.xyz = true;
+    //  this.xyz.hight = 'hightlight'
+    
     //      this.navigationSubState[index] = (this.navigationSubState[index] === 'inactive' ? 'active' : 'inactive');
     //      this.arrow[index] = (this.arrow[index] === 'pull-right-container' ? 'pull-right-containerr' : 'pull-right-container');
     //      this.status = !this.status;

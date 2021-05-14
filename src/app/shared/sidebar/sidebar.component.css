@@ -323,10 +323,19 @@ color: #fff !important;
       top: 50%;
       margin-top: -7px;
   }
-  /* .selected{
+  /* .true{
     background-color:#000000 !important;
   } */
-
+  /* .active{
+    background-color:#000000 !important;
+  } */
+  .sidebar .menu .list a > .hightlight{
+    color:#0502b1 !important;
+  }
+  .sidebar .menu .list a > .Nothightlight{
+    color:#fff !important;
+  }
+  
   .sidebar .menu .list a > .pull-right-containerr > .fa {
     -webkit-transform: rotate(-90deg);
     -ms-transform: rotate(-90deg);
@@ -376,7 +385,8 @@ transition: 0.5s;
         font-size: 21px;
         height: 20px;
         top: -5px;
-        right: 0px; }
+        right: 0px;
+       }
     .sidebar .menu .list .ml-menu li .ml-menu li a {
       padding-left: 80px; }
     .sidebar .menu .list .ml-menu li .ml-menu .ml-menu li a {

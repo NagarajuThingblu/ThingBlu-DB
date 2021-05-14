@@ -182,9 +182,14 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     this.globalResource = GlobalResources.getResources().en;
     this.taskStatus = AppConstants.getStatusList;
     this.userRoles = AppConstants.getUserRoles;
-    this.titleService.setTitle(this.assignTaskResources.budpackagingtitle);
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
-    this.taskCategory = this._cookieService.TaskCategory,
+    this.taskCategory = this._cookieService.TaskCategory;
+    if(this.taskCategory != 'GROWING'){
+      this.titleService.setTitle(this.assignTaskResources.budpackagingtitle);
+    }
+    else{
+      this.titleService.setTitle('Packaging');
+    }
     this.route.params.forEach((urlParams) => {
       this.taskId = urlParams['id'];
       this.taskType = urlParams['taskType'];

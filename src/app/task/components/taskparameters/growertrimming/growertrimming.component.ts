@@ -103,7 +103,7 @@ export class GrowertrimmingComponent implements OnInit {
     this.employeeListByClient();
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
-    this.titleService.setTitle(this.assignTaskResources.siftingtitle);
+    this.titleService.setTitle('Trimming');
     this.taskStatus = AppConstants.getStatusList;
     this.userRoles = AppConstants.getUserRoles;
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
