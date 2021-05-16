@@ -53,6 +53,7 @@ export class RetailerComponent implements OnInit {
   // Added by Devdan
   selectedCountry: number;
   selectedState: number;
+  selectedCity: number;
   selectedRetailer: any;
   public taskCategory: any;
   displayInfoDialog = false;
@@ -207,11 +208,11 @@ export class RetailerComponent implements OnInit {
         this.States = this.dropdwonTransformService.transform(
           data.filter(x => x.CountryID === this.retailerForm.value.country), 'StateName', 'StateId', '-- Select --');
           // Get the Clients State from the Cookie ::: Added by Devdan :: 28-Sep-2018
-        this.selectedState = this._cookieService.StateId;
-        if (this.selectedState > 0) {
-          this.retailerForm.controls['state'].patchValue(this.selectedState);
-          // this.StateChange();
-        }
+        // this.selectedState = this._cookieService.StateId;
+        // if (this.selectedState > 0) {
+        //   this.retailerForm.controls['state'].patchValue(this.selectedState);
+        //   // this.StateChange();
+        // }
       } ,
       error => { console.log(error); },
       () => console.log('Get all State complete'));
@@ -389,13 +390,14 @@ export class RetailerComponent implements OnInit {
     return rowData;
   }
   GetRetailerOnEdit(RetailerId) {
+  
     event.stopPropagation();
     const data = this.allretailerList.filter(x => x.RetailerId === RetailerId);
     // var itemlist = this.retailerForm.get('controls');
     if (data !== null) {
       this.RetailerID = RetailerId;
-      // this.getAllCities();
-      // this.getAllStates();
+      this.getAllCities();
+      this.getAllStates();
       // this.retailerForm.controls['retailerType'].patchValue(data[0].RetlrTypeID);
       // this.retailerForm.controls['retailer'].patchValue(data[0].RetailerName);
       // const state =   itemlist[0].controls["state"];
@@ -414,6 +416,7 @@ export class RetailerComponent implements OnInit {
         country: data[0].CountryId,
        
         state: data[0].StateId,
+        
         city: data[0].CityId,
         zipCode: data[0].ZipCode,
         description: data[0].Description,

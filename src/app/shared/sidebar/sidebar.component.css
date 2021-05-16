@@ -305,7 +305,7 @@ color: #fff !important;
       div.selected > a { text-decoration: none !important; background-color: #00ACEC;border-left-color: #1C3C93 !important;}
       .sidebar .menu .list div ul li a:hover, .sidebar .menu .list div ul li a:active, .sidebar .menu .list div ul li a:focus,
       .sidebar .menu .list div ul li a:hover span, .sidebar .menu .list div ul li a:active span, .sidebar .menu .list div ul li a:focus span {
-         color: #31ACD6 !important;  text-decoration: none !important; }
+        background-color: #00ACEC !important;  text-decoration: none !important; }
 
     .sidebar .menu .list a small {
       position: absolute;
@@ -329,13 +329,14 @@ color: #fff !important;
   /* .active{
     background-color:#000000 !important;
   } */
-  .sidebar .menu .list a > .hightlight{
-    color:#0502b1 !important;
-  }
-  .sidebar .menu .list a > .Nothightlight{
-    color:#fff !important;
-  }
+ 
   
+  .Hightlight{
+    background-color:#00ACEC;
+  }
+  /* .Nothighlight{
+    color:white
+  } */
   .sidebar .menu .list a > .pull-right-containerr > .fa {
     -webkit-transform: rotate(-90deg);
     -ms-transform: rotate(-90deg);

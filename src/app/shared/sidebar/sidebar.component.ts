@@ -42,9 +42,8 @@ export class SidebarComponent implements OnInit {
   public userModel: UserModel;
   public userRoles: any;
   public userRoleName: any;
-  public xyz ={
-    hight : ''
-  } 
+ public link;
+ public subLink;
 
   navigationSubState: any = {
     1: 'inactive',
@@ -79,18 +78,27 @@ export class SidebarComponent implements OnInit {
   }
 
   toggleNavigationSub(index: number, event: Event) {
-    this.xyz.hight = 'Nothighlight'
+    this.subLink = null;
       event.preventDefault();
+      // this.plottedmenuItems[index].Hightlight = null
       this.plottedmenuItems[index].subState = (this.plottedmenuItems[index].subState === 'inactive' ? 'active' : 'inactive');
       this.plottedmenuItems[index].arrow = (this.plottedmenuItems[index].arrow === 'pull-right-container' ? 'pull-right-containerr' : 'pull-right-container');
     //  this.xyz.hight = 'hightlight'
-    
+    this.link =  this.plottedmenuItems[index].routerLink 
+
+   
+    // this.plottedmenuItems[index].Hightlight = "Hightlight"
     //      this.navigationSubState[index] = (this.navigationSubState[index] === 'inactive' ? 'active' : 'inactive');
     //      this.arrow[index] = (this.arrow[index] === 'pull-right-container' ? 'pull-right-containerr' : 'pull-right-container');
     //      this.status = !this.status;
     //      subModuleee.active = !subModuleee.active;
     //      this.wasClicked= !this.wasClicked;
   }
+
+  navigatesubitems(index: number, i:number) {
+    this.link = null
+    this.subLink = this.plottedmenuItems[i].items[index].routerLink
+}
 
   logOut() {
     this.cookieService.deleteAll();
@@ -186,9 +194,11 @@ export class SidebarComponent implements OnInit {
         Newmenu.subState = element.SubState;
         Newmenu.arrow = element.SideArrow;
         Newmenu.IsDefault = element.IsDefaultPage;
+        Newmenu.Hightlight = null;
 
         if (Newmenu.isParent === true) {
           this.plottedmenuItems.push(Newmenu);
+          // this.plottedmenuItems.push('Hightlight')
           if (unparentlist.length) {
             this.plottedmenuItems.forEach(unparent => {
               if (unparent.id === Newmenu.id) {

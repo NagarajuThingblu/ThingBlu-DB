@@ -362,19 +362,22 @@ submitReview(formModel) {
     };
    
       // this.duplicateSection = element.value.section
-      taskReviewWebApi.InputBinDetails.push({
-        BinId:this.BinData[0].InputBinId,
-        DryWt: this.BinData[0].IPBinWt,
-        WetWt: 0,
-        WasteWt: this.BinData[0].WasteWt,
-            
-         });
+      this.inpubinData.forEach((element, index) => {
+        taskReviewWebApi.InputBinDetails.push({
+          BinId:element.InputBinId,
+          DryWt: element.IPBinWt,
+          WetWt: 0,
+          WasteWt: element.Wastewt,
+              
+           });
+      })
+     
     
    
      this.BinData.forEach((element, index) => {
       // this.duplicateSection = element.value.section
       taskReviewWebApi.OutputBinDetails.push({
-        BinId:element.InputBinId,
+        BinId:element.OPBinId,
         DryWt: element.OPBinWt,
         WetWt: 0,
         WasteWt: element.WasteWt,

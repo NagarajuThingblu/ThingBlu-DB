@@ -74,11 +74,17 @@ export class OrderListingComponent implements OnInit, OnDestroy {
     this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle(this.orderrequestResource.orderlisttitle);
     this._cookieService = this.appCommonService.getUserProfile();
-    this.taskCategory = this._cookieService.TaskCategory,
+    this.taskCategory = this._cookieService.TaskCategory;
+    if(this.taskCategory === 'GROWING'){
+      this.getAllOrders();
+    }
+   else{
     this.getAllOrders();
-     this.getAllDreaftOrders();
-     this.getAllIncomingOrders();
-     this.getAllChangeOrders();
+    this.getAllDreaftOrders();
+    this.getAllIncomingOrders();
+    this.getAllChangeOrders();
+   }
+    
      if (this.appCommonService.navDraftOrder.isBackClicked) {
       this.draftTabSelected = true;
       this.orderTabSelected = false;

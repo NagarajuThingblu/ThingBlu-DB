@@ -303,7 +303,7 @@ if(this.editData != null){
       packagetype: new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
       packagetypeid: new FormControl(null),
       packagesize: new FormControl(null, Validators.compose([Validators.required, Validators.max(999999999999999), Validators.min(0.1)])),
-      orderqt: new FormControl(null, Validators.compose([ Validators.max(99999), Validators.min(1)])),
+      orderqt: new FormControl(null, Validators.compose([ Validators.required, Validators.max(99999), Validators.min(1)])),
       producttype: new FormControl(null, Validators.compose([ Validators.max(99999), Validators.min(0.1)])),
       ordercost: new FormControl(null, Validators.compose([ Validators.max(99999), Validators.min(0.1)])),
     });

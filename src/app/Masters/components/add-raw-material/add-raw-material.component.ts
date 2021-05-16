@@ -153,17 +153,28 @@ export class AddRawMaterialComponent implements OnInit {
   getGrowerData(){
     this.growerDetailsActionService.getRowSuplierDetailList().subscribe(
       data =>{
-        console.log(data)
+      if(data !='No Data Found!'){
         this.Growers = this.dropdwonTransformService.transform(data, 'RawSupplierName', 'RawSupId', '-- Select --');
+      }
+      else{
+        this.Growers = [];
+      }
+      
       }
     )
   }
   getBinsData(){
     this.growerDetailsActionService.getEmptyBins().subscribe(
       data => {
-        console.log(data)
-        this.globalData.binsData = data
-        this.bins =  this.dropdwonTransformService.transform(data, 'BinName', 'BinId', '-- Select --');
+        if(data != 'No Data Found!'){
+          this.globalData.binsData = data
+          this.bins =  this.dropdwonTransformService.transform(data, 'BinName', 'BinId', '-- Select --');
+        }
+        else{
+          this.bins =[];
+        }
+       
+       
       }
     )
   }
@@ -293,7 +304,7 @@ GoToBinsPage(){
   getAllRawMaterialList(){
     this.newARMDetailsActionService.GetRawMaterialList().subscribe(
       data=>{
-        if (data !== 'No data found!') {
+        if (data != 'No data found!') {
           this.allRawMateriallist=data;
           this.paginationValues = AppConstants.getPaginationOptions;
           if (this.allRawMateriallist.length > 20) {

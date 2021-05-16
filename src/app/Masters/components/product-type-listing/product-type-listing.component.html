@@ -27,7 +27,7 @@
                   <th [pSortableColumn]="'StrainName'">{{ newProductTypeResources.strain}} <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>              
                   <th [pSortableColumn]="'SkewKeyName'">{{ newProductTypeResources.skewtype}} <p-sortIcon [field]="'SkewKeyName'"></p-sortIcon></th> 
                   <th *ngIf="taskCategoryType === 'GROWING'" [pSortableColumn]="'TrimmingMethod'">Trimming Method<p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon></th>
-                  <th *ngIf="taskCategoryType === 'GROWING'" [pSortableColumn]="'IsLD'">Trimming Method<p-sortIcon [field]="'IsLD'"></p-sortIcon></th>  
+                  <th *ngIf="taskCategoryType === 'GROWING'" [pSortableColumn]="'IsLD'">Light Dept<p-sortIcon [field]="'IsLD'"></p-sortIcon></th>  
                   <th [pSortableColumn]="'PkgTypeName'">{{ newProductTypeResources.packagetype}} <p-sortIcon [field]="'PkgTypeName'"></p-sortIcon></th>
                   <th [pSortableColumn]="'UnitPrice'">Package Unit Price($) <p-sortIcon [field]="'UnitPrice'"></p-sortIcon></th>
                   <th class="wtg" [pSortableColumn]="'UnitValue'">{{ newProductTypeResources.packageunit}} <p-sortIcon [field]="'UnitValue'"></p-sortIcon></th>

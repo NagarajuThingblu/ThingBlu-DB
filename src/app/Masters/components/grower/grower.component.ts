@@ -185,8 +185,8 @@ export class GrowerComponent implements OnInit {
         this.states = this.dropdwonTransformService.transform(
           data.filter(x => x.CountryID === this.growerForm.value.country), 'StateName', 'StateId', '-- Select --');
 
-          const stateid = this.globalData.states.filter(data1 => data1.StateName === 'Washington')[0].StateId;
-          this.growerForm.controls['state'].patchValue(stateid);
+          // const stateid = this.globalData.states.filter(data1 => data1.StateName === 'Washington')[0].StateId;
+          // this.growerForm.controls['state'].patchValue(stateid);
       } ,
       error => { console.log(error); },
       () => console.log('Get all State complete'));
@@ -332,6 +332,8 @@ export class GrowerComponent implements OnInit {
 
   getGrowerOnEdit(RawSupId) {
     event.stopPropagation();
+    this.getAllStates();
+     this.getAllCities();
     // console.log(this.allGrowerList);
     //  this.growerDetailsActionService.getGrowerListByRawSupId(RawSupId).subscribe(
        const data = this.allGrowerList.filter(x => x.RawSupId === RawSupId);
@@ -350,9 +352,9 @@ export class GrowerComponent implements OnInit {
           const contactperson = this.growerForm.controls['contactPerson'];
           const address = this.growerForm.controls['address'];
           const country = this.growerForm.controls['country'];
-          // this.getAllStates();
+         
           const state = this.growerForm.controls['state'];
-          // this.getAllCities();
+         
           const city = this.growerForm.controls['city'];
           const zipcode = this.growerForm.controls['zipCode'];
           const latitude = this.growerForm.controls['latitude'];
