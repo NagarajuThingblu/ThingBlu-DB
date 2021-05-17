@@ -19,6 +19,7 @@ import { routing } from '../../../app.routing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { routerNgProbeToken } from '@angular/router/src/router_module';
 import {NewLabelDetailsActionService} from '../../../task/services/add-label-details.service'
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
     moduleId: module.id,
@@ -69,6 +70,7 @@ import {NewLabelDetailsActionService} from '../../../task/services/add-label-det
   enabletextbox = true;
   public defaultValue: number =1;
   public e:any;
+  HT: String 
   taskTypeValueAndLabelMap: Map<number,string> = new Map<number,string>()
   pageheading: any;
   public placeholder ='-- Select --';
@@ -317,9 +319,11 @@ createItem(): FormGroup {
      
       this.taskTypeNameValue = "Trimming"
       this.enableDropDown = false;
+      this.HT = "HT"
     }
     else{
       this.enableDropDown = true;
+      this.HT = ""
     }
   }
 

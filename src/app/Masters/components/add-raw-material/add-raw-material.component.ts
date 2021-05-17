@@ -136,7 +136,7 @@ export class AddRawMaterialComponent implements OnInit {
     });
 
     for (const prop in result) {
-        if (result[prop].length > 1 && result[prop][0].controls['binNo'].value !== null) {
+        if (result[prop].length > 1 && result[prop][0].controls['binNo'].value != null) {
           isError = true;
             _.forEach(result[prop], function (item: any, index) {
               // alert(index);
@@ -227,7 +227,7 @@ deleteItem(index: number) {
     
   const control = <FormArray>this.ARMForm.controls['items'];
  
-  if (control.length !== 1) {
+  if (control.length != 1) {
     control.removeAt(index);
   }
   console.log(this.ARMForm.get('items'))
@@ -304,7 +304,7 @@ GoToBinsPage(){
   getAllRawMaterialList(){
     this.newARMDetailsActionService.GetRawMaterialList().subscribe(
       data=>{
-        if (data != 'No data found!') {
+        if (data != 'No Data Found!') {
           this.allRawMateriallist=data;
           this.paginationValues = AppConstants.getPaginationOptions;
           if (this.allRawMateriallist.length > 20) {
@@ -340,7 +340,7 @@ GoToBinsPage(){
     const data = this.allRawMateriallist.filter(x => x.LabelId === LabelId);
     console.log(data);
     var itemlist = this.ARMForm.get('items')['controls'];
-    if (data !== 'No data found!') {
+    if (data != 'No data found!') {
       this.LabelIdForUpdate = LabelId;
       this.GrowBinMapId = data[0].GrowBinMapId;
       this.Editor = 1;
