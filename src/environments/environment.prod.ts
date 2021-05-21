@@ -9,18 +9,18 @@ export const environment = {
   // apiEndpoint: 'https://thingbluapiuat.azurewebsites.net/',
   tolerance: 5,
   //  apiEndpoint: 'https://tbappapihannah.azurewebsites.net/',
-    //  apiEndpoint: 'https://tbappapitest.azurewebsites.net/',
-   apiEndpoint:'https://hwg-api.azurewebsites.net/',
+   apiEndpoint: 'https://tbappapitest.azurewebsites.net/',
+  //  apiEndpoint:'https://hwg-api.azurewebsites.net/',
   //  apiEndpoint: 'https://tbdemowebapi.azurewebsites.net/',
 
   sessionTimeout: 86399,
   refreshTime: 1, // refresh time in minutes,
   encryptDecryptKey: 'mechsoft@12',
   parentEncryptionKey: 'm3ch50ft',
-//   clientCode: 'HANNAH',
-//  clientKey: 'Hannah Industries',
-clientCode:'HWG',
-clientKey:'HWG',
+  clientCode: 'HANNAH',
+ clientKey: 'Hannah Industries',
+// clientCode:'HWG',
+// clientKey:'HWG',
   
 
   // ** Start Hannah LocalDev Test config

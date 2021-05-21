@@ -1924,7 +1924,7 @@ else{
             }
             this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
             setTimeout( () => {
-              if (this._cookieService.UserRole === this.userRoles.Manager) {
+              if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
                 this.router.navigate(['home/managerdashboard']);
               } else {
                 this.router.navigate(['home/empdashboard']);
@@ -2191,7 +2191,7 @@ else{
                   this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
 
                   setTimeout(() => {
-                    if (this._cookieService.UserRole === this.userRoles.Manager) {
+                    if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
                       this.router.navigate(['home/managerdashboard']);
                     } else {
                       this.router.navigate(['home/empdashboard']);
@@ -2212,7 +2212,7 @@ else{
                   });
 
                   setTimeout(() => {
-                    if (this._cookieService.UserRole === this.userRoles.Manager) {
+                    if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
                       this.router.navigate(['home/managerdashboard']);
                     } else {
                       this.router.navigate(['home/empdashboard']);
@@ -2329,7 +2329,7 @@ else{
         if (data[0].RESULTKEY  === 'SUCCESS') {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
           setTimeout( () => {
-            if (this._cookieService.UserRole === this.userRoles.Manager) {
+            if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
               this.router.navigate(['home/managerdashboard']);
             } else {
               this.router.navigate(['home/empdashboard']);
@@ -2576,7 +2576,7 @@ else{
                   this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskalreadyreviewed });
                   this.TaskModel.TaskStatus = this.taskStatus.Completed;
 
-                  if (this._cookieService.UserRole === this.userRoles.Manager &&
+                  if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin &&
                     this.TaskModel.IsReview &&
                     this.TaskModel.TaskStatus === this.taskStatus.Completed) {
                     this.showToManager = true;
@@ -2591,7 +2591,7 @@ else{
                   this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformR });
 
                   setTimeout(() => {
-                    if (this._cookieService.UserRole === this.userRoles.Manager) {
+                    if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
                       this.router.navigate(['home/managerdashboard']);
                     } else {
                       this.router.navigate(['home/empdashboard']);
@@ -2602,7 +2602,7 @@ else{
                 } else if (String(data).toLocaleUpperCase() === 'SUCCESS') {
                   this.TaskModel.TaskStatus = this.taskStatus.Completed;
 
-                  if (this._cookieService.UserRole === this.userRoles.Manager &&
+                  if (this._cookieService.UserRole === this.userRoles.Manager||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin&&
                     this.TaskModel.IsReview &&
                     this.TaskModel.TaskStatus === this.taskStatus.Completed) {
                     this.showToManager = true;
@@ -2612,7 +2612,7 @@ else{
                   this.msgs.push({ severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.reviewsubmittedsuccess });
 
                   setTimeout(() => {
-                    if (this._cookieService.UserRole === this.userRoles.Manager) {
+                    if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
                       this.router.navigate(['home/managerdashboard']);
                     } else {
                       this.router.navigate(['home/empdashboard']);

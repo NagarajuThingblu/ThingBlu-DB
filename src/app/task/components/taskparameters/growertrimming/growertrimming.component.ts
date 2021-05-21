@@ -410,7 +410,7 @@ submitReview(formModel) {
           this.msgs = [];
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
           setTimeout( () => {
-            if (this._cookieService.UserRole === this.userRoles.Manager) {
+            if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
               this.router.navigate(['home/managerdashboard']);
             }
             else {
@@ -439,7 +439,7 @@ submitReview(formModel) {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
            setTimeout( () => {
-                      if (this._cookieService.UserRole === this.userRoles.Manager) {
+                      if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
                         this.router.navigate(['home/managerdashboard']);
                       } else {
                         this.router.navigate(['home/empdashboard']);
@@ -537,7 +537,7 @@ completeTask(formModel){
         else if (data[0].RESULTKEY ==='Success'){
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
           setTimeout( () => {
-            if (this._cookieService.UserRole === this.userRoles.Manager) {
+            if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
               this.router.navigate(['home/managerdashboard']);
             } else {
               this.router.navigate(['home/empdashboard']);
@@ -557,7 +557,7 @@ completeTask(formModel){
                   this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
                     detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
                     setTimeout( () => {
-                      if (this._cookieService.UserRole === this.userRoles.Manager) {
+                      if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
                         this.router.navigate(['home/managerdashboard']);
                       } else {
                         this.router.navigate(['home/empdashboard']);

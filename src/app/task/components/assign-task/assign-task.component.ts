@@ -228,7 +228,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
       
       const categoryname = this.assignTask.taskcategory;
       const categorylist = this.tasktypelist.filter(item=>item.TaskCategoryID==categoryname);
-            if((<UserModel>this.appCommonService.getUserProfile()).UserRole === (this.userRoles.Manager) || this.prodDBRouteParams){
+            if((<UserModel>this.appCommonService.getUserProfile()).UserRole === (this.userRoles.Manager) || (<UserModel>this.appCommonService.getUserProfile()).UserRole === this.userRoles.SystemAdmin || this.prodDBRouteParams){
 
 this.tasknames=this.dropdwonTransformService.transform(
   categorylist.filter(item =>
@@ -271,7 +271,7 @@ else{
         this.tasktypelist=data;
         console.log(data, 'tasks');
 
-        if ((<UserModel>this.appCommonService.getUserProfile()).UserRole === this.userRoles.Manager || this.prodDBRouteParams) {
+        if ((<UserModel>this.appCommonService.getUserProfile()).UserRole === this.userRoles.Manager || (<UserModel>this.appCommonService.getUserProfile()).UserRole === this.userRoles.SystemAdmin || this.prodDBRouteParams) {
           if (this.prodDBRouteParams) {
             
             this.tasknames = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', '-- Select --', false);
@@ -894,6 +894,7 @@ console.log(assignTaskFormValues)
         // assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = 0;
         assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'INDEPENDENT';
         assignTaskDetailsForWebApi.TaskDetails['LotId'] = 0;
+        // assignTaskDetailsForWebApi.TaskDetails['EmpId'] = 0;
         assignTaskDetailsForWebApi.TaskDetails['NotifyEmp'] = false;
         assignTaskDetailsForWebApi.TaskDetails['NotifyManager'] = false;
         assignTaskDetailsForWebApi.TaskDetails['Priority'] = '';
@@ -1350,7 +1351,7 @@ console.log(assignTaskFormValues)
               });
             }
 
-      else  if(this.selectedTaskTypeName === 'CUSTOMTASK' &&  this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+      else  if(this.selectedTaskTypeName === 'CUSTOMTASK'  ||this.selectedTaskTypeName === 'INDEPENDENT' &&  this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
 
    
         this.loaderService.display(true);

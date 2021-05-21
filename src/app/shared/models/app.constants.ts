@@ -20,7 +20,8 @@ export class AppConstants {
             Manager: 'Manager',
             Employee: 'Employee',
             SuperAdmin: 'SuperAdmin',
-            Temp:'Temp'
+            Temp:'Temp',
+            SystemAdmin:'System Admin'
         } ;
     }
     public static get defaultTextAreaLength(): number {

@@ -71,7 +71,7 @@ export class MastersResource {
                     viewstrain: 'View All Strains',
                     viewpackagetype: 'View All Package Types',
                     PackageUnitPrice:'Package Unit Price',
-                    PackageUnitPricerequired:'Package Unit Prce Required',
+                    PackageUnitPricerequired:'Package Unit Price Required',
                     MeasureOfUnit:'Measure Of Unit'
                     
 
@@ -255,10 +255,10 @@ export class MastersResource {
                 },
 
                 grower: {
-                    pageheading: 'Add New Grower',
-                    growerlist: 'Grower List',
+                    pageheading: 'Add New Supplier',
+                    growerlist: 'Supplier List',
                     client: 'Client Name',
-                    grower: 'Grower Name',
+                    grower: 'Supplier Name',
                     growerLength: 'Maximun 30 characters are allowed',
                     officephone: 'Office Phone',
                     officephoneLength: 'Maximum 15 digits are allowed',
@@ -289,17 +289,17 @@ export class MastersResource {
                     staterequired: 'Select State',
                     zipcoderequired: 'Enter Zip Code',
                     validemail: 'Enter Valid Email',
-                    growerrequired: 'Please enter Grower',
-                    growersavedsuccess: 'Grower details saved successfully.',
-                    groweralreadyexist: 'Grower already exist.',
-                    inactivated: 'Grower inactivated successfully.',
-                    activated: 'Grower activated successfully.',
-                    deletedSuccess: 'Grower deleted successfully.',
-                    noupdate: 'Can not update this grower. Might be it does not exist.',
-                    cannotInactivate: 'Can not inactivate this grower. Might be it does not exist.',
-                    cannotActivate: 'Can not activate this grower. Might be it does not exist.',
-                    cannotdelete: 'Can not delete this grower. Might be it does not exist.',
-                    growerdetails: 'Grower Details'
+                    growerrequired: 'Please enter Supplier',
+                    growersavedsuccess: 'Supplier details saved successfully.',
+                    groweralreadyexist: 'Supplier already exist.',
+                    inactivated: 'Supplier inactivated successfully.',
+                    activated: 'Supplier activated successfully.',
+                    deletedSuccess: 'Supplier deleted successfully.',
+                    noupdate: 'Can not update this Supplier. Might be it does not exist.',
+                    cannotInactivate: 'Can not inactivate this Supplier. Might be it does not exist.',
+                    cannotActivate: 'Can not activate this Supplier. Might be it does not exist.',
+                    cannotdelete: 'Can not delete this Supplier. Might be it does not exist.',
+                    growerdetails: 'Supplier Details'
                 },
                 addnewcountry: {
                     pageheading: 'Add New Country',

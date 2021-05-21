@@ -38,7 +38,7 @@ import { Router } from '@angular/router';
 })
 export class GrowerComponent implements OnInit {
   clear: any;
-  pageheading = 'Add New Grower';
+  pageheading = 'Add New Supplier';
   growerForm: FormGroup;
   growerResources: any;
   globalResource: any;
@@ -91,7 +91,7 @@ export class GrowerComponent implements OnInit {
   ngOnInit() {
     this.backUrl = this.appCommonService.lotPageBackLink;
     this.chkIsActive = true;
-    this.appComponentData.setTitle('Grower');
+    this.appComponentData.setTitle('Supplier');
     this.clear = 'Clear';
     this.growerResources = MastersResource.getResources().en.grower;
     this.globalResource = GlobalResources.getResources().en;
@@ -138,7 +138,7 @@ export class GrowerComponent implements OnInit {
       // To showing default state as Washington
       this.countryChange();
     }, 1000);
-    this.pageheading = 'Add New Grower';
+    this.pageheading = 'Add New Supplier';
     this.clear = 'Clear';
     this.saveButtonText = 'Save';
     this.growerForUpdate = 0;
@@ -381,7 +381,7 @@ export class GrowerComponent implements OnInit {
           description.patchValue(this.growerOnEdit[0].Description);
           chkIsActive.patchValue(this.growerOnEdit[0].IsActive);
           this.saveButtonText = 'Update';
-          this.pageheading = 'Edit Grower';
+          this.pageheading = 'Edit Supplier';
           this.clear = 'Cancel';
           this.scrolltopservice.setScrollTop();
         } else {
@@ -393,7 +393,7 @@ export class GrowerComponent implements OnInit {
   showConformationMessaegForDelete(RowSupId, grower, IsDeleted, ActiveInactiveFlag) {
     event.stopPropagation();
     let strMessage: any;
-    strMessage = 'Do you want to delete this Grower?';
+    strMessage = 'Do you want to delete this Supplier?';
     this.confirmationService.confirm({
       message: strMessage,
       header: 'Confirmation',
@@ -410,9 +410,9 @@ export class GrowerComponent implements OnInit {
     event.stopPropagation();
     let strMessage: any;
     if (this.allGrowerList[rowIndex].IsActive === true) {
-      strMessage = 'Do you want to activate this Grower?';
+      strMessage = 'Do you want to activate this Supplier?';
     } else {
-      strMessage = 'Do you want to inactivate this Grower?';
+      strMessage = 'Do you want to inactivate this Supplier?';
     }
     this.confirmationService.confirm({
       message: strMessage,

@@ -259,7 +259,7 @@ export class CustomTaskComponent implements OnInit {
             this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
 
             setTimeout( () => {
-              if (this._cookieService.UserRole === this.userRoles.Manager) {
+              if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
                 this.router.navigate(['home/managerdashboard']);
               } else {
                 this.router.navigate(['home/empdashboard']);
@@ -278,7 +278,7 @@ export class CustomTaskComponent implements OnInit {
               detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
 
             setTimeout( () => {
-              if (this._cookieService.UserRole === this.userRoles.Manager) {
+              if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
                 this.router.navigate(['home/managerdashboard']);
               } else {
                 this.router.navigate(['home/empdashboard']);
@@ -347,7 +347,7 @@ export class CustomTaskComponent implements OnInit {
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformR });
 
         setTimeout( () => {
-          if (this._cookieService.UserRole === this.userRoles.Manager) {
+          if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
             this.router.navigate(['home/managerdashboard']);
           } else {
             this.router.navigate(['home/empdashboard']);
@@ -366,7 +366,7 @@ export class CustomTaskComponent implements OnInit {
         this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.reviewsubmittedsuccess });
 
         setTimeout( () => {
-          if (this._cookieService.UserRole === this.userRoles.Manager) {
+          if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
             this.router.navigate(['home/managerdashboard']);
           } else {
             this.router.navigate(['home/empdashboard']);

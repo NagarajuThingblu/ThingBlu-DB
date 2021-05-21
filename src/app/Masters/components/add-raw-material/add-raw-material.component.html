@@ -6,7 +6,7 @@
           <div class="ui-g">
             <div class="ui-g-12 ui-md-6">
               <div class="paddingRL">
-                <label for="grower">Grower</label> <span class="star">*</span>:
+                <label for="grower">Supplier</label> <span class="star">*</span>:
                 <p-dropdown
                 [filter] ="true"
                 id="grower"
@@ -44,7 +44,7 @@
                         <span class="star">*</span>
                         <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="Add Bins"  id="btn_binshow" (click)="GoToBinsPage()"  name="btnviewbins"></p-button>
                       </th>
-                      <th>Task Type
+                      <th>Classification
                         <span class="star">*</span>
                       </th>
                       <th>Strain
@@ -87,7 +87,7 @@
                         autocomplete="off"
                         class="clsControl"       
                         formControlName="tasktype"
-                        placeholder=" Task Type Name"
+                        placeholder=" Classification Name"
                         readonly
                         >
                     </td>
@@ -204,9 +204,9 @@
       </ng-template>
       <ng-template pTemplate="header">
         <tr>
-          <th [pSortableColumn]="'RawSupplierName'">Grower Name <p-sortIcon [field]="'RawSupplierName'"></p-sortIcon>
+          <th [pSortableColumn]="'RawSupplierName'">Supplier Name <p-sortIcon [field]="'RawSupplierName'"></p-sortIcon>
           </th>
-          <th [pSortableColumn]="'TaskTypeName'">Task Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
+          <th [pSortableColumn]="'TaskTypeName'">Classification Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
           </th>
         
           <th [pSortableColumn]="'BinName'">Bin Name <p-sortIcon [field]="'BinName'"></p-sortIcon>

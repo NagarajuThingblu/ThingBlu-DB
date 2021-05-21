@@ -196,6 +196,8 @@ export class NewProductTypeComponent implements OnInit {
 
   getSkewTypeByStrainName(event?:any){
     this.skewtypes = null;
+    this.trimmingMethods = null;
+    this.lightDept = null;
     this.skewtypeList = [];
       for(let sec of this.globalData.strains ){
         if(event.value === sec.StrainId){

@@ -684,10 +684,10 @@
                 </div>
                 <!-- End Hourly labour Rate -->
                 <!--Manager List-->
-                <div class="ui-g-12 ui-md-6" *ngIf="(this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole) || showMang === true">
+                <div class="ui-g-12 ui-md-6">
                   <div class="paddingRL">
                     <div class="le-su-12">
-                      <label for="managerlist" class="towlable fwLabelBold">ManagerList<span class="star"> *</span></label>
+                      <label for="managerlist" class="towlable fwLabelBold">ManagerList</label>
                       <p-dropdown [filter]="true" id="managerlist" [options]="Managerlist" placeholder="-- Select --"
                       [autoWidth]="false" [tabindex]="10" class="clsControl" name="managerlist" formControlName="Managerlist">
                     </p-dropdown>

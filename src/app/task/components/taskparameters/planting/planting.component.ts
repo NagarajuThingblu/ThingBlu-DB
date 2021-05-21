@@ -92,6 +92,7 @@ export class PlantingComponent implements OnInit{
   public employeeArray:any=[];
   public strainName: '';
   public defaultValueCompletePc: Number = 0;
+  public extraPC: Number = 0;
   public defaultValueTerminatedPc: Number = 0;
   public plantCount: any;
   public taskCompletionModel: any;
@@ -200,6 +201,7 @@ export class PlantingComponent implements OnInit{
         'completedPC': new FormControl(''),
         'terminatedtedPC': new FormControl(''),
         'terminationReason':new FormControl(null),
+        // 'extraPC':new FormControl(''),
         'comment':new FormControl(null),
       });
 
@@ -322,7 +324,7 @@ submitReview(formModel) {
           this.msgs = [];
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
           setTimeout( () => {
-            if (this._cookieService.UserRole === this.userRoles.Manager) {
+            if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
               this.router.navigate(['home/managerdashboard']);
             }
             else {
@@ -357,7 +359,7 @@ submitReview(formModel) {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
            setTimeout( () => {
-                      if (this._cookieService.UserRole === this.userRoles.Manager) {
+                      if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
                         this.router.navigate(['home/managerdashboard']);
                       } else {
                         this.router.navigate(['home/empdashboard']);
@@ -379,6 +381,7 @@ completeTask(formModel){
         TaskId:Number(this.taskid),
         CompletedPlantCount: formModel.completedPC,
         TerminatedPlantCount: formModel.terminatedtedPC,
+        // ExtraPlantCount:formModel.extraPC,
         TerminationId:  formModel.terminationReason?formModel.terminationReason:0,
         Comment: formModel.comment,
         VirtualRoleId: 0,
@@ -411,7 +414,7 @@ completeTask(formModel){
           this.msgs = [];
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
           setTimeout( () => {
-            if (this._cookieService.UserRole === this.userRoles.Manager) {
+            if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin ) {
               this.router.navigate(['home/managerdashboard']);
             } else {
               this.router.navigate(['home/empdashboard']);
@@ -444,7 +447,7 @@ completeTask(formModel){
                   this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
                     detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
                     setTimeout( () => {
-                      if (this._cookieService.UserRole === this.userRoles.Manager) {
+                      if (this._cookieService.UserRole === this.userRoles.Manager||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
                         this.router.navigate(['home/managerdashboard']);
                       } else {
                         this.router.navigate(['home/empdashboard']);
