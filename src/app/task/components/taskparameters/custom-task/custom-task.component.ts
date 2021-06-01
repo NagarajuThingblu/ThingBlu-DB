@@ -38,7 +38,7 @@ export class CustomTaskComponent implements OnInit {
   {
     console.log(this.TaskModel);
     this.TaskTypeKey=this.TaskModel.TaskTypeKey;
-    this.TaskTypeKey=="INDEPENDENT"?this.ParentFormGroup.addControl('INDEPENDENT',this.CUSTOMTASK):this.ParentFormGroup.addControl('CUSTOMTASK', this.CUSTOMTASK);
+    // this.TaskTypeKey==="INDEPENDENT"?this.ParentFormGroup.addControl('INDEPENDENT',this.CUSTOMTASK):this.ParentFormGroup.addControl('CUSTOMTASK', this.CUSTOMTASK);
 
   }
   public _cookieService: UserModel;

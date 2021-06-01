@@ -14,6 +14,8 @@ import { LoaderService } from '../../../shared/services/loader.service';
 import { Title } from '@angular/platform-browser';
 import { AppCommonService } from '../../../shared/services/app-common.service';
 import { RefreshService } from '../../../dashboard/services/refresh.service';
+import { PlantingComponent } from '../taskparameters/planting/planting.component';
+import { FormGroup, NgModel, FormBuilder, FormControl, Validators } from '@angular/forms';
 
 @Component({
   moduleId: module.id,
@@ -22,7 +24,7 @@ import { RefreshService } from '../../../dashboard/services/refresh.service';
   styleUrls: ['taskactions.component.css']
 })
 export class TaskactionsComponent implements OnInit {
-
+  EndDateEditForm: FormGroup;
   public taskid;
   public taskType;
   public taskActionDetails1: any;
@@ -30,7 +32,10 @@ export class TaskactionsComponent implements OnInit {
   public binDetails: any;
   public inputbinDetails: any;
   public taskCategory: any;
-
+  public popup:boolean = false;
+  public BinData: any[];
+  public editEndDateAndTime: boolean = false;
+  public enddate;
   taskActionDetails = {
     'LotId': '',
     'TaskPriority': '',
@@ -50,6 +55,7 @@ export class TaskactionsComponent implements OnInit {
     'IsManagerNotify': true,
     'IsEmpNotify': true,
     'Comments': '',
+    'EmpId':'',
     'EmpName': '',
     'TaskTypeName': '',
     'GrowerLotNo': '',
@@ -104,6 +110,7 @@ export class TaskactionsComponent implements OnInit {
   taskTypeId: any;
   public AssignRole: any;
   constructor(
+    private fb: FormBuilder,
     private route: ActivatedRoute,
     private http: DataService,
     private taskCommonService: TaskCommonService,
@@ -137,6 +144,7 @@ export class TaskactionsComponent implements OnInit {
       data => {
         // this.taskActionDetails = data;
         this.taskActionDetails =  data.Table ? data.Table[0] : [];
+   
         this.taskTypeId = this.taskActionDetails.TaskTypeId;
 
         // Check if task is already deleted and redirect to dashboard
@@ -262,12 +270,84 @@ export class TaskactionsComponent implements OnInit {
     this.taskCategory = this._cookieService.TaskCategory,
 
     this.getTaskDetaisByTask();
-
+    this.BinData =[
+      {TaskName:'Planting', TaskId:123},
+      {TaskName:'Harvesting', TaskId:456}
+    ]
+    
+      this.EndDateEditForm = this.fb.group({
+        'editenddate': new FormControl('',  Validators.compose([Validators.required])),
+      });
+    
+  
   }
-
+  pausetask(TaskModel){
+      this.apiUrl = 'api/Task/TaskUpdateStatus';
+  var flag = "Pause"
+      const taskStatusParameter = {
+        apiUrl: 'api/Task/TaskUpdateStatus',
+        taskId: TaskModel.TaskId,
+        taskStatus: flag === 'Pause' ? this.TaskStatus.Paused : this.TaskStatus.InProcess
+      };
+  
+      // http call start
+      this.loaderService.display(true);
+      this.taskCommonService.resumeOrPauseTask(taskStatusParameter)
+      .subscribe(data => {
+          // http call end
+          this.loaderService.display(false);
+          if (data === 'NoUpdate') {
+            this.msgs = [];
+  
+            if (flag === 'Pause') {
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskalreadypaused });
+              this.taskActionDetails.TaskStatus = this.TaskStatus.Paused;
+              this.popup = false;
+             
+            } else {
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskalreadyresumed });
+              this.taskActionDetails.TaskStatus = this.TaskStatus.InProcess;
+            }
+  
+            setTimeout( () => {
+              this.router.navigate(['home/taskaction', this.taskType, this.taskid]);
+            }, 2000);
+  
+          } else if (data === 'Deleted') {
+            if (flag === 'Pause') {
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg , detail: this.taskActionResource.taskActionCannotPerformP });
+            } else {
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskActionCannotPerformR });
+            }
+  
+            setTimeout( () => {
+              if (this._cookieService.UserRole === this.userRoles.Manager) {
+                this.router.navigate(['home/managerdashboard']);
+              } else {
+                this.router.navigate(['home/empdashboard']);
+              }
+            }, 2000);
+          } else if (flag === 'Pause') {
+            this.taskActionDetails.TaskStatus = this.TaskStatus.Paused;
+            this.msgs = [];
+            this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskpaused });
+            this.popup = false;
+          } else {
+            this.taskActionDetails.TaskStatus = this.TaskStatus.InProcess;
+            this.msgs = [];
+            this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskresumed });
+          }
+  
+        this.getTaskDetaisByTask();
+        // Commented by DEVDAN :: 26-Sep2018 :: Optimizing API Calls
+        // this.refreshService.PushChange().subscribe(
+        //   msg => {
+        //   });
+      });
+    
+  }
   startTask() {
     this.apiUrl = 'api/Task/TaskUpdateStatus';
-
     const taskStatusParameters = {
       apiUrl: 'api/Task/TaskUpdateStatus',
       taskId: this.taskid,
@@ -285,6 +365,21 @@ export class TaskactionsComponent implements OnInit {
           .subscribe(data => {
                 // http call end
                 this.loaderService.display(false);
+                if(data.Table[0].ResultKey === "success" && this.taskCategory === "GROWING"){
+                  this.taskActionDetails.TaskStatus = this.TaskStatus.InProcess;
+              this.getTaskDetaisByTask();
+              this.msgs = [];
+              this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskstarted });
+                }
+                else if(data.Table[0].ResultKey !=""&& this.taskCategory === "GROWING"){
+                  this.msgs = [];
+                  this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: data.Table[0].ResultKey+" Please Finish those tasks to start this task." });
+                  this.popup = false;
+                }
+               else if(data.Table[0].ResultKey ===""&& this.taskCategory === "GROWING"){
+                  this.popup = true;
+                  this.BinData =data.Table1 
+                }
             if (data === 'NoUpdate') {
               this.msgs = [];
               this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskalreadystarted });
@@ -307,7 +402,7 @@ export class TaskactionsComponent implements OnInit {
                   this.router.navigate(['home/empdashboard']);
                 }
               }, 2000);
-            } else {
+            } else if (data === 'Success'){
               this.taskActionDetails.TaskStatus = this.TaskStatus.InProcess;
               this.getTaskDetaisByTask();
               this.msgs = [];
@@ -346,6 +441,7 @@ export class TaskactionsComponent implements OnInit {
           if (flag === 'Pause') {
             this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskalreadypaused });
             this.taskActionDetails.TaskStatus = this.TaskStatus.Paused;
+           
           } else {
             this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskalreadyresumed });
             this.taskActionDetails.TaskStatus = this.TaskStatus.InProcess;
@@ -373,7 +469,12 @@ export class TaskactionsComponent implements OnInit {
           this.taskActionDetails.TaskStatus = this.TaskStatus.Paused;
           this.msgs = [];
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskpaused });
-        } else {
+        } else if(data.Table[0].ResultKey ===""){
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: "Finish the tasks in INPROCESS stage to resume this task." });
+        
+
+        }else {
           this.taskActionDetails.TaskStatus = this.TaskStatus.InProcess;
           this.msgs = [];
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskresumed });
@@ -385,6 +486,48 @@ export class TaskactionsComponent implements OnInit {
       //   msg => {
       //   });
     });
+  }
+  editEndDtae(){
+    this.editEndDateAndTime = true;
+  }
+  updateEndDate(formModel){
+    let endDateEditApi;
+    if ( this.EndDateEditForm.valid === true) {
+      endDateEditApi = {
+        "TaskData": {
+          "TaskId": this.taskid,
+          "ClientId":this._cookieService.ClientId,
+          "VirtualRoleId": this._cookieService.VirtualRoleId,
+          "EmpId": this.taskActionDetails.EmpId,
+          "ActEndDate":formModel.editenddate,
+        }
+      }
+    }
+    this.taskCommonService.editEndDate(endDateEditApi)
+    .subscribe(data => {
+      if (data === 'Record Updated Successfully') {
+        this.msgs = [];
+        this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+        detail:"Record Updated Successfully"});
+        this.router.navigate(['home/managerdashboard']);
+      }
+      if(data === 'Task End Date Less Than Start Date'){
+        this.msgs = [];
+        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+        detail:"Task End Date Less Than Start Date"});
+      }
+      if(data === 'Failure'){
+        this.msgs = [];
+        this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg,
+        detail:"Failed To update" });
+      }
+      else{
+        this.msgs = [];
+        this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+        detail:"Record Updated Successfully"});
+        this.router.navigate(['home/managerdashboard']);
+      }
+    })
   }
   editTask() {
 

@@ -238,6 +238,15 @@
                   (click)="page.showmodal=true;" 
                   *ngIf="taskActionDetails?.TaskStatus!=TaskStatus.Assigned&&taskActionDetails?.TaskStatus!=TaskStatus.Completed&&taskActionDetails?.TaskStatus!=TaskStatus.ReviewPending&&taskActionDetails?.TaskStatus!=''">
                 </button>
+
+                <button 
+                pButton 
+                type="button" 
+                label="Edit" 
+                class="ui-button-primary btnMargin" 
+                (click)="editEndDtae();"
+                *ngIf="taskActionDetails?.TaskStatus!=TaskStatus.Assigned&&taskActionDetails?.TaskStatus===TaskStatus.Completed&&taskActionDetails?.TaskStatus!=TaskStatus.ReviewPending&&taskActionDetails?.TaskStatus!=''">
+              </button>
     
                 <span *ngIf="_cookieService.UserRole == userRoles.Manager" >
                   <!-- <button 
@@ -347,6 +356,53 @@
             </ng-template>
         </p-table>
         </div>
+
+        <p-dialog header="Caution" [(visible)]="popup" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
+          <div class="ui-g-12 ui-md-12">
+            <b><h6 style="color: red;">Alert :You need to pause any one of the below tasks to continue with this task!</h6></b>
+            <div class="ui-g-12"  style="padding-top: 10px;" >
+              <p-table [value]="BinData">
+                <ng-template pTemplate="header">
+                  <tr>
+                     <th>Task Name</th>
+                     <!-- <th>Strain</th> -->
+                     <th>Task Status</th>
+                     <th>Action Taken By</th>
+                     <th>Action</th>
+                   </tr>
+               </ng-template>
+               <ng-template pTemplate="body" let-TaskModel>
+                <tr>
+                <td>{{TaskModel.TaskTypeName}}</td>
+                <!-- <td>{{TaskModel.StrainName}}</td> -->
+                <td>{{TaskModel.TaskStatus}}</td>
+                <td>{{TaskModel.ActionTaker}}</td>
+                <td>  <p-button  type="button" 
+                  (click)="pausetask(TaskModel)"
+                  label="Pause" 
+                 >
+                </p-button></td>
+                </tr>
+              </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </p-dialog>
+
+        <p-dialog header="Edit End Date & Time" [(visible)]="editEndDateAndTime" modal="modal"  [responsive]="true" [width]="650" [minHeight]="700" [minWidth]="200" >
+          <div class="ui-g-12 ui-md-12">
+            <b><h6 style="color: red;">You can edit your task end date and time here!</h6></b>
+            <form [formGroup]="EndDateEditForm" (ngSubmit)="updateEndDate(EndDateEditForm.value)">
+              <div class="ui-g-12"  style="padding-top: 10px;" >
+               <div class="ui-g-12 ui-md-6" >  <strong> End Date & Time: </strong></div>
+                <p-calendar   formControlName="editenddate"  [showTime]="true" [showIcon]="true"></p-calendar>
+             </div>
+             <button type="submit" pButton icon="fa-check"  label="submit"  ></button>
+            </form>
+            
+          </div>
+         
+        </p-dialog>
 
       </p-panel>
     </div>

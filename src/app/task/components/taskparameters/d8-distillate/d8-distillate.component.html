@@ -1,0 +1,146 @@
+<div class="ui-g " [formGroup]="D8DISTILLATE" *ngIf="PageFlag.page =='AssignTask'">
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="bins">Bins<span class="star">*</span></label>:
+      <div class="clear"></div>
+      <p-multiSelect #checkedItems
+      [filter] ="true"
+      [options]="bins"
+      placeholder="-- Select --"
+      (onChange)="OnSelectingEmployees($event, checkedItems)"
+      formControlName="bins"
+      class="clsControl"
+      id="bins"
+      name="bins">
+      </p-multiSelect>
+    </div>
+  </div>
+
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="employeeList">Assigned To<span class="star">*</span></label>:
+      <p-multiSelect #checkedItems
+      [filter] ="true"
+      [options]="employees"
+      placeholder="-- Select --"
+      (onChange)="OnSelectingEmployees($event, checkedItems)"
+      formControlName="employeeList"
+      class="clsControl"
+      id="employeeList"
+      name="employeeList">
+      </p-multiSelect>
+    </div>
+  </div>
+
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="leademp">
+        Lead Emp<span class="star">*</span>:
+      </label>
+      <p-dropdown #checkedItems
+      placeholder="-- Select --"
+      [filter] ="true"
+      [options]="leademplist"
+      formControlName="leademp"
+      class="clsControl"
+      id="leademp"
+      name="leademp"
+      >
+      </p-dropdown>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label for="EmployeeListBox">Employee List</label>
+    <div  class="EmployeeListBox">
+      <ul class="emp-list" style='padding: 0px;'>
+        <li  *ngFor="let i of employeeArray; let id=index" class="EmployeeListItem" >
+          <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
+        </li>
+      </ul>
+    </div>  
+  </div>
+</div>
+
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label for="estimatedstartdate">
+      Est. Start Date<span class="star">*</span>:
+    </label>
+    <small class="smallTextRed"
+        *ngIf="showPastDateLabel"
+        >Task will be get created for past date
+      </small>
+      <p-calendar  
+         [(ngModel)]="TaskModel.D8DISTILLATE.startdate"                      
+         [showIcon]="true"
+         [defaultDate]="defaultDate"      
+         (onSelect)="estStartDate_Select()"
+         (onInput)="estStartDate_Select()"  
+         formControlName="estimatedstartdate"          
+         class="clsControl"
+         id="estimatedstartdate"
+         name="estimatedstartdate"
+         >
+       </p-calendar>
+       <!-- <div
+         class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+         *ngIf="!SIFTING.controls['estimatedstartdate'].valid&&SIFTING.controls['estimatedstartdate'].dirty">
+          
+           <span *ngIf="SIFTING.controls['estimatedstartdate'].errors['required']">
+             {{ globalResource.startdaterequired }}
+           </span>                                                                                                                                                                            
+       </div>
+       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip 
+         *ngIf="SIFTING.hasError('invalidDate')" >
+           {{ globalResource.datecomparevalidation }}
+       </div>  -->
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label for="employee">Priority</label>:
+    <p-dropdown
+      [options]="priorities"
+      [autoWidth]="true"
+      formControlName="priority"
+      id="priority"
+      class="clsControl"
+      name="priority">
+    </p-dropdown> 
+  </div>
+</div>
+<div class="ui-g-12 ui-md-6">
+  <div class="paddingRL">
+    <label for="comment">Comment</label>:
+    <textarea                        
+          pInputTextarea                        
+          formControlName="comment"
+          id="comment"
+          name="comment"
+          maxlength="500"
+          class="clsControl"
+          binary="true"
+        ></textarea>
+  </div>
+</div>
+
+<div class="ui-g-12 ui-md-6 " >
+  <div class="paddingRL">                              
+        <p-checkbox          
+          label="Notify Manager"
+         
+          formControlName="notifymanager"
+          binary="true"
+        ></p-checkbox>
+
+        <p-checkbox 
+          value="true"
+          label="Notify Employee"
+         
+          formControlName="notifyemployee"
+          binary="true"
+        ></p-checkbox>                                                              
+    </div>
+</div>
+</div>

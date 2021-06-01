@@ -50,6 +50,7 @@ export const environment = {
   tenantURL:'thingbluB2Csample.b2clogin.com',
   // reportURL: 'https://thingbludemoapplication.navizanalytics.com/ThingbluDev'
   reportURL: 'https://thingbludemoapplication.navizanalytics.com/Grow',
+ 
   //End of dev testing
 
   // ** Start Hannah UAT config

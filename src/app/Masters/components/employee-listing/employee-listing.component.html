@@ -13,7 +13,7 @@
           sortOrder="-1"
           [rowsPerPageOptions]="PaginationValues"
           (onPage)="onPageChange($event)"
-          [globalFilterFields]="['FirstName','LastName','Gender','DOB','Role','FLCName','CityName','CellPhone']"
+          [globalFilterFields]="['FirstName','LastName','Username','Gender','DOB','Role','FLCName','CityName','CellPhone']"
           >                    
           <ng-template pTemplate="caption">
               <div style="text-align: right">
@@ -25,7 +25,8 @@
               <tr>
                   <!-- <th [pSortableColumn]="'ClientName'">{{ newEmployeeResources.clientname}} <p-sortIcon [field]="'ClientName'"></p-sortIcon></th> -->
                   <th [pSortableColumn]="'FirstName'">{{ newEmployeeResources.firstnameshort}} <p-sortIcon [field]="'FirstName'"></p-sortIcon></th>                  
-                  <th [pSortableColumn]="'LastName'">{{ newEmployeeResources.lastnameshort}} <p-sortIcon [field]="'LastName'"></p-sortIcon></th>              
+                  <th [pSortableColumn]="'LastName'">{{ newEmployeeResources.lastnameshort}} <p-sortIcon [field]="'LastName'"></p-sortIcon></th>    
+                  <th [pSortableColumn]="'Username'">UserName<p-sortIcon [field]="'Username'"></p-sortIcon></th>          
                   <th [pSortableColumn]="'Gender'">{{ newEmployeeResources.gender}} <p-sortIcon [field]="'Gender'"></p-sortIcon></th>  
                   <th [pSortableColumn]="'DOB'">{{ newEmployeeResources.dob}} <p-sortIcon [field]="'DOB'"></p-sortIcon></th>
                   <th [pSortableColumn]="'Role'">{{ newEmployeeResources.userrole}} <p-sortIcon [field]="'Role'"></p-sortIcon></th>
@@ -45,6 +46,9 @@
                   </th>
                   <th>
                     <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'LastName', 'contains')" class="clsControl">
+                  </th>
+                  <th>
+                    <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'Username', 'contains')" class="clsControl">
                   </th>
                   <th>
                       <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'Gender', 'contains')" class="clsControl">
@@ -74,6 +78,7 @@
                   <!-- <td>{{newemployee?.ClientName}}</td> -->
                   <td>{{newemployee?.FirstName}}</td>
                   <td>{{newemployee?.LastName }}</td>
+                  <td>{{newemployee?.Username }}</td>
                   <td>{{newemployee?.GenderName }}</td>                  
                   <td>{{newemployee?.DOB | date: 'MM/dd/yyyy' }}</td>
                   <td>{{newemployee?.Role}}</td>

@@ -61,6 +61,15 @@ export class TaskCommonService {
    .map(data =>  data );
   }
 
+  editEndDate(endDateEditApi: any){
+    const url = 'api/Grower/UpdateTaskEndDate';
+    console.log('end date edit');
+    console.log(endDateEditApi);
+    return this.http.post(url, endDateEditApi, this.headers)
+    // .do(data =>console.log('All : ' + JSON.stringify(data)))
+   .map(data =>  data );
+
+  }
   assignbuckingTask(buckingDataForApi: any) {
     const url = 'api/Grower/BuckingTaskAssign';
     console.log('assign form ');

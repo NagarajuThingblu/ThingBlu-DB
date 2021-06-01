@@ -42,6 +42,8 @@ import { PlantingComponent } from './components/taskparameters/planting/planting
 import { PrebuckingComponent } from './components/taskparameters/prebucking/prebucking.component';
 import { BuckingComponent } from './components/taskparameters/bucking/bucking.component';
 import { GrowertrimmingComponent } from './components/taskparameters/growertrimming/growertrimming.component';
+import { D8DistillateComponent } from './components/taskparameters/d8-distillate/d8-distillate.component';
+
 
 
 @NgModule({
@@ -76,6 +78,8 @@ import { GrowertrimmingComponent } from './components/taskparameters/growertrimm
     PrebuckingComponent,
     BuckingComponent,
     GrowertrimmingComponent,
+    D8DistillateComponent,
+  
     
   ],
   imports: [

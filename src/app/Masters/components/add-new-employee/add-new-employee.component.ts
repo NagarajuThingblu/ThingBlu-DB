@@ -67,6 +67,7 @@ export class AddNewEmployeeComponent implements OnInit {
   public showFlc: boolean =false;
   public globalResource: any;
   public showTerminationDate: boolean = false;
+  public star:boolean = false;
   collapsed: any;
   constructor(
     private fb: FormBuilder,
@@ -204,13 +205,7 @@ export class AddNewEmployeeComponent implements OnInit {
             } else if (data === 'Failure') {
               this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
             } else if (String(data[0].ResultKey).toUpperCase() === 'DUPLICATE') {
-              if (data[0].FirstName !== 0) {
-                this.newEmployeeForm.controls['firstname'].setErrors({ 'duplicatefirstname': true });
-                this.loaderService.display(false);
-              } if (data[0].LastName !== 0) {
-                this.newEmployeeForm.controls['lastname'].setErrors({ 'duplicatelastname': true });
-                this.loaderService.display(false);
-              } if (data[0].Email !== 0) {
+           if (data[0].Email !== 0) {
                 this.newEmployeeForm.controls['primaryemail'].setErrors({ 'duplicateemail': true });
                 this.loaderService.display(false);
               } if (data[0].Username !== 0) {
@@ -548,6 +543,9 @@ export class AddNewEmployeeComponent implements OnInit {
     this.newEmployeeResources.pageheading = 'Add New Employee';
     this.resetForm();
     this.showTextbox = true;
+    this.states = null;
+    this.cities = null;
+    this.star = false;
   }
   resetForm() {
     this.newEmployeeForm.reset({ chkIsActive: true });
