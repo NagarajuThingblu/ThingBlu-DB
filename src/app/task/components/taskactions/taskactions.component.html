@@ -239,14 +239,14 @@
                   *ngIf="taskActionDetails?.TaskStatus!=TaskStatus.Assigned&&taskActionDetails?.TaskStatus!=TaskStatus.Completed&&taskActionDetails?.TaskStatus!=TaskStatus.ReviewPending&&taskActionDetails?.TaskStatus!=''">
                 </button>
 
-                <button 
+                <!-- <button 
                 pButton 
                 type="button" 
                 label="Edit" 
                 class="ui-button-primary btnMargin" 
                 (click)="editEndDtae();"
                 *ngIf="taskActionDetails?.TaskStatus!=TaskStatus.Assigned&&taskActionDetails?.TaskStatus===TaskStatus.Completed&&taskActionDetails?.TaskStatus!=TaskStatus.ReviewPending&&taskActionDetails?.TaskStatus!=''">
-              </button>
+              </button> -->
     
                 <span *ngIf="_cookieService.UserRole == userRoles.Manager" >
                   <!-- <button 
@@ -389,13 +389,13 @@
           </div>
         </p-dialog>
 
-        <p-dialog header="Edit End Date & Time" [(visible)]="editEndDateAndTime" modal="modal"  [responsive]="true" [width]="650" [minHeight]="700" [minWidth]="200" >
+        <p-dialog header="Edit End Date & Time" [(visible)]="editEndDateAndTime" modal="modal"  [responsive]="true" [width]="550" [minHeight]="minHeight" [minWidth]="200" >
           <div class="ui-g-12 ui-md-12">
             <b><h6 style="color: red;">You can edit your task end date and time here!</h6></b>
             <form [formGroup]="EndDateEditForm" (ngSubmit)="updateEndDate(EndDateEditForm.value)">
               <div class="ui-g-12"  style="padding-top: 10px;" >
-               <div class="ui-g-12 ui-md-6" >  <strong> End Date & Time: </strong></div>
-                <p-calendar   formControlName="editenddate"  [showTime]="true" [showIcon]="true"></p-calendar>
+               <div class="ui-g-12 ui-md-6" >  <strong> Actual End Date: </strong></div>
+                <p-calendar  (onClose)="resetHeight()" (click)="incHeight()" formControlName="editenddate"  [showTime]="true" [showIcon]="true"></p-calendar>
              </div>
              <button type="submit" pButton icon="fa-check"  label="submit"  ></button>
             </form>
