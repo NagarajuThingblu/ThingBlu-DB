@@ -366,21 +366,21 @@ export class TaskactionsComponent implements OnInit {
           .subscribe(data => {
                 // http call end
                 this.loaderService.display(false);
-              //   if(data.Table[0].ResultKey === "success" && this.taskCategory === "GROWING"){
-              //     this.taskActionDetails.TaskStatus = this.TaskStatus.InProcess;
-              // this.getTaskDetaisByTask();
-              // this.msgs = [];
-              // this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskstarted });
-              //   }
-                // else if(data.Table[0].ResultKey !=""&& this.taskCategory === "GROWING"){
-                //   this.msgs = [];
-                //   this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: data.Table[0].ResultKey+" Please Finish those tasks to start this task." });
-                //   this.popup = false;
-                // }
-              //  else if(data.Table[0].ResultKey ===""&& this.taskCategory === "GROWING"){
-              //     this.popup = true;
-              //     this.BinData =data.Table1 
-              //   }
+                if(data.Table[0].ResultKey === "success" && this.taskCategory === "GROWING"){
+                  this.taskActionDetails.TaskStatus = this.TaskStatus.InProcess;
+              this.getTaskDetaisByTask();
+              this.msgs = [];
+              this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskstarted });
+                }
+                else if(data.Table[0].ResultKey !=""&& this.taskCategory === "GROWING"){
+                  this.msgs = [];
+                  this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: data.Table[0].ResultKey+" Please Finish those tasks to start this task." });
+                  this.popup = false;
+                }
+               else if(data.Table[0].ResultKey ===""&& this.taskCategory === "GROWING"){
+                  this.popup = true;
+                  this.BinData =data.Table1 
+                }
             if (data === 'NoUpdate') {
               this.msgs = [];
               this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskalreadystarted });
@@ -471,12 +471,12 @@ export class TaskactionsComponent implements OnInit {
           this.msgs = [];
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskpaused });
         } 
-        // else if(data.Table[0].ResultKey ===""){
-        //   this.msgs = [];
-        //   this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: "Finish the tasks in INPROCESS stage to resume this task." });
+        else if(data.Table[0].ResultKey ===""){
+          this.msgs = [];
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: "Finish the tasks in INPROCESS stage to resume this task." });
         
 
-        // }
+        }
         else {
           this.taskActionDetails.TaskStatus = this.TaskStatus.InProcess;
           this.msgs = [];
@@ -621,7 +621,7 @@ export class TaskactionsComponent implements OnInit {
   }
 
   incHeight(){
-    this.minHeight = 650;
+    this.minHeight = 700;
   }
   resetHeight(){
     this.minHeight = 100;

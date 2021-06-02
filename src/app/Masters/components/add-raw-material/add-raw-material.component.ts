@@ -68,6 +68,8 @@ export class AddRawMaterialComponent implements OnInit {
   public GrowBinMapId = 0;
   public Editor = 0;
   public allLabelslist:any;
+  public totalCost: any;
+  public costPerPound: any;
   private globalData = {
     binsData: [],
   };
@@ -124,7 +126,9 @@ export class AddRawMaterialComponent implements OnInit {
       skewType: new FormControl(null),
       lightDept: new FormControl(false),
       TrimmingMethod: new FormControl(null),
-      weight: new FormControl(null,Validators.compose([Validators.required]))
+      weight: new FormControl(null,Validators.compose([Validators.required])),
+      costperpound:new FormControl(null,Validators.compose([Validators.required])),
+      totalcost:new FormControl(null),
     });
     
   }
@@ -254,6 +258,7 @@ GoToBinsPage(){
    newAddRawMaterialsForApi.OutputBinData.push({
     BinId:element.value.binNo,
     DryWt:Number(element.value.weight),
+    CostPerPound:element.value.costperpound,
     IsOpBinFilledCompletely:0
    });
    });
@@ -354,6 +359,8 @@ GoToBinsPage(){
       const lightDept =  itemlist[0].controls["lightDept"];
       const TrimminMethod =  itemlist[0].controls["TrimmingMethod"];
       const weight =   itemlist[0].controls["weight"];
+      const costperpound = itemlist[0].controls["costperpound"];
+      const totalcost = itemlist[0].controls["totalcost"];
 
        grower.patchValue(this.LabelOnEdit[0].GrowerId);
        receivedwt.patchValue(this.LabelOnEdit[0].TotalWeight);
@@ -365,7 +372,8 @@ GoToBinsPage(){
       lightDept.patchValue(this.LabelOnEdit[0].LightDeprevation);
       TrimminMethod.patchValue(this.LabelOnEdit[0].TrimmingMethod);
       weight.patchValue(this.LabelOnEdit[0].Weight);
-  
+      costperpound.patchValue(this.LabelOnEdit[0].CostPerPound);
+      totalcost.patchValue(this.LabelOnEdit[0].TotalCost)
         this.clear = 'Cancel';
        this.saveButtonText = 'Update';
        this.pageheading = 'Edit Add Raw Material';
@@ -450,6 +458,18 @@ GoToBinsPage(){
     });
      
   
+  }
+  calculateTotalCost(i,event?: any){
+    var items = this.ARMForm.get('items')['controls']
+    this.RawmaterialDetailsArr.controls.forEach((element, index) => {
+      if(i===index){
+        this.costPerPound = element.value.costperpound
+        this.totalCost = this.costPerPound * element.value.weight
+      this.ARMForm.get('items')['controls'][index].controls['totalcost'].setValue(this.totalCost)  
+      //  console.log(this.totalCost)
+      }
+    });
+    // const costPerPound = 
   }
 
 }

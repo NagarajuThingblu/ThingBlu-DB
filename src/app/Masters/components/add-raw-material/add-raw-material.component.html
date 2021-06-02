@@ -61,6 +61,11 @@
                       <th>Weight (lb)
                         <span class="star">*</span>
                       </th>
+                      <th>Cost per pound
+                        <span class="star">*</span>
+                      </th>
+                      <th>Total cost ($)
+                      </th>
                       <th style="width: 80px;">Action
                       </th>
                     </tr>
@@ -139,11 +144,37 @@
                       <input pInputText
                         name="weight"
                         id="weight"
-                        type="text"
+                        (keyup)="calculateTotalCost(i,$event)"
+                        type="number"
                         autocomplete="off"
                         class="clsControl"       
                         formControlName="weight"
                         placeholder="Enter Weight"
+                        >
+                    </td>
+                    <td>
+                      <input pInputText
+                        name="costperpound"
+                        id="costperpound"
+                        type="number"
+                        (keyup)="calculateTotalCost(i,$event)"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="costperpound"
+                        placeholder="Cost per pound"
+                      
+                        >
+                    </td>
+                    <td>
+                      <input pInputText
+                        name="totalcost"
+                        id="totalcost"
+                        type="text"
+                        autocomplete="off"
+                        class="clsControl"       
+                        formControlName="totalcost"
+                        placeholder=" Classification Name"
+                        readonly
                         >
                     </td>
                     <td>
@@ -194,7 +225,7 @@
       <p-table #dtRaMaterialList [value]="allRawMateriallist" sortMode="single" [responsive]="true" [paginator]="true"
       [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
       (onPage)="onPageChange($event)"
-      [globalFilterFields]="['RawSupplierName','TaskTypeName','BinName','StrainName','SkewType','TrimmingMethod','LightDeprevation','Weight']">
+      [globalFilterFields]="['RawSupplierName','TaskTypeName','BinName','StrainName','SkewType','TrimmingMethod','LightDeprevation','Weight','cost/pound']">
       <ng-template pTemplate="caption">
         <div style="text-align: right">
           <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
@@ -215,11 +246,13 @@
           </th>
           <th [pSortableColumn]="'SkewType'">SkewType <p-sortIcon [field]="'SkewType'"></p-sortIcon>
           </th>
-          <th [pSortableColumn]="'TrimmingMethod'">TrimmingMethod <p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon>
+          <th [pSortableColumn]="'TrimmingMethod'">TM<p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon>
           </th>
           <th [pSortableColumn]="'LightDeprevation'">Light Dept <p-sortIcon [field]="'LightDeprevation'"></p-sortIcon>
           </th>
-          <th [pSortableColumn]="'Weight'">Weight (lb)<p-sortIcon [field]="'Weight'"></p-sortIcon>
+          <th [pSortableColumn]="'Weight'">Weight(lb)<p-sortIcon [field]="'Weight'"></p-sortIcon>
+          </th>
+          <th [pSortableColumn]="'cost/pound'">Cost per pound(lb)<p-sortIcon [field]="'cost/pound'"></p-sortIcon>
           </th>
           <th style="width:100px;">Action </th>
         </tr>
@@ -257,6 +290,10 @@
             <input pInputText type="text" autocomplete="off"
               (input)="dtRaMaterialList.filter($event.target.value, 'Weight', 'contains')" class="clsControl">
           </th>
+          <th>
+            <input pInputText type="text" autocomplete="off"
+              (input)="dtRaMaterialList.filter($event.target.value, 'cost/pound', 'contains')" class="clsControl">
+          </th>
           <th rowspan="2"></th>
         </tr>
       </ng-template>
@@ -271,6 +308,7 @@
           <td>{{rawmaterial?.TrimmingMethod}}</td>
           <td>{{rawmaterial?.LightDeprevation}}</td>
           <td>{{rawmaterial?.Weight}}</td>
+          <td>{{rawmaterial?.CostPerPound}}</td>
           <td style="width:65px;">
             <span class="ui-column-title">edit</span>
             <a href="#" [routerLink]="">

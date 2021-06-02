@@ -239,14 +239,14 @@
                   *ngIf="taskActionDetails?.TaskStatus!=TaskStatus.Assigned&&taskActionDetails?.TaskStatus!=TaskStatus.Completed&&taskActionDetails?.TaskStatus!=TaskStatus.ReviewPending&&taskActionDetails?.TaskStatus!=''">
                 </button>
 
-                <!-- <button 
+                <button 
                 pButton 
                 type="button" 
                 label="Edit" 
                 class="ui-button-primary btnMargin" 
                 (click)="editEndDtae();"
                 *ngIf="taskActionDetails?.TaskStatus!=TaskStatus.Assigned&&taskActionDetails?.TaskStatus===TaskStatus.Completed&&taskActionDetails?.TaskStatus!=TaskStatus.ReviewPending&&taskActionDetails?.TaskStatus!=''">
-              </button> -->
+              </button>
     
                 <span *ngIf="_cookieService.UserRole == userRoles.Manager" >
                   <!-- <button 
@@ -397,7 +397,7 @@
                <div class="ui-g-12 ui-md-6" >  <strong> Actual End Date: </strong></div>
                 <p-calendar  (onClose)="resetHeight()" (click)="incHeight()" formControlName="editenddate"  [showTime]="true" [showIcon]="true"></p-calendar>
              </div>
-             <button type="submit" pButton icon="fa-check"  label="submit"  ></button>
+             <button type="submit" pButton icon="fa-check"  label="Submit"  ></button>
             </form>
             
           </div>
