@@ -50,7 +50,7 @@ clientKey:'HWG',
   tenantURL:'thingbluB2Csample.b2clogin.com',
   // reportURL: 'https://thingbludemoapplication.navizanalytics.com/ThingbluDev'
   // reportURL: 'https://thingbludemoapplication.navizanalytics.com/Grow',
-  reportURL: 'https://thingbludemoapplication.navizanalytics.com/GrowPROD/Workspace.html',
+  reportURL: 'https://thingbludemoapplication.navizanalytics.com/GrowPROD',
   //End of dev testing
 
   // ** Start Hannah UAT config
