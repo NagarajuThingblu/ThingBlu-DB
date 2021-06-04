@@ -51,6 +51,7 @@ export class AppCommonService implements OnChanges, OnInit {
 
   public strainFormDetail: FormGroup; // add by :: swapnil :: 02-april-2019
   public strainPageBackLink = false; // add by :: swapnil :: 02-april-2019
+  public ChemicalPurchasePageBackLink = false;
   public lotPageBackLink = false;
   public lotFormDetail: FormGroup;
   public TPProcessorBackLink = false;

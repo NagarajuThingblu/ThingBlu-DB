@@ -310,7 +310,18 @@ getStrainType() {
     return data;
    });
 }
+getChemicalTypes(){
+  const url = 'api/Grower/GetChemicalType';
 
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+  return this.http
+  .get(url, {params: params})
+ .map(data => {
+  // // console.log('Strains Service success');
+  return data;
+ });
+}
 
 getPackageTypeList() {
   const url = 'api/PackagingTypes/GetPackagingTypesList';
@@ -349,7 +360,15 @@ getCountryList() {
   return data;
  });
 }
-
+getUOM(){
+  const url = 'api/Grower/GetUnitofMeasures';
+  return this.http
+    .get(url)
+   .map(data => {
+    // console.log('Strains Service success');
+    return data;
+   });
+}
 getStatesList() {
   const url = 'api/State/GetStateList';
 

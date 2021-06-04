@@ -341,7 +341,7 @@ console.log(assignTaskFormValues)
           VirtualRoleId: this._cookieService.VirtualRoleId,
           TaskTypeId: assignTaskFormValues.taskname,
           LotId: lotid,
-          EmpId: assignTaskFormValues[this.selectedTaskTypeName].employee,
+          EmpId: Number(assignTaskFormValues[this.selectedTaskTypeName].employee),
           // EstHours: assignTaskFormValues.Trimming.esthrs,
           // EstStartDate: assignTaskFormValues.Trimming.estimatedstartdate.toLocaleDateString(),
           // EstEndDate:assignTaskFormValues.Trimming.estimatedenddate.toLocaleDateString() + ' ' + assignTaskFormValues.Trimming.endtime.toLocaleTimeString(),
@@ -1251,13 +1251,18 @@ console.log(assignTaskFormValues)
                   }
                 } else if (String(data[0]['Result']).toLocaleUpperCase() === 'FAILURE' || String(data[0]['Result']).toLocaleUpperCase() === 'ERROR') {
                   this.msgs.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
-                } else if (String(data[0]['Result']).toLocaleUpperCase() === 'TRIMCOMPLETED') {
+                } 
+                else if (String(data[0]['Result']).toLocaleUpperCase() === 'TRIMCOMPLETED') {
                   this.msgs = [];
                   this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.trimcompleted });
                 } else if (String(data[0]['Result']).toLocaleUpperCase() === 'LOTDELETED') {
                   this.msgs = [];
                   this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotdeleted });
-                } else if (String(data[0]['Result']).toLocaleUpperCase() === 'JOINTSHORTAGE') {
+                } 
+                else if (String(data[0]['Result'])=== 'Please Select An Employee') {
+                  this.msgs = [];
+                  this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail:"Please Select Employee" });
+                }else if (String(data[0]['Result']).toLocaleUpperCase() === 'JOINTSHORTAGE') {
                   this.msgs = [];
                   this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.jointshortage });
 
@@ -1378,6 +1383,10 @@ console.log(assignTaskFormValues)
               } else if (String(data[0]['Result']).toLocaleUpperCase() === 'LOTDELETED') {
                 this.msgs = [];
                 this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.lotdeleted });
+              }
+              else if (String(data[0]['Result'])=== 'Please Select An Employee') {
+                this.msgs = [];
+                this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail:"Please Select Employee" });
               } else if (String(data[0]['Result']).toLocaleUpperCase() === 'JOINTSHORTAGE') {
                 this.msgs = [];
                 this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.jointshortage });

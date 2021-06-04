@@ -512,14 +512,17 @@ export class TaskactionsComponent implements OnInit {
         this.msgs = [];
         this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
         detail:"Record Updated Successfully"});
-        this.router.navigate(['home/managerdashboard']);
+        setTimeout( () => {
+          this.router.navigate(['home/managerdashboard']);
+        }, 2000);
+        // this.router.navigate(['home/managerdashboard']);
       }
-      if(data === 'Task End Date Less Than Start Date'){
+     else if(data ==="Task End Date Less Than Start Date"){
         this.msgs = [];
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
         detail:"Task End Date Less Than Start Date"});
       }
-      if(data === 'Failure'){
+    else  if(data === 'Failure'){
         this.msgs = [];
         this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg,
         detail:"Failed To update" });

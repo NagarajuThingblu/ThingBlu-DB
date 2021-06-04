@@ -25,6 +25,7 @@ import { RetailerComponent } from './components/retailer/retailer.component';
 import { RetailerService } from './services/retailer.service';
 import { FLCService } from './services/flc.service';
 import { PTRService } from './services/ptr.service';
+import {ChemicalMasterService} from './services/chemicalmaster.service'
 import { AddNewClientComponent } from './components/add-new-client/add-new-client.component';
 import { NewClientService } from './services/new-client.service';
 import { CityService } from './services/city.service';
@@ -74,6 +75,8 @@ import { HelpComponent } from './components/help/help.component';
 import { FlcComponent } from './components/flc/flc.component';
 import { PlantTerminationReasonsComponent } from './components/plant-termination-reasons/plant-termination-reasons.component';
 import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-material.component';
+import { ChemicalPurchaseComponent } from './components/chemical-purchase/chemical-purchase.component';
+import { ChemicalMasterPageComponent } from './components/chemical-master-page/chemical-master-page.component';
 
 
 @NgModule({
@@ -118,7 +121,9 @@ import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-m
     HelpComponent,
     FlcComponent,
     PlantTerminationReasonsComponent,
-    AddRawMaterialComponent
+    AddRawMaterialComponent,
+    ChemicalPurchaseComponent,
+    ChemicalMasterPageComponent
    
   ],
   imports: [
@@ -136,6 +141,7 @@ import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-m
     RetailerService,
     FLCService,
     PTRService,
+    ChemicalMasterService,
     NewClientService,
     CityService,
     NewRoleActionService,

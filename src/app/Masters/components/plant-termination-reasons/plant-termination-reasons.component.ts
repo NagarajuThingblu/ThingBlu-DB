@@ -180,7 +180,7 @@ export class PlantTerminationReasonsComponent implements OnInit {
     event.stopPropagation();
     let strMessage: any;
   
-      strMessage = 'Do you want to delete this FLC?';
+      strMessage = 'Do you want to delete this Termination Reason?';
   
     
     this.confirmationService.confirm({
@@ -202,9 +202,9 @@ export class PlantTerminationReasonsComponent implements OnInit {
     event.stopPropagation();
     let strMessage: any;
     if (this.allptrList[rowIndex].IsActive === true) {
-        strMessage = 'Do you want to activate this FLC?';
+        strMessage = 'Do you want to activate this Termination Reason?';
     } else {
-        strMessage = 'Do you want to inactivate this FLC?';
+        strMessage = 'Do you want to inactivate this Termination Reason?';
     }
     this.confirmationService.confirm({
       message: strMessage,

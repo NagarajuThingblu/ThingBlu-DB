@@ -171,8 +171,9 @@ export class AddNewEmployeeComponent implements OnInit {
           VirtualRoleId: Number(this._cookieService.VirtualRoleId),
           IsActive: this.newEmployeeForm.value.chkIsActive ? 1 : 0,
           HireDate: new Date(this.newEmployeeForm.value.hiredate).toLocaleDateString().replace(/\u200E/g, ''),
-          TerminationDate: new Date(this.newEmployeeForm.value.terminationdate).toLocaleDateString().replace(/\u200E/g, '') ? new Date(this.newEmployeeForm.value.terminationdate).toLocaleDateString().replace(/\u200E/g, '') : null,
+          // TerminationDate: new Date(this.newEmployeeForm.value.terminationdate).toLocaleDateString().replace(/\u200E/g, '') ? new Date(this.newEmployeeForm.value.terminationdate).toLocaleDateString().replace(/\u200E/g, '') : null,
           // EditorType: 'Manager'
+          TerminationDate: new Date(this.newEmployeeForm.value.terminationdate).toLocaleDateString().replace(/\u200E/g, ''),
           EditorType: this._cookieService.UserRole,
           ManagerId:this.newEmployeeForm.value.Managerlist,
           FLCId:this.newEmployeeForm.value.flclist,
@@ -197,7 +198,9 @@ export class AddNewEmployeeComponent implements OnInit {
               this.resetForm();
               this.showTerminationDate = false;
               this.getAllEmployee();
-            } else if (String(data).toLocaleUpperCase() === 'NOTUPDATED') {
+            } else if(String(data[0].RESULTKEY) === 'Termination Date less Than HireDate'){
+              this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail:data[0].RESULTKEY });
+            }else if (String(data).toLocaleUpperCase() === 'NOTUPDATED') {
                 this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                 detail: this.newEmployeeResources.noupdate });
                 this.showTerminationDate = false;
