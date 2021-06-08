@@ -17,7 +17,7 @@ import { EncDecPwdComponent } from './shared/components/enc-dec-pwd/enc-dec-pwd.
 import { AuthGuard } from './guards/auth.guard';
 import { SearchtaskComponent } from './task/components/searchtask/searchtask.component';
 import { LoginComponent } from './login/login.component';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 // import { AssignTaskComponent } from './task/components/assign-task/assign-task.component';
 // import { TaskactionsComponent } from './task/components/taskactions/taskactions.component';
 // import { ManagerdashboardComponent } from './dashboard/components/managerdashboard/managerdashboard.component';
@@ -203,4 +203,4 @@ const appRoutes: Routes = [
   }
 ];
 
-export const routing = RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload' });
+export const routing = RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload',preloadingStrategy:PreloadAllModules });
