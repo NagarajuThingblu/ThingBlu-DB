@@ -906,7 +906,7 @@ console.log(assignTaskFormValues)
         Plants: {
           "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
           "SectionId": assignTaskFormValues.PLANTING.section,
-          "AssignedPlantsCount": assignTaskFormValues.PLANTING.assignedPC,
+          "AssignedPlantsCount": 0,// hem growers don't assign particular number of palnts to emp
           "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
           "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
           "Priority":assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority  ,
@@ -943,6 +943,9 @@ console.log(assignTaskFormValues)
         }
         else if (String(data[0]. RESULTKEY).toLocaleUpperCase() === 'FAILURE') {
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+        }
+        else if (String(data[0]. RESULTKEY)=== 'No Plants Are Avilable') {
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail:"No Plants Are Avilable"});
         }
         else if (String(data[0]. RESULTKEY) === 'Assigned Plant Count Greater than Total Plant Count') {
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.assignedcountmore });

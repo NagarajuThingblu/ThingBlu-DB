@@ -82,6 +82,8 @@ export class PlantingComponent implements OnInit{
   public  Fields: any[];
   public TerminatioReasons: any[];
   public fields: any[];
+  public workingEmp: any=[];
+  public workingemp:boolean =false
   public strains: any[];
   public employees: any[];
   public globalResource: any;
@@ -105,6 +107,7 @@ export class PlantingComponent implements OnInit{
     strains: [],
     Fields: [],
     TerminationReasons: [],
+    workingEmp:[],//array to hold already working emp list
   };
   isRActSecsDisabled: boolean;
   ngOnInit() {
@@ -166,7 +169,7 @@ export class PlantingComponent implements OnInit{
       // 'estimatedenddate': new FormControl('',  Validators.compose([Validators.required])),
       'employeeList': new FormControl('', Validators.required),
      'plantCount' : new FormControl('', Validators.required),
-     'assignedPC' : new FormControl('', Validators.required),
+     'assignedPC' : new FormControl(''),// hem growers don't assign particular number of palnts to emp
       'priority': new FormControl(''),
       'notifymanager': new FormControl(''),
       'notifyemployee': new FormControl(''),
@@ -183,6 +186,7 @@ export class PlantingComponent implements OnInit{
       CompletedPlantCnt : this.TaskModel.CompletedPlantCnt,
       TerminatedPlantCount : this.TaskModel.TerminatedPlantCnt,
       TerminationReason : this.TaskModel.TerminationReason,
+      TerminationReasonId: this.TaskModel.TerminationId,
       comment :'',
       racthrs: this.TaskModel.RevHrs ?  this.TaskModel.RevHrs : this.padLeft(String(Math.floor(this.TaskModel.ActHrs / 3600)), '0', 2),
       ractmins: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) / 60)), '0', 2),
@@ -208,13 +212,16 @@ export class PlantingComponent implements OnInit{
       this.reviewForm = this.fb.group({
         'completedPC': new FormControl(''),
         'terminatedtedPC': new FormControl(''),
-        'terminationReason':new FormControl(null),
+        'terminationReason':new FormControl(''),
         'ActHrs': new FormControl(null),
           'ActMins': new FormControl(null, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
           'ActSecs': new FormControl({value: null, disabled: this.isRActSecsDisabled}, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
           'rmisccost': new FormControl(null),
           'rmisccomment': new FormControl(null)
       })
+        const terminationReason = this.reviewForm.controls['terminationReason'];
+        terminationReason.patchValue(this.taskReviewModel.TerminationReasonId);
+      
     }
 
   }
@@ -344,10 +351,15 @@ submitReview(formModel) {
         else  if (data[0].RESULTKEY === 'Invalid Termination Reason'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.invalid });
         }
+        else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Available Plant Count'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: "Completed Plant Count Greater Than Available Plant Count" });
+          this.loaderService.display(false);
+        }
         else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
           this.loaderService.display(false);
         }
+      
         else{
           if (this.TaskModel.IsReview === true) {
             this.TaskModel.TaskStatus =  this.taskStatus.ReviewPending;
@@ -427,6 +439,11 @@ completeTask(formModel){
           this.loaderService.display(false);
         }
         else  if (data[0].RESULTKEY === 'Please Select Termination Reason'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY });
+          this.PageFlag.showmodal = false;
+          this.loaderService.display(false);
+        }
+        else  if (data[0].RESULTKEY === 'Completed Plant Count Greater Than Available Plant Count'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY });
           this.PageFlag.showmodal = false;
           this.loaderService.display(false);
@@ -522,6 +539,9 @@ completeTask(formModel){
     
   }
   getStrainAndPlantCount(event?: any){
+    this.globalData.workingEmp =[];
+    this.workingEmp = [];
+    this.workingemp=false;
     for(let sec of this.globalData.Fields ){
       if(event.value === sec.SectionId)
       {
@@ -534,7 +554,34 @@ completeTask(formModel){
         this.PLANTING.controls["plantCount"].setValue(this.plantCount)
       }
     }
+    this.getWorkingEmpList(event.value);
    
+  }
+
+  getWorkingEmpList(sectionId){
+    this.dropdownDataService.getEmpAlreadyWorkingOnATask(sectionId).subscribe(
+      data=>{
+        if(data != 'No Data Found'){
+          this.globalData.workingEmp = data;
+          this.getWorkingEmpsList();
+        }
+        else{
+          this.globalData.workingEmp = [];
+          this.workingEmp = [];
+        }
+      }
+    )
+  }
+  getWorkingEmpsList(){
+    if(this.globalData.workingEmp != null){
+      for(let employee of this.globalData.workingEmp){
+        this.workingEmp.push(employee.Column1)
+    }
+    }
+    else{
+      this.workingEmp = [];
+    }
+  
   }
   employeeListByClient() {
     this.dropdownDataService.getEmployeeListByClient().subscribe(

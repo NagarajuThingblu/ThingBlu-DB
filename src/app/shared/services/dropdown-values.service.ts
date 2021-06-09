@@ -202,6 +202,20 @@ getFieldsSectionsInGrowers(TaskTypeId) {
     return data;
    });
 }
+
+getEmpAlreadyWorkingOnATask(sectionId){
+  const url = 'api/Grower/GetEmpListBySectionId';
+
+  let params = new HttpParams();
+  params = params.append('SectionId', sectionId);
+return this.http
+.get(url, {params: params})
+
+.map(data => {
+// console.log('Brands Service success');
+return data;
+});
+}
 getTaskType() {
   const url = 'api/Grower/GetFieldsList';
 
