@@ -501,7 +501,7 @@
     <p-footer>
       <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
       <!-- [disabled]="!completionForm.valid" -->
-      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showmodal=false" label="Cancel"></button>
+      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="closetaskpopup()" label="Cancel"></button>
     </p-footer>
   </form>
 </p-dialog>
@@ -664,7 +664,7 @@
     <p-footer>
       <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
       <!-- [disabled]="!reviewForm.valid" -->
-      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showReviewmodal=false" label="Cancel"></button>
+      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="this.PageFlag.showReviewmodal=false" label="Cancel"></button>
     </p-footer>
   </form>
 </p-dialog>

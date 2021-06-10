@@ -249,6 +249,13 @@ export class PlantingComponent implements OnInit{
       error => { console.log(error); },
       () => console.log('Get all brands complete'));
   }
+  closetaskpopup(){
+    this.completionForm.controls['completedPC'].setValue(0),
+    this.completionForm.controls['terminatedtedPC'].setValue(0),
+    this.completionForm.controls['terminationReason'].setValue(''),
+    this.completionForm.controls['comment'].setValue(0)
+   this.PageFlag.showmodal=false
+  }
   getTerminationReasons(){
     this.ptrActionService.GetAllPTRListByClient().subscribe(
       data => {
