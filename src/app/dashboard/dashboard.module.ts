@@ -16,7 +16,7 @@ import { ManagerdashboardPrintComponent } from './components/managerdashboard-pr
 import{ProductionsdashboardComponent} from './components/productionsdashboard/productionsdashboard.component';
 import{EmpPerformanceDashboardComponent} from './components/emp-performance-dashboard/emp-performance-dashboard.component';
 import { ProductiondashboardsummaryComponent } from './components/productiondashboardsummary/productiondashboardsummary.component';
-
+import { DashboardRoutingModule } from './dashboard.routing';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,8 @@ import { ProductiondashboardsummaryComponent } from './components/productiondash
     ProductiondashboardsummaryComponent
   ],
   imports: [
-    SharedModule
+    SharedModule,
+    DashboardRoutingModule
   ],
   providers: [
     DashobardService,

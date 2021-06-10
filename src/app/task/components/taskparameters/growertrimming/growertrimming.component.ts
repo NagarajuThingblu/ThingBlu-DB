@@ -318,7 +318,7 @@ export class GrowertrimmingComponent implements OnInit {
    
   }
   viewBinsList(e){
-    this.router.navigate(['../home/labels', e]);
+    this.router.navigate(['../home/master/labels', e]);
   }
   CaluculateTotalSecs(Hours, Mins, Secs) {
     return (Number(Hours) * 3600) + (Number(Mins) * 60) + Number(Secs);
@@ -537,10 +537,10 @@ completeTask(formModel){
         else if (data[0].RESULTKEY ==='Success'){
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
           setTimeout( () => {
-            if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-              this.router.navigate(['home/managerdashboard']);
+            if (this._cookieService.UserRole === this.userRoles.Manager) {
+              this.router.navigate(['home/dashboard/managerdashboard']);
             } else {
-              this.router.navigate(['home/empdashboard']);
+              this.router.navigate(['home/dashboard/empdashboard']);
             }
           }, 1000);
           this.PageFlag.showmodal = false;

@@ -176,10 +176,10 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   }
   back(e){
     if(e.TaskTypeKey!= null){
-      this.router.navigate(['home/taskaction/', e.TaskTypeKey, e.TaskId]);
+      this.router.navigate(['home/task/taskaction/', e.TaskTypeKey, e.TaskId]);
     }
     else{
-      this.router.navigate(['home/addrawmaterial']);
+      this.router.navigate(['home/master/addrawmaterial']);
     }
   }
 createItem(): FormGroup {

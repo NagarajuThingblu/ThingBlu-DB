@@ -1924,10 +1924,10 @@ else{
             }
             this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
             setTimeout( () => {
-              if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                this.router.navigate(['home/managerdashboard']);
+              if (this._cookieService.UserRole === this.userRoles.Manager) {
+                this.router.navigate(['home/dashboard/managerdashboard']);
               } else {
-                this.router.navigate(['home/empdashboard']);
+                this.router.navigate(['home/dashboard/empdashboard']);
               }
             }, 1000);
           }
@@ -2191,10 +2191,10 @@ else{
                   this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
 
                   setTimeout(() => {
-                    if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                      this.router.navigate(['home/managerdashboard']);
+                    if (this._cookieService.UserRole === this.userRoles.Manager) {
+                      this.router.navigate(['dashboard/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/empdashboard']);
+                      this.router.navigate(['home/dashboard/empdashboard']);
                     }
                   }, 1000);
                 } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
@@ -2212,10 +2212,10 @@ else{
                   });
 
                   setTimeout(() => {
-                    if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                      this.router.navigate(['home/managerdashboard']);
+                    if (this._cookieService.UserRole === this.userRoles.Manager) {
+                      this.router.navigate(['home/dashboard/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/empdashboard']);
+                      this.router.navigate(['home/dashboard/empdashboard']);
                     }
                   }, 1000);
                 } else {
@@ -2329,10 +2329,10 @@ else{
         if (data[0].RESULTKEY  === 'SUCCESS') {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
           setTimeout( () => {
-            if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-              this.router.navigate(['home/managerdashboard']);
+            if (this._cookieService.UserRole === this.userRoles.Manager) {
+              this.router.navigate(['home/dashboard/managerdashboard']);
             } else {
-              this.router.navigate(['home/empdashboard']);
+              this.router.navigate(['home/dashboard/empdashboard']);
             }
           }, 1000);
         }
@@ -2583,7 +2583,7 @@ else{
                   }
 
                   setTimeout(() => {
-                    this.router.navigate(['home/taskaction', this.taskType, this.taskId]);
+                    this.router.navigate(['home/task/taskaction', this.taskType, this.taskId]);
                   }, 1000);
 
                 } else if (String(data).toLocaleUpperCase() === 'DELETED') {
@@ -2591,10 +2591,10 @@ else{
                   this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformR });
 
                   setTimeout(() => {
-                    if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                      this.router.navigate(['home/managerdashboard']);
+                    if (this._cookieService.UserRole === this.userRoles.Manager) {
+                      this.router.navigate(['home/dashboard/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/empdashboard']);
+                      this.router.navigate(['home/dashboard/empdashboard']);
                     }
                   }, 1000);
                 } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
@@ -2612,10 +2612,10 @@ else{
                   this.msgs.push({ severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.reviewsubmittedsuccess });
 
                   setTimeout(() => {
-                    if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                      this.router.navigate(['home/managerdashboard']);
+                    if (this._cookieService.UserRole === this.userRoles.Manager) {
+                      this.router.navigate(['home/dashboard/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/empdashboard']);
+                      this.router.navigate(['home/dashboard/empdashboard']);
                     }
                   }, 1000);
                 } else {

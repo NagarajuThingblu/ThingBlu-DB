@@ -616,10 +616,10 @@ export class TaskactionsComponent implements OnInit {
   }
   // Added by Devdan :: 20-Nov-2018 :: Back button redirect to dashboard
   backToDashboard() {
-    if (this._cookieService.UserRole === this.userRoles.Manager || this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-      this.router.navigate(['home/managerdashboard']);
+    if (this._cookieService.UserRole === this.userRoles.Manager) {
+      this.router.navigate(['home/dashboard/managerdashboard']);
     } else {
-      this.router.navigate(['home/empdashboard']);
+      this.router.navigate(['home/dashboard/empdashboard']);
     }
   }
 

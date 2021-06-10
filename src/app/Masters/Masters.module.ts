@@ -17,6 +17,7 @@ import { NewStrainTypeActionService } from '../task/services/new-strain-type-act
 import { ProductTypeListingComponent } from './components/product-type-listing/product-type-listing.component';
 import { NewProductTypeService } from './services/new-product-type.service';
 import { GrowerComponent } from './components/grower/grower.component';
+import { GrowerDetailsActionService } from '../task/services/grower-details-action.service'
 import { CityComponent } from './components/city/city.component';
 import { AddNewCountryComponent } from './components/add-new-country/add-new-country.component';
 import { TpProcessorComponent } from './components/tp-processor/tp-processor.component';
@@ -78,6 +79,7 @@ import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-m
 import { ChemicalPurchaseComponent } from './components/chemical-purchase/chemical-purchase.component';
 import { ChemicalMasterPageComponent } from './components/chemical-master-page/chemical-master-page.component';
 
+import { MastersRoutingModule } from './Masters.routing';
 
 @NgModule({
   declarations: [
@@ -128,6 +130,7 @@ import { ChemicalMasterPageComponent } from './components/chemical-master-page/c
   ],
   imports: [
     SharedModule,
+    MastersRoutingModule
   ],
   providers: [
     NewProductTypeDetailsActionService,
@@ -163,7 +166,8 @@ import { ChemicalMasterPageComponent } from './components/chemical-master-page/c
     NewFieldGenerationService,
     NewSectionDetailsActionService,
     NewLabelDetailsActionService,
-    NewARMDetailsActionService
+    NewARMDetailsActionService,
+    GrowerDetailsActionService
   ],
   exports: [
     NewProductTypeComponent,

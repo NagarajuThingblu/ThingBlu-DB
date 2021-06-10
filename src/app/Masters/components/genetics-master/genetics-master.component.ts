@@ -321,6 +321,6 @@ export class GeneticsMasterComponent implements OnInit {
 
     // back link redirect to strain page
     backToStrain() {
-      this.router.navigate(['../home/strainmaster']);
+      this.router.navigate(['../home/master/strainmaster']);
     }
   }

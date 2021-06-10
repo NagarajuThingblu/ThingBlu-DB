@@ -68,6 +68,7 @@ export class AddNewEmployeeComponent implements OnInit {
   public globalResource: any;
   public showTerminationDate: boolean = false;
   public star:boolean = false;
+  public defaultDate: Date = new Date();
   collapsed: any;
   constructor(
     private fb: FormBuilder,
@@ -632,6 +633,7 @@ else{
     this.appComponentData.setTitle('Employee');
     this._cookieService = this.appCommonService.getUserProfile();
     this.constantusrRole=  AppConstants.getUserRoles;
+    this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
     // new product type form defination(reactive form)
   this.newEmployeeForm = this.fb.group({
     'clientname': new FormControl(null, Validators.required),
@@ -659,6 +661,7 @@ else{
     'Managerlist': new FormControl(null),
     'flclist':new FormControl(null),
   });
+  this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
   // const managerdata = this.newEmployeeForm.get('Managerlist');
   const clientname = this.newEmployeeForm.controls['clientname'];
   clientname.patchValue(Number(this._cookieService.ClientId));

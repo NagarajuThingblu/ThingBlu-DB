@@ -1,9 +1,9 @@
 import { AppLoadFOrgotPasswordService } from './azureb2c/app-load-forgot-password.service';
 import { MsalModule } from './msal.module';
-import { EmployeeModule } from './employee/employee.module';
+// import { EmployeeModule } from './employee/employee.module';
 import { Azureb2cModule } from './azureb2c/azureb2c.module';
 import { AppLoadService } from './azureb2c/app-load.service';
-import { ReportsModule } from './reports/reports.module';
+// import { ReportsModule } from './reports/reports.module';
 import { AdminModule } from './admin/admin.module';
 import { HomeModule } from './home/home.module';
 import { BrowserModule } from '@angular/platform-browser';
@@ -19,16 +19,16 @@ import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 
 import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
-import { TaskModule } from './task/task.module';
-import { OrderModule } from './order/order.module';
+// import { TaskModule } from './task/task.module';
+// import { OrderModule } from './order/order.module';
 
 import { SharedModule } from './shared/shared.module';
-import { DashboardModule } from './dashboard/dashboard.module';
+// import { DashboardModule } from './dashboard/dashboard.module';
 import { StartupService } from './shared/services/startup.service';
 import {HttpModule} from '@angular/http';
-import { LotModule } from './lot/lot.module';
+// import { LotModule } from './lot/lot.module';
 import { LoaderService } from './shared/services/loader.service';
-import { MastersModule } from './Masters/Masters.module';
+// import { MastersModule } from './Masters/Masters.module';
 
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import { NgIdleModule } from '@ng-idle/core';
@@ -58,15 +58,15 @@ import { promise } from 'protractor';
     BrowserModule,
     LoginModule,
     SharedModule.forRoot(),
-    TaskModule,
-    LotModule,
-    OrderModule,
+    // TaskModule,
+    // LotModule,
+    // OrderModule,
     HomeModule,
-    DashboardModule,
+    // DashboardModule,
     routing,
     HttpClientModule,
     HttpModule,
-    MastersModule,
+    // MastersModule,
     BrowserAnimationsModule,
     ProgressSpinnerModule,
    
@@ -77,9 +77,9 @@ import { promise } from 'protractor';
     // and `ping` is 120 (2 minutes).
     // UserIdleModule.forRoot({idle: 300, timeout: 300, ping: 100})
     AdminModule,
-    ReportsModule,
+    // ReportsModule,
     Azureb2cModule,
-    EmployeeModule,
+    // EmployeeModule,
     MsalModule
   ],
   exports: [NgIdleModule],
