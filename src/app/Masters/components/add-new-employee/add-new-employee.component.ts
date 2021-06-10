@@ -606,15 +606,20 @@ export class AddNewEmployeeComponent implements OnInit {
   const selectedRole=this.roles.filter(ur=>ur.value==event.value);
   this.selectedRole=selectedRole[0].label;
 const managerdata = this.newEmployeeForm.get('Managerlist');
-if(this.constantusrRole.Employee==this.selectedRole )
-{
-  managerdata.setValidators(Validators.required);
-  this.showMang = true;
+// if(this.constantusrRole.Employee==this.selectedRole )
+// {
+//   managerdata.setValidators(Validators.required);
+//   this.showMang = true;
   
-}
-else if(this.constantusrRole.Temp==this.selectedRole){
+// }
+// else 
+if(this.constantusrRole.Temp==this.selectedRole){
   managerdata.setValidators(Validators.required);
   this.showFlc = true;
+}
+else if(this.constantusrRole.Temp !=this.selectedRole){
+this.showFlc = false;
+this.newEmployeeForm.controls['flclist'].setValue(null)
 }
 else{
   managerdata.clearValidators();

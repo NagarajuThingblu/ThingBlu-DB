@@ -906,7 +906,7 @@ console.log(assignTaskFormValues)
         Plants: {
           "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
           "SectionId": assignTaskFormValues.PLANTING.section,
-          "AssignedPlantsCount": 0,// hem growers don't assign particular number of palnts to emp
+          "AssignedPlantsCount": assignTaskFormValues.PLANTING.assignedPC,
           "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
           "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
           "Priority":assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority  ,

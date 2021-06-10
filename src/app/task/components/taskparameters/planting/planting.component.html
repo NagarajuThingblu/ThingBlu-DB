@@ -87,18 +87,7 @@
     />
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6">
-    <div class="paddingRL">
-      <label for="EmployeeListBox">Employees Working For Planting</label>
-      <div  class="EmployeeListBox">
-        <ul class="emp-list" style='padding: 0px;'>
-          <li  *ngFor="let i of workingEmp; let id=index" class="EmployeeListItem" >
-            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
+  
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="employeeList">Assigned To<span class="star">*</span></label>:
@@ -114,9 +103,7 @@
       </p-multiSelect>
     </div>
   </div>
-
-  <!--Commented as hem growers don't assign particular number of palnts to emp-->
-  <!-- <div class="ui-g-12 ui-md-6">
+  <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="assignedPC">Assigned Plants Count<span class="star">*</span></label>:
       <input type="number" 
@@ -133,7 +120,20 @@
       styleClass="multiselect-mobileregulation-width" 
     />
     </div>
-  </div> -->
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="EmployeeListBox">Employee List</label>
+      <div  class="EmployeeListBox">
+        <ul class="emp-list" style='padding: 0px;'>
+          <li  *ngFor="let i of employeeArray; let id=index" class="EmployeeListItem" >
+            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
+            
+          </li>
+        </ul>
+      </div>  
+    </div>
+  </div>
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="estimatedstartdate">
@@ -155,22 +155,20 @@
            name="estimatedstartdate"
            >
          </p-calendar>
-    </div>
-  </div>
-  <div class="ui-g-12 ui-md-6">
-    <div class="paddingRL">
-      <label for="EmployeeListBox">Employee List</label>
-      <div  class="EmployeeListBox">
-        <ul class="emp-list" style='padding: 0px;'>
-          <li  *ngFor="let i of employeeArray; let id=index" class="EmployeeListItem" >
-            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
+         <!-- <div
+           class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+           *ngIf="!SIFTING.controls['estimatedstartdate'].valid&&SIFTING.controls['estimatedstartdate'].dirty">
             
-          </li>
-        </ul>
-      </div>  
+             <span *ngIf="SIFTING.controls['estimatedstartdate'].errors['required']">
+               {{ globalResource.startdaterequired }}
+             </span>                                                                                                                                                                            
+         </div>
+         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip 
+           *ngIf="SIFTING.hasError('invalidDate')" >
+             {{ globalResource.datecomparevalidation }}
+         </div>  -->
     </div>
   </div>
- 
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="employee">Priority</label>:
@@ -285,15 +283,14 @@
         {{TaskModel?.TaskPriority}}
   </div>
 </div>
-<!--Hem growers doesn't have assignepc-->
-<!-- <div class="ui-g-12 ui-md-6">
+<div class="ui-g-12 ui-md-6">
   <div class="paddingRL">
     <label>
       <strong>Assigned Plant Count: </strong>
     </label>
         {{TaskModel?.AssignedPlantCnt}}
   </div>
-</div> -->
+</div>
 <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
   <div class="paddingRL">
       <label>
@@ -416,25 +413,6 @@
         />
         </div>
       </div>
-
-      <!-- <div class="ui-g-12 ui-md-6">
-        <div class="paddingRL">
-          <label for="extraPC">Extra Completed Plants</label>:
-        </div>
-      </div> -->
-      <!-- <div class="ui-g-12 ui-md-6">
-        <div>
-          <input type="number" 
-          pInputText 
-          [value]="extraPC"
-          autocomplete="off"
-          id="extraPC" 
-          name="extraPC" 
-          formControlName="extraPC"              
-          class="clsControl"   
-        />
-        </div>
-      </div> -->
       <div class="ui-g-12 ui-md-6">
         <div class="paddingRL">
           <label for="terminatedtedPC">Terminated Plant Count</label>:
@@ -460,23 +438,14 @@
       </div>
       <div class="ui-g-12 ui-md-6">
         <div>
-          <!-- <input type="text" 
+          <input type="text" 
           pInputText 
           autocomplete="off"
           id="terminationReason" 
           name="terminationReason" 
           formControlName="terminationReason"              
           class="clsControl"   
-        /> -->
-
-        <p-dropdown
-        [options]="TerminatioReasons"
-        [autoWidth]="true"
-        formControlName="terminationReason"
-        id="terminationReason"
-        class="clsControl"
-        name="terminationReason">
-      </p-dropdown>
+        />
         </div>
       </div>
       <div class="ui-g-12 ui-md-6">
@@ -501,7 +470,7 @@
     <p-footer>
       <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
       <!-- [disabled]="!completionForm.valid" -->
-      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="closetaskpopup()" label="Cancel"></button>
+      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showmodal=false" label="Cancel"></button>
     </p-footer>
   </form>
 </p-dialog>
@@ -553,14 +522,14 @@
         </div>
         <div class="ui-g-12 ui-md-6">
           <div>
-            <p-dropdown
-            [options]="TerminatioReasons"
-            [autoWidth]="true"
-            formControlName="terminationReason"
-            id="terminationReason"
-            class="clsControl"
-            name="terminationReason">
-          </p-dropdown>
+            <input type="text" 
+            pInputText 
+            autocomplete="off"
+            id="terminationReason" 
+            name="terminationReason" 
+            formControlName="terminationReason"              
+            class="clsControl"   
+          />
           </div>
         </div>
         <div class="ui-grid-row">
@@ -664,7 +633,7 @@
     <p-footer>
       <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
       <!-- [disabled]="!reviewForm.valid" -->
-      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="this.PageFlag.showReviewmodal=false" label="Cancel"></button>
+      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showReviewmodal=false" label="Cancel"></button>
     </p-footer>
   </form>
 </p-dialog>

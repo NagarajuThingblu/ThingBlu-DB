@@ -75,8 +75,8 @@ import { HelpComponent } from './components/help/help.component';
 import { FlcComponent } from './components/flc/flc.component';
 import { PlantTerminationReasonsComponent } from './components/plant-termination-reasons/plant-termination-reasons.component';
 import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-material.component';
-import { ChemicalPurchaseComponent } from './components/chemical-purchase/chemical-purchase.component';
-import { ChemicalMasterPageComponent } from './components/chemical-master-page/chemical-master-page.component';
+
+
 
 
 @NgModule({
@@ -122,8 +122,8 @@ import { ChemicalMasterPageComponent } from './components/chemical-master-page/c
     FlcComponent,
     PlantTerminationReasonsComponent,
     AddRawMaterialComponent,
-    ChemicalPurchaseComponent,
-    ChemicalMasterPageComponent
+    
+    
    
   ],
   imports: [

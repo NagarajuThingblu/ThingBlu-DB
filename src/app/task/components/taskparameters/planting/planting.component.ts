@@ -23,7 +23,6 @@ import { RefreshService } from '../../../../dashboard/services/refresh.service';
 import { NewSectionDetailsActionService } from '../../../services/add-section-details.service';
 import { filter } from 'rxjs/operator/filter';
 import { NewClientService } from '../../../../Masters/services/new-client.service';
-import { PTRService } from '../../../../Masters/services/ptr.service';
 declare var $: any;
 @Component({
   moduleId: module.id,
@@ -52,7 +51,6 @@ export class PlantingComponent implements OnInit{
   public defaultDate: Date = new Date();
   public showPastDateLabel = false;
   public priorities: SelectItem[];
-  public termination:SelectItem[];
   constructor(
     private fb: FormBuilder,
     private dropdownDataService: DropdownValuesService,
@@ -60,7 +58,6 @@ export class PlantingComponent implements OnInit{
     private service: QuestionService,
     private taskCommonService: TaskCommonService,
     private route: ActivatedRoute,
-    private ptrActionService: PTRService,
     private cookieService: CookieService,
     private newSectionDetailsActionService: NewSectionDetailsActionService, 
     private router: Router,
@@ -80,10 +77,7 @@ export class PlantingComponent implements OnInit{
   display = false;
   public sectionList = [];
   public  Fields: any[];
-  public TerminatioReasons: any[];
   public fields: any[];
-  public workingEmp: any=[];
-  public workingemp:boolean =false
   public strains: any[];
   public employees: any[];
   public globalResource: any;
@@ -94,7 +88,6 @@ export class PlantingComponent implements OnInit{
   public employeeArray:any=[];
   public strainName: '';
   public defaultValueCompletePc: Number = 0;
-  public extraPC: Number = 0;
   public defaultValueTerminatedPc: Number = 0;
   public plantCount: any;
   public taskCompletionModel: any;
@@ -106,18 +99,15 @@ export class PlantingComponent implements OnInit{
     employees: [],
     strains: [],
     Fields: [],
-    TerminationReasons: [],
-    workingEmp:[],//array to hold already working emp list
   };
   isRActSecsDisabled: boolean;
   ngOnInit() {
     this.getAllFieldsAndSections();
     // this.getAllsectionlist();
     this.employeeListByClient();
-    this.getTerminationReasons();
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
-    this.titleService.setTitle('Planting');
+    this.titleService.setTitle(this.assignTaskResources.siftingtitle);
     this.taskStatus = AppConstants.getStatusList;
     this.userRoles = AppConstants.getUserRoles;
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
@@ -169,7 +159,7 @@ export class PlantingComponent implements OnInit{
       // 'estimatedenddate': new FormControl('',  Validators.compose([Validators.required])),
       'employeeList': new FormControl('', Validators.required),
      'plantCount' : new FormControl('', Validators.required),
-     'assignedPC' : new FormControl(''),// hem growers don't assign particular number of palnts to emp
+     'assignedPC' : new FormControl('', Validators.required),
       'priority': new FormControl(''),
       'notifymanager': new FormControl(''),
       'notifyemployee': new FormControl(''),
@@ -186,7 +176,6 @@ export class PlantingComponent implements OnInit{
       CompletedPlantCnt : this.TaskModel.CompletedPlantCnt,
       TerminatedPlantCount : this.TaskModel.TerminatedPlantCnt,
       TerminationReason : this.TaskModel.TerminationReason,
-      TerminationReasonId: this.TaskModel.TerminationId,
       comment :'',
       racthrs: this.TaskModel.RevHrs ?  this.TaskModel.RevHrs : this.padLeft(String(Math.floor(this.TaskModel.ActHrs / 3600)), '0', 2),
       ractmins: this.padLeft(String(Math.floor((this.TaskModel.ActHrs % 3600) / 60)), '0', 2),
@@ -205,23 +194,19 @@ export class PlantingComponent implements OnInit{
         'completedPC': new FormControl(''),
         'terminatedtedPC': new FormControl(''),
         'terminationReason':new FormControl(null),
-        // 'extraPC':new FormControl(''),
         'comment':new FormControl(null),
       });
 
       this.reviewForm = this.fb.group({
         'completedPC': new FormControl(''),
         'terminatedtedPC': new FormControl(''),
-        'terminationReason':new FormControl(''),
+        'terminationReason':new FormControl(null),
         'ActHrs': new FormControl(null),
           'ActMins': new FormControl(null, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
           'ActSecs': new FormControl({value: null, disabled: this.isRActSecsDisabled}, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
           'rmisccost': new FormControl(null),
           'rmisccomment': new FormControl(null)
       })
-        const terminationReason = this.reviewForm.controls['terminationReason'];
-        terminationReason.patchValue(this.taskReviewModel.TerminationReasonId);
-      
     }
 
   }
@@ -233,45 +218,14 @@ export class PlantingComponent implements OnInit{
     this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
     this.dropdownDataService.getFieldsSectionsInGrowers(TaskTypeId).subscribe(
       data => {
-        if(data != 'No Data Found'){
-          this.globalData.Fields = data;
-          this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --',false);
-          const fieldsfilter = Array.from(data.reduce((m, t) => m.set(t.FieldName, t), new Map()).values())
-          this.fields = this.dropdwonTransformService.transform(fieldsfilter,'FieldName', 'FieldId', '-- Select --',false)
-          console.log("fields"+JSON.stringify(this.Fields));
-        }
-        else{
-          this.globalData.Fields = [];
-          this.fields = [];
-        }
-       
+        this.globalData.Fields = data;
+        this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --',false);
+        const fieldsfilter = Array.from(data.reduce((m, t) => m.set(t.FieldName, t), new Map()).values())
+        this.fields = this.dropdwonTransformService.transform(fieldsfilter,'FieldName', 'FieldId', '-- Select --',false)
+        console.log("fields"+JSON.stringify(this.Fields));
       } ,
       error => { console.log(error); },
       () => console.log('Get all brands complete'));
-  }
-  closetaskpopup(){
-    this.completionForm.controls['completedPC'].setValue(0),
-    this.completionForm.controls['terminatedtedPC'].setValue(0),
-    this.completionForm.controls['terminationReason'].setValue(''),
-    this.completionForm.controls['comment'].setValue(0)
-   this.PageFlag.showmodal=false
-  }
-  getTerminationReasons(){
-    this.ptrActionService.GetAllPTRListByClient().subscribe(
-      data => {
-        if(data != 'No Data Found!'){
-          this.globalData.TerminationReasons = data;
-          this.TerminatioReasons = this.dropdwonTransformService.transform(data, 'TerminationReason', 'TerminationId', '-- Select --',false);
-        }
-        else{
-          this.globalData.TerminationReasons = [];
-          this.TerminatioReasons = [];
-        }
-       
-       } ,
-       error => { console.log(error);  this.loaderService.display(false); },
-       () => console.log('getTerminationReasons complete'));
-
   }
 
   
@@ -308,7 +262,7 @@ submitReview(formModel) {
         VirtualRoleId: 0,
         CompletedPlantCount:formModel.completedPC,
         TerminatedPlantCount: formModel.terminatedtedPC,
-        TerminationId:  formModel.terminationReason?formModel.terminationReason:0,
+        TerminationReason:  formModel.terminationReason,
         Comment: formModel.comment,
         MiscCost: formModel.rmisccost,
         RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
@@ -338,35 +292,24 @@ submitReview(formModel) {
           this.msgs = [];
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
           setTimeout( () => {
-            if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-              this.router.navigate(['home/managerdashboard']);
+            if (this._cookieService.UserRole === this.userRoles.Manager) {
+              this.router.navigate(['home/dashboard/managerdashboard']);
             }
             else {
-              this.router.navigate(['home/empdashboard']);
+              this.router.navigate(['home/dashboard/empdashboard']);
             }
           }, 1000);
         }
         else if (data[0].RESULTKEY === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         }
-        else  if (data[0].RESULTKEY === 'Invalid Termination Reason'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.invalid });
-        }
-        else  if (data[0].RESULTKEY === 'Please Select Termination Reason'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY});
-        }
-        else  if (data[0].RESULTKEY === 'Invalid Termination Reason'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.invalid });
-        }
-        else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Available Plant Count'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: "Completed Plant Count Greater Than Available Plant Count" });
-          this.loaderService.display(false);
+        else  if (data[0].RESULTKEY === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         }
         else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
           this.loaderService.display(false);
         }
-      
         else{
           if (this.TaskModel.IsReview === true) {
             this.TaskModel.TaskStatus =  this.taskStatus.ReviewPending;
@@ -378,10 +321,10 @@ submitReview(formModel) {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
            setTimeout( () => {
-                      if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                        this.router.navigate(['home/managerdashboard']);
+                      if (this._cookieService.UserRole === this.userRoles.Manager) {
+                        this.router.navigate(['home/dashboard/managerdashboard']);
                       } else {
-                        this.router.navigate(['home/empdashboard']);
+                        this.router.navigate(['home/dashboard/empdashboard']);
                       }
                     }, 1000);
         }
@@ -400,8 +343,7 @@ completeTask(formModel){
         TaskId:Number(this.taskid),
         CompletedPlantCount: formModel.completedPC,
         TerminatedPlantCount: formModel.terminatedtedPC,
-        // ExtraPlantCount:formModel.extraPC,
-        TerminationId:  formModel.terminationReason?formModel.terminationReason:0,
+        TerminationReason:  formModel.terminationReason,
         Comment: formModel.comment,
         VirtualRoleId: 0,
       }
@@ -433,10 +375,10 @@ completeTask(formModel){
           this.msgs = [];
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
           setTimeout( () => {
-            if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin ) {
-              this.router.navigate(['home/managerdashboard']);
+            if (this._cookieService.UserRole === this.userRoles.Manager) {
+              this.router.navigate(['home/dashboard/managerdashboard']);
             } else {
-              this.router.navigate(['home/empdashboard']);
+              this.router.navigate(['home/dashboard/empdashboard']);
             }
           }, 1000);
         }
@@ -445,13 +387,8 @@ completeTask(formModel){
           this.PageFlag.showmodal = false;
           this.loaderService.display(false);
         }
-        else  if (data[0].RESULTKEY === 'Please Select Termination Reason'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY });
-          this.PageFlag.showmodal = false;
-          this.loaderService.display(false);
-        }
-        else  if (data[0].RESULTKEY === 'Completed Plant Count Greater Than Available Plant Count'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY });
+        else  if (data[0].RESULTKEY === 'Failure'){
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
           this.PageFlag.showmodal = false;
           this.loaderService.display(false);
         }
@@ -471,10 +408,10 @@ completeTask(formModel){
                   this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
                     detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
                     setTimeout( () => {
-                      if (this._cookieService.UserRole === this.userRoles.Manager||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                        this.router.navigate(['home/managerdashboard']);
+                      if (this._cookieService.UserRole === this.userRoles.Manager) {
+                        this.router.navigate(['home/dashboard/managerdashboard']);
                       } else {
-                        this.router.navigate(['home/empdashboard']);
+                        this.router.navigate(['home/dashboard/empdashboard']);
                       }
                     }, 1000);
         }
@@ -546,9 +483,6 @@ completeTask(formModel){
     
   }
   getStrainAndPlantCount(event?: any){
-    this.globalData.workingEmp =[];
-    this.workingEmp = [];
-    this.workingemp=false;
     for(let sec of this.globalData.Fields ){
       if(event.value === sec.SectionId)
       {
@@ -561,34 +495,7 @@ completeTask(formModel){
         this.PLANTING.controls["plantCount"].setValue(this.plantCount)
       }
     }
-    this.getWorkingEmpList(event.value);
    
-  }
-
-  getWorkingEmpList(sectionId){
-    this.dropdownDataService.getEmpAlreadyWorkingOnATask(sectionId).subscribe(
-      data=>{
-        if(data != 'No Data Found'){
-          this.globalData.workingEmp = data;
-          this.getWorkingEmpsList();
-        }
-        else{
-          this.globalData.workingEmp = [];
-          this.workingEmp = [];
-        }
-      }
-    )
-  }
-  getWorkingEmpsList(){
-    if(this.globalData.workingEmp != null){
-      for(let employee of this.globalData.workingEmp){
-        this.workingEmp.push(employee.Column1)
-    }
-    }
-    else{
-      this.workingEmp = [];
-    }
-  
   }
   employeeListByClient() {
     this.dropdownDataService.getEmployeeListByClient().subscribe(
