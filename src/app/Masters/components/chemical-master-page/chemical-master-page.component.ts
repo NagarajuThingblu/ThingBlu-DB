@@ -290,7 +290,7 @@ export class ChemicalMasterPageComponent implements OnInit {
     );
   }
   backToChemicalPurchase(){
-    this.router.navigate(['../home/chemicalsaddupdate']);
+    this.router.navigate(['../home/master/chemicalsaddupdate']);
   }
 
 }

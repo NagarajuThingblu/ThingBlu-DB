@@ -116,7 +116,7 @@ export class ChemicalPurchaseComponent implements OnInit {
   }
 
   navigateToChemicalTypePage(){
-    this.router.navigate(['home/chemicalType/']);
+    this.router.navigate(['home/master/chemicalType/']);
   }
 
   getChemicalPurchaseDetailListByClient(){
