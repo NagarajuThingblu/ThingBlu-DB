@@ -183,6 +183,7 @@ export class HarvestingComponent implements OnInit{
       CompletedPlantCnt : this.TaskModel.CompletedPlantCnt,
       TerminatedPlantCount : this.TaskModel.TerminatedPlantCnt,
       TerminationReason : this.TaskModel.TerminationReason,
+      TerminationReasonId: this.TaskModel.TerminationId,
       comment :'',
       wetweight : this.TaskModel.WetWt,
       driweight : this.TaskModel.DryWt,
@@ -227,7 +228,9 @@ export class HarvestingComponent implements OnInit{
           'wasteweight': new FormControl('')
       })
     }
-
+    const terminationReason = this.reviewForm.controls['terminationReason'];
+    terminationReason.patchValue(this.taskReviewModel.TerminationReasonId);
+  
   }
 
   // getAllFieldsAndSections() {

@@ -24,6 +24,11 @@
           >
         </div>
       </div>
+      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        *ngIf="!CUSTOMTASK.controls['employee'].valid&&CUSTOMTASK.controls['employee'].dirty&&TaskTypeKey=='INDEPENDENT'">
+
+                          employee required
+                      </div>
   </div>
   <!--End Employee-->
  

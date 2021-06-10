@@ -77,6 +77,8 @@ import {PlantTerminationReasonsComponent} from './Masters/components/plant-termi
 import {AddRawMaterialComponent} from './Masters/components/add-raw-material/add-raw-material.component';
 import { HelpComponent } from './Masters/components/help/help.component';
 import { OrderformComponent } from './order/components/orderform/orderform.component';
+import { ChemicalPurchaseComponent } from './Masters/components/chemical-purchase/chemical-purchase.component';
+import { ChemicalMasterPageComponent } from './Masters/components/chemical-master-page/chemical-master-page.component';
 const appRoutes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   // { path: 'login', component: LoginComponent },
@@ -164,6 +166,8 @@ const appRoutes: Routes = [
       {path:'labels', component:LabelsComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'flc', component:FlcComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'plantterminationreasons', component:PlantTerminationReasonsComponent,canActivate:[AuthGuard,RoleGuard]},
+      {path:'chemicalsaddupdate', component:ChemicalPurchaseComponent},
+      {path:'chemicalType', component:ChemicalMasterPageComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'addrawmaterial', component:AddRawMaterialComponent},
       {path:'help', component:HelpComponent},
       {path:'orderform', component:OrderformComponent},

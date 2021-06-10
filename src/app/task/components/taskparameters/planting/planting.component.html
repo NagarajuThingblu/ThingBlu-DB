@@ -87,7 +87,18 @@
     />
     </div>
   </div>
-  
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="EmployeeListBox">Employees Working For Planting</label>
+      <div  class="EmployeeListBox">
+        <ul class="emp-list" style='padding: 0px;'>
+          <li  *ngFor="let i of workingEmp; let id=index" class="EmployeeListItem" >
+            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="employeeList">Assigned To<span class="star">*</span></label>:
@@ -103,7 +114,9 @@
       </p-multiSelect>
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6">
+
+  <!--Commented as hem growers don't assign particular number of palnts to emp-->
+  <!-- <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="assignedPC">Assigned Plants Count<span class="star">*</span></label>:
       <input type="number" 
@@ -120,20 +133,7 @@
       styleClass="multiselect-mobileregulation-width" 
     />
     </div>
-  </div>
-  <div class="ui-g-12 ui-md-6">
-    <div class="paddingRL">
-      <label for="EmployeeListBox">Employee List</label>
-      <div  class="EmployeeListBox">
-        <ul class="emp-list" style='padding: 0px;'>
-          <li  *ngFor="let i of employeeArray; let id=index" class="EmployeeListItem" >
-            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
-            
-          </li>
-        </ul>
-      </div>  
-    </div>
-  </div>
+  </div> -->
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="estimatedstartdate">
@@ -155,20 +155,22 @@
            name="estimatedstartdate"
            >
          </p-calendar>
-         <!-- <div
-           class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-           *ngIf="!SIFTING.controls['estimatedstartdate'].valid&&SIFTING.controls['estimatedstartdate'].dirty">
-            
-             <span *ngIf="SIFTING.controls['estimatedstartdate'].errors['required']">
-               {{ globalResource.startdaterequired }}
-             </span>                                                                                                                                                                            
-         </div>
-         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip 
-           *ngIf="SIFTING.hasError('invalidDate')" >
-             {{ globalResource.datecomparevalidation }}
-         </div>  -->
     </div>
   </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="EmployeeListBox">Employee List</label>
+      <div  class="EmployeeListBox">
+        <ul class="emp-list" style='padding: 0px;'>
+          <li  *ngFor="let i of employeeArray; let id=index" class="EmployeeListItem" >
+            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
+            
+          </li>
+        </ul>
+      </div>  
+    </div>
+  </div>
+ 
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="employee">Priority</label>:
@@ -283,14 +285,15 @@
         {{TaskModel?.TaskPriority}}
   </div>
 </div>
-<div class="ui-g-12 ui-md-6">
+<!--Hem growers doesn't have assignepc-->
+<!-- <div class="ui-g-12 ui-md-6">
   <div class="paddingRL">
     <label>
       <strong>Assigned Plant Count: </strong>
     </label>
         {{TaskModel?.AssignedPlantCnt}}
   </div>
-</div>
+</div> -->
 <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
   <div class="paddingRL">
       <label>
@@ -498,7 +501,7 @@
     <p-footer>
       <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
       <!-- [disabled]="!completionForm.valid" -->
-      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showmodal=false" label="Cancel"></button>
+      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="closetaskpopup()" label="Cancel"></button>
     </p-footer>
   </form>
 </p-dialog>
@@ -552,7 +555,6 @@
           <div>
             <p-dropdown
             [options]="TerminatioReasons"
-          
             [autoWidth]="true"
             formControlName="terminationReason"
             id="terminationReason"
@@ -662,7 +664,7 @@
     <p-footer>
       <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
       <!-- [disabled]="!reviewForm.valid" -->
-      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showReviewmodal=false" label="Cancel"></button>
+      <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="this.PageFlag.showReviewmodal=false" label="Cancel"></button>
     </p-footer>
   </form>
 </p-dialog>

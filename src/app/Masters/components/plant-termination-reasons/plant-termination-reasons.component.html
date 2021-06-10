@@ -81,16 +81,16 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th [pSortableColumn]="'Reason'">Reason  <p-sortIcon [field]="'FLCName'"></p-sortIcon></th>   
+            <th [pSortableColumn]="'Reason'">Reason  <p-sortIcon [field]="'Reason'"></p-sortIcon></th>   
             <th [pSortableColumn]="'Description'">Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>    
             <th style="width:100px;">Action</th>
           </tr>
           <tr>
             <th>
-              <input pInputText type="text" autocomplete="off" (input)="dtFLCList.filter($event.target.value, 'Reason', 'contains')" class="clsControl">
+              <input pInputText type="text" autocomplete="off" (input)="dtPTRList.filter($event.target.value, 'Reason', 'contains')" class="clsControl">
             </th>
             <th>
-              <input pInputText type="text" autocomplete="off"  (input)="dtFLCList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+              <input pInputText type="text" autocomplete="off"  (input)="dtPTRList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
           </th> 
           </tr>
         </ng-template>
@@ -121,6 +121,13 @@
               </div>
             </td>
           </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft" let-state>
+          <pagination-counts
+            *ngIf="allptrList?.length"
+            [inputData]="allptrList"
+            [inputEvent]="event"
+          ></pagination-counts>
         </ng-template>
       </p-table>
         </p-panel>

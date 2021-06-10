@@ -483,6 +483,35 @@ export class MastersResource {
                     duplicate:'Duplicate record found',
                     AlreadyDeleted:'Plant Termination Reason Already Deleted'
                 },
+                chemicalmaster:{
+                    success:"Chemical Type Saved Successfully ",
+                    updated:"Chemical Type Updated Successfully ",
+                    inactivated:'Chemical Type inactivated successfully.',
+                    activated: 'Chemical Type activated successfully.',
+                    alreadydlt:'Chemical Type Already Deleted',
+                    deletedSuccess: 'Chemical Type deleted successfully.',
+                    cannotActivate: 'Can not activate this Chemical Type. Might be it does not exist.',
+                    cannotdelete: 'Can not delete this Chemical Type. Might be it does not exist.',
+                    cannotInactivate: 'Can not inactivate this Chemical Type. Might be it does not exist.',
+                    inuse: 'Can not delete this Chemical Type. It is in use.',
+                    duplicate:'Duplicate record found',
+                    AlreadyDeleted:'Chemical Type Already Deleted'
+                },
+
+                chemicalpurchase:{
+                    success:"Chemical Purchase Saved Successfully ",
+                    updated:"Chemical Purchase Updated Successfully ",
+                    inactivated:'Chemical Purchase inactivated successfully.',
+                    activated: 'Chemical Purchase activated successfully.',
+                    alreadydlt:'Chemical Purchase Already Deleted',
+                    deletedSuccess: 'Chemical Purchase deleted successfully.',
+                    cannotActivate: 'Can not activate this Chemical Purchase. Might be it does not exist.',
+                    cannotdelete: 'Can not delete this Chemical Purchase. Might be it does not exist.',
+                    cannotInactivate: 'Can not inactivate this Chemical Purchase. Might be it does not exist.',
+                    inuse: 'Can not delete this Chemical Purchase. It is in use.',
+                    duplicate:'Duplicate record found',
+                    AlreadyDeleted:'Chemical Purchase Already Deleted'
+                },
                 
 
          addnewclient: {
