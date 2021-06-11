@@ -299,6 +299,11 @@ else{
 
           );
         }
+        if(this.tasknames){
+          for(let item of this.tasknames){
+            this.tasknameMap.set(item.value,item.label)
+          }
+        }
         if(this.taskcategories){
           for(let item of this.taskcategories){
             this.taskcategoriesMap.set(item.value,item.label)
@@ -379,7 +384,7 @@ console.log(assignTaskFormValues)
           return;
         }
 
-      } else if (this.selectedTaskTypeName === 'BUDPACKAGING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskname.value) === 'BUDPACKAGING') { // BUDPACKAGING TASK
+      } else if (this.selectedTaskTypeName === 'BUDPACKAGING'&&this.tasknameMap.get(this.assignTaskForm.controls.taskname.value) === 'BUDPACKAGING') { // BUDPACKAGING TASK
         // Changed added by Devdan :: Calling common methods to get n set local storage :: 27-Sep-2018
         // let lotDetails = JSON.parse(localStorage.getItem('selectedLotsArray'));
         let lotDetails = null;
@@ -1136,7 +1141,7 @@ console.log(assignTaskFormValues)
           }
         )
         }
-        else if(this.selectedTaskTypeName === 'BUDPACKAGING'&&(this.assignTaskForm.controls.taskname.value) === 'PACKAGING'){
+        else if(this.selectedTaskTypeName === 'BUDPACKAGING'&&this.tasknameMap.get(this.assignTaskForm.controls.taskname.value) === 'Packaging'){
          let BinTypeDetails
          BinTypeDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
           let packagingDataForApi = {
@@ -1234,7 +1239,7 @@ console.log(assignTaskFormValues)
         }
           // http call starts
         
-   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING' && this.selectedTaskTypeName != 'BUCKING'&& this.selectedTaskTypeName != 'TRIM'&& (this.selectedTaskTypeName != 'BUDPACKAGING' && this.taskcategoriesMap.get(this.assignTaskForm.controls.taskname.value) != 'PACKAGING')){
+   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING' && this.selectedTaskTypeName != 'BUCKING'&& this.selectedTaskTypeName != 'TRIM'&& (this.selectedTaskTypeName != 'BUDPACKAGING' && this.tasknameMap.get(this.assignTaskForm.controls.taskname.value) === 'Packaging')){
 
    
           this.loaderService.display(true);

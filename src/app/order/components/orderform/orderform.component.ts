@@ -531,7 +531,7 @@ this.saveButtonText ="save"
         },
         error => {
           this.msgs = [];
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: 'Something went wrong  at server side!' });
          
           this.loaderService.display(false);
         }

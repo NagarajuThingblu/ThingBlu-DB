@@ -284,7 +284,7 @@
               </app-bud-unlabelled-packaging> -->
 
               <app-bud-packaging
-                *ngIf="selectedTaskTypeName=='BUDPACKAGING'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Processing'"
+                *ngIf="selectedTaskTypeName=='BUDPACKAGING'&&this.isServiceCallComplete"
                 style="width:100%;"                 
                 [TaskModel]="assignTask"       
                 [PageFlag]="page"     
