@@ -60,6 +60,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
   public tasktypelist:any;
   taskcategoriesMap: Map<number,string> = new Map<number,string>();
+  tasknameMap: Map<number,string> = new Map<number,string>();
   constructor(
     private fb: FormBuilder,
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -378,7 +379,7 @@ console.log(assignTaskFormValues)
           return;
         }
 
-      } else if (this.selectedTaskTypeName === 'BUDPACKAGING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) != 'Growing') { // BUDPACKAGING TASK
+      } else if (this.selectedTaskTypeName === 'BUDPACKAGING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskname.value) === 'BUDPACKAGING') { // BUDPACKAGING TASK
         // Changed added by Devdan :: Calling common methods to get n set local storage :: 27-Sep-2018
         // let lotDetails = JSON.parse(localStorage.getItem('selectedLotsArray'));
         let lotDetails = null;
@@ -1099,7 +1100,7 @@ console.log(assignTaskFormValues)
           }
         )
         }
-        else if(this.selectedTaskTypeName === 'TRIM'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+        else if(this.selectedTaskTypeName === 'TRIM'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Processing'){
           let trimmingDataForApi = {
             Trimming:{
               "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
@@ -1135,7 +1136,7 @@ console.log(assignTaskFormValues)
           }
         )
         }
-        else if(this.selectedTaskTypeName === 'BUDPACKAGING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+        else if(this.selectedTaskTypeName === 'BUDPACKAGING'&&(this.assignTaskForm.controls.taskname.value) === 'PACKAGING'){
          let BinTypeDetails
          BinTypeDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
           let packagingDataForApi = {
@@ -1233,7 +1234,7 @@ console.log(assignTaskFormValues)
         }
           // http call starts
         
-   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING' && this.selectedTaskTypeName != 'BUCKING'&& this.selectedTaskTypeName != 'TRIM'&& (this.selectedTaskTypeName != 'BUDPACKAGING' && this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) != 'Growing')){
+   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING' && this.selectedTaskTypeName != 'BUCKING'&& this.selectedTaskTypeName != 'TRIM'&& (this.selectedTaskTypeName != 'BUDPACKAGING' && this.taskcategoriesMap.get(this.assignTaskForm.controls.taskname.value) != 'PACKAGING')){
 
    
           this.loaderService.display(true);
