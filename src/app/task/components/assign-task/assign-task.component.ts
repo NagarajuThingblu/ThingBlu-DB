@@ -1365,7 +1365,7 @@ console.log(assignTaskFormValues)
               });
             }
 
-      else  if(this.selectedTaskTypeName === 'CUSTOMTASK'  ||this.selectedTaskTypeName === 'INDEPENDENT' &&  this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+      else  if(this.selectedTaskTypeName === 'CUSTOMTASK'  ||this.selectedTaskTypeName === 'INDEPENDENT'){
 
    
         this.loaderService.display(true);
