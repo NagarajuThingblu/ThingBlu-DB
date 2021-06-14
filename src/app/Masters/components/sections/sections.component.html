@@ -180,7 +180,7 @@
             </th>
             <th [pSortableColumn]="'IsLightDeprevation'">Light Dept <p-sortIcon [field]="'IsLightDeprevation'"></p-sortIcon>
             </th>
-            <th style="width:100px;">Action </th>
+            <th style="width:120px;">Action </th>
           </tr>
           <tr>
             <!-- <th>
@@ -233,7 +233,9 @@
               <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(section?.SectionId,section,1,0)">
                 <span class="fa fa-trash"></span>
               </a>
-            
+              <a href="#" [routerLink]="" (click)="showTerminationReasonPopup(section?.SectionId,section)">
+                <span class="fa fa-info-circle"></span>
+              </a>
               <div class="clsToggleButtonDiv">
                 <p-toggleButton [(ngModel)]="section.IsActive" onLabel="Active" offLabel="InActive"
                   [style]="{'width':'90px'}"
@@ -249,6 +251,157 @@
         </ng-template>
       </p-table>
     </p-panel>
+    <p-dialog header="Section Details" [(visible)]="popupTerminationReason" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
+      <div>
+      <div class="ui-g-12 ui-md-6">
+        <label for="section" class="towlable"><b>Field Name:</b> {{fieldname}}</label>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <label for="section" class="towlable"><b>Section Name:</b> {{sectionname}}</label>
+          </div>
+          <div class="ui-g-12 ui-md-6">
+            <label for="section" class="towlable"><b>Strain Name:</b> {{strainname}}</label>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+              <label for="section" class="towlable"><b>Total Plant Count:</b> {{tpc}}</label>
+              </div>
+              <div class="ui-g-12 ui-md-6">
+                <label for="section" class="towlable"><b>Year:</b> {{year}}</label>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                  <label for="section" class="towlable"><b>Light Deprevation:</b> {{ld}}</label>
+                  </div>
+                </div>
+            <div>
+              <form [formGroup]="TerminationReasons" (ngSubmit)="submitCompleteParameter(TerminationReasons.value)">
+                <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                  <div class="ui-g-12 ui-md-4">
+                    <div class="paddingRL">
+                      <label for="phase">Phase :</label><span class="star">*</span>
+                    </div>
+                  </div>
+                  <div class="ui-g-12 ui-md-4">
+                    <div class="paddingRL" style="text-align: center;">
+                      <label for="completed">Completed :</label>
+                    </div>
+                  </div>
+                  <div class="ui-g-12 ui-md-4">
+                    <div class="paddingRL">
+                      <label for="cpc">Completed Plant Count :</label>
+                    </div>
+                  </div>
+                  <div class="ui-g-12 ui-md-4">
+                    <div>
+                    <p-dropdown
+                    [options]="Phases"
+                    [autoWidth]="true"
+                    formControlName="phase"
+                    id="phase"
+                    class="clsControl"
+                    name="phase">
+                  </p-dropdown>
+                    </div>
+                  </div>
+                  <div class="ui-g-12 ui-md-4">
+                    <div style="text-align: center;">
+                      <p-checkbox          
+                      formControlName="completed"
+                      binary="true"
+                    ></p-checkbox>
+            
+                    </div>
+                  </div>
+                  <div class="ui-g-12 ui-md-4">
+                    <div>
+                      <input type="text" 
+                      pInputText 
+                      autocomplete="off"
+                      id="cpc" 
+                      name="cpc" 
+                      formControlName="cpc"         
+                      class="clsControl"  
+                    />
+                    </div>
+                  </div>
+                  <div class="ui-g-12">
+                    <div class="ui-g-12 ui-md-4">
+                      <div class="paddingRL">
+                        <label for="tpc">Terminated Plant Count :</label>
+                      </div>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                      <div class="paddingRL">
+                        <label for="Terminationreason">Termination Reason :</label>
+                      </div>
+                    </div>
+                  </div>
+                 <div class="ui-g-12">
+                  <div class="ui-g-12 ui-md-4">
+                    <div class="paddingRL">
+                      <input type="text" 
+                      pInputText 
+                      autocomplete="off"
+                      id="tpc" 
+                      name="tpc" 
+                      formControlName="tpc"         
+                      class="clsControl"  
+                    />
+                    </div>
+                  </div>
+                  <div class="ui-g-12 ui-md-4">
+                    <div class="paddingRL">
+                      <p-dropdown
+                      [options]="TerminatioReasons"
+                      [autoWidth]="true"
+                      formControlName="Terminationreason"
+                      id="Terminationreason"
+                      class="clsControl"
+                      name="Terminationreason">
+                    </p-dropdown>
+                    </div>
+                  </div>
+                  <div class="ui-g-12 ui-md-4">
+                    <div class="paddingRL">
+                        <!-- <button 
+                        style="width: 60px;"
+                        pButton 
+                        (click)="resetForm()" 
+                        type="button" 
+                        label="Add" 
+                        >
+                    </button> -->
+                      <button style="width: 70px;" type="submit" pButton   label="Submit"  ></button>
+                
+                    </div>
+                  </div>
+                 </div>
+                 <!-- <p-table [value]="taskStatusHistory">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>Terminated Plant Count</th>
+                      <th>Termination Reason</th>
+                  </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-taskstatus>
+                    <tr>
+                        
+                    </tr>
+                </ng-template>
+                 </p-table> -->
+                  
+                </div>
+              </form>
+            </div>
+            <button 
+            style="float: right;"
+            pButton 
+            (click)="closePopUp()" 
+            type="button" 
+            label="Close" 
+            class="ui-button-secondary"
+            >
+        </button>
+    </p-dialog>
   </div>
 </div>
 <p-growl [(value)]="msgs" life='5000'></p-growl>

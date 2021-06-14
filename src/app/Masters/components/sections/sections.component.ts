@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 import { routerNgProbeToken } from '@angular/router/src/router_module';
 import { NewSectionDetailsActionService } from '../../../task/services/add-section-details.service';
 import { element } from 'protractor';
+import { PTRService } from '../../../Masters/services/ptr.service';
 
 @Component({
   moduleId: module.id,
@@ -33,11 +34,13 @@ export class SectionsComponent implements OnInit {
   paginationValues: any;
   chkSelectAll: any;
   public newSectionEntryForm: FormGroup;
+  TerminationReasons: FormGroup;
   Fields: any[];
   chkIsActive: boolean;
   strains: any[];
   // section: any[];
   public saveButtonText = 'save';
+  public Phases:any;
   public newProductTypeResources: any;
   public newSectionResources: any;
   public globalResource: any;
@@ -53,6 +56,14 @@ export class SectionsComponent implements OnInit {
   public duplicateSection: any;
   public ActiveInActiveForUpdate: any = 0;
   public event: any;
+  public popupTerminationReason: boolean = false
+  public fieldname:any;
+  public sectionname:any;
+  public strainname:any;
+  public tpc:any;
+  public year:any;
+  public ld:any;
+  public TerminatioReasons: any[];
   pageheading: any;
   collapsed: any;
   sysmbol:any;
@@ -84,6 +95,7 @@ export class SectionsComponent implements OnInit {
     private scrolltopservice: ScrollTopService,
     private confirmationService: ConfirmationService,
     private router: Router,
+    private ptrActionService: PTRService,
     private cdr: ChangeDetectorRef
   ) {
     
@@ -112,7 +124,7 @@ export class SectionsComponent implements OnInit {
         this.globalData.Fields = data;
         this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --');
        
-        console.log("fields"+JSON.stringify(this.Fields));
+        // console.log("fields"+JSON.stringify(this.Fields));
       } ,
       error => { console.log(error); },
       () => console.log('Get all brands complete'));
@@ -328,7 +340,13 @@ this.Year = new Date().getFullYear();
     'Field': new FormControl(null, Validators.required),
       items: new FormArray([], this.customGroupValidation),
   });
- 
+  this.TerminationReasons = this.fb.group({
+    'phase': new FormControl(null, Validators.required),
+    'completed':new FormControl(null),
+    'cpc':new FormControl(null),
+    'Terminationreason':new FormControl(null),
+    'tpc':new FormControl(null),
+  })
   this.addItem();
   this.Year = new Date().getFullYear();
   if (this.appCommonService.ProductTypeBackLink && this.appCommonService.ProductTypeFormDetail) {
@@ -345,7 +363,11 @@ this.Year = new Date().getFullYear();
   setTimeout(() => {
     this.loaderService.display(false);
   }, 500);
-
+  this.Phases =  [
+    {label: '--Select--', value: 'null'},
+    {label: 'Planting', value: 'Planting'},
+    {label: 'Harvesting', value: 'Harvesting'}
+  ];
   }
 
   get SectionDetailsArr(): FormArray {
@@ -553,6 +575,37 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
       this.loaderService.display(false);
     });
 
+}
+
+showTerminationReasonPopup(SectionId,section){
+this.popupTerminationReason = true;
+this.fieldname =section.FieldName;
+this.sectionname = section.SectionName;
+this.strainname = section.StrainName;
+this.ld = section.IsLightDeprevation;
+this.year = section.Year;
+this.tpc = section.PlantsCount;
+this.getAllTerminationReasons();
+}
+getAllTerminationReasons(){
+  this.ptrActionService.GetAllPTRListByClient().subscribe(
+    data => {
+      if(data != 'No Data Found!'){
+        this.TerminatioReasons = this.dropdwonTransformService.transform(data, 'TerminationReason', 'TerminationId', '-- Select --',false);
+      }
+      else{
+        this.TerminatioReasons = [];
+      }
+     
+     } ,
+     error => { console.log(error);  this.loaderService.display(false); },
+     () => console.log('getTerminationReasons complete'));
+}
+closePopUp(){
+  this.popupTerminationReason = false
+}
+submitCompleteParameter(value: string){
+console.log("hi")
 }
 }
  
