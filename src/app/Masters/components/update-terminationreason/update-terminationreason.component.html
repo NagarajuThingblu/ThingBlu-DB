@@ -1,0 +1,167 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header="{{ pageheading }}" [(collapsed)]="collapsed" [toggleable]="true">
+        <div>
+        <form [formGroup]="updateTerminationReason" (ngSubmit)="onSubmit(updateTerminationReason.value)">
+          <div class="ui-g">
+            <div class="ui-g-12 ui-md-12" style="padding: 0">
+              <a [routerLink]=""  class="btn-link" (click)="backToSectionsPge()" style="float: right;padding-right: 21px;text-decoration: underline" ><< Back</a>
+             </div>
+          </div>
+          
+          <div class="ui-g">
+            <div class="ui-g-12 ui-md-6">
+              <label for="section" class="towlable"><b>Field Name:</b> {{sectionDetails.FieldName}}</label>
+              </div>
+              <div class="ui-g-12 ui-md-6">
+                <label for="section" class="towlable"><b>Section Name:</b> {{sectionDetails.SectionName}}</label>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                  <label for="section" class="towlable"><b>Strain Name:</b> {{sectionDetails.StrainName}}</label>
+                  </div>
+                  <div class="ui-g-12 ui-md-6">
+                    <label for="section" class="towlable"><b>Total Plant Count:</b> {{sectionDetails.PlantsCount}}</label>
+                    </div>
+                    <div class="ui-g-12 ui-md-6">
+                      <label for="section" class="towlable"><b>Year:</b> {{sectionDetails.Year}}</label>
+                      </div>
+                      <div class="ui-g-12 ui-md-6">
+                        <label for="section" class="towlable"><b>Light Deprevation:</b> {{sectionDetails.IsLightDeprevation}}</label>
+                        </div>
+          </div>
+         
+          <div class="ui-g">
+            <div class="ui-g-12 ui-md-4">
+              <div class="paddingRL">
+                <div class="le-su-12">
+                  <label for="phase">Phase :</label><span class="star">*</span>
+                  <p-dropdown
+                  [options]="Phases"
+                  [autoWidth]="true"
+                  formControlName="phase"
+                  id="phase"
+                  class="clsControl"
+                  name="phase">
+                </p-dropdown>
+                </div>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+              <div class="paddingRL">
+                <div class="le-su-12">
+                  <label for="completed">Completed :</label>
+                  <p-checkbox          
+                  formControlName="completed"
+                  binary="true"
+                  (onChange)="enableAndDisableFields($event)"
+                ></p-checkbox>
+                </div>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+              <div class="paddingRL">
+                <div class="le-su-12">
+                  <label for="cpc">Completed Plant Count :</label>
+                  <input type="text" 
+                  pInputText 
+                  autocomplete="off"
+                  id="cpc" 
+                  name="cpc" 
+                  formControlName="cpc"         
+                  class="clsControl"  
+                  [readonly]="enabledisablefields"
+                />
+                </div>
+              </div>
+            </div>
+            <!-- <div class="ui-g-12 ui-md-4">
+              <div class="paddingRL">
+                <div class="le-su-12">
+                  <label for="Date">Select Date :</label>
+                  <p-calendar             
+                  [showIcon]="true"  
+                
+                  formControlName="deliverydate"          
+                  class="clsControl"
+                  id="deliverydate"
+                  name="deliverydate"
+                  >
+                </p-calendar>
+                </div>
+                </div>
+              </div> -->
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="tpc">Terminated Plant Count :</label>
+                    <input type="text" 
+                    pInputText 
+                    autocomplete="off"
+                    id="tpc" 
+                    name="tpc" 
+                    formControlName="tpc"         
+                    class="clsControl"  
+                    [readonly]="enabledisableTerminationFields"
+                  />
+                  </div>
+                </div>
+              </div>
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="Terminationreason">Termination Reason :</label>
+                    <p-dropdown
+                    [options]="TerminatioReasons"
+                    [autoWidth]="true"
+                    formControlName="Terminationreason"
+                    id="Terminationreason"
+                    class="clsControl"
+                    name="Terminationreason"
+                    [disabled]="enabledisableTerminationFields">
+                  </p-dropdown>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ui-g" style="width:100%;text-align:right;">
+              <div class="ui-g-12">
+                <button pButton type="submit" label="Save" ></button>
+              </div>
+            </div>
+        </form>
+      </div>
+      <div class="ui-g">
+        <div class="paddingRL">
+          <div class="le-su-12">
+            <h6><b>History</b></h6>
+          </div>
+        </div>
+      </div>
+      <p-table [value]="allUpdatedTerminationlist">
+        <ng-template pTemplate="header">
+          <tr>
+              <th>Date</th>
+              <th>Terminated Plant Count</th>
+              <th>Termination Reason</th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-taskstatus>
+        <tr>
+            <td>{{taskstatus.CreatedDate}}</td>
+            <td>{{taskstatus.TerminatedPlantCount}}</td>
+            <td>{{taskstatus.TerminationReason}}</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft" let-state>
+      <pagination-counts *ngIf="allUpdatedTerminationlist?.length" [inputData]="allUpdatedTerminationlist" [inputEvent]="event">
+      </pagination-counts>
+    </ng-template>
+      </p-table>
+      </p-panel>
+    </div>
+  </div>
+</div>
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" *ngIf="true" class="clsConfirmBox">
+</p-confirmDialog>

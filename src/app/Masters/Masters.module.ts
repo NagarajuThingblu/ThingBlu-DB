@@ -77,6 +77,7 @@ import { PlantTerminationReasonsComponent } from './components/plant-termination
 import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-material.component';
 import { ChemicalPurchaseComponent } from './components/chemical-purchase/chemical-purchase.component';
 import { ChemicalMasterPageComponent } from './components/chemical-master-page/chemical-master-page.component';
+import { UpdateTerminationreasonComponent } from './components/update-terminationreason/update-terminationreason.component';
 
 
 @NgModule({
@@ -123,7 +124,8 @@ import { ChemicalMasterPageComponent } from './components/chemical-master-page/c
     PlantTerminationReasonsComponent,
     AddRawMaterialComponent,
     ChemicalPurchaseComponent,
-    ChemicalMasterPageComponent
+    ChemicalMasterPageComponent,
+    UpdateTerminationreasonComponent
    
   ],
   imports: [

@@ -34,12 +34,27 @@ export class NewSectionDetailsActionService {
       // .do(data =>console.log('All : ' + JSON.stringify(data)))
      .map(data =>  data );
     }
+    updateTermination(newUpdateTerminationForApi: any) {
+      const url = 'api/Grower/UpdateTaskStatus';
+
+      return this.http.post(url, newUpdateTerminationForApi, this.headers)
+      // .do(data =>console.log('All : ' + JSON.stringify(data)))
+     .map(data =>  data );
+    }
 
     Getsectionlist()
     {
       const url='api/Grower/GetSectionsList';
   let params = new HttpParams();
   params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
+  return this.http.get(url,{params: params}).map(data=>data);
+
+    }
+    GetUpdatedTerminationList(sectionid)
+    {
+      const url='api/Grower/GetTerminatedPlantCount';
+  let params = new HttpParams();
+  params=params.append('SectionId',sectionid);
   return this.http.get(url,{params: params}).map(data=>data);
 
     }

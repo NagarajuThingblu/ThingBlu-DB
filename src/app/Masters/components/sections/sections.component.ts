@@ -577,15 +577,17 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
 
 }
 
-showTerminationReasonPopup(SectionId,section){
-this.popupTerminationReason = true;
-this.fieldname =section.FieldName;
-this.sectionname = section.SectionName;
-this.strainname = section.StrainName;
-this.ld = section.IsLightDeprevation;
-this.year = section.Year;
-this.tpc = section.PlantsCount;
-this.getAllTerminationReasons();
+showTerminationReasonPopup(section){
+  this.router.navigate(['../home/taskupdate', section]);
+  
+// this.popupTerminationReason = true;
+// this.fieldname =section.FieldName;
+// this.sectionname = section.SectionName;
+// this.strainname = section.StrainName;
+// this.ld = section.IsLightDeprevation;
+// this.year = section.Year;
+// this.tpc = section.PlantsCount;
+// this.getAllTerminationReasons();
 }
 getAllTerminationReasons(){
   this.ptrActionService.GetAllPTRListByClient().subscribe(

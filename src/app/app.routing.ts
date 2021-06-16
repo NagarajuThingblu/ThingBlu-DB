@@ -79,6 +79,9 @@ import { HelpComponent } from './Masters/components/help/help.component';
 import { OrderformComponent } from './order/components/orderform/orderform.component';
 import { ChemicalPurchaseComponent } from './Masters/components/chemical-purchase/chemical-purchase.component';
 import { ChemicalMasterPageComponent } from './Masters/components/chemical-master-page/chemical-master-page.component';
+import { UpdateTerminationreasonComponent } from './Masters/components/update-terminationreason/update-terminationreason.component';
+
+
 const appRoutes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   // { path: 'login', component: LoginComponent },
@@ -171,6 +174,7 @@ const appRoutes: Routes = [
       {path:'addrawmaterial', component:AddRawMaterialComponent},
       {path:'help', component:HelpComponent},
       {path:'orderform', component:OrderformComponent},
+      { path: 'taskupdate', component: UpdateTerminationreasonComponent, canActivate: [AuthGuard, RoleGuard] },
       // {path:'planting', component:PlantingComponent}
      // {path:'harvesting',component:HarvestingComponent}
 
