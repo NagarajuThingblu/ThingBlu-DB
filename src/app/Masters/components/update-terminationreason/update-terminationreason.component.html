@@ -9,28 +9,6 @@
               <a [routerLink]=""  class="btn-link" (click)="backToSectionsPge()" style="float: right;padding-right: 21px;text-decoration: underline" ><< Back</a>
              </div>
           </div>
-          
-          <div class="ui-g">
-            <div class="ui-g-12 ui-md-6">
-              <label for="section" class="towlable"><b>Field Name:</b> {{sectionDetails.FieldName}}</label>
-              </div>
-              <div class="ui-g-12 ui-md-6">
-                <label for="section" class="towlable"><b>Section Name:</b> {{sectionDetails.SectionName}}</label>
-                </div>
-                <div class="ui-g-12 ui-md-6">
-                  <label for="section" class="towlable"><b>Strain Name:</b> {{sectionDetails.StrainName}}</label>
-                  </div>
-                  <div class="ui-g-12 ui-md-6">
-                    <label for="section" class="towlable"><b>Total Plant Count:</b> {{sectionDetails.PlantsCount}}</label>
-                    </div>
-                    <div class="ui-g-12 ui-md-6">
-                      <label for="section" class="towlable"><b>Year:</b> {{sectionDetails.Year}}</label>
-                      </div>
-                      <div class="ui-g-12 ui-md-6">
-                        <label for="section" class="towlable"><b>Light Deprevation:</b> {{sectionDetails.IsLightDeprevation}}</label>
-                        </div>
-          </div>
-         
           <div class="ui-g">
             <div class="ui-g-12 ui-md-4">
               <div class="paddingRL">
@@ -40,6 +18,7 @@
                   [options]="Phases"
                   [autoWidth]="true"
                   formControlName="phase"
+                  (onChange)="GetAllDetails()"
                   id="phase"
                   class="clsControl"
                   name="phase">
@@ -47,6 +26,62 @@
                 </div>
               </div>
             </div>
+          </div>
+          <div class="ui-g" *ngIf="viewdata">
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="section" class="towlable"><b>Field Name:</b> {{AllSectionData.FieldName}}</label>
+              </div>
+              </div>
+             
+              <div class="ui-g-12 ui-md-6">
+                <div class="paddingRL">
+                  <label for="section" class="towlable"><b>Section Name:</b> {{AllSectionData.SectionName}}</label>
+                </div>
+              </div>
+               
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <label for="section" class="towlable"><b>Strain Name:</b> {{AllSectionData.StrainName}}</label>
+                  </div>
+                </div>
+                 
+                  <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <label for="section" class="towlable"><b>Total Plant Count:</b> {{AllSectionData.TotalPlantCount}}</label>
+                    </div>
+                  </div>
+                  <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <label for="section" class="towlable"><b>Available Plant Count:</b> {{AllSectionData.AvailablePlantCnt}}</label>
+                    </div>
+                  </div>
+                  <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <label for="section" class="towlable"><b>Terminated Plant Count:</b> {{AllSectionData.TerminatedPlantCnt}}</label>
+                    </div>
+                  </div>
+                  <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <label for="section" class="towlable"><b>Completed Plant Count:</b> {{AllSectionData.CompletedPlantCnt}}</label>
+                    </div>
+                  </div>
+                    
+                    <div class="ui-g-12 ui-md-6">
+                      <div class="paddingRL">
+                        <label for="section" class="towlable"><b>Year:</b> {{AllSectionData.Year}}</label>
+                      </div>
+                    </div>
+                     
+                      <div class="ui-g-12 ui-md-6">
+                        <div class="paddingRL">
+                          <label for="section" class="towlable"><b>Light Deprevation:</b> {{AllSectionData.IsLightDeprevation}}</label>
+                        </div>
+                        </div>
+                      
+          </div>
+         
+          <div class="ui-g">
             <div class="ui-g-12 ui-md-4">
               <div class="paddingRL">
                 <div class="le-su-12">
@@ -75,22 +110,21 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="ui-g-12 ui-md-4">
+            <div class="ui-g-12 ui-md-4" style="visibility: hidden;">
               <div class="paddingRL">
                 <div class="le-su-12">
-                  <label for="Date">Select Date :</label>
-                  <p-calendar             
-                  [showIcon]="true"  
-                
-                  formControlName="deliverydate"          
+                  <label for="phase">Phase :</label><span class="star">*</span>
+                  <p-dropdown
+                  [options]="Phases"
+                  [autoWidth]="true"
+                  formControlName="phase"
+                  id="phase"
                   class="clsControl"
-                  id="deliverydate"
-                  name="deliverydate"
-                  >
-                </p-calendar>
+                  name="phase">
+                </p-dropdown>
                 </div>
-                </div>
-              </div> -->
+              </div>
+            </div>
               <div class="ui-g-12 ui-md-4">
                 <div class="paddingRL">
                   <div class="le-su-12">
@@ -131,14 +165,14 @@
             </div>
         </form>
       </div>
-      <div class="ui-g">
+      <div class="ui-g" >
         <div class="paddingRL">
           <div class="le-su-12">
             <h6><b>History</b></h6>
           </div>
         </div>
       </div>
-      <p-table [value]="allUpdatedTerminationlist">
+      <p-table  [value]="allUpdatedTerminationlist">
         <ng-template pTemplate="header">
           <tr>
               <th>Date</th>
@@ -148,15 +182,15 @@
       </ng-template>
       <ng-template pTemplate="body" let-taskstatus>
         <tr>
-            <td>{{taskstatus.CreatedDate}}</td>
+            <td>{{taskstatus.TerminationDate}}</td>
             <td>{{taskstatus.TerminatedPlantCount}}</td>
             <td>{{taskstatus.TerminationReason}}</td>
         </tr>
     </ng-template>
-    <ng-template pTemplate="paginatorleft" let-state>
+    <!-- <ng-template pTemplate="paginatorleft" let-state>
       <pagination-counts *ngIf="allUpdatedTerminationlist?.length" [inputData]="allUpdatedTerminationlist" [inputEvent]="event">
       </pagination-counts>
-    </ng-template>
+    </ng-template> -->
       </p-table>
       </p-panel>
     </div>

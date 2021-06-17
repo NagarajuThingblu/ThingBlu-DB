@@ -50,6 +50,14 @@ export class NewSectionDetailsActionService {
   return this.http.get(url,{params: params}).map(data=>data);
 
     }
+    GetSectionDetails(SectionId, TaskName){
+      const url='api/Grower/GetSectionDetails';
+      let params = new HttpParams();
+      params=params.append('SectionId',SectionId);
+      params=params.append('TaskName',TaskName);
+      return this.http.get(url,{params: params}).map(data=>data);
+    
+    }
     GetUpdatedTerminationList(sectionid)
     {
       const url='api/Grower/GetTerminatedPlantCount';

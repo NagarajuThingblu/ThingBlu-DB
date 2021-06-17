@@ -155,8 +155,12 @@ export class OrderformComponent implements OnInit {
   ngOnInit() {
     this.priorities =  [
       {label: 'Ground', value: 'Ground'},
+      {label: 'USP', value: 'USP'},
+      // {label: 'UPS Ground', value: 'UPSGround'},
+      // {label: 'UPS 2 Day', value: 'UPS2Day'},
+      // {label: 'UPS 3 Day', value: 'UPS3Day'},
+      // {label: 'UPS Next Day Air', value: 'UPSNextDayAir'},
       {label: 'FedEx', value: 'FedEx'},
-      {label: 'UPS', value: 'UPS'},
       {label: 'USPS', value: 'USPS'}
     ];
     
@@ -181,6 +185,7 @@ export class OrderformComponent implements OnInit {
       'deliverydate':new FormControl(null, Validators.required),
       'orderno':new FormControl(null, Validators.required),
       'shippingpref':new FormControl(null, Validators.required),
+      'comment': new FormControl(null),
       items: new FormArray([], this.customGroupValidation),
     })
     this.addItem();
@@ -442,7 +447,7 @@ for(let data of this.globalData.dropdownsData){
   if(event.value === data.ProductTypeId){
     // this.orderForm.get('items')['controls'][index].controls['producttype'].setValue(data.ProductTypeId)
     this.skewtype = data.SkewKeyName
-    this.orderForm.get('items')['controls'][index].controls['producttypeName'].setValue(data.ProductName)
+    // this.orderForm.get('items')['controls'][index].controls['producttypeName'].setValue(data.ProductName)
     this.orderForm.get('items')['controls'][index].controls['skewtype'].setValue(this.skewtype)
     this.packagetype = data.PkgTypeName
     this.orderForm.get('items')['controls'][index].controls['packagetype'].setValue(this.packagetype)

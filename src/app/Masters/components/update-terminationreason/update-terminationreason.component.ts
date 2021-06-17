@@ -29,7 +29,10 @@ export class UpdateTerminationreasonComponent implements OnInit {
   public sectionId:any;
   public _cookieService: any;
   public allUpdatedTerminationlist:any;
+  public AllSectionData: any;
+  public TaskName:any;
   public sectionDetails:any;
+  public viewdata:boolean= false;
   pageheading: any;
   public Phases:any;
   public msgs: any[];
@@ -38,6 +41,7 @@ export class UpdateTerminationreasonComponent implements OnInit {
   public TerminatioReasons: any[];
   paginationValues: any;
   public sectionid:any
+  collapsed: any;
   updateTerminationReason:FormGroup;
   constructor( 
     private route: ActivatedRoute,
@@ -103,6 +107,9 @@ export class UpdateTerminationreasonComponent implements OnInit {
        error => { console.log(error);  this.loaderService.display(false); },
        () => console.log('getTerminationReasons complete'));
   }
+  doOPenPanel() {
+    this.collapsed = false;
+  }
   enableAndDisableFields(event:any){
     if(event){
 this.enabledisablefields = false;
@@ -141,6 +148,21 @@ console.log(event);
                 this.getAllUpdateTerminationlist();
                 this.loaderService.display(false);
             }
+            else if(String(data[0].RESULTKEY) === 'Completed plantcount is greater than Total plantcount'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail:'Completed plantcount is greater than Total plantcount' });
+              this.loaderService.display(false);
+            }
+            else if(String(data[0].RESULTKEY) === 'Failure'){
+              this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg,
+              detail:'Failure' });
+              this.loaderService.display(false);
+            }
+            else if(String(data[0].RESULTKEY) === 'Something went wrong at server side!'){
+              this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg,
+              detail:'Something went wrong at server side!' });
+              this.loaderService.display(false);
+            }
             else {
               this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data });
               this.loaderService.display(false);
@@ -178,5 +200,21 @@ this.newSectionDetailsActionService.GetUpdatedTerminationList(this.sectionDetail
 
   backToSectionsPge(){
     this.router.navigate(['../home/sections']);
+  }
+  GetAllDetails(){
+this.TaskName = this.updateTerminationReason.value.phase
+    this.newSectionDetailsActionService.GetSectionDetails(this.sectionDetails.SectionId, this.TaskName).subscribe(
+      data=>{
+        if (data !== 'No Data Found') {
+          this.viewdata = true;
+          this.AllSectionData=data[0];
+      } else {
+        this.AllSectionData = [];
+        this.viewdata = false;
+       }
+       this.loaderService.display(false);
+      },
+       error => { console.log(error);  this.loaderService.display(false); },
+       () => console.log('getAllStrainsbyClient complete'));
   }
 }
