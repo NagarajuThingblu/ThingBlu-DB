@@ -99,7 +99,6 @@
                       <div class="radio" *ngFor="let TrimmingMethod of TrimmingMethods;" >
                         <p-radioButton [name]=i
                          [value]="TrimmingMethod" 
-                         [(ngModel)]="HT"
                          label={{TrimmingMethod}} 
                          [disabled]="enableDropDown"
                          formControlName="TrimmingMethod"
