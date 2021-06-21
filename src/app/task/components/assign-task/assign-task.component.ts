@@ -239,7 +239,7 @@ this.tasknames=this.dropdwonTransformService.transform(
     String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBING' &&
     String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBELABELING'
   ),
-  'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+  'TaskTypeValue', 'TaskTypeId', '-- Select --', false);
   this.assignTaskForm = this.fb.group({
     'taskCategory': new FormControl(this.assignTask.taskcategory, Validators.required),
     'taskname': new FormControl(null, Validators.required)
@@ -251,7 +251,7 @@ else{
     categorylist.filter(item =>
       String(item.TaskTypeKey).toLocaleUpperCase() == 'CUSTOMTASK'
     ),
-    'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+    'TaskTypeValue', 'TaskTypeId', '-- Select --', false);
     this.assignTaskForm = this.fb.group({
       'taskCategory': new FormControl(this.assignTask.taskcategory, Validators.required),
       'taskname': new FormControl(null, Validators.required)
@@ -275,7 +275,7 @@ else{
         if ((<UserModel>this.appCommonService.getUserProfile()).UserRole === this.userRoles.Manager || (<UserModel>this.appCommonService.getUserProfile()).UserRole === this.userRoles.SystemAdmin || this.prodDBRouteParams) {
           if (this.prodDBRouteParams) {
             
-            this.tasknames = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+            this.tasknames = this.dropdwonTransformService.transform(data, 'TaskTypeValue', 'TaskTypeId', '-- Select --', false);
             this.taskcategories=this.dropdwonTransformService.transform(data,'CategoryName','TaskCategoryID','-- Select --', false);
           } else {
             this.tasknames = this.dropdwonTransformService.transform(
@@ -286,7 +286,7 @@ else{
                 String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBING' &&
                 String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBELABELING'
               ),
-              'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+              'TaskTypeValue', 'TaskTypeId', '-- Select --', false);
               const categories= Array.from(data.reduce((m, t) => m.set(t.CategoryName, t), new Map()).values())
               this.taskcategories=this.dropdwonTransformService.transform(categories,'CategoryName','TaskCategoryID','-- Select --', false);       }
         } else {
