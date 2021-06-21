@@ -211,9 +211,9 @@ createItem(): FormGroup {
         if (data) {
           let category 
          category = data.filter(item=>item.CategoryName == 'Processing');
-        this.TaskType = this.dropdwonTransformService.transform(category, 'TaskTypeName', 'TaskTypeId', '-- Select --');
+        this.TaskType = this.dropdwonTransformService.transform(category, 'TaskTypeValue', 'TaskTypeId', '-- Select --');
         console.log(this.TaskType) 
-        this.tasktypes = this.TaskType.filter(x =>x.label == 'Trimming' ||x.label == 'Bucking' || x.label == 'PreBucking'  )
+        this.tasktypes = this.TaskType.filter(x =>x.label == 'Trimmed' ||x.label == 'Bucked' || x.label == 'Pre-Bucked'  )
         console.log(this.tasktypes) 
       }
       } ,
@@ -314,10 +314,10 @@ createItem(): FormGroup {
     for(let item of this.TaskType){
       this.taskTypeValueAndLabelMap.set(item.value,item.label)
     }
-    if(event && event.value && this.taskTypeValueAndLabelMap.get(event.value) === 'Trimming')
+    if(event && event.value && this.taskTypeValueAndLabelMap.get(event.value) === 'Trimmed')
     {
      
-      this.taskTypeNameValue = "Trimming"
+      this.taskTypeNameValue = "Trimmed"
       this.enableDropDown = false;
       this.HT = "HT"
     }
