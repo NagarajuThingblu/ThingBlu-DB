@@ -210,7 +210,7 @@ createItem(): FormGroup {
         
         if (data) {
           let category 
-         category = data.filter(item=>item.CategoryName == 'Growing');
+         category = data.filter(item=>item.CategoryName == 'Processing');
         this.TaskType = this.dropdwonTransformService.transform(category, 'TaskTypeName', 'TaskTypeId', '-- Select --');
         console.log(this.TaskType) 
         this.tasktypes = this.TaskType.filter(x =>x.label == 'Trimming' ||x.label == 'Bucking' || x.label == 'PreBucking'  )
@@ -621,7 +621,3 @@ createItem(): FormGroup {
   
   }
 }
-
-
-
-
