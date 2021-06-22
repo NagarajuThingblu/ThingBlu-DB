@@ -276,7 +276,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
       data => {
         // console.log(data);
         this.globalData.taskTypes = data;
-        this.taskTypes = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', 'Show All', false) ;
+        this.taskTypes = this.dropdwonTransformService.transform(data, 'TaskTypeValue', 'TaskTypeId', 'Show All', false) ;
        // this.loaderService.display(false);
       } ,
       error => { console.log(error); this.loaderService.display(false); },
