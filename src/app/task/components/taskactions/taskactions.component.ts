@@ -502,7 +502,7 @@ export class TaskactionsComponent implements OnInit {
           "ClientId":this._cookieService.ClientId,
           "VirtualRoleId": this._cookieService.VirtualRoleId,
           "EmpId": this.taskActionDetails.EmpId,
-           "ActEndDate":formModel.editenddate,
+           "ActEndDate":String(formModel.editenddate),
           // "ActEndDate": new Date(formModel.editenddate).toLocaleDateString().replace(/\u200E/g, ''),
         }
       }
