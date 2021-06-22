@@ -44,7 +44,7 @@
                         <span class="star">*</span>
                         <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="Add Bins"  id="btn_binshow" (click)="GoToBinsPage()"  name="btnviewbins"></p-button>
                       </th>
-                      <th>Classification
+                      <th>Category 
                         <span class="star">*</span>
                       </th>
                       <th>Strain
@@ -237,7 +237,7 @@
         <tr>
           <th [pSortableColumn]="'RawSupplierName'">Supplier Name <p-sortIcon [field]="'RawSupplierName'"></p-sortIcon>
           </th>
-          <th [pSortableColumn]="'TaskTypeName'">Classification Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
+          <th [pSortableColumn]="'TaskTypeName'">Category Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
           </th>
         
           <th [pSortableColumn]="'BinName'">Bin Name <p-sortIcon [field]="'BinName'"></p-sortIcon>

@@ -517,6 +517,10 @@ this.saveButtonText ="save"
            
             this.resetForm();
           }
+          else     if (String(data[0].RESULTKEY) === 'Order In Progress You Can not Delete the Product') {
+            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+            detail:"Order In Progress You Can not Delete the Product"});
+          }
           else if (String(data[0].ResultKey)  === "DUPLICATE") {
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.orderrequestResource.duplicateorder});
           }
