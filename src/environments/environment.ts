@@ -9,8 +9,8 @@ export const environment = {
     // apiEndpoint: 'http://localhost/thingbluwebapinew/'
     // apiEndpoint: 'https://thingbluapiuat.azurewebsites.net/',
     tolerance: 5,
-        apiEndpoint:'https://hwg-api.azurewebsites.net/',
- // apiEndpoint: 'https://tbappapitest.azurewebsites.net/', // Growers dev
+       // apiEndpoint:'https://hwg-api.azurewebsites.net/',
+ apiEndpoint: 'https://tbappapitest.azurewebsites.net/', // Growers dev
     // apiEndpoint: 'https://tbappapihannah.azurewebsites.net/', //Processor dev
     //  apiEndpoint: 'https://tbdemowebapi.azurewebsites.net/',
   
@@ -18,10 +18,10 @@ export const environment = {
     refreshTime: 1, // refresh time in minutes,
     encryptDecryptKey: 'mechsoft@12',
     parentEncryptionKey: 'm3ch50ft',
-    // clientCode: 'HANNAH',
-    // clientKey: 'Hannah Industries',
-    clientCode: 'HWG',
-     clientKey:'HWG',
+    clientCode: 'HANNAH',
+    clientKey: 'Hannah Industries',
+    // clientCode: 'HWG',
+    //  clientKey:'HWG',
   
     // ** Start  Demo Test config (demo processors)
   //     tenant: 'thingblub2ctest.onmicrosoft.com',
@@ -45,8 +45,8 @@ export const environment = {
     signUpPolicy: 'B2C_1_SignUpV2',
     resetPolicy: 'B2C_1_PasswordReset',
     b2cScopes: 'https://thingbluB2Csample.onmicrosoft.com/access-api/user_impersonation', 
-    // reportURL: 'https://thingbludemoapplication.navizanalytics.com/Grow',
-     reportURL: 'https://thingbludemoapplication.navizanalytics.com/GrowPROD',
+    reportURL: 'https://thingbludemoapplication.navizanalytics.com/Grow',
+     //reportURL: 'https://thingbludemoapplication.navizanalytics.com/GrowPROD',
 
     //Local
   redirectUri: 'http://localhost:8000/',
