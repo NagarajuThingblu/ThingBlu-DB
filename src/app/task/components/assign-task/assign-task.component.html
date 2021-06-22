@@ -284,7 +284,7 @@
               </app-bud-unlabelled-packaging> -->
 
               <app-bud-packaging
-                *ngIf="selectedTaskTypeName=='BUDPACKAGING'&&this.isServiceCallComplete" 
+                *ngIf="selectedTaskTypeName=='BUDPACKAGING'&&this.isServiceCallComplete"
                 style="width:100%;"                 
                 [TaskModel]="assignTask"       
                 [PageFlag]="page"     
@@ -394,7 +394,7 @@
             >
             </app-harvesting>
             <app-prebucking
-              *ngIf="selectedTaskTypeName=='PREBUCKING'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Growing'" 
+              *ngIf="selectedTaskTypeName=='PREBUCKING'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Processing'" 
               style="width:100%;"   
               [TaskModel]="assignTask" 
               [PageFlag]="page"  
@@ -403,7 +403,7 @@
             </app-prebucking>
 
             <app-bucking
-            *ngIf="selectedTaskTypeName=='BUCKING'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Growing'" 
+            *ngIf="selectedTaskTypeName=='BUCKING'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Processing'" 
             style="width:100%;"   
             [TaskModel]="assignTask" 
             [PageFlag]="page"  
@@ -412,7 +412,7 @@
           </app-bucking>
 
           <app-bud-packaging
-                *ngIf="selectedTaskTypeName=='PACKAGING'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Growing'"
+                *ngIf="selectedTaskTypeName=='BUDPACKAGING'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Growing'"
                 style="width:100%;"                 
                 [TaskModel]="assignTask"       
                 [PageFlag]="page"     
@@ -421,7 +421,7 @@
           </app-bud-packaging>
 
           <app-growertrimming
-            *ngIf="selectedTaskTypeName=='TRIM'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Growing'
+            *ngIf="selectedTaskTypeName=='TRIM'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Processing'
             
             " 
             style="width:100%;"   
@@ -431,7 +431,7 @@
           >
           </app-growertrimming>
           <app-d8-distillate
-          *ngIf="selectedTaskTypeName=='D8DISTILLATE'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Growing'
+          *ngIf="selectedTaskTypeName=='D8DISTILLATE'&&this.isServiceCallComplete&&taskcategoriesMap.get(assignTaskForm.controls.taskCategory.value) === 'Processing'
           
           " 
           style="width:100%;"   

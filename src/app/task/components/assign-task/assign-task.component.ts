@@ -60,6 +60,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
   public tasktypelist:any;
   taskcategoriesMap: Map<number,string> = new Map<number,string>();
+  tasknameMap: Map<number,string> = new Map<number,string>();
   constructor(
     private fb: FormBuilder,
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -238,7 +239,7 @@ this.tasknames=this.dropdwonTransformService.transform(
     String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBING' &&
     String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBELABELING'
   ),
-  'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+  'TaskTypeValue', 'TaskTypeId', '-- Select --', false);
   this.assignTaskForm = this.fb.group({
     'taskCategory': new FormControl(this.assignTask.taskcategory, Validators.required),
     'taskname': new FormControl(null, Validators.required)
@@ -250,7 +251,7 @@ else{
     categorylist.filter(item =>
       String(item.TaskTypeKey).toLocaleUpperCase() == 'CUSTOMTASK'
     ),
-    'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+    'TaskTypeValue', 'TaskTypeId', '-- Select --', false);
     this.assignTaskForm = this.fb.group({
       'taskCategory': new FormControl(this.assignTask.taskcategory, Validators.required),
       'taskname': new FormControl(null, Validators.required)
@@ -274,7 +275,7 @@ else{
         if ((<UserModel>this.appCommonService.getUserProfile()).UserRole === this.userRoles.Manager || (<UserModel>this.appCommonService.getUserProfile()).UserRole === this.userRoles.SystemAdmin || this.prodDBRouteParams) {
           if (this.prodDBRouteParams) {
             
-            this.tasknames = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+            this.tasknames = this.dropdwonTransformService.transform(data, 'TaskTypeValue', 'TaskTypeId', '-- Select --', false);
             this.taskcategories=this.dropdwonTransformService.transform(data,'CategoryName','TaskCategoryID','-- Select --', false);
           } else {
             this.tasknames = this.dropdwonTransformService.transform(
@@ -285,7 +286,7 @@ else{
                 String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBING' &&
                 String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBELABELING'
               ),
-              'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+              'TaskTypeValue', 'TaskTypeId', '-- Select --', false);
               const categories= Array.from(data.reduce((m, t) => m.set(t.CategoryName, t), new Map()).values())
               this.taskcategories=this.dropdwonTransformService.transform(categories,'CategoryName','TaskCategoryID','-- Select --', false);       }
         } else {
@@ -297,6 +298,11 @@ else{
             'CategoryName','TaskCategoryID','-- Select --', false
 
           );
+        }
+        if(this.tasknames){
+          for(let item of this.tasknames){
+            this.tasknameMap.set(item.value,item.label)
+          }
         }
         if(this.taskcategories){
           for(let item of this.taskcategories){
@@ -378,7 +384,7 @@ console.log(assignTaskFormValues)
           return;
         }
 
-      } else if (this.selectedTaskTypeName === 'BUDPACKAGING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) != 'Growing') { // BUDPACKAGING TASK
+      } else if (this.selectedTaskTypeName === 'BUDPACKAGING'&&this.tasknameMap.get(this.assignTaskForm.controls.taskname.value) === 'BUDPACKAGING') { // BUDPACKAGING TASK
         // Changed added by Devdan :: Calling common methods to get n set local storage :: 27-Sep-2018
         // let lotDetails = JSON.parse(localStorage.getItem('selectedLotsArray'));
         let lotDetails = null;
@@ -906,7 +912,7 @@ console.log(assignTaskFormValues)
         Plants: {
           "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
           "SectionId": assignTaskFormValues.PLANTING.section,
-          "AssignedPlantsCount": assignTaskFormValues.PLANTING.assignedPC,
+          "AssignedPlantsCount": 0,// hem growers don't assign particular number of palnts to emp
           "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
           "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
           "Priority":assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority  ,
@@ -1099,7 +1105,7 @@ console.log(assignTaskFormValues)
           }
         )
         }
-        else if(this.selectedTaskTypeName === 'TRIM'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+        else if(this.selectedTaskTypeName === 'TRIM'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Processing'){
           let trimmingDataForApi = {
             Trimming:{
               "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
@@ -1135,7 +1141,7 @@ console.log(assignTaskFormValues)
           }
         )
         }
-        else if(this.selectedTaskTypeName === 'BUDPACKAGING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+        else if(this.selectedTaskTypeName === 'BUDPACKAGING'&&this.tasknameMap.get(this.assignTaskForm.controls.taskname.value) === 'Packaging'){
          let BinTypeDetails
          BinTypeDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
           let packagingDataForApi = {
@@ -1233,7 +1239,7 @@ console.log(assignTaskFormValues)
         }
           // http call starts
         
-   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING' && this.selectedTaskTypeName != 'BUCKING'&& this.selectedTaskTypeName != 'TRIM'&& (this.selectedTaskTypeName != 'BUDPACKAGING' && this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) != 'Growing')){
+   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING' && this.selectedTaskTypeName != 'BUCKING'&& this.selectedTaskTypeName != 'TRIM'&& (this.selectedTaskTypeName != 'BUDPACKAGING' && this.tasknameMap.get(this.assignTaskForm.controls.taskname.value) === 'Packaging')){
 
    
           this.loaderService.display(true);
@@ -1359,7 +1365,7 @@ console.log(assignTaskFormValues)
               });
             }
 
-      else  if(this.selectedTaskTypeName === 'CUSTOMTASK'  ||this.selectedTaskTypeName === 'INDEPENDENT' &&  this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+      else  if(this.selectedTaskTypeName === 'CUSTOMTASK'  ||this.selectedTaskTypeName === 'INDEPENDENT'){
 
    
         this.loaderService.display(true);
