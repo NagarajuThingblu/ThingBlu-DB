@@ -97,8 +97,12 @@ export class RetailerComponent implements OnInit {
     this.getRetailerDetailListByClient();
     this.priorities =  [
       {label: 'Ground', value: 'Ground'},
+      {label: 'USP', value: 'USP'},
+      {label: 'UPS Ground', value: 'UPSGround'},
+      {label: 'UPS 2 Day', value: 'UPS2Day'},
+      {label: 'UPS 3 Day', value: 'UPS3Day'},
+      {label: 'UPS Next Day Air', value: 'UPSNextDayAir'},
       {label: 'FedEx', value: 'FedEx'},
-      {label: 'UPS', value: 'UPS'},
       {label: 'USPS', value: 'USPS'}
     ];
     // By Defalt Set IsActive = true :: Added by Devdan :: 28-Sep-2018

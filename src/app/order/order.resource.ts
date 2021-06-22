@@ -56,6 +56,7 @@ export class OrderResource {
                     changeDate: 'Change Date',
                     initialDate: 'Initial Date',
                     deleteIncomingConfirm: 'Are you sure you’d like to discard this order?',
+                    orderdeletewarn:'Order In Progress You Can not Delete the Product'
 
                 },
                 identifyProduct: {

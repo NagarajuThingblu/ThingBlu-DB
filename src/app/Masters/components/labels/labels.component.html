@@ -9,7 +9,7 @@
           <div class="ui-g ">
             <div class="ui-g-12 ui-md-6" style="padding-left:0px;">
               <div class="paddingRL">
-                <label for="TaskType" class="towlable">{{ newLabelResources.taskType }}<span class="star">*</span></label>
+                <label for="TaskType" class="towlable">Category<span class="star">*</span></label>
                   <p-dropdown
                     id="TaskType"
                     [options]="tasktypes"
@@ -263,7 +263,7 @@
           <tr>
             <!-- <th [pSortableColumn]="'FieldName'">Field Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
             </th> -->
-            <th [pSortableColumn]="'TaskTypeName'">Task Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
+            <th [pSortableColumn]="'TaskTypeName'">Category<p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
             </th>
             <th [pSortableColumn]="'BinNo'">Bin Number <p-sortIcon [field]="'BinNo'"></p-sortIcon>
             </th>

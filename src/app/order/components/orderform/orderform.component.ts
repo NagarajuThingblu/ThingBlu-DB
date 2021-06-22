@@ -563,11 +563,15 @@ this.saveButtonText ="save"
            
             this.resetForm();
           }
-          else     if (String(data[0].RESULTKEY) === 'Order Updated Successfully') {
+          else if (String(data[0].RESULTKEY) === 'Order Updated Successfully') {
             this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
             detail: this.orderrequestResource.orderupdated });
            
             this.resetForm();
+          }
+           else     if (String(data[0].RESULTKEY) === 'Order In Progress You Can not Delete the Product') {
+            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+            detail:this.orderrequestResource.orderdeletewarn });
           }
           else if (String(data[0].ResultKey)  === "DUPLICATE") {
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.orderrequestResource.duplicateorder});
