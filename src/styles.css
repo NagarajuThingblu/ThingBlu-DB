@@ -483,6 +483,9 @@ nav.navbar-right > li{
     .ui-state-disabled, .ui-widget:disabled {
         opacity: 0.6 !important;
     }
+.ui-dialog .ui-dialog-content{
+overflow: visible !important;
+    }
     .ui-button.ui-button-secondary.ui-state-default, .ui-splitbutton.ui-button-secondary .ui-button.ui-state-default {
         background-color: #e6e6e6 !important;
         border-color: #ccc;
