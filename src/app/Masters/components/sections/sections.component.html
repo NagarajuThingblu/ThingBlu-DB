@@ -227,13 +227,14 @@
             <td>{{section?.IsLightDeprevation }}</td>
             <td style="width:65px;">
               <span class="ui-column-title">edit</span>
-              <a href="#" [routerLink]="" (click)="getSectionOnEdit(section?.SectionId)">
+              <!-- <a href="#" [routerLink]="" (click)="getSectionOnEdit(section?.SectionId)"> -->
+                <a href="#" [routerLink]="" (click)="showTerminationReasonPopup(section)">
                 <span class="fa fa-edit"></span>
               </a>
               <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(section?.SectionId,section,1,0)">
                 <span class="fa fa-trash"></span>
               </a>
-              <a href="#" [routerLink]="" (click)="showTerminationReasonPopup(section)">
+              <a href="#" [routerLink]="" (click)="showSectionDetails(section)">
                 <span class="fa fa-info-circle"></span>
               </a>
               <div class="clsToggleButtonDiv">

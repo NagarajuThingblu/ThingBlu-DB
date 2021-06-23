@@ -30,52 +30,108 @@
           <div class="ui-g" *ngIf="viewdata">
             <div class="ui-g-12 ui-md-6">
               <div class="paddingRL">
-                <label for="section" class="towlable"><b>Field Name:</b> {{AllSectionData.FieldName}}</label>
+                <label for="field" class="towlable"><b>Field Name:</b> {{AllSectionData.FieldName}} </label>
               </div>
               </div>
              
               <div class="ui-g-12 ui-md-6">
                 <div class="paddingRL">
-                  <label for="section" class="towlable"><b>Section Name:</b> {{AllSectionData.SectionName}}</label>
+                  <label for="section" class="towlable"><b>Section Name:</b>
+                    <span class="fa fa-pencil" (click)="editSectionInfo()"></span>
+                    <input
+                    class="inputtextbox"
+                    name="section"
+                    id="section"
+                    type="text"
+                    autocomplete="off"    
+                    formControlName="section"
+                    placeholder="Enter Section "
+                    min="0.1" value="{{AllSectionData.SectionName}}"
+                    [readonly]="editSection"></label>
                 </div>
               </div>
                
                 <div class="ui-g-12 ui-md-6">
                   <div class="paddingRL">
-                    <label for="section" class="towlable"><b>Strain Name:</b> {{AllSectionData.StrainName}}</label>
+                    <label for="strain" class="towlable"><b>Strain Name:</b><span class="fa fa-pencil" (click)="editStrainInfo()"></span>
+                      <span *ngIf="showStrainText" >{{AllSectionData.StrainName}}</span>
+                      <p-dropdown
+                      *ngIf="showStrainDropdown"
+                      [options]="strains"
+                      [autoWidth]="true"
+                      formControlName="strain"
+                      id="strain"
+                      class="clsControl"
+                      name="strain"
+                     >
+                    </p-dropdown></label>
                   </div>
                 </div>
                  
                   <div class="ui-g-12 ui-md-6">
                     <div class="paddingRL">
-                      <label for="section" class="towlable"><b>Total Plant Count:</b> {{AllSectionData.TotalPlantCount}}</label>
+                      <label for="TPC" class="towlable"><b>Total Plant Count:</b> 
+                        <span class="fa fa-pencil" (click)="editTPCInfo()"></span>
+                        <input
+                        class="inputtextbox"
+                        name="TPC"
+                        id="TPC"
+                        type="text"
+                        autocomplete="off"    
+                        formControlName="TPC"
+                        placeholder="Enter Total Plant Count "
+                        min="0.1" value="{{AllSectionData.TotalPlantCount}}"
+                        [readonly]="editTPC"></label>
                     </div>
                   </div>
                   <div class="ui-g-12 ui-md-6">
                     <div class="paddingRL">
-                      <label for="section" class="towlable"><b>Available Plant Count:</b> {{AllSectionData.AvailablePlantCnt}}</label>
+                      <label for="availpc" class="towlable"><b>Available Plant Count:</b> {{AllSectionData.AvailablePlantCnt}}</label>
                     </div>
                   </div>
                   <div class="ui-g-12 ui-md-6">
                     <div class="paddingRL">
-                      <label for="section" class="towlable"><b>Terminated Plant Count:</b> {{AllSectionData.TerminatedPlantCnt}}</label>
+                      <label for="termpc" class="towlable"><b>Terminated Plant Count:</b> {{AllSectionData.TerminatedPlantCnt}}</label>
                     </div>
                   </div>
                   <div class="ui-g-12 ui-md-6">
                     <div class="paddingRL">
-                      <label for="section" class="towlable"><b>Completed Plant Count:</b> {{AllSectionData.CompletedPlantCnt}}</label>
+                      <label for="compc" class="towlable"><b>Completed Plant Count:</b> {{AllSectionData.CompletedPlantCnt}}</label>
                     </div>
                   </div>
                     
                     <div class="ui-g-12 ui-md-6">
                       <div class="paddingRL">
-                        <label for="section" class="towlable"><b>Year:</b> {{AllSectionData.Year}}</label>
+                        <label for="year" class="towlable"><b>Year:</b>
+                          <span class="fa fa-pencil" (click)="editYearInfo()"></span>
+                          <input
+                          class="inputtextbox"
+                          name="year"
+                          id="year"
+                          type="text"
+                          autocomplete="off"    
+                          formControlName="year"
+                          placeholder="Enter Year"
+                          min="0.1" value="{{AllSectionData.Year}}"
+                          [readonly]="editYear"></label>
                       </div>
                     </div>
                      
                       <div class="ui-g-12 ui-md-6">
                         <div class="paddingRL">
-                          <label for="section" class="towlable"><b>Light Deprevation:</b> {{AllSectionData.IsLightDeprevation}}</label>
+                          <label for="isld" class="towlable"><b>Light Deprevation:</b>
+                            <span *ngIf="showLDText" >{{AllSectionData.IsLightDeprevation}}</span>
+                            <span class="fa fa-pencil" (click)="editLD()"></span>
+                            <p-dropdown
+                            *ngIf="showLDDropdown"
+                            [options]="ld"
+                            [autoWidth]="true"
+                            formControlName="ld"
+                            id="ld"
+                            class="clsControl"
+                            name="ld"
+                           >
+                          </p-dropdown> </label>
                         </div>
                         </div>
                       
@@ -94,7 +150,7 @@
                 </div>
               </div>
             </div>
-            <div class="ui-g-12 ui-md-4">
+            <div class="ui-g-12 ui-md-4" style="visibility: hidden;">
               <div class="paddingRL">
                 <div class="le-su-12">
                   <label for="cpc">Completed Plant Count :</label>
@@ -129,7 +185,8 @@
                 <div class="paddingRL">
                   <div class="le-su-12">
                     <label for="tpc">Terminated Plant Count :</label>
-                    <input type="text" 
+                    <input 
+                    type="text" 
                     pInputText 
                     autocomplete="off"
                     id="tpc" 
@@ -175,9 +232,12 @@
       <p-table  [value]="allUpdatedTerminationlist">
         <ng-template pTemplate="header">
           <tr>
-              <th>Date</th>
+              
+              <th>Termination Date</th>
               <th>Terminated Plant Count</th>
               <th>Termination Reason</th>
+              <th>Phase</th>
+              <th>Action</th>
           </tr>
       </ng-template>
       <ng-template pTemplate="body" let-taskstatus>
@@ -185,6 +245,10 @@
             <td>{{taskstatus.TerminationDate}}</td>
             <td>{{taskstatus.TerminatedPlantCount}}</td>
             <td>{{taskstatus.TerminationReason}}</td>
+            <td>{{taskstatus.TaskName}}</td>
+            <td><a href="#" [routerLink]="" (click)="editTerminationdata(taskstatus)">
+              <span class="fa fa-edit"></span>
+            </a></td>
         </tr>
     </ng-template>
     <!-- <ng-template pTemplate="paginatorleft" let-state>

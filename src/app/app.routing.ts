@@ -80,7 +80,7 @@ import { OrderformComponent } from './order/components/orderform/orderform.compo
 import { ChemicalPurchaseComponent } from './Masters/components/chemical-purchase/chemical-purchase.component';
 import { ChemicalMasterPageComponent } from './Masters/components/chemical-master-page/chemical-master-page.component';
 import { UpdateTerminationreasonComponent } from './Masters/components/update-terminationreason/update-terminationreason.component';
-
+import { SectionDetailsComponent } from './Masters/components/section-details/section-details.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -175,6 +175,7 @@ const appRoutes: Routes = [
       {path:'help', component:HelpComponent},
       {path:'orderform', component:OrderformComponent},
       { path: 'taskupdate', component: UpdateTerminationreasonComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'infoofsection', component: SectionDetailsComponent, canActivate: [AuthGuard, RoleGuard] },
       // {path:'planting', component:PlantingComponent}
      // {path:'harvesting',component:HarvestingComponent}
 

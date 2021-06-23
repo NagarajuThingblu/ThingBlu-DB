@@ -192,6 +192,12 @@ this.Year = new Date().getFullYear();
             ClientId: Number(this._cookieService.ClientId),
             FieldId: Number(this.newSectionEntryForm.value.Field),
             VirtualRoleId: Number(this._cookieService.VirtualRoleId),
+            TerminatedPlantCount:0,
+            TerminationReasonId:0,
+            IsTaskCompleted:0,
+            TaskTypeId:0,
+            TerminationSectionMapId:0
+           
            
         },
         SectionsTypeDetails: []
@@ -208,8 +214,9 @@ this.Year = new Date().getFullYear();
             PlantsCount:element.value.plantcount,
             year:element.value.year,
             IsDeleted:this.IsDeletedForUpdate,
-            LightDept:element.value.lightDept? 1: 0,
+            IsLightDeprevation:element.value.lightDept? 1: 0,
             ActiveInactive:this.ActiveInActiveForUpdate
+
             
          });
     
@@ -224,14 +231,14 @@ this.Year = new Date().getFullYear();
             data => {
             
               this.msgs = [];
-              if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
+              if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'SUCCESS') {
                 this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
                 detail: this.newSectionResources.newsectionsavedsuccess });
                
                 this.resetForm();
                 this.getAllsectionlist();
                 this.SectionIdForUpdate = 0;
-              } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'UPDATED') {
+              } else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'UPDATED') {
                 this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
                 detail: this.newSectionResources.updated });
                
@@ -244,10 +251,10 @@ this.Year = new Date().getFullYear();
                 this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.newSectionResources.alreadydeleted });
               }else if (String(data).toLocaleUpperCase() === 'FAILURE') {
                 this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
-              } else if (String(data[0].ResultKey).toUpperCase() === 'INUSE') {
+              } else if (String(data[0].RESULTKEY).toUpperCase() === 'INUSE') {
                 this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                     detail: this.newProductTypeResources.producttypeisassigned });
-              } else if (String(data[0].ResultKey).toUpperCase() === 'NOTPRESENT') {
+              } else if (String(data[0].RESULTKEY).toUpperCase() === 'NOTPRESENT') {
                 if (data[0].NoBrand === 1) {
                   this.newSectionEntryForm.controls['brand'].setErrors({ 'brandnotpresent': true });
                   this.loaderService.display(false);
@@ -266,7 +273,7 @@ this.Year = new Date().getFullYear();
                   this.newSectionEntryForm.controls['skewType'].setErrors({ 'skewnotpresent': true });
                   this.loaderService.display(false);
                 }
-              } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'DUPLICATE') {
+              } else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'DUPLICATE') {
                 this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.duplicateSection+this.newSectionResources.duplicateSection });
                 this.loaderService.display(false);
                 // data.forEach(dataItem => {
@@ -423,43 +430,43 @@ this.Year = new Date().getFullYear();
   this.appCommonService.ProductTypeFormDetail = this.newSectionEntryForm;
     this.router.navigate(['../home/strainmaster']);
   }
-  getSectionOnEdit(SectionId) {
-    this.plusOnEdit = false;
-    console.log(this.allsectionslist)
-    const data = this.allsectionslist.filter(x => x.SectionId === SectionId);
-    console.log(data);
-    var itemlist = this.newSectionEntryForm.get('items')['controls'];
-     if (data !== 'No data found!') {
-       this.SectionIdForUpdate = SectionId;
-       this.SectionOnEdit = data;
-       const fieldName = this.newSectionEntryForm.controls['Field'];
-       const sectionName = itemlist[0].controls['section'];
-       const strainName =  itemlist[0].controls["strain"];
-       const plantsCount =  itemlist[0].controls["plantcount"];
-       const year = itemlist[0].controls["year"];
-       const lightDept =  itemlist[0].controls["lightDept"];
-       const chkIsActive =   itemlist[0].controls["chkSelectAll"];
+  // getSectionOnEdit(SectionId) {
+  //   this.plusOnEdit = false;
+  //   console.log(this.allsectionslist)
+  //   const data = this.allsectionslist.filter(x => x.SectionId === SectionId);
+  //   console.log(data);
+  //   var itemlist = this.newSectionEntryForm.get('items')['controls'];
+  //    if (data !== 'No data found!') {
+  //      this.SectionIdForUpdate = SectionId;
+  //      this.SectionOnEdit = data;
+  //      const fieldName = this.newSectionEntryForm.controls['Field'];
+  //      const sectionName = itemlist[0].controls['section'];
+  //      const strainName =  itemlist[0].controls["strain"];
+  //      const plantsCount =  itemlist[0].controls["plantcount"];
+  //      const year = itemlist[0].controls["year"];
+  //      const lightDept =  itemlist[0].controls["lightDept"];
+  //      const chkIsActive =   itemlist[0].controls["chkSelectAll"];
         
-       fieldName.patchValue(this.SectionOnEdit[0].FieldId);
-       sectionName.patchValue(this.SectionOnEdit[0].SectionName);
-       strainName.patchValue(this.SectionOnEdit[0].StrainId);
-       plantsCount.patchValue(this.SectionOnEdit[0].PlantsCount);
-       lightDept.patchValue(this.SectionOnEdit[0].IsLightDeprevation);
-       year.patchValue(this.SectionOnEdit[0].Year);
-        chkIsActive.patchValue(this.SectionOnEdit[0].IsActive);
+  //      fieldName.patchValue(this.SectionOnEdit[0].FieldId);
+  //      sectionName.patchValue(this.SectionOnEdit[0].SectionName);
+  //      strainName.patchValue(this.SectionOnEdit[0].StrainId);
+  //      plantsCount.patchValue(this.SectionOnEdit[0].PlantsCount);
+  //      lightDept.patchValue(this.SectionOnEdit[0].IsLightDeprevation);
+  //      year.patchValue(this.SectionOnEdit[0].Year);
+  //       chkIsActive.patchValue(this.SectionOnEdit[0].IsActive);
        
-        this.clear = 'Cancel';
-       this.saveButtonText = 'Update';
-       this.pageheading = 'Edit Section';
+  //       this.clear = 'Cancel';
+  //      this.saveButtonText = 'Update';
+  //      this.pageheading = 'Edit Section';
 
       
        
-     } else {
-     this.allsectionslist = [];
-     }
-     this.loaderService.display(false);
-    //  this.cdr.detectChanges();
-  }
+  //    } else {
+  //    this.allsectionslist = [];
+  //    }
+  //    this.loaderService.display(false);
+  //   //  this.cdr.detectChanges();
+  // }
   showConformationMessaegForDeactive(SectionId, section, rowIndex, IsDeleted, ActiveInactiveFlag) {
     console.log(section);
     let strMessage: any;
@@ -579,15 +586,9 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
 
 showTerminationReasonPopup(section){
   this.router.navigate(['../home/taskupdate', section]);
-  
-// this.popupTerminationReason = true;
-// this.fieldname =section.FieldName;
-// this.sectionname = section.SectionName;
-// this.strainname = section.StrainName;
-// this.ld = section.IsLightDeprevation;
-// this.year = section.Year;
-// this.tpc = section.PlantsCount;
-// this.getAllTerminationReasons();
+}
+showSectionDetails(section){
+  this.router.navigate(['../home/infoofsection', section]);
 }
 getAllTerminationReasons(){
   this.ptrActionService.GetAllPTRListByClient().subscribe(

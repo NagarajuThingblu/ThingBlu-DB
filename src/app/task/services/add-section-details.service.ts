@@ -54,7 +54,7 @@ export class NewSectionDetailsActionService {
       const url='api/Grower/GetSectionDetails';
       let params = new HttpParams();
       params=params.append('SectionId',SectionId);
-      params=params.append('TaskName',TaskName);
+      params=params.append('TaskTypeId',TaskName);
       return this.http.get(url,{params: params}).map(data=>data);
     
     }
