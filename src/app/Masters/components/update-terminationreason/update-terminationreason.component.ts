@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators,FormArray } from '@angular/forms';
 import { LoaderService } from '../../../shared/services/loader.service';
 import { CookieService } from 'ngx-cookie-service';
 import { NewStrainTypeActionService } from '../../../task/services/new-strain-type-action.service';
@@ -15,6 +15,7 @@ import { DropdownValuesService } from '../../../shared/services/dropdown-values.
 import { GeneticsService } from '../../services/genetics.service';
 import { AppConstants } from '../../../shared/models/app.constants';
 import { ActivatedRoute,Router } from '@angular/router';
+import * as _ from 'lodash';
 import { Title } from '@angular/platform-browser';
 import { NewSectionDetailsActionService } from '../../../task/services/add-section-details.service';
 import { PTRService } from '../../../Masters/services/ptr.service';
@@ -52,6 +53,8 @@ export class UpdateTerminationreasonComponent implements OnInit {
   public showLDText: boolean = true;
   public showStrainDropdown:boolean = false;
   public showLDDropdown: boolean = false;
+  public plusOnEdit: boolean = true;
+  sysmbol:any;
   strains: any[];
   ld: any[];
   paginationValues: any;
@@ -84,11 +87,13 @@ export class UpdateTerminationreasonComponent implements OnInit {
         console.log(urlParams)
       });
    }
+   items = new FormArray([], this.customGroupValidation );
+   arrayItems: FormArray;
 
   ngOnInit() {
     this.pageheading="Section Details";
     this.getAllTerminationReasons();
-    this.getPhases();
+    // this.getPhases();
     this.getAllUpdateTerminationlist();
     this.getStrains();
     this.ld=
@@ -104,15 +109,17 @@ export class UpdateTerminationreasonComponent implements OnInit {
       'phase': new FormControl(null, Validators.required),
       'completed':new FormControl(null),
       'cpc':new FormControl(0),
-      'Terminationreason':new FormControl(0),
-      'tpc':new FormControl(0),
+     
       'deliverydate':new FormControl(null),
       'section':new FormControl(),
       'TPC':new FormControl(),
       'year':new FormControl(),
       'strain':new FormControl(null),
       'ld':new FormControl(),
+      items: new FormArray([], this.customGroupValidation),
     })
+
+    this.addItem();
     setTimeout(() => {
       this.loaderService.display(false);
     }, 500);
@@ -123,6 +130,52 @@ export class UpdateTerminationreasonComponent implements OnInit {
     ];
     this.sectionid=Number(this.sectionDetails.SectionId)
   }
+  
+  get SectionDetailsArr(): FormArray {
+    return this.updateTerminationReason.get('items') as FormArray;
+  }
+  addItem(): void {
+    this.sysmbol=0;
+    // this.SectionDetailsArr.push(this.createItem());
+    this.arrayItems = this.updateTerminationReason.get('items') as FormArray;
+    this.arrayItems.push(this.createItem());
+  }
+  createItem(): FormGroup {
+    return this.fb.group({
+       'Terminationreason':new FormControl(0),
+      'tpc':new FormControl(0),
+    });
+  }
+  customGroupValidation (formArray) {
+    let isError = false;
+    const result = _.groupBy( formArray.controls , c => {
+      return [c.value.Terminationreason];
+    });
+
+    for (const prop in result) {
+        if (result[prop].length > 1 && result[prop][0].controls['Terminationreason'].value !== null) {
+          isError = true;
+            _.forEach(result[prop], function (item: any, index) {
+             
+              item._status = 'INVALID';
+            });
+        } else {
+            result[prop][0]._status = 'VALID';
+            
+        }
+    }
+    if (isError) { return {'duplicate': 'duplicate entries'}; }
+}
+deleteItem(index: number) {
+    
+  const control = <FormArray>this.updateTerminationReason.controls['items'];
+ 
+  if (control.length !== 1) {
+    control.removeAt(index);
+  }
+  console.log(this.updateTerminationReason.get('items'))
+ 
+}
   getAllTerminationReasons(){
     this.ptrActionService.GetAllPTRListByClient().subscribe(
       data => {
@@ -137,26 +190,26 @@ export class UpdateTerminationreasonComponent implements OnInit {
        error => { console.log(error);  this.loaderService.display(false); },
        () => console.log('getTerminationReasons complete'));
   }
-  getPhases(){
-    this.loaderService.display(true);
-    this.newTaskActionService.getTaskDetailList().subscribe(
-      data=>{
-        if(data!=='No data found')
-        {
-          // this.Phases=data;
-          let category 
-          category = data.filter(item=>item.CategoryName == 'Growing');
-          this.phases = this.dropdwonTransformService.transform(category, 'TaskTypeName', 'TaskTypeId', '-- Select --');
-          console.log(this.phases) 
-          this.Phases = this.phases.filter(x =>x.label == 'Planting' ||x.label == 'Growing' || x.label == 'Harvesting' || x.value == null )
-          console.log(this.Phases)
-        }
+  // getPhases(){
+  //   this.loaderService.display(true);
+  //   this.newTaskActionService.getTaskDetailList().subscribe(
+  //     data=>{
+  //       if(data!=='No data found')
+  //       {
+  //         // this.Phases=data;
+  //         let category 
+  //         category = data.filter(item=>item.CategoryName == 'Growing');
+  //         this.phases = this.dropdwonTransformService.transform(category, 'TaskTypeName', 'TaskTypeId', '-- Select --');
+  //         console.log(this.phases) 
+  //         this.Phases = this.phases.filter(x =>x.label == 'Planting' ||x.label == 'Growing' || x.label == 'Harvesting' || x.value == null )
+  //         console.log(this.Phases)
+  //       }
        
-        this.loaderService.display(false);
-      },
-      error=>{ console.log(error);  this.loaderService.display(false); },
-      () => console.log('getAllTasksbyClient complete'));
-  }
+  //       this.loaderService.display(false);
+  //     },
+  //     error=>{ console.log(error);  this.loaderService.display(false); },
+  //     () => console.log('getAllTasksbyClient complete'));
+  // }
   doOPenPanel() {
     this.collapsed = false;
   }
@@ -209,10 +262,10 @@ ld.patchValue(this.AllSectionData.IsLightDeprevation);
      
      
   }
-  resetForm() {
-    this.updateTerminationReason.value.Terminationreason = null
-    this.updateTerminationReason.value.tpc = 0
-  }
+  // resetForm() {
+  //   this.updateTerminationReason.value.Terminationreason = null
+  //   this.updateTerminationReason.value.tpc = 0
+  // }
 
 
   onSubmit(value: string){
@@ -230,17 +283,20 @@ ld.patchValue(this.AllSectionData.IsLightDeprevation);
       },
       SectionsTypeDetails: []
     };
-    newUpdateTerminationForApi.SectionsTypeDetails.push({
-      SectionId:Number(this.AllSectionData.SectionId),
-      SectionName:this.updateTerminationReason.value.section === null? this.AllSectionData.SectionName : this.updateTerminationReason.value.section,
-      StrainId:this.updateTerminationReason.value.strain === null? this.AllSectionData.StrainId :this.updateTerminationReason.value.strain ,
-      IsActive:this.AllSectionData.IsActive === true? 1: 0,
-      PlantsCount:this.updateTerminationReason.value.TPC === null? this.AllSectionData.TotalPlantCount : this.updateTerminationReason.value.TPC,
-      year:this.updateTerminationReason.value.year === null? this.AllSectionData.Year:this.updateTerminationReason.value.year ,
-      IsLightDeprevation:this.updateTerminationReason.value.ld === null?this.AllSectionData.IsLightDeprevation === true? 1:0 :this.updateTerminationReason.value.ld === true? 1: 0 ,
-      IsDeleted:0,
-      ActiveInactive:0,
-    })
+    this.SectionDetailsArr.controls.forEach((element, index) => {
+      newUpdateTerminationForApi.SectionsTypeDetails.push({
+        SectionId:Number(this.AllSectionData.SectionId),
+        SectionName:this.updateTerminationReason.value.section === null? this.AllSectionData.SectionName : this.updateTerminationReason.value.section,
+        StrainId:this.updateTerminationReason.value.strain === null? this.AllSectionData.StrainId :this.updateTerminationReason.value.strain ,
+        IsActive:this.AllSectionData.IsActive === true? 1: 0,
+        PlantsCount:this.updateTerminationReason.value.TPC === null? this.AllSectionData.TotalPlantCount : this.updateTerminationReason.value.TPC,
+        year:this.updateTerminationReason.value.year === null? this.AllSectionData.Year:this.updateTerminationReason.value.year ,
+        IsLightDeprevation:this.updateTerminationReason.value.ld === null?this.AllSectionData.IsLightDeprevation === true? 1:0 :this.updateTerminationReason.value.ld === true? 1: 0 ,
+        IsDeleted:0,
+        ActiveInactive:0,
+      });
+    });
+  
     if (this.updateTerminationReason.valid) {
       this.loaderService.display(true);
       this.newSectionDetailsActionService.addNewSectionEntry(newUpdateTerminationForApi)
@@ -249,9 +305,9 @@ ld.patchValue(this.AllSectionData.IsLightDeprevation);
             this.msgs = [];
              if(String(data[0].RESULTKEY) === 'Updated'){
               this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
-              detail:'Updated Successfully'});
+              detail:'Section Details Saved Successfully'});
               this.getAllUpdateTerminationlist();
-              this.resetForm();
+              this.backToSectionsPge();
               this.TerminationSectionMapId = 0;
               this.loaderService.display(false);
             }
@@ -296,7 +352,8 @@ ld.patchValue(this.AllSectionData.IsLightDeprevation);
 this.newSectionDetailsActionService.GetUpdatedTerminationList(this.sectionDetails.SectionId).subscribe(
   data=>{
     if (data !== 'No Data Found') {
-      this.allUpdatedTerminationlist=data;
+      this.allUpdatedTerminationlist=data.Table;
+      this.Phases = this.dropdwonTransformService.transform(data.Table1, 'TaskTypeName', 'TaskTypeId', '-- Select --');
       this.paginationValues = AppConstants.getPaginationOptions;
     if (this.allUpdatedTerminationlist.length > 20) {
       this.paginationValues[AppConstants.getPaginationOptions.length] = this.allUpdatedTerminationlist.length;
