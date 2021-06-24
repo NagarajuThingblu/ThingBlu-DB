@@ -37,7 +37,11 @@
               <div class="ui-g-12 ui-md-6">
                 <div class="paddingRL">
                   <label for="section" class="towlable"><b>Section Name:</b>
-                    <span class="fa fa-pencil" (click)="editSectionInfo()"></span>
+                    
+                    <a href="#" [routerLink]="" (click)="editSectionInfo()">
+                      <span class="fa fa-pencil" ></span>
+                    </a>
+                  
                     <input
                     class="inputtextbox"
                     name="section"
@@ -53,7 +57,10 @@
                
                 <div class="ui-g-12 ui-md-6">
                   <div class="paddingRL">
-                    <label for="strain" class="towlable"><b>Strain Name:</b><span class="fa fa-pencil" (click)="editStrainInfo()"></span>
+                    <label for="strain" class="towlable"><b>Strain Name:</b>
+                      <a href="#" [routerLink]="" (click)="editStrainInfo()">
+                        <span class="fa fa-pencil" ></span>
+                      </a>
                       <span *ngIf="showStrainText" >{{AllSectionData.StrainName}}</span>
                       <p-dropdown
                       *ngIf="showStrainDropdown"
@@ -71,7 +78,9 @@
                   <div class="ui-g-12 ui-md-6">
                     <div class="paddingRL">
                       <label for="TPC" class="towlable"><b>Total Plant Count:</b> 
-                        <span class="fa fa-pencil" (click)="editTPCInfo()"></span>
+                        <a href="#" [routerLink]="" (click)="editTPCInfo()">
+                          <span class="fa fa-pencil" ></span>
+                        </a>
                         <input
                         class="inputtextbox"
                         name="TPC"
@@ -103,7 +112,9 @@
                     <div class="ui-g-12 ui-md-6">
                       <div class="paddingRL">
                         <label for="year" class="towlable"><b>Year:</b>
-                          <span class="fa fa-pencil" (click)="editYearInfo()"></span>
+                          <a href="#" [routerLink]="" (click)="editYearInfo()">
+                            <span class="fa fa-pencil" ></span>
+                          </a>
                           <input
                           class="inputtextbox"
                           name="year"
@@ -120,8 +131,11 @@
                       <div class="ui-g-12 ui-md-6">
                         <div class="paddingRL">
                           <label for="isld" class="towlable"><b>Light Deprevation:</b>
+                            <a href="#" [routerLink]="" (click)="editLD()">
+                              <span class="fa fa-pencil" ></span>
+                            </a>
                             <span *ngIf="showLDText" >{{AllSectionData.IsLightDeprevation}}</span>
-                            <span class="fa fa-pencil" (click)="editLD()"></span>
+                          
                             <p-dropdown
                             *ngIf="showLDDropdown"
                             [options]="ld"
@@ -181,7 +195,8 @@
                 </div>
               </div>
             </div>
-              <div class="ui-g-12 ui-md-4">
+          </div>
+  <!-- <div class="ui-g-12 ui-md-4">
                 <div class="paddingRL">
                   <div class="le-su-12">
                     <label for="tpc">Terminated Plant Count :</label>
@@ -214,7 +229,88 @@
                   </div>
                 </div>
               </div>
-            </div>
+              <div class="ui-g-12 ui-md-4">
+                <div class="paddingRL">
+                  <div class="paddingRL">
+                    <div class="le-su-12">
+                      <a (click)="deleteItem(i)" *ngIf="!updateTerminationReason.get('items').valid || sysmbol == 0">                                                    
+                        <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                        </span>
+                    </a>
+                    <a (click)="addItem()" *ngIf="updateTerminationReason.get('items').valid&&plusOnEdit === true">
+                      <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                      </span>
+                     </a>
+                    </div>
+                  </div>
+                 
+                </div>
+              </div> -->
+            
+              <div formArrayName="items" style="position: relative">
+                <div style="width:calc(100% - 20px);float:left;">
+                  <p-table [value]="SectionDetailsArr?.controls" id="sectionDetails" name="sectionDetails">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        
+                        <th>Terminated Plant Count
+                        </th>
+                        <th>Termination Reason
+                        </th>
+                        <th style="width:80px;">Action</th> 
+                        
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-item let-i="rowIndex" >
+                      <tr [formGroupName]="i">
+                        <td>
+                          <input 
+                          type="text" 
+                          pInputText 
+                          autocomplete="off"
+                          id="tpc" 
+                          name="tpc" 
+                          formControlName="tpc"         
+                          class="clsControl"  
+                          [readonly]="enabledisableTerminationFields"
+                        />
+                        </td>
+                       
+                        <td>
+                          <p-dropdown
+                          [options]="TerminatioReasons"
+                          [autoWidth]="true"
+                          formControlName="Terminationreason"
+                          id="Terminationreason"
+                          class="clsControl"
+                          name="Terminationreason"
+                          [disabled]="enabledisableTerminationFields">
+                        </p-dropdown>
+                      </td>
+                      <td style="width: 80px;">
+                        <a (click)="deleteItem(i)" *ngIf="!updateTerminationReason.get('items').valid || sysmbol == 0">                                                    
+                            <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                            </span>
+                        </a> 
+                        
+                          <a (click)="addItem()" *ngIf="updateTerminationReason.get('items').valid&&plusOnEdit === true">
+                              <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                              </span>
+                          </a>
+                          <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
+                            This Termination Reason already exists.
+                          </div>  
+                    </td>
+                   
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                </div>
+                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="SectionDetailsArr.hasError('duplicate')">
+                  duplicate entries
+                </div> 
+              </div>
+
             <div class="ui-g" style="width:100%;text-align:right;">
               <div class="ui-g-12">
                 <button pButton type="submit" label="Save" ></button>
@@ -242,6 +338,7 @@
       </ng-template>
       <ng-template pTemplate="body" let-taskstatus>
         <tr>
+          <!-- <td *ngIf="taskstatus.length === 0" >No Data Available</td> -->
             <td>{{taskstatus.TerminationDate}}</td>
             <td>{{taskstatus.TerminatedPlantCount}}</td>
             <td>{{taskstatus.TerminationReason}}</td>
