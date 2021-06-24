@@ -62,9 +62,16 @@ export class NewSectionDetailsActionService {
     {
       const url='api/Grower/GetTerminatedPlantCount';
   let params = new HttpParams();
+  params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
   params=params.append('SectionId',sectionid);
   return this.http.get(url,{params: params}).map(data=>data);
 
+    }
+    GetPhasesInfo(sectionid){
+      const url='api/Grower/UpdateTaskStatus';
+  let params = new HttpParams();
+  params=params.append('SectionId',sectionid);
+  return this.http.get(url,{params: params}).map(data=>data);
     }
     getFieldsInGrowers() {
   const url = 'api/Grower/GetFieldsSectionList';
