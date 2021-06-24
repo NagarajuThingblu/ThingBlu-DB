@@ -54,6 +54,7 @@ export class UpdateTerminationreasonComponent implements OnInit {
   public showStrainDropdown:boolean = false;
   public showLDDropdown: boolean = false;
   public plusOnEdit: boolean = true;
+  public TerminationOnEdit: any;
   sysmbol:any;
   strains: any[];
   ld: any[];
@@ -274,27 +275,32 @@ ld.patchValue(this.AllSectionData.IsLightDeprevation);
       Sections: {
         ClientId: Number(this._cookieService.ClientId),
         FieldId:this.AllSectionData.FieldId,
-        TerminatedPlantCount:Number(this.updateTerminationReason.value.tpc),
-        TerminationReasonId:this.updateTerminationReason.value.Terminationreason === null? 0 : this.updateTerminationReason.value.Terminationreason,
         VirtualRoleId:Number(this._cookieService.VirtualRoleId),
         IsTaskCompleted:this.updateTerminationReason.value.completed === null? 0:1,
         TaskTypeId:this.updateTerminationReason.value.phase,
-        TerminationSectionMapId:this.TerminationSectionMapId
+      
       },
-      SectionsTypeDetails: []
+      SectionsTypeDetails: [],
+      TerminationTypeDetails: []
     };
+    newUpdateTerminationForApi.SectionsTypeDetails.push({
+      SectionId:Number(this.AllSectionData.SectionId),
+      SectionName:this.updateTerminationReason.value.section === null? this.AllSectionData.SectionName : this.updateTerminationReason.value.section,
+      StrainId:this.updateTerminationReason.value.strain === null? this.AllSectionData.StrainId :this.updateTerminationReason.value.strain ,
+      IsActive:this.AllSectionData.IsActive === true? 1: 0,
+      PlantsCount:this.updateTerminationReason.value.TPC === null? this.AllSectionData.TotalPlantCount : this.updateTerminationReason.value.TPC,
+      year:this.updateTerminationReason.value.year === null? this.AllSectionData.Year:this.updateTerminationReason.value.year ,
+      IsLightDeprevation:this.updateTerminationReason.value.ld === null?this.AllSectionData.IsLightDeprevation === true? 1:0 :this.updateTerminationReason.value.ld === true? 1: 0 ,
+      IsDeleted:0,
+      ActiveInactive:0,
+    });
     this.SectionDetailsArr.controls.forEach((element, index) => {
-      newUpdateTerminationForApi.SectionsTypeDetails.push({
-        SectionId:Number(this.AllSectionData.SectionId),
-        SectionName:this.updateTerminationReason.value.section === null? this.AllSectionData.SectionName : this.updateTerminationReason.value.section,
-        StrainId:this.updateTerminationReason.value.strain === null? this.AllSectionData.StrainId :this.updateTerminationReason.value.strain ,
-        IsActive:this.AllSectionData.IsActive === true? 1: 0,
-        PlantsCount:this.updateTerminationReason.value.TPC === null? this.AllSectionData.TotalPlantCount : this.updateTerminationReason.value.TPC,
-        year:this.updateTerminationReason.value.year === null? this.AllSectionData.Year:this.updateTerminationReason.value.year ,
-        IsLightDeprevation:this.updateTerminationReason.value.ld === null?this.AllSectionData.IsLightDeprevation === true? 1:0 :this.updateTerminationReason.value.ld === true? 1: 0 ,
-        IsDeleted:0,
-        ActiveInactive:0,
-      });
+      newUpdateTerminationForApi.TerminationTypeDetails.push({
+        TerminationSectionMapId:this.TerminationSectionMapId,
+        TerminatedPlantCount: element.value.tpc,
+        TerminationReasonId: element.value.Terminationreason,
+  
+       });
     });
   
     if (this.updateTerminationReason.valid) {
@@ -307,9 +313,15 @@ ld.patchValue(this.AllSectionData.IsLightDeprevation);
               this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
               detail:'Section Details Saved Successfully'});
               this.getAllUpdateTerminationlist();
-              this.backToSectionsPge();
-              this.TerminationSectionMapId = 0;
               this.loaderService.display(false);
+              this.TerminationSectionMapId = 0;
+              setTimeout(() => {
+                this.backToSectionsPge();
+              }, 500);
+              
+
+              
+             
             }
             else if(String(data[0].RESULTKEY) === 'Terminated Plantcount is Greater than Available Plantcount'){
               this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
@@ -388,11 +400,22 @@ this.TaskName = this.updateTerminationReason.value.phase
        () => console.log('getAllStrainsbyClient complete'));
   }
 
-  editTerminationdata(terminationData){
-    const terminatePC = this.updateTerminationReason.controls['tpc'];
-    terminatePC.patchValue(terminationData.TerminatedPlantCount); 
-    const terminateReason = this.updateTerminationReason.controls['Terminationreason'];
-    terminateReason.patchValue(terminationData.TerminationReasonId); 
-    this.TerminationSectionMapId =terminationData.Id
+  editTerminationdata(TerminationReasonId){
+    this.plusOnEdit = false;
+    const data = this.allUpdatedTerminationlist.filter(x => x.TerminationReasonId === TerminationReasonId);
+    var itemlist = this.updateTerminationReason.get('items')['controls'];
+    if (data !== 'No data found!') {
+this.TerminationOnEdit = data;
+this.TerminationSectionMapId = this.TerminationOnEdit[0].Id;
+const terminatePC = itemlist[0].controls['tpc'];
+const terminateReason = itemlist[0].controls['Terminationreason'];
+terminatePC.patchValue(this.TerminationOnEdit[0].TerminatedPlantCount); 
+terminateReason.patchValue(this.TerminationOnEdit[0].TerminationReasonId); 
+    }
+    else {
+         this.allUpdatedTerminationlist = [];
+         }
+         this.loaderService.display(false);
   }
+
 }

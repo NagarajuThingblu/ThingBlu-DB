@@ -200,9 +200,15 @@ this.Year = new Date().getFullYear();
            
            
         },
-        SectionsTypeDetails: []
+        SectionsTypeDetails: [],
+        TerminationTypeDetails:[]
       };
-
+      newSectionForApi.TerminationTypeDetails.push({
+        TerminationSectionMapId:0,
+        TerminatedPlantCount: 0,
+        TerminationReasonId:0
+  
+       });
 
     this.SectionDetailsArr.controls.forEach((element, index) => {
       this.duplicateSection = element.value.section
@@ -221,6 +227,7 @@ this.Year = new Date().getFullYear();
          });
     
      });
+    
       this.newSectionForm_copy = JSON.parse(JSON.stringify(Object.assign({}, this.newSectionEntryForm.value)));
 
       if (this.newSectionEntryForm.valid) {

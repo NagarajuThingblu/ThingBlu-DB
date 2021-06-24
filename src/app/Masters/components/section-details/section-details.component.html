@@ -14,15 +14,15 @@
             <th>Phase</th>
             <th>Total Plant Count </th>
             <th>Terminated Plant Count</th>
-            <th>Final Completed Plant Count </th>
+            <th>Final Plant Count </th>
         </tr>
         </ng-template>
         <ng-template pTemplate="body" let-taskstatus>
           <tr>
               <td>{{taskstatus.TaskKeyName}}</td>
               <td>{{taskstatus.TotalPlantCount}}</td>
-              <td>{{taskstatus.TerminatedPlantCnt}}</td>
-              <td>{{taskstatus.CompletedPlantCnt}}</td>
+              <td>{{taskstatus.TerminatedPlantCount}}</td>
+              <td>{{taskstatus.CompletedPlantCount}}</td>
           </tr>
       </ng-template>
       </p-table>

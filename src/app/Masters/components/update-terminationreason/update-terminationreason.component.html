@@ -343,7 +343,7 @@
             <td>{{taskstatus.TerminatedPlantCount}}</td>
             <td>{{taskstatus.TerminationReason}}</td>
             <td>{{taskstatus.TaskName}}</td>
-            <td><a href="#" [routerLink]="" (click)="editTerminationdata(taskstatus)">
+            <td><a href="#" [routerLink]="" (click)="editTerminationdata(taskstatus.TerminationReasonId)">
               <span class="fa fa-edit"></span>
             </a></td>
         </tr>
