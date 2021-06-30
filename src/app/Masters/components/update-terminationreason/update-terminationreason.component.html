@@ -9,12 +9,12 @@
               <a [routerLink]=""  class="btn-link" (click)="backToSectionsPge()" style="float: right;padding-right: 21px;text-decoration: underline" ><< Back</a>
              </div>
           </div>
-          <div class="ui-g">
+          <div class="ui-g" *ngIf="showPhses">
             <div class="ui-g-12 ui-md-4">
               <div class="paddingRL">
                 <div class="le-su-12">
                   <label for="phase">Phase :</label><span class="star">*</span>
-                  <p-dropdown
+                  <!-- <p-dropdown
                   [options]="Phases"
                   [autoWidth]="true"
                   formControlName="phase"
@@ -22,12 +22,22 @@
                   id="phase"
                   class="clsControl"
                   name="phase">
-                </p-dropdown>
+                </p-dropdown> -->
+                <input
+                pInputText 
+                name="phase"
+                id="phase"
+                type="text"
+                class="clsControl"
+                autocomplete="off"    
+                formControlName="phase"
+                min="0.1" [ngModel]="topTaskTypeName"
+                readonly="true">
                 </div>
               </div>
             </div>
           </div>
-          <div class="ui-g" *ngIf="viewdata">
+          <!-- <div class="ui-g" *ngIf="viewdata">
             <div class="ui-g-12 ui-md-6">
               <div class="paddingRL">
                 <label for="field" class="towlable"><b>Field Name:</b> {{AllSectionData.FieldName}} </label>
@@ -38,59 +48,77 @@
                 <div class="paddingRL">
                   <label for="section" class="towlable"><b>Section Name:</b>
                     
-                    <a href="#" [routerLink]="" (click)="editSectionInfo()">
+                    <a  *ngIf="selectedForNoEditSection" href="#" [routerLink]="" (click)="editSectionInfo()">
                       <span class="fa fa-pencil" ></span>
                     </a>
-                  
+                    <a *ngIf='selectedForEditSection' href="#" [routerLink]="" (click)="closeEditSection()">
+                      <span style="color: red;" class="fa fa-close" ></span>
+                    </a>
                     <input
-                    class="inputtextbox"
+                    [ngClass]="inputtextbox1"
                     name="section"
                     id="section"
                     type="text"
                     autocomplete="off"    
                     formControlName="section"
                     placeholder="Enter Section "
-                    min="0.1" value="{{AllSectionData.SectionName}}"
+                    min="0.1" [ngModel]="AllSectionData.SectionName"
                     [readonly]="editSection"></label>
+                </div>
+                <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="errormsg">
+                  Section Name Required
                 </div>
               </div>
                
                 <div class="ui-g-12 ui-md-6">
                   <div class="paddingRL">
                     <label for="strain" class="towlable"><b>Strain Name:</b>
-                      <a href="#" [routerLink]="" (click)="editStrainInfo()">
+                      <a *ngIf="selectedForNoEditStrain" href="#" [routerLink]="" (click)="editStrainInfo()">
                         <span class="fa fa-pencil" ></span>
                       </a>
+                      <a  *ngIf="selectedForEditStrain"  href="#" [routerLink]="" (click)="closeEditStrain()">
+                        <span style="color: red;" class="fa fa-close" ></span>
+                      </a>
                       <span *ngIf="showStrainText" >{{AllSectionData.StrainName}}</span>
-                      <p-dropdown
-                      *ngIf="showStrainDropdown"
-                      [options]="strains"
-                      [autoWidth]="true"
-                      formControlName="strain"
-                      id="strain"
-                      class="clsControl"
-                      name="strain"
-                     >
-                    </p-dropdown></label>
+                  
+                        <p-dropdown
+                        *ngIf="showStrainDropdown"
+                        [options]="strains"
+                        [autoWidth]="true"
+                        formControlName="strain"
+                        id="strain"
+                        class="clsControl"
+                        name="strain"
+                        [disabled]="disableStrainDropdown"
+                       >
+                      </p-dropdown>
+                  
+                     </label>
                   </div>
                 </div>
                  
                   <div class="ui-g-12 ui-md-6">
                     <div class="paddingRL">
-                      <label for="TPC" class="towlable"><b>Total Plant Count:</b> 
-                        <a href="#" [routerLink]="" (click)="editTPCInfo()">
+                      <label for="TPC" class="towlable"><b>Initial Plant Count:</b> 
+                        <a *ngIf="selectedForNoEditTPC && (topTaskTypeName === 'Planting') " href="#" [routerLink]="" (click)="editTPCInfo()">
                           <span class="fa fa-pencil" ></span>
                         </a>
+                        <a  *ngIf="selectedForEditTPC && (topTaskTypeName === 'Planting')"  href="#" [routerLink]="" (click)="closeEditTPC()">
+                          <span style="color: red;" class="fa fa-close" ></span>
+                        </a>
                         <input
-                        class="inputtextbox"
+                        [ngClass]="inputtextbox2"
                         name="TPC"
                         id="TPC"
                         type="text"
                         autocomplete="off"    
                         formControlName="TPC"
                         placeholder="Enter Total Plant Count "
-                        min="0.1" value="{{AllSectionData.TotalPlantCount}}"
+                        min="0.1" [ngModel]="AllSectionData.TotalPlantCount"
                         [readonly]="editTPC"></label>
+                    </div>
+                    <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="errormsg1">
+                     Plant Count Required
                     </div>
                   </div>
                   <div class="ui-g-12 ui-md-6">
@@ -112,27 +140,36 @@
                     <div class="ui-g-12 ui-md-6">
                       <div class="paddingRL">
                         <label for="year" class="towlable"><b>Year:</b>
-                          <a href="#" [routerLink]="" (click)="editYearInfo()">
+                          <a *ngIf="selectedForNoEditYEAR" href="#" [routerLink]="" (click)="editYearInfo()">
                             <span class="fa fa-pencil" ></span>
                           </a>
+                          <a  *ngIf="selectedForEditYEAR"  href="#" [routerLink]="" (click)="closeEditYEAR()">
+                            <span style="color: red;" class="fa fa-close" ></span>
+                          </a>
                           <input
-                          class="inputtextbox"
+                          [ngClass]="inputtextbox3"
                           name="year"
                           id="year"
                           type="text"
                           autocomplete="off"    
                           formControlName="year"
                           placeholder="Enter Year"
-                          min="0.1" value="{{AllSectionData.Year}}"
+                          min="0.1" [ngModel]="AllSectionData.Year"
                           [readonly]="editYear"></label>
                       </div>
+                      <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="errormsg2">
+                       Year Required
+                       </div>
                     </div>
                      
                       <div class="ui-g-12 ui-md-6">
                         <div class="paddingRL">
                           <label for="isld" class="towlable"><b>Light Deprevation:</b>
-                            <a href="#" [routerLink]="" (click)="editLD()">
+                            <a *ngIf="selectedForNoEditLD" href="#" [routerLink]="" (click)="editLD()">
                               <span class="fa fa-pencil" ></span>
+                            </a>
+                            <a  *ngIf="selectedForEditLD"  href="#" [routerLink]="" (click)="closeEditLD()">
+                              <span style="color: red;" class="fa fa-close" ></span>
                             </a>
                             <span *ngIf="showLDText" >{{AllSectionData.IsLightDeprevation}}</span>
                           
@@ -144,6 +181,158 @@
                             id="ld"
                             class="clsControl"
                             name="ld"
+                            [disabled]="disableLDDropdown"
+                           >
+                          </p-dropdown> </label>
+                        </div>
+                        </div>
+                      
+          </div> -->
+          <div class="ui-g" >
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="field" class="towlable"><b>Field Name:</b> {{AllSectionData.FieldName}} </label>
+              </div>
+              </div>
+             
+              <div class="ui-g-12 ui-md-6">
+                <div class="paddingRL">
+                  <label for="section" class="towlable"><b>Section Name:</b>
+                    
+                    <a  *ngIf="selectedForNoEditSection" href="#" [routerLink]="" (click)="editSectionInfo()">
+                      <span class="fa fa-pencil" ></span>
+                    </a>
+                    <a *ngIf='selectedForEditSection' href="#" [routerLink]="" (click)="closeEditSection()">
+                      <span style="color: red;" class="fa fa-close" ></span>
+                    </a>
+                    <input
+                    [ngClass]="inputtextbox1"
+                    name="section"
+                    id="section"
+                    type="text"
+                    autocomplete="off"    
+                    formControlName="section"
+                    placeholder="Enter Section "
+                    min="0.1" [ngModel]="AllSectionData.SectionName"
+                    [readonly]="editSection"></label>
+                </div>
+                <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="errormsg">
+                  Section Name Required
+                </div>
+              </div>
+               
+                <div class="ui-g-12 ui-md-6">
+                  <div class="paddingRL">
+                    <label for="strain" class="towlable"><b>Strain Name:</b>
+                      <a *ngIf="selectedForNoEditStrain" href="#" [routerLink]="" (click)="editStrainInfo()">
+                        <span class="fa fa-pencil" ></span>
+                      </a>
+                      <a  *ngIf="selectedForEditStrain"  href="#" [routerLink]="" (click)="closeEditStrain()">
+                        <span style="color: red;" class="fa fa-close" ></span>
+                      </a>
+                      <span *ngIf="showStrainText" >{{AllSectionData.StrainName}}</span>
+                  
+                        <p-dropdown
+                        *ngIf="showStrainDropdown"
+                        [options]="strains"
+                        [autoWidth]="true"
+                        formControlName="strain"
+                        id="strain"
+                        class="clsControl"
+                        name="strain"
+                        [disabled]="disableStrainDropdown"
+                       >
+                      </p-dropdown>
+                  
+                     </label>
+                  </div>
+                </div>
+                 
+                  <div class="ui-g-12 ui-md-6" *ngIf="viewdata">
+                    <div class="paddingRL">
+                      <label for="TPC" class="towlable"><b>Initial Plant Count:</b> 
+                        <a *ngIf="selectedForNoEditTPC && (topTaskTypeName === 'Planting') " href="#" [routerLink]="" (click)="editTPCInfo()">
+                          <span class="fa fa-pencil" ></span>
+                        </a>
+                        <a  *ngIf="selectedForEditTPC && (topTaskTypeName === 'Planting')"  href="#" [routerLink]="" (click)="closeEditTPC()">
+                          <span style="color: red;" class="fa fa-close" ></span>
+                        </a>
+                        <input
+                        [ngClass]="inputtextbox2"
+                        name="TPC"
+                        id="TPC"
+                        type="text"
+                        autocomplete="off"    
+                        formControlName="TPC"
+                        placeholder="Enter Total Plant Count "
+                        min="0.1" [ngModel]="AllSectionData.TotalPlantCount"
+                        [readonly]="editTPC"></label>
+                    </div>
+                    <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="errormsg1">
+                     Plant Count Required
+                    </div>
+                  </div>
+                  <div class="ui-g-12 ui-md-6" *ngIf="viewdata">
+                    <div class="paddingRL">
+                      <label for="availpc" class="towlable"><b>Available Plant Count:</b> {{AllSectionData.AvailablePlantCnt}}</label>
+                    </div>
+                  </div>
+                  <div class="ui-g-12 ui-md-6" *ngIf="viewdata">
+                    <div class="paddingRL">
+                      <label for="termpc" class="towlable"><b>Terminated Plant Count:</b> {{AllSectionData.TerminatedPlantCnt}}</label>
+                    </div>
+                  </div>
+                  <div class="ui-g-12 ui-md-6" *ngIf="viewdata">
+                    <div class="paddingRL">
+                      <label for="compc" class="towlable"><b>Completed Plant Count:</b> {{AllSectionData.CompletedPlantCnt}}</label>
+                    </div>
+                  </div>
+                    
+                    <div class="ui-g-12 ui-md-6">
+                      <div class="paddingRL">
+                        <label for="year" class="towlable"><b>Year:</b>
+                          <a *ngIf="selectedForNoEditYEAR" href="#" [routerLink]="" (click)="editYearInfo()">
+                            <span class="fa fa-pencil" ></span>
+                          </a>
+                          <a  *ngIf="selectedForEditYEAR"  href="#" [routerLink]="" (click)="closeEditYEAR()">
+                            <span style="color: red;" class="fa fa-close" ></span>
+                          </a>
+                          <input
+                          [ngClass]="inputtextbox3"
+                          name="year"
+                          id="year"
+                          type="text"
+                          autocomplete="off"    
+                          formControlName="year"
+                          placeholder="Enter Year"
+                          min="0.1" [ngModel]="AllSectionData.Year"
+                          [readonly]="editYear"></label>
+                      </div>
+                      <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="errormsg2">
+                       Year Required
+                       </div>
+                    </div>
+                     
+                      <div class="ui-g-12 ui-md-6">
+                        <div class="paddingRL">
+                          <label for="isld" class="towlable"><b>Light Deprevation:</b>
+                            <a *ngIf="selectedForNoEditLD" href="#" [routerLink]="" (click)="editLD()">
+                              <span class="fa fa-pencil" ></span>
+                            </a>
+                            <a  *ngIf="selectedForEditLD"  href="#" [routerLink]="" (click)="closeEditLD()">
+                              <span style="color: red;" class="fa fa-close" ></span>
+                            </a>
+                            <span *ngIf="showLDText" >{{AllSectionData.IsLightDeprevation}}</span>
+                          
+                            <p-dropdown
+                            *ngIf="showLDDropdown"
+                            [options]="ld"
+                            [autoWidth]="true"
+                            formControlName="ld"
+                            id="ld"
+                            class="clsControl"
+                            name="ld"
+                            [disabled]="disableLDDropdown"
                            >
                           </p-dropdown> </label>
                         </div>
@@ -151,7 +340,7 @@
                       
           </div>
          
-          <div class="ui-g">
+          <div class="ui-g"  *ngIf="viewdata">
             <div class="ui-g-12 ui-md-4">
               <div class="paddingRL">
                 <div class="le-su-12">
@@ -180,7 +369,7 @@
                 </div>
               </div>
             </div>
-            <div class="ui-g-12 ui-md-4" style="visibility: hidden;">
+            <div class="ui-g-12 ui-md-4" style="visibility: hidden;" >
               <div class="paddingRL">
                 <div class="le-su-12">
                   <label for="phase">Phase :</label><span class="star">*</span>
@@ -247,7 +436,7 @@
                 </div>
               </div> -->
             
-              <div formArrayName="items" style="position: relative">
+              <div formArrayName="items" style="position: relative"  *ngIf="viewdata">
                 <div style="width:calc(100% - 20px);float:left;">
                   <p-table [value]="SectionDetailsArr?.controls" id="sectionDetails" name="sectionDetails">
                     <ng-template pTemplate="header">
@@ -270,12 +459,13 @@
                           autocomplete="off"
                           id="tpc" 
                           name="tpc" 
-                          formControlName="tpc"         
+                          formControlName="tpc"    
+                          (keyup)="onKeypressEvent($event)"     
                           class="clsControl"  
                           [readonly]="enabledisableTerminationFields"
                         />
                         </td>
-                       
+                        <!-- (keyup)="onKeypressEvent($event)" -->
                         <td>
                           <p-dropdown
                           [options]="TerminatioReasons"
@@ -300,9 +490,13 @@
                           <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
                             This Termination Reason already exists.
                           </div>  
+                          <!-- <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.tpc.dirty || tpc.touched">
+                           Termination Reason Required
+                          </div>  -->
                     </td>
                    
                       </tr>
+                      
                     </ng-template>
                   </p-table>
                 </div>
@@ -321,11 +515,11 @@
       <div class="ui-g" >
         <div class="paddingRL">
           <div class="le-su-12">
-            <h6><b>History</b></h6>
+            <h6 *ngIf="viewTable"><b>History</b></h6>
           </div>
         </div>
       </div>
-      <p-table  [value]="allUpdatedTerminationlist">
+      <p-table *ngIf="viewTable" [value]="allUpdatedTerminationlist">
         <ng-template pTemplate="header">
           <tr>
               

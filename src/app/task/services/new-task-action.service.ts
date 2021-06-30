@@ -47,4 +47,17 @@ getTaskDetailList(){
       });
 }
 
+getPhases(SectionId){
+  const url ='api/Grower/UpdateTaskStatus'
+  let params = new HttpParams();
+  params=params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+  params=params.append('SectionId',SectionId);
+  return this.http
+      .get(url, {params: params} )
+      .map(data => {
+        console.log('GetStrainDetailList Service success');
+        return data;
+      });
+}
+
 }

@@ -51,8 +51,9 @@ export class NewSectionDetailsActionService {
 
     }
     GetSectionDetails(SectionId, TaskName){
-      const url='api/Grower/GetSectionDetails';
+      const url='api/Grower/GetTerminatedPlantCount';
       let params = new HttpParams();
+      params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
       params=params.append('SectionId',SectionId);
       params=params.append('TaskTypeId',TaskName);
       return this.http.get(url,{params: params}).map(data=>data);
@@ -68,9 +69,16 @@ export class NewSectionDetailsActionService {
 
     }
     GetPhasesInfo(sectionid){
-      const url='api/Grower/UpdateTaskStatus';
+      const url='api/Grower/GetSectionDetails';
   let params = new HttpParams();
   params=params.append('SectionId',sectionid);
+  return this.http.get(url,{params: params}).map(data=>data);
+    }
+    GetCompleteInfo(sectionid,TaskTypeId){
+      const url='api/Grower/GetTerminationDetails';
+  let params = new HttpParams();
+  params=params.append('SectionId',sectionid);
+  params=params.append('TaskTypeId',TaskTypeId);
   return this.http.get(url,{params: params}).map(data=>data);
     }
     getFieldsInGrowers() {

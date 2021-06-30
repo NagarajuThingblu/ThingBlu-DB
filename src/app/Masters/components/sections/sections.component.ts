@@ -516,13 +516,25 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
         ClientId: Number(this._cookieService.ClientId),
         FieldId: section.FieldId,
         VirtualRoleId:  Number(this._cookieService.VirtualRoleId),
+        TerminatedPlantCount:0,
+            TerminationReasonId:0,
+            IsTaskCompleted:0,
+            TaskTypeId:0,
+            TerminationSectionMapId:0
         // ActiveInactive: ActiveInactiveFlag,
         // IsDeleted: IsDeleted,
         // IsActive: section.IsActive,
        
     },
-    SectionsTypeDetails: []
+    SectionsTypeDetails: [],
+    TerminationTypeDetails:[]
   };
+  newSectionDetailsForApi.TerminationTypeDetails.push({
+    TerminationSectionMapId:0,
+    TerminatedPlantCount: 0,
+    TerminationReasonId:0
+
+   });
   this.SectionDetailsArr.controls.forEach((element, index) => {
 
     newSectionDetailsForApi.SectionsTypeDetails.push({
@@ -545,7 +557,7 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
     data => {
    
       this.msgs = [];
-      if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS' && IsDeleted === 1) {
+      if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'SUCCESS' && IsDeleted === 1) {
       
         this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
         detail: this.newSectionResources.newsectiondeletedsuccess  });
@@ -553,7 +565,7 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
         this.resetForm();
         this.getAllsectionlist();
         
-      } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'INUSE') {
+      } else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'INUSE') {
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
         detail: this.newSectionResources.sectionisassigned });
         this.loaderService.display(false);
@@ -562,7 +574,7 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
         detail: data[0].RESULTKEY });
         this.loaderService.display(false);
-      }  else if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS' && ActiveInactiveFlag === 1) {
+      }  else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'SUCCESS' && ActiveInactiveFlag === 1) {
         if (section.IsActive === true) {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.newSectionResources.sectionactivatesuccess });

@@ -8,6 +8,7 @@ import { MastersResource } from '../../master.resource';
 import { GlobalResources } from '../../../global resource/global.resource';
 import { ConfirmationService } from 'primeng/api';
 import { AppComponent } from '../../../app.component';
+import { SelectItem } from 'primeng/api';
 import{ NewTaskActionService } from '../../../task/services/new-task-action.service';
 import { StrainTypeService } from '../../services/strain-type.service';
 import { AddGeneticsActionService } from '../../../task/services/add-genetics-action.service';
@@ -20,6 +21,7 @@ import { Title } from '@angular/platform-browser';
 import { NewSectionDetailsActionService } from '../../../task/services/add-section-details.service';
 import { PTRService } from '../../../Masters/services/ptr.service';
 import { DropdwonTransformService } from '../../../shared/services/dropdown-transform.service';
+import { templateSourceUrl } from '@angular/compiler';
 @Component({
   selector: 'app-update-terminationreason',
   templateUrl: './update-terminationreason.component.html',
@@ -33,12 +35,17 @@ export class UpdateTerminationreasonComponent implements OnInit {
   public _cookieService: any;
   public allUpdatedTerminationlist:any;
   public AllSectionData: any;
-  public TaskName:any;
+  public TaskId:any;
   public sectionDetails:any;
   public viewdata:boolean= false;
+  public viewDefaultData: boolean = true;
+  public viewTable:boolean = false;
   pageheading: any;
-  public phases:any;
-  public Phases:any;
+
+  public Phases: SelectItem[];
+  public inputtextbox1: String ='inputtextbox1'
+  public inputtextbox2: String ='inputtextbox1'
+  public inputtextbox3: String ='inputtextbox1'
   public msgs: any[];
   public enabledisablefields: boolean = true
   public enabledisableTerminationFields:boolean =false
@@ -55,6 +62,25 @@ export class UpdateTerminationreasonComponent implements OnInit {
   public showLDDropdown: boolean = false;
   public plusOnEdit: boolean = true;
   public TerminationOnEdit: any;
+  public selectedForEditSection: boolean = false;
+  public selectedForNoEditSection: boolean = true;
+  public selectedForEditStrain: boolean = false;
+  public selectedForNoEditStrain: boolean = true;
+  public selectedForEditTPC: boolean = false;
+  public selectedForNoEditTPC: boolean = true;
+  public selectedForEditYEAR: boolean = false;
+  public selectedForNoEditYEAR: boolean = true;
+  public selectedForEditLD: boolean = false;
+  public selectedForNoEditLD: boolean = true;
+  public disableStrainDropdown: boolean = false;
+  public disableLDDropdown: boolean = false;
+  public showPhses:boolean = false;
+  public errormsg:boolean = false;
+  public errormsg1:boolean = false;
+  public errormsg2:boolean = false;
+public data = 0;
+  public topTaskTypeId:any;
+  public topTaskTypeName:any;
   sysmbol:any;
   strains: any[];
   ld: any[];
@@ -94,41 +120,55 @@ export class UpdateTerminationreasonComponent implements OnInit {
   ngOnInit() {
     this.pageheading="Section Details";
     this.getAllTerminationReasons();
-    // this.getPhases();
-    this.getAllUpdateTerminationlist();
+    this.AllSectionData = this.sectionDetails
+    // this.getAllUpdateTerminationlist();
     this.getStrains();
     this.ld=
       [
-        {label: 'true', value: 'true'},
-        {label: 'false', value: 'false'},
+        {label: 'true', value: true},
+        {label: 'false', value: false},
       ];
     
     this.globalResource = GlobalResources.getResources().en;
     this._cookieService = this.appCommonService.getUserProfile();
     this.titleService.setTitle("Update Termination");
     this.updateTerminationReason = this.fb.group({
-      'phase': new FormControl(null, Validators.required),
+      'phase': new FormControl(null),
       'completed':new FormControl(null),
       'cpc':new FormControl(0),
      
       'deliverydate':new FormControl(null),
-      'section':new FormControl(),
-      'TPC':new FormControl(),
-      'year':new FormControl(),
+      'section':new FormControl(null, Validators.required),
+      'TPC':new FormControl(0, Validators.required),
+      'year':new FormControl(0, Validators.required),
       'strain':new FormControl(null),
       'ld':new FormControl(),
       items: new FormArray([], this.customGroupValidation),
     })
 
     this.addItem();
+    this.getPhases();
     setTimeout(() => {
       this.loaderService.display(false);
     }, 500);
-    this.Phases =  [
-      {label: '--Select--', value: 'null'},
-      // {label: 'Planting', value: 'Planting'},
-      // {label: 'Harvesting', value: 'Harvesting'}
-    ];
+    // this.Phases =  [
+    //   {label: '--Select--', value: 'null'},
+    //   // {label: 'Planting', value: 'Planting'},
+    //   // {label: 'Harvesting', value: 'Harvesting'}
+    // ];
+
+    // this.updateTerminationReason.get('items')['controls'][0]['controls']['tpc'].statusChanges
+    // .subscribe(value =>{
+    //   const termpc = this.updateTerminationReason.get('items')['controls'][0]['controls']['Terminationreason'];
+    //   console.log(value)
+    //   if(value > 0){
+    //     termpc.setValidators(Validators.required)
+    //   }
+    //   else{
+    //   termpc.clearValidators();
+    //   }
+    //   termpc.updateValueAndValidity();
+    // });
     this.sectionid=Number(this.sectionDetails.SectionId)
   }
   
@@ -143,9 +183,32 @@ export class UpdateTerminationreasonComponent implements OnInit {
   }
   createItem(): FormGroup {
     return this.fb.group({
-       'Terminationreason':new FormControl(0),
+      
       'tpc':new FormControl(0),
+      'Terminationreason':new FormControl(0),
+     
     });
+  }
+  onKeypressEvent(event: any){
+    if(Number(event.target.value) > 0){
+      const tpc = this.updateTerminationReason.get('items')['controls'][0]['controls']['tpc'];
+      const termpc = this.updateTerminationReason.get('items')['controls'][0]['controls']['Terminationreason'];
+      tpc.setValidators([Validators.required]);
+      termpc.setValidators([Validators.required]);
+      termpc.updateValueAndValidity();
+    }
+  
+    // if(Number(event.target.value) === 0){
+    //   const termpc = this.updateTerminationReason.get('items')['controls'][0]['controls']['Terminationreason'];
+    //   this.updateTerminationReason.get('items')['controls'][0]['controls']['tpc'].valueChanges
+    //   .subscribe(tpc => {
+    //     if (tpc > 0) {
+    //       termpc.setValidators([Validators.required]);
+    //     }
+    //   });
+    // }
+  
+  
   }
   customGroupValidation (formArray) {
     let isError = false;
@@ -191,26 +254,34 @@ deleteItem(index: number) {
        error => { console.log(error);  this.loaderService.display(false); },
        () => console.log('getTerminationReasons complete'));
   }
-  // getPhases(){
-  //   this.loaderService.display(true);
-  //   this.newTaskActionService.getTaskDetailList().subscribe(
-  //     data=>{
-  //       if(data!=='No data found')
-  //       {
-  //         // this.Phases=data;
-  //         let category 
-  //         category = data.filter(item=>item.CategoryName == 'Growing');
-  //         this.phases = this.dropdwonTransformService.transform(category, 'TaskTypeName', 'TaskTypeId', '-- Select --');
-  //         console.log(this.phases) 
-  //         this.Phases = this.phases.filter(x =>x.label == 'Planting' ||x.label == 'Growing' || x.label == 'Harvesting' || x.value == null )
-  //         console.log(this.Phases)
-  //       }
+  getPhases(){
+    this.loaderService.display(true);
+    this.newTaskActionService.getPhases(this.sectionDetails.SectionId).subscribe(
+      data=>{
+        if(data!=='No Data Found')
+        {
+          // this.Phases=data;
+          // let category 
+          // category = data.filter(item=>item.CategoryName == 'Growing');
+          // this.Phases = this.dropdwonTransformService.transform(data, 'TaskName', 'TaskTypeId','',false);
+        this.showPhses = true;
+          this.topTaskTypeId = data[0].TaskTypeId
+          this.topTaskTypeName = data[0].TaskName
+          this.GetAllDetails( this.topTaskTypeId);
+          // this.Phases = this.phases.filter(x =>x.label == 'Planting' ||x.label == 'Growing' || x.label == 'Harvesting' || x.value == null )
+          // console.log(this.Phases)
+        }
+        else{
+        this.AllSectionData = this.sectionDetails
+          this.topTaskTypeId =0;
+          this.topTaskTypeName = null
+        }
        
-  //       this.loaderService.display(false);
-  //     },
-  //     error=>{ console.log(error);  this.loaderService.display(false); },
-  //     () => console.log('getAllTasksbyClient complete'));
-  // }
+        this.loaderService.display(false);
+      },
+      error=>{ console.log(error);  this.loaderService.display(false); },
+      () => console.log('getAllTasksbyClient complete'));
+  }
   doOPenPanel() {
     this.collapsed = false;
   }
@@ -227,26 +298,89 @@ console.log(event);
   }
   editSectionInfo(){
 this.editSection = false
+this.selectedForEditSection = true
+this.selectedForNoEditSection =false;
+this.inputtextbox1 = ""
   }
+  closeEditSection(){
+    this.errormsg = false;
+    this.editSection = true;
+    this.selectedForEditSection = false;
+    this.selectedForNoEditSection =true;
+    this.inputtextbox1="inputtextbox1";
+    if(this.updateTerminationReason.value.section === ""){
+       this.errormsg = true;
+      // this.updateTerminationReason.controls['section'] = new FormControl(Validators.required)
+    }
+  }
+
   editTPCInfo(){
-this.editTPC = false
+    this.selectedForNoEditTPC = false
+    this.selectedForEditTPC = true;
+    this.editTPC = false
+    this.inputtextbox2 = ""
   }
+  closeEditTPC(){
+    this.errormsg1 = false;
+    this.editTPC = true
+    this.selectedForNoEditTPC = true
+    this.selectedForEditTPC = false;
+    this.inputtextbox2 ="inputtextbox1"
+    if(this.updateTerminationReason.value.TPC === ""){
+      this.errormsg1 = true;
+     // this.updateTerminationReason.controls['section'] = new FormControl(Validators.required)
+   }
+  }
+
   editYearInfo(){
-this.editYear = false
+    
+    this.selectedForNoEditYEAR = false;
+    this.selectedForEditYEAR = true;
+this.editYear = false;
+this.inputtextbox3 = ""
   }
+  closeEditYEAR(){
+    this.errormsg2 = false;
+    this.selectedForNoEditYEAR = true;
+    this.selectedForEditYEAR = false;
+    this.editYear = true
+    this.inputtextbox3="inputtextbox1"
+    if(this.updateTerminationReason.value.year === ""){
+      this.errormsg2 = true;
+     // this.updateTerminationReason.controls['section'] = new FormControl(Validators.required)
+   }
+  }
+
   editStrainInfo(){
     // const fieldName = this.newSectionEntryForm.controls['Field'];
     // fieldName.patchValue(this.SectionOnEdit[0].FieldId);
     this.showStrainText = false;
     this.showStrainDropdown = true;
+    this.disableStrainDropdown = false;
+    this.selectedForEditStrain = true
+    this.selectedForNoEditStrain =false;
     const strainname = this.updateTerminationReason.controls['strain'];
     strainname.patchValue(this.AllSectionData.StrainId); 
+  }
+  closeEditStrain(){
+    this.selectedForEditStrain = false
+    this.selectedForNoEditStrain =true;
+    this.disableStrainDropdown = true;
   }
   editLD(){
 this.showLDText = false;
 this.showLDDropdown =true;
+this.selectedForNoEditLD = false;
+this.selectedForEditLD = true;
+this.disableLDDropdown = false;
 const ld = this.updateTerminationReason.controls['ld'];
 ld.patchValue(this.AllSectionData.IsLightDeprevation); 
+  }
+  closeEditLD(){
+    this.selectedForNoEditLD = true;
+this.selectedForEditLD = false;
+
+this.disableLDDropdown = true;
   }
   getStrains(){
     this.dropdownDataService.getStrains().subscribe(
@@ -277,7 +411,7 @@ ld.patchValue(this.AllSectionData.IsLightDeprevation);
         FieldId:this.AllSectionData.FieldId,
         VirtualRoleId:Number(this._cookieService.VirtualRoleId),
         IsTaskCompleted:this.updateTerminationReason.value.completed === null? 0:1,
-        TaskTypeId:this.updateTerminationReason.value.phase,
+        TaskTypeId: this.topTaskTypeId,
       
       },
       SectionsTypeDetails: [],
@@ -290,7 +424,7 @@ ld.patchValue(this.AllSectionData.IsLightDeprevation);
       IsActive:this.AllSectionData.IsActive === true? 1: 0,
       PlantsCount:this.updateTerminationReason.value.TPC === null? this.AllSectionData.TotalPlantCount : this.updateTerminationReason.value.TPC,
       year:this.updateTerminationReason.value.year === null? this.AllSectionData.Year:this.updateTerminationReason.value.year ,
-      IsLightDeprevation:this.updateTerminationReason.value.ld === null?this.AllSectionData.IsLightDeprevation === true? 1:0 :this.updateTerminationReason.value.ld === true? 1: 0 ,
+      IsLightDeprevation:this.updateTerminationReason.value.ld === null?this.AllSectionData.IsLightDeprevation === true || "true"? 1:0 :this.updateTerminationReason.value.ld === true? 1: 0 ,
       IsDeleted:0,
       ActiveInactive:0,
     });
@@ -312,7 +446,7 @@ ld.patchValue(this.AllSectionData.IsLightDeprevation);
              if(String(data[0].RESULTKEY) === 'Updated'){
               this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
               detail:'Section Details Saved Successfully'});
-              this.getAllUpdateTerminationlist();
+              // this.getAllUpdateTerminationlist();
               this.loaderService.display(false);
               this.TerminationSectionMapId = 0;
               setTimeout(() => {
@@ -338,67 +472,107 @@ ld.patchValue(this.AllSectionData.IsLightDeprevation);
               detail:'Failure' });
               this.loaderService.display(false);
             }
-            else if(String(data[0].RESULTKEY) === 'Something went wrong at server side!'){
+            else if(String(data[0].RESULTKEY) === 'Please Select Termination Reason'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail:'Please Select Termination Reason' });
+              this.loaderService.display(false);
+            }
+            else if(String(data[0].RESULTKEY) === 'Please Enter Terminated Plant Count'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail:'Please Enter Terminated Plant Count' });
+              this.loaderService.display(false);
+            }
+            else if(String(data[0].RESULTKEY) === 'Enter the required fields'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail:'Please Enter Both Terminated PlantCount And Termination Reason' });
+              this.loaderService.display(false);
+            }
+            else if(String(data) === 'Something went wrong  at server side!'){
               this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg,
               detail:'Something went wrong at server side!' });
               this.loaderService.display(false);
             }
             else {
-              this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data });
+              this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: 'Something went wrong  at server side!' });
               this.loaderService.display(false);
             } 
           }, 
           error => {
             this.msgs = [];
-            this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
+            this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail:'Something went wrong  at server side!' });
            
             this.loaderService.display(false);
           });
     }
+    
     else {
       this.appCommonService.validateAllFields(this.updateTerminationReason);
     }
   }
-  getAllUpdateTerminationlist()
-  {
-this.newSectionDetailsActionService.GetUpdatedTerminationList(this.sectionDetails.SectionId).subscribe(
-  data=>{
-    if (data !== 'No Data Found') {
-      this.allUpdatedTerminationlist=data.Table;
-      this.Phases = this.dropdwonTransformService.transform(data.Table1, 'TaskTypeName', 'TaskTypeId', '-- Select --');
-      this.paginationValues = AppConstants.getPaginationOptions;
-    if (this.allUpdatedTerminationlist.length > 20) {
-      this.paginationValues[AppConstants.getPaginationOptions.length] = this.allUpdatedTerminationlist.length;
-    }
-  } else {
-    this.allUpdatedTerminationlist = [];
-   }
-   this.loaderService.display(false);
-  },
-   error => { console.log(error);  this.loaderService.display(false); },
-   () => console.log('getAllStrainsbyClient complete'));
-  }
+//   getAllUpdateTerminationlist()
+//   {
+// this.newSectionDetailsActionService.GetUpdatedTerminationList(this.sectionDetails.SectionId).subscribe(
+//   data=>{
+//     if (data !== 'No Data Found') {
+//       this.allUpdatedTerminationlist=data.Table;
+//       // this.Phases = this.dropdwonTransformService.transform(data.Table1, 'TaskTypeName', 'TaskTypeId', '-- Select --');
+//       this.paginationValues = AppConstants.getPaginationOptions;
+//     if (this.allUpdatedTerminationlist.length > 20) {
+//       this.paginationValues[AppConstants.getPaginationOptions.length] = this.allUpdatedTerminationlist.length;
+//     }
+//   } else {
+//     this.allUpdatedTerminationlist = [];
+//    }
+//    this.loaderService.display(false);
+//   },
+//    error => { console.log(error);  this.loaderService.display(false); },
+//    () => console.log('getAllStrainsbyClient complete'));
+//   }
 
   backToSectionsPge(){
     this.router.navigate(['../home/sections']);
   }
-  GetAllDetails(){
-this.TaskName = this.updateTerminationReason.value.phase
-    this.newSectionDetailsActionService.GetSectionDetails(this.sectionDetails.SectionId, this.TaskName).subscribe(
-      data=>{
-        if (data !== 'No Data Found') {
-          this.viewdata = true;
-          this.AllSectionData=data[0];
-
-      } else {
-        this.AllSectionData = [];
-        this.viewdata = false;
-       }
-       this.loaderService.display(false);
-      },
-       error => { console.log(error);  this.loaderService.display(false); },
-       () => console.log('getAllStrainsbyClient complete'));
+//   GetAllDetails(){
+//     if(this.topTaskTypeId === null){
+//       this.TaskName = this.updateTerminationReason.value.phase
+//     }
+// else{
+//   this.TaskName = this.updateTerminationReason.value.phase
+// }
+//     this.newSectionDetailsActionService.GetSectionDetails(this.sectionDetails.SectionId, this.TaskName).subscribe(
+//       data=>{
+//         this.viewdata = true;
+//           this.AllSectionData=data[0];
+//        this.loaderService.display(false);
+//       },
+//        error => { console.log(error);  this.loaderService.display(false); },
+//        () => console.log('getAllStrainsbyClient complete'));
+//   }
+      GetAllDetails(taskId){
+  this.viewdata = false;
+  this.viewDefaultData = true;
+  this.viewTable =  false;
+  // this.TaskId = this.updateTerminationReason.value.phase === null?  this.topTaskTypeId : this.updateTerminationReason.value.phase;
+  this.newSectionDetailsActionService.GetSectionDetails(this.sectionDetails.SectionId,taskId).subscribe(
+    data=>{
+      if(data){
+        this.AllSectionData = data.Table[0]
+      
+        this.viewDefaultData = false;
+        this.allUpdatedTerminationlist=data.Table1;
+      }
+    if(this.AllSectionData){
+      this.viewdata = true;
+    }
+      console.log(this.AllSectionData)
+  
+  if(data.Table1.length > 0 ){
+    this.viewTable = true;
   }
+    }
+  )
+  console.log("hi")
+}
 
   editTerminationdata(TerminationReasonId){
     this.plusOnEdit = false;

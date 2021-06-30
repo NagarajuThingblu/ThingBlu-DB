@@ -12,8 +12,8 @@
         <ng-template pTemplate="header">
           <tr>
             <th>Phase</th>
-            <th>Total Plant Count </th>
-            <th>Terminated Plant Count</th>
+            <th>Initial Plant Count </th>
+            <th>Terminated Plant Count </th>
             <th>Final Plant Count </th>
         </tr>
         </ng-template>
@@ -21,11 +21,36 @@
           <tr>
               <td>{{taskstatus.TaskKeyName}}</td>
               <td>{{taskstatus.TotalPlantCount}}</td>
-              <td>{{taskstatus.TerminatedPlantCount}}</td>
-              <td>{{taskstatus.CompletedPlantCount}}</td>
+              <td>{{taskstatus.TerminatedPlantCnt}}
+                <a href="#" [routerLink]="" (click)="showCompleteInfo(taskstatus)" style="float: right;">
+                  <span class="fa fa-info-circle"></span>
+                </a>
+              </td>
+              <td>{{taskstatus.CompletedPlantCnt}}</td>
           </tr>
       </ng-template>
       </p-table>
+      <p-dialog header="Details" [(visible)]="showPopUp" modal="modal" [width]="350">
+        <p-table  [value]="completeInfo" *ngIf="NoData">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Date</th>
+              <th>Plant Count</th>
+              <th>Reason </th>
+          </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-taskstatus>
+            <tr>
+                <td>{{taskstatus?.TerminationDate}}</td>
+                <td>{{taskstatus?.TerminatedPlantCount}}</td>
+                <td>{{taskstatus?.TerminationReason}}</td>
+               
+            </tr>
+          
+        </ng-template>
+        </p-table>
+        <p *ngIf="!NoData" style="color: red;">No Terminations Available!</p>
+      </p-dialog>
     </p-panel>
     </div>
   </div>

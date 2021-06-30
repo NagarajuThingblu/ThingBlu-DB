@@ -2,8 +2,10 @@
     display: block;
   }
    */
- 
-   .inputtextbox{
+   /* a span {
+    cursor: pointer;
+} */
+   .inputtextbox1{
     border: none;
     background-color: white;
     width:auto

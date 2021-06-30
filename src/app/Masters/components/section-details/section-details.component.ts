@@ -11,6 +11,9 @@ export class SectionDetailsComponent implements OnInit {
 public allUpdatedPhaseslist: any;
 public sectionId: any
 public sectionDetails: any;
+public showPopUp:boolean = false;
+public NoData:boolean = false;
+public completeInfo:any;
   constructor(
     private route: ActivatedRoute,
     private loaderService: LoaderService,
@@ -46,6 +49,23 @@ public sectionDetails: any;
       },
        error => { console.log(error);  this.loaderService.display(false); },
        () => console.log('Get Complete Data'));
+  }
+
+  showCompleteInfo(section){
+    this.completeInfo = []
+    this.showPopUp = true;
+    this.newSectionDetailsActionService.GetCompleteInfo(this.sectionDetails.SectionId,section.TaskTypeId).subscribe(
+      data=>{
+        if(data !='No Data Found'){
+        this.completeInfo = data
+      this.NoData = true;
+        }
+      else{
+        this.NoData = false
+      }
+      }
+    )
+    
   }
   backToSectionsPge(){
     this.router.navigate(['../home/sections']);
