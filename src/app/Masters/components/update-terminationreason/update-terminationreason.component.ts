@@ -43,6 +43,7 @@ export class UpdateTerminationreasonComponent implements OnInit {
   pageheading: any;
 
   public Phases: SelectItem[];
+  public completeSectionName: string;
   public inputtextbox1: String ='inputtextbox1'
   public inputtextbox2: String ='inputtextbox1'
   public inputtextbox3: String ='inputtextbox1'
@@ -62,6 +63,8 @@ export class UpdateTerminationreasonComponent implements OnInit {
   public showLDDropdown: boolean = false;
   public plusOnEdit: boolean = true;
   public TerminationOnEdit: any;
+  public shoesectionCompleteName:boolean = false
+  public shoesectionCompleteNameInput:boolean = true
   public selectedForEditSection: boolean = false;
   public selectedForNoEditSection: boolean = true;
   public selectedForEditStrain: boolean = false;
@@ -299,15 +302,20 @@ console.log(event);
   editSectionInfo(){
 this.editSection = false
 this.selectedForEditSection = true
+this.shoesectionCompleteNameInput = true;
+this.shoesectionCompleteName = false
 this.selectedForNoEditSection =false;
 this.inputtextbox1 = ""
   }
   closeEditSection(){
     this.errormsg = false;
+    this.shoesectionCompleteNameInput = false
+    this.shoesectionCompleteName = true
     this.editSection = true;
     this.selectedForEditSection = false;
     this.selectedForNoEditSection =true;
     this.inputtextbox1="inputtextbox1";
+    this.completeSectionName = this.updateTerminationReason.value.section
     if(this.updateTerminationReason.value.section === ""){
        this.errormsg = true;
       // this.updateTerminationReason.controls['section'] = new FormControl(Validators.required)

@@ -206,6 +206,7 @@
                       <span style="color: red;" class="fa fa-close" ></span>
                     </a>
                     <input
+                    *ngIf="shoesectionCompleteNameInput"
                     [ngClass]="inputtextbox1"
                     name="section"
                     id="section"
@@ -214,7 +215,8 @@
                     formControlName="section"
                     placeholder="Enter Section "
                     min="0.1" [ngModel]="AllSectionData.SectionName"
-                    [readonly]="editSection"></label>
+                    [readonly]="editSection">
+                    <span *ngIf="shoesectionCompleteName" >{{completeSectionName}}</span></label>
                 </div>
                 <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="errormsg">
                   Section Name Required
@@ -248,7 +250,7 @@
                   </div>
                 </div>
                  
-                  <div class="ui-g-12 ui-md-6" *ngIf="viewdata">
+                  <div class="ui-g-12 ui-md-6" >
                     <div class="paddingRL">
                       <label for="TPC" class="towlable"><b>Initial Plant Count:</b> 
                         <a *ngIf="selectedForNoEditTPC && (topTaskTypeName === 'Planting') " href="#" [routerLink]="" (click)="editTPCInfo()">
@@ -265,7 +267,7 @@
                         autocomplete="off"    
                         formControlName="TPC"
                         placeholder="Enter Total Plant Count "
-                        min="0.1" [ngModel]="AllSectionData.TotalPlantCount"
+                        min="0.1" [ngModel]="AllSectionData.PlantsCount"
                         [readonly]="editTPC"></label>
                     </div>
                     <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="errormsg1">
