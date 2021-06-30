@@ -16,7 +16,9 @@ import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { AppConstants } from '../../../shared/models/app.constants';
 import * as _ from 'lodash';
 import { routing } from '../../../app.routing';
+import { NewSectionDetailsActionService } from '../../../task/services/add-section-details.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NewFieldGenerationService } from '../../../task/services/new-field-generation.service';
 import { routerNgProbeToken } from '@angular/router/src/router_module';
 import {NewLabelDetailsActionService} from '../../../task/services/add-label-details.service'
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
@@ -37,6 +39,9 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   chkSelectAll: any;
   public newLabelsEntryForm: FormGroup;
   strains: any[];
+  Fields: any[];
+  Sections: any[];
+  public sectionData: any;
   TaskType: any[];
   public taskid;
   public taskType;
@@ -70,6 +75,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   enabletextbox = true;
   public defaultValue: number =1;
   public e:any;
+  public allFieldslist:any;
   HT: String 
   taskTypeValueAndLabelMap: Map<number,string> = new Map<number,string>()
   pageheading: any;
@@ -94,6 +100,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private loaderService: LoaderService,
+    private newSectionDetailsActionService: NewSectionDetailsActionService, 
     private cookieService: CookieService,
     private dropdownDataService: DropdownValuesService, // For common used dropdown service
     private dropdwonTransformService: DropdwonTransformService,
@@ -102,6 +109,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     private newLabelDetailsActionService: NewLabelDetailsActionService,
     private confirmationService: ConfirmationService,
     private scrolltopservice: ScrollTopService,
+    private NewFieldgeneration: NewFieldGenerationService,
     private router: Router
   ) {
     this.route.params.forEach((urlParams) => {
@@ -110,6 +118,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
       this.taskid = urlParams['TaskTypeId'];
       this.taskType = urlParams['TaskTypeKey'];
     });
+    this.GetFields();
     this.getAllStrains();
     this.getAllTaskType();
     this.getAllSkew();
@@ -138,6 +147,8 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     }, 0);
     this.newLabelsEntryForm = this.fb.group({
       'TaskType': new FormControl(null, Validators.required),
+      'field': new FormControl(null, Validators.required),
+      'Section':new FormControl(null, Validators.required),
       items: new FormArray([], this.customGroupValidation),
       // 'bincount':  new FormControl(null),
       
@@ -174,6 +185,41 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
    
     // this.router.navigate(['../home/taskaction', e.TaskTypeKey, e.TaskId]);
   }
+  GetFields() {
+    this.loaderService.display(true);
+    this.NewFieldgeneration.GetFieldList().subscribe(data=>{
+      if(data!="No Data Found"){
+        this.allFieldslist=data;
+        this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --');
+       
+      }
+     
+      this.loaderService.display(false);
+    },
+    error => { console.log(error); this.loaderService.display(false); },
+    () => console.log('GetAllFieldsbyClient complete'));
+ }
+
+ 
+ onFieldSelection(event: any)
+ {
+
+this.newSectionDetailsActionService.Getsectionlist().subscribe(
+ data=>{
+   if (data !== 'No Data Found') {
+    this.sectionData = data;
+    this.Sections = this.dropdwonTransformService.transform(data.filter(x => x.FieldId === event.value), 'SectionName', 'SectionId', '-- Select --');
+
+ } 
+  this.loaderService.display(false);
+ },
+  error => { console.log(error);  this.loaderService.display(false); },
+  () => console.log('getAllStrainsbyClient complete'));
+ }
+
+ onSectionSelection(event: any){
+
+ }
   back(e){
     if(e.TaskTypeKey!= null){
       this.router.navigate(['home/taskaction/', e.TaskTypeKey, e.TaskId]);
