@@ -81,6 +81,8 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   pageheading: any;
   public placeholder ='-- Select --';
   public taskKeyName: any = '';
+  public strainName: any;
+  public lightDep:any;
   public allLabelslist:any;
   public count:number = 0;
   public popupTaskType: any;
@@ -219,7 +221,16 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
 
  onSectionSelection(event: any){
 
+for(let sec of this.sectionData ){
+  if(event.value === sec.SectionId){
+    this.strainName = sec.StrainName;
+    this.lightDep =sec.AvilablePlantCount;
+    this.newLabelsEntryForm.controls["strain"].setValue(this.strainName)
+    this.newLabelsEntryForm.controls["strain"].setValue(this.strainName)
+  }
+}
  }
+
   back(e){
     if(e.TaskTypeKey!= null){
       this.router.navigate(['home/taskaction/', e.TaskTypeKey, e.TaskId]);
