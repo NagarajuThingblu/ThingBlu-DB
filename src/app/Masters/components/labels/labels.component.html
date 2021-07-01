@@ -46,7 +46,7 @@
                   <p-dropdown
                     id="Section"
                     [options]="Sections"
-                    formControlName="TaskType"
+                    formControlName="Section"
                     placeholder="-- Select --"
                     class="clsControl"
                     (onChange) = "onSectionSelection($event)"
@@ -98,7 +98,7 @@
                         min="0.1">
                     </td>
                     <td>
-                      <p-dropdown
+                      <!-- <p-dropdown
                       id="strain"
                       formControlName="strain"
                       placeholder="-- Select --"
@@ -106,7 +106,18 @@
                       class="clsControl"
                       [options]="strains"
                       name="strain">
-                    </p-dropdown>
+                    </p-dropdown> -->
+                    <input pInputText
+                      
+                    name="strain"
+                    [ngModel]="strainName"
+                    id="strain"
+                    type="string"
+                    autocomplete="off"
+                    class="clsControl"       
+                    formControlName="strain"
+                    readonly ="true"
+                  >
                   </td>
                     <td>
                       <p-dropdown
@@ -121,7 +132,7 @@
                       
                     </td>
                     <td>
-                      <p-checkbox value="true"
+                      <p-checkbox  [ngModel]="strainName"
                        formControlName="lightDept" checked="true"
                       binary="true"></p-checkbox>                                      
                     </td>

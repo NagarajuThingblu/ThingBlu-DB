@@ -224,9 +224,9 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
 for(let sec of this.sectionData ){
   if(event.value === sec.SectionId){
     this.strainName = sec.StrainName;
-    this.lightDep =sec.AvilablePlantCount;
-    this.newLabelsEntryForm.controls["strain"].setValue(this.strainName)
-    this.newLabelsEntryForm.controls["strain"].setValue(this.strainName)
+    this.lightDep =sec.IsLightDeprevation;
+    this.newLabelsEntryForm.controls.items['controls'][0].controls['strain'].setValue(this.strainName)
+    this.newLabelsEntryForm.controls.items['controls'][0].controls['lightDept'].setValue(this.lightDep)
   }
 }
  }
@@ -495,7 +495,8 @@ createItem(): FormGroup {
     this.viewNoOfBins = true;
     this.newLabelsEntryForm.reset({ chkSelectAll: true });
    this.plusOnEdit = true;
-
+this.strainName = null
+this.lightDep = false;
     const control = <FormArray>this.newLabelsEntryForm.controls['items'];
     
     let length = control.length;
@@ -533,6 +534,8 @@ createItem(): FormGroup {
       this.LabelIdForUpdate = LabelId;
       this.LabelOnEdit = data;
       const taskType = this.newLabelsEntryForm.controls['TaskType'];
+      const field =this.newLabelsEntryForm.controls['field'];
+      const section =this.newLabelsEntryForm.controls['Section'];
       const binNo = itemlist[0].controls['binNo'];
       const bincount = itemlist[0].controls['bincount'];
       const strainName =  itemlist[0].controls["strain"];
@@ -542,9 +545,11 @@ createItem(): FormGroup {
       const chkIsActive =   itemlist[0].controls["chkSelectAll"];
 
       taskType.patchValue(this.LabelOnEdit[0].TaskTypeId);
+      field.patchValue(this.LabelOnEdit[0].FieldId);
+      section.patchValue(this.LabelOnEdit[0].SectionId);
       binNo.patchValue(this.LabelOnEdit[0].BinNo);
       bincount.patchValue(this.LabelOnEdit[0].NoOfBins);
-       strainName.patchValue(this.LabelOnEdit[0].StrainId);
+       strainName.patchValue(this.LabelOnEdit[0].StrainName);
        skewType.patchValue(this.LabelOnEdit[0].SkewType);
        lightDept.patchValue(this.LabelOnEdit[0].IsLightDeprevation);
        TrimminMethod.patchValue(this.LabelOnEdit[0].TrimmingMethod);
