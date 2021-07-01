@@ -395,7 +395,7 @@
             <form [formGroup]="EndDateEditForm" (ngSubmit)="updateEndDate(EndDateEditForm.value)">
               <div class="ui-g-12"  style="padding-top: 10px;" >
                <div class="ui-g-12 ui-md-6" >  <strong> Actual End Date: </strong></div>
-                <p-calendar  (onClose)="resetHeight()" (click)="incHeight()" formControlName="editenddate"  [showTime]="true" [showIcon]="true" hourFormat="12"></p-calendar>
+                <p-calendar [utc]="true" (onClose)="resetHeight()" (click)="incHeight()" formControlName="editenddate"  [showTime]="true" [showIcon]="true" hourFormat="12"></p-calendar>
              </div>
              <button type="submit" pButton icon="fa-check"  label="Submit"  ></button>
             </form>
