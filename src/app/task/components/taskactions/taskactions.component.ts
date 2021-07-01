@@ -502,8 +502,8 @@ export class TaskactionsComponent implements OnInit {
           "ClientId":this._cookieService.ClientId,
           "VirtualRoleId": this._cookieService.VirtualRoleId,
           "EmpId": this.taskActionDetails.EmpId,
-           "ActEndDate":String(formModel.editenddate),
-          // "ActEndDate": new Date(formModel.editenddate).toLocaleDateString().replace(/\u200E/g, ''),
+          //  "ActEndDate":String(formModel.editenddate),
+        "ActEndDate": new Date(formModel.editenddate).toLocaleTimeString().replace(/\u200E/g, ''),
         }
       }
     }
