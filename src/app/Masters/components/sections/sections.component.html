@@ -180,7 +180,7 @@
             </th>
             <th [pSortableColumn]="'IsLightDeprevation'">Light Dept <p-sortIcon [field]="'IsLightDeprevation'"></p-sortIcon>
             </th>
-            <th style="width:100px;">Action </th>
+            <th style="width:120px;">Action </th>
           </tr>
           <tr>
             <!-- <th>
@@ -227,13 +227,16 @@
             <td>{{section?.IsLightDeprevation }}</td>
             <td style="width:65px;">
               <span class="ui-column-title">edit</span>
-              <a href="#" [routerLink]="" (click)="getSectionOnEdit(section?.SectionId)">
+              <!-- <a href="#" [routerLink]="" (click)="getSectionOnEdit(section?.SectionId)"> -->
+                <a href="#" [routerLink]="" (click)="showTerminationReasonPopup(section)">
                 <span class="fa fa-edit"></span>
               </a>
               <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(section?.SectionId,section,1,0)">
                 <span class="fa fa-trash"></span>
               </a>
-            
+              <a href="#" [routerLink]="" (click)="showSectionDetails(section)">
+                <span class="fa fa-info-circle"></span>
+              </a>
               <div class="clsToggleButtonDiv">
                 <p-toggleButton [(ngModel)]="section.IsActive" onLabel="Active" offLabel="InActive"
                   [style]="{'width':'90px'}"

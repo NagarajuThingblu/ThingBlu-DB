@@ -77,7 +77,8 @@ import {PlantTerminationReasonsComponent} from './Masters/components/plant-termi
 import {AddRawMaterialComponent} from './Masters/components/add-raw-material/add-raw-material.component';
 import { HelpComponent } from './Masters/components/help/help.component';
 import { OrderformComponent } from './order/components/orderform/orderform.component';
-
+import { UpdateTerminationreasonComponent } from './Masters/components/update-terminationreason/update-terminationreason.component';
+import { SectionDetailsComponent } from './Masters/components/section-details/section-details.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -169,6 +170,8 @@ const appRoutes: Routes = [
       {path:'addrawmaterial', component:AddRawMaterialComponent},
       {path:'help', component:HelpComponent},
       {path:'orderform', component:OrderformComponent},
+      { path: 'taskupdate', component: UpdateTerminationreasonComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'infoofsection', component: SectionDetailsComponent, canActivate: [AuthGuard, RoleGuard] },
       // {path:'planting', component:PlantingComponent}
      // {path:'harvesting',component:HarvestingComponent}
 

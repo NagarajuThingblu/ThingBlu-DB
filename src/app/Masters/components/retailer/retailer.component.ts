@@ -96,10 +96,11 @@ export class RetailerComponent implements OnInit {
     this.getAllRetailerTypes();
     this.getRetailerDetailListByClient();
     this.priorities =  [
-      {label: 'UPS Ground', value: 'UPS Ground'},
-      {label: 'UPS 2 Day', value: 'UPS 2 Day'},
-      {label: 'UPS 3 Day', value: 'UPS 3 Day'},
-      {label: 'UPS Next Day', value: 'UPS Next Day'},
+     
+      {label: 'UPS Ground', value: 'UPSGround'},
+      {label: 'UPS 2 Day', value: 'UPS2Day'},
+      {label: 'UPS 3 Day', value: 'UPS3Day'},
+      {label: 'UPS Next Day Air', value: 'UPSNextDayAir'},
       {label: 'FedEx', value: 'FedEx'},
       {label: 'USPS', value: 'USPS'}
     ];

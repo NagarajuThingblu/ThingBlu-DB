@@ -95,6 +95,8 @@
                                         <input type="text" pInputText size="50" placeholder="Global Filter" (input)="dtReviewPending.filterGlobal($event.target.value, 'contains')" style="width:80%;">
                                     </div>
                                 </ng-template>-->
+                                
+                             
                                 <ng-template pTemplate="header">
                                     <br>
                                     <tr class="rowBorder">
@@ -527,6 +529,24 @@
                                         <input type="text" pInputText size="50" placeholder="Global Filter" (input)="dtCompleted.filterGlobal($event.target.value, 'contains')" style="width:80%;">
                                     </div>
                                 </ng-template>-->
+                               <!-- <ng-template pTemplate="caption">
+                                   <br>
+                                  
+                                   <tr>
+                                    <label>Date :</label>
+                                        <p-calendar [showIcon]="true" 
+                                        class="clsControl" 
+                                        id="range"
+                                        selectionMode="range"
+                                        [yearNavigator] = "true" 
+                                        yearRange="1900:3030"
+                                        name="range" 
+                                       >
+                                        </p-calendar>
+                                      
+                                   </tr>
+                               </ng-template> -->
+                             
                                 <ng-template pTemplate="header">
                                     <br>
                                     <tr class="rowBorder">

@@ -486,6 +486,9 @@ nav.navbar-right > li{
 .ui-dialog .ui-dialog-content{
 overflow: visible !important;
     }
+    /* .ui-dialog {
+        overflow: scroll;
+    } */
     .ui-button.ui-button-secondary.ui-state-default, .ui-splitbutton.ui-button-secondary .ui-button.ui-state-default {
         background-color: #e6e6e6 !important;
         border-color: #ccc;

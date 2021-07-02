@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 import { routerNgProbeToken } from '@angular/router/src/router_module';
 import { NewSectionDetailsActionService } from '../../../task/services/add-section-details.service';
 import { element } from 'protractor';
+import { PTRService } from '../../../Masters/services/ptr.service';
 
 @Component({
   moduleId: module.id,
@@ -33,11 +34,13 @@ export class SectionsComponent implements OnInit {
   paginationValues: any;
   chkSelectAll: any;
   public newSectionEntryForm: FormGroup;
+  TerminationReasons: FormGroup;
   Fields: any[];
   chkIsActive: boolean;
   strains: any[];
   // section: any[];
   public saveButtonText = 'save';
+  public Phases:any;
   public newProductTypeResources: any;
   public newSectionResources: any;
   public globalResource: any;
@@ -53,6 +56,14 @@ export class SectionsComponent implements OnInit {
   public duplicateSection: any;
   public ActiveInActiveForUpdate: any = 0;
   public event: any;
+  public popupTerminationReason: boolean = false
+  public fieldname:any;
+  public sectionname:any;
+  public strainname:any;
+  public tpc:any;
+  public year:any;
+  public ld:any;
+  public TerminatioReasons: any[];
   pageheading: any;
   collapsed: any;
   sysmbol:any;
@@ -84,6 +95,7 @@ export class SectionsComponent implements OnInit {
     private scrolltopservice: ScrollTopService,
     private confirmationService: ConfirmationService,
     private router: Router,
+    private ptrActionService: PTRService,
     private cdr: ChangeDetectorRef
   ) {
     
@@ -112,7 +124,7 @@ export class SectionsComponent implements OnInit {
         this.globalData.Fields = data;
         this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --');
        
-        console.log("fields"+JSON.stringify(this.Fields));
+        // console.log("fields"+JSON.stringify(this.Fields));
       } ,
       error => { console.log(error); },
       () => console.log('Get all brands complete'));
@@ -180,11 +192,23 @@ this.Year = new Date().getFullYear();
             ClientId: Number(this._cookieService.ClientId),
             FieldId: Number(this.newSectionEntryForm.value.Field),
             VirtualRoleId: Number(this._cookieService.VirtualRoleId),
+            TerminatedPlantCount:0,
+            TerminationReasonId:0,
+            IsTaskCompleted:0,
+            TaskTypeId:0,
+            TerminationSectionMapId:0
+           
            
         },
-        SectionsTypeDetails: []
+        SectionsTypeDetails: [],
+        TerminationTypeDetails:[]
       };
-
+      newSectionForApi.TerminationTypeDetails.push({
+        TerminationSectionMapId:0,
+        TerminatedPlantCount: 0,
+        TerminationReasonId:0
+  
+       });
 
     this.SectionDetailsArr.controls.forEach((element, index) => {
       this.duplicateSection = element.value.section
@@ -196,12 +220,14 @@ this.Year = new Date().getFullYear();
             PlantsCount:element.value.plantcount,
             year:element.value.year,
             IsDeleted:this.IsDeletedForUpdate,
-            LightDept:element.value.lightDept? 1: 0,
+            IsLightDeprevation:element.value.lightDept? 1: 0,
             ActiveInactive:this.ActiveInActiveForUpdate
+
             
          });
     
      });
+    
       this.newSectionForm_copy = JSON.parse(JSON.stringify(Object.assign({}, this.newSectionEntryForm.value)));
 
       if (this.newSectionEntryForm.valid) {
@@ -212,14 +238,14 @@ this.Year = new Date().getFullYear();
             data => {
             
               this.msgs = [];
-              if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
+              if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'SUCCESS') {
                 this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
                 detail: this.newSectionResources.newsectionsavedsuccess });
                
                 this.resetForm();
                 this.getAllsectionlist();
                 this.SectionIdForUpdate = 0;
-              } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'UPDATED') {
+              } else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'UPDATED') {
                 this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
                 detail: this.newSectionResources.updated });
                
@@ -232,10 +258,10 @@ this.Year = new Date().getFullYear();
                 this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.newSectionResources.alreadydeleted });
               }else if (String(data).toLocaleUpperCase() === 'FAILURE') {
                 this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
-              } else if (String(data[0].ResultKey).toUpperCase() === 'INUSE') {
+              } else if (String(data[0].RESULTKEY).toUpperCase() === 'INUSE') {
                 this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                     detail: this.newProductTypeResources.producttypeisassigned });
-              } else if (String(data[0].ResultKey).toUpperCase() === 'NOTPRESENT') {
+              } else if (String(data[0].RESULTKEY).toUpperCase() === 'NOTPRESENT') {
                 if (data[0].NoBrand === 1) {
                   this.newSectionEntryForm.controls['brand'].setErrors({ 'brandnotpresent': true });
                   this.loaderService.display(false);
@@ -254,7 +280,7 @@ this.Year = new Date().getFullYear();
                   this.newSectionEntryForm.controls['skewType'].setErrors({ 'skewnotpresent': true });
                   this.loaderService.display(false);
                 }
-              } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'DUPLICATE') {
+              } else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'DUPLICATE') {
                 this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.duplicateSection+this.newSectionResources.duplicateSection });
                 this.loaderService.display(false);
                 // data.forEach(dataItem => {
@@ -328,7 +354,13 @@ this.Year = new Date().getFullYear();
     'Field': new FormControl(null, Validators.required),
       items: new FormArray([], this.customGroupValidation),
   });
- 
+  this.TerminationReasons = this.fb.group({
+    'phase': new FormControl(null, Validators.required),
+    'completed':new FormControl(null),
+    'cpc':new FormControl(null),
+    'Terminationreason':new FormControl(null),
+    'tpc':new FormControl(null),
+  })
   this.addItem();
   this.Year = new Date().getFullYear();
   if (this.appCommonService.ProductTypeBackLink && this.appCommonService.ProductTypeFormDetail) {
@@ -345,7 +377,11 @@ this.Year = new Date().getFullYear();
   setTimeout(() => {
     this.loaderService.display(false);
   }, 500);
-
+  this.Phases =  [
+    {label: '--Select--', value: 'null'},
+    {label: 'Planting', value: 'Planting'},
+    {label: 'Harvesting', value: 'Harvesting'}
+  ];
   }
 
   get SectionDetailsArr(): FormArray {
@@ -401,43 +437,43 @@ this.Year = new Date().getFullYear();
   this.appCommonService.ProductTypeFormDetail = this.newSectionEntryForm;
     this.router.navigate(['../home/strainmaster']);
   }
-  getSectionOnEdit(SectionId) {
-    this.plusOnEdit = false;
-    console.log(this.allsectionslist)
-    const data = this.allsectionslist.filter(x => x.SectionId === SectionId);
-    console.log(data);
-    var itemlist = this.newSectionEntryForm.get('items')['controls'];
-     if (data !== 'No data found!') {
-       this.SectionIdForUpdate = SectionId;
-       this.SectionOnEdit = data;
-       const fieldName = this.newSectionEntryForm.controls['Field'];
-       const sectionName = itemlist[0].controls['section'];
-       const strainName =  itemlist[0].controls["strain"];
-       const plantsCount =  itemlist[0].controls["plantcount"];
-       const year = itemlist[0].controls["year"];
-       const lightDept =  itemlist[0].controls["lightDept"];
-       const chkIsActive =   itemlist[0].controls["chkSelectAll"];
+  // getSectionOnEdit(SectionId) {
+  //   this.plusOnEdit = false;
+  //   console.log(this.allsectionslist)
+  //   const data = this.allsectionslist.filter(x => x.SectionId === SectionId);
+  //   console.log(data);
+  //   var itemlist = this.newSectionEntryForm.get('items')['controls'];
+  //    if (data !== 'No data found!') {
+  //      this.SectionIdForUpdate = SectionId;
+  //      this.SectionOnEdit = data;
+  //      const fieldName = this.newSectionEntryForm.controls['Field'];
+  //      const sectionName = itemlist[0].controls['section'];
+  //      const strainName =  itemlist[0].controls["strain"];
+  //      const plantsCount =  itemlist[0].controls["plantcount"];
+  //      const year = itemlist[0].controls["year"];
+  //      const lightDept =  itemlist[0].controls["lightDept"];
+  //      const chkIsActive =   itemlist[0].controls["chkSelectAll"];
         
-       fieldName.patchValue(this.SectionOnEdit[0].FieldId);
-       sectionName.patchValue(this.SectionOnEdit[0].SectionName);
-       strainName.patchValue(this.SectionOnEdit[0].StrainId);
-       plantsCount.patchValue(this.SectionOnEdit[0].PlantsCount);
-       lightDept.patchValue(this.SectionOnEdit[0].IsLightDeprevation);
-       year.patchValue(this.SectionOnEdit[0].Year);
-        chkIsActive.patchValue(this.SectionOnEdit[0].IsActive);
+  //      fieldName.patchValue(this.SectionOnEdit[0].FieldId);
+  //      sectionName.patchValue(this.SectionOnEdit[0].SectionName);
+  //      strainName.patchValue(this.SectionOnEdit[0].StrainId);
+  //      plantsCount.patchValue(this.SectionOnEdit[0].PlantsCount);
+  //      lightDept.patchValue(this.SectionOnEdit[0].IsLightDeprevation);
+  //      year.patchValue(this.SectionOnEdit[0].Year);
+  //       chkIsActive.patchValue(this.SectionOnEdit[0].IsActive);
        
-        this.clear = 'Cancel';
-       this.saveButtonText = 'Update';
-       this.pageheading = 'Edit Section';
+  //       this.clear = 'Cancel';
+  //      this.saveButtonText = 'Update';
+  //      this.pageheading = 'Edit Section';
 
       
        
-     } else {
-     this.allsectionslist = [];
-     }
-     this.loaderService.display(false);
-    //  this.cdr.detectChanges();
-  }
+  //    } else {
+  //    this.allsectionslist = [];
+  //    }
+  //    this.loaderService.display(false);
+  //   //  this.cdr.detectChanges();
+  // }
   showConformationMessaegForDeactive(SectionId, section, rowIndex, IsDeleted, ActiveInactiveFlag) {
     console.log(section);
     let strMessage: any;
@@ -480,13 +516,25 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
         ClientId: Number(this._cookieService.ClientId),
         FieldId: section.FieldId,
         VirtualRoleId:  Number(this._cookieService.VirtualRoleId),
+        TerminatedPlantCount:0,
+            TerminationReasonId:0,
+            IsTaskCompleted:0,
+            TaskTypeId:0,
+            TerminationSectionMapId:0
         // ActiveInactive: ActiveInactiveFlag,
         // IsDeleted: IsDeleted,
         // IsActive: section.IsActive,
        
     },
-    SectionsTypeDetails: []
+    SectionsTypeDetails: [],
+    TerminationTypeDetails:[]
   };
+  newSectionDetailsForApi.TerminationTypeDetails.push({
+    TerminationSectionMapId:0,
+    TerminatedPlantCount: 0,
+    TerminationReasonId:0
+
+   });
   this.SectionDetailsArr.controls.forEach((element, index) => {
 
     newSectionDetailsForApi.SectionsTypeDetails.push({
@@ -509,7 +557,7 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
     data => {
    
       this.msgs = [];
-      if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS' && IsDeleted === 1) {
+      if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'SUCCESS' && IsDeleted === 1) {
       
         this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
         detail: this.newSectionResources.newsectiondeletedsuccess  });
@@ -517,7 +565,7 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
         this.resetForm();
         this.getAllsectionlist();
         
-      } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'INUSE') {
+      } else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'INUSE') {
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
         detail: this.newSectionResources.sectionisassigned });
         this.loaderService.display(false);
@@ -526,7 +574,7 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
         detail: data[0].RESULTKEY });
         this.loaderService.display(false);
-      }  else if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS' && ActiveInactiveFlag === 1) {
+      }  else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'SUCCESS' && ActiveInactiveFlag === 1) {
         if (section.IsActive === true) {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.newSectionResources.sectionactivatesuccess });
@@ -553,6 +601,33 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
       this.loaderService.display(false);
     });
 
+}
+
+showTerminationReasonPopup(section){
+  this.router.navigate(['../home/taskupdate', section]);
+}
+showSectionDetails(section){
+  this.router.navigate(['../home/infoofsection', section]);
+}
+getAllTerminationReasons(){
+  this.ptrActionService.GetAllPTRListByClient().subscribe(
+    data => {
+      if(data != 'No Data Found!'){
+        this.TerminatioReasons = this.dropdwonTransformService.transform(data, 'TerminationReason', 'TerminationId', '-- Select --',false);
+      }
+      else{
+        this.TerminatioReasons = [];
+      }
+     
+     } ,
+     error => { console.log(error);  this.loaderService.display(false); },
+     () => console.log('getTerminationReasons complete'));
+}
+closePopUp(){
+  this.popupTerminationReason = false
+}
+submitCompleteParameter(value: string){
+console.log("hi")
 }
 }
  

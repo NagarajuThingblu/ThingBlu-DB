@@ -193,6 +193,26 @@
     </div>
   </div>
 </div>
+<!-- <div class="ui-g">
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <div class="le-su-12">
+        <label for="comment">Comment</label>:
+                   
+  <textarea                        
+    pInputTextarea                        
+    
+    formControlName="comment"
+    id="comment"
+    name="comment"
+    maxlength="500"
+    class="clsControl"
+    binary="true"
+  ></textarea>
+      </div>
+    </div>
+  </div>
+</div> -->
           
         
         <div class="ui-g">
@@ -328,7 +348,7 @@
                   min="0.1">
               </td> -->
               <td>
-                <a (click)="deleteItem(i)" *ngIf="!orderForm.get('items').valid || sysmbol == 0">                                                    
+                <a (click)="deleteItem(i,$event)" *ngIf="!orderForm.get('items').valid || sysmbol == 0">                                                    
                     <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
                     </span>
                 </a> 
@@ -353,7 +373,7 @@
                     pButton 
                     (click)="resetForm()" 
                     type="button" 
-                    label="Clear" 
+                    label="{{clearbutton}}" 
                     class="ui-button-secondary">
                 </button>
               </div>

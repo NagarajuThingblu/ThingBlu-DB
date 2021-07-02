@@ -1,0 +1,61 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel  [toggleable]="true">
+        <div class="ui-g">
+          <div class="ui-g-12 ui-md-12" style="padding: 0">
+            <a [routerLink]=""  class="btn-link" (click)="backToSectionsPge()" style="float: right;padding-right: 21px;text-decoration: underline" ><< Back</a>
+           </div>
+        </div>
+       
+      <p-table  [value]="allUpdatedPhaseslist">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Phase</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Initial Plant Count </th>
+            <th>Terminated Plant Count </th>
+            <th>Final Plant Count </th>
+        </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-taskstatus>
+          <tr>
+              <td>{{taskstatus.TaskKeyName}}</td>
+              <td>{{taskstatus.StartDate}}</td>
+              <td>{{taskstatus.EndDate}}</td>
+              <td>{{taskstatus.TotalPlantCount}}</td>
+              <td>{{taskstatus.TerminatedPlantCnt}}
+                <a href="#" [routerLink]="" (click)="showCompleteInfo(taskstatus)" style="float: right;">
+                  <span class="fa fa-info-circle"></span>
+                </a>
+              </td>
+              <td>{{taskstatus.CompletedPlantCnt}}</td>
+          </tr>
+      </ng-template>
+      </p-table>
+      <p-dialog header="Details" [(visible)]="showPopUp" modal="modal"  [width]="750"   [style]="{ 'overflow' : 'scroll'  }">
+        <p-table  [value]="completeInfo" *ngIf="NoData">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Date</th>
+              <th>Plant Count</th>
+              <th>Reason </th>
+          </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-taskstatus>
+            <tr>
+                <td>{{taskstatus?.TerminationDate}}</td>
+                <td>{{taskstatus?.TerminatedPlantCount}}</td>
+                <td>{{taskstatus?.TerminationReason}}</td>
+               
+            </tr>
+          
+        </ng-template>
+        </p-table>
+        <p *ngIf="!NoData" style="color: red;">No Terminations Available!</p>
+      </p-dialog>
+    </p-panel>
+    </div>
+  </div>
+</div>
