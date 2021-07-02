@@ -82,6 +82,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   public placeholder ='-- Select --';
   public taskKeyName: any = '';
   public strainName: any;
+  public strainId: any;
   public lightDep:any;
   public allLabelslist:any;
   public count:number = 0;
@@ -205,7 +206,8 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
  
  onFieldSelection(event: any)
  {
-
+// this.sectionData =null;
+// this.Sections = null
 this.newSectionDetailsActionService.Getsectionlist().subscribe(
  data=>{
    if (data !== 'No Data Found') {
@@ -224,6 +226,7 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
 for(let sec of this.sectionData ){
   if(event.value === sec.SectionId){
     this.strainName = sec.StrainName;
+    this.strainId = sec.StrainId;
     this.lightDep =sec.IsLightDeprevation;
     this.newLabelsEntryForm.controls.items['controls'][0].controls['strain'].setValue(this.strainName)
     this.newLabelsEntryForm.controls.items['controls'][0].controls['lightDept'].setValue(this.lightDep)
@@ -395,6 +398,8 @@ createItem(): FormGroup {
             ClientId: Number(this._cookieService.ClientId),
             TaskTypeId: Number(this.newLabelsEntryForm.value.TaskType),
             VirtualRoleId: Number(this._cookieService.VirtualRoleId),
+            FieldId: Number(this.newLabelsEntryForm.value.field),
+            SectionId: Number(this.newLabelsEntryForm.value.Section),
       },
       BinLabelsTypeDetails:[]
     };
@@ -404,7 +409,7 @@ createItem(): FormGroup {
       newLabelForApi.BinLabelsTypeDetails.push({
           LabelId: this.LabelIdForUpdate,
           BinNo: element.value.binNo,
-          StrainId:  element.value.strain,
+          StrainId:  this.strainId,
           SkewType: this.enableDropDown == true? null:element.value.skewType,
           SkewTypeId: this.skewTypeID,
           IsLightDeprevation:element.value.lightDept? 1: 0,
@@ -428,7 +433,8 @@ createItem(): FormGroup {
         if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.newLabelResources.newlabelsavedsuccess });
-         
+          this.sectionData = null
+         this.Sections = null;
           this.resetForm();
           this.getAllLabelslist();
           this.LabelIdForUpdate = 0;
@@ -523,6 +529,7 @@ this.lightDep = false;
    
   }
   getLabelsOnEdit(LabelId){
+   
     this.plusOnEdit = false;
     this.viewNoOfBins = false;
     this.enableDropDown = true;
@@ -546,6 +553,7 @@ this.lightDep = false;
 
       taskType.patchValue(this.LabelOnEdit[0].TaskTypeId);
       field.patchValue(this.LabelOnEdit[0].FieldId);
+      this.onFieldSelection(field);
       section.patchValue(this.LabelOnEdit[0].SectionId);
       binNo.patchValue(this.LabelOnEdit[0].BinNo);
       bincount.patchValue(this.LabelOnEdit[0].NoOfBins);
@@ -612,6 +620,8 @@ this.lightDep = false;
         ClientId: Number(this._cookieService.ClientId),
         TaskTypeId:label.TaskTypeId,
         VirtualRoleId: Number(this._cookieService.VirtualRoleId),
+        FieldId:label.FieldId,
+        SectionId:label.SectionId,
       },
       BinLabelsTypeDetails:[]
     };
