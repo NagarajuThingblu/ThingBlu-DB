@@ -219,8 +219,8 @@ export class PlantingComponent implements OnInit{
           'rmisccost': new FormControl(null),
           'rmisccomment': new FormControl(null)
       })
-        const terminationReason = this.reviewForm.controls['terminationReason'];
-        terminationReason.patchValue(this.taskReviewModel.TerminationReasonId);
+        // const terminationReason = this.reviewForm.controls['terminationReason'];
+        // terminationReason.patchValue(this.taskReviewModel.TerminationReasonId);
       
     }
 
@@ -306,10 +306,10 @@ submitReview(formModel) {
       ReviewPlant: {
         TaskId:Number(this.taskid),
         VirtualRoleId: 0,
-        CompletedPlantCount:formModel.completedPC,
-        TerminatedPlantCount: formModel.terminatedtedPC,
-        TerminationId:  formModel.terminationReason?formModel.terminationReason:0,
-        Comment: formModel.comment,
+        // CompletedPlantCount:formModel.completedPC,
+        // TerminatedPlantCount: formModel.terminatedtedPC,
+        // TerminationId:  formModel.terminationReason?formModel.terminationReason:0,
+        Comment: formModel.rmisccomment,
         MiscCost: formModel.rmisccost,
         RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
       }
@@ -349,23 +349,28 @@ submitReview(formModel) {
         else if (data[0].RESULTKEY === 'Failure'){
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         }
-        else  if (data[0].RESULTKEY === 'Invalid Termination Reason'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.invalid });
-        }
-        else  if (data[0].RESULTKEY === 'Please Select Termination Reason'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY});
-        }
-        else  if (data[0].RESULTKEY === 'Invalid Termination Reason'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.invalid });
-        }
-        else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Available Plant Count'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: "Completed Plant Count Greater Than Available Plant Count" });
+        else if (data === 'This status already exist'){
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'This status already exist' });
+          this.PageFlag.showmodal = false;
           this.loaderService.display(false);
         }
-        else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
-          this.loaderService.display(false);
-        }
+        // else  if (data[0].RESULTKEY === 'Invalid Termination Reason'){
+        //   this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.invalid });
+        // }
+        // else  if (data[0].RESULTKEY === 'Please Select Termination Reason'){
+        //   this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY});
+        // }
+        // else  if (data[0].RESULTKEY === 'Invalid Termination Reason'){
+        //   this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.invalid });
+        // }
+        // else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Available Plant Count'){
+        //   this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: "Completed Plant Count Greater Than Available Plant Count" });
+        //   this.loaderService.display(false);
+        // }
+        // else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
+        //   this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
+        //   this.loaderService.display(false);
+        // }
       
         else{
           if (this.TaskModel.IsReview === true) {
@@ -393,21 +398,21 @@ submitReview(formModel) {
 
 completeTask(formModel){
   let taskCompletionWebApi;
-  let assignedPC;
+  // let assignedPC;
   if ( this.completionForm.valid === true) {
     taskCompletionWebApi = {
       CompletePlant:{
         TaskId:Number(this.taskid),
-        CompletedPlantCount: formModel.completedPC,
-        TerminatedPlantCount: formModel.terminatedtedPC,
+        // CompletedPlantCount: formModel.completedPC,
+        // TerminatedPlantCount: formModel.terminatedtedPC,
         // ExtraPlantCount:formModel.extraPC,
-        TerminationId:  formModel.terminationReason?formModel.terminationReason:0,
+        // TerminationId:  formModel.terminationReason?formModel.terminationReason:0,
         Comment: formModel.comment,
         VirtualRoleId: 0,
       }
     }
   }
-  assignedPC = Number(this.taskCompletionModel.AssignedPlantCnt);
+  // assignedPC = Number(this.taskCompletionModel.AssignedPlantCnt);
   // if(Number(assignedPC) < Number(this.TaskModel.CompletedPlantCnt) + Number(this.TaskModel.CompletedPlantCnt))
   
   this.confirmationService.confirm({
@@ -445,21 +450,26 @@ completeTask(formModel){
           this.PageFlag.showmodal = false;
           this.loaderService.display(false);
         }
-        else  if (data[0].RESULTKEY === 'Please Select Termination Reason'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY });
+        else if (data === 'This status already exist'){
+          this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: 'This status already exist' });
           this.PageFlag.showmodal = false;
           this.loaderService.display(false);
         }
-        else  if (data[0].RESULTKEY === 'Completed Plant Count Greater Than Available Plant Count'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY });
-          this.PageFlag.showmodal = false;
-          this.loaderService.display(false);
-        }
-        else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
-          this.PageFlag.showmodal = false;
-          this.loaderService.display(false);
-        }
+        // else  if (data[0].RESULTKEY === 'Please Select Termination Reason'){
+        //   this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY });
+        //   this.PageFlag.showmodal = false;
+        //   this.loaderService.display(false);
+        // }
+        // else  if (data[0].RESULTKEY === 'Completed Plant Count Greater Than Available Plant Count'){
+        //   this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data[0].RESULTKEY });
+        //   this.PageFlag.showmodal = false;
+        //   this.loaderService.display(false);
+        // }
+        // else if (data[0].RESULTKEY ==='Completed Plant Count Greater Than Assigned Plant Count'){
+        //   this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.plantcountmore });
+        //   this.PageFlag.showmodal = false;
+        //   this.loaderService.display(false);
+        // }
         else{
           if (this.TaskModel.IsReview === true) {
             this.TaskModel.TaskStatus =  this.taskStatus.ReviewPending;

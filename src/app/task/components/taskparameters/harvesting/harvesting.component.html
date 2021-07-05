@@ -86,7 +86,18 @@
     />
     </div>
   </div>
-  
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="EmployeeListBox">Employees Working For Planting</label>
+      <div  class="EmployeeListBox">
+        <ul class="emp-list" style='padding: 0px;'>
+          <li  *ngFor="let i of workingEmp; let id=index" class="EmployeeListItem" >
+            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="employeeList">Assigned To<span class="star">*</span></label>:
@@ -103,7 +114,7 @@
       </p-multiSelect>
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6">
+  <!-- <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="assignedPC">Assigned Plants Count<span class="star">*</span></label>:
       <input type="number" 
@@ -120,20 +131,7 @@
       styleClass="multiselect-mobileregulation-width" 
     />
     </div>
-  </div>
-  <div class="ui-g-12 ui-md-6">
-    <div class="paddingRL">
-      <label for="EmployeeListBox">Employee List</label>
-      <div  class="EmployeeListBox">
-        <ul class="emp-list" style='padding: 0px;'>
-          <li  *ngFor="let i of employeeArray; let id=index" class="EmployeeListItem" >
-            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
-            
-          </li>
-        </ul>
-      </div>  
-    </div>
-  </div>
+  </div> -->
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="estimatedstartdate">
@@ -169,6 +167,20 @@
          </div>  -->
     </div>
   </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="EmployeeListBox">Employee List</label>
+      <div  class="EmployeeListBox">
+        <ul class="emp-list" style='padding: 0px;'>
+          <li  *ngFor="let i of employeeArray; let id=index" class="EmployeeListItem" >
+            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
+            
+          </li>
+        </ul>
+      </div>  
+    </div>
+  </div>
+  
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="employee">Priority</label>:
@@ -268,14 +280,14 @@
   </div>
 </div>
 
-<div class="ui-g-12 ui-md-6">
+<!-- <div class="ui-g-12 ui-md-6">
   <div class="paddingRL">
     <label>
       <strong>Assigned Plant Count: </strong>
     </label>
         {{TaskModel?.AssignedPlantCnt}}
   </div>
-</div>
+</div> -->
 <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
   <div class="paddingRL">
       <label>
@@ -294,7 +306,7 @@
           {{TaskModel?.TerminatedPlantCnt }}
       </div>
     </div>
-    <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess" >
+    <!-- <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess" >
       <div class="paddingRL">
           <label>
             <strong>{{ globalResource.RevCompletedPlantCnt }}: </strong>
@@ -302,8 +314,8 @@
         
             {{TaskModel?.RevCompletedPlantCnt }}
         </div>
-      </div>
-    <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
+      </div> -->
+    <!-- <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
       <div class="paddingRL">
           <label>
             <strong>{{ globalResource.terminatedreason }}: </strong>
@@ -311,7 +323,7 @@
         
             {{TaskModel?.TerminationReason }}
         </div>
-      </div>
+      </div> -->
 <div class="ui-g-12 ui-md-6">
   <div class="paddingRL">
     <label>
@@ -415,12 +427,12 @@
          </div>
          
       </div>
-      <div class="ui-g-12 ui-md-6">
+      <!-- <div class="ui-g-12 ui-md-6">
         <div class="paddingRL">
           <label for="completedPC">Completed Plant Count</label>:
         </div>
-      </div>
-      <div class="ui-g-12 ui-md-6">
+      </div> -->
+      <!-- <div class="ui-g-12 ui-md-6">
         <div>
           <input type="number" 
           pInputText 
@@ -432,13 +444,13 @@
           class="clsControl"   
         />
         </div>
-      </div>
-      <div class="ui-g-12 ui-md-6">
+      </div> -->
+      <!-- <div class="ui-g-12 ui-md-6">
         <div class="paddingRL">
           <label for="terminatedtedPC">Terminated Plant Count</label>:
         </div>
-      </div>
-      <div class="ui-g-12 ui-md-6">
+      </div> -->
+      <!-- <div class="ui-g-12 ui-md-6">
         <div>
           <input type="number" 
           pInputText 
@@ -450,13 +462,13 @@
           class="clsControl"   
         />
         </div>
-      </div>
-      <div class="ui-g-12 ui-md-6">
+      </div> -->
+      <!-- <div class="ui-g-12 ui-md-6">
         <div class="paddingRL">
           <label for="terminationReason">Termination Reason</label>:
         </div>
-      </div>
-      <div class="ui-g-12 ui-md-6">
+      </div> -->
+      <!-- <div class="ui-g-12 ui-md-6">
         <div>
           <p-dropdown
           [options]="TerminatioReasons"
@@ -468,7 +480,7 @@
           name="terminationReason">
         </p-dropdown>
         </div>
-      </div>
+      </div> -->
       <div class="ui-g-12 ui-md-6">
         <div class="paddingRL">
           <label for="comment">Comment</label>:
@@ -476,7 +488,7 @@
       </div>
       <div class="ui-g-12 ui-md-6">
         <div>
-          <input type="text" 
+          <textarea type="text" 
           pInputText 
           autocomplete="off"
           id="comment" 
@@ -484,7 +496,7 @@
           [(ngModel)]="taskCompletionModel.miscComment"
           formControlName="comment"              
           class="clsControl"   
-        />
+        ></textarea>
         </div>
       </div>
       <div class="ui-g-12 ui-md-6">
@@ -523,7 +535,7 @@
         />
         </div>
       </div>
-      <div class="ui-g-12 ui-md-6" style="visibility: hidden;">
+      <!-- <div class="ui-g-12 ui-md-6" style="visibility: hidden;">
         <div class="paddingRL">
           <label for="dryweight">Dry Weight (lb)</label>:
         </div>
@@ -540,7 +552,7 @@
           class="clsControl"   
         />
         </div>
-      </div>
+      </div> -->
       
     </div>
 
@@ -555,7 +567,7 @@
 <p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
   <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-      <div class="ui-grid-row">
+      <!-- <div class="ui-grid-row">
         <div class="ui-grid-col-6">
           <label for="completedPC">Completed Plant Count:</label>
         </div> 
@@ -573,13 +585,13 @@
           />
           </div>
         </div> 
-        </div>
-        <div class="ui-g-12 ui-md-6">
+        </div> -->
+        <!-- <div class="ui-g-12 ui-md-6">
           <div>
             <label for="terminatedtedPC">Terminated Plant Count</label>:
           </div>
-        </div>
-        <div class="ui-g-12 ui-md-6">
+        </div> -->
+        <!-- <div class="ui-g-12 ui-md-6">
           <div>
             <input type="number" 
             pInputText 
@@ -591,13 +603,13 @@
             class="clsControl"   
           />
           </div>
-        </div>
-        <div class="ui-g-12 ui-md-6">
+        </div> -->
+        <!-- <div class="ui-g-12 ui-md-6">
           <div>
             <label for="terminationReason">Termination Reason</label>:
           </div>
-        </div>
-        <div class="ui-g-12 ui-md-6">
+        </div> -->
+        <!-- <div class="ui-g-12 ui-md-6">
           <div>
             <p-dropdown
         [options]="TerminatioReasons"
@@ -609,7 +621,7 @@
         name="terminationReason">
       </p-dropdown>
           </div>
-        </div>
+        </div> -->
         <div class="ui-g-12 ui-md-6">
           <div>
             <label for="wetweight">Wet Weight</label>:
@@ -646,12 +658,12 @@
           />
           </div>
         </div>
-        <div class="ui-g-12 ui-md-6" style="visibility: hidden;">
+        <!-- <div class="ui-g-12 ui-md-6" style="visibility: hidden;">
           <div>
             <label for="dryweight">Dry Weight</label>:
           </div>
-        </div>
-        <div class="ui-g-12 ui-md-6" style="visibility: hidden;">
+        </div> -->
+        <!-- <div class="ui-g-12 ui-md-6" style="visibility: hidden;">
           <div>
             <input type="number" 
             pInputText 
@@ -664,7 +676,7 @@
           />
           </div>
         </div>
-        
+         -->
         <div class="ui-grid-row">
           <div class="ui-grid-col-4">
             {{ assignTaskResources.actualhrs }}:
