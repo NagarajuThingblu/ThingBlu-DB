@@ -16,9 +16,9 @@ import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { AppConstants } from '../../../shared/models/app.constants';
 import * as _ from 'lodash';
 import { routing } from '../../../app.routing';
-import { NewSectionDetailsActionService } from '../../../task/services/add-section-details.service';
+// import { NewSectionDetailsActionService } from '../../../task/services/add-section-details.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NewFieldGenerationService } from '../../../task/services/new-field-generation.service';
+//import { NewFieldGenerationService } from '../../../task/services/new-field-generation.service';
 import { routerNgProbeToken } from '@angular/router/src/router_module';
 import {NewLabelDetailsActionService} from '../../../task/services/add-label-details.service'
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
@@ -39,9 +39,9 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   chkSelectAll: any;
   public newLabelsEntryForm: FormGroup;
   strains: any[];
-  Fields: any[];
-  Sections: any[];
-  public sectionData: any;
+  // Fields: any[];
+  // Sections: any[];
+  // public sectionData: any;
   TaskType: any[];
   public taskid;
   public taskType;
@@ -75,15 +75,15 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   enabletextbox = true;
   public defaultValue: number =1;
   public e:any;
-  public allFieldslist:any;
+  // public allFieldslist:any;
   HT: String 
   taskTypeValueAndLabelMap: Map<number,string> = new Map<number,string>()
   pageheading: any;
   public placeholder ='-- Select --';
   public taskKeyName: any = '';
-  public strainName: any;
-  public strainId: any;
-  public lightDep:any;
+  // public strainName: any;
+  // public strainId: any;
+  // public lightDep:any;
   public allLabelslist:any;
   public count:number = 0;
   public popupTaskType: any;
@@ -103,7 +103,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private loaderService: LoaderService,
-    private newSectionDetailsActionService: NewSectionDetailsActionService, 
+    // private newSectionDetailsActionService: NewSectionDetailsActionService, 
     private cookieService: CookieService,
     private dropdownDataService: DropdownValuesService, // For common used dropdown service
     private dropdwonTransformService: DropdwonTransformService,
@@ -112,7 +112,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     private newLabelDetailsActionService: NewLabelDetailsActionService,
     private confirmationService: ConfirmationService,
     private scrolltopservice: ScrollTopService,
-    private NewFieldgeneration: NewFieldGenerationService,
+    // private NewFieldgeneration: NewFieldGenerationService,
     private router: Router
   ) {
     this.route.params.forEach((urlParams) => {
@@ -121,7 +121,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
       this.taskid = urlParams['TaskTypeId'];
       this.taskType = urlParams['TaskTypeKey'];
     });
-    this.GetFields();
+    //this.GetFields();
     this.getAllStrains();
     this.getAllTaskType();
     this.getAllSkew();
@@ -150,8 +150,8 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     }, 0);
     this.newLabelsEntryForm = this.fb.group({
       'TaskType': new FormControl(null, Validators.required),
-      'field': new FormControl(null, Validators.required),
-      'Section':new FormControl(null, Validators.required),
+      // 'field': new FormControl(null, Validators.required),
+      // 'Section':new FormControl(null, Validators.required),
       items: new FormArray([], this.customGroupValidation),
       // 'bincount':  new FormControl(null),
       
@@ -188,51 +188,51 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
    
     // this.router.navigate(['../home/taskaction', e.TaskTypeKey, e.TaskId]);
   }
-  GetFields() {
-    this.loaderService.display(true);
-    this.NewFieldgeneration.GetFieldList().subscribe(data=>{
-      if(data!="No Data Found"){
-        this.allFieldslist=data;
-        this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --');
+//   GetFields() {
+//     this.loaderService.display(true);
+//     this.NewFieldgeneration.GetFieldList().subscribe(data=>{
+//       if(data!="No Data Found"){
+//         this.allFieldslist=data;
+//         this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --');
        
-      }
+//       }
      
-      this.loaderService.display(false);
-    },
-    error => { console.log(error); this.loaderService.display(false); },
-    () => console.log('GetAllFieldsbyClient complete'));
- }
+//       this.loaderService.display(false);
+//     },
+//     error => { console.log(error); this.loaderService.display(false); },
+//     () => console.log('GetAllFieldsbyClient complete'));
+//  }
 
  
- onFieldSelection(event: any)
- {
-// this.sectionData =null;
-// this.Sections = null
-this.newSectionDetailsActionService.Getsectionlist().subscribe(
- data=>{
-   if (data !== 'No Data Found') {
-    this.sectionData = data;
-    this.Sections = this.dropdwonTransformService.transform(data.filter(x => x.FieldId === event.value), 'SectionName', 'SectionId', '-- Select --');
+//  onFieldSelection(event: any)
+//  {
+// // this.sectionData =null;
+// // this.Sections = null
+// this.newSectionDetailsActionService.Getsectionlist().subscribe(
+//  data=>{
+//    if (data !== 'No Data Found') {
+//     this.sectionData = data;
+//     this.Sections = this.dropdwonTransformService.transform(data.filter(x => x.FieldId === event.value), 'SectionName', 'SectionId', '-- Select --');
 
- } 
-  this.loaderService.display(false);
- },
-  error => { console.log(error);  this.loaderService.display(false); },
-  () => console.log('getAllStrainsbyClient complete'));
- }
+//  } 
+//   this.loaderService.display(false);
+//  },
+//   error => { console.log(error);  this.loaderService.display(false); },
+//   () => console.log('getAllStrainsbyClient complete'));
+//  }
 
- onSectionSelection(event: any){
+//  onSectionSelection(event: any){
 
-for(let sec of this.sectionData ){
-  if(event.value === sec.SectionId){
-    this.strainName = sec.StrainName;
-    this.strainId = sec.StrainId;
-    this.lightDep =sec.IsLightDeprevation;
-    this.newLabelsEntryForm.controls.items['controls'][0].controls['strain'].setValue(this.strainName)
-    this.newLabelsEntryForm.controls.items['controls'][0].controls['lightDept'].setValue(this.lightDep)
-  }
-}
- }
+// for(let sec of this.sectionData ){
+//   if(event.value === sec.SectionId){
+//     this.strainName = sec.StrainName;
+//     this.strainId = sec.StrainId;
+//     this.lightDep =sec.IsLightDeprevation;
+//     this.newLabelsEntryForm.controls.items['controls'][0].controls['strain'].setValue(this.strainName)
+//     this.newLabelsEntryForm.controls.items['controls'][0].controls['lightDept'].setValue(this.lightDep)
+//   }
+// }
+//  }
 
   back(e){
     if(e.TaskTypeKey!= null){
@@ -398,8 +398,8 @@ createItem(): FormGroup {
             ClientId: Number(this._cookieService.ClientId),
             TaskTypeId: Number(this.newLabelsEntryForm.value.TaskType),
             VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-            FieldId: Number(this.newLabelsEntryForm.value.field),
-            SectionId: Number(this.newLabelsEntryForm.value.Section),
+            // FieldId: Number(this.newLabelsEntryForm.value.field),
+            // SectionId: Number(this.newLabelsEntryForm.value.Section),
       },
       BinLabelsTypeDetails:[]
     };
@@ -409,7 +409,7 @@ createItem(): FormGroup {
       newLabelForApi.BinLabelsTypeDetails.push({
           LabelId: this.LabelIdForUpdate,
           BinNo: element.value.binNo,
-          StrainId:  this.strainId,
+          StrainId:  element.value.strain,
           SkewType: this.enableDropDown == true? null:element.value.skewType,
           SkewTypeId: this.skewTypeID,
           IsLightDeprevation:element.value.lightDept? 1: 0,
@@ -433,8 +433,8 @@ createItem(): FormGroup {
         if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.newLabelResources.newlabelsavedsuccess });
-          this.sectionData = null
-         this.Sections = null;
+        //   this.sectionData = null
+        //  this.Sections = null;
           this.resetForm();
           this.getAllLabelslist();
           this.LabelIdForUpdate = 0;
@@ -501,8 +501,8 @@ createItem(): FormGroup {
     this.viewNoOfBins = true;
     this.newLabelsEntryForm.reset({ chkSelectAll: true });
    this.plusOnEdit = true;
-this.strainName = null
-this.lightDep = false;
+// this.strainName = null
+// this.lightDep = false;
     const control = <FormArray>this.newLabelsEntryForm.controls['items'];
     
     let length = control.length;
@@ -541,8 +541,8 @@ this.lightDep = false;
       this.LabelIdForUpdate = LabelId;
       this.LabelOnEdit = data;
       const taskType = this.newLabelsEntryForm.controls['TaskType'];
-      const field =this.newLabelsEntryForm.controls['field'];
-      const section =this.newLabelsEntryForm.controls['Section'];
+      // const field =this.newLabelsEntryForm.controls['field'];
+      // const section =this.newLabelsEntryForm.controls['Section'];
       const binNo = itemlist[0].controls['binNo'];
       const bincount = itemlist[0].controls['bincount'];
       const strainName =  itemlist[0].controls["strain"];
@@ -552,12 +552,12 @@ this.lightDep = false;
       const chkIsActive =   itemlist[0].controls["chkSelectAll"];
 
       taskType.patchValue(this.LabelOnEdit[0].TaskTypeId);
-      field.patchValue(this.LabelOnEdit[0].FieldId);
-      this.onFieldSelection(field);
-      section.patchValue(this.LabelOnEdit[0].SectionId);
+      // field.patchValue(this.LabelOnEdit[0].FieldId);
+      // this.onFieldSelection(field);
+      // section.patchValue(this.LabelOnEdit[0].SectionId);
       binNo.patchValue(this.LabelOnEdit[0].BinNo);
       bincount.patchValue(this.LabelOnEdit[0].NoOfBins);
-       strainName.patchValue(this.LabelOnEdit[0].StrainName);
+       strainName.patchValue(this.LabelOnEdit[0].StrainId);
        skewType.patchValue(this.LabelOnEdit[0].SkewType);
        lightDept.patchValue(this.LabelOnEdit[0].IsLightDeprevation);
        TrimminMethod.patchValue(this.LabelOnEdit[0].TrimmingMethod);
@@ -620,8 +620,8 @@ this.lightDep = false;
         ClientId: Number(this._cookieService.ClientId),
         TaskTypeId:label.TaskTypeId,
         VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-        FieldId:label.FieldId,
-        SectionId:label.SectionId,
+        // FieldId:label.FieldId,
+        // SectionId:label.SectionId,
       },
       BinLabelsTypeDetails:[]
     };
