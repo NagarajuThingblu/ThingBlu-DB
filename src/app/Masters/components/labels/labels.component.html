@@ -6,8 +6,13 @@
           
         </p-header>
         <form  [formGroup]="newLabelsEntryForm" (ngSubmit)="onSubmit(newLabelsEntryForm.value)">
+          <div class="ui-g">
+            <div *ngIf = "visible === true"  style="float:left;">
+              <p-button  style="float: right;" class="toplinks" type="button" icon="fa fa-list-ul" label="Back"  id="btn_binshow" (click)="backtotaskpage()"  name="btnviewbins"></p-button>
+            </div>
+          </div>
           <div class="ui-g ">
-            <div class="ui-g-12 ui-md-6" style="padding-left:0px;">
+            <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
               <div class="paddingRL">
                 <label for="TaskType" class="towlable">Category<span class="star">*</span></label>
                   <p-dropdown
@@ -21,9 +26,35 @@
                   </p-dropdown>
               </div>
             </div>
-            <div *ngIf = "visible === true" class="ui-g-12 ui-md-6" style="float:right;">
-              <p-button  style="float: right;" class="toplinks" type="button" icon="fa fa-list-ul" label="Back"  id="btn_binshow" (click)="backtotaskpage()"  name="btnviewbins"></p-button>
+            <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
+              <div class="paddingRL">
+                <label for="field" class="towlable">Fields<span class="star">*</span></label>
+                  <p-dropdown
+                    id="field"
+                    [options]="Fields"
+                    formControlName="field"
+                    placeholder="-- Select --"
+                    class="clsControl"
+                    (onChange) = "onFieldSelection($event)"
+                    name="field">
+                  </p-dropdown>
+              </div>
             </div>
+            <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
+              <div class="paddingRL">
+                <label for="Section" class="towlable">Sections<span class="star">*</span></label>
+                  <p-dropdown
+                    id="Section"
+                    [options]="Sections"
+                    formControlName="Section"
+                    placeholder="-- Select --"
+                    class="clsControl"
+                    (onChange) = "onSectionSelection($event)"
+                    name="Section">
+                  </p-dropdown>
+              </div>
+            </div>
+            
            
           </div>
           <div formArrayName="items" style="position: relative">
@@ -67,7 +98,7 @@
                         min="0.1">
                     </td>
                     <td>
-                      <p-dropdown
+                      <!-- <p-dropdown
                       id="strain"
                       formControlName="strain"
                       placeholder="-- Select --"
@@ -75,7 +106,18 @@
                       class="clsControl"
                       [options]="strains"
                       name="strain">
-                    </p-dropdown>
+                    </p-dropdown> -->
+                    <input pInputText
+                      
+                    name="strain"
+                    [ngModel]="strainName"
+                    id="strain"
+                    type="string"
+                    autocomplete="off"
+                    class="clsControl"       
+                    formControlName="strain"
+                    readonly ="true"
+                  >
                   </td>
                     <td>
                       <p-dropdown
@@ -90,7 +132,7 @@
                       
                     </td>
                     <td>
-                      <p-checkbox value="true"
+                      <p-checkbox  [ngModel]="strainName"
                        formControlName="lightDept" checked="true"
                       binary="true"></p-checkbox>                                      
                     </td>
