@@ -13,3 +13,18 @@
     display:inline;
     float:left;
 }
+.EmployeeListBox{
+    border:1px solid #D5D5D5;
+    height:40px;
+    overflow: auto;
+}
+.emp-list{
+    list-style-type: none;
+}
+.emplisttext{
+    font-size:15px;
+  }
+  .EmployeeListItem{
+    display:inline;
+    float:left;
+}
