@@ -110,10 +110,16 @@ export class TaskCommonService {
     return this.http.post(taskStatusParameters.apiUrl,
       {
         TaskDetails: {
-          TaskId: Number(taskStatusParameters.taskId),
+          // TaskId: Number(taskStatusParameters.taskId),
           TaskStatus: taskStatusParameters.taskStatus,
           VirtualRoleId: String(this.appCommonService.getUserProfile().VirtualRoleId)
-        }
+        },
+        TaskIdList : [
+          {
+          TaskId: taskStatusParameters.taskId,
+          }
+        ],
+
       }, this.headers)
     .map(data =>  data );
   }
@@ -123,10 +129,17 @@ export class TaskCommonService {
     return this.http.post(taskStatusParameters.apiUrl,
       {
         TaskDetails: {
-          TaskId: taskStatusParameters.taskId,
+          // TaskId: taskStatusParameters.taskId,
           TaskStatus: taskStatusParameters.taskStatus,
           VirtualRoleId: String(this.appCommonService.getUserProfile().VirtualRoleId)
-        }
+        },
+        TaskIdList : [
+          {
+          TaskId: taskStatusParameters.taskId,
+          }
+        ],
+       
+
       }, this.headers)
     .map(data =>  data );
   }

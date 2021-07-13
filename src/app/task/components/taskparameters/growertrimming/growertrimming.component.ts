@@ -57,7 +57,8 @@ export class GrowertrimmingComponent implements OnInit {
   public defaultDate: Date = new Date();
   public showPastDateLabel = false;
   public priorities: SelectItem[];
- 
+  public workingEmp: any=[];
+  public workingemp:boolean =false
   constructor(
     private fb: FormBuilder,
     private dropdownDataService: DropdownValuesService,

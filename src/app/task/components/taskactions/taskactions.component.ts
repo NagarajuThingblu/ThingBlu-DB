@@ -333,6 +333,7 @@ export class TaskactionsComponent implements OnInit {
             this.msgs = [];
             this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.taskActionResource.taskpaused });
             this.popup = false;
+            
           } else {
             this.taskActionDetails.TaskStatus = this.TaskStatus.InProcess;
             this.msgs = [];
@@ -574,10 +575,24 @@ export class TaskactionsComponent implements OnInit {
   }
   deleteTask() {
     const taskDeleteDetailsForApi = {
-      TaskId: Number(this.taskid),
-      VirtualRoleId: 0,
-      TaskKeyName: ''
+      
+        TaskKeyName: '',
+        VirtualRoleId:this._cookieService.VirtualRoleId,
+        TaskIdList: [],
+    
+      //  TaskId: Number(this.taskid),
+      // VirtualRoleId: 0,
+     
     };
+    taskDeleteDetailsForApi.TaskIdList.push ({
+      TaskId: Number(this.taskid),
+    }) ;
+    // 
+    // TaskIdList : [
+    //   {
+    //   TaskId: taskStatusParameters.taskId,
+    //   }
+    // ],
     this.confirmationService.confirm({
       message: this.taskActionResource.deleteConfirm,
       header: this.globalResource.applicationmsg,

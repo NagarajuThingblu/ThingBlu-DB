@@ -54,6 +54,8 @@ export class PrebuckingComponent implements OnInit {
   public defaultDate: Date = new Date();
   public showPastDateLabel = false;
   public priorities: SelectItem[];
+  public workingEmp: any=[];
+  public workingemp:boolean =false
 
   constructor(
     private fb: FormBuilder,
@@ -104,6 +106,7 @@ export class PrebuckingComponent implements OnInit {
    private globalData = {
     employees: [],
     sections: [],
+    workingEmp:[],
   };
   isRActSecsDisabled: boolean;
 
@@ -331,6 +334,9 @@ export class PrebuckingComponent implements OnInit {
 
   }
   getStrainListByTask() {
+    this.globalData.workingEmp =[];
+    this.workingEmp = [];
+    this.workingemp=false;
     let TaskTypeId = this.ParentFormGroup != undefined?
     this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
     this.dropdownDataService. getStrainsByTaskType(TaskTypeId).subscribe(
@@ -363,6 +369,34 @@ export class PrebuckingComponent implements OnInit {
         this.PREBUCKING.controls["lightdept"].setValue(this.lightdept)
       }
     }
+    this.getWorkingEmpList(event.value,);
+  }
+
+  getWorkingEmpList(sectionId){
+    this.dropdownDataService.getEmpAlreadyWorkingOnATask(sectionId,this.TaskModel.task).subscribe(
+      data=>{
+        if(data != 'No Data Found'){
+          this.globalData.workingEmp = data;
+          this.getWorkingEmpsList();
+        }
+        else{
+          this.globalData.workingEmp = [];
+          this.workingEmp = [];
+        }
+      }
+    )
+  }
+
+  getWorkingEmpsList(){
+    if(this.globalData.workingEmp != null){
+      for(let employee of this.globalData.workingEmp){
+        this.workingEmp.push(employee.Column1)
+    }
+    }
+    else{
+      this.workingEmp = [];
+    }
+  this. filterEmpList()
   }
 
   employeeListByClient() {
@@ -378,7 +412,17 @@ export class PrebuckingComponent implements OnInit {
       error => { console.log(error); },
       () => console.log('Get all employees by client complete'));
   }
-
+  filterEmpList(){
+    for(let j of this.globalData.workingEmp){
+      // for(let i of this.employees){
+        // if(i.value === j.EmpId){
+          let index = this.employees.findIndex(x => x.value === j.EmpId)
+          
+          this.employees.splice(index,1)
+        // }
+      // }
+    }
+  }
   resetForm() {
     
     this.completionForm.reset({ isStrainComplete: false });

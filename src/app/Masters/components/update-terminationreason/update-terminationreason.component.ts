@@ -418,7 +418,7 @@ this.disableLDDropdown = true;
         ClientId: Number(this._cookieService.ClientId),
         FieldId:this.AllSectionData.FieldId,
         VirtualRoleId:Number(this._cookieService.VirtualRoleId),
-        IsTaskCompleted:this.updateTerminationReason.value.completed === null? 0:1,
+        IsTaskCompleted:this.updateTerminationReason.value.completed === true? 1:0,
         TaskTypeId: this.topTaskTypeId,
       
       },
@@ -473,6 +473,11 @@ this.disableLDDropdown = true;
             else if(String(data[0].RESULTKEY) === 'Task has already Completed'){
               this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
               detail:'Phase is completed' });
+              this.loaderService.display(false);
+            }
+            else if(String(data[0].RESULTKEY) === 'There are employees still working on this section'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail:data[0].RESULTMSG + '  are still working on this section' });
               this.loaderService.display(false);
             }
             else if(String(data[0].RESULTKEY) === 'Failure'){
@@ -583,6 +588,15 @@ this.disableLDDropdown = true;
 }
 
   editTerminationdata(TerminationReasonId){
+    const control = <FormArray>this.updateTerminationReason.controls['items'];
+    
+    let length = control.length;
+    while (length > 0) {
+      length = Number(length) - 1;
+      this.deleteItem(length);
+    }
+   
+    // this.addItem();
     this.plusOnEdit = false;
     const data = this.allUpdatedTerminationlist.filter(x => x.TerminationReasonId === TerminationReasonId);
     var itemlist = this.updateTerminationReason.get('items')['controls'];

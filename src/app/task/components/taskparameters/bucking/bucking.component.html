@@ -1,5 +1,5 @@
 <div class="ui-g " [formGroup]="BUCKING" *ngIf="PageFlag.page =='AssignTask'">
-  <div class="ui-g-12 ui-md-6">
+  <!-- <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="bins">Bins<span class="star">*</span></label>:
       <div class="clear"></div>
@@ -13,6 +13,18 @@
       name="bins"
       >
       </p-dropdown>
+    </div>
+  </div> -->
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="EmployeeListBox">Employees Working For Bucking</label>
+      <div  class="EmployeeListBox">
+        <ul class="emp-list" style='padding: 0px;'>
+          <li  *ngFor="let i of workingEmp; let id=index" class="EmployeeListItem" >
+            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="ui-g-12 ui-md-6">

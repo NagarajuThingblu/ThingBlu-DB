@@ -150,6 +150,7 @@ export class D8DistillateComponent implements OnInit {
       };
       this.D8DISTILLATE = this.fb.group({
         'bins': new FormControl('', Validators.required),
+        // 'binwt': new FormControl(0, Validators.required),
         'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
         'employeeList': new FormControl('', Validators.required),
         'leademp':new FormControl('', Validators.required),

@@ -78,3 +78,13 @@ tr.rowBorder>th {
 .ui-tabview.ui-tabview-top>.ui-tabview-nav {
   border-bottom: 1px solid #d6d6d6!important;
 }
+/* p-checkbox {
+float: left;
+}
+tr.sample{
+  float: left;
+} */
+p-checkbox{
+  display: inline;
+}
+

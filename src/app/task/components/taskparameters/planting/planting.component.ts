@@ -571,7 +571,7 @@ completeTask(formModel){
         this.PLANTING.controls["plantCount"].setValue(this.plantCount)
       }
     }
-    this.getWorkingEmpList(event.value);
+    this.getWorkingEmpList(event.value,);
    
   }
 
@@ -598,7 +598,7 @@ completeTask(formModel){
     else{
       this.workingEmp = [];
     }
-  
+  this.filterEmpList()
   }
   employeeListByClient() {
     this.dropdownDataService.getEmployeeListByClient().subscribe(
@@ -612,6 +612,17 @@ completeTask(formModel){
       } ,
       error => { console.log(error); },
       () => console.log('Get all employees by client complete'));
+  }
+  filterEmpList(){
+    for(let j of this.globalData.workingEmp){
+      // for(let i of this.employees){
+        // if(i.value === j.EmpId){
+          let index = this.employees.findIndex(x => x.value === j.EmpId)
+          
+          this.employees.splice(index,1)
+        // }
+      // }
+    }
   }
 
   OnSelectingEmployees(event: any, checkedItem: any){
