@@ -477,7 +477,7 @@ this.disableLDDropdown = true;
             }
             else if(String(data[0].RESULTKEY) === 'There are employees still working on this section'){
               this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
-              detail:data[0].RESULTMSG + '  are still working on this section' });
+              detail:data[0].RESULTMSG + '  still working on this section' });
               this.loaderService.display(false);
             }
             else if(String(data[0].RESULTKEY) === 'Failure'){
