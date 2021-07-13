@@ -114,6 +114,35 @@
                         </div>
                   <!-- End Strain Name -->
 
+                  <!-- Strain Code -->
+                  <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                        <div class="le-su-12">
+                          <label for="enterstrain">
+                           Strain Code<span class="star">*</span>:
+                          </label>
+
+                          <input pInputText
+                            name="straincode"
+                            id="straincode"
+                            autocomplete="off"
+                            placeholder="Enter Strain Code"
+                            type="text"
+                            class="clsControl"
+                            formControlName="straincode"
+                          />
+
+                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                            *ngIf="!strainmasterForm.controls['straincode'].valid&&strainmasterForm.controls['straincode'].dirty">
+                            <span *ngIf="strainmasterForm.controls['straincode'].errors['required']">Strain code required</span>
+                          
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+            <!-- End Strain Code -->
+
+
                   <!--Description -->
                 <div class="ui-g-12 ui-md-6">
                     <div class="paddingRL">
@@ -348,7 +377,7 @@
           sortOrder="-1"
           [rowsPerPageOptions]="paginationValues"
           (onPage)="onPageChange($event)"
-          [globalFilterFields]="['StrainName','StrainTypeName','GeneticsName','Description']"
+          [globalFilterFields]="['StrainName','StrainCode','StrainTypeName','GeneticsName','Description']"
           
           >                    
           <ng-template pTemplate="caption">
@@ -360,6 +389,7 @@
           <ng-template pTemplate="header">
               <tr>
                   <th [pSortableColumn]="'StrainName'">Strain  <p-sortIcon [field]="'StrainName'"></p-sortIcon> </th>
+                  <th [pSortableColumn]="'StrainCode'">Strain Code  <p-sortIcon [field]="'StrainCode'"></p-sortIcon> </th>
                   <th [pSortableColumn]="'StrainTypeName'">Strain Type  <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
                   <th [pSortableColumn]="'GeneticsName'"> GeneticsName <p-sortIcon [field]="'GeneticsName'"></p-sortIcon></th>
                   <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>
@@ -374,6 +404,9 @@
                   <th>
                       <input pInputText type="text" autocomplete="off" (input)="dtStrainList.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
                   </th>
+                  <th>
+                    <input pInputText type="text" autocomplete="off" (input)="dtStrainList.filter($event.target.value, 'StrainCode', 'contains')" class="clsControl">
+                </th>
                   <th>
                       <input pInputText type="text" autocomplete="off" (input)="dtStrainList.filter($event.target.value, 'StrainTypeName', 'contains')" class="clsControl">
                   </th>
@@ -406,6 +439,7 @@
                   </td> -->
   
                   <td>{{Strain?.StrainName}}</td>
+                  <td>{{Strain?.StrainCode}}</td>
                   <td>{{Strain?.StrainTypeName}}</td>
                   <td>{{Strain?.GeneticsName }}</td>
                   <td>{{Strain?.Description }}</td>

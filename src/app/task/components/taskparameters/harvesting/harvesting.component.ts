@@ -603,7 +603,18 @@ completeTask(formModel){
     else{
       this.workingEmp = [];
     }
-  
+    this.filterEmpList()
+  }
+  filterEmpList(){
+    for(let j of this.globalData.workingEmp){
+      // for(let i of this.employees){
+        // if(i.value === j.EmpId){
+          let index = this.employees.findIndex(x => x.value === j.EmpId)
+          
+          this.employees.splice(index,1)
+        // }
+      // }
+    }
   }
   employeeListByClient() {
     this.dropdownDataService.getEmployeeListByClient().subscribe(

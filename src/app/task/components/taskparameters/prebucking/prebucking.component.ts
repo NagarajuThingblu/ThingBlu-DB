@@ -396,7 +396,7 @@ export class PrebuckingComponent implements OnInit {
     else{
       this.workingEmp = [];
     }
-  
+  this. filterEmpList()
   }
 
   employeeListByClient() {
@@ -412,7 +412,17 @@ export class PrebuckingComponent implements OnInit {
       error => { console.log(error); },
       () => console.log('Get all employees by client complete'));
   }
-
+  filterEmpList(){
+    for(let j of this.globalData.workingEmp){
+      // for(let i of this.employees){
+        // if(i.value === j.EmpId){
+          let index = this.employees.findIndex(x => x.value === j.EmpId)
+          
+          this.employees.splice(index,1)
+        // }
+      // }
+    }
+  }
   resetForm() {
     
     this.completionForm.reset({ isStrainComplete: false });
