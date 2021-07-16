@@ -16,6 +16,7 @@
               <div class="paddingRL">
                 <label for="TaskType" class="towlable">Category<span class="star">*</span></label>
                   <p-dropdown
+                  [filter] ="true"
                     id="TaskType"
                     [options]="tasktypes"
                     formControlName="TaskType"
@@ -24,38 +25,87 @@
                     (onChange) = "TaskType_InChange($event)"
                     name="TaskType">
                   </p-dropdown>
+
+                  <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                  *ngIf="!newLabelsEntryForm.controls['TaskType'].valid&&newLabelsEntryForm.controls['TaskType'].dirty">
+                  <span *ngIf="newLabelsEntryForm.controls['TaskType'].errors['required']">
+                      Category required
+                </span>
+          
+                </div> -->
+                <!-- <div *ngIf="newLabelsEntryForm.controls['TaskType'].valid &&(newLabelsEntryForm.controls['TaskType'].dirty || newLabelsEntryForm.controls['TaskType'].touched)">
+                  <span>Category required</span>
+                </div> -->
+
               </div>
             </div>
             <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
               <div class="paddingRL">
+                <label for="strain" class="towlable">Strain<span class="star">*</span></label>
+                <p-dropdown
+                id="strain"
+                formControlName="strain"
+                placeholder="-- Select --"
+                [autoWidth]="false"
+                class="clsControl"
+                (onChange) = "onStrainSelect($event)"
+                [options]="strains"
+                name="strain"
+                [readonly]="enableFieldSection">
+              </p-dropdown> 
+
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
+              <div class="paddingRL">
+                <label for="lightdept" class="towlable">Light Dept<span class="star">*</span></label>
+                <p-dropdown
+                [filter] ="true"
+                id="lightdept"
+                formControlName="lightdept"
+                [options]="LD"
+                placeholder="-- Select --"
+                [autoWidth]="false"
+                (onChange) = "onLDSelect($event)"
+                class="clsControl"
+                name="lightdept"
+                [readonly]="enableFieldSection">
+              </p-dropdown>
+              </div>
+            </div>
+          
+            <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
+              <div class="paddingRL">
                 <label for="field" class="towlable">Fields<span class="star">*</span></label>
-                  <p-dropdown
+                  <p-multiSelect #checkedItems
                     id="field"
                     [options]="Fields"
                     formControlName="field"
                     placeholder="-- Select --"
+                    (onChange) = "onFieldSelect($event)"
                     class="clsControl"
-                    (onChange) = "onFieldSelection($event)"
-                    name="field">
-                  </p-dropdown>
+                    name="field"
+                    [disabled]="enableFieldSection"
+                    >
+                  </p-multiSelect>
               </div>
             </div>
             <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
               <div class="paddingRL">
                 <label for="Section" class="towlable">Sections<span class="star">*</span></label>
-                  <p-dropdown
+                <p-multiSelect #checkedItems
                     id="Section"
                     [options]="Sections"
                     formControlName="Section"
                     placeholder="-- Select --"
                     class="clsControl"
                     (onChange) = "onSectionSelection($event)"
-                    name="Section">
-                  </p-dropdown>
+                    name="Section"
+                    [disabled]="enableFieldSection"
+                    >
+                </p-multiSelect>
               </div>
             </div>
-            
-           
           </div>
           <div formArrayName="items" style="position: relative">
             <div style="width:calc(100% - 20px);float:left;">
@@ -65,14 +115,14 @@
                     <th>{{ newLabelResources.binNo }}
                       <span class="star">*</span>
                     </th>
-                    <th>{{ newLabelResources.strain }}
+                    <!-- <th>{{ newLabelResources.strain }}
                       <span class="star">*</span>
-                    </th>
+                    </th> -->
                     <th>{{ newLabelResources.skewType }}
                        <span class="star">*</span>
                     </th>
-                    <th style="width: 80px;">{{ newLabelResources.lightDept }}
-                    </th>
+                    <!-- <th style="width: 80px;">{{ newLabelResources.lightDept }}
+                    </th> -->
                     <th>{{ newLabelResources.trimmingMethod }}
                       <span class="star">*</span>
                    </th>
@@ -97,7 +147,7 @@
                         placeholder="Enter Bin Number "
                         min="0.1">
                     </td>
-                    <td>
+                    <!-- <td> -->
                       <!-- <p-dropdown
                       id="strain"
                       formControlName="strain"
@@ -107,7 +157,7 @@
                       [options]="strains"
                       name="strain">
                     </p-dropdown> -->
-                    <input pInputText
+                    <!-- <input pInputText
                       
                     name="strain"
                     [ngModel]="strainName"
@@ -118,7 +168,7 @@
                     formControlName="strain"
                     readonly ="true"
                   >
-                  </td>
+                  </td> -->
                     <td>
                       <p-dropdown
                       id="skewType"
@@ -131,11 +181,11 @@
                       </p-dropdown>
                       
                     </td>
-                    <td>
+                    <!-- <td>
                       <p-checkbox  [ngModel]="strainName"
                        formControlName="lightDept" checked="true"
                       binary="true"></p-checkbox>                                      
-                    </td>
+                    </td> -->
                      <td Style="text-align:center">
                      
                       <div class="radio" *ngFor="let TrimmingMethod of TrimmingMethods;" >
@@ -161,6 +211,8 @@
                         autocomplete="off"
                         class="clsControl"       
                         formControlName="bincount"
+                        min="1"
+                        onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57"
                       >
                     </td>
                     <td>

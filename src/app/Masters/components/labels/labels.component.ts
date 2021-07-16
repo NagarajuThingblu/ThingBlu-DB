@@ -39,8 +39,10 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   chkSelectAll: any;
   public newLabelsEntryForm: FormGroup;
   strains: any[];
-  Fields: any[];
+  Fields= [];
   Sections: any[];
+  public lightDept = [];
+  public LD= [];
   public sectionData: any;
   TaskType: any[];
   public taskid;
@@ -92,6 +94,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   public popupSkew:any;
   public popupld:any;
   public popupTm:any;
+  public enableFieldSection: boolean = true;
 
   TrimmingMethods =['HT','MT']
   private globalData = {
@@ -121,14 +124,16 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
       this.taskid = urlParams['TaskTypeId'];
       this.taskType = urlParams['TaskTypeKey'];
     });
-    this.GetFields();
-    this.getAllStrains();
+    // this.GetFields();
+  
+   
+  
     this.getAllTaskType();
     this.getAllSkew();
     this.getAllLabelslist();
     // this.getAllPackageType();
   // this.skewType_InChange();
-  // this. TaskType_InChange();
+  //this. TaskType_InChange();
   }
   items = new FormArray([], this.customGroupValidation );
   arrayItems: FormArray;
@@ -150,8 +155,10 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     }, 0);
     this.newLabelsEntryForm = this.fb.group({
       'TaskType': new FormControl(null, Validators.required),
+      'strain':new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
       'field': new FormControl(null, Validators.required),
       'Section':new FormControl(null, Validators.required),
+      'lightdept':new FormControl(null, Validators.required),
       items: new FormArray([], this.customGroupValidation),
       // 'bincount':  new FormControl(null),
       
@@ -173,66 +180,30 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   setTimeout(() => {
     this.loaderService.display(false);
   }, 500);
-
-  // this.tasktypes =  [
-  //   {label: 'Trimming', value: 'Trimming'},
-  //   {label: 'Bucking', value: 'Bucking'},
-  //   {label: 'PreBucking', value: 'PreBucking'}
-  // ];
   }
   get labelDetailsArr(): FormArray {
     return this.newLabelsEntryForm.get('items') as FormArray;
   }
   backtotaskpage(){
     this.back(this.e)
-   
-    // this.router.navigate(['../home/taskaction', e.TaskTypeKey, e.TaskId]);
   }
-  GetFields() {
-    this.loaderService.display(true);
-    this.NewFieldgeneration.GetFieldList().subscribe(data=>{
-      if(data!="No Data Found"){
-        this.allFieldslist=data;
-        this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --');
-       
-      }
-     
-      this.loaderService.display(false);
-    },
-    error => { console.log(error); this.loaderService.display(false); },
-    () => console.log('GetAllFieldsbyClient complete'));
- }
 
+ GetAllSections(){
  
- onFieldSelection(event: any)
- {
-// this.sectionData =null;
-// this.Sections = null
-this.newSectionDetailsActionService.Getsectionlist().subscribe(
- data=>{
-   if (data !== 'No Data Found') {
-    this.sectionData = data;
-    this.Sections = this.dropdwonTransformService.transform(data.filter(x => x.FieldId === event.value), 'SectionName', 'SectionId', '-- Select --');
-
- } 
-  this.loaderService.display(false);
- },
-  error => { console.log(error);  this.loaderService.display(false); },
-  () => console.log('getAllStrainsbyClient complete'));
+  this.newSectionDetailsActionService.Getsectionlist().subscribe(
+   data=>{
+     if (data !== 'No Data Found') {
+      this.sectionData = data;
+      this.getAllStrains();
+   } 
+    this.loaderService.display(false);
+   },
+    error => { console.log(error);  this.loaderService.display(false); },
+    () => console.log('getAllStrainsbyClient complete'));
+   
  }
 
- onSectionSelection(event: any){
 
-for(let sec of this.sectionData ){
-  if(event.value === sec.SectionId){
-    this.strainName = sec.StrainName;
-    this.strainId = sec.StrainId;
-    this.lightDep =sec.IsLightDeprevation;
-    this.newLabelsEntryForm.controls.items['controls'][0].controls['strain'].setValue(this.strainName)
-    this.newLabelsEntryForm.controls.items['controls'][0].controls['lightDept'].setValue(this.lightDep)
-  }
-}
- }
 
   back(e){
     if(e.TaskTypeKey!= null){
@@ -246,10 +217,10 @@ createItem(): FormGroup {
   return this.fb.group({
     binNo: new FormControl(null, Validators.compose([Validators.required])),
     bincount: new FormControl(null),
-    strain:new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
+    // strain:new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
     skewType: new FormControl(
       this.taskTypeNameValue === 'Trimming' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
-    lightDept: new FormControl(false),
+    // lightDept: new FormControl(false),
     TrimmingMethod: new FormControl(
       this.taskTypeNameValue === 'Trimming' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
     chkSelectAll: new FormControl(true)
@@ -284,17 +255,76 @@ createItem(): FormGroup {
     this.event = e;
   }
   getAllStrains() {
-    this.dropdownDataService.getStrains().subscribe(
-      data => {
-        
-        if (data) {
-        
-        this.strains = this.dropdwonTransformService.transform(data, 'StrainName', 'StrainId', '-- Select --');
-        }
-      } ,
-      error => { console.log(error); },
-      () => console.log('Get all strains complete'));
+    
+   this.strains = this.dropdwonTransformService.transform(this.sectionData,'StrainName', 'StrainId', '-- Select --');
+   const strainfilter = Array.from(this.strains.reduce((m, t) => m.set(t.label, t), new Map()).values())
+   this.strains = this.dropdwonTransformService.transform(strainfilter,'label', 'value', '-- Select --',false)
+  
   }
+  onStrainSelect(event?: any){
+    this.enableFieldSection = false;
+
+    this.lightDept = null;
+    this.lightDept = [];
+    for(let lightdept of this.sectionData){
+      if(lightdept.StrainId === event.value){
+        this.lightDept.push({label: lightdept.IsLightDeprevation, value:lightdept.IsLightDeprevation})
+      }
+    }
+    const ldfilter = Array.from(this.lightDept.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.lightDept = this.dropdwonTransformService.transform(ldfilter,'label', 'value', '-- Select --',false)
+ if(this.lightDept.length === 3){
+  this.LD=[
+    {label: 'true', value: true},
+    {label: 'false', value: false},
+  ]
+}
+  else if(this.lightDept[1].value === true)
+  {
+    this.LD=[
+      {label: 'true', value: true},
+    ]
+    // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
+  }
+  else 
+  {
+    this.LD=[
+      {label: 'false', value: false},
+    ]
+    // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
+  }
+ 
+  }
+  onLDSelect(event?: any){
+    this.Fields = [];
+    for(let i of this.sectionData){
+      if((i.IsLightDeprevation === event.value) && (i.StrainId === this.newLabelsEntryForm.value.strain) ){
+        this.Fields.push({label: i.FieldName, value:i.FieldId})
+        const Fieldfilter = Array.from(this.Fields.reduce((m, t) => m.set(t.label, t), new Map()).values())
+        this.Fields = this.dropdwonTransformService.transform(Fieldfilter,'label', 'value')
+      }
+    }
+  
+  }
+  onFieldSelect(event?: any){
+    this.Sections = [];
+    var CategoryName:any;
+    CategoryName = this.TaskType.filter(x =>x.value ==this.newLabelsEntryForm.value.TaskType   )
+
+if(CategoryName[0].label === "Pre-Bucked"){
+  for(let j of event.value){
+    for(let i of this.sectionData){
+      if((i.FieldId === j) && (i.StrainId === this.newLabelsEntryForm.value.strain) && (i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept)){
+            this.Sections.push({label: i.SectionName, value:i.SectionId})
+      }
+    }
+  }
+}
+    
+      const Sectionfilter = Array.from(this.Sections.reduce((m, t) => m.set(t.label, t), new Map()).values())
+      this.Sections = this.dropdwonTransformService.transform(Sectionfilter,'label', 'value', '-- Select --',false)
+  }
+
   getAllSkew() {
     this.dropdownDataService.getSkewListByClient().subscribe(
       data => {
@@ -325,18 +355,16 @@ createItem(): FormGroup {
     })
   }
   addItem(): void {
-    // this.sysmbol=0;
-    // this.SectionDetailsArr.push(this.createItem());
+  
    this.count++; 
-  //  this.placeholder = 
+ 
     console.log(this.count)
     this.arrayItems = this.newLabelsEntryForm.get('items') as FormArray;
     this.arrayItems.push(this.createItem());
   }
 
   createBulkBins(index): void {
-    // this.arrayItems = this.newLabelsEntryForm.get('items1') as FormArray;
-    // this.arrayItems.push(this.createItem1());
+    
     this.displayPopUp = true;
     this.popupTaskType = this.newLabelsEntryForm.value.TaskType;
     this.popupbinNo = this.newLabelsEntryForm.value.items[index].binNo;
@@ -369,6 +397,7 @@ createItem(): FormGroup {
     if (isError) { return {'duplicate': 'duplicate entries'}; }
   }
   TaskType_InChange(event?: any){
+  this.enableFieldSection = false;
     // let taskTypes = this.TaskType;
     // let taskTypeID = this.newLabelsEntryForm.value.TaskType
     for(let item of this.TaskType){
@@ -385,6 +414,7 @@ createItem(): FormGroup {
       this.enableDropDown = true;
       this.HT = ""
     }
+    this.GetAllSections();
   }
 
  
@@ -502,7 +532,8 @@ createItem(): FormGroup {
     this.newLabelsEntryForm.reset({ chkSelectAll: true });
    this.plusOnEdit = true;
 this.strainName = null
-this.lightDep = false;
+this.enableFieldSection = true;
+// this.lightDep = false;
     const control = <FormArray>this.newLabelsEntryForm.controls['items'];
     
     let length = control.length;
@@ -553,7 +584,7 @@ this.lightDep = false;
 
       taskType.patchValue(this.LabelOnEdit[0].TaskTypeId);
       field.patchValue(this.LabelOnEdit[0].FieldId);
-      this.onFieldSelection(field);
+      // this.onFieldSelection(field);
       section.patchValue(this.LabelOnEdit[0].SectionId);
       binNo.patchValue(this.LabelOnEdit[0].BinNo);
       bincount.patchValue(this.LabelOnEdit[0].NoOfBins);
