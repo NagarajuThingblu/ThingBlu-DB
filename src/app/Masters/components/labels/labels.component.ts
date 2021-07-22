@@ -41,16 +41,22 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   strains: any[];
   Fields= [];
   Sections: any[];
+  sectionids = [];
   public lightDept = [];
+  public edit:boolean = false;
   public LD= [];
   public sectionData: any;
   TaskType: any[];
   public taskid;
   public taskType;
+  public multiselector : boolean = true;
+  public categoryName:any;
   public visible: boolean = false
   public TaskTypeID: any = 0;
   public TaskTypeName: any = '';
   public LabelOnEdit: any;
+  public LabelOnEditSectionandField:any[]; 
+  public allDetailsBasedOnTaskType: any;
   public skewtypes:any[];
   public tasktypes: any[];
   skewtype: any[];
@@ -79,6 +85,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   public e:any;
   public allFieldslist:any;
   HT: String 
+  public batchIds : any[];
   taskTypeValueAndLabelMap: Map<number,string> = new Map<number,string>()
   pageheading: any;
   public placeholder ='-- Select --';
@@ -87,6 +94,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   public strainId: any;
   public lightDep:any;
   public allLabelslist:any;
+  public allLabelslistSectionsandFields: any;
   public count:number = 0;
   public popupTaskType: any;
   public popupbinNo: any;
@@ -95,7 +103,8 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   public popupld:any;
   public popupTm:any;
   public enableFieldSection: boolean = true;
-
+    public selectedValues = [];
+    public selectedSections = [];
   TrimmingMethods =['HT','MT']
   private globalData = {
     TaskType: [],
@@ -131,9 +140,10 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     this.getAllTaskType();
     this.getAllSkew();
     this.getAllLabelslist();
+    this.GetAllSections()
     // this.getAllPackageType();
   // this.skewType_InChange();
-  //this. TaskType_InChange();
+  //this. TaskType_InChange(this.LabelOnEdit[0].TaskTypeId);
   }
   items = new FormArray([], this.customGroupValidation );
   arrayItems: FormArray;
@@ -142,6 +152,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     // this.resetForm();
   }
   ngOnInit() {
+   
     console.log("TaskType list "+this.globalData.TaskType);
     this.saveButtonText = 'Save';
     this.pageheading="Add Bin";
@@ -164,7 +175,9 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
       
       // items1: new FormArray([]),
     });
-    
+    // if(this.edit){
+    //   this. TaskType_InChange(this.LabelOnEdit[0].TaskTypeId);
+    // }
     this.addItem();
     if (this.appCommonService.ProductTypeBackLink && this.appCommonService.ProductTypeFormDetail) {
       this.newLabelsEntryForm = this.appCommonService.ProductTypeFormDetail;
@@ -188,7 +201,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     this.back(this.e)
   }
 
- GetAllSections(){
+    GetAllSections(){
  
   this.newSectionDetailsActionService.Getsectionlist().subscribe(
    data=>{
@@ -258,73 +271,149 @@ createItem(): FormGroup {
     
    this.strains = this.dropdwonTransformService.transform(this.sectionData,'StrainName', 'StrainId', '-- Select --');
    const strainfilter = Array.from(this.strains.reduce((m, t) => m.set(t.label, t), new Map()).values())
-   this.strains = this.dropdwonTransformService.transform(strainfilter,'label', 'value', '-- Select --',false)
+   this.strains = this.dropdwonTransformService.transform(strainfilter,'label', 'value')
   
   }
   onStrainSelect(event?: any){
     this.enableFieldSection = false;
-
-    this.lightDept = null;
+this.Fields = null;
+     this.lightDept = null;
     this.lightDept = [];
-    for(let lightdept of this.sectionData){
-      if(lightdept.StrainId === event.value){
+    if(this.categoryName === "Pre-Bucked"){
+      for(let lightdept of this.sectionData){
+        if(lightdept.StrainId === event.value || lightdept.StrainId === event ){
+          this.lightDept.push({label: lightdept.IsLightDeprevation, value:lightdept.IsLightDeprevation})
+        }
+      }
+      const ldfilter = Array.from(this.lightDept.reduce((m, t) => m.set(t.label, t), new Map()).values())
+      this.lightDept = this.dropdwonTransformService.transform(ldfilter,'label', 'value', '-- Select --',false)
+    }
+  else{
+    for(let lightdept of this.allDetailsBasedOnTaskType){
+      if(event.value === lightdept.StrainId || lightdept.StrainId === event){
         this.lightDept.push({label: lightdept.IsLightDeprevation, value:lightdept.IsLightDeprevation})
       }
     }
     const ldfilter = Array.from(this.lightDept.reduce((m, t) => m.set(t.label, t), new Map()).values())
     this.lightDept = this.dropdwonTransformService.transform(ldfilter,'label', 'value', '-- Select --',false)
- if(this.lightDept.length === 3){
-  this.LD=[
-    {label: 'true', value: true},
-    {label: 'false', value: false},
-  ]
-}
-  else if(this.lightDept[1].value === true)
-  {
+  }
+  if(this.lightDept.length === 3){
     this.LD=[
       {label: 'true', value: true},
-    ]
-    // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
-  }
-  else 
-  {
-    this.LD=[
       {label: 'false', value: false},
     ]
-    // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
   }
- 
+    else if(this.lightDept[1].value === true)
+    {
+      this.LD=[
+        {label: 'true', value: true},
+      ]
+      // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
+    }
+    else 
+    {
+      this.LD=[
+        {label: 'false', value: false},
+      ]
+      // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
+    }
   }
   onLDSelect(event?: any){
+     this.Sections = null;
+    // this.Sections = []
+    this.selectedValues = []
     this.Fields = [];
-    for(let i of this.sectionData){
-      if((i.IsLightDeprevation === event.value) && (i.StrainId === this.newLabelsEntryForm.value.strain) ){
-        this.Fields.push({label: i.FieldName, value:i.FieldId})
-        const Fieldfilter = Array.from(this.Fields.reduce((m, t) => m.set(t.label, t), new Map()).values())
-        this.Fields = this.dropdwonTransformService.transform(Fieldfilter,'label', 'value')
+    if(this.categoryName === "Pre-Bucked"){
+      for(let i of this.sectionData){
+        if((i.IsLightDeprevation === event.value || i.IsLightDeprevation === event || i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept) && (i.StrainId === this.newLabelsEntryForm.value.strain) ){
+          this.Fields.push({label: i.FieldName, value:i.FieldId})
+          const Fieldfilter = Array.from(this.Fields.reduce((m, t) => m.set(t.label, t), new Map()).values())
+          this.Fields = this.dropdwonTransformService.transform(Fieldfilter,'label', 'value')
+        }
       }
     }
+    else{
+      for(let i of this.allDetailsBasedOnTaskType){
+        if((i.IsLightDeprevation === event.value || i.IsLightDeprevation === event) && (i.StrainId === this.newLabelsEntryForm.value.strain) ){
+          this.Fields.push({label: i.Fields, value:i.Fields})
+          const Fieldfilter = Array.from(this.Fields.reduce((m, t) => m.set(t.label, t), new Map()).values())
+          this.Fields = this.dropdwonTransformService.transform(Fieldfilter,'label', 'value')
+           
+        }
+      }
+     
+    }
+   
   
   }
   onFieldSelect(event?: any){
-    this.Sections = [];
+    this.selectedSections = [];
+    this.Sections = null;
+    this.batchIds = []
+      this.Sections = [];
+     this.sectionids = [];
     var CategoryName:any;
     CategoryName = this.TaskType.filter(x =>x.value ==this.newLabelsEntryForm.value.TaskType   )
 
 if(CategoryName[0].label === "Pre-Bucked"){
-  for(let j of event.value){
-    for(let i of this.sectionData){
-      if((i.FieldId === j) && (i.StrainId === this.newLabelsEntryForm.value.strain) && (i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept)){
-            this.Sections.push({label: i.SectionName, value:i.SectionId})
-      }
+ for(let j of event.value){
+  for(let i of this.sectionData){
+    if((i.FieldId === j|| i.FieldId === event) && (i.StrainId === this.newLabelsEntryForm.value.strain) && (i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept)){
+          this.Sections.push({label: i.SectionName, value:i.SectionId})
     }
   }
+ } 
 }
-    
+else{
+  for(let id of this.allDetailsBasedOnTaskType){
+    if(id.Fields === event.itemValue || id.Fields === event){
+      this.batchIds.push( id.BatchId)
+    }
+  }
+  for(let j of this.batchIds){
+    for(let i of this.allDetailsBasedOnTaskType){
+      if(j === i.BatchId){
+        this.Sections.push({label: i.Sections, value:j})
+        this.sectionids.push( i.SectionId)
+      }
+    }
+   } 
+}
       const Sectionfilter = Array.from(this.Sections.reduce((m, t) => m.set(t.label, t), new Map()).values())
       this.Sections = this.dropdwonTransformService.transform(Sectionfilter,'label', 'value', '-- Select --',false)
   }
-
+  onSectionSelect(event?: any){
+    this.sectionids = [];
+    if(this.categoryName != "Pre-Bucked"){
+      for(let i of this.allDetailsBasedOnTaskType){
+        if(event.value === i.BatchId){
+          if(this.sectionids.indexOf(i.SectionId)=== -1){
+            this.sectionids.push(i.SectionId)
+          }
+        }
+      }
+    }
+  }
+onFieldEdit(fieldid){
+  this.Sections = this.Sections || [];
+  if(this.categoryName === "Pre-Bucked"){
+    for(let i of this.sectionData){
+      if((i.FieldId === fieldid) && (i.StrainId === this.newLabelsEntryForm.value.strain) && (i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept)){
+        this.Sections.push({label: i.SectionName, value:i.SectionId})
+        console.log(this.Sections)
+  }
+    }
+  }
+else{
+  for(let i of this.allDetailsBasedOnTaskType){
+    if((i.Fields === fieldid) && (i.StrainId === this.newLabelsEntryForm.value.strain) && (i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept)){
+      this.Sections.push({label: i.Sections, value:i.Sections})
+}
+  }
+}
+  const Sectionfilter = Array.from(this.Sections.reduce((m, t) => m.set(t.label, t), new Map()).values())
+  this.Sections = this.dropdwonTransformService.transform(Sectionfilter,'label', 'value')
+}
   getAllSkew() {
     this.dropdownDataService.getSkewListByClient().subscribe(
       data => {
@@ -347,7 +436,8 @@ if(CategoryName[0].label === "Pre-Bucked"){
     this.newLabelDetailsActionService.GetLabelslist().subscribe(
       data=>{
         if(data != 'No Data Found'){
-          this.allLabelslist=data;
+          this.allLabelslist=data.Table;
+          this.allLabelslistSectionsandFields=data.Table1
         }
        else{
          this.allLabelslist = [];
@@ -397,11 +487,20 @@ if(CategoryName[0].label === "Pre-Bucked"){
     if (isError) { return {'duplicate': 'duplicate entries'}; }
   }
   TaskType_InChange(event?: any){
+    
+    const id = event.value? event.value :event;
+    this.allDetailsBasedOnTaskType = [];
   this.enableFieldSection = false;
-    // let taskTypes = this.TaskType;
-    // let taskTypeID = this.newLabelsEntryForm.value.TaskType
+  
     for(let item of this.TaskType){
       this.taskTypeValueAndLabelMap.set(item.value,item.label)
+    }
+    this.categoryName = this.taskTypeValueAndLabelMap.get(event.value)
+    if(this.categoryName === "Pre-Bucked"){
+      this.multiselector = true
+    }
+    else{
+      this.multiselector = false
     }
     if(event && event.value && this.taskTypeValueAndLabelMap.get(event.value) === 'Trimmed')
     {
@@ -414,12 +513,65 @@ if(CategoryName[0].label === "Pre-Bucked"){
       this.enableDropDown = true;
       this.HT = ""
     }
-    this.GetAllSections();
+   
+    if(this.taskTypeValueAndLabelMap.get(id) === "Bucked" || this.taskTypeValueAndLabelMap.get(id) === "Trimmed" ){
+      this.newSectionDetailsActionService.GetDetailsOnTaskType(id).subscribe(
+        data=>{
+          if (data !== 'No Data Found') {
+                  this.allDetailsBasedOnTaskType = data
+                  this.strains = this.dropdwonTransformService.transform(this.allDetailsBasedOnTaskType, 'StrainName', 'StrainId', '-- Select --');
+                  const strainfilter = Array.from(this.strains.reduce((m, t) => m.set(t.label, t), new Map()).values())
+                  this.strains = this.dropdwonTransformService.transform(strainfilter,'label', 'value')
+                } 
+                if(this.edit && data!="No Data Found"){
+                  this.onStrainSelect(this.LabelOnEdit[0].StrainId)
+                }
+                if(this.edit && data!="No Data Found"){
+                  this.onLDSelect(this.LabelOnEdit[0].IsLightDeprevation)
+                }
+                if(this.edit && data!="No Data Found"){
+                  // for( let k of this.Fields){
+                  //   if(this.selectedValues.indexOf(k.label) === -1){
+                  //     this.selectedValues = this.selectedValues.concat(k.label);
+                  //   }
+                  // }
+                for( let k of this.LabelOnEditSectionandField){
+                  if(this.selectedValues.indexOf(k.Fields) === -1){
+                    this.selectedValues = this.selectedValues.concat(k.Fields);
+                  }
+                }
+             
+            for( let l of this.selectedValues){
+              this.onFieldEdit(l)
+            }
+            const section =this.newLabelsEntryForm.controls['Section'];
+          //   for(let i of this.allDetailsBasedOnTaskType){
+          //     if((i.Sections === fieldid) && (i.StrainId === this.newLabelsEntryForm.value.strain) && (i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept)){
+          //       this.Sections.push({label: i.Sections, value:i.Sections})
+          // }
+          //   }
+            // section.patchValue(this.LabelOnEditSectionandField[0].SkewType);
+            for( let m of this.LabelOnEditSectionandField){
+              if(this.selectedSections.indexOf(m.Sections) === -1){
+                this.selectedSections = this.selectedSections.concat(m.Sections);
+              }
+            }  
+
+            section.patchValue(this.selectedSections[0]);
+            // this.LabelOnEditSectionandField.filter(x => x.BatchId === LabelId)
+                   }
+        }
+        
+      )
+      
+     
+    }
   }
 
  
   onSubmit(value: string)
   {
+   
     console.log(this.newLabelsEntryForm)
     this.submitted = true;
     let newLabelForApi;
@@ -428,21 +580,40 @@ if(CategoryName[0].label === "Pre-Bucked"){
             ClientId: Number(this._cookieService.ClientId),
             TaskTypeId: Number(this.newLabelsEntryForm.value.TaskType),
             VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-            FieldId: Number(this.newLabelsEntryForm.value.field),
-            SectionId: Number(this.newLabelsEntryForm.value.Section),
+            IsLd: this.newLabelsEntryForm.value.lightdept,
+            StrainId: this.newLabelsEntryForm.value.strain,
       },
+      FieldSectiondetails:[],
       BinLabelsTypeDetails:[]
     };
+ 
+    if( this.categoryName === "Pre-Bucked"){
+      for(let j of this.newLabelsEntryForm.value.Section){
+      
+        newLabelForApi.FieldSectiondetails.push({
+          FieldId: 0,
+          SectionId: j
+        })
+      }
+    }
+   else{
+     for(let j of this.sectionids){
+      newLabelForApi.FieldSectiondetails.push({
+        FieldId: 0,
+        SectionId: j
+      })
+     }
+   }
     this.labelDetailsArr.controls.forEach((element, index) => 
     {
       
       newLabelForApi.BinLabelsTypeDetails.push({
           LabelId: this.LabelIdForUpdate,
           BinNo: element.value.binNo,
-          StrainId:  this.strainId,
+          StrainId: null,
           SkewType: this.enableDropDown == true? null:element.value.skewType,
           SkewTypeId: this.skewTypeID,
-          IsLightDeprevation:element.value.lightDept? 1: 0,
+          IsLightDeprevation:null,
           IsHandTrimmed:this.enableDropDown == true? 0:element.value.TrimmingMethod == 'HT'? 1:0,
           IsMachineTrimmed:this.enableDropDown == true? 0:element.value.TrimmingMethod == 'MT'? 1:0,
           IsActive: element.value.chkSelectAll ? 1 : 0,
@@ -469,13 +640,17 @@ if(CategoryName[0].label === "Pre-Bucked"){
           this.getAllLabelslist();
           this.LabelIdForUpdate = 0;
           this.viewNoOfBins = true;
+          this.Sections = [];
+          this.multiselector = true;
         } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'UPDATED') {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.newLabelResources.updated });
-         
+          this.Sections = null;
           this.resetForm();
           this.getAllLabelslist();
           this.LabelIdForUpdate = 0;
+          this.Sections = [];
+          this.multiselector = true
         } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         } else if (String(data[0].ResultKey).toUpperCase() === 'INUSE') {
@@ -505,12 +680,37 @@ if(CategoryName[0].label === "Pre-Bucked"){
                 detail: data[0].ResultMsg + ' '+ this.newLabelResources.duplicate });
 
                 
-              }else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'Not Existed') {
+              }
+              else if (String(data[0].ResultKey) === 'Strain Not Existed') {
+                this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+                detail:"Strain not available"});
+
+                
+              }else if (String(data[0].ResultKey) === 'already deleted') {
+                this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+                detail:"Strain already deleted"});
+
+              }else if (String(data[0].ResultKey) === 'Some bins are in Use So You Can not Edit This Bin') {
+                this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+                detail:"Some bins are in use so you can not edit this bin"});
+
+                
+              }else if (String(data[0].ResultKey) === 'This bin used so you can not delete this bin') {
+                this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+                detail:"This bin was used so you can not delete now"});
+
+                
+              }else if (String(data[0].RESULTKEY) === 'Label Already Existed with') {
+                this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+                detail: "Label Already Existed with" + ' '+ data[0].RESULTKEY });
+
+                
+              } else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'Not Existed') {
                 this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg,
                 detail: data[0].ResultMsg + ' '+ data[0].RESULTKEY });
 
                 
-              } else {
+              }else {
                 this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data });
               }
              
@@ -525,14 +725,20 @@ if(CategoryName[0].label === "Pre-Bucked"){
       } 
    }
    resetForm() {
+    //  this.LD = null
+    this.edit = false;
+    this.multiselector = true;
     this.saveButtonText ="save"
     this.pageheading = "Add New Bin"
     this.enableDropDown = true;
+    this.GetAllSections()
     this.viewNoOfBins = true;
     this.newLabelsEntryForm.reset({ chkSelectAll: true });
    this.plusOnEdit = true;
 this.strainName = null
+this.Sections = [];
 this.enableFieldSection = true;
+this.LabelIdForUpdate = 0
 // this.lightDep = false;
     const control = <FormArray>this.newLabelsEntryForm.controls['items'];
     
@@ -560,38 +766,80 @@ this.enableFieldSection = true;
    
   }
   getLabelsOnEdit(LabelId){
-   
+    
+    this.edit = true
+    this.selectedValues = [];
+    this.selectedSections = [];
+    this.LabelOnEditSectionandField = [];
+   this.GetAllSections()
     this.plusOnEdit = false;
     this.viewNoOfBins = false;
     this.enableDropDown = true;
+    this.enableFieldSection = false;
     console.log(this.allLabelslist)
     const data = this.allLabelslist.filter(x => x.LabelId === LabelId);
-    console.log(data);
+        console.log(data);
     var itemlist = this.newLabelsEntryForm.get('items')['controls'];
     if (data !== 'No data found!') {
       this.LabelIdForUpdate = LabelId;
       this.LabelOnEdit = data;
+      this.categoryName = this.LabelOnEdit[0].TaskTypeName;
+      if(this.categoryName != "Pre-Bucked"){
+        this.TaskType_InChange(this.LabelOnEdit[0].TaskTypeId)
+       }
+    for(let i of this.LabelOnEdit){
+      for(let j of this.allLabelslistSectionsandFields)
+      if(i.FieldSectionMapId === j.BatchId){
+        this.LabelOnEditSectionandField.push({BatchId : j.BatchId, FieldName :j.FieldId, SectionId :j.SectionId, SectionName : j.SectionName, Fields : j.Fields, Sections : j.Sections })
+      }
+    }
       const taskType = this.newLabelsEntryForm.controls['TaskType'];
+      const strainName = this.newLabelsEntryForm.controls["strain"];
+      const lightDept =  this.newLabelsEntryForm.controls["lightdept"];
       const field =this.newLabelsEntryForm.controls['field'];
       const section =this.newLabelsEntryForm.controls['Section'];
       const binNo = itemlist[0].controls['binNo'];
       const bincount = itemlist[0].controls['bincount'];
-      const strainName =  itemlist[0].controls["strain"];
       const skewType =  itemlist[0].controls["skewType"];
-      const lightDept =  itemlist[0].controls["lightDept"];
       const TrimminMethod =  itemlist[0].controls["TrimmingMethod"];
       const chkIsActive =   itemlist[0].controls["chkSelectAll"];
 
       taskType.patchValue(this.LabelOnEdit[0].TaskTypeId);
-      field.patchValue(this.LabelOnEdit[0].FieldId);
-      // this.onFieldSelection(field);
-      section.patchValue(this.LabelOnEdit[0].SectionId);
       binNo.patchValue(this.LabelOnEdit[0].BinNo);
       bincount.patchValue(this.LabelOnEdit[0].NoOfBins);
-       strainName.patchValue(this.LabelOnEdit[0].StrainName);
+       strainName.patchValue(this.LabelOnEdit[0].StrainId);
+      
+       if(this.categoryName === "Pre-Bucked"){
+        this.onStrainSelect(strainName.value);
+       }
+       if(this.categoryName === "Pre-Bucked"){
+         this.multiselector = true
+       }
+       else{
+         this.multiselector = false
+       }
        skewType.patchValue(this.LabelOnEdit[0].SkewType);
        lightDept.patchValue(this.LabelOnEdit[0].IsLightDeprevation);
        TrimminMethod.patchValue(this.LabelOnEdit[0].TrimmingMethod);
+       if(this.categoryName === "Pre-Bucked"){
+      this.onLDSelect(lightDept.value)
+      
+    for( let k of this.LabelOnEditSectionandField){
+      if(this.selectedValues.indexOf(k.FieldName) === -1){
+        this.selectedValues = this.selectedValues.concat(k.FieldName);
+      }
+    }
+for( let l of this.selectedValues){
+  this.onFieldEdit(l)
+}
+for( let m of this.LabelOnEditSectionandField){
+  if(this.selectedSections.indexOf(m.SectionId) === -1){
+    this.selectedSections = this.selectedSections.concat(m.SectionId);
+  }
+}  
+       }
+     
+     
         chkIsActive.patchValue(this.LabelOnEdit[0].IsActive);
         if(this.LabelOnEdit[0].TaskTypeName === 'Trimming'){
             this.enableDropDown = false
@@ -651,21 +899,31 @@ this.enableFieldSection = true;
         ClientId: Number(this._cookieService.ClientId),
         TaskTypeId:label.TaskTypeId,
         VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-        FieldId:label.FieldId,
-        SectionId:label.SectionId,
+        // FieldId:label.FieldId,
+        // SectionId:label.SectionId,
+        IsLd:label.IsLightDeprevation? 1: 0,
+            StrainId: label.StrainId,
       },
+      FieldSectiondetails:[],
       BinLabelsTypeDetails:[]
     };
+    // for(let j of this.newLabelsEntryForm.value.Section){
+      
+    //   newLabelDetailsForApi.FieldSectiondetails.push({
+    //     FieldId: 0,
+    //     SectionId: j
+    //   })
+    // }
     this.labelDetailsArr.controls.forEach((element, index) => 
     {
       
       newLabelDetailsForApi.BinLabelsTypeDetails.push({
           LabelId:LabelId,
           BinNo: label.BinNo,
-          StrainId:  label.StrainId,
+          StrainId: null,
           SkewType: label.SkewType,
           SkewTypeId: label.SkewTypeId,
-          IsLightDeprevation:label.IsLightDeprevation? 1: 0,
+          IsLightDeprevation:null,
           IsHandTrimmed:label.TrimmingMethod == 'HT'? 1:0,
           IsMachineTrimmed:label.TrimmingMethod == 'MT'? 1:0,
           IsActive: label.IsActive? 1:0,

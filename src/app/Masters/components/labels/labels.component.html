@@ -80,6 +80,7 @@
                   <p-multiSelect #checkedItems
                     id="field"
                     [options]="Fields"
+                    [(ngModel)]="selectedValues"
                     formControlName="field"
                     placeholder="-- Select --"
                     (onChange) = "onFieldSelect($event)"
@@ -94,16 +95,31 @@
               <div class="paddingRL">
                 <label for="Section" class="towlable">Sections<span class="star">*</span></label>
                 <p-multiSelect #checkedItems
+                *ngIf ="multiselector"
                     id="Section"
                     [options]="Sections"
+                    [(ngModel)]="selectedSections"
+                    (onChange) = "onSectionSelect($event)"
                     formControlName="Section"
                     placeholder="-- Select --"
                     class="clsControl"
-                    (onChange) = "onSectionSelection($event)"
                     name="Section"
                     [disabled]="enableFieldSection"
                     >
                 </p-multiSelect>
+
+                <p-dropdown
+                *ngIf ="!multiselector"
+                id="Section"
+                    [options]="Sections"
+                    [(ngModel)]="selectedSections"
+                    (onChange) = "onSectionSelect($event)"
+                    formControlName="Section"
+                    placeholder="-- Select --"
+                    class="clsControl"
+                    name="Section"
+                    [disabled]="enableFieldSection">
+              </p-dropdown>
               </div>
             </div>
           </div>

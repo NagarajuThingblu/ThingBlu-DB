@@ -165,7 +165,7 @@ this.newSectionDetailsActionService.Getsectionlist().subscribe(
  resetForm() {
     this.newSectionEntryForm.reset({ chkSelectAll: true });
     
-this.saveButtonText ="save"
+this.saveButtonText ="Save"
 this.pageheading = "Add New Section"
 this.Year = new Date().getFullYear();
     const control = <FormArray>this.newSectionEntryForm.controls['items'];
