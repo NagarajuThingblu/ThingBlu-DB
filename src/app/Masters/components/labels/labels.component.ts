@@ -229,13 +229,13 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 createItem(): FormGroup {
   return this.fb.group({
     binNo: new FormControl(null, Validators.compose([Validators.required])),
-    bincount: new FormControl(null),
+    bincount: new FormControl(null, Validators.compose([Validators.min(1)])),
     // strain:new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
     skewType: new FormControl(
-      this.taskTypeNameValue === 'Trimming' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
+      this.taskTypeNameValue === 'Trimmed' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
     // lightDept: new FormControl(false),
     TrimmingMethod: new FormControl(
-      this.taskTypeNameValue === 'Trimming' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
+      this.taskTypeNameValue === 'Trimmed' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
     chkSelectAll: new FormControl(true)
   });
   
@@ -366,7 +366,7 @@ if(CategoryName[0].label === "Pre-Bucked"){
 }
 else{
   for(let id of this.allDetailsBasedOnTaskType){
-    if(id.Fields === event.itemValue || id.Fields === event){
+    if(id.Fields === event.value || id.Fields === event){
       this.batchIds.push( id.BatchId)
     }
   }
@@ -380,7 +380,7 @@ else{
    } 
 }
       const Sectionfilter = Array.from(this.Sections.reduce((m, t) => m.set(t.label, t), new Map()).values())
-      this.Sections = this.dropdwonTransformService.transform(Sectionfilter,'label', 'value', '-- Select --',false)
+      this.Sections = this.dropdwonTransformService.transform(Sectionfilter,'label', 'value')
   }
   onSectionSelect(event?: any){
     this.sectionids = [];
@@ -524,6 +524,9 @@ else{
                   this.strains = this.dropdwonTransformService.transform(strainfilter,'label', 'value')
                 } 
                 if(this.edit && data!="No Data Found"){
+                  if(this.LabelOnEdit[0].TaskTypeName === 'Trimmed'){
+                    this.enableDropDown = false
+                }
                   this.onStrainSelect(this.LabelOnEdit[0].StrainId)
                 }
                 if(this.edit && data!="No Data Found"){
@@ -544,7 +547,7 @@ else{
             for( let l of this.selectedValues){
               this.onFieldEdit(l)
             }
-            const section =this.newLabelsEntryForm.controls['Section'];
+            //const section =this.newLabelsEntryForm.controls['Section'];
           //   for(let i of this.allDetailsBasedOnTaskType){
           //     if((i.Sections === fieldid) && (i.StrainId === this.newLabelsEntryForm.value.strain) && (i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept)){
           //       this.Sections.push({label: i.Sections, value:i.Sections})
@@ -557,7 +560,7 @@ else{
               }
             }  
 
-            section.patchValue(this.selectedSections[0]);
+           // section.patchValue(this.selectedSections[0]);
             // this.LabelOnEditSectionandField.filter(x => x.BatchId === LabelId)
                    }
         }
@@ -841,9 +844,7 @@ for( let m of this.LabelOnEditSectionandField){
      
      
         chkIsActive.patchValue(this.LabelOnEdit[0].IsActive);
-        if(this.LabelOnEdit[0].TaskTypeName === 'Trimming'){
-            this.enableDropDown = false
-        }
+        
 
         this.clear = 'Cancel';
        this.saveButtonText = 'Update';
@@ -980,6 +981,11 @@ for( let m of this.LabelOnEditSectionandField){
     });
      
   
+  }
+
+
+  showLabelDetails(label){
+    this.router.navigate(['../home/sectionsMergeinfo', label]);
   }
 }
 

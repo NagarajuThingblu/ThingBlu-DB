@@ -78,6 +78,7 @@
               <div class="paddingRL">
                 <label for="field" class="towlable">Fields<span class="star">*</span></label>
                   <p-multiSelect #checkedItems
+                  *ngIf ="multiselector"
                     id="field"
                     [options]="Fields"
                     [(ngModel)]="selectedValues"
@@ -89,6 +90,19 @@
                     [disabled]="enableFieldSection"
                     >
                   </p-multiSelect>
+
+                  <p-dropdown
+                  *ngIf ="!multiselector"
+                  id="field"
+                  [options]="Fields"
+                  [(ngModel)]="selectedValues"
+                  formControlName="field"
+                  placeholder="-- Select --"
+                  (onChange) = "onFieldSelect($event)"
+                  class="clsControl"
+                  name="field"
+                  [disabled]="enableFieldSection">
+                </p-dropdown>
               </div>
             </div>
             <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
@@ -389,7 +403,7 @@
             </th>
             <th [pSortableColumn]="'AvilableWt'">Available Bin Wt <p-sortIcon [field]="'AvilableWt'"></p-sortIcon>
             </th>
-            <th style="width:100px;">Action </th>
+            <th style="width:120px;">Action </th>
           </tr>
           <tr>
             <!-- <th>
@@ -452,7 +466,9 @@
               <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(label?.LabelId,label,1,0)">
                 <span class="fa fa-trash"></span>
               </a>
-            
+              <a href="#" [routerLink]="" (click)="showLabelDetails(label)">
+                <span class="fa fa-info-circle"></span>
+              </a>
               <div class="clsToggleButtonDiv">
                 <p-toggleButton [(ngModel)]="label.IsActive" onLabel="Active" offLabel="InActive"
                   [style]="{'width':'90px'}"

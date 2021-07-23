@@ -79,6 +79,7 @@ import { ChemicalPurchaseComponent } from './components/chemical-purchase/chemic
 import { ChemicalMasterPageComponent } from './components/chemical-master-page/chemical-master-page.component';
 import { UpdateTerminationreasonComponent } from './components/update-terminationreason/update-terminationreason.component';
 import { SectionDetailsComponent } from './components/section-details/section-details.component';
+import { LabelDetailsComponent } from './components/label-details/label-details.component';
 
 
 @NgModule({
@@ -127,7 +128,8 @@ import { SectionDetailsComponent } from './components/section-details/section-de
     ChemicalPurchaseComponent,
     ChemicalMasterPageComponent,
     UpdateTerminationreasonComponent,
-    SectionDetailsComponent
+    SectionDetailsComponent,
+    LabelDetailsComponent
    
   ],
   imports: [
