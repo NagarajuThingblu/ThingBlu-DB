@@ -90,16 +90,27 @@ export class BuckingComponent implements OnInit {
    public msgs: Message[] = [];
    public employees: any[];
    public binsArray:any=[];
- 
+   public employeeArray:any=[];
+   public completeDataBasedOnTaskType : any;
+   public strainid: any[];
+   public sections: any[];
+   public strains: any[];
+   public lightdepts = [];
+   public fields = [];
+   public sectionslist = [];
+   public batchId : any;
+   public LD= [];
     taskTypeId: any;
    public taskType: any;
    private globalData = {
-    bins: [],
-    employees:[]
+    employees: [],
+    sections: [],
+    workingEmp:[],
   };
   isRActSecsDisabled: boolean;
   // public inputBinDetails :any[];
   ngOnInit() {
+    this.getStrainListByTask();
     this.binsListByClient();
     this.employeeListByClient();
     
@@ -142,7 +153,11 @@ export class BuckingComponent implements OnInit {
         usercomment: '',
       };
       this.BUCKING = this.fb.group({
-        'bins': new FormControl('', Validators.required),
+        'section': new FormControl(null,Validators.required),
+        'strain': new FormControl(null, Validators.required),
+        'field':new FormControl(null,Validators.required),
+        'strainid':new FormControl(''),
+        'lightdept': new FormControl(null,Validators.required),
         'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
         'employeeList': new FormControl('', Validators.required),
         'priority': new FormControl(''),
@@ -181,6 +196,7 @@ export class BuckingComponent implements OnInit {
        }
 
       this.completionForm = this.fb.group({
+        'strain': new FormControl(null),
         'inputBin': new FormControl(null),
         'binWt': new FormControl(''),
         'completeWt':new FormControl('',Validators.compose([Validators.required])),
@@ -271,7 +287,145 @@ export class BuckingComponent implements OnInit {
       error => { console.log(error); },
       () => console.log('GetPrscrStrainListByTask complete'));
   }
- 
+  getStrainListByTask() {
+    this.globalData.workingEmp =[];
+    this.workingEmp = [];
+    this.workingemp=false;
+    let TaskTypeId = this.ParentFormGroup != undefined?
+    this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
+    this.dropdownDataService. getStrainsByTaskType(TaskTypeId).subscribe(
+      data => {
+        this.completeDataBasedOnTaskType = data;
+        this.globalData.sections = data;
+        if (data !== 'No Data Found') {
+          this.strains = this.dropdwonTransformService.transform(data, 'StrainName', 'StrainId', '-- Select --');
+          const strainsfilter = Array.from(this.strains.reduce((m, t) => m.set(t.label, t), new Map()).values())
+          this.strains = this.dropdwonTransformService.transform(strainsfilter,'label', 'value')
+        } else {
+          this.strains = [];
+        }
+      } ,
+      error => { console.log(error); },
+      () => console.log('GetPrscrStrainListByTask complete'));
+  }
+
+  onStrainSelect(event?: any){
+    this.lightdepts = []
+//this.LD = null
+    for(let i of this.completeDataBasedOnTaskType){
+      if(i.StrainId === event.value){
+        this.lightdepts.push({label:i.IsLightDeprevation,value: i.IsLightDeprevation});
+      }
+    }
+    const ldfilter = Array.from(this.lightdepts.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.lightdepts = this.dropdwonTransformService.transform(ldfilter,'label', 'value','-- Select --')
+    if(this.lightdepts.length === 3){
+      this.LD=[
+        {label: "-- Select --", value: null},
+        {label: 'true', value: true},
+        {label: 'false', value: false},
+      ]
+    }
+      else if(this.lightdepts[1].value === true)
+      {
+        this.LD=[
+          {label: "-- Select --", value: null},
+          {label: 'true', value: true},
+        ]
+        // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
+      }
+      else 
+      {
+        this.LD=[
+          {label: "-- Select --", value: null},
+          {label: 'false', value: false},
+        ]
+        // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
+      }
+      if(this.BUCKING.controls['lightdept'].value !=null){
+        this.onLdSelect(this.BUCKING.controls['lightdept'].value);
+      }
+  }
+
+  onLdSelect(event?: any){
+    this.fields = []
+    for(let i of this.completeDataBasedOnTaskType){
+      if(i.StrainId === this.BUCKING.controls['strain'].value && i.IsLightDeprevation === event.value){
+        this.fields.push({label:i.Fields,value: i.FieldUniqueId});
+      }
+    }
+    const fieldfilter = Array.from(this.fields.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.fields = this.dropdwonTransformService.transform(fieldfilter,'label', 'value','-- Select --',false)
+  }
+  onFieldSelect(event?: any){
+    this.sectionslist = []
+    for(let i of this.completeDataBasedOnTaskType){
+      if(i.StrainId === this.BUCKING.controls['strain'].value && i.IsLightDeprevation ===this.BUCKING.controls['lightdept'].value && i.FieldUniqueId === event.value){
+        this.sectionslist.push({label:i.Sections,value: i.SectionUniqueId});
+        this.batchId = i.BatchId
+      }
+    }
+    const sectionfilter = Array.from(this.sectionslist.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.sectionslist = this.dropdwonTransformService.transform(sectionfilter,'label', 'value','-- Select --',false)
+  }
+
+  getWorkingEmpList(event?: any){
+    this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.batchId).subscribe(
+      data=>{
+        if(data != 'No Data Found'){
+          this.globalData.workingEmp = data;
+          this.getWorkingEmpsList();
+        }
+        else{
+          this.globalData.workingEmp = [];
+          this.workingEmp = [];
+        }
+      }
+    )
+  }
+
+  getWorkingEmpsList(){
+    if(this.globalData.workingEmp != null){
+      for(let employee of this.globalData.workingEmp){
+        this.workingEmp.push(employee.Column1)
+    }
+    }
+    else{
+      this.workingEmp = [];
+    }
+  this. filterEmpList()
+  }
+
+  filterEmpList(){
+    for(let j of this.globalData.workingEmp){
+      // for(let i of this.employees){
+        // if(i.value === j.EmpId){
+          let index = this.employees.findIndex(x => x.value === j.EmpId)
+          
+          this.employees.splice(index,1)
+        // }
+      // }
+    }
+  }
+
+  
+  OnSelectingEmployees(event: any, checkedItem: any){
+    
+    for(let employee of this.globalData.employees){
+        if(event.itemValue === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
+          this.employeeArray.push(employee.EmpName)
+          return;
+       }
+       else{
+         if(event.itemValue === employee.EmpId){
+           let index = this.employeeArray.indexOf(employee.EmpName);
+           this.employeeArray.splice(index,1)
+
+         }
+       }
+      }
+    
+  }
 //method to get bins dropdown in complete page
   getAllBins(){
     let TaskId =this.TaskModel.TaskId

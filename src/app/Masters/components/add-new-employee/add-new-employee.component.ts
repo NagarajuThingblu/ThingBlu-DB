@@ -62,6 +62,7 @@ export class AddNewEmployeeComponent implements OnInit {
   public constantusrRole:any;
   public selectedRole:any;
   public Managerlist:any;
+  public ManagerlistOptional : boolean = false;
   public flclist:any;
   public showMang: boolean =false;
   public showFlc: boolean =false;
@@ -638,23 +639,23 @@ else{
     'firstname': new FormControl(null, Validators.required),
     'middlename': new FormControl(null),
     'lastname': new FormControl(null, Validators.required),
-    'gender': new FormControl(null, Validators.required),
-    'dob': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
-    'hiredate': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
+    'gender': new FormControl(null),
+    'dob': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
+    'hiredate': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
     'terminationdate': new FormControl(null),
     'cellphone': new FormControl(null, Validators.compose([ Validators.maxLength(15)])),
     'homephone': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
     'primaryemail': new FormControl(null),
     'secondaryemail': new FormControl(null, Validators.compose([Validators.maxLength(30)])),
-    'address': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(50)])),
-    'country': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
-    'state': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
-    'city': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
-    'zipcode': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(9)])),
+    'address': new FormControl(null, Validators.compose([ Validators.maxLength(50)])),
+    'country': new FormControl(null, Validators.compose([Validators.maxLength(13)])),
+    'state': new FormControl(null, Validators.compose([ Validators.maxLength(13)])),
+    'city': new FormControl(null, Validators.compose([ Validators.maxLength(13)])),
+    'zipcode': new FormControl(null, Validators.compose([ Validators.maxLength(9)])),
     'empusername': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(20)])),
     'emppassword': new FormControl(null, Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)])),
     'userrole': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
-    'hourlylabourrate': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
+    'hourlylabourrate': new FormControl(0, Validators.compose([ Validators.maxLength(13)])),
     'chkIsActive': new FormControl(null),
     'Managerlist': new FormControl(null),
     'flclist':new FormControl(null),

@@ -1,4 +1,91 @@
 <div class="ui-g " [formGroup]="GROWERTRIMMING" *ngIf="PageFlag.page =='AssignTask'">
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="strain">Strain<span class="star">*</span></label>:
+      <div class="clear"></div>
+      <p-dropdown
+          [filter] ="true"
+          [options]="strains"
+          (onChange)=" getStrainListByTask()"
+          placeholder="-- Select --"
+          [autoWidth]="true"
+          formControlName="strain"
+          class="clsControl"
+          id="strain"
+          name="strain">
+      </p-dropdown>
+      <!-- <input type="text" 
+      pInputText 
+      autocomplete="off"
+      id="strain" 
+      name="strain" 
+      [ngModel]="strainName"
+      formControlName="strain"         
+      class="clsControl"  
+      readonly
+    />
+    <input type="text" 
+    pInputText 
+    autocomplete="off"
+    id="strainid" 
+    name="strainid" 
+ 
+    formControlName="strainid"         
+    class="clsControl"  
+    readonly
+    style="display: none;"
+  /> -->
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="lightdept">Light Dept<span class="star">*</span></label>:
+      <input type="text" 
+      pInputText 
+      autocomplete="off"
+      id="lightdept" 
+      name="lightdept" 
+      [ngModel]="lightdept"
+      formControlName="lightdept"         
+      class="clsControl"  
+      readonly
+    />
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="field">Field<span class="star">*</span></label>:
+      <div class="clear"></div>
+      <p-dropdown
+          [filter] ="true"
+          [options]="sections"
+          (onChange)=" getStrainAndLightDept($event)"
+          placeholder="-- Select --"
+          [autoWidth]="true"
+          formControlName="field"
+          class="clsControl"
+          id="field"
+          name="field">
+      </p-dropdown>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="section">Section<span class="star">*</span></label>:
+      <div class="clear"></div>
+      <p-dropdown
+          [filter] ="true"
+          [options]="sections"
+          (onChange)=" getStrainAndLightDept($event)"
+          placeholder="-- Select --"
+          [autoWidth]="true"
+          formControlName="section"
+          class="clsControl"
+          id="section"
+          name="section">
+      </p-dropdown>
+    </div>
+  </div> 
   <!-- <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="bins">Bins<span class="star">*</span></label>:

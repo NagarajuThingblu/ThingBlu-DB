@@ -581,7 +581,7 @@ completeTask(formModel){
     this.getWorkingEmpList(event.value);
   }
   getWorkingEmpList(sectionId){
-    this.dropdownDataService.getEmpAlreadyWorkingOnATask(sectionId,this.TaskModel.task).subscribe(
+    this.dropdownDataService.getEmpAlreadyWorkingOnATask(sectionId,this.TaskModel.task,0).subscribe(
       data=>{
         if(data != 'No Data Found'){
           this.globalData.workingEmp = data;

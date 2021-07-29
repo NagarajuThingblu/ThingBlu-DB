@@ -335,7 +335,7 @@ this.Fields = null;
     else{
       for(let i of this.allDetailsBasedOnTaskType){
         if((i.IsLightDeprevation === event.value || i.IsLightDeprevation === event) && (i.StrainId === this.newLabelsEntryForm.value.strain) ){
-          this.Fields.push({label: i.Fields, value:i.Fields})
+          this.Fields.push({label: i.Fields, value:i.FieldUniqueId})
           const Fieldfilter = Array.from(this.Fields.reduce((m, t) => m.set(t.label, t), new Map()).values())
           this.Fields = this.dropdwonTransformService.transform(Fieldfilter,'label', 'value')
            
@@ -366,14 +366,14 @@ if(CategoryName[0].label === "Pre-Bucked"){
 }
 else{
   for(let id of this.allDetailsBasedOnTaskType){
-    if(id.Fields === event.value || id.Fields === event){
+    if(id.FieldUniqueId === event.value || id.FieldUniqueId === event){
       this.batchIds.push( id.BatchId)
     }
   }
   for(let j of this.batchIds){
     for(let i of this.allDetailsBasedOnTaskType){
       if(j === i.BatchId){
-        this.Sections.push({label: i.Sections, value:j})
+        this.Sections.push({label: i.Sections, value:i.SectionUniqueId})
         this.sectionids.push( i.SectionId)
       }
     }
@@ -386,7 +386,7 @@ else{
     this.sectionids = [];
     if(this.categoryName != "Pre-Bucked"){
       for(let i of this.allDetailsBasedOnTaskType){
-        if(event.value === i.BatchId){
+        if(event.value === i.SectionUniqueId){
           if(this.sectionids.indexOf(i.SectionId)=== -1){
             this.sectionids.push(i.SectionId)
           }
@@ -406,8 +406,8 @@ onFieldEdit(fieldid){
   }
 else{
   for(let i of this.allDetailsBasedOnTaskType){
-    if((i.Fields === fieldid) && (i.StrainId === this.newLabelsEntryForm.value.strain) && (i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept)){
-      this.Sections.push({label: i.Sections, value:i.Sections})
+    if((i.FieldUniqueId === fieldid) && (i.StrainId === this.newLabelsEntryForm.value.strain) && (i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept)){
+      this.Sections.push({label: i.Sections, value:i.SectionUniqueId})
 }
   }
 }
@@ -487,7 +487,8 @@ else{
     if (isError) { return {'duplicate': 'duplicate entries'}; }
   }
   TaskType_InChange(event?: any){
-    
+    // this.strains =  null;
+    // this.lightDept = null;
     const id = event.value? event.value :event;
     this.allDetailsBasedOnTaskType = [];
   this.enableFieldSection = false;
@@ -518,6 +519,9 @@ else{
       this.newSectionDetailsActionService.GetDetailsOnTaskType(id).subscribe(
         data=>{
           if (data !== 'No Data Found') {
+           
+            // this.Fields = null;
+            // this.Sections = null;
                   this.allDetailsBasedOnTaskType = data
                   this.strains = this.dropdwonTransformService.transform(this.allDetailsBasedOnTaskType, 'StrainName', 'StrainId', '-- Select --');
                   const strainfilter = Array.from(this.strains.reduce((m, t) => m.set(t.label, t), new Map()).values())
@@ -539,8 +543,8 @@ else{
                   //   }
                   // }
                 for( let k of this.LabelOnEditSectionandField){
-                  if(this.selectedValues.indexOf(k.Fields) === -1){
-                    this.selectedValues = this.selectedValues.concat(k.Fields);
+                  if(this.selectedValues.indexOf(k.FieldUniqueId) === -1){
+                    this.selectedValues = this.selectedValues.concat(k.FieldUniqueId);
                   }
                 }
              
@@ -555,8 +559,8 @@ else{
           //   }
             // section.patchValue(this.LabelOnEditSectionandField[0].SkewType);
             for( let m of this.LabelOnEditSectionandField){
-              if(this.selectedSections.indexOf(m.Sections) === -1){
-                this.selectedSections = this.selectedSections.concat(m.Sections);
+              if(this.selectedSections.indexOf(m.SectionUniqueId) === -1){
+                this.selectedSections = this.selectedSections.concat(m.SectionUniqueId);
               }
             }  
 
@@ -793,7 +797,7 @@ this.LabelIdForUpdate = 0
     for(let i of this.LabelOnEdit){
       for(let j of this.allLabelslistSectionsandFields)
       if(i.FieldSectionMapId === j.BatchId){
-        this.LabelOnEditSectionandField.push({BatchId : j.BatchId, FieldName :j.FieldId, SectionId :j.SectionId, SectionName : j.SectionName, Fields : j.Fields, Sections : j.Sections })
+        this.LabelOnEditSectionandField.push({BatchId : j.BatchId, FieldName :j.FieldId, SectionId :j.SectionId, SectionName : j.SectionName, Fields : j.Fields, Sections : j.Sections, FieldUniqueId : j.FieldUniqueId, SectionUniqueId : j.SectionUniqueId })
       }
     }
       const taskType = this.newLabelsEntryForm.controls['TaskType'];

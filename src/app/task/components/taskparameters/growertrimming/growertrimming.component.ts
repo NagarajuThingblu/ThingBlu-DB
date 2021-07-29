@@ -141,6 +141,10 @@ export class GrowertrimmingComponent implements OnInit {
         usercomment: '',
       };
       this.GROWERTRIMMING = this.fb.group({
+        'section': new FormControl('null',Validators.required),
+        'strain': new FormControl('', Validators.required),
+        'strainid':new FormControl(''),
+        'lightdept': new FormControl('',Validators.required),
         'bins': new FormControl('', Validators.required),
         'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
         'employeeList': new FormControl('', Validators.required),

@@ -25,6 +25,7 @@ import { NewSectionDetailsActionService } from '../../../services/add-section-de
 import { filter } from 'rxjs/operator/filter';
 import { NewClientService } from '../../../../Masters/services/new-client.service';
 import { FormArray } from '@angular/forms';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   moduleId: module.id,
@@ -83,8 +84,15 @@ export class PrebuckingComponent implements OnInit {
    items = new FormArray([], this.customGroupValidation );
    arrayItems: FormArray;
    display = false;
+   public completeDataBasedOnTaskType : any;
    public strainid: any[];
    public sections: any[];
+   public strains: any[];
+   public lightdepts = [];
+   public fields = [];
+   public sectionslist = [];
+   public batchId : any;
+   public LD= [];
    public strainId:any;
    public lightdept: boolean;
    public bins: any[];
@@ -112,7 +120,7 @@ export class PrebuckingComponent implements OnInit {
 
   ngOnInit() {
     this.employeeListByClient();
-    this.getStrainListByTask();
+     this.getStrainListByTask();
     console.log("bins details : "+this.BinData)
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
@@ -157,10 +165,11 @@ export class PrebuckingComponent implements OnInit {
         usercomment: '',
       };
       this.PREBUCKING = this.fb.group({
-        'section': new FormControl('null',Validators.required),
-        'strain': new FormControl('', Validators.required),
+        'section': new FormControl(null,Validators.required),
+        'strain': new FormControl(null, Validators.required),
+        'field':new FormControl(null,Validators.required),
         'strainid':new FormControl(''),
-        'lightdept': new FormControl('',Validators.required),
+        'lightdept': new FormControl(null,Validators.required),
         'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
         'employeeList': new FormControl('', Validators.required),
         'priority': new FormControl(''),
@@ -196,12 +205,13 @@ export class PrebuckingComponent implements OnInit {
 
       }
       this.completionForm  = this.fb.group({
-        'isStrainComplete': new FormControl(''),
-        'items': new FormArray([
-          this.createItem()
-        ], this.customGroupValidation),
+        'strain': new FormControl(''),
+        'binId': new FormControl(null, Validators.compose([Validators.required])),
+        // 'items': new FormArray([
+        //   this.createItem()
+        // ], this.customGroupValidation),
       });
-
+   
       this.reviewForm = this.fb.group({
         'isStrainComplete': new FormControl(''),
         // 'items': new FormArray([
@@ -242,20 +252,20 @@ export class PrebuckingComponent implements OnInit {
   // }
 
 
-  addItem(): void {
-    this.arrayItems = this.completionForm.get('items') as FormArray;
-    this.arrayItems.push(this.createItem());
-  }
-  createItem(): FormGroup {
-    return this.fb.group({
-      'binId': new FormControl(null, Validators.compose([Validators.required])),
-      'wetweight': new FormControl(''),
-      'dryweight': new FormControl(''),
-      'wasteweight': new FormControl(''),
-      'binFull': new FormControl(''),
-    });
+  // addItem(): void {
+  //   this.arrayItems = this.completionForm.get('items') as FormArray;
+  //   this.arrayItems.push(this.createItem());
+  // }
+  // createItem(): FormGroup {
+  //   return this.fb.group({
+  //     'binId': new FormControl(null, Validators.compose([Validators.required])),
+  //     'wetweight': new FormControl(''),
+  //     'dryweight': new FormControl(''),
+  //     'wasteweight': new FormControl(''),
+  //     'binFull': new FormControl(''),
+  //   });
     
-  }
+  // }
   
   viewBinsList(e){
     this.router.navigate(['../home/labels', e]);
@@ -341,39 +351,99 @@ export class PrebuckingComponent implements OnInit {
     this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
     this.dropdownDataService. getStrainsByTaskType(TaskTypeId).subscribe(
       data => {
-        // let newdata: any[];
-        // newdata = this.removeDuplicatesById(data);
+        this.completeDataBasedOnTaskType = data;
         this.globalData.sections = data;
         if (data !== 'No Data Found') {
-          this.sections = this.dropdwonTransformService.transform(data, 'SectionName', 'SectionId', '-- Select --');
+          this.strains = this.dropdwonTransformService.transform(data, 'StrainName', 'StrainId', '-- Select --');
+          const strainsfilter = Array.from(this.strains.reduce((m, t) => m.set(t.label, t), new Map()).values())
+          this.strains = this.dropdwonTransformService.transform(strainsfilter,'label', 'value')
         } else {
-          this.sections = [];
+          this.strains = [];
         }
       } ,
       error => { console.log(error); },
       () => console.log('GetPrscrStrainListByTask complete'));
   }
-  getStrainAndLightDept(event?: any){
-    for(let sec of this.globalData.sections ){
-      if(event.value === sec.SectionId){
-        this.strainName = sec.StrainName;
-        this.lightdept =sec.IsLightDeprevation;
-        this.strainid = sec.StrainId;
-      
-        this.TaskModel.PREBUCKING.section = sec.SectionName
-        this.TaskModel.PREBUCKING.strain =  sec.StrainId
-        // this.TaskModel.PREBUCKING.strainId =  this.strainId
-        this.PREBUCKING.controls["strain"].setValue(this.strainName)
-        this.PREBUCKING.controls["strainid"].setValue(this.strainid)
-        this.TaskModel.PREBUCKING.lightdept  = this.lightdept
-        this.PREBUCKING.controls["lightdept"].setValue(this.lightdept)
+  onStrainSelect(event?: any){
+    this.lightdepts = []
+//this.LD = null
+    for(let i of this.completeDataBasedOnTaskType){
+      if(i.StrainId === event.value){
+        this.lightdepts.push({label:i.IsLightDeprevation,value: i.IsLightDeprevation});
       }
     }
-    this.getWorkingEmpList(event.value,);
+    const ldfilter = Array.from(this.lightdepts.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.lightdepts = this.dropdwonTransformService.transform(ldfilter,'label', 'value','-- Select --')
+    if(this.lightdepts.length === 3){
+      this.LD=[
+        {label: "-- Select --", value: null},
+        {label: 'true', value: true},
+        {label: 'false', value: false},
+      ]
+    }
+      else if(this.lightdepts[1].value === true)
+      {
+        this.LD=[
+          {label: "-- Select --", value: null},
+          {label: 'true', value: true},
+        ]
+        // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
+      }
+      else 
+      {
+        this.LD=[
+          {label: "-- Select --", value: null},
+          {label: 'false', value: false},
+        ]
+        // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
+      }
+      if(this.PREBUCKING.controls['lightdept'].value !=null){
+        this.onLdSelect(this.PREBUCKING.controls['lightdept'].value);
+      }
   }
 
-  getWorkingEmpList(sectionId){
-    this.dropdownDataService.getEmpAlreadyWorkingOnATask(sectionId,this.TaskModel.task).subscribe(
+  onLdSelect(event?: any){
+    this.fields = []
+    for(let i of this.completeDataBasedOnTaskType){
+      if(i.StrainId === this.PREBUCKING.controls['strain'].value && i.IsLightDeprevation === event.value){
+        this.fields.push({label:i.Fields,value: i.FieldUniqueId});
+      }
+    }
+    const fieldfilter = Array.from(this.fields.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.fields = this.dropdwonTransformService.transform(fieldfilter,'label', 'value','-- Select --',false)
+  }
+  onFieldSelect(event?: any){
+    this.sectionslist = []
+    for(let i of this.completeDataBasedOnTaskType){
+      if(i.StrainId === this.PREBUCKING.controls['strain'].value && i.IsLightDeprevation ===this.PREBUCKING.controls['lightdept'].value && i.FieldUniqueId === event.value){
+        this.sectionslist.push({label:i.Sections,value: i.SectionUniqueId});
+        this.batchId = i.BatchId
+      }
+    }
+    const sectionfilter = Array.from(this.sectionslist.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.sectionslist = this.dropdwonTransformService.transform(sectionfilter,'label', 'value','-- Select --',false)
+  }
+  // getStrainAndLightDept(event?: any){
+  //   for(let sec of this.globalData.sections ){
+  //     if(event.value === sec.SectionId){
+  //       this.strainName = sec.StrainName;
+  //       this.lightdept =sec.IsLightDeprevation;
+  //       this.strainid = sec.StrainId;
+      
+  //       this.TaskModel.PREBUCKING.section = sec.SectionName
+  //       this.TaskModel.PREBUCKING.strain =  sec.StrainId
+  //       // this.TaskModel.PREBUCKING.strainId =  this.strainId
+  //       this.PREBUCKING.controls["strain"].setValue(this.strainName)
+  //       this.PREBUCKING.controls["strainid"].setValue(this.strainid)
+  //       this.TaskModel.PREBUCKING.lightdept  = this.lightdept
+  //       this.PREBUCKING.controls["lightdept"].setValue(this.lightdept)
+  //     }
+  //   }
+  //   this.getWorkingEmpList(event.value,);
+  // }
+
+  getWorkingEmpList(event?: any){
+    this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.batchId).subscribe(
       data=>{
         if(data != 'No Data Found'){
           this.globalData.workingEmp = data;
@@ -436,7 +506,7 @@ export class PrebuckingComponent implements OnInit {
       this.deleteItemAll(length);
     }
    
-    this.addItem();
+    // this.addItem();
   }
   deleteItemAll(index: number) {
    
