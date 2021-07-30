@@ -556,7 +556,7 @@
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="hiredate">
-                        Hire Date<span class="star"></span>:
+                        Hire Date<span class="star">*</span>:
                       </label>
 
                       <p-calendar                                                            
@@ -569,17 +569,18 @@
                        [monthNavigator]="true"
                        [yearNavigator]="true" 
                        yearRange="1800:4030"
+                       required
                        [maxDate]="dateTime"
                       >
                       </p-calendar>
 
-                      <!-- <div
+                      <div
                       class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                       *ngIf="!newEmployeeForm.controls['hiredate'].valid&&newEmployeeForm.controls['hiredate'].dirty">
                       <span *ngIf="newEmployeeForm.controls['hiredate'].errors['required']">
                           Hire date required
                       </span>                      
-                  </div> -->
+                  </div>
                     </div>
                   </div>
                 </div>

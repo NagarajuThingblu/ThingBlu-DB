@@ -156,6 +156,7 @@ export class PrebuckingComponent implements OnInit {
         employeeList:'',
         startdate: this.TaskModel.startdate,
         enddate: '',
+        batchId:'',
         endtime: '',
         employee: '',
         esthrs: '',
@@ -169,6 +170,7 @@ export class PrebuckingComponent implements OnInit {
         'strain': new FormControl(null, Validators.required),
         'field':new FormControl(null,Validators.required),
         'strainid':new FormControl(''),
+        'batchId':new FormControl(''),
         'lightdept': new FormControl(null,Validators.required),
         'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
         'employeeList': new FormControl('', Validators.required),
@@ -205,7 +207,7 @@ export class PrebuckingComponent implements OnInit {
 
       }
       this.completionForm  = this.fb.group({
-        'strain': new FormControl(''),
+        // 'strain': new FormControl(''),
         'binId': new FormControl(null, Validators.compose([Validators.required])),
         // 'items': new FormArray([
         //   this.createItem()
@@ -213,7 +215,7 @@ export class PrebuckingComponent implements OnInit {
       });
    
       this.reviewForm = this.fb.group({
-        'isStrainComplete': new FormControl(''),
+        'binId': new FormControl(null, Validators.compose([Validators.required])),
         // 'items': new FormArray([
         //   this.createItem()
         // ], this.customGroupValidation),
@@ -224,12 +226,16 @@ export class PrebuckingComponent implements OnInit {
           'rmisccomment': new FormControl(null)
       })
       
+    if(!this.PageFlag.showReviewmodal){
+      this.reviewForm.controls['binId'].patchValue(this.BinData[0].OutPutBinId)
+    }
       // this.addItem();
     }
 
     // if(this.BinData.length > 0){
     //   this.getBinsAtReview();
     // }
+
   }
 
   // getBinsAtReview(){
@@ -326,7 +332,7 @@ export class PrebuckingComponent implements OnInit {
         // newdata = this.removeDuplicatesById(data);
    
         if (data !== 'No Data Found!') {
-          this.bins = this.dropdwonTransformService.transform(data, 'LabelName', 'LabelId', '-- Select --');
+          this.bins = this.dropdwonTransformService.transform(data, 'BinName', 'BinId', '-- Select --');
         } else {
           this.bins = [];
         }
@@ -417,7 +423,7 @@ export class PrebuckingComponent implements OnInit {
     for(let i of this.completeDataBasedOnTaskType){
       if(i.StrainId === this.PREBUCKING.controls['strain'].value && i.IsLightDeprevation ===this.PREBUCKING.controls['lightdept'].value && i.FieldUniqueId === event.value){
         this.sectionslist.push({label:i.Sections,value: i.SectionUniqueId});
-        this.batchId = i.BatchId
+        this.PREBUCKING.controls['batchId'].patchValue(i.BatchId);
       }
     }
     const sectionfilter = Array.from(this.sectionslist.reduce((m, t) => m.set(t.label, t), new Map()).values())
@@ -443,7 +449,9 @@ export class PrebuckingComponent implements OnInit {
   // }
 
   getWorkingEmpList(event?: any){
-    this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.batchId).subscribe(
+       this.globalData.workingEmp = [];
+    this.workingEmp = [];
+    this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.PREBUCKING.controls['batchId'].value).subscribe(
       data=>{
         if(data != 'No Data Found'){
           this.globalData.workingEmp = data;
@@ -570,24 +578,24 @@ submitReview(formModel) {
         TaskId:Number(this.taskid),
         VirtualRoleId:Number(this._cookieService.VirtualRoleId),
         Comment: formModel.rmisccomment === null? "": formModel.rmisccomment,
-        IsStrainCompleted:formModel.isStrainComplete === ""?0:1,
+        BinId:this.reviewForm.controls['binId'].value,
         MiscCost: formModel.rmisccost === null?0:formModel.rmisccost,
         RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
       },
-      BinDetails:[]
+      // BinDetails:[]
     };
-    this.BinData.forEach((element, index) => {
-      // this.duplicateSection = element.value.section
-      taskReviewWebApi.BinDetails.push({
-        BinId:element.BinId,
-        DryWt: element.BinWt,
-        WetWt: 0,
-        WasteWt: element.WasteWt,
-        IsOpBinFilledCompletely: element.IsOpBinFilledCompletely == true?1:0
+    // this.BinData.forEach((element, index) => {
+    //   // this.duplicateSection = element.value.section
+    //   taskReviewWebApi.BinDetails.push({
+    //     BinId:element.BinId,
+    //     DryWt: element.BinWt,
+    //     WetWt: 0,
+    //     WasteWt: element.WasteWt,
+    //     IsOpBinFilledCompletely: element.IsOpBinFilledCompletely == true?1:0
             
-         });
+    //      });
     
-     });
+    //  });
   }
   this.confirmationService.confirm({
     message: this.assignTaskResources.taskcompleteconfirm,
@@ -663,22 +671,22 @@ completeTask(formModel){
         TaskId:Number(this.taskid),
         Comment:" ",
         VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-        IsStrainCompleted:formModel.isStrainComplete == ""?0:1
+        BinId:this.completionForm.controls['binId'].value,
       },
-      BinDetails:[]
+      // BinDetails:[]
     };
-    this.preBuckingDetailsArr.controls.forEach((element, index) => {
-      // this.duplicateSection = element.value.section
-      taskCompletionWebApi.BinDetails.push({
-        BinId:element.value.binId,
-        DryWt: element.value.dryweight,
-        WetWt: 0,
-        WasteWt: element.value.wasteweight,
-        IsOpBinFilledCompletely: element.value.binFull == true?1:0
+    // this.preBuckingDetailsArr.controls.forEach((element, index) => {
+    //   // this.duplicateSection = element.value.section
+    //   taskCompletionWebApi.BinDetails.push({
+    //     BinId:element.value.binId,
+    //     DryWt: element.value.dryweight,
+    //     WetWt: 0,
+    //     WasteWt: element.value.wasteweight,
+    //     IsOpBinFilledCompletely: element.value.binFull == true?1:0
             
-         });
+    //      });
     
-     });
+    //  });
    
 
   }

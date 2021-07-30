@@ -1020,8 +1020,9 @@ console.log(assignTaskFormValues)
         let prebuckingDataForApi = {
           PreBucking: {
             "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
-            "SectionId": assignTaskFormValues.PREBUCKING.section,
-            "StrainId": assignTaskFormValues.PREBUCKING.strainid,
+            "BatchId": assignTaskFormValues.PREBUCKING.batchId,
+           // "SectionId": assignTaskFormValues.PREBUCKING.section,
+            "StrainId": assignTaskFormValues.PREBUCKING.strain,
             "IsLightDeprevation": assignTaskFormValues.PREBUCKING.lightdept,
             "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
             "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
@@ -1057,7 +1058,7 @@ console.log(assignTaskFormValues)
               });
               this.loaderService.display(false);
           }
-          else if (String(data).toLocaleUpperCase() === 'FAILURE') {
+          else if (String(data[0]. RESULTKEY).toLocaleUpperCase() === 'FAILURE') {
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
             this.loaderService.display(false);
           }

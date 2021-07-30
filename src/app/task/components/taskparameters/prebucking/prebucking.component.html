@@ -258,9 +258,17 @@
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label>
+        <strong>Field: </strong>
+      </label>
+          {{BinData[0]?.Fields}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
         <strong>Section: </strong>
       </label>
-          {{TaskModel?.SectionName}}
+          {{BinData[0]?.Sections}}
     </div>
   </div>
   <div class="ui-g-12 ui-md-6">
@@ -276,7 +284,7 @@
       <label>
         <strong>Light Deprevation: </strong>
       </label>
-          {{TaskModel?.IsLightDeprevation}}
+          {{BinData[0]?.IsLightDeprevation}}
     </div>
   </div>
   <div class="ui-g-12 ui-md-6">
@@ -354,10 +362,18 @@
           {{TaskModel?.TaskPriority}}
     </div>
   </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>Output Bin Name: </strong>
+      </label>
+          {{BinData[0]?.BinName}}
+    </div>
+  </div>
 
  
   
-    <div  class="ui-g-12" style="padding-top: 5px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
+    <!-- <div  class="ui-g-12" style="padding-top: 5px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
       <div><b>Output Bin Details</b></div>
     <p-table [value]="BinData">
       <ng-template pTemplate="header">
@@ -375,7 +391,7 @@
         </tr>
     </ng-template>
     </p-table>
-  </div>
+  </div> -->
   <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
     <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
       <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -391,10 +407,6 @@
             pInputText 
             [value]="TaskModel.StrainName"
             autocomplete="off"
-            id="strain" 
-            name="strain" 
-            formControlName="strain"              
-            class="clsControl"
             readonly="true"   
           />
           </div>
@@ -557,21 +569,55 @@
 
   <p-dialog header="Task Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
     <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
-      <div class="ui-g"  style="width:100%;">
-        <div class="ui-g-12 ui-md-6" style="text-align:left;">
+      <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-7">
+          
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <label for="strain"><strong>Strain</strong></label>:
+            <input type="string" 
+            pInputText 
+            [value]="TaskModel.StrainName"
+            autocomplete="off"
+            readonly="true"   
+          />
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <label for="binId"><strong>Bin</strong></label>:
+            <p-dropdown
+            id="binId"
+            formControlName="binId"
+            [options]="bins"
+            placeholder="-- Select --"
+            [autoWidth]="false"
+            class="clsControl"
+            name="binId">
+          </p-dropdown>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="ui-g"  style="width:100%;"> -->
+        <!-- <div class="ui-g-12 ui-md-6" style="text-align:left;">
           <div class="paddingRL">
             <span>Strain :- </span><span>{{TaskModel?.StrainName}}</span>
           </div>
-        </div>
-        <div class="ui-g-12 ui-md-6"style="text-align:right;">
+        </div> -->
+        <!-- <div class="ui-g-12 ui-md-6"style="text-align:right;">
           <div class="paddingRL">
             <p-checkbox value="BinData[0].IsStrainCompleted" label="IsStrainComplete"
             formControlName="isStrainComplete" checked="true"
            binary="true"></p-checkbox>  
           </div>
-        </div>
-      </div>
-      <p-table [value]="BinData">
+        </div> -->
+      
+      <!-- </div> -->
+      
+      <!-- <p-table [value]="BinData">
         <ng-template pTemplate="header">
           <tr>
             <th>Bin Name</th>
@@ -586,7 +632,7 @@
               <td>{{TaskModel.IsOpBinFilledCompletely}}</td>
           </tr>
       </ng-template>
-      </p-table>
+      </p-table> -->
 
       <div class="ui-grid-row" style="padding-top: 20px;">
         <div class="ui-grid-col-4">

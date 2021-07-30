@@ -420,6 +420,10 @@ export class AddNewEmployeeComponent implements OnInit {
              this. showMang = true
              this. showFlc = true
           }
+          if( this.employeeOnEdit[0].ManagerId != null){
+            this. showMang = true
+          
+         }
            const decryptedpwd = this.decode64(this.employeeOnEdit[0].Password);
           const clientname = this.newEmployeeForm.controls['clientname'];
           const firstname = this.newEmployeeForm.controls['firstname'];
@@ -451,7 +455,10 @@ export class AddNewEmployeeComponent implements OnInit {
           middlename.patchValue(this.employeeOnEdit[0].MiddleName);
           lastname.patchValue(this.employeeOnEdit[0].LastName);
           gender.patchValue(this.employeeOnEdit[0].Gender);
-          dob.patchValue(new Date(this.employeeOnEdit[0].DOB));
+          if(this.employeeOnEdit[0].DOB != null){
+            dob.patchValue(new Date(this.employeeOnEdit[0].DOB));
+          }
+         
           hiredate.patchValue(new Date(this.employeeOnEdit[0].HireDate));
           if(this.employeeOnEdit[0].TerminationDate != null){
             terminationdate.patchValue(new Date(this.employeeOnEdit[0].TerminationDate));
@@ -641,7 +648,7 @@ else{
     'lastname': new FormControl(null, Validators.required),
     'gender': new FormControl(null),
     'dob': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
-    'hiredate': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
+    'hiredate': new FormControl(null, Validators.compose([ Validators.required,Validators.maxLength(15)])),
     'terminationdate': new FormControl(null),
     'cellphone': new FormControl(null, Validators.compose([ Validators.maxLength(15)])),
     'homephone': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
