@@ -49,7 +49,7 @@
       <div class="clear"></div>
       <p-dropdown
           [filter] ="true"
-          [options]="sections"
+          [options]="fields"
           (onChange)=" onFieldSelect($event)"
           placeholder="-- Select --"
           [autoWidth]="true"
@@ -66,7 +66,7 @@
       <div class="clear"></div>
       <p-dropdown
           [filter] ="true"
-          [options]="sections"
+          [options]="sectionslist"
           (onChange)=" getWorkingEmpList($event)"
           placeholder="-- Select --"
           [autoWidth]="true"
@@ -248,11 +248,27 @@
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label>
-        <strong>{{ globalResource.inputBinName }}: </strong>
+        <strong>Field: </strong>
       </label>
-          {{TaskModel?.IPLabelName}}
+          {{BinData[0]?.Fields}}
     </div>
   </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>Section: </strong>
+      </label>
+          {{BinData[0]?.Sections}}
+    </div>
+  </div>
+  <!-- <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>{{ globalResource.inputBinName }}: </strong>
+      </label>
+          {{BinData[0]?.IPLabelName}}
+    </div>
+  </div> -->
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label>
@@ -329,7 +345,23 @@
       {{TaskModel?.RevHrs  | minutesToTime}}
     </div>
   </div>
-  <div class="ui-g-12" style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>Output Bin Name: </strong>
+      </label>
+          {{BinData[0]?.BinName}}
+    </div>
+  </div>
+  <!-- <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
+    <div class="paddingRL" *ngIf="BinData[0]?.CompletedWt != null">
+      <label>
+        <strong>Completed Weight: </strong>
+      </label>
+          {{BinData[0]?.CompletedWt}}
+    </div>
+  </div> -->
+  <!-- <div class="ui-g-12" style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
     <div><b>Input Bin Details</b></div>
   <p-table [value]="inpubinData">
     <ng-template pTemplate="header">
@@ -349,8 +381,8 @@
       </tr>
   </ng-template>
   </p-table>
-</div>
-  <div class="ui-g-12"  style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
+</div> -->
+  <!-- <div class="ui-g-12"  style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
     <div><b>Output Bin Details</b></div>
   <p-table [value]="BinData">
     <ng-template pTemplate="header">
@@ -368,7 +400,7 @@
       </tr>
   </ng-template>
   </p-table>
-</div>
+</div> -->
   <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
     
     <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
@@ -385,10 +417,6 @@
             pInputText 
             [value]="TaskModel.StrainName"
             autocomplete="off"
-            id="strain" 
-            name="strain" 
-            formControlName="strain"              
-            class="clsControl"
             readonly="true"   
           />
           </div>
@@ -399,7 +427,7 @@
             <p-dropdown
             id="binId"
             formControlName="binId"
-            [options]="bins"
+            [options]="binslist"
             placeholder="-- Select --"
             [autoWidth]="false"
             class="clsControl"
@@ -591,6 +619,38 @@
   <p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
     <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
       <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+        <div class="ui-grid-row">
+          <div class="ui-grid-col-7">
+          
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <label for="strain"><strong>Strain</strong></label>:
+            <input type="string" 
+            pInputText 
+            [value]="TaskModel.StrainName"
+            autocomplete="off"
+            readonly="true"   
+          />
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <label for="binId"><strong>Bin</strong></label>:
+            <p-dropdown
+            id="binId"
+            formControlName="binId"
+            [options]="binslist"
+            placeholder="-- Select --"
+            [autoWidth]="false"
+            class="clsControl"
+            name="binId">
+          </p-dropdown>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-g-12 ui-md-6" style="text-align:left;">
           <div class="paddingRL">
             <span>Strain :- </span><span>{{TaskModel?.StrainName}}</span>
@@ -623,7 +683,7 @@
               </ng-template>
             </p-table>
           </div>
-       </div>
+       </div> -->
        <div class="ui-grid-row" style="padding-top: 20px;">
         <div class="ui-grid-col-4">
           {{ assignTaskResources.actualhrs }}:

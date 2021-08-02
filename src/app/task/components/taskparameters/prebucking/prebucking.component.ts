@@ -88,7 +88,7 @@ export class PrebuckingComponent implements OnInit {
    public strainid: any[];
    public sections: any[];
    public strains: any[];
-   public lightdepts = [];
+   public lightdepts :any [];
    public fields = [];
    public sectionslist = [];
    public batchId : any;
@@ -371,7 +371,12 @@ export class PrebuckingComponent implements OnInit {
       () => console.log('GetPrscrStrainListByTask complete'));
   }
   onStrainSelect(event?: any){
+    this.sectionslist = []
     this.lightdepts = []
+    this.globalData.workingEmp=[]
+    this.workingEmp = []
+    this.LD = []
+   //this.lightdepts = null;
 //this.LD = null
     for(let i of this.completeDataBasedOnTaskType){
       if(i.StrainId === event.value){
@@ -411,17 +416,20 @@ export class PrebuckingComponent implements OnInit {
   onLdSelect(event?: any){
     this.fields = []
     for(let i of this.completeDataBasedOnTaskType){
-      if(i.StrainId === this.PREBUCKING.controls['strain'].value && i.IsLightDeprevation === event.value){
+      if(i.StrainId === this.PREBUCKING.controls['strain'].value && (i.IsLightDeprevation === event.value || i.IsLightDeprevation === event)){
         this.fields.push({label:i.Fields,value: i.FieldUniqueId});
       }
     }
     const fieldfilter = Array.from(this.fields.reduce((m, t) => m.set(t.label, t), new Map()).values())
     this.fields = this.dropdwonTransformService.transform(fieldfilter,'label', 'value','-- Select --',false)
+    if(this.PREBUCKING.controls['field'].value !=null){
+      this.onFieldSelect(this.PREBUCKING.controls['field'].value);
+    }
   }
   onFieldSelect(event?: any){
     this.sectionslist = []
     for(let i of this.completeDataBasedOnTaskType){
-      if(i.StrainId === this.PREBUCKING.controls['strain'].value && i.IsLightDeprevation ===this.PREBUCKING.controls['lightdept'].value && i.FieldUniqueId === event.value){
+      if(i.StrainId === this.PREBUCKING.controls['strain'].value && i.IsLightDeprevation ===this.PREBUCKING.controls['lightdept'].value && (i.FieldUniqueId === event.value || i.FieldUniqueId === event) ){
         this.sectionslist.push({label:i.Sections,value: i.SectionUniqueId});
         this.PREBUCKING.controls['batchId'].patchValue(i.BatchId);
       }
@@ -476,7 +484,7 @@ export class PrebuckingComponent implements OnInit {
     }
   this. filterEmpList()
   }
-
+ 
   employeeListByClient() {
     this.dropdownDataService.getEmployeeListByClient().subscribe(
       data => {

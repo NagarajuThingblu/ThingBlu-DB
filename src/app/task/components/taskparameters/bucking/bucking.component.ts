@@ -157,6 +157,7 @@ export class BuckingComponent implements OnInit {
         'strain': new FormControl(null, Validators.required),
         'field':new FormControl(null,Validators.required),
         'strainid':new FormControl(''),
+        'batchId':new FormControl(''),
         'lightdept': new FormControl(null,Validators.required),
         'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
         'employeeList': new FormControl('', Validators.required),
@@ -174,7 +175,7 @@ export class BuckingComponent implements OnInit {
         BinWeight: this.TaskModel.IPBinWt,
         CompletedBinWt:'', 
         WasteWt:'',
-        binId: this.TaskModel.binId,
+       // binId: this.TaskModel.binId,
         binsId:'',
         weight:'',
         binFull: this.TaskModel.binFull,
@@ -196,17 +197,19 @@ export class BuckingComponent implements OnInit {
        }
 
       this.completionForm = this.fb.group({
-        'strain': new FormControl(null),
-        'inputBin': new FormControl(null),
-        'binWt': new FormControl(''),
-        'completeWt':new FormControl('',Validators.compose([Validators.required])),
-        'wasteWt':new FormControl(''),
-        'items': new FormArray([
-          this.createItem()
-        ], this.customGroupValidation),
+        // 'strain': new FormControl(null),
+        // 'inputBin': new FormControl(null),
+        // 'binWt': new FormControl(''),
+        // 'completeWt':new FormControl('',Validators.compose([Validators.required])),
+        // 'wasteWt':new FormControl(''),
+        'binId': new FormControl(null, Validators.compose([Validators.required])),
+        // 'items': new FormArray([
+        //   this.createItem()
+        // ], this.customGroupValidation),
       });
 
       this.reviewForm = this.fb.group({
+        'binId': new FormControl(null, Validators.compose([Validators.required])),
         // 'inputBin': new FormControl(null),
         // 'binWt': new FormControl(''),
         // 'completeWt':new FormControl('',Validators.compose([Validators.required])),
@@ -221,6 +224,10 @@ export class BuckingComponent implements OnInit {
           'rmisccost': new FormControl(null),
           'rmisccomment': new FormControl(null)
       })
+
+      if(!this.PageFlag.showReviewmodal){
+        this.reviewForm.controls['binId'].patchValue(this.BinData[0].OutPutBinId)
+      }
     }
     // if(this.BinData != null){
     //   this.inputBinDetails = []
@@ -310,7 +317,11 @@ export class BuckingComponent implements OnInit {
   }
 
   onStrainSelect(event?: any){
+    this.sectionslist = []
     this.lightdepts = []
+    this.globalData.workingEmp=[]
+    this.workingEmp = []
+    this.LD = []
 //this.LD = null
     for(let i of this.completeDataBasedOnTaskType){
       if(i.StrainId === event.value){
@@ -345,24 +356,30 @@ export class BuckingComponent implements OnInit {
       if(this.BUCKING.controls['lightdept'].value !=null){
         this.onLdSelect(this.BUCKING.controls['lightdept'].value);
       }
+      if(this.BUCKING.controls['lightdept'].value !=null){
+        this.onLdSelect(this.BUCKING.controls['lightdept'].value);
+      }
   }
 
   onLdSelect(event?: any){
     this.fields = []
     for(let i of this.completeDataBasedOnTaskType){
-      if(i.StrainId === this.BUCKING.controls['strain'].value && i.IsLightDeprevation === event.value){
+      if(i.StrainId === this.BUCKING.controls['strain'].value && (i.IsLightDeprevation === event.value || i.IsLightDeprevation === event)){
         this.fields.push({label:i.Fields,value: i.FieldUniqueId});
       }
     }
     const fieldfilter = Array.from(this.fields.reduce((m, t) => m.set(t.label, t), new Map()).values())
     this.fields = this.dropdwonTransformService.transform(fieldfilter,'label', 'value','-- Select --',false)
+    if(this.BUCKING.controls['field'].value !=null){
+      this.onFieldSelect(this.BUCKING.controls['field'].value);
+    }
   }
   onFieldSelect(event?: any){
     this.sectionslist = []
     for(let i of this.completeDataBasedOnTaskType){
-      if(i.StrainId === this.BUCKING.controls['strain'].value && i.IsLightDeprevation ===this.BUCKING.controls['lightdept'].value && i.FieldUniqueId === event.value){
+      if(i.StrainId === this.BUCKING.controls['strain'].value && i.IsLightDeprevation ===this.BUCKING.controls['lightdept'].value && (i.FieldUniqueId === event.value || i.FieldUniqueId === event)){
         this.sectionslist.push({label:i.Sections,value: i.SectionUniqueId});
-        this.batchId = i.BatchId
+        this.BUCKING.controls['batchId'].patchValue(i.BatchId);
       }
     }
     const sectionfilter = Array.from(this.sectionslist.reduce((m, t) => m.set(t.label, t), new Map()).values())
@@ -370,7 +387,7 @@ export class BuckingComponent implements OnInit {
   }
 
   getWorkingEmpList(event?: any){
-    this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.batchId).subscribe(
+    this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.BUCKING.controls['batchId'].value).subscribe(
       data=>{
         if(data != 'No Data Found'){
           this.globalData.workingEmp = data;
@@ -435,7 +452,7 @@ export class BuckingComponent implements OnInit {
         // newdata = this.removeDuplicatesById(data);
    
         if (data !== 'No Data Found!') {
-          this.binslist = this.dropdwonTransformService.transform(data, 'LabelName', 'LabelId', '-- Select --');
+          this.binslist = this.dropdwonTransformService.transform(data,'BinName', 'BinId', '-- Select --');
         } else {
           this.binslist = [];
         }
@@ -504,36 +521,36 @@ submitReview(formModel) {
         TaskId:Number(this.taskid),
         VirtualRoleId:Number(this._cookieService.VirtualRoleId),
         Comment: formModel.rmisccomment === null? "": formModel.rmisccomment,
-        IsStrainCompleted:formModel.isStrainComplete === ""?0:1,
+        BinId:this.reviewForm.controls['binId'].value,
         MiscCost: formModel.rmisccost === null?0:formModel.rmisccost,
         RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
       },
-      InputBinDetails:[],
-      OutputBinDetails:[]
+      // InputBinDetails:[],
+      // OutputBinDetails:[]
     };
-    this.inpubinData.forEach((element, index) => {
-      // this.duplicateSection = element.value.section
-      taskReviewWebApi.InputBinDetails.push({
-        BinId:element.InputBinId,
-        DryWt: element.IPBinWt,
-        WetWt: 0,
-        WasteWt: element.TotalWasteWt,
+    // this.inpubinData.forEach((element, index) => {
+    //   // this.duplicateSection = element.value.section
+    //   taskReviewWebApi.InputBinDetails.push({
+    //     BinId:element.InputBinId,
+    //     DryWt: element.IPBinWt,
+    //     WetWt: 0,
+    //     WasteWt: element.TotalWasteWt,
             
-         });
+    //      });
     
-     });
-     this.BinData.forEach((element, index) => {
-      // this.duplicateSection = element.value.section
-      taskReviewWebApi.OutputBinDetails.push({
-        BinId:element.OPBinId,
-        DryWt: element.OPBinWt,
-        WetWt: 0,
-        WasteWt: element.WasteWt,
-        IsOpBinFilledCompletely: element.IsOpBinFilledCompletely == true?1:0
+    //  });
+    //  this.BinData.forEach((element, index) => {
+    //   // this.duplicateSection = element.value.section
+    //   taskReviewWebApi.OutputBinDetails.push({
+    //     BinId:element.OPBinId,
+    //     DryWt: element.OPBinWt,
+    //     WetWt: 0,
+    //     WasteWt: element.WasteWt,
+    //     IsOpBinFilledCompletely: element.IsOpBinFilledCompletely == true?1:0
             
-         });
+    //      });
     
-     });
+    //  });
   }
   this.confirmationService.confirm({
     message: this.assignTaskResources.taskcompleteconfirm,
@@ -612,32 +629,33 @@ completeTask(formModel){
         TaskId:Number(this.taskid),
         Comment:" ",
         VirtualRoleId: Number(this._cookieService.VirtualRoleId),
+        BinId:this.completionForm.controls['binId'].value,
       },
-      InputBinDetails:[],
-      OutputBinDetails:[]
+      // InputBinDetails:[],
+      // OutputBinDetails:[]
     };
    
       // this.duplicateSection = element.value.section
-      taskCompletionWebApi.InputBinDetails.push({
-        BinId:this.TaskModel.InputBinId,
-        DryWt: Number(formModel.completeWt),
-        WetWt: 0,
-        WasteWt:Number(formModel.wasteWt) ,
+      // taskCompletionWebApi.InputBinDetails.push({
+      //   BinId:this.TaskModel.InputBinId,
+      //   DryWt: Number(formModel.completeWt),
+      //   WetWt: 0,
+      //   WasteWt:Number(formModel.wasteWt) ,
             
-         });
+      //    });
         
    
     
-     this.buckingDetailsArr.controls.forEach((element, index) => {
-      // this.duplicateSection = element.value.section
-      taskCompletionWebApi.OutputBinDetails.push({
-        BinId:element.value.binsId,
-        DryWt: element.value.weight,
-        IsOpBinFilledCompletely: element.value.binFull == true?1:0
+    //  this.buckingDetailsArr.controls.forEach((element, index) => {
+    //   // this.duplicateSection = element.value.section
+    //   taskCompletionWebApi.OutputBinDetails.push({
+    //     BinId:element.value.binsId,
+    //     DryWt: element.value.weight,
+    //     IsOpBinFilledCompletely: element.value.binFull == true?1:0
             
-         });
+    //      });
         
-     });
+    //  });
    
      
 

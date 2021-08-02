@@ -397,7 +397,7 @@
       <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div class="ui-grid-row">
           <div class="ui-grid-col-7">
-          
+            
           </div>
         </div>
         <div class="ui-g-12 ui-md-6">
@@ -414,6 +414,7 @@
         <div class="ui-g-12 ui-md-6">
           <div class="paddingRL">
             <label for="binId"><strong>Bin</strong></label>:
+            <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="Create Bin" id="btn_geneticshow" (click)="viewBinsList(TaskModel)"  name="btnviewGenetics" ></p-button>
             <p-dropdown
             id="binId"
             formControlName="binId"

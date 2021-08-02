@@ -377,7 +377,22 @@
     (onPage)="onPageChange($event)"
     [globalFilterFields]="['TaskTypeName','BinNo','TotalWt','AvilableWt','StrainName','SkewType','IsLightDeprevation','TrimmingMethod']">
         <ng-template pTemplate="caption">
+          <div style="text-align: right; float: left;">
+<!--         
+              <span>Fields :</span>
+              <p-dropdown
+            [options]="fieldsFilter"
+            placeholder="-- Select --"
+            class="clsControl"
+            style="width:auto;"
+          >
+            </p-dropdown> -->
+            
+          
+          </div>
+          
           <div style="text-align: right">
+            
             <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
             <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter"
               (input)="dtLabelList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
@@ -389,6 +404,10 @@
             </th> -->
             <th [pSortableColumn]="'TaskTypeName'">Category<p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
             </th>
+            <!-- <th [pSortableColumn]="'Fields'">Field <p-sortIcon [field]="'Fields'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'Sections'">Section <p-sortIcon [field]="'Sections'"></p-sortIcon>
+            </th> -->
             <th [pSortableColumn]="'BinNo'">Bin Number <p-sortIcon [field]="'BinNo'"></p-sortIcon>
             </th>
             <th [pSortableColumn]="'StrainName'">Strain<p-sortIcon [field]="'StrainName'"></p-sortIcon>
@@ -414,6 +433,14 @@
               <input pInputText type="text" autocomplete="off"
                 (input)="dtLabelList.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
             </th>
+            <!-- <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtLabelList.filter($event.target.value, 'Fields', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtLabelList.filter($event.target.value, 'Sections', 'contains')" class="clsControl">
+            </th> -->
             <th>
               <input pInputText type="text" autocomplete="off"
                 (input)="dtLabelList.filter($event.target.value, 'BinNo', 'contains')" class="clsControl">
@@ -451,6 +478,8 @@
         <ng-template pTemplate="body" let-label let-rowData let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
             <td>{{label?.TaskTypeName}}</td>
+            <!-- <td>{{label?.Fields}}</td>
+            <td>{{label?.Sections}}</td> -->
             <td>{{label?.BinNo}}</td>
             <td>{{label?.StrainName}}</td>
             <td>{{label?.SkewType }}</td>

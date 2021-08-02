@@ -60,6 +60,8 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   public skewtypes:any[];
   public tasktypes: any[];
   skewtype: any[];
+  sectionsFilter : any[];
+  fieldsFilter : any[];
   public displayPopUp: boolean = false;
   public skewTypeID: any = 0;
   TaskTypeDetails: any;
@@ -437,7 +439,11 @@ else{
       data=>{
         if(data != 'No Data Found'){
           this.allLabelslist=data.Table;
+          //this.allLabelslist=data.Table1;
           this.allLabelslistSectionsandFields=data.Table1
+          this.fieldsFilter = this.dropdwonTransformService.transform(this.allLabelslistSectionsandFields, 'Fields', 'FieldUniqueId', '-- Select --');
+          const Ffilter = Array.from(this.fieldsFilter.reduce((m, t) => m.set(t.label, t), new Map()).values())
+          this.fieldsFilter = this.dropdwonTransformService.transform(Ffilter,'label', 'value')
         }
        else{
          this.allLabelslist = [];

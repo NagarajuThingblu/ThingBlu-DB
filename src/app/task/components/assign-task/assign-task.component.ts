@@ -1074,8 +1074,11 @@ console.log(assignTaskFormValues)
         let buckingDataForApi = {
           Bucking:{
             "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
-            "BinId": assignTaskFormValues.BUCKING.bins,
-            "EmpId": assignTaskFormValues.BUCKING.employeeList,
+            //"BinId": assignTaskFormValues.BUCKING.bins,
+            "BatchId": assignTaskFormValues.BUCKING.batchId,
+            //"EmpId": assignTaskFormValues.BUCKING.employeeList,
+            "StrainId": assignTaskFormValues.BUCKING.strain,
+            "IsLightDeprevation": assignTaskFormValues.BUCKING.lightdept,
             "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
             "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
             "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority ,
@@ -1083,8 +1086,15 @@ console.log(assignTaskFormValues)
             "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
             "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
             "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
-          }
+          },
+          EmployeeTypes:[]
         };
+        assignTaskFormValues[this.selectedTaskTypeName].employeeList
+        .forEach((element, index) => {
+          buckingDataForApi.EmployeeTypes.push({
+            "EmpId" : assignTaskFormValues.BUCKING.employeeList[index] 
+          });
+        });
         this.loaderService.display(true);
         this.taskCommonService.assignbuckingTask(buckingDataForApi).
         subscribe(
@@ -1101,6 +1111,10 @@ console.log(assignTaskFormValues)
                 'taskname': new FormControl(null, Validators.required),
                 'taskCategory':new FormControl(null,Validators.required),
               });
+              this.loaderService.display(false);
+            }
+            else if (String(data).toLocaleUpperCase() === 'FAILURE') {
+              this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
               this.loaderService.display(false);
             }
           }
