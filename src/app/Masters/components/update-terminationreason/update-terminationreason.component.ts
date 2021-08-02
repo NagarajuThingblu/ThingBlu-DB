@@ -432,7 +432,7 @@ this.disableLDDropdown = true;
       IsActive:this.AllSectionData.IsActive === true? 1: 0,
       PlantsCount:this.updateTerminationReason.value.TPC === null? this.AllSectionData.TotalPlantCount : this.updateTerminationReason.value.TPC,
       year:this.updateTerminationReason.value.year === null? this.AllSectionData.Year:this.updateTerminationReason.value.year ,
-      IsLightDeprevation:this.updateTerminationReason.value.ld === null?this.AllSectionData.IsLightDeprevation === true || "true"? 1:0 :this.updateTerminationReason.value.ld === true? 1: 0 ,
+      IsLightDeprevation:this.updateTerminationReason.value.ld === null?this.AllSectionData.IsLightDeprevation === (true || "true")? 1:0 :this.updateTerminationReason.value.ld === true? 1: 0 ,
       IsDeleted:0,
       ActiveInactive:0,
     });

@@ -365,6 +365,12 @@ if(CategoryName[0].label === "Pre-Bucked"){
     }
   }
  } 
+ for(let index of this.Sections){
+  if(index.indexOf(index.Value) === -1){
+    this.Sections.push(index)
+  }
+
+}
 }
 else{
   for(let id of this.allDetailsBasedOnTaskType){
@@ -379,10 +385,12 @@ else{
         this.sectionids.push( i.SectionId)
       }
     }
+    
+    const Sectionfilter = Array.from(this.Sections.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.Sections = this.dropdwonTransformService.transform(Sectionfilter,'label', 'value')
    } 
 }
-      const Sectionfilter = Array.from(this.Sections.reduce((m, t) => m.set(t.label, t), new Map()).values())
-      this.Sections = this.dropdwonTransformService.transform(Sectionfilter,'label', 'value')
+
   }
   onSectionSelect(event?: any){
     this.sectionids = [];
