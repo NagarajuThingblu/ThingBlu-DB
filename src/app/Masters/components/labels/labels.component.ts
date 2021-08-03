@@ -40,6 +40,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   public newLabelsEntryForm: FormGroup;
   strains: any[];
   Fields= [];
+  SectionsList: any[];
   Sections: any[];
   sectionids = [];
   public lightDept = [];
@@ -352,6 +353,7 @@ this.Fields = null;
     this.selectedSections = [];
     this.Sections = null;
     this.batchIds = []
+    this.SectionsList = []
       this.Sections = [];
      this.sectionids = [];
     var CategoryName:any;
@@ -361,12 +363,12 @@ if(CategoryName[0].label === "Pre-Bucked"){
  for(let j of event.value){
   for(let i of this.sectionData){
     if((i.FieldId === j|| i.FieldId === event) && (i.StrainId === this.newLabelsEntryForm.value.strain) && (i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept)){
-          this.Sections.push({label: i.SectionName, value:i.SectionId})
+          this.SectionsList.push({label: i.SectionName, value:i.SectionId})
     }
   }
  } 
- for(let index of this.Sections){
-  if(index.indexOf(index.Value) === -1){
+ for(let index of this.SectionsList){
+  if( this.Sections.indexOf(index.Value) === -1){
     this.Sections.push(index)
   }
 
