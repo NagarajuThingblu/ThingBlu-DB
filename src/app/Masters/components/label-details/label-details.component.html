@@ -1,0 +1,47 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel  [toggleable]="true">
+        <div class="ui-g">
+          <div class="ui-g-12 ui-md-offset-6" style="padding: 0">
+            <a [routerLink]=""  class="btn-link" (click)="backToLabelsPge()" style="float:right;padding-right: 21px;text-decoration: underline" ><< Back</a>
+           </div>
+          <div class="ui-g-12" style="padding: 0">
+            <div class="ui-g-4">
+              <label><b>Category Name : </b></label>
+              <span>{{LabelDetails.TaskTypeName}}</span>
+            </div>
+            <div class="ui-g-4">
+              <label><b>Strain Name : </b></label>
+              <span>{{LabelDetails.StrainName}}</span>
+            </div>
+            <div class="ui-g-4">
+              <label><b>Bin Name : </b></label>
+              <span>{{LabelDetails.BinNo}}</span>
+            </div>
+          </div>
+         
+        </div>
+
+
+
+        <p-table [value]="allLabelDetails" class="paddingRL">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Field Name</th>
+            <th>Section Name</th>
+            <th>Created Date</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-taskstatus>
+            <tr>
+              <td>{{taskstatus.FieldName}}</td>
+              <td>{{taskstatus.SectionName}}</td>
+              <td>{{taskstatus.CreatedDate}}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-panel>
+    </div>
+  </div>
+</div>

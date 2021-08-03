@@ -156,7 +156,7 @@
       <p-table #dtSecList [value]="allsectionslist" sortMode="single" [responsive]="true" [paginator]="true"
     [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
     (onPage)="onPageChange($event)"
-    [globalFilterFields]="['FieldName','SectionName','StrainName','PlantsCount','IsLightDeprevation','Year']">
+    [globalFilterFields]="['FieldName','SectionName','StrainName','PlantsCount','Year','IsLightDeprevation']">
         <ng-template pTemplate="caption">
           <div style="text-align: right">
             <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
@@ -210,7 +210,7 @@
             </th>
             <th>
               <input pInputText type="text" autocomplete="off"
-                (input)="dtLabelList.filter($event.target.value, 'IsLightDeprevation', 'contains')" class="clsControl">
+                (input)="dtSecList.filter($event.target.value, 'IsLightDeprevation', 'contains')" class="clsControl">
             </th>
           
             <th rowspan="2"></th>

@@ -16,9 +16,9 @@ import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { AppConstants } from '../../../shared/models/app.constants';
 import * as _ from 'lodash';
 import { routing } from '../../../app.routing';
-// import { NewSectionDetailsActionService } from '../../../task/services/add-section-details.service';
+import { NewSectionDetailsActionService } from '../../../task/services/add-section-details.service';
 import { ActivatedRoute, Router } from '@angular/router';
-//import { NewFieldGenerationService } from '../../../task/services/new-field-generation.service';
+import { NewFieldGenerationService } from '../../../task/services/new-field-generation.service';
 import { routerNgProbeToken } from '@angular/router/src/router_module';
 import {NewLabelDetailsActionService} from '../../../task/services/add-label-details.service'
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
@@ -39,19 +39,29 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   chkSelectAll: any;
   public newLabelsEntryForm: FormGroup;
   strains: any[];
-  // Fields: any[];
-  // Sections: any[];
-  // public sectionData: any;
+  Fields= [];
+  Sections: any[];
+  sectionids = [];
+  public lightDept = [];
+  public edit:boolean = false;
+  public LD= [];
+  public sectionData: any;
   TaskType: any[];
   public taskid;
   public taskType;
+  public multiselector : boolean = true;
+  public categoryName:any;
   public visible: boolean = false
   public TaskTypeID: any = 0;
   public TaskTypeName: any = '';
   public LabelOnEdit: any;
+  public LabelOnEditSectionandField:any[]; 
+  public allDetailsBasedOnTaskType: any;
   public skewtypes:any[];
   public tasktypes: any[];
   skewtype: any[];
+  sectionsFilter : any[];
+  fieldsFilter : any[];
   public displayPopUp: boolean = false;
   public skewTypeID: any = 0;
   TaskTypeDetails: any;
@@ -75,16 +85,18 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   enabletextbox = true;
   public defaultValue: number =1;
   public e:any;
-  // public allFieldslist:any;
+  public allFieldslist:any;
   HT: String 
+  public batchIds : any[];
   taskTypeValueAndLabelMap: Map<number,string> = new Map<number,string>()
   pageheading: any;
   public placeholder ='-- Select --';
   public taskKeyName: any = '';
-  // public strainName: any;
-  // public strainId: any;
-  // public lightDep:any;
+  public strainName: any;
+  public strainId: any;
+  public lightDep:any;
   public allLabelslist:any;
+  public allLabelslistSectionsandFields: any;
   public count:number = 0;
   public popupTaskType: any;
   public popupbinNo: any;
@@ -92,7 +104,9 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   public popupSkew:any;
   public popupld:any;
   public popupTm:any;
-
+  public enableFieldSection: boolean = true;
+    public selectedValues = [];
+    public selectedSections = [];
   TrimmingMethods =['HT','MT']
   private globalData = {
     TaskType: [],
@@ -103,7 +117,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private loaderService: LoaderService,
-    // private newSectionDetailsActionService: NewSectionDetailsActionService, 
+    private newSectionDetailsActionService: NewSectionDetailsActionService, 
     private cookieService: CookieService,
     private dropdownDataService: DropdownValuesService, // For common used dropdown service
     private dropdwonTransformService: DropdwonTransformService,
@@ -112,7 +126,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     private newLabelDetailsActionService: NewLabelDetailsActionService,
     private confirmationService: ConfirmationService,
     private scrolltopservice: ScrollTopService,
-    // private NewFieldgeneration: NewFieldGenerationService,
+    private NewFieldgeneration: NewFieldGenerationService,
     private router: Router
   ) {
     this.route.params.forEach((urlParams) => {
@@ -121,14 +135,17 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
       this.taskid = urlParams['TaskTypeId'];
       this.taskType = urlParams['TaskTypeKey'];
     });
-    //this.GetFields();
-    this.getAllStrains();
+    // this.GetFields();
+  
+   
+  
     this.getAllTaskType();
     this.getAllSkew();
     this.getAllLabelslist();
+    this.GetAllSections()
     // this.getAllPackageType();
   // this.skewType_InChange();
-  // this. TaskType_InChange();
+  //this. TaskType_InChange(this.LabelOnEdit[0].TaskTypeId);
   }
   items = new FormArray([], this.customGroupValidation );
   arrayItems: FormArray;
@@ -137,6 +154,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     // this.resetForm();
   }
   ngOnInit() {
+   
     console.log("TaskType list "+this.globalData.TaskType);
     this.saveButtonText = 'Save';
     this.pageheading="Add Bin";
@@ -150,14 +168,18 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
     }, 0);
     this.newLabelsEntryForm = this.fb.group({
       'TaskType': new FormControl(null, Validators.required),
-      // 'field': new FormControl(null, Validators.required),
-      // 'Section':new FormControl(null, Validators.required),
+      'strain':new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
+      'field': new FormControl(null, Validators.required),
+      'Section':new FormControl(null, Validators.required),
+      'lightdept':new FormControl(null, Validators.required),
       items: new FormArray([], this.customGroupValidation),
       // 'bincount':  new FormControl(null),
       
       // items1: new FormArray([]),
     });
-    
+    // if(this.edit){
+    //   this. TaskType_InChange(this.LabelOnEdit[0].TaskTypeId);
+    // }
     this.addItem();
     if (this.appCommonService.ProductTypeBackLink && this.appCommonService.ProductTypeFormDetail) {
       this.newLabelsEntryForm = this.appCommonService.ProductTypeFormDetail;
@@ -173,66 +195,30 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   setTimeout(() => {
     this.loaderService.display(false);
   }, 500);
-
-  // this.tasktypes =  [
-  //   {label: 'Trimming', value: 'Trimming'},
-  //   {label: 'Bucking', value: 'Bucking'},
-  //   {label: 'PreBucking', value: 'PreBucking'}
-  // ];
   }
   get labelDetailsArr(): FormArray {
     return this.newLabelsEntryForm.get('items') as FormArray;
   }
   backtotaskpage(){
     this.back(this.e)
-   
-    // this.router.navigate(['../home/taskaction', e.TaskTypeKey, e.TaskId]);
   }
-//   GetFields() {
-//     this.loaderService.display(true);
-//     this.NewFieldgeneration.GetFieldList().subscribe(data=>{
-//       if(data!="No Data Found"){
-//         this.allFieldslist=data;
-//         this.Fields = this.dropdwonTransformService.transform(data, 'FieldName', 'FieldId', '-- Select --');
-       
-//       }
-     
-//       this.loaderService.display(false);
-//     },
-//     error => { console.log(error); this.loaderService.display(false); },
-//     () => console.log('GetAllFieldsbyClient complete'));
-//  }
 
+    GetAllSections(){
  
-//  onFieldSelection(event: any)
-//  {
-// // this.sectionData =null;
-// // this.Sections = null
-// this.newSectionDetailsActionService.Getsectionlist().subscribe(
-//  data=>{
-//    if (data !== 'No Data Found') {
-//     this.sectionData = data;
-//     this.Sections = this.dropdwonTransformService.transform(data.filter(x => x.FieldId === event.value), 'SectionName', 'SectionId', '-- Select --');
+  this.newSectionDetailsActionService.Getsectionlist().subscribe(
+   data=>{
+     if (data !== 'No Data Found') {
+      this.sectionData = data;
+      this.getAllStrains();
+   } 
+    this.loaderService.display(false);
+   },
+    error => { console.log(error);  this.loaderService.display(false); },
+    () => console.log('getAllStrainsbyClient complete'));
+   
+ }
 
-//  } 
-//   this.loaderService.display(false);
-//  },
-//   error => { console.log(error);  this.loaderService.display(false); },
-//   () => console.log('getAllStrainsbyClient complete'));
-//  }
 
-//  onSectionSelection(event: any){
-
-// for(let sec of this.sectionData ){
-//   if(event.value === sec.SectionId){
-//     this.strainName = sec.StrainName;
-//     this.strainId = sec.StrainId;
-//     this.lightDep =sec.IsLightDeprevation;
-//     this.newLabelsEntryForm.controls.items['controls'][0].controls['strain'].setValue(this.strainName)
-//     this.newLabelsEntryForm.controls.items['controls'][0].controls['lightDept'].setValue(this.lightDep)
-//   }
-// }
-//  }
 
   back(e){
     if(e.TaskTypeKey!= null){
@@ -245,13 +231,13 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 createItem(): FormGroup {
   return this.fb.group({
     binNo: new FormControl(null, Validators.compose([Validators.required])),
-    bincount: new FormControl(null),
-    strain:new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
+    bincount: new FormControl(null, Validators.compose([Validators.min(1)])),
+    // strain:new FormControl(null, Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)])),
     skewType: new FormControl(
-      this.taskTypeNameValue === 'Trimming' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
-    lightDept: new FormControl(false),
+      this.taskTypeNameValue === 'Trimmed' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
+    // lightDept: new FormControl(false),
     TrimmingMethod: new FormControl(
-      this.taskTypeNameValue === 'Trimming' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
+      this.taskTypeNameValue === 'Trimmed' ? Validators.compose([Validators.required, Validators.max(99999), Validators.min(0.1)]) : null),
     chkSelectAll: new FormControl(true)
   });
   
@@ -284,17 +270,160 @@ createItem(): FormGroup {
     this.event = e;
   }
   getAllStrains() {
-    this.dropdownDataService.getStrains().subscribe(
-      data => {
-        
-        if (data) {
-        
-        this.strains = this.dropdwonTransformService.transform(data, 'StrainName', 'StrainId', '-- Select --');
-        }
-      } ,
-      error => { console.log(error); },
-      () => console.log('Get all strains complete'));
+    
+   this.strains = this.dropdwonTransformService.transform(this.sectionData,'StrainName', 'StrainId', '-- Select --');
+   const strainfilter = Array.from(this.strains.reduce((m, t) => m.set(t.label, t), new Map()).values())
+   this.strains = this.dropdwonTransformService.transform(strainfilter,'label', 'value')
+  
   }
+  onStrainSelect(event?: any){
+    this.enableFieldSection = false;
+this.Fields = null;
+     this.lightDept = null;
+    this.lightDept = [];
+    if(this.categoryName === "Pre-Bucked"){
+      for(let lightdept of this.sectionData){
+        if(lightdept.StrainId === event.value || lightdept.StrainId === event ){
+          this.lightDept.push({label: lightdept.IsLightDeprevation, value:lightdept.IsLightDeprevation})
+        }
+      }
+      const ldfilter = Array.from(this.lightDept.reduce((m, t) => m.set(t.label, t), new Map()).values())
+      this.lightDept = this.dropdwonTransformService.transform(ldfilter,'label', 'value', '-- Select --',false)
+    }
+  else{
+    for(let lightdept of this.allDetailsBasedOnTaskType){
+      if(event.value === lightdept.StrainId || lightdept.StrainId === event){
+        this.lightDept.push({label: lightdept.IsLightDeprevation, value:lightdept.IsLightDeprevation})
+      }
+    }
+    const ldfilter = Array.from(this.lightDept.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.lightDept = this.dropdwonTransformService.transform(ldfilter,'label', 'value', '-- Select --',false)
+  }
+  if(this.lightDept.length === 3){
+    this.LD=[
+      {label: 'true', value: true},
+      {label: 'false', value: false},
+    ]
+  }
+    else if(this.lightDept[1].value === true)
+    {
+      this.LD=[
+        {label: 'true', value: true},
+      ]
+      // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
+    }
+    else 
+    {
+      this.LD=[
+        {label: 'false', value: false},
+      ]
+      // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
+    }
+  }
+  onLDSelect(event?: any){
+     this.Sections = null;
+    // this.Sections = []
+    this.selectedValues = []
+    this.Fields = [];
+    if(this.categoryName === "Pre-Bucked"){
+      for(let i of this.sectionData){
+        if((i.IsLightDeprevation === event.value || i.IsLightDeprevation === event || i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept) && (i.StrainId === this.newLabelsEntryForm.value.strain) ){
+          this.Fields.push({label: i.FieldName, value:i.FieldId})
+          const Fieldfilter = Array.from(this.Fields.reduce((m, t) => m.set(t.label, t), new Map()).values())
+          this.Fields = this.dropdwonTransformService.transform(Fieldfilter,'label', 'value')
+        }
+      }
+    }
+    else{
+      for(let i of this.allDetailsBasedOnTaskType){
+        if((i.IsLightDeprevation === event.value || i.IsLightDeprevation === event) && (i.StrainId === this.newLabelsEntryForm.value.strain) ){
+          this.Fields.push({label: i.Fields, value:i.FieldUniqueId})
+          const Fieldfilter = Array.from(this.Fields.reduce((m, t) => m.set(t.label, t), new Map()).values())
+          this.Fields = this.dropdwonTransformService.transform(Fieldfilter,'label', 'value')
+           
+        }
+      }
+     
+    }
+   
+  
+  }
+  onFieldSelect(event?: any){
+    this.selectedSections = [];
+    this.Sections = null;
+    this.batchIds = []
+      this.Sections = [];
+     this.sectionids = [];
+    var CategoryName:any;
+    CategoryName = this.TaskType.filter(x =>x.value ==this.newLabelsEntryForm.value.TaskType   )
+
+if(CategoryName[0].label === "Pre-Bucked"){
+ for(let j of event.value){
+  for(let i of this.sectionData){
+    if((i.FieldId === j|| i.FieldId === event) && (i.StrainId === this.newLabelsEntryForm.value.strain) && (i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept)){
+          this.Sections.push({label: i.SectionName, value:i.SectionId})
+    }
+  }
+ } 
+ for(let index of this.Sections){
+  if(index.indexOf(index.Value) === -1){
+    this.Sections.push(index)
+  }
+
+}
+}
+else{
+  for(let id of this.allDetailsBasedOnTaskType){
+    if(id.FieldUniqueId === event.value || id.FieldUniqueId === event){
+      this.batchIds.push( id.BatchId)
+    }
+  }
+  for(let j of this.batchIds){
+    for(let i of this.allDetailsBasedOnTaskType){
+      if(j === i.BatchId){
+        this.Sections.push({label: i.Sections, value:i.SectionUniqueId})
+        this.sectionids.push( i.SectionId)
+      }
+    }
+    
+    const Sectionfilter = Array.from(this.Sections.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.Sections = this.dropdwonTransformService.transform(Sectionfilter,'label', 'value')
+   } 
+}
+
+  }
+  onSectionSelect(event?: any){
+    this.sectionids = [];
+    if(this.categoryName != "Pre-Bucked"){
+      for(let i of this.allDetailsBasedOnTaskType){
+        if(event.value === i.SectionUniqueId){
+          if(this.sectionids.indexOf(i.SectionId)=== -1){
+            this.sectionids.push(i.SectionId)
+          }
+        }
+      }
+    }
+  }
+onFieldEdit(fieldid){
+  this.Sections = this.Sections || [];
+  if(this.categoryName === "Pre-Bucked"){
+    for(let i of this.sectionData){
+      if((i.FieldId === fieldid) && (i.StrainId === this.newLabelsEntryForm.value.strain) && (i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept)){
+        this.Sections.push({label: i.SectionName, value:i.SectionId})
+        console.log(this.Sections)
+  }
+    }
+  }
+else{
+  for(let i of this.allDetailsBasedOnTaskType){
+    if((i.FieldUniqueId === fieldid) && (i.StrainId === this.newLabelsEntryForm.value.strain) && (i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept)){
+      this.Sections.push({label: i.Sections, value:i.SectionUniqueId})
+}
+  }
+}
+  const Sectionfilter = Array.from(this.Sections.reduce((m, t) => m.set(t.label, t), new Map()).values())
+  this.Sections = this.dropdwonTransformService.transform(Sectionfilter,'label', 'value')
+}
   getAllSkew() {
     this.dropdownDataService.getSkewListByClient().subscribe(
       data => {
@@ -317,7 +446,12 @@ createItem(): FormGroup {
     this.newLabelDetailsActionService.GetLabelslist().subscribe(
       data=>{
         if(data != 'No Data Found'){
-          this.allLabelslist=data;
+          this.allLabelslist=data.Table;
+          //this.allLabelslist=data.Table1;
+          this.allLabelslistSectionsandFields=data.Table1
+          this.fieldsFilter = this.dropdwonTransformService.transform(this.allLabelslistSectionsandFields, 'Fields', 'FieldUniqueId', '-- Select --');
+          const Ffilter = Array.from(this.fieldsFilter.reduce((m, t) => m.set(t.label, t), new Map()).values())
+          this.fieldsFilter = this.dropdwonTransformService.transform(Ffilter,'label', 'value')
         }
        else{
          this.allLabelslist = [];
@@ -325,18 +459,16 @@ createItem(): FormGroup {
     })
   }
   addItem(): void {
-    // this.sysmbol=0;
-    // this.SectionDetailsArr.push(this.createItem());
+  
    this.count++; 
-  //  this.placeholder = 
+ 
     console.log(this.count)
     this.arrayItems = this.newLabelsEntryForm.get('items') as FormArray;
     this.arrayItems.push(this.createItem());
   }
 
   createBulkBins(index): void {
-    // this.arrayItems = this.newLabelsEntryForm.get('items1') as FormArray;
-    // this.arrayItems.push(this.createItem1());
+    
     this.displayPopUp = true;
     this.popupTaskType = this.newLabelsEntryForm.value.TaskType;
     this.popupbinNo = this.newLabelsEntryForm.value.items[index].binNo;
@@ -369,10 +501,21 @@ createItem(): FormGroup {
     if (isError) { return {'duplicate': 'duplicate entries'}; }
   }
   TaskType_InChange(event?: any){
-    // let taskTypes = this.TaskType;
-    // let taskTypeID = this.newLabelsEntryForm.value.TaskType
+    // this.strains =  null;
+    // this.lightDept = null;
+    const id = event.value? event.value :event;
+    this.allDetailsBasedOnTaskType = [];
+  this.enableFieldSection = false;
+  
     for(let item of this.TaskType){
       this.taskTypeValueAndLabelMap.set(item.value,item.label)
+    }
+    this.categoryName = this.taskTypeValueAndLabelMap.get(event.value)
+    if(this.categoryName === "Pre-Bucked"){
+      this.multiselector = true
+    }
+    else{
+      this.multiselector = false
     }
     if(event && event.value && this.taskTypeValueAndLabelMap.get(event.value) === 'Trimmed')
     {
@@ -385,11 +528,71 @@ createItem(): FormGroup {
       this.enableDropDown = true;
       this.HT = ""
     }
+   
+    if(this.taskTypeValueAndLabelMap.get(id) === "Bucked" || this.taskTypeValueAndLabelMap.get(id) === "Trimmed" ){
+      this.newSectionDetailsActionService.GetDetailsOnTaskType(id).subscribe(
+        data=>{
+          if (data !== 'No Data Found') {
+           
+            // this.Fields = null;
+            // this.Sections = null;
+                  this.allDetailsBasedOnTaskType = data
+                  this.strains = this.dropdwonTransformService.transform(this.allDetailsBasedOnTaskType, 'StrainName', 'StrainId', '-- Select --');
+                  const strainfilter = Array.from(this.strains.reduce((m, t) => m.set(t.label, t), new Map()).values())
+                  this.strains = this.dropdwonTransformService.transform(strainfilter,'label', 'value')
+                } 
+                if(this.edit && data!="No Data Found"){
+                  if(this.LabelOnEdit[0].TaskTypeName === 'Trimmed'){
+                    this.enableDropDown = false
+                }
+                  this.onStrainSelect(this.LabelOnEdit[0].StrainId)
+                }
+                if(this.edit && data!="No Data Found"){
+                  this.onLDSelect(this.LabelOnEdit[0].IsLightDeprevation)
+                }
+                if(this.edit && data!="No Data Found"){
+                  // for( let k of this.Fields){
+                  //   if(this.selectedValues.indexOf(k.label) === -1){
+                  //     this.selectedValues = this.selectedValues.concat(k.label);
+                  //   }
+                  // }
+                for( let k of this.LabelOnEditSectionandField){
+                  if(this.selectedValues.indexOf(k.FieldUniqueId) === -1){
+                    this.selectedValues = this.selectedValues.concat(k.FieldUniqueId);
+                  }
+                }
+             
+            for( let l of this.selectedValues){
+              this.onFieldEdit(l)
+            }
+            //const section =this.newLabelsEntryForm.controls['Section'];
+          //   for(let i of this.allDetailsBasedOnTaskType){
+          //     if((i.Sections === fieldid) && (i.StrainId === this.newLabelsEntryForm.value.strain) && (i.IsLightDeprevation === this.newLabelsEntryForm.value.lightdept)){
+          //       this.Sections.push({label: i.Sections, value:i.Sections})
+          // }
+          //   }
+            // section.patchValue(this.LabelOnEditSectionandField[0].SkewType);
+            for( let m of this.LabelOnEditSectionandField){
+              if(this.selectedSections.indexOf(m.SectionUniqueId) === -1){
+                this.selectedSections = this.selectedSections.concat(m.SectionUniqueId);
+              }
+            }  
+
+           // section.patchValue(this.selectedSections[0]);
+            // this.LabelOnEditSectionandField.filter(x => x.BatchId === LabelId)
+                   }
+        }
+        
+      )
+      
+     
+    }
   }
 
  
   onSubmit(value: string)
   {
+   
     console.log(this.newLabelsEntryForm)
     this.submitted = true;
     let newLabelForApi;
@@ -398,21 +601,40 @@ createItem(): FormGroup {
             ClientId: Number(this._cookieService.ClientId),
             TaskTypeId: Number(this.newLabelsEntryForm.value.TaskType),
             VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-            // FieldId: Number(this.newLabelsEntryForm.value.field),
-            // SectionId: Number(this.newLabelsEntryForm.value.Section),
+            IsLd: this.newLabelsEntryForm.value.lightdept,
+            StrainId: this.newLabelsEntryForm.value.strain,
       },
+      FieldSectiondetails:[],
       BinLabelsTypeDetails:[]
     };
+ 
+    if( this.categoryName === "Pre-Bucked"){
+      for(let j of this.newLabelsEntryForm.value.Section){
+      
+        newLabelForApi.FieldSectiondetails.push({
+          FieldId: 0,
+          SectionId: j
+        })
+      }
+    }
+   else{
+     for(let j of this.sectionids){
+      newLabelForApi.FieldSectiondetails.push({
+        FieldId: 0,
+        SectionId: j
+      })
+     }
+   }
     this.labelDetailsArr.controls.forEach((element, index) => 
     {
       
       newLabelForApi.BinLabelsTypeDetails.push({
           LabelId: this.LabelIdForUpdate,
           BinNo: element.value.binNo,
-          StrainId:  element.value.strain,
+          StrainId: null,
           SkewType: this.enableDropDown == true? null:element.value.skewType,
           SkewTypeId: this.skewTypeID,
-          IsLightDeprevation:element.value.lightDept? 1: 0,
+          IsLightDeprevation:null,
           IsHandTrimmed:this.enableDropDown == true? 0:element.value.TrimmingMethod == 'HT'? 1:0,
           IsMachineTrimmed:this.enableDropDown == true? 0:element.value.TrimmingMethod == 'MT'? 1:0,
           IsActive: element.value.chkSelectAll ? 1 : 0,
@@ -433,19 +655,23 @@ createItem(): FormGroup {
         if (String(data[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.newLabelResources.newlabelsavedsuccess });
-        //   this.sectionData = null
-        //  this.Sections = null;
+          this.sectionData = null
+         this.Sections = null;
           this.resetForm();
           this.getAllLabelslist();
           this.LabelIdForUpdate = 0;
           this.viewNoOfBins = true;
+          this.Sections = [];
+          this.multiselector = true;
         } else if (String(data[0].ResultKey).toLocaleUpperCase() === 'UPDATED') {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.newLabelResources.updated });
-         
+          this.Sections = null;
           this.resetForm();
           this.getAllLabelslist();
           this.LabelIdForUpdate = 0;
+          this.Sections = [];
+          this.multiselector = true
         } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
           this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         } else if (String(data[0].ResultKey).toUpperCase() === 'INUSE') {
@@ -475,12 +701,37 @@ createItem(): FormGroup {
                 detail: data[0].ResultMsg + ' '+ this.newLabelResources.duplicate });
 
                 
-              }else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'Not Existed') {
+              }
+              else if (String(data[0].ResultKey) === 'Strain Not Existed') {
+                this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+                detail:"Strain not available"});
+
+                
+              }else if (String(data[0].ResultKey) === 'already deleted') {
+                this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+                detail:"Strain already deleted"});
+
+              }else if (String(data[0].ResultKey) === 'Some bins are in Use So You Can not Edit This Bin') {
+                this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+                detail:"Some bins are in use so you can not edit this bin"});
+
+                
+              }else if (String(data[0].ResultKey) === 'This bin used so you can not delete this bin') {
+                this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+                detail:"This bin was used so you can not delete now"});
+
+                
+              }else if (String(data[0].RESULTKEY) === 'Label Already Existed with') {
+                this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+                detail: "Label Already Existed with" + ' '+ data[0].RESULTKEY });
+
+                
+              } else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'Not Existed') {
                 this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg,
                 detail: data[0].ResultMsg + ' '+ data[0].RESULTKEY });
 
                 
-              } else {
+              }else {
                 this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data });
               }
              
@@ -495,13 +746,20 @@ createItem(): FormGroup {
       } 
    }
    resetForm() {
+    //  this.LD = null
+    this.edit = false;
+    this.multiselector = true;
     this.saveButtonText ="save"
     this.pageheading = "Add New Bin"
     this.enableDropDown = true;
+    this.GetAllSections()
     this.viewNoOfBins = true;
     this.newLabelsEntryForm.reset({ chkSelectAll: true });
    this.plusOnEdit = true;
-// this.strainName = null
+this.strainName = null
+this.Sections = [];
+this.enableFieldSection = true;
+this.LabelIdForUpdate = 0
 // this.lightDep = false;
     const control = <FormArray>this.newLabelsEntryForm.controls['items'];
     
@@ -529,42 +787,82 @@ createItem(): FormGroup {
    
   }
   getLabelsOnEdit(LabelId){
-   
+    
+    this.edit = true
+    this.selectedValues = [];
+    this.selectedSections = [];
+    this.LabelOnEditSectionandField = [];
+   this.GetAllSections()
     this.plusOnEdit = false;
     this.viewNoOfBins = false;
     this.enableDropDown = true;
+    this.enableFieldSection = false;
     console.log(this.allLabelslist)
     const data = this.allLabelslist.filter(x => x.LabelId === LabelId);
-    console.log(data);
+        console.log(data);
     var itemlist = this.newLabelsEntryForm.get('items')['controls'];
     if (data !== 'No data found!') {
       this.LabelIdForUpdate = LabelId;
       this.LabelOnEdit = data;
+      this.categoryName = this.LabelOnEdit[0].TaskTypeName;
+      if(this.categoryName != "Pre-Bucked"){
+        this.TaskType_InChange(this.LabelOnEdit[0].TaskTypeId)
+       }
+    for(let i of this.LabelOnEdit){
+      for(let j of this.allLabelslistSectionsandFields)
+      if(i.FieldSectionMapId === j.BatchId){
+        this.LabelOnEditSectionandField.push({BatchId : j.BatchId, FieldName :j.FieldId, SectionId :j.SectionId, SectionName : j.SectionName, Fields : j.Fields, Sections : j.Sections, FieldUniqueId : j.FieldUniqueId, SectionUniqueId : j.SectionUniqueId })
+      }
+    }
       const taskType = this.newLabelsEntryForm.controls['TaskType'];
-      // const field =this.newLabelsEntryForm.controls['field'];
-      // const section =this.newLabelsEntryForm.controls['Section'];
+      const strainName = this.newLabelsEntryForm.controls["strain"];
+      const lightDept =  this.newLabelsEntryForm.controls["lightdept"];
+      const field =this.newLabelsEntryForm.controls['field'];
+      const section =this.newLabelsEntryForm.controls['Section'];
       const binNo = itemlist[0].controls['binNo'];
       const bincount = itemlist[0].controls['bincount'];
-      const strainName =  itemlist[0].controls["strain"];
       const skewType =  itemlist[0].controls["skewType"];
-      const lightDept =  itemlist[0].controls["lightDept"];
       const TrimminMethod =  itemlist[0].controls["TrimmingMethod"];
       const chkIsActive =   itemlist[0].controls["chkSelectAll"];
 
       taskType.patchValue(this.LabelOnEdit[0].TaskTypeId);
-      // field.patchValue(this.LabelOnEdit[0].FieldId);
-      // this.onFieldSelection(field);
-      // section.patchValue(this.LabelOnEdit[0].SectionId);
       binNo.patchValue(this.LabelOnEdit[0].BinNo);
       bincount.patchValue(this.LabelOnEdit[0].NoOfBins);
        strainName.patchValue(this.LabelOnEdit[0].StrainId);
+      
+       if(this.categoryName === "Pre-Bucked"){
+        this.onStrainSelect(strainName.value);
+       }
+       if(this.categoryName === "Pre-Bucked"){
+         this.multiselector = true
+       }
+       else{
+         this.multiselector = false
+       }
        skewType.patchValue(this.LabelOnEdit[0].SkewType);
        lightDept.patchValue(this.LabelOnEdit[0].IsLightDeprevation);
        TrimminMethod.patchValue(this.LabelOnEdit[0].TrimmingMethod);
+       if(this.categoryName === "Pre-Bucked"){
+      this.onLDSelect(lightDept.value)
+      
+    for( let k of this.LabelOnEditSectionandField){
+      if(this.selectedValues.indexOf(k.FieldName) === -1){
+        this.selectedValues = this.selectedValues.concat(k.FieldName);
+      }
+    }
+for( let l of this.selectedValues){
+  this.onFieldEdit(l)
+}
+for( let m of this.LabelOnEditSectionandField){
+  if(this.selectedSections.indexOf(m.SectionId) === -1){
+    this.selectedSections = this.selectedSections.concat(m.SectionId);
+  }
+}  
+       }
+     
+     
         chkIsActive.patchValue(this.LabelOnEdit[0].IsActive);
-        if(this.LabelOnEdit[0].TaskTypeName === 'Trimming'){
-            this.enableDropDown = false
-        }
+        
 
         this.clear = 'Cancel';
        this.saveButtonText = 'Update';
@@ -622,19 +920,29 @@ createItem(): FormGroup {
         VirtualRoleId: Number(this._cookieService.VirtualRoleId),
         // FieldId:label.FieldId,
         // SectionId:label.SectionId,
+        IsLd:label.IsLightDeprevation? 1: 0,
+            StrainId: label.StrainId,
       },
+      FieldSectiondetails:[],
       BinLabelsTypeDetails:[]
     };
+    // for(let j of this.newLabelsEntryForm.value.Section){
+      
+    //   newLabelDetailsForApi.FieldSectiondetails.push({
+    //     FieldId: 0,
+    //     SectionId: j
+    //   })
+    // }
     this.labelDetailsArr.controls.forEach((element, index) => 
     {
       
       newLabelDetailsForApi.BinLabelsTypeDetails.push({
           LabelId:LabelId,
           BinNo: label.BinNo,
-          StrainId:  label.StrainId,
+          StrainId: null,
           SkewType: label.SkewType,
           SkewTypeId: label.SkewTypeId,
-          IsLightDeprevation:label.IsLightDeprevation? 1: 0,
+          IsLightDeprevation:null,
           IsHandTrimmed:label.TrimmingMethod == 'HT'? 1:0,
           IsMachineTrimmed:label.TrimmingMethod == 'MT'? 1:0,
           IsActive: label.IsActive? 1:0,
@@ -691,6 +999,11 @@ createItem(): FormGroup {
     });
      
   
+  }
+
+
+  showLabelDetails(label){
+    this.router.navigate(['../home/sectionsMergeinfo', label]);
   }
 }
 

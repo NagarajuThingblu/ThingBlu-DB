@@ -147,7 +147,7 @@
                 <!-- Gender  -->
                 <div class="ui-g-12 ui-md-6">
                     <div class="paddingRL">
-                      <label for="gender">{{ newEmployeeResources.gender }}<span class="star">*</span>:
+                      <label for="gender">{{ newEmployeeResources.gender }}<span class="star"></span>:
                       </label>
                       <p-dropdown
                         [filter] ="true"
@@ -174,7 +174,7 @@
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="dob">
-                        {{ newEmployeeResources.dob}}<span class="star">*</span>:
+                        {{ newEmployeeResources.dob}}<span class="star"></span>:
                       </label>
 
                       <p-calendar                                                            
@@ -187,18 +187,10 @@
                        [monthNavigator]="true"
                        [yearNavigator]="true" 
                        yearRange="1800:4030"
-                       required
                        [maxDate]="dateTime"
                       >
                       </p-calendar>
 
-                      <div
-                      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                      *ngIf="!newEmployeeForm.controls['dob'].valid&&newEmployeeForm.controls['dob'].dirty">
-                      <span *ngIf="newEmployeeForm.controls['dob'].errors['required']">
-                          {{ newEmployeeResources.dobrequired }}
-                      </span>                      
-                  </div>
                     </div>
                   </div>
                 </div>
@@ -209,7 +201,7 @@
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="cellphone">
-                        {{ newEmployeeResources.cellphone}}<span class="star">*</span>:
+                        {{ newEmployeeResources.cellphone}}<span class="star"></span>:
                       </label>
 
                       <input pInputText
@@ -363,7 +355,7 @@
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="address">
-                        {{ newEmployeeResources.address}}<span class="star">*</span>:
+                        {{ newEmployeeResources.address}}<span class="star"></span>:
                       </label>
 
                       <textarea pInputTextarea
@@ -376,15 +368,15 @@
                         formControlName="address"
                       ></textarea>
 
-                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['address'].valid&&newEmployeeForm.controls['address'].dirty">
 
                           <span *ngIf="newEmployeeForm.controls['address'].errors['required']">
                             {{newEmployeeResources.addressrequired}}
                           </span>
-                          <!-- <span *ngIf="newEmployeeForm.controls['address'].errors['maxlength']">{{newEmployeeResources.packageUnitLength}}</span>
-                          <span *ngIf="newEmployeeForm.controls['address'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span> -->
-                        </div>
+                          <span *ngIf="newEmployeeForm.controls['address'].errors['maxlength']">{{newEmployeeResources.packageUnitLength}}</span>
+                          <span *ngIf="newEmployeeForm.controls['address'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span>
+                        </div> -->
                     </div>
                   </div>
                 </div>
@@ -393,7 +385,7 @@
                 <!-- Country  -->
                   <div class="ui-g-12 ui-md-6">
                     <div class="paddingRL">
-                      <label for="country">{{ newEmployeeResources.country }}<span class="star">*</span></label>:
+                      <label for="country">{{ newEmployeeResources.country }}<span class="star"></span></label>:
 
                       <p-dropdown
                         [filter] ="true"
@@ -407,10 +399,10 @@
                         name="country">
                       </p-dropdown>
 
-                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['country'].valid&&newEmployeeForm.controls['country'].dirty">
                           {{ newEmployeeResources.countryrequired }}
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 <!--End  Country  -->
@@ -418,7 +410,7 @@
                 <!-- State -->
                 <div class="ui-g-12 ui-md-6">
                   <div class="paddingRL">
-                    <label for="state">{{ newEmployeeResources.state }}<span class="star">*</span></label>:
+                    <label for="state">{{ newEmployeeResources.state }}<span class="star"></span></label>:
 
                     <p-dropdown
                       [filter] ="true"
@@ -432,17 +424,17 @@
                       name="state">
                     </p-dropdown>
 
-                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['state'].valid&&newEmployeeForm.controls['state'].dirty">
                           {{ newEmployeeResources.staterequired }}
-                      </div>
+                      </div> -->
                   </div>
                 </div>
                 <!-- End State -->
                 <!-- City -->
                 <div class="ui-g-12 ui-md-6">
                   <div class="paddingRL">
-                    <label for="city">{{ newEmployeeResources.city }}<span class="star">*</span></label>:
+                    <label for="city">{{ newEmployeeResources.city }}<span class="star"></span></label>:
 
                     <p-dropdown
                       [filter] ="true"
@@ -455,10 +447,10 @@
                       name="city">
                     </p-dropdown>
 
-                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                     *ngIf="!newEmployeeForm.controls['city'].valid&&newEmployeeForm.controls['city'].dirty">
                       {{ newEmployeeResources.cityrequired }}
-                  </div>
+                  </div> -->
                     </div>
                   </div>
                   <!-- End City -->
@@ -467,7 +459,7 @@
                     <div class="paddingRL">
                       <div class="le-su-12">
                         <label for="zipcode">
-                          {{ newEmployeeResources.zipcode}}<span class="star">*</span>:
+                          {{ newEmployeeResources.zipcode}}<span class="star"></span>:
                         </label>
 
                         <input pInputText
@@ -481,13 +473,13 @@
                           maxlength="9"
                         />
 
-                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                           *ngIf="!newEmployeeForm.controls['zipcode'].valid&&newEmployeeForm.controls['zipcode'].dirty">
                           <span *ngIf="newEmployeeForm.controls['zipcode'].errors['required']">
                           {{ newEmployeeResources.zipcoderequired }}
                           </span>
                           <span *ngIf="newEmployeeForm.controls['zipcode'].errors['maxlength']">{{newEmployeeResources.zipcodeLength}}</span>
-                        </div>
+                        </div> -->
                       </div>
                   </div>
                 </div>
@@ -540,7 +532,9 @@
                           placeholder="Enter Password"
                           formControlName="emppassword"
                         />
-
+                        <!-- <span class="p-viewer2" *ngIf="showeye === true">
+                          <i class="fa fa-eye eyeicon"   ria-hidden="true" (click)="togglepw()">    </i>
+                      </span> -->
                         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                           *ngIf="!newEmployeeForm.controls['emppassword'].valid&&newEmployeeForm.controls['emppassword'].dirty">
                           <span *ngIf="newEmployeeForm.controls['emppassword'].errors['required']">
@@ -661,7 +655,7 @@
                   <div class="paddingRL">
                       <div class="le-su-12">
                         <label for="hourlylabourrate">
-                          {{ newEmployeeResources.hourlylabourrate}}<span class="star">*</span>:
+                          {{ newEmployeeResources.hourlylabourrate}}<span class="star"></span>:
                         </label>
 
                         <input pInputText
@@ -674,17 +668,17 @@
                           formControlName="hourlylabourrate"
                         />
 
-                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['hourlylabourrate'].valid&&newEmployeeForm.controls['hourlylabourrate'].dirty">
 
                           {{ newEmployeeResources.hourlylabourraterequired }}
-                      </div>
+                      </div> -->
                       </div>
                   </div>
                 </div>
                 <!-- End Hourly labour Rate -->
                 <!--Manager List-->
-                <div class="ui-g-12 ui-md-6">
+                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole|| showMang === true">
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="managerlist" class="towlable fwLabelBold">ManagerList</label>

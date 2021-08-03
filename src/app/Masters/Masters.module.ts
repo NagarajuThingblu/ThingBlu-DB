@@ -77,6 +77,7 @@ import { PlantTerminationReasonsComponent } from './components/plant-termination
 import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-material.component';
 import { UpdateTerminationreasonComponent } from './components/update-terminationreason/update-terminationreason.component';
 import { SectionDetailsComponent } from './components/section-details/section-details.component';
+import { LabelDetailsComponent } from './components/label-details/label-details.component';
 
 
 @NgModule({
@@ -123,7 +124,8 @@ import { SectionDetailsComponent } from './components/section-details/section-de
     PlantTerminationReasonsComponent,
     AddRawMaterialComponent,
     UpdateTerminationreasonComponent,
-    SectionDetailsComponent
+    SectionDetailsComponent,
+    LabelDetailsComponent
    
   ],
   imports: [

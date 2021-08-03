@@ -50,6 +50,14 @@ export class NewSectionDetailsActionService {
   return this.http.get(url,{params: params}).map(data=>data);
 
     }
+
+    GetDetailsOnTaskType(taskid){
+      const url='api/Grower/GetFieldSectionDetails';
+  let params = new HttpParams();
+  params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
+  params=params.append('TaskTypeId',taskid);
+  return this.http.get(url,{params: params}).map(data=>data);
+    }
     GetSectionDetails(SectionId, TaskName){
       const url='api/Grower/GetTerminatedPlantCount';
       let params = new HttpParams();
