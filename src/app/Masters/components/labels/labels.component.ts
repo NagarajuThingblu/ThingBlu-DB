@@ -380,7 +380,7 @@ else{
   }
   for(let j of this.batchIds){
     for(let i of this.allDetailsBasedOnTaskType){
-      if(j === i.BatchId){
+      if(j === i.BatchId && i.StrainId === this.newLabelsEntryForm.controls['strain'].value && i.IsLightDeprevation === this.newLabelsEntryForm.controls['lightdept'].value){
         this.Sections.push({label: i.Sections, value:i.SectionUniqueId})
         this.sectionids.push( i.SectionId)
       }
