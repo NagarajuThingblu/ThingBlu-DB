@@ -525,13 +525,30 @@
                           {{ newEmployeeResources.password}}<span class="star">*</span>:
                         </label>
 
-                        <input pInputText               
+                        <!-- <input pInputText               
                           autocomplete="new-password"
                           type="password"
                           class="clsControl"
                           placeholder="Enter Password"
                           formControlName="emppassword"
+                        /> -->
+
+                        <div class="input-container">
+                          <input pInputText               
+                          autocomplete="new-password"
+                          [type]="passwordType"
+                          class="clsControl"
+                          placeholder="Enter Password"
+                          formControlName="emppassword"
                         />
+                          <!-- class="clsControl" -->
+                          <span class="p-viewer2" *ngIf="showeye === true">
+                              <i class="fa fa-eye eyeicon"   ria-hidden="true" (click)="togglepw()">    </i>
+                          </span>
+                          <span class="p-viewer2" *ngIf="hideeye === true">
+                              <i class="fa fa-eye-slash eyeicon"  ria-hidden="true" (click)="togglepw()">                     </i>
+                          </span>
+                      </div>
                         <!-- <span class="p-viewer2" *ngIf="showeye === true">
                           <i class="fa fa-eye eyeicon"   ria-hidden="true" (click)="togglepw()">    </i>
                       </span> -->

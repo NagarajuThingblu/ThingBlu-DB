@@ -59,6 +59,10 @@ export class AddNewEmployeeComponent implements OnInit {
   public empIdForUpdate: any = 0;
   public _cookieService: any;
   public newEmployeeResources: any;
+  public showeye: boolean = false;
+public hideeye: boolean = true;
+passwordShown: boolean= false;
+passwordType: string = 'password';
   public constantusrRole:any;
   public selectedRole:any;
   public Managerlist:any;
@@ -759,4 +763,19 @@ getCityOnStateChange() {
     this.newUserInfo.role = null;
     this.newUserInfo.ShowAddUserRolePopup = true;
   }
+
+  public  togglepw(){
+    if(this.passwordShown){
+      this.passwordShown = false;
+      this.passwordType = 'text';
+      this.showeye = true
+      this.hideeye = false;
+    }
+    else{
+      this.passwordShown = true;
+      this.passwordType = 'password';
+      this.showeye = false
+      this.hideeye = true;
+    }
+    }
 }

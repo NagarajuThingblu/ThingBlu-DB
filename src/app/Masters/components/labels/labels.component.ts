@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { LoaderService } from '../../../shared/services/loader.service';
 import { GlobalResources } from '../../../global resource/global.resource';
 import { MastersResource } from '../../master.resource';
@@ -22,6 +22,7 @@ import { NewFieldGenerationService } from '../../../task/services/new-field-gene
 import { routerNgProbeToken } from '@angular/router/src/router_module';
 import {NewLabelDetailsActionService} from '../../../task/services/add-label-details.service'
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Table } from 'primeng/table';
 
 @Component({
     moduleId: module.id,
@@ -34,6 +35,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
    
 
   // @Input() NewProductTypeSave: EventEmitter<any> = new EventEmitter<any>();
+  @ViewChild('dtLabelList') table: Table
   clear: any;
   paginationValues: any;
   chkSelectAll: any;
@@ -63,6 +65,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   skewtype: any[];
   sectionsFilter : any[];
   fieldsFilter : any[];
+  batchIdsList : any[];
   public displayPopUp: boolean = false;
   public skewTypeID: any = 0;
   TaskTypeDetails: any;
@@ -96,6 +99,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   public strainName: any;
   public strainId: any;
   public lightDep:any;
+  public TotalList:any
   public allLabelslist:any;
   public allLabelslistSectionsandFields: any;
   public count:number = 0;
@@ -445,15 +449,20 @@ else{
       () => console.log('Get all skew types complete'));
   }
   getAllLabelslist(){
+    this.TotalList = []
     this.newLabelDetailsActionService.GetLabelslist().subscribe(
       data=>{
         if(data != 'No Data Found'){
           this.allLabelslist=data.Table;
           //this.allLabelslist=data.Table1;
           this.allLabelslistSectionsandFields=data.Table1
-          this.fieldsFilter = this.dropdwonTransformService.transform(this.allLabelslistSectionsandFields, 'Fields', 'FieldUniqueId', '-- Select --');
+        
+          this.fieldsFilter = this.dropdwonTransformService.transform(this.allLabelslist, 'Fields', 'Fields');
+          // this.sectionsFilter = this.dropdwonTransformService.transform(this.allLabelslist, 'Sections', 'Sections');
           const Ffilter = Array.from(this.fieldsFilter.reduce((m, t) => m.set(t.label, t), new Map()).values())
           this.fieldsFilter = this.dropdwonTransformService.transform(Ffilter,'label', 'value')
+          // const Sfilter = Array.from(this.sectionsFilter.reduce((m, t) => m.set(t.label, t), new Map()).values())
+          // this.sectionsFilter = this.dropdwonTransformService.transform(Sfilter,'label', 'value')
         }
        else{
          this.allLabelslist = [];
@@ -1006,6 +1015,28 @@ for( let m of this.LabelOnEditSectionandField){
 
   showLabelDetails(label){
     this.router.navigate(['../home/sectionsMergeinfo', label]);
+  }
+
+  // filetrFields(event: any){
+  //   this.batchIdsList= []
+  //   for(let i of this.allLabelslistSectionsandFields){
+  //     if(event.value === i.FieldUniqueId){
+  //     return this.batchIdsList.push({batchId : i.BatchId})
+  //     }
+  //   }
+
+  // }
+  filterSections(event:any){
+    this.sectionsFilter = []
+    this.table.filterGlobal(event.value, 'contains')
+    for(let i of this.allLabelslist){
+      if(i.Fields === event.value){
+        this.sectionsFilter.push({label:i.Sections,value:i.Sections})
+        
+      }
+    }
+    const Sfilter = Array.from(this.sectionsFilter.reduce((m, t) => m.set(t.label, t), new Map()).values())
+        this.sectionsFilter = this.dropdwonTransformService.transform(Sfilter,'label', 'value')
   }
 }
 
