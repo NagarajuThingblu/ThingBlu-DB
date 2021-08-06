@@ -727,6 +727,14 @@
                       <p-dropdown [filter]="true" id="managerlist" [options]="Managerlist" placeholder="-- Select --"
                       [autoWidth]="false" [tabindex]="10" class="clsControl" name="managerlist" formControlName="Managerlist">
                     </p-dropdown>
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!newEmployeeForm.controls['Managerlist'].valid&&newEmployeeForm.controls['Managerlist'].dirty">
+                    <span *ngIf="newEmployeeForm.controls['Managerlist'].errors['required']">
+                     Manager Required
+                    </span>
+                      <!-- <span *ngIf="newEmployeeForm.controls['emppassword'].errors['pattern']">dfgdfg</span> -->
+                   
+                  </div>
                     </div>
                   </div>
                 </div>
@@ -739,6 +747,14 @@
                       <p-dropdown [filter]="true" id="flclist" [options]="flclist" placeholder="-- Select --"
                       [autoWidth]="false" [tabindex]="10" class="clsControl" name="flclist" formControlName="flclist">
                     </p-dropdown>
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!newEmployeeForm.controls['flclist'].valid&&newEmployeeForm.controls['flclist'].dirty">
+                    <span *ngIf="newEmployeeForm.controls['flclist'].errors['required']">
+                     Flc Required
+                    </span>
+                      <!-- <span *ngIf="newEmployeeForm.controls['emppassword'].errors['pattern']">dfgdfg</span> -->
+                   
+                  </div>
                     </div>
                   </div>
                  </div>
