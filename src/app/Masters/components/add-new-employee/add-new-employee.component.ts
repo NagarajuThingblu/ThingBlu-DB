@@ -588,6 +588,7 @@ export class AddNewEmployeeComponent implements OnInit {
     //   userrole: null,
     //   hourlylabourrate: null
     // };
+    //this.showMang = false
     const clientname = this.newEmployeeForm.controls['clientname'];
     clientname.patchValue(Number(this._cookieService.ClientId));
     const Country = this.newEmployeeForm.controls['country'];
@@ -615,8 +616,10 @@ export class AddNewEmployeeComponent implements OnInit {
   this.selectedRole=selectedRole[0].label;
 const managerdata = this.newEmployeeForm.get('Managerlist');
 const flc = this.newEmployeeForm.get('flclist')
+this.newEmployeeForm.controls['flclist'].patchValue("")
+this.newEmployeeForm.controls['Managerlist'].patchValue("")
 if(this.constantusrRole.Employee==this.selectedRole){
-  this.newEmployeeForm.controls['flclist'].patchValue("") 
+  
   managerdata.setValidators(Validators.required);
   flc.clearValidators();
   //flc.updateValueAndValidity();

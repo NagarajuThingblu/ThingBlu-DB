@@ -10,17 +10,18 @@ export const environment = {
   tolerance: 5,
   //  apiEndpoint: 'https://tbappapihannah.azurewebsites.net/',
   // apiEndpoint: 'https://tbappapitest.azurewebsites.net/',
-    apiEndpoint:'https://hwg-api.azurewebsites.net/',
+    //apiEndpoint:'https://hwg-api.azurewebsites.net/',
+     apiEndpoint: 'https://tbgrowqc-api.azurewebsites.net/',//Arbre dev
   //  apiEndpoint: 'https://tbdemowebapi.azurewebsites.net/',
 
   sessionTimeout: 86399,
   refreshTime: 1, // refresh time in minutes,
   encryptDecryptKey: 'mechsoft@12',
   parentEncryptionKey: 'm3ch50ft',
-//   clientCode: 'HANNAH',
-//  clientKey: 'Hannah Industries',
-clientCode:'HWG',
-clientKey:'HWG',
+  clientCode: 'HANNAH',
+ clientKey: 'Hannah Industries',
+// clientCode:'HWG',
+// clientKey:'HWG',
   
 
   // ** Start Hannah LocalDev Test config
@@ -49,8 +50,8 @@ clientKey:'HWG',
 //  resetPwdRedirectUri: 'http://localhost:8000/resetsuccess/',
   tenantURL:'thingbluB2Csample.b2clogin.com',
   // reportURL: 'https://thingbludemoapplication.navizanalytics.com/ThingbluDev'
-  // reportURL: 'https://thingbludemoapplication.navizanalytics.com/Grow',
-  reportURL: 'https://thingbludemoapplication.navizanalytics.com/GrowPROD',
+   reportURL: 'https://thingbludemoapplication.navizanalytics.com/Grow',
+  //reportURL: 'https://thingbludemoapplication.navizanalytics.com/GrowPROD',
   //End of dev testing
 
   // ** Start Hannah UAT config

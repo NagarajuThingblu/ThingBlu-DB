@@ -511,7 +511,7 @@
                             <span *ngIf="newEmployeeForm.controls['empusername'].hasError('duplicateusername')">
                                 {{newEmployeeResources.duplicateusername}}
                             </span>
-                            <!-- <span *ngIf="newEmployeeForm.controls['empusername'].errors['maxlength']">{{newEmployeeResources.packageItemQtyLength}}</span> -->
+                            <span *ngIf="newEmployeeForm.controls['empusername'].errors['maxlength']">Maximum 20 characters are allowed.</span>
                           </div>
                       </div>
                   </div>
@@ -681,10 +681,18 @@
                 <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole|| showMang === true">
                   <div class="paddingRL">
                     <div class="le-su-12">
-                      <label for="managerlist" class="towlable fwLabelBold">ManagerList</label>
+                      <label for="managerlist" class="towlable fwLabelBold">ManagerList<span class="star">*</span></label>
                       <p-dropdown [filter]="true" id="managerlist" [options]="Managerlist" placeholder="-- Select --"
                       [autoWidth]="false" [tabindex]="10" class="clsControl" name="managerlist" formControlName="Managerlist">
                     </p-dropdown>
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!newEmployeeForm.controls['Managerlist'].valid&&newEmployeeForm.controls['Managerlist'].dirty">
+                    <span *ngIf="newEmployeeForm.controls['Managerlist'].errors['required']">
+                     Manager Required
+                    </span>
+                      <!-- <span *ngIf="newEmployeeForm.controls['emppassword'].errors['pattern']">dfgdfg</span> -->
+                   
+                  </div>
                     </div>
                   </div>
                 </div>
@@ -697,6 +705,14 @@
                       <p-dropdown [filter]="true" id="flclist" [options]="flclist" placeholder="-- Select --"
                       [autoWidth]="false" [tabindex]="10" class="clsControl" name="flclist" formControlName="flclist">
                     </p-dropdown>
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!newEmployeeForm.controls['flclist'].valid&&newEmployeeForm.controls['flclist'].dirty">
+                    <span *ngIf="newEmployeeForm.controls['flclist'].errors['required']">
+                     Flc Required
+                    </span>
+                      <!-- <span *ngIf="newEmployeeForm.controls['emppassword'].errors['pattern']">dfgdfg</span> -->
+                   
+                  </div>
                     </div>
                   </div>
                  </div>
