@@ -614,26 +614,61 @@ export class AddNewEmployeeComponent implements OnInit {
   const selectedRole=this.roles.filter(ur=>ur.value==event.value);
   this.selectedRole=selectedRole[0].label;
 const managerdata = this.newEmployeeForm.get('Managerlist');
-// if(this.constantusrRole.Employee==this.selectedRole )
-// {
-//   managerdata.setValidators(Validators.required);
-//   this.showMang = true;
-  
-// }
-// else 
-if(this.constantusrRole.Temp==this.selectedRole){
+const flc = this.newEmployeeForm.get('flclist')
+if(this.constantusrRole.Employee==this.selectedRole){
+  this.newEmployeeForm.controls['flclist'].patchValue("") 
   managerdata.setValidators(Validators.required);
-  this.showFlc = true;
+  flc.clearValidators();
+  //flc.updateValueAndValidity();
+  this.showMang = true;
 }
-else if(this.constantusrRole.Temp !=this.selectedRole){
-this.showFlc = false;
-this.newEmployeeForm.controls['flclist'].setValue(null)
+else if(this.constantusrRole.Temp==this.selectedRole){
+  managerdata.setValidators(Validators.required);
+  flc.setValidators(Validators.required);
+  this.showFlc = true;
 }
 else{
   managerdata.clearValidators();
+  flc.clearValidators();
   }
   managerdata.updateValueAndValidity();
+  flc.updateValueAndValidity();
 }
+// Managerdrpdwnchng(event)
+// {
+//   this.showMang = false;
+//   this.showFlc = false;
+//   const selectedRole=this.roles.filter(ur=>ur.value==event.value);
+//   this.selectedRole=selectedRole[0].label;
+// const managerdata = this.newEmployeeForm.get('Managerlist');
+// const password = this.newEmployeeForm.get('emppassword')
+// const flc = this.newEmployeeForm.get('flclist')
+// if(this.constantusrRole.Employee==this.selectedRole )
+// {
+//   this.newEmployeeForm.controls['flclist'].patchValue("") 
+//   managerdata.setValidators(Validators.required);
+//   password.setValidators(Validators.required);
+//   flc.clearValidators();
+//   //flc.updateValueAndValidity();
+//   this.showMang = true;
+  
+// }
+// else if(this.constantusrRole.Temp==this.selectedRole){
+//   managerdata.setValidators(Validators.required);
+//   flc.setValidators(Validators.required);
+//   //password.updateValueAndValidity();
+//   password.clearValidators();
+//   this.showFlc = true;
+// }
+// else{
+//   managerdata.clearValidators();
+//   password.clearValidators();
+//   flc.clearValidators();
+//   }
+//   managerdata.updateValueAndValidity();
+//   password.updateValueAndValidity();
+//   flc.updateValueAndValidity();
+// }
 
   ngOnInit() {
     this.saveButtonText = 'Save';
