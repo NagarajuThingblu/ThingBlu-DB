@@ -52,11 +52,23 @@ export class GrowertrimmingComponent implements OnInit {
   public taskid: any;
   arrayItems: FormArray;
   public taskCompletionModel: any;
+  public sectionslist = [];
+  
+  public employeeArray:any=[];
+  public lightdepts = [];
+  public saveAsDraft =0;
+  public LD= [];
+  public fields = [];
+  public showBinData:boolean = false
+  public completeDataBasedOnTaskType : any;
   public taskReviewModel: any;
   public taskStatus: any;
   public defaultDate: Date = new Date();
   public showPastDateLabel = false;
+  public strains: any[];
+  public batchId : any;
   public priorities: SelectItem[];
+  public tm : any[];
   public workingEmp: any=[];
   public workingemp:boolean =false
   constructor(
@@ -94,12 +106,22 @@ export class GrowertrimmingComponent implements OnInit {
    public taskType: any;
    private globalData = {
     bins: [],
-    employees:[]
+    employees:[],
+    sections: [],
+    workingEmp:[],
   };
   isRActSecsDisabled: boolean;
   public inputBinDetails :any[];
 
   ngOnInit() {
+    console.log(this.inpubinData)
+    // if(this.inpubinData.length === 0){
+    //   this.showBinData = false
+    // }
+    // else{
+    //   this.showBinData = true
+    // }
+    this.getStrainListByTask();
     this.binsListByClient();
     this.employeeListByClient();
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
@@ -119,13 +141,16 @@ export class GrowertrimmingComponent implements OnInit {
         this.taskTypeId = this.TaskModel.TaskDetails.TaskTypeId;
       }
     });
-
+    
     this.priorities =  [
       {label: 'Normal', value: 'Normal'},
       {label: 'Important', value: 'Important'},
       {label: 'Critical', value: 'Critical'}
     ];
-
+    this.tm = [
+      { label: 'HT', value:'HT'},
+      { label: 'MT', value:'MT'}
+    ];
     if (this.PageFlag.page !== 'TaskAction') {
       this.TaskModel.GROWERTRIMMING = {
         bins:'',
@@ -141,11 +166,13 @@ export class GrowertrimmingComponent implements OnInit {
         usercomment: '',
       };
       this.GROWERTRIMMING = this.fb.group({
-        'section': new FormControl('null',Validators.required),
-        'strain': new FormControl('', Validators.required),
+        'tm':new FormControl(null,Validators.required),
+        'section': new FormControl(null,Validators.required),
+        'strain': new FormControl(null, Validators.required),
+        'field':new FormControl(null,Validators.required),
         'strainid':new FormControl(''),
-        'lightdept': new FormControl('',Validators.required),
-        'bins': new FormControl('', Validators.required),
+        'batchId':new FormControl(''),
+        'lightdept': new FormControl(null,Validators.required),
         'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
         'employeeList': new FormControl('', Validators.required),
         'priority': new FormControl(''),
@@ -184,13 +211,14 @@ export class GrowertrimmingComponent implements OnInit {
        }
 
       this.completionForm = this.fb.group({
-        'inputBin': new FormControl(null),
-        'binWt': new FormControl(''),
-        'completeWt':new FormControl('',Validators.compose([Validators.required])),
-        'wasteWt':new FormControl(''),
+        // 'inputBin': new FormControl(null),
+        // 'binWt': new FormControl(''),
+        // 'completeWt':new FormControl('',Validators.compose([Validators.required])),
+        // 'wasteWt':new FormControl(''),
         'items': new FormArray([
           this.createItem()
         ], this.customGroupValidation),
+       
       });
 
       this.reviewForm = this.fb.group({
@@ -229,9 +257,8 @@ export class GrowertrimmingComponent implements OnInit {
 
   createItem(): FormGroup {
     return this.fb.group({
-      'binsId': new FormControl(null, Validators.compose([Validators.required])),
-      'weight': new FormControl('',Validators.compose([Validators.required])),
-      'binFull': new FormControl(''),
+      'weight':new FormControl(null),
+        'binId': new FormControl(null, Validators.compose([Validators.required])),
     }); 
   }
 
@@ -262,7 +289,162 @@ export class GrowertrimmingComponent implements OnInit {
   padLeft(text: string, padChar: string, size: number): string {
     return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;
   }
- 
+ //method to get strains based on task
+ getStrainListByTask() {
+  this.globalData.workingEmp =[];
+  this.workingEmp = [];
+  this.workingemp=false;
+  let TaskTypeId = this.ParentFormGroup != undefined?
+  this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
+  this.dropdownDataService. getStrainsByTaskType(TaskTypeId).subscribe(
+    data => {
+      this.completeDataBasedOnTaskType = data;
+      this.globalData.sections = data;
+      if (data !== 'No Data Found') {
+        this.strains = this.dropdwonTransformService.transform(data, 'StrainName', 'StrainId', '-- Select --');
+        const strainsfilter = Array.from(this.strains.reduce((m, t) => m.set(t.label, t), new Map()).values())
+        this.strains = this.dropdwonTransformService.transform(strainsfilter,'label', 'value')
+      } else {
+        this.strains = [];
+      }
+    } ,
+    error => { console.log(error); },
+    () => console.log('GetPrscrStrainListByTask complete'));
+}
+
+
+
+//method to get ld by selecting strain
+onStrainSelect(event?: any){
+  this.sectionslist = []
+  this.lightdepts = []
+  this.globalData.workingEmp=[]
+  this.workingEmp = []
+  this.LD = []
+//this.LD = null
+  for(let i of this.completeDataBasedOnTaskType){
+    if(i.StrainId === event.value){
+      this.lightdepts.push({label:i.IsLightDeprevation,value: i.IsLightDeprevation});
+    }
+  }
+  const ldfilter = Array.from(this.lightdepts.reduce((m, t) => m.set(t.label, t), new Map()).values())
+  this.lightdepts = this.dropdwonTransformService.transform(ldfilter,'label', 'value','-- Select --')
+  if(this.lightdepts.length === 3){
+    this.LD=[
+      {label: "-- Select --", value: null},
+      {label: 'true', value: true},
+      {label: 'false', value: false},
+    ]
+  }
+    else if(this.lightdepts[1].value === true)
+    {
+      this.LD=[
+        {label: "-- Select --", value: null},
+        {label: 'true', value: true},
+      ]
+      // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
+    }
+    else 
+    {
+      this.LD=[
+        {label: "-- Select --", value: null},
+        {label: 'false', value: false},
+      ]
+      // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
+    }
+    if(this.GROWERTRIMMING.controls['lightdept'].value !=null){
+      this.onLdSelect(this.GROWERTRIMMING.controls['lightdept'].value);
+    }
+    if(this.GROWERTRIMMING.controls['lightdept'].value !=null){
+      this.onLdSelect(this.GROWERTRIMMING.controls['lightdept'].value);
+    }
+}
+
+//method to get fields and sections on ld select
+onLdSelect(event?: any){
+  this.fields = []
+  for(let i of this.completeDataBasedOnTaskType){
+    if(i.StrainId === this.GROWERTRIMMING.controls['strain'].value && (i.IsLightDeprevation === event.value || i.IsLightDeprevation === event)){
+      this.fields.push({label:i.Fields,value: i.FieldUniqueId});
+    }
+  }
+  const fieldfilter = Array.from(this.fields.reduce((m, t) => m.set(t.label, t), new Map()).values())
+  this.fields = this.dropdwonTransformService.transform(fieldfilter,'label', 'value','-- Select --',false)
+  if(this.GROWERTRIMMING.controls['field'].value !=null){
+    this.onFieldSelect(this.GROWERTRIMMING.controls['field'].value);
+  }
+}
+
+//method to get sections on selecting fields
+onFieldSelect(event?: any){
+  this.sectionslist = []
+  for(let i of this.completeDataBasedOnTaskType){
+    if(i.StrainId === this.GROWERTRIMMING.controls['strain'].value && i.IsLightDeprevation ===this.GROWERTRIMMING.controls['lightdept'].value && (i.FieldUniqueId === event.value || i.FieldUniqueId === event)){
+      this.sectionslist.push({label:i.Sections,value: i.SectionUniqueId});
+      this.GROWERTRIMMING.controls['batchId'].patchValue(i.BatchId);
+    }
+  }
+  const sectionfilter = Array.from(this.sectionslist.reduce((m, t) => m.set(t.label, t), new Map()).values())
+  this.sectionslist = this.dropdwonTransformService.transform(sectionfilter,'label', 'value','-- Select --',false)
+}
+
+
+//methods to select multiple employees
+OnSelectingEmployees(event: any, checkedItem: any){
+    
+  for(let employee of this.globalData.employees){
+      if(event.itemValue === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
+        this.employeeArray.push(employee.EmpName)
+        return;
+     }
+     else{
+       if(event.itemValue === employee.EmpId){
+         let index = this.employeeArray.indexOf(employee.EmpName);
+         this.employeeArray.splice(index,1)
+
+       }
+     }
+    }
+  
+}
+//on selecting section to get employees already working on that task
+getWorkingEmpList(event?: any){
+  this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.GROWERTRIMMING.controls['batchId'].value).subscribe(
+    data=>{
+      if(data != 'No Data Found'){
+        this.globalData.workingEmp = data;
+        this.getWorkingEmpsList();
+      }
+      else{
+        this.globalData.workingEmp = [];
+        this.workingEmp = [];
+      }
+    }
+  )
+}
+getWorkingEmpsList(){
+  if(this.globalData.workingEmp != null){
+    for(let employee of this.globalData.workingEmp){
+      this.workingEmp.push(employee.Column1)
+  }
+  }
+  else{
+    this.workingEmp = [];
+  }
+this. filterEmpList()
+}
+
+filterEmpList(){
+  for(let j of this.globalData.workingEmp){
+    // for(let i of this.employees){
+      // if(i.value === j.EmpId){
+        let index = this.employees.findIndex(x => x.value === j.EmpId)
+        
+        this.employees.splice(index,1)
+      // }
+    // }
+  }
+}
   //method to get bins dropdown
   binsListByClient() {
     
@@ -290,7 +472,7 @@ export class GrowertrimmingComponent implements OnInit {
         // newdata = this.removeDuplicatesById(data);
    
         if (data !== 'No Data Found!') {
-          this.binslist = this.dropdwonTransformService.transform(data, 'LabelName', 'LabelId', '-- Select --');
+          this.binslist = this.dropdwonTransformService.transform(data, 'BinName', 'BinId', '-- Select --');
         } else {
           this.binslist = [];
         }
@@ -456,43 +638,32 @@ submitReview(formModel) {
   })
 
 }
+SaveAsDraft(formModel){
+this.saveAsDraft =1;
+this.completeTask(formModel)
+}
 
 completeTask(formModel){
   let taskCompletionWebApi;
   if ( this.completionForm.valid === true) {
     taskCompletionWebApi = {
-      Trimming:{
+    
         TaskId:Number(this.taskid),
         Comment:" ",
         VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-      },
-      InputBinDetails:[],
-      OutputBinDetails:[]
+        SaveAsDraft: this.saveAsDraft,
+     
+    
+     BinDetails:[]
     };
    
       // this.duplicateSection = element.value.section
-      taskCompletionWebApi.InputBinDetails.push({
-        BinId:this.TaskModel.InputBinId,
-        DryWt: Number(formModel.completeWt),
-        WetWt: 0,
-        WasteWt:Number(formModel.wasteWt) ,
+      taskCompletionWebApi.BinDetails.push({
+        BinId:Number(formModel.items[0].binId),
+        DryWt: Number(formModel.items[0].weight),
+        IsOpBinFilledCompletely:0
             
          });
-        
-   
-    
-     this.trimmingDetailsArr.controls.forEach((element, index) => {
-      // this.duplicateSection = element.value.section
-      taskCompletionWebApi.OutputBinDetails.push({
-        BinId:element.value.binsId,
-        DryWt: element.value.weight,
-        IsOpBinFilledCompletely: element.value.binFull == true?1:0
-            
-         });
-        
-     });
-   
-     
 
   }
   // assignedPC = Number(this.taskCompletionModel.AssignedPlantCnt);

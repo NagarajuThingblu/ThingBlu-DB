@@ -146,7 +146,10 @@ passwordType: string = 'password';
         }
       }
     }
-    const encryptedPwd = this.encode64(String(this.newEmployeeForm.value.emppassword).trim());
+    if(this.newEmployeeForm.value.emppassword != null){
+      var encryptedPwd = this.encode64(String(this.newEmployeeForm.value.emppassword).trim());
+    }
+   
     let newRoleDetailsForApi;
     newRoleDetailsForApi = {
       Employee: {
@@ -168,7 +171,7 @@ passwordType: string = 'password';
           CityId: this.newEmployeeForm.value.city,
           ZipCode: this.newEmployeeForm.value.zipcode,
           UserName: this.appCommonService.trimString(this.newEmployeeForm.value.empusername),
-          Password: encryptedPwd,
+          Password: encryptedPwd ? encryptedPwd : '' ,
           PasswordText: this.appCommonService.trimString(this.newEmployeeForm.value.emppassword),
           UserRoleId: this.newEmployeeForm.value.userrole,
           UserRole: (this.roles.filter(x => x.value === this.newEmployeeForm.value.userrole))[0].label,
@@ -428,6 +431,10 @@ passwordType: string = 'password';
             this. showMang = true
           
          }
+         if( this.employeeOnEdit[0].Role === "Temp"){
+          this.selectedRole= "Temp"
+        
+       }
            const decryptedpwd = this.decode64(this.employeeOnEdit[0].Password);
           const clientname = this.newEmployeeForm.controls['clientname'];
           const firstname = this.newEmployeeForm.controls['firstname'];
@@ -558,6 +565,7 @@ passwordType: string = 'password';
   isNumber(value) {return typeof value === 'number'; }
 
   resetAll() {
+    this.showFlc = false
     this.empIdForUpdate = 0;
     this.saveButtonText = 'Save';
     this.clear = 'Clear';
@@ -570,7 +578,9 @@ passwordType: string = 'password';
     this.star = false;
   }
   resetForm() {
+    this.selectedRole = ""
     this.newEmployeeForm.reset({ chkIsActive: true });
+    this.showFlc = false;
     // this.EmployeeDetails = {
     //   clientname: null,
     //   firstname: null,
@@ -618,20 +628,33 @@ passwordType: string = 'password';
   const selectedRole=this.roles.filter(ur=>ur.value==event.value);
   this.selectedRole=selectedRole[0].label;
 const managerdata = this.newEmployeeForm.get('Managerlist');
+const password = this.newEmployeeForm.get('emppassword')
+const flc = this.newEmployeeForm.get('flclist')
 if(this.constantusrRole.Employee==this.selectedRole )
 {
+  this.newEmployeeForm.controls['flclist'].patchValue("") 
   managerdata.setValidators(Validators.required);
+  password.setValidators(Validators.required);
+  flc.clearValidators();
+  //flc.updateValueAndValidity();
   this.showMang = true;
   
 }
 else if(this.constantusrRole.Temp==this.selectedRole){
   managerdata.setValidators(Validators.required);
+  flc.setValidators(Validators.required);
+  //password.updateValueAndValidity();
+  password.clearValidators();
   this.showFlc = true;
 }
 else{
   managerdata.clearValidators();
+  password.clearValidators();
+  flc.clearValidators();
   }
   managerdata.updateValueAndValidity();
+  password.updateValueAndValidity();
+  flc.updateValueAndValidity();
 }
 
   ngOnInit() {
@@ -664,7 +687,7 @@ else{
     'city': new FormControl(null, Validators.compose([ Validators.maxLength(13)])),
     'zipcode': new FormControl(null, Validators.compose([ Validators.maxLength(9)])),
     'empusername': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(20)])),
-    'emppassword': new FormControl(null, Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)])),
+    'emppassword': new FormControl(null, Validators.compose([ Validators.minLength(6), Validators.maxLength(20)])),
     'userrole': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
     'hourlylabourrate': new FormControl(0, Validators.compose([ Validators.maxLength(13)])),
     'chkIsActive': new FormControl(null),

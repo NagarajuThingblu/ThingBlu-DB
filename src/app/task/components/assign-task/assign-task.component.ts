@@ -1117,6 +1117,11 @@ console.log(assignTaskFormValues)
               this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
               this.loaderService.display(false);
             }
+            else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Selected Merged Sections'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail: data[0]. RESULTKEY});
+              this.loaderService.display(false);
+            }
           }
         )
         }
@@ -1124,8 +1129,12 @@ console.log(assignTaskFormValues)
           let trimmingDataForApi = {
             Trimming:{
               "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
-              "BinId": assignTaskFormValues.TRIM.bins,
-              "EmpId": assignTaskFormValues.TRIM.employeeList,
+              //"BinId": assignTaskFormValues.TRIM.bins,
+              "TrimmingMethod":assignTaskFormValues.TRIM.tm,
+              "BatchId": assignTaskFormValues.TRIM.batchId,
+              //"EmpId": assignTaskFormValues.TRIM.employeeList,
+              "StrainId": assignTaskFormValues.TRIM.strain,
+              "IsLightDeprevation": assignTaskFormValues.TRIM.lightdept,
               "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
               "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
               "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority ,
@@ -1133,9 +1142,16 @@ console.log(assignTaskFormValues)
               "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
               "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
               "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
-            }
+            },
+            EmployeeTypes:[]
           };
-          // this.loaderService.display(true);
+          assignTaskFormValues[this.selectedTaskTypeName].employeeList
+          .forEach((element, index) => {
+            trimmingDataForApi.EmployeeTypes.push({
+              "EmpId" : assignTaskFormValues.TRIM.employeeList[index] 
+            });
+          });
+          this.loaderService.display(true);
         this.taskCommonService.assignTrimmingTask(trimmingDataForApi).
         subscribe(
           data => {
@@ -1152,6 +1168,10 @@ console.log(assignTaskFormValues)
                 'taskCategory':new FormControl(null,Validators.required),
               });
               this.loaderService.display(false);
+            }
+            else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Selected Merged Sections'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail: data[0]. RESULTKEY});
             }
           }
         )

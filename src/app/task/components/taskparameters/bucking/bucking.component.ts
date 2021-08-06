@@ -487,6 +487,7 @@ export class BuckingComponent implements OnInit {
   viewBinsList(e){
     this.router.navigate(['../home/labels', e]);
   }
+ 
   CaluculateTotalSecs(Hours, Mins, Secs) {
     return (Number(Hours) * 3600) + (Number(Mins) * 60) + Number(Secs);
   }

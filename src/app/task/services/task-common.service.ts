@@ -206,7 +206,7 @@ completeBuckingTask(taskCompletionWebApi: any){
 completeTrimmingTask(taskCompletionWebApi: any){
   const apiUrl = 'api/Grower/TrimmingTaskComplete';
 
-    taskCompletionWebApi.Trimming.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
+    taskCompletionWebApi.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
     return this.http.post(apiUrl, taskCompletionWebApi, this.headers)
     .map(data =>  data );
 }

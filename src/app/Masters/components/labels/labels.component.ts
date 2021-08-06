@@ -1031,7 +1031,7 @@ for( let m of this.LabelOnEditSectionandField){
     this.table.filterGlobal(event.value, 'contains')
     for(let i of this.allLabelslist){
       if(i.Fields === event.value){
-        this.sectionsFilter.push({label:i.Sections,value:i.Sections})
+        this.sectionsFilter.push({label:i.Sections,value:i.Sections,})
         
       }
     }
