@@ -211,10 +211,10 @@ export class GrowertrimmingComponent implements OnInit {
        }
 
       this.completionForm = this.fb.group({
-        // 'inputBin': new FormControl(null),
-        // 'binWt': new FormControl(''),
-        // 'completeWt':new FormControl('',Validators.compose([Validators.required])),
-        // 'wasteWt':new FormControl(''),
+        'inputBin': new FormControl(null),
+        'binWt': new FormControl(''),
+        'completeWt':new FormControl('',Validators.compose([Validators.required])),
+        'wasteWt':new FormControl(''),
         'items': new FormArray([
           this.createItem()
         ], this.customGroupValidation),
