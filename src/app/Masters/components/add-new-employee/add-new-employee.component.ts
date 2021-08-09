@@ -630,9 +630,10 @@ passwordType: string = 'password';
 const managerdata = this.newEmployeeForm.get('Managerlist');
 const password = this.newEmployeeForm.get('emppassword')
 const flc = this.newEmployeeForm.get('flclist')
+this.newEmployeeForm.controls['flclist'].patchValue("") 
+this.newEmployeeForm.controls['Managerlist'].patchValue("")
 if(this.constantusrRole.Employee==this.selectedRole )
 {
-  this.newEmployeeForm.controls['flclist'].patchValue("") 
   managerdata.setValidators(Validators.required);
   password.setValidators(Validators.required);
   flc.clearValidators();

@@ -392,12 +392,14 @@
       <tr>
         <th>Bin Name</th>
         <th>Weight</th>
+        <!-- <th *ngIf="TaskModel?.TaskStatus ==='REVIEW PENDING'">Action</th> -->
     </tr>
     </ng-template>
-    <ng-template pTemplate="body"  let-TaskModel  >
+    <ng-template pTemplate="body"  let-TaskMode  >
       <tr>
-          <td >{{TaskModel.BinName}}</td>
-          <td >{{TaskModel.CompletedWt}}</td>
+          <td >{{TaskMode.BinName}}</td>
+          <td >{{TaskMode.CompletedWt}}</td>
+          <!-- <td *ngIf="TaskModel?.TaskStatus ==='REVIEW PENDING'">Edit</td> -->
       </tr>
   </ng-template>
   </p-table>
@@ -529,7 +531,7 @@
                   </th>
                   <th >Weight
                 </th>
-                <!-- <th style="width: 80px;">Action</th> -->
+                <th *ngIf="BinData[0]?.TrimmingMethod === 'MT'" style="width: 80px;">Action</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-item let-i="rowIndex">
@@ -568,7 +570,7 @@
                      formControlName="binFull" checked="true"
                     binary="true"></p-checkbox>                                       -->
                   </td>
-                  <!-- <td>
+                  <td *ngIf="BinData[0]?.TrimmingMethod === 'MT'" >
                       <a (click)="deleteItem(i)" >                                                    
                           <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
                           </span>
@@ -577,7 +579,7 @@
                             <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
                             </span>
                         </a>
-                  </td> -->
+                  </td>
                 </tr>
               </ng-template>
             </p-table>
@@ -606,20 +608,20 @@
   <p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
     <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
       <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-        <div class="ui-g-12 ui-md-6" style="text-align:left;">
+        <!-- <div class="ui-g-12 ui-md-6" style="text-align:left;">
           <div class="paddingRL">
             <span>Strain :- </span><span>{{TaskModel?.StrainName}}</span>
           </div>
-        </div>
-        <div class="ui-g-12 ui-md-6"style="text-align:right;">
+        </div> -->
+        <!-- <div class="ui-g-12 ui-md-6"style="text-align:right;">
           <div class="paddingRL">
             <p-checkbox value="BinData[0].IsStrainCompleted" label="IsStrainComplete"
             formControlName="isStrainComplete" checked="true"
            binary="true"></p-checkbox>  
           </div>
-        </div>
+        </div> -->
 
-        <div class="ui-g-12"  style="padding-top: 10px;" >
+        <!-- <div class="ui-g-12"  style="padding-top: 10px;" >
           <div><b>Output Bin Details</b></div>
             <p-table [value]="BinData">
              <ng-template pTemplate="header">
@@ -637,8 +639,84 @@
                 </tr>
               </ng-template>
             </p-table>
+          </div> -->
+          <div formArrayName="items" style="position: relative">
+            <div style="width:calc(100% - 20px);float:left;">
+              <div style="padding:5px;">
+                <!-- <span><b>Bin</b></span>
+                <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ assignTaskResources.viewaddbin}}" id="btn_binshow" (click)="viewBinsList(TaskModel)"  name="btnviewbins"></p-button> -->
+              </div>
+              <p-table [value]="trimmingDetailsArr?.controls" id="trimmingDetailsArr" name="trimmingDetailsArr">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Strain
+                      <span class="star">*</span>
+                    </th>
+                    <th>Bin 
+                      <span class="star">*</span>
+                      <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="Create Bin" id="btn_geneticshow" (click)="viewBinsList(TaskModel)"  name="btnviewGenetics" ></p-button>
+                    </th>
+                    <th >Weight
+                  </th>
+                  <!-- <th *ngIf="BinData[0]?.TrimmingMethod === 'MT'" style="width: 80px;">Action</th> -->
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-i="rowIndex">
+                  <tr [formGroupName]="i">
+                    <td>
+                      <input pInputText
+                      pInputText 
+                      [value]="BinData[0].StrainName"
+                      autocomplete="off"
+                      readonly="true">
+                     
+                    </td>
+                    <td>
+                      <p-dropdown
+                      id="binId"
+              formControlName="binId"
+              [options]="binslist"
+              placeholder="-- Select --"
+              [autoWidth]="false"
+              class="clsControl"
+              name="binId">
+                      </p-dropdown>
+                     
+                    </td>
+                    <td>
+                      <input pInputText
+                      name="weight"
+                      id="weight"
+                      type="number"
+                      autocomplete="off"
+                      class="clsControl"       
+                      formControlName="weight"
+                      placeholder="Enter  Weight "
+                      min="0.1">
+                      <!-- <p-checkbox value="true"
+                       formControlName="binFull" checked="true"
+                      binary="true"></p-checkbox>                                       -->
+                    </td>
+                    <!-- <td *ngIf="BinData[0]?.TrimmingMethod === 'MT'" >
+                        <a (click)="deleteItem(i)" >                                                    
+                            <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                            </span>
+                        </a> 
+                          <a (click)="addItem()" *ngIf="reviewForm.get('items').valid">
+                              <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                              </span>
+                          </a>
+                    </td> -->
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+             <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="trimmingDetailsArr.hasError('duplicate')">
+            duplicate entries
+          </div>  
           </div>
-       </div>
+        </div>
+
        <div class="ui-grid-row" style="padding-top: 20px;">
         <div class="ui-grid-col-4">
           {{ assignTaskResources.actualhrs }}:

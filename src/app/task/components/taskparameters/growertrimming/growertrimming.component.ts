@@ -226,9 +226,9 @@ export class GrowertrimmingComponent implements OnInit {
         // 'binWt': new FormControl(''),
         // 'completeWt':new FormControl('',Validators.compose([Validators.required])),
         // 'wasteWt':new FormControl(''),
-        // 'items': new FormArray([
-        //   this.createItem()
-        // ], this.customGroupValidation),
+        'items': new FormArray([
+          this.createItem()
+        ], this.customGroupValidation),
         'isStrainComplete': new FormControl(''),
         'ActHrs': new FormControl(null),
           'ActMins': new FormControl(null, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
@@ -238,12 +238,12 @@ export class GrowertrimmingComponent implements OnInit {
       })
     }
 
-   if(this.BinData != null){
-     this.inputBinDetails = []
-     for(let i =0; i<1; i++){
-      this.inputBinDetails[i] = this.BinData[i]
-    }
-   }
+  //  if(this.BinData != null){
+  //    this.inputBinDetails = []
+  //    for(let i =0; i<1; i++){
+  //     this.inputBinDetails[i] = this.BinData[i]
+  //   }
+  //  }
    
 // if(this.BinData != null){
 //   this.inputBinDetails.inputBinName = this.BinData[0].IPLabelName;
@@ -261,15 +261,34 @@ export class GrowertrimmingComponent implements OnInit {
         'binId': new FormControl(null, Validators.compose([Validators.required])),
     }); 
   }
+  resetForm() {
+    
+    this.completionForm.reset({ isStrainComplete: false });
+//this.defaulDryWeight = 0;
 
+    const control = <FormArray>this.completionForm.controls['items'];
+    
+    let length = control.length;
+    while (length > 0) {
+      length = Number(length) - 1;
+      this.deleteItemAll(length);
+    }
+   
+    this.addItem();
+  }
+  deleteItemAll(index: number) {
+   
+    const control = <FormArray>this.completionForm.controls['items'];
+    control.removeAt(index);
+  }
   customGroupValidation (formArray) {
     let isError = false;
     const result = _.groupBy( formArray.controls , c => {
-      return [c.value.binsId];
+      return [c.value.binId];
     });
 
     for (const prop in result) {
-        if (result[prop].length > 1 && result[prop][0].controls['binsId'].value !== null) {
+        if (result[prop].length > 1 && result[prop][0].controls['binId'].value !== null) {
           isError = true;
             _.forEach(result[prop], function (item: any, index) {
               // alert(index);
@@ -656,15 +675,16 @@ completeTask(formModel){
     
      BinDetails:[]
     };
-   
-      // this.duplicateSection = element.value.section
+    this.trimmingDetailsArr.controls.forEach((element, index) =>
+    {
       taskCompletionWebApi.BinDetails.push({
-        BinId:Number(formModel.items[0].binId),
-        DryWt: Number(formModel.items[0].weight),
+        BinId:Number(element.value.binId),
+        DryWt: Number(element.value.weight),
         IsOpBinFilledCompletely:0
             
          });
-
+    });
+      // this.duplicateSection = element.value.section
   }
   // assignedPC = Number(this.taskCompletionModel.AssignedPlantCnt);
   // if(Number(assignedPC) < Number(this.TaskModel.CompletedPlantCnt) + Number(this.TaskModel.CompletedPlantCnt))

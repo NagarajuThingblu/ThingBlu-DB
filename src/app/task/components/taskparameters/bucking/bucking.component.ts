@@ -474,6 +474,13 @@ export class BuckingComponent implements OnInit {
       error => { console.log(error); },
       () => console.log('Get all employees by client complete'));
   }
+
+  resetForm() {
+    
+    this.completionForm.reset({ isStrainComplete: false });
+ 
+  }
+ 
   deleteItem(index: number) {
     
     const control = <FormArray>this.completionForm.controls['items'];

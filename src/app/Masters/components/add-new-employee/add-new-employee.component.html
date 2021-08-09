@@ -562,7 +562,7 @@
                             <span *ngIf="newEmployeeForm.controls['empusername'].hasError('duplicateusername')">
                                 {{newEmployeeResources.duplicateusername}}
                             </span>
-                            <!-- <span *ngIf="newEmployeeForm.controls['empusername'].errors['maxlength']">{{newEmployeeResources.packageItemQtyLength}}</span> -->
+                            <span *ngIf="newEmployeeForm.controls['empusername'].errors['maxlength']">Maximum 20 characters are allowed.</span>
                           </div>
                       </div>
                   </div>
@@ -600,10 +600,8 @@
                               <i class="fa fa-eye-slash eyeicon"  ria-hidden="true" (click)="togglepw()">                     </i>
                           </span>
                       </div>
-                        <!-- <span class="p-viewer2" *ngIf="showeye === true">
-                          <i class="fa fa-eye eyeicon"   ria-hidden="true" (click)="togglepw()">    </i>
-                      </span> -->
-                        <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        
+                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                           *ngIf="!newEmployeeForm.controls['emppassword'].valid&&newEmployeeForm.controls['emppassword'].dirty">
                           <span *ngIf="newEmployeeForm.controls['emppassword'].errors['required']">
                             {{newEmployeeResources.passwordrequired}}
@@ -615,7 +613,7 @@
                           <span *ngIf="newEmployeeForm.controls['emppassword'].errors['maxlength']">
                               {{newEmployeeResources.passwordMaxLength}}
                           </span>
-                        </div> -->
+                        </div>
                       </div>
                   </div>
                 </div>
