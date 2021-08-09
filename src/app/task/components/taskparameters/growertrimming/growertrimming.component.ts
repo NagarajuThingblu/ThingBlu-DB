@@ -25,6 +25,7 @@ import { NewSectionDetailsActionService } from '../../../services/add-section-de
 import { filter } from 'rxjs/operator/filter';
 import { NewClientService } from '../../../../Masters/services/new-client.service';
 import { FormArray } from '@angular/forms';
+import { ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 
 
 @Component({
@@ -51,24 +52,21 @@ export class GrowertrimmingComponent implements OnInit {
   public userRoles: any;
   public taskid: any;
   arrayItems: FormArray;
-  public taskCompletionModel: any;
-  public sectionslist = [];
-  
-  public employeeArray:any=[];
-  public lightdepts = [];
+  public completeDataBasedOnTaskType : any;
   public saveAsDraft =0;
+  public strains: any[];
+  public sectionslist = [];
+  public lightdepts = [];
   public LD= [];
   public fields = [];
-  public showBinData:boolean = false
-  public completeDataBasedOnTaskType : any;
+  public employeeArray:any=[];
+  public taskCompletionModel: any;
   public taskReviewModel: any;
   public taskStatus: any;
   public defaultDate: Date = new Date();
   public showPastDateLabel = false;
-  public strains: any[];
-  public batchId : any;
-  public priorities: SelectItem[];
   public tm : any[];
+  public priorities: SelectItem[];
   public workingEmp: any=[];
   public workingemp:boolean =false
   constructor(
@@ -81,6 +79,7 @@ export class GrowertrimmingComponent implements OnInit {
     private cookieService: CookieService,
     private newSectionDetailsActionService: NewSectionDetailsActionService, 
     private router: Router,
+    private cdref: ChangeDetectorRef,
     private dropdwonTransformService: DropdwonTransformService,
     private lotService: LotService,
     private loaderService: LoaderService,
@@ -114,13 +113,6 @@ export class GrowertrimmingComponent implements OnInit {
   public inputBinDetails :any[];
 
   ngOnInit() {
-    console.log(this.inpubinData)
-    // if(this.inpubinData.length === 0){
-    //   this.showBinData = false
-    // }
-    // else{
-    //   this.showBinData = true
-    // }
     this.getStrainListByTask();
     this.binsListByClient();
     this.employeeListByClient();
@@ -141,16 +133,16 @@ export class GrowertrimmingComponent implements OnInit {
         this.taskTypeId = this.TaskModel.TaskDetails.TaskTypeId;
       }
     });
-    
+    this.tm = [
+      { label: 'HT', value:'HT'},
+      { label: 'MT', value:'MT'}
+    ];
     this.priorities =  [
       {label: 'Normal', value: 'Normal'},
       {label: 'Important', value: 'Important'},
       {label: 'Critical', value: 'Critical'}
     ];
-    this.tm = [
-      { label: 'HT', value:'HT'},
-      { label: 'MT', value:'MT'}
-    ];
+
     if (this.PageFlag.page !== 'TaskAction') {
       this.TaskModel.GROWERTRIMMING = {
         bins:'',
@@ -211,17 +203,6 @@ export class GrowertrimmingComponent implements OnInit {
        }
 
       this.completionForm = this.fb.group({
-        'inputBin': new FormControl(null),
-        'binWt': new FormControl(''),
-        'completeWt':new FormControl('',Validators.compose([Validators.required])),
-        'wasteWt':new FormControl(''),
-        'items': new FormArray([
-          this.createItem()
-        ], this.customGroupValidation),
-       
-      });
-
-      this.reviewForm = this.fb.group({
         // 'inputBin': new FormControl(null),
         // 'binWt': new FormControl(''),
         // 'completeWt':new FormControl('',Validators.compose([Validators.required])),
@@ -229,21 +210,34 @@ export class GrowertrimmingComponent implements OnInit {
         'items': new FormArray([
           this.createItem()
         ], this.customGroupValidation),
-        'isStrainComplete': new FormControl(''),
+      });
+
+      this.reviewForm = this.fb.group({
+        // 'inputBin': new FormControl(null),
+        // 'binWt': new FormControl(''),
+        // 'completeWt':new FormControl('',Validators.compose([Validators.required])),
+        // 'wasteWt':new FormControl(''),
+        'items1': new FormArray([
+          this.createItem1()
+        ], this.customGroupValidation),
         'ActHrs': new FormControl(null),
           'ActMins': new FormControl(null, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
           'ActSecs': new FormControl({value: null, disabled: this.isRActSecsDisabled}, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
           'rmisccost': new FormControl(null),
           'rmisccomment': new FormControl(null)
       })
-    }
 
-  //  if(this.BinData != null){
-  //    this.inputBinDetails = []
-  //    for(let i =0; i<1; i++){
-  //     this.inputBinDetails[i] = this.BinData[i]
-  //   }
-  //  }
+    
+    }
+    // if(this.PageFlag.showReviewmodal){
+    //   console.log("hi")
+    // }
+   if(this.BinData != null){
+     this.inputBinDetails = []
+     for(let i =0; i<1; i++){
+      this.inputBinDetails[i] = this.BinData[i]
+    }
+   }
    
 // if(this.BinData != null){
 //   this.inputBinDetails.inputBinName = this.BinData[0].IPLabelName;
@@ -253,42 +247,31 @@ export class GrowertrimmingComponent implements OnInit {
 //   this.completedWt = this.completedWt +i.OPBinWt
 // }
 // }
+
   }
 
   createItem(): FormGroup {
     return this.fb.group({
-      'weight':new FormControl(null),
-        'binId': new FormControl(null, Validators.compose([Validators.required])),
+      'binsId': new FormControl(null, Validators.compose([Validators.required])),
+      'weight': new FormControl('',Validators.compose([Validators.required])),
+      // 'binFull': new FormControl(''),
     }); 
   }
-  resetForm() {
-    
-    this.completionForm.reset({ isStrainComplete: false });
-//this.defaulDryWeight = 0;
-
-    const control = <FormArray>this.completionForm.controls['items'];
-    
-    let length = control.length;
-    while (length > 0) {
-      length = Number(length) - 1;
-      this.deleteItemAll(length);
-    }
-   
-    this.addItem();
-  }
-  deleteItemAll(index: number) {
-   
-    const control = <FormArray>this.completionForm.controls['items'];
-    control.removeAt(index);
+  createItem1(): FormGroup {
+    return this.fb.group({
+      'binsId': new FormControl(null, Validators.compose([Validators.required])),
+      'weight': new FormControl('',Validators.compose([Validators.required])),
+      // 'binFull': new FormControl(''),
+    }); 
   }
   customGroupValidation (formArray) {
     let isError = false;
     const result = _.groupBy( formArray.controls , c => {
-      return [c.value.binId];
+      return [c.value.binsId];
     });
 
     for (const prop in result) {
-        if (result[prop].length > 1 && result[prop][0].controls['binId'].value !== null) {
+        if (result[prop].length > 1 && result[prop][0].controls['binsId'].value !== null) {
           isError = true;
             _.forEach(result[prop], function (item: any, index) {
               // alert(index);
@@ -305,8 +288,29 @@ export class GrowertrimmingComponent implements OnInit {
   get trimmingDetailsArr(): FormArray {
     return this.completionForm.get('items') as FormArray;
   }
+  get trimmingReviewDetailsArr(): FormArray {
+    return this.reviewForm.get('items1') as FormArray;
+  }
   padLeft(text: string, padChar: string, size: number): string {
     return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;
+  }
+ 
+  //method to get bins dropdown
+  binsListByClient() {
+    
+    let TaskTypeId = this.ParentFormGroup != undefined?
+    this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
+    this.dropdownDataService. getStrainsByTaskType(TaskTypeId).subscribe(
+      data => {
+       
+        if (data !== 'No Data Found') {
+          this.bins = this.dropdwonTransformService.transform(data, 'LabelName', 'BinId', '-- Select --');
+        } else {
+          this.bins = [];
+        }
+      } ,
+      error => { console.log(error); },
+      () => console.log('GetPrscrStrainListByTask complete'));
   }
  //method to get strains based on task
  getStrainListByTask() {
@@ -330,7 +334,6 @@ export class GrowertrimmingComponent implements OnInit {
     error => { console.log(error); },
     () => console.log('GetPrscrStrainListByTask complete'));
 }
-
 
 
 //method to get ld by selecting strain
@@ -407,7 +410,6 @@ onFieldSelect(event?: any){
   this.sectionslist = this.dropdwonTransformService.transform(sectionfilter,'label', 'value','-- Select --',false)
 }
 
-
 //methods to select multiple employees
 OnSelectingEmployees(event: any, checkedItem: any){
     
@@ -464,24 +466,6 @@ filterEmpList(){
     // }
   }
 }
-  //method to get bins dropdown
-  binsListByClient() {
-    
-    let TaskTypeId = this.ParentFormGroup != undefined?
-    this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
-    this.dropdownDataService. getStrainsByTaskType(TaskTypeId).subscribe(
-      data => {
-       
-        if (data !== 'No Data Found') {
-          this.bins = this.dropdwonTransformService.transform(data, 'LabelName', 'BinId', '-- Select --');
-        } else {
-          this.bins = [];
-        }
-      } ,
-      error => { console.log(error); },
-      () => console.log('GetPrscrStrainListByTask complete'));
-  }
-
   //method to get bins dropdown in complete page
   getAllBins(){
     let TaskId =this.TaskModel.TaskId
@@ -533,7 +517,14 @@ filterEmpList(){
     this.arrayItems = this.completionForm.get('items') as FormArray;
     this.arrayItems.push(this.createItem());
   }
-
+  addItem1(): void {
+    this.arrayItems = this.reviewForm.get('items1') as FormArray;
+    this.arrayItems.push(this.createItem1());
+  }
+  SaveAsDraft(formModel){
+    this.saveAsDraft =1;
+    this.completeTask(formModel)
+    }
   submitCompleteParameter(formModel) {
     if (this.completionForm.valid) {
       // this.CheckThreSholdValidation(formModel);
@@ -555,43 +546,31 @@ submitReview(formModel) {
   let taskReviewWebApi;
   if ( this.reviewForm.valid === true) {
     taskReviewWebApi = {
-      Bucking: {
+      
         TaskId:Number(this.taskid),
         VirtualRoleId:Number(this._cookieService.VirtualRoleId),
         Comment: formModel.rmisccomment === null? "": formModel.rmisccomment,
-        IsStrainCompleted:formModel.isStrainComplete === ""?0:1,
+        //IsStrainCompleted:formModel.isStrainComplete === ""?0:1,
         MiscCost: Number(formModel.rmisccost) === null?0:Number(formModel.rmisccost) ,
         RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
-      },
-      InputBinDetails:[],
-      OutputBinDetails:[]
+    
+      BinDetails:[],
+      
     };
    
       // this.duplicateSection = element.value.section
-      this.inpubinData.forEach((element, index) => {
-        taskReviewWebApi.InputBinDetails.push({
-          BinId:element.InputBinId,
-          DryWt: element.IPBinWt,
-          WetWt: 0,
-          WasteWt: element.Wastewt,
+      this.trimmingReviewDetailsArr.controls.forEach((element, index) =>
+      {
+        taskReviewWebApi.BinDetails.push({
+          BinId:Number(element.value.binsId),
+          DryWt: Number(element.value.weight),
+          IsOpBinFilledCompletely:1
               
            });
-      })
+      });
      
     
    
-     this.BinData.forEach((element, index) => {
-      // this.duplicateSection = element.value.section
-      taskReviewWebApi.OutputBinDetails.push({
-        BinId:element.OPBinId,
-        DryWt: element.OPBinWt,
-        WetWt: 0,
-        WasteWt: element.WasteWt,
-        IsOpBinFilledCompletely: element.IsOpBinFilledCompletely == true?1:0
-            
-         });
-    
-     });
   }
   this.confirmationService.confirm({
     message: this.assignTaskResources.taskcompleteconfirm,
@@ -599,7 +578,7 @@ submitReview(formModel) {
     icon: 'fa fa-exclamation-triangle',
     accept: () => {
       this.loaderService.display(true);
-      this.taskCommonService.submitbuckingTaskReview(taskReviewWebApi)
+      this.taskCommonService.submittrimmingTaskReview(taskReviewWebApi)
       .subscribe(data => {
         if (data === 'NoComplete'){
           this.msgs = [];
@@ -651,40 +630,38 @@ submitReview(formModel) {
                         this.router.navigate(['home/empdashboard']);
                       }
                     }, 1000);
+
+                    this.loaderService.display(false);
         }
       })
     }
   })
 
 }
-SaveAsDraft(formModel){
-this.saveAsDraft =1;
-this.completeTask(formModel)
-}
 
 completeTask(formModel){
   let taskCompletionWebApi;
   if ( this.completionForm.valid === true) {
     taskCompletionWebApi = {
-    
-        TaskId:Number(this.taskid),
+      TaskId:Number(this.taskid),
         Comment:" ",
         VirtualRoleId: Number(this._cookieService.VirtualRoleId),
         SaveAsDraft: this.saveAsDraft,
+
+      BinDetails:[],
      
-    
-     BinDetails:[]
     };
-    this.trimmingDetailsArr.controls.forEach((element, index) =>
-    {
-      taskCompletionWebApi.BinDetails.push({
-        BinId:Number(element.value.binId),
-        DryWt: Number(element.value.weight),
-        IsOpBinFilledCompletely:0
-            
-         });
-    });
+   
       // this.duplicateSection = element.value.section
+      this.trimmingDetailsArr.controls.forEach((element, index) =>
+      {
+        taskCompletionWebApi.BinDetails.push({
+          BinId:Number(element.value.binsId),
+          DryWt: Number(element.value.weight),
+          IsOpBinFilledCompletely:0
+              
+           });
+      });
   }
   // assignedPC = Number(this.taskCompletionModel.AssignedPlantCnt);
   // if(Number(assignedPC) < Number(this.TaskModel.CompletedPlantCnt) + Number(this.TaskModel.CompletedPlantCnt))
@@ -771,4 +748,83 @@ completeTask(formModel){
     }
   });
 }
+ngAfterContentChecked() {
+
+  this.cdref.detectChanges();
+
+}
+
+bindData(inpubinData){
+  console.log(this.PageFlag)
+  let i =0;
+ console.log(inpubinData)
+ var itemlist = this.reviewForm.get('items1')['controls'];
+ for(let value of this.inpubinData){
+  itemlist[i].controls.binsId.patchValue(value.BinId);
+  itemlist[i].controls.weight.patchValue(value.CompletedWt);
+  if(this.inpubinData.length > i+1){
+    i++;
+    this.addItem1();
+  
+  }
+ }
+ //const binNo = itemlist[i].controls['binNo'];
+ 
+console.log(this.PageFlag)
+}
+
+resetForm() {
+  // if(this.clearbutton === "Cancel"){
+  //   this.router.navigate(['../home/orderlisting']);
+  // }
+  // else{
+ // this.reviewForm.reset({ chkSelectAll: true });
+  //this.clearbutton ="Clear"
+//this.saveButtonText ="save"
+  const control = <FormArray>this.reviewForm.controls['items1'];
+  
+  let length = control.length;
+  while (length > 0) {
+    length = Number(length) - 1;
+    this.deleteItemAll(length);
+  }
+ 
+  this.addItem1();
+}
+
+deleteItemAll(index: number) {
+   
+  const control = <FormArray>this.reviewForm.controls['items1'];
+  control.removeAt(index);
+}
+
+deleteItems(index: number,event?:any) {
+  var index1 =0;
+ // this.dataAfterDelete = [];
+  const control = <FormArray>this.reviewForm.controls['items1'];
+ 
+  if (control.length != 1) {
+    control.removeAt(index);
+   
+  }
+  // console.log(this.reviewForm.get('items'))
+  //  var itemlist = this.reviewForm.get('items')['controls'];
+//  for(let i of itemlist){
+//    this.dataAfterDelete.push(i.value)
+//  }
+// for(let j of this.dataAfterDelete){
+// itemlist[index1].controls.strain.patchValue(j.strain);
+// this.getAllDetails2(index1,j)
+// itemlist[index1].controls.producttype.patchValue(j.producttype);
+// itemlist[index1].controls.skewtype.patchValue(j.skewtype);
+// itemlist[index1].controls.packagetype.patchValue(j.packagetype);
+// itemlist[index1].controls.packagetypeid.patchValue(j.packagetypeid);
+// itemlist[index1].controls.packagesize.patchValue(j.packagesize);
+// itemlist[index1].controls.orderqt.patchValue(j.orderqt);
+// index1++
+// }
+ 
+
+}
+// }
 }

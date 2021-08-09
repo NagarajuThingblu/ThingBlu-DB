@@ -254,7 +254,7 @@ submitbuckingTaskReview(taskReviewWebApi) {
 submittrimmingTaskReview(taskReviewWebApi) {
   const apiUrl = 'api/Grower/TrimmingTaskReview';
 
-  taskReviewWebApi.Trimming.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
+  taskReviewWebApi.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
   return this.http.post(apiUrl, taskReviewWebApi, this.headers)
   .map(data =>  data );
 }

@@ -128,8 +128,8 @@ public data = 0;
     this.getStrains();
     this.ld=
       [
-        {label: 'true', value: true},
-        {label: 'false', value: false},
+        {label: 'true', value: 'true'},
+        {label: 'false', value: 'false'},
       ];
     
     this.globalResource = GlobalResources.getResources().en;
@@ -382,7 +382,7 @@ this.selectedForNoEditLD = false;
 this.selectedForEditLD = true;
 this.disableLDDropdown = false;
 const ld = this.updateTerminationReason.controls['ld'];
-ld.patchValue(this.AllSectionData.IsLightDeprevation); 
+ld.patchValue(String(this.AllSectionData.IsLightDeprevation)); 
   }
   closeEditLD(){
     this.selectedForNoEditLD = true;

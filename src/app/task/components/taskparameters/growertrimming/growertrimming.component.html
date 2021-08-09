@@ -14,6 +14,7 @@
       </p-dropdown>
     </div>
   </div>
+
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="strain">Strain<span class="star">*</span></label>:
@@ -29,30 +30,9 @@
       id="strain"
       name="strain">
       </p-dropdown>
-      <!-- <input type="text" 
-      pInputText 
-      autocomplete="off"
-      id="strain" 
-      name="strain" 
-      [ngModel]="strainName"
-      formControlName="strain"         
-      class="clsControl"  
-      readonly
-    />
-    <input type="text" 
-    pInputText 
-    autocomplete="off"
-    id="strainid" 
-    name="strainid" 
- 
-    formControlName="strainid"         
-    class="clsControl"  
-    readonly
-    style="display: none;"
-  /> -->
+   
     </div>
   </div>
- 
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="lightdept">Light Dept<span class="star">*</span></label>:
@@ -69,6 +49,7 @@
     </p-dropdown>
     </div>
   </div>
+
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="field">Field<span class="star">*</span></label>:
@@ -86,6 +67,7 @@
       </p-dropdown>
     </div>
   </div>
+
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="section">Section<span class="star">*</span></label>:
@@ -103,22 +85,6 @@
       </p-dropdown>
     </div>
   </div> 
-  <!-- <div class="ui-g-12 ui-md-6">
-    <div class="paddingRL">
-      <label for="bins">Bins<span class="star">*</span></label>:
-      <div class="clear"></div>
-      <p-dropdown #checkedItems
-      placeholder="-- Select --"
-      [filter] ="true"
-      [options]="bins"
-      formControlName="bins"
-      class="clsControl"
-      id="bins"
-      name="bins"
-      >
-      </p-dropdown>
-    </div>
-  </div> -->
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="EmployeeListBox">Employees Working For Trimming</label>
@@ -267,7 +233,7 @@
       <label>
         <strong>{{ globalResource.strain }}: </strong>
       </label>
-          {{BinData[0]?.StrainName}}
+          {{TaskModel?.StrainName}}
     </div>
   </div>
   <!-- <div class="ui-g-12 ui-md-6">
@@ -385,26 +351,29 @@
       {{TaskModel?.RevHrs  | minutesToTime}}
     </div>
   </div>
-  <div class="ui-g-12" style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&  inpubinData.length > 0">
-    <div><b> Bin Details</b></div>
+  <!-- <div class="ui-g-12" style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+    <div><b>Input Bin Details</b></div>
   <p-table [value]="inpubinData">
     <ng-template pTemplate="header">
       <tr>
-        <th>Bin Name</th>
-        <th>Weight</th>
-        <!-- <th *ngIf="TaskModel?.TaskStatus ==='REVIEW PENDING'">Action</th> -->
+        <th>Input Bin Name</th>
+        <th>Total Weight</th>
+        <th>Completed Weight</th>
+        <th>Waste Weight</th>
     </tr>
     </ng-template>
-    <ng-template pTemplate="body"  let-TaskMode  >
+    <ng-template pTemplate="body"  let-TaskModel  >
       <tr>
-          <td >{{TaskMode.BinName}}</td>
-          <td >{{TaskMode.CompletedWt}}</td>
-          <!-- <td *ngIf="TaskModel?.TaskStatus ==='REVIEW PENDING'">Edit</td> -->
+          <td >{{TaskModel.IPLabelName}}</td>
+          <td >{{TaskModel.IPBinWt}}</td>
+          <td >{{TaskModel.TotalOpBinWt}}</td>
+          <td >{{TaskModel.Wastewt}}</td>
+           
       </tr>
   </ng-template>
   </p-table>
 </div>
-  <!-- <div class="ui-g-12"  style="padding-top: 10px;"*ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
+  <div class="ui-g-12"  style="padding-top: 10px;"*ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess">
     <div><b>Output Bin Details</b></div>
   <p-table [value]="BinData">
     <ng-template pTemplate="header">
@@ -423,172 +392,28 @@
   </ng-template>
   </p-table>
 </div> -->
-<p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
-    
-  <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
-    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-      <div  class="ui-g-12">
-        <span><b>Input Bin</b></span>
-      </div>
-      <div class="ui-g-12 ui-md-3">
-        <div class="paddingRL">
-          <label for="inputBin">InputBin</label>
-        </div>
-      </div>
-      <div class="ui-g-12 ui-md-3">
-        <div class="paddingRL">
-          <label for="binWt">TotalBinWeight(lb)</label>
-          <span class="star">*</span>
-        </div>
-      </div>
-      <div class="ui-g-12 ui-md-3">
-        
-          <label for="completeWt">CompletedWeight(lb)</label>
-          <span class="star">*</span>
-       
-      </div>
-      <div class="ui-g-12 ui-md-3">
-        <div class="paddingRL">
-          <label for="wasteWt">WasteWeight(lb)</label>
-        </div>
-      </div>
-      <div class="ui-g-12 ui-md-3">
-        <div>
-          <input type="text" 
-          pInputText 
-          [(ngModel)]="taskCompletionModel.BinName"
-          autocomplete="off"
-          id="inputBin" 
-          name="inputBin" 
-          formControlName="inputBin"              
-          class="clsControl"  
-          readonly 
-        />
-        </div>
-      </div>
-     
-      <div class="ui-g-12 ui-md-3">
-        <div>
-          <input type="text" 
-          pInputText 
-          [(ngModel)]="taskCompletionModel.BinWeight"
-          autocomplete="off"
-          id="binWt" 
-          placeholder="Enter Bin Weight"
-          name="binWt" 
-          formControlName="binWt"              
-          class="clsControl"  
-          readonly  
-        />
-        </div>
-      </div>
-   
-      <div class="ui-g-12 ui-md-3">
-        <div>
-          <input type="text" 
-          pInputText 
-          autocomplete="off"
-          id="completeWt" 
-          placeholder="Enter Completed Weight"
-          name="completeWt" 
-          formControlName="completeWt"              
-          class="clsControl"   
-        />
-        </div>
-      </div>
-     
-      <div class="ui-g-12 ui-md-3">
-        <div>
-          <input type="text" 
-          pInputText 
-          autocomplete="off"
-          id="wasteWt" 
-          placeholder="Enter Waste Weight"
-          name="wasteWt" 
-          formControlName="wasteWt"              
-          class="clsControl"   
-        />
-        </div>
-      </div>
-
-      <div formArrayName="items" style="position: relative">
-        <div style="width:calc(100% - 20px);float:left;">
-          <div style="padding:5px;">
-            <span><b>Output Bin</b></span>
-            <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ assignTaskResources.viewaddbin}}" id="btn_binshow" (click)="viewBinsList(TaskModel)"  name="btnviewbins"></p-button>
-          </div>
-          <p-table [value]="trimmingDetailsArr?.controls" id="trimmingDetailsArr" name="trimmingDetailsArr">
-            <ng-template pTemplate="header">
-              <tr>
-                <th>Bin
-                  <span class="star">*</span>
-                </th>
-                <th>Weight (lb)
-                  <span class="star">*</span>
-                </th>
-             
-              <th style="width: 80px;">Action</th>
-              </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-item let-i="rowIndex">
-              <tr [formGroupName]="i">
-                <td>
-                  <p-dropdown
-                  id="binId"
-                  formControlName="binId"
-                  [options]="binslist"
-                  placeholder="-- Select --"
-                  [autoWidth]="false"
-                  class="clsControl"
-                  name="binId">
-                  </p-dropdown>
-                </td>
-                <td>
-                  <input pInputText
-                    name="weight"
-                    id="weight"
-                    type="number"
-                    autocomplete="off"
-                    class="clsControl"       
-                    formControlName="weight"
-                    placeholder="Enter  Weight "
-                    min="0.1">
-                </td>
-              
-                <td>
-                    <a (click)="deleteItem(i)" >                                                    
-                        <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
-                        </span>
-                    </a> 
-                      <a (click)="addItem()" *ngIf="completionForm.get('items').valid">
-                          <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
-                          </span>
-                      </a>
-                </td>
-              </tr>
-            </ng-template>
-          </p-table>
-        </div>
-         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="trimmingDetailsArr.hasError('duplicate')">
-        duplicate entries
-      </div>  
-      </div>
-    </div>
-    <div class="ui-g" style="width:100%;text-align:right;">
-      <div class="ui-g-12">
-        <button pButton type="submit" label="Save" ></button>
-        <button 
-            pButton 
-            (click)="resetForm()" 
-            type="button" 
-            label="Clear" 
-            class="ui-button-secondary">
-        </button>
-      </div>
-    </div>
-  </form>
-</p-dialog>
-  <!-- <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
+<div class="ui-g-12" style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&  inpubinData.length > 0">
+  <div><b> Bin Details</b></div>
+<p-table [value]="inpubinData">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Bin Name</th>
+      <th>Completed Weight</th>
+      <th *ngIf="TaskModel?.TaskStatus === 'COMPLETED'"> Review Completed Weight</th>
+      <!-- <th *ngIf="TaskModel?.TaskStatus ==='REVIEW PENDING'">Action</th> -->
+  </tr>
+  </ng-template>
+  <ng-template pTemplate="body"  let-TaskMode  >
+    <tr>
+        <td >{{TaskMode.BinName}}</td>
+        <td >{{TaskMode.CompletedWt}}</td>
+        <td *ngIf="TaskModel?.TaskStatus === 'COMPLETED'">{{TaskMode.RevCompletedWt}}</td>
+        <!-- <td *ngIf="TaskModel?.TaskStatus ==='REVIEW PENDING'">Edit</td> -->
+    </tr>
+</ng-template>
+</p-table>
+</div>
+  <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
     
     <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
       <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -596,26 +421,108 @@
           <span><b>Trimming Method :- </b>{{BinData[0]?.TrimmingMethod}}</span>
          
         </div>
-
+        <!-- <div  class="ui-g-12">
+          <span><b>Input Bin</b></span>
+        </div>
+        <div class="ui-g-12 ui-md-3">
+          <div class="paddingRL">
+            <label for="inputBin">InputBin</label>
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-3">
+          <div class="paddingRL">
+            <label for="binWt">TotalBinWeight(lb)</label>
+            <span class="star">*</span>
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-3">
+          
+            <label for="completeWt">CompletedWeight(lb)</label>
+            <span class="star">*</span>
+         
+        </div>
+        <div class="ui-g-12 ui-md-3">
+          <div class="paddingRL">
+            <label for="wasteWt">WasteWeight(lb)</label>
+          </div>
+        </div>
+        <div class="ui-g-12 ui-md-3">
+          <div>
+            <input type="text" 
+            pInputText 
+            [(ngModel)]="taskCompletionModel.BinName"
+            autocomplete="off"
+            id="inputBin" 
+            name="inputBin" 
+            formControlName="inputBin"              
+            class="clsControl"  
+            readonly 
+          />
+          </div>
+        </div>
+       
+        <div class="ui-g-12 ui-md-3">
+          <div>
+            <input type="text" 
+            pInputText 
+            [(ngModel)]="taskCompletionModel.BinWeight"
+            autocomplete="off"
+            id="binWt" 
+            placeholder="Enter Bin Weight"
+            name="binWt" 
+            formControlName="binWt"              
+            class="clsControl"  
+            readonly  
+          />
+          </div>
+        </div>
+     
+        <div class="ui-g-12 ui-md-3">
+          <div>
+            <input type="text" 
+            pInputText 
+            autocomplete="off"
+            id="completeWt" 
+            placeholder="Enter Completed Weight"
+            name="completeWt" 
+            formControlName="completeWt"              
+            class="clsControl"   
+          />
+          </div>
+        </div>
+       
+        <div class="ui-g-12 ui-md-3">
+          <div>
+            <input type="text" 
+            pInputText 
+            autocomplete="off"
+            id="wasteWt" 
+            placeholder="Enter Waste Weight"
+            name="wasteWt" 
+            formControlName="wasteWt"              
+            class="clsControl"   
+          />
+          </div>
+        </div> -->
 
         <div formArrayName="items" style="position: relative">
           <div style="width:calc(100% - 20px);float:left;">
-            <div style="padding:5px;">
-             
-            </div>
+           
             <p-table [value]="trimmingDetailsArr?.controls" id="trimmingDetailsArr" name="trimmingDetailsArr">
               <ng-template pTemplate="header">
                 <tr>
                   <th>Strain
                     <span class="star">*</span>
                   </th>
-                  <th>Bin 
+                  <th>Bin
                     <span class="star">*</span>
-                    <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="Create Bin" id="btn_geneticshow" (click)="viewBinsList(TaskModel)"  name="btnviewGenetics" ></p-button>
                   </th>
-                  <th >Weight
-                </th>
-                <th *ngIf="BinData[0]?.TrimmingMethod === 'MT'" style="width: 80px;">Action</th>
+                  <th>Weight (lb)
+                    <span class="star">*</span>
+                  </th>
+                  <!-- <th style="width: 80px;">IsBinFull
+                </th> -->
+                <th  *ngIf="BinData[0]?.TrimmingMethod === 'MT'" style="width: 80px;">Action</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-item let-i="rowIndex">
@@ -630,29 +537,32 @@
                   </td>
                   <td>
                     <p-dropdown
-                    id="binId"
-            formControlName="binId"
-            [options]="binslist"
-            placeholder="-- Select --"
-            [autoWidth]="false"
-            class="clsControl"
-            name="binId">
+                    id="binsId"
+                    formControlName="binsId"
+                    [options]="binslist"
+                    placeholder="-- Select --"
+                    [autoWidth]="false"
+                    class="clsControl"
+                    name="binsId">
                     </p-dropdown>
-                   
                   </td>
                   <td>
                     <input pInputText
-                    name="weight"
-                    id="weight"
-                    type="number"
-                    autocomplete="off"
-                    class="clsControl"       
-                    formControlName="weight"
-                    placeholder="Enter  Weight "
-                    min="0.1">
-                                                      
+                      name="weight"
+                      id="weight"
+                      type="number"
+                      autocomplete="off"
+                      class="clsControl"       
+                      formControlName="weight"
+                      placeholder="Enter  Weight "
+                      min="0.1">
                   </td>
-                  <td *ngIf="BinData[0]?.TrimmingMethod === 'MT'" >
+                  <!-- <td>
+                    <p-checkbox value="true"
+                     formControlName="binFull" checked="true"
+                    binary="true"></p-checkbox>                                      
+                  </td> -->
+                  <td *ngIf="BinData[0]?.TrimmingMethod === 'MT'">
                       <a (click)="deleteItem(i)" >                                                    
                           <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
                           </span>
@@ -685,88 +595,55 @@
         </div>
       </div>
     </form>
-  </p-dialog> -->
+  </p-dialog>
 
-  <p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
+  <p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" (onShow)="bindData(inpubinData)">
     <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
       <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-        <!-- <div class="ui-g-12 ui-md-6" style="text-align:left;">
-          <div class="paddingRL">
-            <span>Strain :- </span><span>{{TaskModel?.StrainName}}</span>
-          </div>
-        </div> -->
-        <!-- <div class="ui-g-12 ui-md-6"style="text-align:right;">
-          <div class="paddingRL">
-            <p-checkbox value="BinData[0].IsStrainCompleted" label="IsStrainComplete"
-            formControlName="isStrainComplete" checked="true"
-           binary="true"></p-checkbox>  
-          </div>
-        </div> -->
-
-        <!-- <div class="ui-g-12"  style="padding-top: 10px;" >
-          <div><b>Output Bin Details</b></div>
-            <p-table [value]="BinData">
-             <ng-template pTemplate="header">
-               <tr>
-                  <th>Ouput Bin Name</th>
-                  <th>Bin Weight</th>
-                  <th>Is Bin Full</th>
-                </tr>
-            </ng-template>
-              <ng-template pTemplate="body" let-TaskModel>
+       
+        <div formArrayName="items1" style="position: relative">
+          <div style="width:calc(100% - 20px);float:left;">
+           
+            <p-table [value]="trimmingReviewDetailsArr?.controls" id="trimmingReviewDetailsArr" name="trimmingReviewDetailsArr">
+              <ng-template pTemplate="header">
                 <tr>
-                <td>{{TaskModel.OPLabelName}}</td>
-                <td>{{TaskModel.OPBinWt}}</td>
-                <td>{{TaskModel.IsOpBinFilledCompletely}}</td>
+                  <th>Strain
+                    <span class="star">*</span>
+                  </th>
+                  <th>Bin
+                    <span class="star">*</span>
+                  </th>
+                  <th>Weight (lb)
+                    <span class="star">*</span>
+                  </th>
+                  <!-- <th style="width: 80px;">IsBinFull
+                </th> -->
+                <th  *ngIf="BinData[0]?.TrimmingMethod === 'MT'" style="width: 80px;">Action</th>
                 </tr>
               </ng-template>
-            </p-table>
-          </div> -->
-          <div formArrayName="items" style="position: relative">
-            <div style="width:calc(100% - 20px);float:left;">
-              <div style="padding:5px;">
-                <!-- <span><b>Bin</b></span>
-                <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ assignTaskResources.viewaddbin}}" id="btn_binshow" (click)="viewBinsList(TaskModel)"  name="btnviewbins"></p-button> -->
-              </div>
-              <p-table [value]="trimmingDetailsArr?.controls" id="trimmingDetailsArr" name="trimmingDetailsArr">
-                <ng-template pTemplate="header">
-                  <tr>
-                    <th>Strain
-                      <span class="star">*</span>
-                    </th>
-                    <th>Bin 
-                      <span class="star">*</span>
-                      <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="Create Bin" id="btn_geneticshow" (click)="viewBinsList(TaskModel)"  name="btnviewGenetics" ></p-button>
-                    </th>
-                    <th >Weight
-                  </th>
-                  <!-- <th *ngIf="BinData[0]?.TrimmingMethod === 'MT'" style="width: 80px;">Action</th> -->
-                  </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-item let-i="rowIndex">
-                  <tr [formGroupName]="i">
-                    <td>
-                      <input pInputText
-                      pInputText 
-                      [value]="BinData[0].StrainName"
-                      autocomplete="off"
-                      readonly="true">
-                     
-                    </td>
-                    <td>
-                      <p-dropdown
-                      id="binId"
-              formControlName="binId"
-              [options]="binslist"
-              placeholder="-- Select --"
-              [autoWidth]="false"
-              class="clsControl"
-              name="binId">
-                      </p-dropdown>
-                     
-                    </td>
-                    <td>
-                      <input pInputText
+              <ng-template pTemplate="body" let-item let-i="rowIndex">
+                <tr [formGroupName]="i">
+                  <td>
+                    <input pInputText
+                    pInputText 
+                    [value]="BinData[0].StrainName"
+                    autocomplete="off"
+                    readonly="true">
+                   
+                  </td>
+                  <td>
+                    <p-dropdown
+                    id="binsId"
+                    formControlName="binsId"
+                    [options]="binslist"
+                    placeholder="-- Select --"
+                    [autoWidth]="false"
+                    class="clsControl"
+                    name="binsId">
+                    </p-dropdown>
+                  </td>
+                  <td>
+                    <input pInputText
                       name="weight"
                       id="weight"
                       type="number"
@@ -775,30 +652,94 @@
                       formControlName="weight"
                       placeholder="Enter  Weight "
                       min="0.1">
-                      <!-- <p-checkbox value="true"
-                       formControlName="binFull" checked="true"
-                      binary="true"></p-checkbox>                                       -->
-                    </td>
-                    <!-- <td *ngIf="BinData[0]?.TrimmingMethod === 'MT'" >
-                        <a (click)="deleteItem(i)" >                                                    
-                            <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                  </td>
+                  <!-- <td>
+                    <p-checkbox value="true"
+                     formControlName="binFull" checked="true"
+                    binary="true"></p-checkbox>                                      
+                  </td> -->
+                  <td *ngIf="BinData[0]?.TrimmingMethod === 'MT'">
+                      <a (click)="deleteItems(i,$event)" >                                                    
+                          <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                          </span>
+                      </a> 
+                        <a (click)="addItem1()" *ngIf="reviewForm.get('items1').valid">
+                            <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
                             </span>
-                        </a> 
-                          <a (click)="addItem()" *ngIf="reviewForm.get('items').valid">
-                              <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
-                              </span>
-                          </a>
-                    </td> -->
-                  </tr>
-                </ng-template>
-              </p-table>
-            </div>
-             <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="trimmingDetailsArr.hasError('duplicate')">
-            duplicate entries
-          </div>  
+                        </a>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
           </div>
+           <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="trimmingDetailsArr.hasError('duplicate')">
+          duplicate entries
+        </div>  
         </div>
-
+        <!-- <p-table [value]="trimmingReviewDetailsArr?.controls" id="trimmingReviewDetailsArr" name="trimmingReviewDetailsArr">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Strain
+                <span class="star">*</span>
+              </th>
+              <th>Bin
+                <span class="star">*</span>
+              </th>
+              <th>Weight (lb)
+                <span class="star">*</span>
+              </th>
+         
+            <th  *ngIf="BinData[0]?.TrimmingMethod === 'MT'" style="width: 80px;">Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item let-i="rowIndex">
+            <tr [formGroupName]="j">
+              <td>
+                <input pInputText
+                pInputText 
+                [value]="BinData[0].StrainName"
+                autocomplete="off"
+                readonly="true">
+               
+              </td>
+              <td>
+                <p-dropdown
+                id="binsId"
+                formControlName="binsId"
+                [options]="binslist"
+                placeholder="-- Select --"
+                [autoWidth]="false"
+                class="clsControl"
+                name="binsId">
+                </p-dropdown>
+              </td>
+              <td>
+                <input pInputText
+                  name="weight"
+                  id="weight"
+                  type="number"
+                  autocomplete="off"
+                  class="clsControl"       
+                  formControlName="weight"
+                  placeholder="Enter  Weight "
+                  min="0.1">
+              </td>
+             
+              <td *ngIf="BinData[0]?.TrimmingMethod === 'MT'">
+                  <a (click)="deleteItem(i)" >                                                    
+                      <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                      </span>
+                  </a> 
+                    <a (click)="addItem()" *ngIf="completionForm.get('items').valid">
+                        <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                        </span>
+                    </a>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table> -->
+      
+       </div>
        <div class="ui-grid-row" style="padding-top: 20px;">
         <div class="ui-grid-col-4">
           {{ assignTaskResources.actualhrs }}:
@@ -896,7 +837,7 @@
      <p-footer>
     <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
     <!-- [disabled]="!completionForm.valid" -->
-    <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showReviewmodal=false" label="Cancel"></button>
+    <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showReviewmodal=false"  (click)="resetForm()" label="Cancel"></button>
   </p-footer>
     </form>
   </p-dialog>

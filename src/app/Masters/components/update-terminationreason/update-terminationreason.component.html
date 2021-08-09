@@ -199,10 +199,10 @@
                 <div class="paddingRL">
                   <label for="section" class="towlable"><b>Section Name:</b>
                     
-                    <a  *ngIf="selectedForNoEditSection" href="#" [routerLink]="" (click)="editSectionInfo()">
+                    <a  *ngIf="selectedForNoEditSection && topTaskTypeName != null" href="#" [routerLink]="" (click)="editSectionInfo()">
                       <span class="fa fa-pencil" ></span>
                     </a>
-                    <a *ngIf='selectedForEditSection' href="#" [routerLink]="" (click)="closeEditSection()">
+                    <a *ngIf='selectedForEditSection && topTaskTypeName != null' href="#" [routerLink]="" (click)="closeEditSection()">
                       <span style="color: red;" class="fa fa-close" ></span>
                     </a>
                     <input
@@ -226,10 +226,10 @@
                 <div class="ui-g-12 ui-md-6">
                   <div class="paddingRL">
                     <label for="strain" class="towlable"><b>Strain Name:</b>
-                      <a *ngIf="selectedForNoEditStrain" href="#" [routerLink]="" (click)="editStrainInfo()">
+                      <a *ngIf="selectedForNoEditStrain && topTaskTypeName != null" href="#" [routerLink]="" (click)="editStrainInfo()">
                         <span class="fa fa-pencil" ></span>
                       </a>
-                      <a  *ngIf="selectedForEditStrain"  href="#" [routerLink]="" (click)="closeEditStrain()">
+                      <a  *ngIf="selectedForEditStrain && topTaskTypeName != null"  href="#" [routerLink]="" (click)="closeEditStrain()">
                         <span style="color: red;" class="fa fa-close" ></span>
                       </a>
                       <span *ngIf="showStrainText" >{{AllSectionData.StrainName}}</span>
@@ -253,7 +253,7 @@
                   <div class="ui-g-12 ui-md-6" >
                     <div class="paddingRL">
                       <label for="TPC" class="towlable"><b>Initial Plant Count:</b> 
-                        <a *ngIf="selectedForNoEditTPC && (topTaskTypeName === 'Planting') " href="#" [routerLink]="" (click)="editTPCInfo()">
+                        <a *ngIf="selectedForNoEditTPC && (topTaskTypeName === 'Planting')  " href="#" [routerLink]="" (click)="editTPCInfo()">
                           <span class="fa fa-pencil" ></span>
                         </a>
                         <a  *ngIf="selectedForEditTPC && (topTaskTypeName === 'Planting')"  href="#" [routerLink]="" (click)="closeEditTPC()">
@@ -318,10 +318,10 @@
                       <div class="ui-g-12 ui-md-6">
                         <div class="paddingRL">
                           <label for="isld" class="towlable"><b>Light Deprevation:</b>
-                            <a *ngIf="selectedForNoEditLD" href="#" [routerLink]="" (click)="editLD()">
+                            <a *ngIf="selectedForNoEditLD && topTaskTypeName != null" href="#" [routerLink]="" (click)="editLD()">
                               <span class="fa fa-pencil" ></span>
                             </a>
-                            <a  *ngIf="selectedForEditLD"  href="#" [routerLink]="" (click)="closeEditLD()">
+                            <a  *ngIf="selectedForEditLD && topTaskTypeName != null"  href="#" [routerLink]="" (click)="closeEditLD()">
                               <span style="color: red;" class="fa fa-close" ></span>
                             </a>
                             <span *ngIf="showLDText" >{{AllSectionData.IsLightDeprevation}}</span>
