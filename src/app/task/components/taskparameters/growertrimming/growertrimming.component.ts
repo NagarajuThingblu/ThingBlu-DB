@@ -219,7 +219,7 @@ export class GrowertrimmingComponent implements OnInit {
         // 'wasteWt':new FormControl(''),
         'items1': new FormArray([
           this.createItem1()
-        ], this.customGroupValidation),
+        ]),
         'ActHrs': new FormControl(null),
           'ActMins': new FormControl(null, Validators.compose([Validators.maxLength(2), Validators.max(59)])),
           'ActSecs': new FormControl({value: null, disabled: this.isRActSecsDisabled}, Validators.compose([Validators.maxLength(2), Validators.max(59)])),

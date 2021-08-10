@@ -415,6 +415,10 @@ passwordType: string = 'password';
       this.showMang = false;
       this.showFlc = false;
       this.showTextbox = false;
+      const password = this.newEmployeeForm.get('emppassword')
+      if(this.showTextbox === false){
+        password.clearValidators();
+      }
       this.showTerminationDate = true;
       const data = this.allEmployeeList.filter(x => x.EmpId === EmpId);
        if (data !== 'No data found!') {
@@ -484,7 +488,10 @@ passwordType: string = 'password';
           city.patchValue(this.employeeOnEdit[0].CityId);
           zipcode.patchValue(this.employeeOnEdit[0].ZipCode);
           username.patchValue(this.employeeOnEdit[0].Username);
-          password.patchValue(decryptedpwd);
+          if(decryptedpwd.length >= 6){
+            password.patchValue(decryptedpwd);
+          }
+        
           userrole.patchValue(this.employeeOnEdit[0].RoleId);
           managerlist.patchValue(this.employeeOnEdit[0].ManagerId);
           flclist.patchValue(this.employeeOnEdit[0].FLCId);
@@ -572,12 +579,13 @@ passwordType: string = 'password';
     this.showTerminationDate = false;
     this.newEmployeeResources.pageheading = 'Add New Employee';
     this.resetForm();
-    this.showTextbox = true;
+    //this.showTextbox = true;
     this.states = null;
     this.cities = null;
     this.star = false;
   }
   resetForm() {
+    this.showTextbox = false
     this.selectedRole = ""
     this.newEmployeeForm.reset({ chkIsActive: true });
     this.showFlc = false;
@@ -602,6 +610,8 @@ passwordType: string = 'password';
     //   userrole: null,
     //   hourlylabourrate: null
     // };
+  
+  
     const clientname = this.newEmployeeForm.controls['clientname'];
     clientname.patchValue(Number(this._cookieService.ClientId));
     const Country = this.newEmployeeForm.controls['country'];
@@ -625,6 +635,7 @@ passwordType: string = 'password';
 {
   this.showMang = false;
   this.showFlc = false;
+  //this.showTextbox = false;
   const selectedRole=this.roles.filter(ur=>ur.value==event.value);
   this.selectedRole=selectedRole[0].label;
 const managerdata = this.newEmployeeForm.get('Managerlist');
@@ -634,23 +645,25 @@ this.newEmployeeForm.controls['flclist'].patchValue("")
 this.newEmployeeForm.controls['Managerlist'].patchValue("")
 if(this.constantusrRole.Employee==this.selectedRole )
 {
+  this.showTextbox = true;
   managerdata.setValidators(Validators.required);
-  password.setValidators(Validators.required);
+  //password.setValidators(Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)]));
   flc.clearValidators();
   //flc.updateValueAndValidity();
   this.showMang = true;
   
 }
 else if(this.constantusrRole.Temp==this.selectedRole){
+  password.clearValidators();
   managerdata.setValidators(Validators.required);
   flc.setValidators(Validators.required);
   //password.updateValueAndValidity();
-  password.clearValidators();
+
   this.showFlc = true;
 }
 else{
   managerdata.clearValidators();
-  password.clearValidators();
+  //password.clearValidators();
   flc.clearValidators();
   }
   managerdata.updateValueAndValidity();
@@ -688,7 +701,7 @@ else{
     'city': new FormControl(null, Validators.compose([ Validators.maxLength(13)])),
     'zipcode': new FormControl(null, Validators.compose([ Validators.maxLength(9)])),
     'empusername': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(20)])),
-    'emppassword': new FormControl(null, Validators.compose([ Validators.minLength(6), Validators.maxLength(20)])),
+    'emppassword': new FormControl(null, Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)])),
     'userrole': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
     'hourlylabourrate': new FormControl(0, Validators.compose([ Validators.maxLength(13)])),
     'chkIsActive': new FormControl(null),
