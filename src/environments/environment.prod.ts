@@ -10,7 +10,8 @@ export const environment = {
   tolerance: 5,
   //  apiEndpoint: 'https://tbappapihannah.azurewebsites.net/',
   // apiEndpoint: 'https://tbappapitest.azurewebsites.net/',
-    apiEndpoint:'https://hwg-api.azurewebsites.net/',
+   apiEndpoint:   'https://pcgapi.azurewebsites.net',//pre-production
+   // apiEndpoint:'https://hwg-api.azurewebsites.net/',//production
      //apiEndpoint: 'https://tbgrowqc-api.azurewebsites.net/',//Arbre dev
   //  apiEndpoint: 'https://tbdemowebapi.azurewebsites.net/',
 
