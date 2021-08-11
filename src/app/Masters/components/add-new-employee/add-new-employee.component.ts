@@ -42,6 +42,7 @@ export class AddNewEmployeeComponent implements OnInit {
     roles: []
   };
   showTextbox: any = true;
+  showPWbox: any = true;
   clear: any;
   msgs: any[];
   clients: any[];
@@ -415,10 +416,10 @@ passwordType: string = 'password';
       this.showMang = false;
       this.showFlc = false;
       this.showTextbox = false;
+      this.showPWbox = false;
       const password = this.newEmployeeForm.get('emppassword')
-      if(this.showTextbox === false){
-        password.clearValidators();
-      }
+    
+      password.clearValidators();
       this.showTerminationDate = true;
       const data = this.allEmployeeList.filter(x => x.EmpId === EmpId);
        if (data !== 'No data found!') {
@@ -579,13 +580,15 @@ passwordType: string = 'password';
     this.showTerminationDate = false;
     this.newEmployeeResources.pageheading = 'Add New Employee';
     this.resetForm();
-    //this.showTextbox = true;
+    this.showTextbox = true;
+    this.showPWbox = true;
     this.states = null;
     this.cities = null;
     this.star = false;
   }
   resetForm() {
-    this.showTextbox = false
+    this.showTextbox = true;
+    this.showPWbox = true;
     this.selectedRole = ""
     this.newEmployeeForm.reset({ chkIsActive: true });
     this.showFlc = false;
@@ -610,8 +613,8 @@ passwordType: string = 'password';
     //   userrole: null,
     //   hourlylabourrate: null
     // };
-  
-  
+    const password = this.newEmployeeForm.get('emppassword')
+    password.clearValidators();
     const clientname = this.newEmployeeForm.controls['clientname'];
     clientname.patchValue(Number(this._cookieService.ClientId));
     const Country = this.newEmployeeForm.controls['country'];
@@ -643,11 +646,15 @@ const password = this.newEmployeeForm.get('emppassword')
 const flc = this.newEmployeeForm.get('flclist')
 this.newEmployeeForm.controls['flclist'].patchValue("") 
 this.newEmployeeForm.controls['Managerlist'].patchValue("")
+// if(this.selectedRole != 'Temp'){
+//   this.showTextbox = true;
+// }
 if(this.constantusrRole.Employee==this.selectedRole )
 {
-  this.showTextbox = true;
+ 
+    this.showPWbox = true;
   managerdata.setValidators(Validators.required);
-  //password.setValidators(Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)]));
+  password.setValidators(Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)]));
   flc.clearValidators();
   //flc.updateValueAndValidity();
   this.showMang = true;
@@ -701,7 +708,7 @@ else{
     'city': new FormControl(null, Validators.compose([ Validators.maxLength(13)])),
     'zipcode': new FormControl(null, Validators.compose([ Validators.maxLength(9)])),
     'empusername': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(20)])),
-    'emppassword': new FormControl(null, Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)])),
+    'emppassword': new FormControl(null, Validators.compose([Validators.minLength(6), Validators.maxLength(20)])),
     'userrole': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
     'hourlylabourrate': new FormControl(0, Validators.compose([ Validators.maxLength(13)])),
     'chkIsActive': new FormControl(null),
