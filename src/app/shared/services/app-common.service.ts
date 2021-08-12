@@ -58,6 +58,7 @@ export class AppCommonService implements OnChanges, OnInit {
   public TPProcessorFormDetail: FormGroup;
   public ProductTypeBackLink = false;
   public ProductTypeFormDetail: FormGroup;
+  public skillFormDetail: FormGroup; 
 
   public LotBackLink = false;
   public costoflot: any;

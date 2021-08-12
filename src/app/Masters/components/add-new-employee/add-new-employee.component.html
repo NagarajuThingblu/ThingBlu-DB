@@ -535,8 +535,40 @@
                   </div>
                 </div>
                 <!--End Zip Code -->
+                  <!-- Skills -->
+                  <div class="ui-g-12 ui-md-6">
+                    <div class="paddingRL">
+                      <div class="le-su-12">
+                        <label for="skills">
+                          Skills<span class="star">*</span>:
+                        </label>
+                        <p-button class="toplinks" type="button" icon="fa fa-plus" label="Add Skills" id="btn_geneticshow" (click)="NavigateToSkillsPage()"  name="btnviewGenetics" ></p-button>
+                        <p-multiSelect #checkedItems
+                          id="skills"
+                          [options]="skills"
+                          formControlName="skills"
+                          placeholder="-- Select --"
+                          (onChange) = "onFieldSelect($event)"
+                          class="clsControl"
+                          name="skills"
+                          [disabled]="enableFieldSection"
+                          >
+                        </p-multiSelect>
+
+                        <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          *ngIf="!newEmployeeForm.controls['zipcode'].valid&&newEmployeeForm.controls['zipcode'].dirty">
+                          <span *ngIf="newEmployeeForm.controls['zipcode'].errors['required']">
+                          {{ newEmployeeResources.zipcoderequired }}
+                          </span>
+                          <span *ngIf="newEmployeeForm.controls['zipcode'].errors['maxlength']">{{newEmployeeResources.zipcodeLength}}</span>
+                        </div> -->
+                      </div>
+                  </div>
+                </div>
+                <!--End Skills -->
+               
                 <!-- User Name -->
-                <div class="ui-g-12 ui-md-6" *ngIf="showTextbox === true">
+                <div class="ui-g-12 ui-md-6" >
                   <div class="paddingRL">
                       <div class="le-su-12">
                         <label for="empusername">
@@ -569,7 +601,7 @@
                 </div>
                 <!-- End User Name -->
                 <!-- Password -->
-                <div class="ui-g-12 ui-md-6" *ngIf="showPWbox === true && this.constantusrRole.Temp !=this.selectedRole">
+                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp !=this.selectedRole && showPWbox === true" >
                   <div class="paddingRL">
                       <div class="le-su-12">
                         <label for="emppassword">
@@ -655,7 +687,7 @@
                 <!-- End Hire Date -->
 
                  <!-- Termination Date -->
-                 <div class="ui-g-12 ui-md-6" *ngIf = "showTerminationDate === true" >
+                 <div class="ui-g-12 ui-md-6" *ngIf = "showTerminationDate === true">
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="terminationdate">
@@ -718,7 +750,7 @@
                 </div>
                 <!-- End Hourly labour Rate -->
                 <!--Manager List-->
-                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole|| showMang === true">
+                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole">
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="managerlist" class="towlable fwLabelBold">ManagerList<span class="star">*</span></label>
@@ -738,7 +770,7 @@
                 </div>
                 <!--End Manager List-->
                  <!--FLC List-->
-                 <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp==this.selectedRole || showFlc === true">
+                 <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp==this.selectedRole" >
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="flclist" class="towlable fwLabelBold">FLC List<span class="star"> *</span></label>

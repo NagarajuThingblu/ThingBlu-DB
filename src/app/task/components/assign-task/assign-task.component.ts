@@ -1062,6 +1062,11 @@ console.log(assignTaskFormValues)
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
             this.loaderService.display(false);
           }
+          else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Merged Sections'){
+            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+            detail: data[0]. RESULTKEY});
+            this.loaderService.display(false);
+          }
           else if (String(data) === 'Something went wrong  at server side!'){
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
             this.loaderService.display(false);
@@ -1117,7 +1122,7 @@ console.log(assignTaskFormValues)
               this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
               this.loaderService.display(false);
             }
-            else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Selected Merged Sections'){
+            else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Merged Sections'){
               this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
               detail: data[0]. RESULTKEY});
               this.loaderService.display(false);
@@ -1169,9 +1174,10 @@ console.log(assignTaskFormValues)
               });
               this.loaderService.display(false);
             }
-            else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Selected Merged Sections'){
+            else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Merged Sections'){
               this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
               detail: data[0]. RESULTKEY});
+              this.loaderService.display(false);
             }
           }
         )

@@ -38,6 +38,7 @@ import { TpProcessorComponent } from './Masters/components/tp-processor/tp-proce
 import { RetailerComponent } from './Masters/components/retailer/retailer.component';
 import { AddNewClientComponent } from './Masters/components/add-new-client/add-new-client.component';
 import { AddNewEmployeeComponent } from './Masters/components/add-new-employee/add-new-employee.component';
+import { EmployeeSkillsetComponent } from './Masters/components/employee-skillset/employee-skillset.component';
 import { StrainMasterComponent } from './Masters/components/strain-master/strain-master.component';
 import { StraintypeMasterComponent } from './Masters/components/straintype-master/straintype-master.component';
 import { AddNewBrandFormComponent } from './Masters/components/add-new-brand-form/add-new-brand-form.component';
@@ -134,6 +135,7 @@ const appRoutes: Routes = [
       { path: 'customer', component: RetailerComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'client', component: AddNewClientComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'addemployee', component: AddNewEmployeeComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'skills', component: EmployeeSkillsetComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'strainmaster', component: StrainMasterComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'straintypemaster', component: StraintypeMasterComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'addnewbrand', component: AddNewBrandFormComponent, canActivate: [AuthGuard, RoleGuard] },

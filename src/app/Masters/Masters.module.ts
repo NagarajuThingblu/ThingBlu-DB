@@ -80,6 +80,7 @@ import { ChemicalMasterPageComponent } from './components/chemical-master-page/c
 import { UpdateTerminationreasonComponent } from './components/update-terminationreason/update-terminationreason.component';
 import { SectionDetailsComponent } from './components/section-details/section-details.component';
 import { LabelDetailsComponent } from './components/label-details/label-details.component';
+import { EmployeeSkillsetComponent } from './components/employee-skillset/employee-skillset.component';
 
 
 @NgModule({
@@ -129,7 +130,8 @@ import { LabelDetailsComponent } from './components/label-details/label-details.
     ChemicalMasterPageComponent,
     UpdateTerminationreasonComponent,
     SectionDetailsComponent,
-    LabelDetailsComponent
+    LabelDetailsComponent,
+    EmployeeSkillsetComponent
    
   ],
   imports: [

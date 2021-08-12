@@ -14,6 +14,7 @@ import { NewEmployeeActionService } from '../../../task/services/add-employee';
 import { NewEmployeeService } from '../../services/new-employee.service';
 import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { AppConstants } from '../../../shared/models/app.constants';
+import { Router } from '@angular/router';
 declare function unescape(s: string): string;
 @Component({
   selector: 'app-add-new-employee',
@@ -86,6 +87,7 @@ passwordType: string = 'password';
    // private cookieService: CookieService, ::unused
     private newEmployeeService: NewEmployeeService,
     private scrolltopservice: ScrollTopService,
+    private router: Router
   ) {
     this.getClientList();
     this.getAllRoles();
@@ -99,27 +101,58 @@ passwordType: string = 'password';
     this.dateTime.setDate(this.dateTime.getDate());
    }
 
-  //  EmployeeDetails = {
-  //   clientname: null,
-  //   firstname: null,
-  //   middlename: null,
-  //   lastname: null,
-  //   gender: null,
-  //   dob: null,
-  //   cellphone: null,
-  //   homephone: null,
-  //   primaryemail: null,
-  //   secondaryemail: null,
-  //   address: null,
-  //   country: null,
-  //   state: null,
-  //   city: null,
-  //   zipcode: null,
-  //   username: null,
-  //   password: null,
-  //   userrole: null,
-  //   hourlylabourrate: null
-  // };
+   ngOnInit() {
+    this.saveButtonText = 'Save';
+    this.clear = 'Clear';
+    this.chkIsActive = true;
+    this.newEmployeeResources = MastersResource.getResources().en.addnewemployee;
+    this.globalResource = GlobalResources.getResources().en;
+    this.loaderService.display(false);
+    this.appComponentData.setTitle('Employee');
+    this._cookieService = this.appCommonService.getUserProfile();
+    this.constantusrRole=  AppConstants.getUserRoles;
+    // new product type form defination(reactive form)
+  this.newEmployeeForm = this.fb.group({
+    'clientname': new FormControl(null, Validators.required),
+    'firstname': new FormControl(null, Validators.required),
+    'middlename': new FormControl(null),
+    'lastname': new FormControl(null, Validators.required),
+    'gender': new FormControl(null),
+    'dob': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
+    'hiredate': new FormControl(null, Validators.compose([ Validators.required,Validators.maxLength(15)])),
+    'terminationdate': new FormControl(null),
+    'cellphone': new FormControl(null, Validators.compose([ Validators.maxLength(15)])),
+    'homephone': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
+    'primaryemail': new FormControl(null),
+    'secondaryemail': new FormControl(null, Validators.compose([Validators.maxLength(30)])),
+    'address': new FormControl(null, Validators.compose([ Validators.maxLength(50)])),
+    'country': new FormControl(null, Validators.compose([Validators.maxLength(13)])),
+    'state': new FormControl(null, Validators.compose([ Validators.maxLength(13)])),
+    'city': new FormControl(null, Validators.compose([ Validators.maxLength(13)])),
+    'zipcode': new FormControl(null, Validators.compose([ Validators.maxLength(9)])),
+    'empusername': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(20)])),
+    'emppassword': new FormControl(null, Validators.compose([Validators.minLength(6), Validators.maxLength(20)])),
+    'userrole': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
+    'hourlylabourrate': new FormControl(0, Validators.compose([ Validators.maxLength(13)])),
+    'chkIsActive': new FormControl(null),
+    'Managerlist': new FormControl(null),
+    'flclist':new FormControl(null),
+    'skills':new FormControl(null, Validators.required),
+  });
+  // const managerdata = this.newEmployeeForm.get('Managerlist');
+  const clientname = this.newEmployeeForm.controls['clientname'];
+  clientname.patchValue(Number(this._cookieService.ClientId));
+
+  this.genders = [
+    { label: '-- Select --', value: null },
+    { label: 'Male', value: 'M' },
+    { label: 'Female', value: 'F' }
+  ];
+  const Country = this.newEmployeeForm.controls['country'];
+  Country.patchValue(31);
+  const state = this.newEmployeeForm.controls['state'];
+  state.patchValue(16);
+  }
 
   doOPenPanel() {
     this.collapsed = false;
@@ -172,7 +205,7 @@ passwordType: string = 'password';
           CityId: this.newEmployeeForm.value.city,
           ZipCode: this.newEmployeeForm.value.zipcode,
           UserName: this.appCommonService.trimString(this.newEmployeeForm.value.empusername),
-          Password: encryptedPwd ? encryptedPwd : '' ,
+          Password: encryptedPwd ? encryptedPwd : null ,
           PasswordText: this.appCommonService.trimString(this.newEmployeeForm.value.emppassword),
           UserRoleId: this.newEmployeeForm.value.userrole,
           UserRole: (this.roles.filter(x => x.value === this.newEmployeeForm.value.userrole))[0].label,
@@ -412,15 +445,15 @@ passwordType: string = 'password';
     // return output;
   }
   GetEmployeeOnEdit(EmpId) {
-    // this.newEmployeeService.GetAllEmployeeList().subscribe(
-      this.showMang = false;
-      this.showFlc = false;
-      this.showTextbox = false;
-      this.showPWbox = false;
-      const password = this.newEmployeeForm.get('emppassword')
-    
-      password.clearValidators();
+   this.resetForm();
+      // this.showMang = false;
+      // this.showFlc = false;
+      // this.showTextbox = false;
+      var decryptedpwd
+       this.showPWbox = false;
       this.showTerminationDate = true;
+      const password = this.newEmployeeForm.controls['emppassword'];
+      password.clearValidators();
       const data = this.allEmployeeList.filter(x => x.EmpId === EmpId);
        if (data !== 'No data found!') {
           this.empIdForUpdate = EmpId;
@@ -429,18 +462,23 @@ passwordType: string = 'password';
 
           this.employeeOnEdit = data.filter(x => x.EmpId === EmpId);
           if( this.employeeOnEdit[0].FLCId != null){
-             this. showMang = true
-             this. showFlc = true
+            //  this. showMang = true
+            //  this. showFlc = true
           }
           if( this.employeeOnEdit[0].ManagerId != null){
-            this. showMang = true
+            // this. showMang = true
           
          }
          if( this.employeeOnEdit[0].Role === "Temp"){
           this.selectedRole= "Temp"
-        
        }
-           const decryptedpwd = this.decode64(this.employeeOnEdit[0].Password);
+       if(this.employeeOnEdit[0].Password != null){
+         decryptedpwd = this.decode64(this.employeeOnEdit[0].Password);
+         if(decryptedpwd.length >= 6){
+          password.patchValue(decryptedpwd);
+        }
+       }
+          
           const clientname = this.newEmployeeForm.controls['clientname'];
           const firstname = this.newEmployeeForm.controls['firstname'];
           const middlename = this.newEmployeeForm.controls['middlename'];
@@ -459,7 +497,7 @@ passwordType: string = 'password';
           const city = this.newEmployeeForm.controls['city'];
           const zipcode = this.newEmployeeForm.controls['zipcode'];
           const username = this.newEmployeeForm.controls['empusername'];
-          const password = this.newEmployeeForm.controls['emppassword'];
+         
           const userrole = this.newEmployeeForm.controls['userrole'];
           const managerlist = this.newEmployeeForm.controls['Managerlist'];
           const flclist = this.newEmployeeForm.controls['flclist'];
@@ -489,9 +527,7 @@ passwordType: string = 'password';
           city.patchValue(this.employeeOnEdit[0].CityId);
           zipcode.patchValue(this.employeeOnEdit[0].ZipCode);
           username.patchValue(this.employeeOnEdit[0].Username);
-          if(decryptedpwd.length >= 6){
-            password.patchValue(decryptedpwd);
-          }
+         
         
           userrole.patchValue(this.employeeOnEdit[0].RoleId);
           managerlist.patchValue(this.employeeOnEdit[0].ManagerId);
@@ -573,46 +609,26 @@ passwordType: string = 'password';
   isNumber(value) {return typeof value === 'number'; }
 
   resetAll() {
-    this.showFlc = false
-    this.empIdForUpdate = 0;
+    // this.showFlc = false
+   
     this.saveButtonText = 'Save';
     this.clear = 'Clear';
     this.showTerminationDate = false;
     this.newEmployeeResources.pageheading = 'Add New Employee';
     this.resetForm();
-    this.showTextbox = true;
-    this.showPWbox = true;
+    // this.showTextbox = true;
+    // this.showPWbox = true;
     this.states = null;
     this.cities = null;
     this.star = false;
   }
   resetForm() {
-    this.showTextbox = true;
-    this.showPWbox = true;
+    // this.showTextbox = true;
+    this.empIdForUpdate = 0;
+     this.showPWbox = true;
     this.selectedRole = ""
     this.newEmployeeForm.reset({ chkIsActive: true });
-    this.showFlc = false;
-    // this.EmployeeDetails = {
-    //   clientname: null,
-    //   firstname: null,
-    //   middlename: null,
-    //   lastname: null,
-    //   gender: null,
-    //   dob: null,
-    //   cellphone: null,
-    //   homephone: null,
-    //   primaryemail: null,
-    //   secondaryemail: null,
-    //   address: null,
-    //   country: null,
-    //   state: null,
-    //   city: null,
-    //   zipcode: null,
-    //   username: null,
-    //   password: null,
-    //   userrole: null,
-    //   hourlylabourrate: null
-    // };
+    // this.showFlc = false;
     const password = this.newEmployeeForm.get('emppassword')
     password.clearValidators();
     const clientname = this.newEmployeeForm.controls['clientname'];
@@ -636,8 +652,8 @@ passwordType: string = 'password';
 
   Managerdrpdwnchng(event)
 {
-  this.showMang = false;
-  this.showFlc = false;
+  // this.showMang = false;
+  // this.showFlc = false;
   //this.showTextbox = false;
   const selectedRole=this.roles.filter(ur=>ur.value==event.value);
   this.selectedRole=selectedRole[0].label;
@@ -649,24 +665,29 @@ this.newEmployeeForm.controls['Managerlist'].patchValue("")
 // if(this.selectedRole != 'Temp'){
 //   this.showTextbox = true;
 // }
+if(this.selectedRole != 'Temp'){
+  this.showPWbox = true
+ password.setValidators(Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)]));
+}
 if(this.constantusrRole.Employee==this.selectedRole )
 {
  
-    this.showPWbox = true;
+    // this.showPWbox = true;
   managerdata.setValidators(Validators.required);
-  password.setValidators(Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)]));
+ 
   flc.clearValidators();
   //flc.updateValueAndValidity();
-  this.showMang = true;
+  // this.showMang = true;
   
 }
 else if(this.constantusrRole.Temp==this.selectedRole){
-  password.clearValidators();
+  this.showPWbox = false
+  password.setValidators(Validators.compose([Validators.minLength(6), Validators.maxLength(20)]));
   managerdata.setValidators(Validators.required);
   flc.setValidators(Validators.required);
   //password.updateValueAndValidity();
 
-  this.showFlc = true;
+  // this.showFlc = true;
 }
 else{
   managerdata.clearValidators();
@@ -678,57 +699,7 @@ else{
   flc.updateValueAndValidity();
 }
 
-  ngOnInit() {
-    this.saveButtonText = 'Save';
-    this.clear = 'Clear';
-    this.chkIsActive = true;
-    this.newEmployeeResources = MastersResource.getResources().en.addnewemployee;
-    this.globalResource = GlobalResources.getResources().en;
-    this.loaderService.display(false);
-    this.appComponentData.setTitle('Employee');
-    this._cookieService = this.appCommonService.getUserProfile();
-    this.constantusrRole=  AppConstants.getUserRoles;
-    // new product type form defination(reactive form)
-  this.newEmployeeForm = this.fb.group({
-    'clientname': new FormControl(null, Validators.required),
-    'firstname': new FormControl(null, Validators.required),
-    'middlename': new FormControl(null),
-    'lastname': new FormControl(null, Validators.required),
-    'gender': new FormControl(null),
-    'dob': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
-    'hiredate': new FormControl(null, Validators.compose([ Validators.required,Validators.maxLength(15)])),
-    'terminationdate': new FormControl(null),
-    'cellphone': new FormControl(null, Validators.compose([ Validators.maxLength(15)])),
-    'homephone': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
-    'primaryemail': new FormControl(null),
-    'secondaryemail': new FormControl(null, Validators.compose([Validators.maxLength(30)])),
-    'address': new FormControl(null, Validators.compose([ Validators.maxLength(50)])),
-    'country': new FormControl(null, Validators.compose([Validators.maxLength(13)])),
-    'state': new FormControl(null, Validators.compose([ Validators.maxLength(13)])),
-    'city': new FormControl(null, Validators.compose([ Validators.maxLength(13)])),
-    'zipcode': new FormControl(null, Validators.compose([ Validators.maxLength(9)])),
-    'empusername': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(20)])),
-    'emppassword': new FormControl(null, Validators.compose([Validators.minLength(6), Validators.maxLength(20)])),
-    'userrole': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
-    'hourlylabourrate': new FormControl(0, Validators.compose([ Validators.maxLength(13)])),
-    'chkIsActive': new FormControl(null),
-    'Managerlist': new FormControl(null),
-    'flclist':new FormControl(null),
-  });
-  // const managerdata = this.newEmployeeForm.get('Managerlist');
-  const clientname = this.newEmployeeForm.controls['clientname'];
-  clientname.patchValue(Number(this._cookieService.ClientId));
-
-  this.genders = [
-    { label: '-- Select --', value: null },
-    { label: 'Male', value: 'M' },
-    { label: 'Female', value: 'F' }
-  ];
-  const Country = this.newEmployeeForm.controls['country'];
-  Country.patchValue(31);
-  const state = this.newEmployeeForm.controls['state'];
-  state.patchValue(16);
-  }
+ 
 
   
 
@@ -821,5 +792,10 @@ getCityOnStateChange() {
       this.showeye = false
       this.hideeye = true;
     }
+    }
+
+    NavigateToSkillsPage(){
+      this.appCommonService.skillFormDetail = this.newEmployeeForm;
+      this.router.navigate(['../home/skills']);
     }
 }
