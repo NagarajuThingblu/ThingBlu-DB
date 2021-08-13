@@ -105,7 +105,7 @@ confirmpasswordType: string = 'password';
 // this.ShowForgotPasswordPopup();
     this.username = this.appCommonService.getUserProfile().UserName;
     this.ClientId= String(this.appCommonService.getUserProfile().ClientId);
-    this.headerimagtail="assets/img/"+this.ClientId+"ThingBluNoTagline.png";
+    this.headerimagtail="assets/img/"+4+"ThingBluNoTagline.png";
     this.headerimagesmall="assets/img/"+this.ClientId+"hannah-logo-small.png";
     this.heading = this.username + ' is logged in. Do you want to continue with this?';
 
