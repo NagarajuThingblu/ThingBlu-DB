@@ -1,6 +1,8 @@
 import { AddNewSkewPopupComponent } from './components/add-new-skew-popup/add-new-skew-popup.component';
 
 import { NgModule } from '@angular/core';
+import {TreeModule} from 'primeng/tree';
+import {TreeNode} from 'primeng/api';
 import { SharedModule } from '../shared/shared.module';
 import { NewProductTypeComponent } from './components/new-product-type/new-product-type.component';
 import { NewProductTypeDetailsActionService } from '../task/services/new-product-type.service';
@@ -136,6 +138,8 @@ import { EmployeeSkillsetComponent } from './components/employee-skillset/employ
   ],
   imports: [
     SharedModule,
+    TreeModule,
+  
   ],
   providers: [
     NewProductTypeDetailsActionService,

@@ -101,8 +101,22 @@
   </div>
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
-      <label for="employeeList">Assigned To<span class="star">*</span></label>:
+      <label for="skills">Skills<span class="star">*</span></label>:
       <p-multiSelect #checkedItems
+      [filter] ="true"
+      [options]="skills"
+      placeholder="-- Select --"
+      formControlName="skills"
+      class="clsControl"
+      id="skills"
+      name="skills">
+      </p-multiSelect>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="employeeList">Assigned To<span class="star">*</span></label>:
+      <!-- <p-multiSelect #checkedItems
       [filter] ="true"
       [options]="employees"
       placeholder="-- Select --"
@@ -111,7 +125,9 @@
       class="clsControl"
       id="employeeList"
       name="employeeList">
-      </p-multiSelect>
+      </p-multiSelect> -->
+      <p-tree [value]="files"  styleClass="clsRoleAccessTree" selectionMode="checkbox"  [(selection)]="selectedSkillItems"
+      [propagateSelectionUp]="false" (onNodeSelect)="OnSelectingEmployees($event)" (onNodeUnselect) = "OnUnSelectNode($event)" [propagateSelectionDown]="true"></p-tree>
     </div>
   </div>
 

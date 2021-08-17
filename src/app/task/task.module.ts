@@ -1,7 +1,8 @@
 
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
-
+import {TreeModule} from 'primeng/tree';
+import {TreeNode} from 'primeng/api';
 import { GrowerDetailsActionService } from './services/grower-details-action.service';
 
 import { AssignTaskComponent } from './components/assign-task/assign-task.component';
@@ -83,7 +84,8 @@ import { D8DistillateComponent } from './components/taskparameters/d8-distillate
     
   ],
   imports: [
-    SharedModule
+    SharedModule,
+    TreeModule
   ],
   providers: [GrowerDetailsActionService, TaskCommonService, TaskResolver, SkewListResolver, OilService],
   entryComponents: [ QuarantineComponent ],

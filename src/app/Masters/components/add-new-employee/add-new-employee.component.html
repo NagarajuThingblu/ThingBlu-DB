@@ -64,32 +64,32 @@
           <p-button  type="button" class="links" icon="fa fa-plus" label="{{ newEmployeeResources.adduserrole}}" id="btn_userroleshow" (click)="showUserRolePopup()" name="btnshow" ></p-button>
         </div>
       </div>
-      <!-- End User Role -->
-      <div class="ui-g-12 ui-md-6" style="visibility: hidden;">
-        <div class="paddingRL">
-          <label for="userrole">{{ newEmployeeResources.userrole }}<span class="star">*</span></label>:
-  
-          <p-dropdown
-            [filter] ="true"
-            id="userrole"
-            formControlName="userrole"
-            [options]="roles"
-            placeholder="-- Select --"
-            [autoWidth]="false"
-            (onChange)="Managerdrpdwnchng($event)"
-            class="clsControl"
-            name="userrole">
-          </p-dropdown>
-  
-            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-              *ngIf="!newEmployeeForm.controls['userrole'].valid&&newEmployeeForm.controls['userrole'].dirty">
-  
-                {{ newEmployeeResources.userrolerequired }}
-            </div>
-  
-            <p-button  type="button" class="links" icon="fa fa-plus" label="{{ newEmployeeResources.adduserrole}}" id="btn_userroleshow" (click)="showUserRolePopup()" name="btnshow" ></p-button>
+    <!--End User Role-->
+    <div class="ui-g-12 ui-md-6" style="visibility:hidden;">
+      <div class="paddingRL">
+        <label for="userrole">{{ newEmployeeResources.userrole }}<span class="star">*</span></label>:
+
+        <p-dropdown
+          [filter] ="true"
+          id="userrole"
+          formControlName="userrole"
+          [options]="roles"
+          placeholder="-- Select --"
+          [autoWidth]="false"
+          (onChange)="Managerdrpdwnchng($event)"
+          class="clsControl"
+          name="userrole">
+        </p-dropdown>
+
+          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+            *ngIf="!newEmployeeForm.controls['userrole'].valid&&newEmployeeForm.controls['userrole'].dirty">
+
+              {{ newEmployeeResources.userrolerequired }}
           </div>
+
+          <p-button  type="button" class="links" icon="fa fa-plus" label="{{ newEmployeeResources.adduserrole}}" id="btn_userroleshow" (click)="showUserRolePopup()" name="btnshow" ></p-button>
         </div>
+      </div>
                 <!--Employee First Name -->
                 <div class="ui-g-12 ui-md-6">
                   <div class="paddingRL">
@@ -535,38 +535,7 @@
                   </div>
                 </div>
                 <!--End Zip Code -->
-                  <!-- Skills -->
-                  <div class="ui-g-12 ui-md-6">
-                    <div class="paddingRL">
-                      <div class="le-su-12">
-                        <label for="skills">
-                          Skills<span class="star">*</span>:
-                        </label>
-                        <p-button class="toplinks" type="button" icon="fa fa-plus" label="Add Skills" id="btn_geneticshow" (click)="NavigateToSkillsPage()"  name="btnviewGenetics" ></p-button>
-                        <p-multiSelect #checkedItems
-                          id="skills"
-                          [options]="skills"
-                          formControlName="skills"
-                          placeholder="-- Select --"
-                          (onChange) = "onFieldSelect($event)"
-                          class="clsControl"
-                          name="skills"
-                          [disabled]="enableFieldSection"
-                          >
-                        </p-multiSelect>
-
-                        <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                          *ngIf="!newEmployeeForm.controls['zipcode'].valid&&newEmployeeForm.controls['zipcode'].dirty">
-                          <span *ngIf="newEmployeeForm.controls['zipcode'].errors['required']">
-                          {{ newEmployeeResources.zipcoderequired }}
-                          </span>
-                          <span *ngIf="newEmployeeForm.controls['zipcode'].errors['maxlength']">{{newEmployeeResources.zipcodeLength}}</span>
-                        </div> -->
-                      </div>
-                  </div>
-                </div>
-                <!--End Skills -->
-               
+                    
                 <!-- User Name -->
                 <div class="ui-g-12 ui-md-6" >
                   <div class="paddingRL">
@@ -749,6 +718,24 @@
                   </div>
                 </div>
                 <!-- End Hourly labour Rate -->
+
+                  <!-- End User Role -->
+        <!-- Skills -->
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <div class="le-su-12">
+              <label for="skills">
+                Skills<span class="star"></span>:
+              </label>
+              <p-button class="toplinks" type="button" icon="fa fa-plus" label="Add Skills" id="btn_geneticshow" (click)="NavigateToSkillsPage()"  name="btnviewGenetics" ></p-button>
+
+              <p-tree [value]="files"  styleClass="clsRoleAccessTree" selectionMode="checkbox"  [(selection)]="selectedSkillItems"
+              [propagateSelectionUp]="false" (onNodeUnselect) = "OnUnSelectNode($event)" [propagateSelectionDown]="true"></p-tree>
+
+            </div>
+        </div>
+      </div>
+      <!--End Skills -->
                 <!--Manager List-->
                 <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole">
                   <div class="paddingRL">
@@ -821,6 +808,7 @@
 (EmployeeDeleteEvent)="EmployeeDeleteEvent($event)"
 (EmployeeDeactivateEvent)="EmployeeDeleteEvent($event)"
 [allEmployeeList]="allEmployeeList"
+[allSkillsList]="allSkillslistforBelowList"
 [PaginationValues]="paginationValues"></app-employee-listing>
 
 

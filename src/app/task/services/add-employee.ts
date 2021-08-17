@@ -39,6 +39,12 @@ export class NewEmployeeActionService {
       params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
       return this.http.get(url,{params: params}).map(data=>data);
     }
+  SkillslistForEmp(){
+      const url='api/Grower/GetSkillsListForEmployee';
+      let params = new HttpParams();
+      params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
+      return this.http.get(url,{params: params}).map(data=>data);
+    }
     addNewSkills(skillDetauilsForApi){
       const url = 'api/Grower/AddUpdateSkills';
 

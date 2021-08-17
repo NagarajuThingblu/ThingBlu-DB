@@ -15,6 +15,10 @@ import { NewEmployeeService } from '../../services/new-employee.service';
 import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { AppConstants } from '../../../shared/models/app.constants';
 import { Router } from '@angular/router';
+import {TreeModule} from 'primeng/tree';
+import {TreeNode} from 'primeng/api';
+
+
 declare function unescape(s: string): string;
 @Component({
   selector: 'app-add-new-employee',
@@ -52,9 +56,13 @@ export class AddNewEmployeeComponent implements OnInit {
   cities: any[];
   roles:  any[];
   genders: SelectItem[];
+  sampleData:any[]
+  sampleDataChild:any[]
   stringEscapeRegex: any = /[^ a-zA-Z0-9]/g;
   chkIsActive: boolean;
   public allEmployeeList: any;
+  public allSkillsList :any;
+  public allSkillslistforBelowList : any
   public getInventoryList: any;
   public employeeOnEdit: any;
   public saveButtonText: any;
@@ -66,15 +74,23 @@ public hideeye: boolean = true;
 passwordShown: boolean= false;
 passwordType: string = 'password';
   public constantusrRole:any;
+  public alltaskslist: any;
+  public allSkillslist: any;
+  public displatSkillSet: boolean = false;
   public selectedRole:any;
   public Managerlist:any;
+  public Skilllist:TreeNode[];
+  selectedFile:  TreeNode[];
   public ManagerlistOptional : boolean = false;
   public flclist:any;
+  public files: any = [];
   public showMang: boolean =false;
   public showFlc: boolean =false;
   public globalResource: any;
   public showTerminationDate: boolean = false;
   public star:boolean = false;
+  plottedSkillItems: any = [];
+  public selectedSkillItems: any[];
   collapsed: any;
   constructor(
     private fb: FormBuilder,
@@ -87,7 +103,10 @@ passwordType: string = 'password';
    // private cookieService: CookieService, ::unused
     private newEmployeeService: NewEmployeeService,
     private scrolltopservice: ScrollTopService,
-    private router: Router
+    private router: Router,
+    // private TreeModule :TreeModule,
+    // private Tree:Tree,
+    // private TreeNode:TreeNode,
   ) {
     this.getClientList();
     this.getAllRoles();
@@ -97,6 +116,7 @@ passwordType: string = 'password';
     this.GetManagerlist();
     this.getAllEmployee();
     this.GetFLClist();
+    this.getSkills();
     this.saveButtonText = 'Save';
     this.dateTime.setDate(this.dateTime.getDate());
    }
@@ -137,12 +157,23 @@ passwordType: string = 'password';
     'chkIsActive': new FormControl(null),
     'Managerlist': new FormControl(null),
     'flclist':new FormControl(null),
-    'skills':new FormControl(null, Validators.required),
+    'skills':new FormControl(null),
   });
   // const managerdata = this.newEmployeeForm.get('Managerlist');
   const clientname = this.newEmployeeForm.controls['clientname'];
   clientname.patchValue(Number(this._cookieService.ClientId));
-
+  // this.sampleData = [
+  //   { ClientId:4, Id:62, IsParent:true, label:"Planting", Num:1,parentId:0 },
+   
+  //   { ClientId:4, Id:65, IsParent:true, label:"Harvesting", Num:4,parentId:0 },
+ 
+  // ];
+  // this.sampleDataChild = [
+  //   { ClientId:4, Id:1, IsParent:false, label:"good at plants selection", Num:2,parentId:62 },
+  //   { ClientId:4, Id:2, IsParent:false, label:"good at pestisides", Num:3,parentId:62 },
+  //   { ClientId:4, Id:3, IsParent:false, label:"good at xyz", Num:5,parentId:65 },
+  //   { ClientId:4, Id:4, IsParent:false, label:"good at zbc", Num:6,parentId:65 },
+  // ]
   this.genders = [
     { label: '-- Select --', value: null },
     { label: 'Male', value: 'M' },
@@ -152,6 +183,8 @@ passwordType: string = 'password';
   Country.patchValue(31);
   const state = this.newEmployeeForm.controls['state'];
   state.patchValue(16);
+ 
+  //this.plotSkillData()
   }
 
   doOPenPanel() {
@@ -160,6 +193,10 @@ passwordType: string = 'password';
   }
    // Save the form details
    onSubmit(value: any) {
+    // if (String(this.newEmployeeForm.value.country) != null) {
+    //   this.newEmployeeForm.controls['state'].setValidators(Validators.compose([Validators.required]));
+    //   this.newEmployeeForm.controls['city'].setValidators(Validators.compose([Validators.required]));
+    // }
     if (String(this.newEmployeeForm.value.firstname).trim().length === 0) {
       this.newEmployeeForm.controls['firstname'].setErrors({'whitespace': true});
       this.newEmployeeForm.value.firstname = null;
@@ -220,8 +257,15 @@ passwordType: string = 'password';
           ManagerId:this.newEmployeeForm.value.Managerlist,
           FLCId:this.newEmployeeForm.value.flclist,
 
-      }
+      },
+      SkillList:[]
     };
+    this.selectedSkillItems.forEach((element, index) => {
+      newRoleDetailsForApi.SkillList.push({
+        SkilId: element.SkillTaskTypeMapId,
+
+      });
+    });
     // this.NewProductTypeForm_copy = JSON.parse(JSON.stringify(Object.assign({}, this.newEmployeeForm.value)));
 
     // console.log(newRoleDetailsForApi);
@@ -236,6 +280,8 @@ passwordType: string = 'password';
             if (String(data[0].Result).toLocaleUpperCase() === 'SUCCESS') {
               this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
               detail: this.newEmployeeResources.newemployeesavedsuccess });
+              // this.newEmployeeForm.controls['state'].clearValidators()
+              // this.newEmployeeForm.controls['city'].clearValidators()
               this.NewEmployeeSave = data;
               this.resetForm();
               this.showTerminationDate = false;
@@ -377,7 +423,8 @@ passwordType: string = 'password';
     this.newEmployeeService.getAllEmployeeList().subscribe(
       data => {
        if (data != 'No data found!') {
-          this.allEmployeeList = data;
+          this.allEmployeeList = data.Table;
+          this.allSkillslistforBelowList = data.Table1;
           this.paginationValues = AppConstants.getPaginationOptions;
           if (this.allEmployeeList.length > 20) {
             this.paginationValues[AppConstants.getPaginationOptions.length] = this.allEmployeeList.length;
@@ -401,7 +448,82 @@ passwordType: string = 'password';
       () => console.log('Get all Managerlist complete'));
   
 }
+getSkills(){
+  this.newEmployeeActionService.SkillslistForEmp().subscribe(data => {
+    if (data !== 'No Data found') {
+      this.displatSkillSet = true;
+      this.alltaskslist = data.Table,
+      this.allSkillslist = data.Table1
+      if(this.allSkillslist){
+         this.plotSkillData()
+      }
+     // this.Skilllist=this.dropdwonTransformService.transform(this.allSkillslist,'SkillName','SkillID');
+    }
+    else {
+      this.displatSkillSet = false;
+      this.Skilllist = [];
+      this.allSkillslist = [];
+    }
+  
+  },
 
+    error => { console.log(error); this.loaderService.display(false); },
+    () => console.log('GetAllSkillsList complete'));
+}
+
+plotSkillData(){
+  this.plottedSkillItems = [];
+  this.selectedSkillItems = [];
+  this.alltaskslist.forEach(element => {
+    const NewSkill: any = {};
+    NewSkill.id = element.TaskTypeID;
+    NewSkill.label = element.TaskTypeValue;
+    NewSkill.children = [];
+    //NewSkill.Num  = element.Num
+NewSkill.isParent = element.IsParent;
+NewSkill.ParentId = element.ParentId;
+NewSkill.SkillTaskTypeMapId = 0
+NewSkill.Selectable = true;
+if (element.IsParent === false || element.IsParent === "False" ) {
+  this.selectedSkillItems.push(NewSkill)
+}
+  
+    if(NewSkill.isParent === true || NewSkill.isParent === "True"){
+      this.plottedSkillItems.push(NewSkill)
+    }
+  });
+  this.allSkillslist.forEach(element => {
+    const NewSkillchild: any = {};
+    NewSkillchild.id = element.SkillId;
+    NewSkillchild.label = element.SkillName;
+    NewSkillchild.children = [];
+    NewSkillchild.SkillTaskTypeMapId  = element.SkillTaskTypeMapId
+    NewSkillchild.isParent = element.IsParent;
+    NewSkillchild.ParentId = element.ParentId;
+   NewSkillchild.selectable = true;
+    if (element.IsParent === false ||element.IsParent === "False") {
+      if (this.plottedSkillItems.length) {
+        this.plottedSkillItems.forEach(parent => {
+          if (parent.id === element.ParentId) {
+            parent.children.push(NewSkillchild);
+          } 
+        })
+     
+      }
+    }
+  })
+
+  this.files = this.plottedSkillItems;
+}
+
+
+OnUnSelectNode(e) {
+ 
+    if (e.node.selectable === false) {
+     // this.selectedmenuItems.push(e.node.parent);
+    }
+  
+}
   decode64 (input) {
     let output = '';
     let chr1: any = '', chr2: any = '', chr3: any = '' ;
@@ -455,6 +577,7 @@ passwordType: string = 'password';
       const password = this.newEmployeeForm.controls['emppassword'];
       password.clearValidators();
       const data = this.allEmployeeList.filter(x => x.EmpId === EmpId);
+      const data1 = this.allSkillslistforBelowList.filter(x => x.EmpId === EmpId)
        if (data !== 'No data found!') {
           this.empIdForUpdate = EmpId;
           this.getStateList();
@@ -540,6 +663,57 @@ passwordType: string = 'password';
        } else {
         this.allEmployeeList = [];
        }
+       if(data1 !== 'No data found!'){
+      
+          this.plottedSkillItems = [];
+           this.selectedSkillItems = [];
+           this.alltaskslist.forEach(element => {
+             const NewSkill: any = {};
+             NewSkill.id = element.TaskTypeID;
+             NewSkill.label = element.TaskTypeValue;
+             NewSkill.children = [];
+             //NewSkill.Num  = element.Num
+         NewSkill.isParent = element.IsParent;
+         NewSkill.ParentId = element.ParentId;
+         NewSkill.SkillTaskTypeMapId = 0
+         NewSkill.Selectable = true;
+      
+           
+             if(NewSkill.isParent === true || NewSkill.isParent === "True"){
+               this.plottedSkillItems.push(NewSkill)
+             }
+           });
+           this.allSkillslist.forEach(element => {
+             const NewSkillchild: any = {};
+             NewSkillchild.id = element.SkillId;
+             NewSkillchild.label = element.SkillName;
+             NewSkillchild.children = [];
+             NewSkillchild.SkillTaskTypeMapId  = element.SkillTaskTypeMapId
+             NewSkillchild.isParent = element.IsParent;
+             NewSkillchild.ParentId = element.ParentId;
+            NewSkillchild.selectable = true;
+             if (element.IsParent === false ||element.IsParent === "False") {
+               if (this.plottedSkillItems.length) {
+                 this.plottedSkillItems.forEach(parent => {
+                   if (parent.id === element.ParentId) {
+                     parent.children.push(NewSkillchild);
+                   } 
+                 })
+              
+               }
+             }
+             for(let i of data1){
+              if(i.SkillId === NewSkillchild.id){
+                this.selectedSkillItems.push(NewSkillchild)
+              }
+            }
+           })
+         
+           this.files = this.plottedSkillItems;
+         }
+        
+      
+       
        this.loaderService.display(false);
       this.scrolltopservice.setScrollTop();
   }
@@ -624,6 +798,7 @@ passwordType: string = 'password';
   }
   resetForm() {
     // this.showTextbox = true;
+    this.selectedSkillItems = []
     this.empIdForUpdate = 0;
      this.showPWbox = true;
     this.selectedRole = ""

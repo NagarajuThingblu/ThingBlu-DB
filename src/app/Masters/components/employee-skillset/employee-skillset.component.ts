@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators, FormGroup, FormArray, FormArrayName } from '@angular/forms';
 import { LoaderService } from '../../../shared/services/loader.service';
 import { CookieService } from 'ngx-cookie-service';
 import { AppCommonService } from '../../../shared/services/app-common.service';
@@ -14,6 +14,7 @@ import { AppConstants } from '../../../shared/models/app.constants';
 import { NewEmployeeActionService } from '../../../task/services/add-employee';
 import { DropdownValuesService } from '../../../shared/services/dropdown-values.service';
 import { DropdwonTransformService } from '../../../shared/services/dropdown-transform.service';
+import * as _ from 'lodash';
 import { Router } from '@angular/router';
 
 @Component({
@@ -22,16 +23,21 @@ import { Router } from '@angular/router';
   styleUrls: ['./employee-skillset.component.css']
 })
 export class EmployeeSkillsetComponent implements OnInit {
-  employeeSkillForm: FormGroup;
+  public employeeSkillForm: FormGroup;
   public _cookieService: any;
   public globalResource: any;
   public msgs: any[];
   chkIsActive: any;
   pageHeader: any;
+  chkSelectAll: any;
   public tasktypelist:any;
   public tasknames = [];
+  public event: any;
   public taskcategories:SelectItem[];
   public Skillsarray:any=[ ];
+  public plusOnEdit: boolean = true;
+  public IsDeletedForUpdate: any =0;
+  public ActiveInActiveForUpdate: any = 0;
   public dataExist =true;
   public SkillDuplicateerror: String = 'Skill name already exist';
   public saveButtontext = 'Save';
@@ -68,7 +74,8 @@ export class EmployeeSkillsetComponent implements OnInit {
     this.getTaskDetails()
     this.getSkills()
   }
-
+  items = new FormArray([], this.customGroupValidation );
+  arrayItems: FormArray;
   ngOnInit() {
     this.chkIsActive = 1;
     this.pageHeader = 'Add New Skills';
@@ -79,12 +86,50 @@ export class EmployeeSkillsetComponent implements OnInit {
 
     this.employeeSkillForm = this.fb.group({
       'taskcategory': new FormControl(null, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]),
-      'skills':new FormControl(null, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]),
       'tasktype':new FormControl(null, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]),
-      'chkIsActive': new FormControl(null),
+      items: new FormArray([], this.customGroupValidation),
     });
+    this.addItem();
   }
+  get skillDetailsArr(): FormArray {
+    return this.employeeSkillForm.get('items') as FormArray;
+  }
+  createItem(): FormGroup {
+    return this.fb.group({
+      skills:new FormControl(null, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]),
+      description: new FormControl(null, [Validators.maxLength(500)]),
+      chkSelectAll: new FormControl(true)
+    });
+    
+  }
+  addItem(): void {
+  
+   // this.count++; 
+  
+     //console.log(this.count)
+     this.arrayItems = this.employeeSkillForm.get('items') as FormArray;
+     this.arrayItems.push(this.createItem());
+   }
+  customGroupValidation (formArray) {
+    let isError = false;
+    const result = _.groupBy( formArray.controls , c => {
+      return [c.value.skills];
+    });
 
+    for (const prop in result) {
+        if (result[prop].length > 1 && result[prop][0].controls['skills'].value !== null) {
+          isError = true;
+            _.forEach(result[prop], function (item: any, index) {
+              // alert(index);
+              item._status = 'INVALID';
+            });
+        } else {
+            result[prop][0]._status = 'VALID';
+            // console.log(result[prop].length);
+        }
+    }
+    if (isError) { return {'duplicate': 'duplicate entries'}; }
+  }
   getTaskDetails(){
     this.dropdownDataService.getAllTask().subscribe(
       data => {
@@ -130,7 +175,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
   getSkills() {
     this.loaderService.display(true);
     this.newEmployeeActionService.GetSkillslist().subscribe(data => {
-      if (data !== 'No Data found') {
+      if (data !== 'No Data Found') {
         this.allSkillslist = data;
         this.paginationValues = AppConstants.getPaginationOptions;
         if (this.allSkillslist.length > 20) {
@@ -148,23 +193,51 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
       () => console.log('GetAllSkillsList complete'));
 
   }
-
+  onPageChange(e) {
+    this.event = e;
+  }
   resetAll() {
     this.SkillUpdateId = 0;
     this.saveButtontext = 'save';
-    this.pageHeader = 'Add New Zone';
+    this.pageHeader = 'Add New Skills';
     this.clear = 'Clear';
+ this.plusOnEdit=  true;
     this.Skillsarray.length = 0;
     this.resetForm();
 
   }
   resetForm() {
-    this.employeeSkillForm.reset({ chkIsActive: true });
+    this.employeeSkillForm.reset({ chkSelectAll: true });
+  
     this.skillSetdetails = {
       taskcategory: null,
       tasktype: null,
       skills:null,
     }
+
+    const control = <FormArray>this.employeeSkillForm.controls['items'];
+    
+    let length = control.length;
+    while (length > 0) {
+      length = Number(length) - 1;
+      this.deleteItemAll(length);
+    }
+    this.addItem();
+  }
+  deleteItemAll(index: number) {
+   
+    const control = <FormArray>this.employeeSkillForm.controls['items'];
+    control.removeAt(index);
+  }
+  deleteItem(index: number) {
+    
+    const control = <FormArray>this.employeeSkillForm.controls['items'];
+   
+    if (control.length !== 1) {
+      control.removeAt(index);
+    }
+    console.log(this.employeeSkillForm.get('items'))
+   
   }
   backToEmpPage() {
     this.router.navigate(['../home/addemployee']);
@@ -188,17 +261,29 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
           TaskTypeId:this.employeeSkillForm.value.tasktype,
           ClientId: this._cookieService.ClientId,
           VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-          IsDeleted:0,
-          IsActive: this.employeeSkillForm.value.chkIsActive ? 1 : 0,
-          ActiveInactive:0,
+          // IsDeleted:0,
+          // IsActive: this.employeeSkillForm.value.chkIsActive ? 1 : 0,
+          // ActiveInactive:0,
           SkillList:[]
       };
-      this.Skillsarray.forEach((element, index) => {
-        skillDetauilsForApi.SkillList.push({
-          SkilId:this.SkillUpdateId,
-          SkillName:element,
+      // this.Skillsarray.forEach((element, index) => {
+      //   skillDetauilsForApi.SkillList.push({
+      //     SkilId:this.SkillUpdateId,
+      //     SkillName:element,
+      //   });
+      // });
+      this.skillDetailsArr.controls.forEach((element, index) => 
+    {
+      
+      skillDetauilsForApi.SkillList.push({
+        SkilId:this.SkillUpdateId,
+         SkillName: element.value.skills,
+          Description:element.value.description ,
+          IsActive: element.value.chkSelectAll ? 1 : 0,
+          IsDeleted:this.IsDeletedForUpdate,
+          ActiveInactive:this.ActiveInActiveForUpdate
         });
-      });
+    });
       if (this.employeeSkillForm.valid) {
         this.loaderService.display(false);
         this.newEmployeeActionService.addNewSkills(skillDetauilsForApi).subscribe(data => {
@@ -212,27 +297,39 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
             this.resetAll();
             this.getSkills();
           }
+          else   if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'UPDATED') {
+            this.msg.push({
+              severity: 'success', summary: this.globalResource.applicationmsg,
+              detail:"Skill Set Updated Successfully."
+            });
+            this.SkillUpdateId = 0;
+            this.resetAll();
+            this.getSkills();
+          }
         })
       }
     }
 
-    GetSkillonEdit(SkillID) {
+    GetSkillonEdit(SkillId) {
       this.pageHeader = 'Edit Skill';
       this.clear = 'Cancel';
-  
-      const data = this.allSkillslist.filter(rt => rt.SkillID == SkillID)
+  this.plusOnEdit = false;
+      const data = this.allSkillslist.filter(rt => rt.SkillId == SkillId)
+      var itemlist = this.employeeSkillForm.get('items')['controls'];
       if (data != 'No Data Found') {
-        this.SkillUpdateId = SkillID;
+        this.SkillUpdateId = SkillId;
         this.SkillTypeEdit = data;
         this.oncategoryChange(this.SkillTypeEdit[0].TaskCategoryID)
         const taskcategory = this.employeeSkillForm.controls['taskcategory'];
         const tasktype = this.employeeSkillForm.controls['tasktype'];
-        const skills = this.employeeSkillForm.controls['skills'];
-        const chkIsActive = this.employeeSkillForm.controls['chkIsActive'];
+        const skills = itemlist[0].controls['skills'];
+        const description =  itemlist[0].controls['description'];
+        const chkIsActive = itemlist[0].controls['chkSelectAll'];
   
         taskcategory.patchValue(this.SkillTypeEdit[0].TaskCategoryID);
         tasktype.patchValue(this.SkillTypeEdit[0].TaskTypeId);
         skills.patchValue(this.SkillTypeEdit[0].SkillName);
+        description.patchValue(this.SkillTypeEdit[0].Description);
         chkIsActive.patchValue(this.SkillTypeEdit[0].IsActive);
         this.saveButtontext = 'Update';
       }
@@ -242,7 +339,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
       this.loaderService.display(false);
     }
 
-    showConformationMessaegForDelete(SkillID, skillset, IsDeleted, ActivateInactivateKey) {
+    showConformationMessaegForDelete(SkillId, skillset, IsDeleted, ActivateInactivateKey) {
       let strMessage: any;
       strMessage = 'Do you want to delete the Skill?';
       this.confirmationService.confirm({
@@ -250,45 +347,46 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
         header: 'Confirmation',
         icon: 'fa fa-exclamation-triangle',
         accept: () => {
-          this.activateDeleteSkill(SkillID, skillset, IsDeleted, ActivateInactivateKey);
+          this.activateDeleteSkill(SkillId, skillset, IsDeleted, ActivateInactivateKey);
         },
         reject: () => {
         }
       });
     }
-    activateDeleteSkill(SkillID: any, skillset: any, IsDeleted: any, ActivateInactivateKey: any) {
+    activateDeleteSkill(SkillId: any, skillset: any, IsDeleted: any, ActivateInactivateKey: any) {
       this.submitted = true;
       let skillDetauilsForApi;
     skillDetauilsForApi = {
-          TaskTypeId:skillset.TaskCategoryID,
+          TaskTypeId:skillset.TaskTypeId,
           ClientId: this._cookieService.ClientId,
           VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-          IsDeleted:IsDeleted,
-          IsActive:skillset.IsActive ,
-          ActiveInactive:ActivateInactivateKey,
+        
           SkillList:[]
       };
      
         skillDetauilsForApi.SkillList.push({
-          SkilId:SkillID,
+          SkilId:SkillId,
           SkillName:skillset.SkillName,
+          IsDeleted:IsDeleted,
+          IsActive:skillset.IsActive? 1:0,
+          ActiveInactive:ActivateInactivateKey,
         });
     
       this.loaderService.display(true);
       this.newEmployeeActionService.addNewSkills(skillDetauilsForApi).subscribe(data => {
         this.msg = [];
-        if (data[0]['Result'] === 'success' && IsDeleted == 1) {
+        if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'UPDATED' && IsDeleted == 1) {
           this.msg.push({
             severity: 'success', summary: this.globalResource.applicationmsg,
             detail: "Successfully Deleted"
           });
           this.getSkills();
         }
-        else if (String(data[0]['Result']) === 'success' && ActivateInactivateKey === 1) {
+        else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'UPDATED' && ActivateInactivateKey === 1) {
           if (skillset.IsActive !== true) {
             this.msg.push({
               severity: 'success', summary: this.globalResource.applicationmsg,
-              detail: "Successfully Activated"
+              detail: "Successfully InActivated"
             });
             this.resetAll();
             this.getSkills();
@@ -297,14 +395,14 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
           else {
             this.msg.push({
               severity: 'success', summary: this.globalResource.applicationmsg,
-              detail: "hi"
+              detail: "Successfully Activated"
             });
             this.resetAll();
             this.getSkills();
             this.loaderService.display(false);
           }
         }
-        else if (String(data.toLocaleUpperCase()) === 'NOTUPDATED') {
+        else if (String(data[0].RESULTKEY) === 'NOTUPDATED') {
           if (IsDeleted === 1) {
             this.msg.push({
               severity: 'warn', summary: this.globalResource.applicationmsg,
@@ -327,7 +425,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
             this.loaderService.display(false);
           }
         }
-        else if (String(data.toLocaleUpperCase()) === 'ZoneINACTIVE') {
+        else if (String(data[0].RESULTKEY) === 'ZoneINACTIVE') {
           // alert('in in use');
           this.msg.push({
             severity: 'warn', summary: this.globalResource.applicationmsg,
@@ -338,7 +436,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
         }
         else if (data === 'Failure') {
           this.msg.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
-        } else if (String(data.toLocaleUpperCase()) === 'INUSE') {
+        } else if (String(data[0].RESULTKEY) === 'INUSE') {
           this.msg.push({
             severity: 'warn', summary: this.globalResource.applicationmsg,
             detail:  "hi"
@@ -359,7 +457,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
           this.loaderService.display(false);
         });
     }
-    showConformationMessaegForDeactive(SkillID, skillset, rowIndex, IsDeleted: number, ActiveAction: number) {
+    showConformationMessaegForDeactive(SkillId, skillset, IsDeleted: number, ActiveAction: number) {
       let strMessage: any;
       if (skillset.IsActive === true) {
         strMessage = 'Do you want to activate Skill?';
@@ -373,7 +471,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
         icon: 'fa fa-exclamation-triangle',
         accept: () => {
   
-          this.activateDeleteSkill(SkillID, skillset, IsDeleted, ActiveAction);
+          this.activateDeleteSkill(SkillId, skillset, IsDeleted, ActiveAction);
         },
         reject: () => {
           skillset.IsActive = !skillset.IsActive;
