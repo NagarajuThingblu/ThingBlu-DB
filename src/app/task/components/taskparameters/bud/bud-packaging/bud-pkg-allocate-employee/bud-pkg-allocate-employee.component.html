@@ -40,7 +40,7 @@
               >
               <ng-template pTemplate="header" class="header-tab">
                 <tr>                                   
-                  <th style="width: 20%;"> {{globalResource.strain}} </th>
+                  <th style="width: 20%;"> Cultivar </th>
                   <th  *ngIf="taskCategory === 'GROWING'" style="width: 20%;">SkewKeyName</th>
                   <th style="width: 12%;"> {{globalResource.pkgsize}} </th>
                   <th *ngIf="taskCategory != 'GROWING'" style="width: 8%;"> {{globalResource.total}} </th>
@@ -59,7 +59,7 @@
                   <td  
                     title="{{rowData.value.toolTip}}" 
                     tooltipPosition="top" >
-                    <span class="ui-column-title">{{globalResource.strain}}</span>
+                    <span class="ui-column-title">Cultivar</span>
                     {{rowData.value.strainName}}
                   </td>
                   <td *ngIf="taskCategory === 'GROWING'">
@@ -316,7 +316,7 @@
       <p-table [value]="questions?.controls" id="tblLotSelection">
           <ng-template pTemplate="header">
               <tr>
-                  <th style="width:150px">{{globalResource.strain}}</th>
+                  <th style="width:150px">Cultivar</th>
                   <th style="width:170px" *ngIf="taskCategory != 'GROWING'">{{globalResource.lotno}}</th>
                   <th style="width:170px" *ngIf="taskCategory === 'GROWING'">Bin No</th>
                   <th style="width:33.33333333%">{{assignTaskResources.lblAvailWeight}}</th>
@@ -486,7 +486,7 @@
     </div>
     <div class="ui-g-12 ui-md-6">                
           <label>
-            <strong>{{globalResource.strain}}</strong>
+            <strong>Cultivar</strong>
           </label>
         <br>
           <label>

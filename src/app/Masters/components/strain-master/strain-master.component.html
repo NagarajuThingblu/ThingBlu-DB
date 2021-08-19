@@ -21,7 +21,7 @@
                     <div class="ui-g-12 ui-md-6">
                         <div class="paddingRL">
                             <div class="le-su-12">
-                                <label for="enterstraintype">{{ newStrainResources.enterstraintype}}<span class="star">*</span></label>:
+                                <label for="enterstraintype">Cultivar Type<span class="star">*</span></label>:
                                 <p-dropdown
                                     [filter] ="true"
                                     id="straintype"
@@ -37,10 +37,10 @@
                                 <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                                   *ngIf="!strainmasterForm.controls['straintype'].valid&&strainmasterForm.controls['straintype'].dirty">
                                   <span *ngIf="strainmasterForm.controls['straintype'].errors['required']">
-                                  {{ newStrainResources.straintyperequired }}
+                                    Cultivar type required
                                 </span>
                                 <span *ngIf="strainmasterForm.controls['straintype'].hasError('straintypenotpresent')">
-                                    {{ newStrainResources.straintypenotpresent }} 
+                                  Cultivar type not present
                                 </span>
                                 </div>
                           <!-- <p-button  type="button" label="Add new strain type" id="btn_straintype" (click)="ShowstraintypePopup()" name="btnstraintype" ></p-button> -->
@@ -90,14 +90,14 @@
                           <div class="paddingRL">
                               <div class="le-su-12">
                                 <label for="enterstrain">
-                                  {{ newStrainResources.enterstrain}}<span class="star">*</span>:
+                                  Cultivar Name<span class="star">*</span>:
                                 </label>
   
                                 <input pInputText
                                   name="strain"
                                   id="strain"
                                   autocomplete="off"
-                                  placeholder="Enter Strain Name"
+                                  placeholder="Enter Cultivar Name"
                                   type="text"
                                   class="clsControl"
                                   formControlName="strain"
@@ -105,7 +105,7 @@
   
                                 <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                                   *ngIf="!strainmasterForm.controls['strain'].valid&&strainmasterForm.controls['strain'].dirty">
-                                  <span *ngIf="strainmasterForm.controls['strain'].errors['required']">{{newStrainResources.strainrequired}}</span>
+                                  <span *ngIf="strainmasterForm.controls['strain'].errors['required']">Cultivar required</span>
                                   <span *ngIf="strainmasterForm.controls['strain'].errors['maxlength']">{{newStrainResources.strainLength}}</span>
                                   <span *ngIf="strainmasterForm.controls['strain'].errors['whitespace']">{{newStrainResources.strainrequired}}</span>
                                   </div>
@@ -119,14 +119,14 @@
                     <div class="paddingRL">
                         <div class="le-su-12">
                           <label for="enterstrain">
-                           Strain Code<span class="star">*</span>:
+                            Cultivar  Code<span class="star">*</span>:
                           </label>
 
                           <input pInputText
                             name="straincode"
                             id="straincode"
                             autocomplete="off"
-                            placeholder="Enter Strain Code"
+                            placeholder="Enter Cultivar  Code"
                             type="text"
                             class="clsControl"
                             formControlName="straincode"
@@ -134,7 +134,7 @@
 
                           <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                             *ngIf="!strainmasterForm.controls['straincode'].valid&&strainmasterForm.controls['straincode'].dirty">
-                            <span *ngIf="strainmasterForm.controls['straincode'].errors['required']">Strain code required</span>
+                            <span *ngIf="strainmasterForm.controls['straincode'].errors['required']">Cultivar  code required</span>
                           
                             </div>
                         </div>
@@ -157,7 +157,7 @@
                           type="text"
                           autocomplete="off"
                           class="clsControl"
-                          placeholder="Enter Strain Description"
+                          placeholder="Enter Cultivar  Description"
                           formControlName="description"
                         />
                       </div>
@@ -367,7 +367,7 @@
     </div>
      <div class="ui-g">
        <div class="ui-g-12">
-        <p-panel header="Strain List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+        <p-panel header="Cultivar  List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
           <p-table #dtStrainList [value]="allStrainList" 
           sortMode="single"                      
           [responsive]="true" 
@@ -388,9 +388,9 @@
           </ng-template>
           <ng-template pTemplate="header">
               <tr>
-                  <th [pSortableColumn]="'StrainName'">Strain  <p-sortIcon [field]="'StrainName'"></p-sortIcon> </th>
-                  <th [pSortableColumn]="'StrainCode'">Strain Code  <p-sortIcon [field]="'StrainCode'"></p-sortIcon> </th>
-                  <th [pSortableColumn]="'StrainTypeName'">Strain Type  <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
+                  <th [pSortableColumn]="'StrainName'">Cultivar   <p-sortIcon [field]="'StrainName'"></p-sortIcon> </th>
+                  <th [pSortableColumn]="'StrainCode'">Cultivar  Code  <p-sortIcon [field]="'StrainCode'"></p-sortIcon> </th>
+                  <th [pSortableColumn]="'StrainTypeName'">Cultivar  Type  <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
                   <th [pSortableColumn]="'GeneticsName'"> GeneticsName <p-sortIcon [field]="'GeneticsName'"></p-sortIcon></th>
                   <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>
                   <!-- <th [pSortableColumn]="'THC'">THC(%) <p-sortIcon [field]="'THC'"></p-sortIcon></th>    

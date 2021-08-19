@@ -1,5 +1,5 @@
 <p-dialog 
-    header="Add New Strain"
+    header="Add New Cultivar"
     [(visible)]="Strain.showStrainModal"
     modal="modal" 
     [resizable]="true" 
@@ -15,7 +15,7 @@
                   <div class="ui-g-12 ui-md-12">
                       <div class="paddingRL">
                           <div class="le-su-12">
-                              <label for="enterstraintype">{{ newStrainResources.enterstraintype}}<span class="star">*</span></label>:
+                              <label for="enterstraintype">Cultivar Type<span class="star">*</span></label>:
         
                         <p-dropdown
                             [filter] ="true"
@@ -25,7 +25,7 @@
                             placeholder="-- Select --"
                             [autoWidth]="false"
                             class="clsControl"
-                            name="straintype">z
+                            name="straintype">
                         </p-dropdown>
                     
                         <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
@@ -38,15 +38,15 @@
                         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                             *ngIf="!newStrainEntryForm.controls['straintype'].valid&&newStrainEntryForm.controls['straintype'].dirty">
                             <span *ngIf="newStrainEntryForm.controls['straintype'].errors['required']">
-                                {{ newStrainResources.straintyperequired }}
+                              Cultivar required 
                             </span>
                             <span *ngIf="newStrainEntryForm.controls['straintype'].hasError('straintypenotpresent')">
-                                {{ newStrainResources.straintypenotpresent }} 
+                              Cultivar type not present  
                             </span>
                       </div>
 
 
-                        <p-button  class="links" type="button" icon="fa fa-plus" label="Add new strain type" id="btn_straintype" (click)="showstraintypePopup()" name="btnstraintype" ></p-button>
+                        <p-button  class="links" type="button" icon="fa fa-plus" label="Add new Cultivar type" id="btn_straintype" (click)="showstraintypePopup()" name="btnstraintype" ></p-button>
                       </div>
                 </div>
               </div>
@@ -90,14 +90,14 @@
                         <div class="paddingRL">
                             <div class="le-su-12">
                               <label for="enterstrain">
-                                {{ newStrainResources.enterstrain}}<span class="star">*</span>:
+                                Cultivar Name<span class="star">*</span>:
                               </label>
 
                               <input pInputText
                                 name="strain"
                                 id="strain"
                                 autocomplete="off"
-                                placeholder="Enter Strain Name"
+                                placeholder="Enter Cultivar Name"
                                 type="text"
                                 class="clsControl"
                                 formControlName="strain"
@@ -105,7 +105,7 @@
 
                               <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                                 *ngIf="!newStrainEntryForm.controls['strain'].valid&&newStrainEntryForm.controls['strain'].dirty">
-                                <span *ngIf="newStrainEntryForm.controls['strain'].errors['required']">{{newStrainResources.strainrequired}}</span>
+                                <span *ngIf="newStrainEntryForm.controls['strain'].errors['required']">Cultivar required</span>
                                 <span *ngIf="newStrainEntryForm.controls['strain'].errors['maxlength']">{{newStrainResources.strainLength}}</span>
                                 <span *ngIf="newStrainEntryForm.controls['strain'].errors['whitespace']">{{newStrainResources.strainrequired}}</span>
                                 </div>
@@ -118,7 +118,7 @@
                   <div class="paddingRL">
                       <div class="le-su-12">
                       <label for="description">
-                        {{ newStrainResources.description}}<span class="star"></span>:
+                        Cultivar Description}}<span class="star"></span>:
                       </label>
 
                       <input pInputText
@@ -127,7 +127,7 @@
                         type="text"
                         autocomplete="off"
                         class="clsControl"
-                        placeholder="Enter Strain Description"
+                        placeholder="Enter Cultivar Description"
                         formControlName="description"
                       />
                       

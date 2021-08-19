@@ -109,7 +109,7 @@ export class StrainMasterComponent implements OnInit {
       this.getAllGenetics();
       this.getAllStrainsbyClient();
       this.saveButtonText = 'Save';
-      this.pageheading = 'Add New Strain';
+      this.pageheading = 'Add New Cultivar';
       this.clear = 'Clear';
       this.appComponentData.setTitle('Strain');
       this.chkIsActive = true;
@@ -308,7 +308,7 @@ export class StrainMasterComponent implements OnInit {
               description.patchValue(this.strainOnEdit[0].Description);
               this.clear = 'Cancel';
              this.saveButtonText = 'Update';
-             this.pageheading = 'Edit Strain';
+             this.pageheading = 'Edit Cultivar';
 
              // Modified By Bharat T on 26th-Sept-2018 for showing straintype enable in edit mode
              // let strainTypeNewData: any;
@@ -342,7 +342,7 @@ export class StrainMasterComponent implements OnInit {
      resetAll() {
       this.strainForUpdate = 0;
       this.saveButtonText = 'Save';
-      this.pageheading = 'Add New Strain';
+      this.pageheading = 'Add New Cultivar';
       this.clear = 'Clear';
       this.strainTypeDisabled = false;
       this.geneticsDisabled = false;

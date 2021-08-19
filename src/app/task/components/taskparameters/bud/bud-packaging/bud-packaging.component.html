@@ -50,7 +50,7 @@
                 <tr>
                     <th *ngIf="taskCategory != 'GROWING'" style="width:15%">{{globalResource.brand}}</th>
                     <th *ngIf="taskCategory != 'GROWING'" style="width:15%">{{globalResource.subbrand}}</th>
-                    <th >{{globalResource.strain}}</th>
+                    <th >Cultivar</th>
                     <th *ngIf="taskCategory === 'GROWING'">SkewName</th>
                     <th>{{globalResource.pkgtype}}</th>
                     <th >{{globalResource.pkgsize}}</th>
@@ -300,7 +300,7 @@
               <p-table [value]="questions?.controls" id="tblLotSelection">
                   <ng-template pTemplate="header">
                       <tr>
-                          <th style="width:150px">Strain</th>
+                          <th style="width:150px">Cultivar</th>
                           <th style="width:170px" *ngIf="taskCategory != 'GROWING'">Lot No</th>
                           <th style="width:170px" *ngIf="taskCategory === 'GROWING'">Bin No</th>
                           <th style="width:33.33333333%">Available Weight</th>
@@ -566,7 +566,7 @@
                     <tr>
                         <th *ngIf="taskCategory != 'GROWING'" style="width:20%">{{globalResource.brand}}</th>
                         <th *ngIf="taskCategory != 'GROWING'" style="width:20%">{{globalResource.subbrand}}</th>
-                        <th style="width:20%">{{globalResource.strain}}</th>
+                        <th style="width:20%">Cultivar</th>
                         <th style="width:20%">{{globalResource.pkgtype}}</th>
                         <th style="width:20%">{{globalResource.pkgsize}}</th>
                         <!-- <th style="width:20%">{{globalResource.itemqty}}</th> -->
@@ -669,7 +669,7 @@
                   <div class="ui-g-12 ui-md-4">
                       <div class="paddingRL">
                           <label>
-                            <strong>{{globalResource.strain  }}: </strong>
+                            <strong>Cultivar: </strong>
                           </label>
                           <label>
                               {{LotDetails?.StrainName}}
@@ -727,7 +727,7 @@
                               <!-- <th> {{globalResource.pkgcode }} </th> -->
                               <th *ngIf="taskCategory != 'GROWING'" style="width:20%">{{globalResource.completedqty}}</th>
                               <th *ngIf="taskCategory === 'GROWING'" style="width:20%">Completed Wt</th>
-                              <th style="width:20%">{{globalResource.strain}}</th>
+                              <th style="width:20%">Cultivar</th>
                               <th *ngIf="taskCategory != 'GROWING'"style="width:205px;">{{globalResource.lotno}}</th>    
                               <th *ngIf="taskCategory === 'GROWING'"style="width:205px;">Bin Name</th>                                                         
                               <th style="width:20%" *ngIf="showToManager&&taskCategory != 'GROWING'">{{globalResource.revqty}}</th>                              
@@ -781,7 +781,7 @@
                               <p-table [value]="getPkgMixLotDetails(pkgDetails.MixPkgId)">
                                   <ng-template pTemplate="header">
                                       <tr>
-                                          <th>{{globalResource.strain}}</th>
+                                          <th>Cultivar</th>
                                           <th>{{globalResource.lotno}}</th>
                                           <th>{{globalResource.selectedwt}}</th>
                                       </tr>
@@ -840,7 +840,7 @@
                   <ng-template pTemplate="header">
                       <tr>
                           <!-- <th style="width:20%">Brand</th> -->
-                          <th style="width:20%">Strain</th>
+                          <th style="width:20%">Cultivar</th>
                           <!-- <th style="width:20%">Lot Ids</th> -->
                           <th *ngIf="taskCategory != 'GROWING'" style="width:80%">Lot Details</th>
                           <th *ngIf="taskCategory === 'GROWING'" style="width:80%">Bin Details</th>
@@ -1494,7 +1494,7 @@
                           <p-table [value]="selectedMixLotsArray[i +''+ k]">
                               <ng-template pTemplate="header">
                                   <tr>
-                                      <th>{{globalResource.strain}}</th>
+                                      <th>Cultivar</th>
                                       <th>{{globalResource.lotno}}</th>
                                       <th>{{globalResource.selectedwt}}</th>
                                   </tr>
@@ -1757,7 +1757,7 @@
         <p-table [value]="questions?.controls" id="tblMixLotSelection">
             <ng-template pTemplate="header">
                 <tr>
-                    <th style="width:20.33333333%">Strain</th>
+                    <th style="width:20.33333333%">Cultivar</th>
                     <th style="width:170px">{{globalResource.lotno}}</th>
                     <th style="width:20.33333333%">{{globalResource.completedwt}}</th>
                     <th style="width:20.33333333%">{{globalResource.balancedwt}}</th>
