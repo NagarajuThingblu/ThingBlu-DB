@@ -12,5 +12,8 @@
     text-align: right;
 }
 /* .ui-dialog .ui-dialog-content{
+overflow: visible !important;
+    } */
+/* .ui-dialog .ui-dialog-content{
     overflow: visible !important
 } */

@@ -58,6 +58,9 @@ export class PlantingComponent implements OnInit{
   public headings: any[]
   public skills: SelectItem[];
   public termination:SelectItem[];
+  
+  public visibility:boolean = false;
+  public showUpArrow:boolean = false;
   constructor(
     private fb: FormBuilder,
     private dropdownDataService: DropdownValuesService,
@@ -769,4 +772,16 @@ completeTask(formModel){
   //  console.log(element)
   // }
  
+  showEmps(event: any){
+    if(this.visibility === true){
+      this.visibility = false;
+      this.showUpArrow = false
+    }
+    else{
+      this.visibility = true;
+      this.showUpArrow = true
+    }
+ 
+console.log(event)
+  }
 }

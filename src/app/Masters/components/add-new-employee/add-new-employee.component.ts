@@ -92,6 +92,9 @@ passwordType: string = 'password';
   plottedSkillItems: any = [];
   public selectedSkillItems: any[];
   collapsed: any;
+
+  public visibility:boolean = false;
+  public showUpArrow:boolean = false;
   constructor(
     private fb: FormBuilder,
     private loaderService: LoaderService,
@@ -342,8 +345,15 @@ passwordType: string = 'password';
           ActiveInactive: AllValues.ActiveInactiveFlag,
           // EditorType: 'Manager'
           EditorType: this._cookieService.UserRole
-      }
+      },
+      SkillList:[]
     };
+    this.selectedSkillItems.forEach((element, index) => {
+      newRoleDetailsForApi.SkillList.push({
+        SkilId: element.SkillTaskTypeMapId,
+
+      });
+    });
     // this.NewProductTypeForm_copy = JSON.parse(JSON.stringify(Object.assign({}, this.newEmployeeForm.value)));
 
     // console.log(newRoleDetailsForApi);
@@ -972,5 +982,17 @@ getCityOnStateChange() {
     NavigateToSkillsPage(){
       this.appCommonService.skillFormDetail = this.newEmployeeForm;
       this.router.navigate(['../home/skills']);
+    }
+    showSkills(event: any){
+      if(this.visibility === true){
+        this.visibility = false;
+        this.showUpArrow = false
+      }
+      else{
+        this.visibility = true;
+        this.showUpArrow = true
+      }
+   
+console.log(event)
     }
 }

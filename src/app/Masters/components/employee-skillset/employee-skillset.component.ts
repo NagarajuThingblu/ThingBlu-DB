@@ -46,6 +46,7 @@ export class EmployeeSkillsetComponent implements OnInit {
   public paginationValues: any;
   public msg: any[];
   public SkillUpdateId: any = 0;
+  public SkillTaskTypeMapId: any = 0;
   public SkillTypeEdit: any;
   public SkillListBox: boolean= true;
   public submitted: boolean;
@@ -261,6 +262,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
           TaskTypeId:this.employeeSkillForm.value.tasktype,
           ClientId: this._cookieService.ClientId,
           VirtualRoleId: Number(this._cookieService.VirtualRoleId),
+          SkillTaskTypeMapId:this.SkillTaskTypeMapId,
           // IsDeleted:0,
           // IsActive: this.employeeSkillForm.value.chkIsActive ? 1 : 0,
           // ActiveInactive:0,
@@ -294,6 +296,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
               detail:"Skill Set Saved Successfully."
             });
             this.SkillUpdateId = 0;
+            this.SkillTaskTypeMapId = 0
             this.resetAll();
             this.getSkills();
           }
@@ -303,8 +306,21 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
               detail:"Skill Set Updated Successfully."
             });
             this.SkillUpdateId = 0;
+            this.SkillTaskTypeMapId = 0;
             this.resetAll();
             this.getSkills();
+          }
+          else   if (String(data[0].RESULTKEY)=== 'Duplicate') {
+            this.msg.push({
+              severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail:" Duplicate Skill Set."
+            });
+            // this.SkillUpdateId = 0;
+            // this.resetAll();
+            // this.getSkills();
+          }
+          else if (data === 'Failure') {
+            this.msg.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
           }
         })
       }
@@ -317,6 +333,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
       const data = this.allSkillslist.filter(rt => rt.SkillId == SkillId)
       var itemlist = this.employeeSkillForm.get('items')['controls'];
       if (data != 'No Data Found') {
+        this.SkillTaskTypeMapId = data[0].SkillTaskTypeMapId;
         this.SkillUpdateId = SkillId;
         this.SkillTypeEdit = data;
         this.oncategoryChange(this.SkillTypeEdit[0].TaskCategoryID)
@@ -360,7 +377,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
           TaskTypeId:skillset.TaskTypeId,
           ClientId: this._cookieService.ClientId,
           VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-        
+          SkillTaskTypeMapId:skillset.SkillTaskTypeMapId,
           SkillList:[]
       };
      

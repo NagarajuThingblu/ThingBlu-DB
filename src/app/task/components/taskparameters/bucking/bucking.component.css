@@ -28,3 +28,13 @@
     display:inline;
     float:left;
 }
+.myskillsdropdown{
+    display: none;
+   }
+    /* .ui-tree  {
+       width:546px;
+   } */
+   .viewer2{
+       width:24px;
+       text-align: center;
+   }

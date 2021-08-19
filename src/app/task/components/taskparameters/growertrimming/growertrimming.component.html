@@ -99,29 +99,47 @@
   </div>
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
-      <label for="employeeList">Assigned To<span class="star">*</span></label>:
-      <!-- <p-dropdown
-      [filter] ="true"
-      [options]="employees"
-      placeholder="-- Select --"
-      [autoWidth]="true"
-      formControlName="employeeList"
-      class="clsControl"
-      id="employeeList"
-      name="employeeList">
-      </p-dropdown> -->
+      <label for="skills">Skills<span class="star">*</span></label>:
       <p-multiSelect #checkedItems
       [filter] ="true"
-      [options]="employees"
+      [options]="skills"
       placeholder="-- Select --"
-      (onChange)="OnSelectingEmployees($event, checkedItems)"
-      formControlName="employeeList"
+      formControlName="skills"
       class="clsControl"
-      id="employeeList"
-      name="employeeList">
+      id="skills"
+      name="skills">
       </p-multiSelect>
     </div>
   </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="employeeList">Assigned To<span class="star">*</span></label>:
+      <div>
+
+              
+        <div class="input-container">
+          <input pInputText
+        
+          class="clsControl"
+          placeholder="- - Choose - -"
+         (click)="showEmps($event)"
+        />
+        <span class="viewer2" *ngIf="!showUpArrow">
+          <i class="fa fa-caret-down" ria-hidden="true"  (click)="showEmps($event)"></i>
+        </span>
+        <span class="viewer2" *ngIf="showUpArrow">
+          <i class="fa fa-caret-up" ria-hidden="true"  (click)="showEmps($event)"></i>
+        </span>
+      </div>
+      <p-tree [value]="files"  [ngClass]="!visibility?'myskillsdropdown':'showmyskillsdropdown'" styleClass="clsRoleAccessTree" selectionMode="checkbox"  [(selection)]="selectedSkillItems"
+      [propagateSelectionUp]="false" (onNodeSelect)="OnSelectingEmployees($event)" (onNodeUnselect) = "OnUnSelectNode($event)" [propagateSelectionDown]="true"></p-tree>
+       
+      
+      </div>
+     
+    </div>
+  </div>
+  
   <!-- <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="BinsListBox">Bins List</label>

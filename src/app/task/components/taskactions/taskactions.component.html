@@ -389,7 +389,7 @@
           </div>
         </p-dialog>
 
-        <p-dialog header="Edit End Date & Time" [(visible)]="editEndDateAndTime" modal="modal"  [responsive]="true" [width]="550" [minHeight]="minHeight" [minWidth]="200" >
+        <p-dialog styleClass="MyDialog" header="Edit End Date & Time" [(visible)]="editEndDateAndTime" modal="modal"  [responsive]="true" [width]="550" [minHeight]="minHeight" [minWidth]="200" >
           <div class="ui-g-12 ui-md-12">
             <b><h6 style="color: red;">You can edit your task end date and time here!</h6></b>
             <form [formGroup]="EndDateEditForm" (ngSubmit)="updateEndDate(EndDateEditForm.value)">
