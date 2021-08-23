@@ -114,6 +114,8 @@ export class PlantingComponent implements OnInit{
   plottedSkillItems: any = [];
   public selectedSkillItems: any[];
   public employeeName:'';
+  public cookie_clientId: any = 0;
+  public cookie_virtualRoleId: any = 0;
   private globalData = {
     lots: [],
     employees: [],
@@ -131,6 +133,8 @@ export class PlantingComponent implements OnInit{
     this.getTerminationReasons();
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
+    this.cookie_clientId = this.appCommonService.getUserProfile().ClientId;
+    this.cookie_virtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
     this.titleService.setTitle('Planting');
     this.taskStatus = AppConstants.getStatusList;
     this.userRoles = AppConstants.getUserRoles;
@@ -149,22 +153,22 @@ export class PlantingComponent implements OnInit{
 
     
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
-    this.headings =[
-      {id:1, headingName:"Skilled Employees",  Num:2, isParent:true, parentId:0},
-      {id:0, headingName:"All Employees", Num:1, isParent:true, parentId:0},
-    ]
-    this.skilledempslist =[
-      {empid:1, empname:"jyothi",  isParent:false, ParentId:1},
-      {empid:2, empname:"saikumar",  isParent:false, ParentId:1},
-      {empid:3, empname:"sucharitha",  isParent:false, ParentId:1},
-    ]
-    this.allemplist = [
-      {empid:1, empname:"jyothi", isParent:false, ParentId:0},
-      {empid:2, empname:"saikumar",  isParent:false, ParentId:0},
-      {empid:3, empname:"sucharitha",  isParent:false, ParentId:0},
-      {empid:4, empname:"hemanth",  isParent:false, ParentId:0},
-      {empid:5, empname:"nagaraju",  isParent:false, ParentId:0},
-    ]
+    // this.headings =[
+    //   {id:1, headingName:"Skilled Employees",  Num:2, isParent:true, parentId:0},
+    //   {id:0, headingName:"All Employees", Num:1, isParent:true, parentId:0},
+    // ]
+    // this.skilledempslist =[
+    //   {empid:1, empname:"jyothi",  isParent:false, ParentId:1},
+    //   {empid:2, empname:"saikumar",  isParent:false, ParentId:1},
+    //   {empid:3, empname:"sucharitha",  isParent:false, ParentId:1},
+    // ]
+    // this.allemplist = [
+    //   {empid:1, empname:"jyothi", isParent:false, ParentId:0},
+    //   {empid:2, empname:"saikumar",  isParent:false, ParentId:0},
+    //   {empid:3, empname:"sucharitha",  isParent:false, ParentId:0},
+    //   {empid:4, empname:"hemanth",  isParent:false, ParentId:0},
+    //   {empid:5, empname:"nagaraju",  isParent:false, ParentId:0},
+    // ]
   
     // this.skills =  [
     //   {label: 'Good At Grooming Plants', value: 'Good At Grooming Plants'},
@@ -263,37 +267,37 @@ this.employees = [
         // terminationReason.patchValue(this.taskReviewModel.TerminationReasonId);
       
     }
-this.empfilterBasedOnSkill()
+
   }
   empfilterBasedOnSkill(){
     this.plottedSkillItems = [];
     this.selectedSkillItems = [];
     this.headings.forEach(element => {
       const NewEmpList: any = {};
-      NewEmpList.id = element.id;
-      NewEmpList.label = element.headingName;
+      NewEmpList.id = element.ID;
+      NewEmpList.label = element.HeadingName;
       NewEmpList.children = [];
       NewEmpList.Num  = element.Num
-      NewEmpList.isParent = element.isParent;
-      NewEmpList.ParentId = element.parentId;
+      NewEmpList.isParent = element.IsParent;
+      NewEmpList.ParentId = element.ParentID;
       NewEmpList.Selectable = true;
-      if(element.isParent === false){
+      if(element.IsParent === false || element.IsParent === "False"){
         this.selectedSkillItems.push(NewEmpList)
       }
-      if(NewEmpList.isParent === true){
+      if(NewEmpList.isParent === true || NewEmpList.isParent === "True"){
         this.plottedSkillItems.push(NewEmpList)
       }
     });
     this.allemplist.forEach(element => {
       const NewAllEmpList: any = {};
-      NewAllEmpList.id = element.empid;
-      NewAllEmpList.label = element.empname;
+      NewAllEmpList.id = element.EmpID;
+      NewAllEmpList.label = element.EmpName;
       NewAllEmpList.children = [];
      // NewAllEmpList.Num  = element.Num
-      NewAllEmpList.isParent = element.isParent;
-      NewAllEmpList.ParentId = element.ParentId;
+      NewAllEmpList.isParent = element.IsParent;
+      NewAllEmpList.ParentId = element.ParentID;
       NewAllEmpList.Selectable = true;
-      if (element.isParent === false) {
+      if (element.IsParent === false || element.IsParent === "False" ) {
         if (this.plottedSkillItems.length) {
           this.plottedSkillItems.forEach(parent => {
             if (parent.id === element.ParentId) {
@@ -306,14 +310,14 @@ this.empfilterBasedOnSkill()
     })
     this.skilledempslist.forEach(element => {
       const NewAllEmpList: any = {};
-      NewAllEmpList.id = element.empid;
-      NewAllEmpList.label = element.empname;
+      NewAllEmpList.id = element.EmpID;
+      NewAllEmpList.label = element.EmpName;
       NewAllEmpList.children = [];
      // NewAllEmpList.Num  = element.Num
-      NewAllEmpList.isParent = element.isParent;
+      NewAllEmpList.isParent = element.IsParent;
       NewAllEmpList.ParentId = element.ParentId;
       NewAllEmpList.Selectable = true;
-      if (element.isParent === false) {
+      if (element.IsParent === false || element.IsParent === "False") {
         if (this.plottedSkillItems.length) {
           this.plottedSkillItems.forEach(parent => {
             if (parent.id === element.ParentId) {
@@ -381,7 +385,28 @@ this.empfilterBasedOnSkill()
        () => console.log('getTerminationReasons complete'));
 
   }
+  onSkillsSelect(event:any){
+let skillListApiDetails;
+skillListApiDetails = {
+  TaskTypeId:Number(this.TaskModel.task),
 
+  SkillList:[]
+};
+for(let j of this.PLANTING.value.skills){
+      
+  skillListApiDetails.SkillList.push({
+    SkillID: j,
+   
+  })
+};
+this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
+.subscribe(data => {
+  this.headings = data.Table,
+  this.skilledempslist = data.Table1
+  this.allemplist = data.Table2
+  this.empfilterBasedOnSkill()
+});
+  }
   
   padLeft(text: string, padChar: string, size: number): string {
     return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;

@@ -105,6 +105,7 @@
       <p-multiSelect #checkedItems
       [filter] ="true"
       [options]="skills"
+      (onChange)="onSkillsSelect($event)"
       placeholder="-- Select --"
       formControlName="skills"
       class="clsControl"

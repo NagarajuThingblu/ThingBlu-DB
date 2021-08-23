@@ -228,6 +228,11 @@ submitPlantTaskReview(taskReviewWebApi) {
   .map(data =>  data );
 }
 
+getEmployeeListBasedOnSkills(skillListApiDetails){
+  const apiUrl = 'api/Grower/GetEmployee';
+  return this.http.post(apiUrl, skillListApiDetails, this.headers)
+  .map(data =>  data );
+}
 // completePackagingCompleteTask(taskCompletionWebApi){
 //   const apiUrl = 'api/Grower/PackagingTaskComplete';
 //   taskCompletionWebApi.CompleteHarvesting.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
