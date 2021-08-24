@@ -62,8 +62,8 @@ export class GeneticsMasterComponent implements OnInit {
   ngOnInit() {
     this.backUrl = this.appCommonService.strainPageBackLink;
     this.chkIsActive = 1;
-    this.pageHeader = 'Add New Genetics';
-    this.appComponentData.setTitle('Genetics');
+    this.pageHeader = 'Add New Species';
+    this.appComponentData.setTitle('Species');
     this.newStrainTypeResources = MastersResource.getResources().en.addnewstraintype;
     this.newGeneticsResources = MastersResource.getResources().en.addnewgenetics;
     this.globalResource = GlobalResources.getResources().en;
@@ -84,7 +84,7 @@ export class GeneticsMasterComponent implements OnInit {
     this.geneticsForUpdate = 0;
     this.saveButtonText = 'Save';
     this.clear = 'Clear';
-    this.pageHeader = 'Add New Genetics';
+    this.pageHeader = 'Add New Species';
     this.resetForm();
   }
 
@@ -178,7 +178,7 @@ export class GeneticsMasterComponent implements OnInit {
   }
 
   getGeneticsOnEdit(geneticsId) {
-    this.pageHeader = 'Edit Genetics';
+    this.pageHeader = 'Edit Species';
     this.clear = 'Cancel';
     // this.NewStrainTypeActionService.GetStrainTypeDetailByStrainTypeId(StrainTypeId).subscribe(
 
@@ -202,7 +202,7 @@ export class GeneticsMasterComponent implements OnInit {
 
  showConformationMessaegForDelete(strainTypeId, strainType, isDeleted, activateInactivateKey) {
       let strMessage: any;
-      strMessage = 'Do you want to delete the genetics?';
+      strMessage = 'Do you want to delete the Species?';
       this.confirmationService.confirm({
         message: strMessage,
         header: 'Confirmation',
@@ -300,9 +300,9 @@ export class GeneticsMasterComponent implements OnInit {
     showConformationMessaegForDeactive(geneticsId, genetics, rowIndex, isDeleted: number, activeAction: number) {
       let strMessage: any;
       if (genetics.IsActive === true) {
-        strMessage = 'Do you want to activate genetics?';
+        strMessage = 'Do you want to activate Species?';
       } else {
-        strMessage = 'Do you want to inactivate genetics? Strain associated with this genetics will also be inactivated.';
+        strMessage = 'Do you want to inactivate Species? Strain associated with this Species will also be inactivated.';
       }
 
       this.confirmationService.confirm({
