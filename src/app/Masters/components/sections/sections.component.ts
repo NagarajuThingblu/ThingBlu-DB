@@ -134,7 +134,7 @@ export class SectionsComponent implements OnInit {
     this.dropdownDataService.getStrains().subscribe(
       data => {
         
-        if (data) {
+        if (data != 'No data found!') {
         
         this.strains = this.dropdwonTransformService.transform(data, 'StrainName', 'StrainId', '-- Select --');
         }

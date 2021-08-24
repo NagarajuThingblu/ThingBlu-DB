@@ -157,7 +157,7 @@ export class AddRawMaterialComponent implements OnInit {
   getGrowerData(){
     this.growerDetailsActionService.getRowSuplierDetailList().subscribe(
       data =>{
-      if(data !='No Data Found!'){
+      if(data !='No data found!'){
         this.Growers = this.dropdwonTransformService.transform(data, 'RawSupplierName', 'RawSupId', '-- Select --');
       }
       else{
