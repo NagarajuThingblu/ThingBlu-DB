@@ -180,10 +180,10 @@ export class PlantingComponent implements OnInit{
       {label: 'Important', value: 'Important'},
       {label: 'Critical', value: 'Critical'}
     ];
-this.employees = [
-  {label: 'Skilled Employees', value: 'Skilled Employees'},
-  {label: 'All Employees', value: 'All Employees'}
-]
+// this.employees = [
+//   {label: 'Skilled Employees', value: 'Skilled Employees'},
+//   {label: 'All Employees', value: 'All Employees'}
+// ]
     if (this.PageFlag.page !== 'TaskAction') {
       this.TaskModel.PLANTING = {
         field: '',
@@ -402,8 +402,9 @@ for(let j of this.PLANTING.value.skills){
 this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
 .subscribe(data => {
   this.headings = data.Table,
-  this.skilledempslist = data.Table1
+  this.skilledempslist = data.Table1,
   this.allemplist = data.Table2
+  this.globalData
   this.empfilterBasedOnSkill()
 });
   }
@@ -666,7 +667,7 @@ completeTask(formModel){
       if (data !== 'No Data found') {
         this.allSkillslist = data;
        
-        this.skills = this.dropdwonTransformService.transform(this.allSkillslist.filter(x => x.TaskTypeId === TaskTypeId), 'SkillName', 'SkillId');
+        this.skills = this.dropdwonTransformService.transform(this.allSkillslist.filter(x => x.TaskTypeId === TaskTypeId), 'SkillName', 'SkillTaskTypeMapId');
       }
       else{
         this.allSkillslist = [];
@@ -747,7 +748,7 @@ completeTask(formModel){
     else{
       this.workingEmp = [];
     }
-  this.filterEmpList()
+ // this.filterEmpList()
   }
   employeeListByClient() {
     this.dropdownDataService.getEmployeeListByClient().subscribe(
@@ -762,28 +763,28 @@ completeTask(formModel){
       error => { console.log(error); },
       () => console.log('Get all employees by client complete'));
   }
-  filterEmpList(){
-    for(let j of this.globalData.workingEmp){
-      // for(let i of this.employees){
-        // if(i.value === j.EmpId){
-          let index = this.employees.findIndex(x => x.value === j.EmpId)
+  // filterEmpList(){
+  //   for(let j of this.globalData.workingEmp){
+  //     // for(let i of this.employees){
+  //       // if(i.value === j.EmpId){
+  //         let index = this.employees.findIndex(x => x.value === j.EmpId)
           
-          this.employees.splice(index,1)
-        // }
-      // }
-    }
-  }
+  //         this.employees.splice(index,1)
+  //       // }
+  //     // }
+  //   }
+  // }
 
   OnSelectingEmployees(event: any){
     
-    for(let employee of this.allemplist){
-        if(event.node.id === employee.empid && this.employeeArray.indexOf(employee.empname) === -1){
-          this.employeeArray.push(employee.empname)
+    for(let employee of  this.globalData.employees){
+        if(event.node.id === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
+          this.employeeArray.push(employee.EmpName)
           return;
        }
        else{
-         if(event.node.id === employee.empid){
-           let index = this.employeeArray.indexOf(employee.empname);
+         if(event.node.id === employee.EmpId){
+           let index = this.employeeArray.indexOf(employee.EmpName);
            this.employeeArray.splice(index,1)
 
          }

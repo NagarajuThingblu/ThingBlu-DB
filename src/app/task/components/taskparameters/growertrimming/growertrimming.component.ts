@@ -393,7 +393,7 @@ export class GrowertrimmingComponent implements OnInit {
       if (data !== 'No Data found') {
         this.allSkillslist = data;
        
-        this.skills = this.dropdwonTransformService.transform(this.allSkillslist.filter(x => x.TaskTypeId === TaskTypeId), 'SkillName', 'SkillId');
+        this.skills = this.dropdwonTransformService.transform(this.allSkillslist.filter(x => x.TaskTypeId === TaskTypeId), 'SkillName', 'SkillTaskTypeMapId');
       }
       else{
         this.allSkillslist = [];

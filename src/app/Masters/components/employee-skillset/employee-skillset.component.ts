@@ -262,7 +262,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
           TaskTypeId:this.employeeSkillForm.value.tasktype,
           ClientId: this._cookieService.ClientId,
           VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-          SkillTaskTypeMapId:this.SkillTaskTypeMapId,
+          SkillTaskMapId:this.SkillTaskTypeMapId,
           // IsDeleted:0,
           // IsActive: this.employeeSkillForm.value.chkIsActive ? 1 : 0,
           // ActiveInactive:0,
@@ -377,7 +377,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
           TaskTypeId:skillset.TaskTypeId,
           ClientId: this._cookieService.ClientId,
           VirtualRoleId: Number(this._cookieService.VirtualRoleId),
-          SkillTaskTypeMapId:skillset.SkillTaskTypeMapId,
+          SkillTaskMapId:skillset.SkillTaskTypeMapId,
           SkillList:[]
       };
      

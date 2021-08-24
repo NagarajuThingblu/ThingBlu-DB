@@ -264,7 +264,7 @@ export class BuckingComponent implements OnInit {
     //    this.inputBinDetails[i] = this.BinData[i]
     //  }
     // }
-    this.empfilterBasedOnSkill()
+   // this.empfilterBasedOnSkill()
   }
 
   createItem(): FormGroup {
@@ -328,30 +328,30 @@ export class BuckingComponent implements OnInit {
     this.selectedSkillItems = [];
     this.headings.forEach(element => {
       const NewEmpList: any = {};
-      NewEmpList.id = element.id;
-      NewEmpList.label = element.headingName;
+      NewEmpList.id = element.ID;
+      NewEmpList.label = element.HeadingName;
       NewEmpList.children = [];
       NewEmpList.Num  = element.Num
-      NewEmpList.isParent = element.isParent;
-      NewEmpList.ParentId = element.parentId;
+      NewEmpList.isParent = element.IsParent;
+      NewEmpList.ParentId = element.ParentID;
       NewEmpList.Selectable = true;
-      if(element.isParent === false){
+      if(element.IsParent === false || element.IsParent === "False"){
         this.selectedSkillItems.push(NewEmpList)
       }
-      if(NewEmpList.isParent === true){
+      if(NewEmpList.isParent === true || NewEmpList.isParent === "True"){
         this.plottedSkillItems.push(NewEmpList)
       }
     });
     this.allemplist.forEach(element => {
       const NewAllEmpList: any = {};
-      NewAllEmpList.id = element.empid;
-      NewAllEmpList.label = element.empname;
+      NewAllEmpList.id = element.EmpID;
+      NewAllEmpList.label = element.EmpName;
       NewAllEmpList.children = [];
      // NewAllEmpList.Num  = element.Num
-      NewAllEmpList.isParent = element.isParent;
-      NewAllEmpList.ParentId = element.ParentId;
+      NewAllEmpList.isParent = element.IsParent;
+      NewAllEmpList.ParentId = element.ParentID;
       NewAllEmpList.Selectable = true;
-      if (element.isParent === false) {
+      if (element.IsParent === false || element.IsParent === "False" ) {
         if (this.plottedSkillItems.length) {
           this.plottedSkillItems.forEach(parent => {
             if (parent.id === element.ParentId) {
@@ -364,14 +364,14 @@ export class BuckingComponent implements OnInit {
     })
     this.skilledempslist.forEach(element => {
       const NewAllEmpList: any = {};
-      NewAllEmpList.id = element.empid;
-      NewAllEmpList.label = element.empname;
+      NewAllEmpList.id = element.EmpID;
+      NewAllEmpList.label = element.EmpName;
       NewAllEmpList.children = [];
      // NewAllEmpList.Num  = element.Num
-      NewAllEmpList.isParent = element.isParent;
+      NewAllEmpList.isParent = element.IsParent;
       NewAllEmpList.ParentId = element.ParentId;
       NewAllEmpList.Selectable = true;
-      if (element.isParent === false) {
+      if (element.IsParent === false || element.IsParent === "False") {
         if (this.plottedSkillItems.length) {
           this.plottedSkillItems.forEach(parent => {
             if (parent.id === element.ParentId) {
@@ -391,7 +391,7 @@ export class BuckingComponent implements OnInit {
       if (data !== 'No Data found') {
         this.allSkillslist = data;
        
-        this.skills = this.dropdwonTransformService.transform(this.allSkillslist.filter(x => x.TaskTypeId === TaskTypeId), 'SkillName', 'SkillId');
+        this.skills = this.dropdwonTransformService.transform(this.allSkillslist.filter(x => x.TaskTypeId === TaskTypeId), 'SkillName', 'SkillTaskTypeMapId');
       }
       else{
         this.allSkillslist = [];
@@ -401,6 +401,30 @@ export class BuckingComponent implements OnInit {
     error => { console.log(error); },
     () => console.log('skillslistbytasktype complete'));
   }
+  onSkillsSelect(event:any){
+    let skillListApiDetails;
+    skillListApiDetails = {
+      TaskTypeId:Number(this.TaskModel.task),
+    
+      SkillList:[]
+    };
+    for(let j of this.BUCKING.value.skills){
+          
+      skillListApiDetails.SkillList.push({
+        SkillID: j,
+       
+      })
+    };
+    this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
+    .subscribe(data => {
+      this.headings = data.Table,
+      this.skilledempslist = data.Table1,
+      this.allemplist = data.Table2
+      this.globalData
+      this.empfilterBasedOnSkill()
+    });
+      }
+      
   getStrainListByTask() {
     this.globalData.workingEmp =[];
     this.workingEmp = [];
@@ -535,14 +559,14 @@ export class BuckingComponent implements OnInit {
   
   OnSelectingEmployees(event: any){
     
-    for(let employee of this.allemplist){
-        if(event.node.id === employee.empid && this.employeeArray.indexOf(employee.empname) === -1){
-          this.employeeArray.push(employee.empname)
+    for(let employee of  this.globalData.employees){
+        if(event.node.id === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
+          this.employeeArray.push(employee.EmpName)
           return;
        }
        else{
-         if(event.node.id === employee.empid){
-           let index = this.employeeArray.indexOf(employee.empname);
+         if(event.node.id === employee.EmpId){
+           let index = this.employeeArray.indexOf(employee.EmpName);
            this.employeeArray.splice(index,1)
 
          }
@@ -550,6 +574,7 @@ export class BuckingComponent implements OnInit {
       }
     
   }
+
   OnUnSelectNode(e) {
  
     if (e.node.selectable === false) {
