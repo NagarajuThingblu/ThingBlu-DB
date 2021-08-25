@@ -194,7 +194,7 @@ export class MastersResource {
                     deletestrainmsg: 'Do you want to delete this Cultivar ?',
                     activestrainmsg: 'Do you want to activate this Cultivar ?',
                     deactivatestrainmsg: 'Do you want to inactivate this Cultivar ?',
-                    genetics: 'Species',
+                    genetics: 'Binomial Name',
                     geneticsrequired: 'Species Required.',
                     straintypenotpresent: 'Cultivar  type is deleted or is inactive.',
                     geneticsnotpresent: 'Species is deleted or is inactive.',
@@ -625,10 +625,10 @@ export class MastersResource {
                 },
 
                 addnewgenetics: {
-                    geneticsName: 'Species Name',
-                    geneticsrequired: 'Species Required',
+                    geneticsName: 'Binomial Name ',
+                    geneticsrequired: 'Binomial Name  Required',
                     geneticsLength: 'Shoukd not be more than 50 characters.',
-                    enterdescription: 'Species Description',
+                    enterdescription: 'Binomial  Description',
                     descriptionrequired: 'Description Required',
                     newGeneticseSavedSuccess: 'Species saved successfully.',
                     geneticsAlreadyExist: 'Species already exist',

@@ -21,6 +21,37 @@
 
 
   <div class="ui-g">
+    <!--cultivar type-->
+    <div class="ui-g-12 ui-md-6">
+      <div class="paddingRL">
+          <div class="le-su-12">
+            <label for="cultivartype">
+              Cultivar Type<span class="star">*</span>:
+            </label>
+
+            <p-dropdown
+            [filter] ="true"
+            id="cultivartype"
+            [options]="straintypes"
+            formControlName="cultivartype"
+            placeholder="-- Select --"
+            [autoWidth]="false"
+            class="clsControl"                                    
+            name="cultivartype">
+        </p-dropdown>
+
+            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+              *ngIf="!geneticsMasterForm.controls['genetics'].valid&&geneticsMasterForm.controls['genetics'].dirty">
+
+                <span *ngIf="geneticsMasterForm.controls['cultivartype'].errors['required']">
+               Cultiver required
+                </span>
+              
+              </div>
+          </div>
+      </div>
+    </div>
+    <!--End cultivar type-->
     <!-- StrainType Name -->
             <div class="ui-g-12 ui-md-6">
               <div class="paddingRL">

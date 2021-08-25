@@ -13,6 +13,8 @@ import { AddGeneticsActionService } from '../../../task/services/add-genetics-ac
 import { GeneticsService } from '../../services/genetics.service';
 import { AppConstants } from '../../../shared/models/app.constants';
 import { Router } from '@angular/router';
+import { DropdownValuesService } from '../../../shared/services/dropdown-values.service';
+import { DropdwonTransformService } from '../../../shared/services/dropdown-transform.service';
 
 @Component({
   selector: 'app-genetics-master',
@@ -40,7 +42,12 @@ export class GeneticsMasterComponent implements OnInit {
       straintype: null,
       description: null
     };
-
+    straintypes: any[];
+    newStrainTypes: any[];
+    private globalData = {
+      straintypes: [],
+ 
+    };
     // public StrainTypeInfo: any = {
     //   StrainTypeName: null
     // };
@@ -51,6 +58,8 @@ export class GeneticsMasterComponent implements OnInit {
   constructor(  private fb: FormBuilder,
     private loaderService: LoaderService,
     private cookieService: CookieService,
+    private dropdownDataService: DropdownValuesService, 
+    private dropdwonTransformService: DropdwonTransformService,
     private appComponentData: AppComponent,
     private geneticsService: GeneticsService,
     // tslint:disable-next-line:no-shadowed-variable
@@ -70,10 +79,11 @@ export class GeneticsMasterComponent implements OnInit {
     this.loaderService.display(false);
     this._cookieService = this.appCommonService.getUserProfile();
     this.getGeneticsDetails();
-
+    this.getAllStrainsType();
 
   // New StrainType form defination(reactive form)
   this.geneticsMasterForm = this.fb.group({
+    'cultivartype':new FormControl(null, [Validators.required]),
     'genetics': new FormControl(null, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]),
     'description': new FormControl(null, [Validators.maxLength(500)]),
     'chkIsActive': new FormControl(null)
@@ -98,6 +108,17 @@ export class GeneticsMasterComponent implements OnInit {
   }
   onPageChange(e) {
     this.event = e;
+  }
+  getAllStrainsType() {
+    this.dropdownDataService.getStrainType().subscribe(
+      data => {
+        this.globalData.straintypes = data;
+        this.newStrainTypes = this.dropdwonTransformService.transform(data, 'StrainTypeName', 'StrainTypeId', '-- Select --');
+        this.straintypes = this.dropdwonTransformService.transform(data, 'StrainTypeName', 'StrainTypeId', '-- Select --');
+        // this.straintypes = this.newStrainTypes;
+      } ,
+      error => { console.log(error); },
+      () => console.log('Get all strains types complete'));
   }
   onSubmit(formModel) {
     if (String(this.geneticsMasterForm.value.genetics).trim().length === 0) {
