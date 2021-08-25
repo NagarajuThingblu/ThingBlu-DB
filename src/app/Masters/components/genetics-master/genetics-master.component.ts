@@ -129,11 +129,15 @@ export class GeneticsMasterComponent implements OnInit {
     const geneticsDetailsForApi = {
       Genetics: {
         GeneticsId: this.geneticsForUpdate,
+        GeneticsCode:0,
         GeneticsName: this.appCommonService.trimString(this.geneticsMasterForm.value.genetics),
         Description: this.appCommonService.trimString(this.geneticsMasterForm.value.description),
         VirtualRoleId: this._cookieService.VirtualRoleId,
+        IsDeleted: 0,
+        ActiveInactive:0,
         IsActive: this.geneticsMasterForm.value.chkIsActive ? 1 : 0,
-        ClientId: this._cookieService.ClientId
+        ClientId: this._cookieService.ClientId,
+        StrainTypeId:  this.geneticsMasterForm.value.cultivartype
       }
     };
     // console.log(geneticsDetailsForApi);
@@ -207,10 +211,11 @@ export class GeneticsMasterComponent implements OnInit {
       //  console.log(data);
        if (data !== 'No data found!') {
          this.geneticsForUpdate = geneticsId;
+         const cultivar = this.geneticsMasterForm.controls['cultivartype'];
          const genetics = this.geneticsMasterForm.controls['genetics'];
          const description = this.geneticsMasterForm.controls['description'];
          const chkIsActive = this.geneticsMasterForm.controls['chkIsActive'];
-
+         cultivar.patchValue(data[0].StrainTypeID);
          genetics.patchValue(data[0].GeneticsName);
           description.patchValue(data[0].Description);
           chkIsActive.patchValue(data[0].IsActive);

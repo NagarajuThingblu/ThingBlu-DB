@@ -25,7 +25,8 @@
                                 <p-dropdown
                                     [filter] ="true"
                                     id="straintype"
-                                    [options]="straintypes"
+                                    [options]="cultivartypes"
+                                    (onChange)="filterBinomialNames($event)"
                                     formControlName="straintype"
                                     placeholder="-- Select --"
                                     [autoWidth]="false"
@@ -391,7 +392,7 @@
                   <th [pSortableColumn]="'StrainName'">Cultivar   <p-sortIcon [field]="'StrainName'"></p-sortIcon> </th>
                   <th [pSortableColumn]="'StrainCode'">Cultivar  Code  <p-sortIcon [field]="'StrainCode'"></p-sortIcon> </th>
                   <th [pSortableColumn]="'StrainTypeName'">Cultivar  Type  <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
-                  <th [pSortableColumn]="'GeneticsName'"> GeneticsName <p-sortIcon [field]="'GeneticsName'"></p-sortIcon></th>
+                  <th [pSortableColumn]="'GeneticsName'"> Binomial Name <p-sortIcon [field]="'GeneticsName'"></p-sortIcon></th>
                   <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>
                   <!-- <th [pSortableColumn]="'THC'">THC(%) <p-sortIcon [field]="'THC'"></p-sortIcon></th>    
                   <th [pSortableColumn]="'CBD'">CBD(%) <p-sortIcon [field]="'CBD'"></p-sortIcon></th>                  

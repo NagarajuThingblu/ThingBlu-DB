@@ -13,6 +13,7 @@ import { ConfirmationService } from 'primeng/api';
 import { AppComponent } from '../../../app.component';
 import { AppConstants } from '../../../shared/models/app.constants';
 import { Router } from '@angular/router';
+import { GeneticsService } from '../../services/genetics.service';
 
 @Component({
   moduleId: module.id,
@@ -39,6 +40,8 @@ export class StrainMasterComponent implements OnInit {
   clear: any;
   public event: any;
   paginationValues: any;
+  public cultivarBasedBinomialNamesData: any;
+  public cultivartypes: any;
     // all form fiels model object
     newStrainDetails = {
       straintype: null,
@@ -75,6 +78,7 @@ export class StrainMasterComponent implements OnInit {
     private dropdwonTransformService: DropdwonTransformService,
     private strainMasterAppService: StrainMasterService,
     private confirmationService: ConfirmationService,
+    private geneticsService: GeneticsService,
     private appComponentData: AppComponent,
     private appCommonService: AppCommonService,
     private router: Router
@@ -106,8 +110,9 @@ export class StrainMasterComponent implements OnInit {
       this.loaderService.display(false);
       this._cookieService = this.appCommonService.getUserProfile();
       this.getAllStrainsType();
-      this.getAllGenetics();
+     // this.getAllGenetics();
       this.getAllStrainsbyClient();
+      this.getGeneticsDetails();
       this.saveButtonText = 'Save';
       this.pageheading = 'Add New Cultivar';
       this.clear = 'Clear';
@@ -136,7 +141,32 @@ export class StrainMasterComponent implements OnInit {
         chkIsActive: 1
       };
     }
-
+    getGeneticsDetails() {
+      this.loaderService.display(true);
+      this.geneticsService.getGeneticsDetails().subscribe(
+        data => {
+        //  console.log(data);
+         if (data !== 'No data found!') {
+          //  this.allGeneticsList = data;
+          this.cultivarBasedBinomialNamesData = data;
+            this.cultivartypes = this.dropdwonTransformService.transform(data, 'StrainTypeName', 'StrainTypeID', '-- Select --');
+            // console.log(data);
+         } else {
+          this.cultivartypes = [];
+         }
+         this.loaderService.display(false);
+        } ,
+        error => { console.log(error);  this.loaderService.display(false); },
+        () => console.log('GetGeneticsDetails complete'));
+    }
+    filterBinomialNames(event:any){
+      this.genetics=[];
+      for(let i of this.cultivarBasedBinomialNamesData){
+        if(i.StrainTypeID === event.value){
+          this.genetics.push({label:i.GeneticsName, value:i.GeneticsId})
+        }
+      }
+    }
     getAllStrainsType() {
       this.dropdownDataService.getStrainType().subscribe(
         data => {
@@ -163,11 +193,6 @@ export class StrainMasterComponent implements OnInit {
             StrainName: this.appCommonService.trimString(this.strainmasterForm.value.strain),
             StrainCode: this.appCommonService.trimString(this.strainmasterForm.value.straincode),
             Description: this.appCommonService.trimString(this.strainmasterForm.value.description),
-            // THC: this.strainmasterForm.value.thc,
-            // THCA: this.strainmasterForm.value.thca,
-            // CBD: this.strainmasterForm.value.cbd,
-            // CBDA: this.strainmasterForm.value.cbda,
-            // Total: this.strainmasterForm.value.total,
             VirtualRoleId: this._cookieService.VirtualRoleId,
             GeneticsId: this.strainmasterForm.value.genetics?this.strainmasterForm.value.genetics:0,
             IsActive: this.strainmasterForm.value.chkIsActive ? 1 : 0,
@@ -263,17 +288,17 @@ export class StrainMasterComponent implements OnInit {
           () => console.log('getAllStrainsbyClient complete'));
       }
 
-      getAllGenetics() {
-        this.strainMasterAppService.getGeneticsList().subscribe(
-          data => {
-            this.globalData.genetics = data;
-            this.newGenetics = this.dropdwonTransformService.transform(data, 'GeneticsName', 'GeneticsId', '-- Select --');
-            this.genetics = this.newGenetics;
-            // console.log(data);
-          } ,
-          error => { console.log(error); },
-          () => console.log('Get all clients complete'));
-      }
+      // getAllGenetics() {
+      //   this.strainMasterAppService.getGeneticsList().subscribe(
+      //     data => {
+      //       this.globalData.genetics = data;
+      //       this.newGenetics = this.dropdwonTransformService.transform(data, 'GeneticsName', 'GeneticsId', '-- Select --');
+      //       this.genetics = this.newGenetics;
+      //       // console.log(data);
+      //     } ,
+      //     error => { console.log(error); },
+      //     () => console.log('Get all clients complete'));
+      // }
 
       getStrainOnEdit(StrainId) {
         // this.strainMasterAppService.getStrainListByStrainId(StrainId).subscribe(
