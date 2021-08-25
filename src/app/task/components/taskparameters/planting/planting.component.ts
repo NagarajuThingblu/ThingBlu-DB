@@ -102,6 +102,7 @@ export class PlantingComponent implements OnInit{
    taskTypeId: any;
   public taskType: any;
   public employeeArray:any=[];
+  public employeeNames: any=[];
   public strainName: '';
   public defaultValueCompletePc: Number = 0;
   public extraPC: Number = 0;
@@ -210,7 +211,8 @@ export class PlantingComponent implements OnInit{
       'section': new FormControl('', Validators.required),
       'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
       // 'estimatedenddate': new FormControl('',  Validators.compose([Validators.required])),
-      'employeeList': new FormControl('', Validators.required),
+    //
+     'employeeList': new FormControl('', Validators.required),
      'plantCount' : new FormControl('', Validators.required),
      'skills':new FormControl('', Validators.required),
      'assignedPC' : new FormControl(''),// hem growers don't assign particular number of palnts to emp
@@ -329,6 +331,7 @@ export class PlantingComponent implements OnInit{
       }
     })
     this.files = this.plottedSkillItems;
+  
   }
   OnUnSelectNode(e) {
  
@@ -779,7 +782,10 @@ completeTask(formModel){
     
     for(let employee of  this.globalData.employees){
         if(event.node.id === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
-          this.employeeArray.push(employee.EmpName)
+          this.employeeArray.push(employee.EmpName);
+          // this.employeeNames.push(employee.EmpId)
+          // this.PLANTING.controls.employeeList = this.employeeNames
+          this.PLANTING.get('employeeList').patchValue(this.selectedSkillItems)
           return;
        }
        else{

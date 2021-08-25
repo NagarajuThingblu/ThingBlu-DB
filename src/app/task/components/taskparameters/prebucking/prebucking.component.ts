@@ -658,6 +658,7 @@ export class PrebuckingComponent implements OnInit {
     for(let employee of  this.globalData.employees){
         if(event.node.id === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
           this.employeeArray.push(employee.EmpName)
+          this.PREBUCKING.get('employeeList').patchValue(this.selectedSkillItems)
           return;
        }
        else{

@@ -921,12 +921,19 @@ console.log(assignTaskFormValues)
           "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
           "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
        },
-       EmployeeTypes:[]
+       EmployeeTypes:[],
+       SkillIDlist:[]
       };
       assignTaskFormValues[this.selectedTaskTypeName].employeeList
       .forEach((element, index) => {
         plantingDataForApi.EmployeeTypes.push({
-          "EmpId" : assignTaskFormValues.PLANTING.employeeList[index] 
+          "EmpId" : assignTaskFormValues.PLANTING.employeeList[index].id 
+        });
+      });
+      assignTaskFormValues[this.selectedTaskTypeName].skills
+      .forEach((element, index) => {
+        plantingDataForApi.SkillIDlist.push({
+          "SkillId" : assignTaskFormValues.PLANTING.skills[index] 
         });
       });
        this.loaderService.display(true);
@@ -978,12 +985,19 @@ console.log(assignTaskFormValues)
            "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
            "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
         },
-        EmployeeTypes:[]
+        EmployeeTypes:[],
+        SkillIDlist:[]
        };
        assignTaskFormValues[this.selectedTaskTypeName].employeeList
        .forEach((element, index) => {
         harvestingDataForApi.EmployeeTypes.push({
-           "EmpId" : assignTaskFormValues.HARVESTING.employeeList[index] 
+           "EmpId" : assignTaskFormValues.HARVESTING.employeeList[index].id 
+         });
+       });
+       assignTaskFormValues[this.selectedTaskTypeName].skills
+       .forEach((element, index) => {
+        harvestingDataForApi.SkillIDlist.push({
+           "SkillId" : assignTaskFormValues.HARVESTING.skills[index] 
          });
        });
         this.loaderService.display(true);
@@ -1032,14 +1046,21 @@ console.log(assignTaskFormValues)
             "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
             "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
           },
-          EmployeeTypes:[]
+          EmployeeTypes:[],
+          SkillIDlist:[]
         };
         assignTaskFormValues[this.selectedTaskTypeName].employeeList
-        .forEach((element, index) => {
-          prebuckingDataForApi.EmployeeTypes.push({
-            "EmpId" : assignTaskFormValues.PREBUCKING.employeeList[index] 
-          });
-        });
+       .forEach((element, index) => {
+        prebuckingDataForApi.EmployeeTypes.push({
+           "EmpId" : assignTaskFormValues.PREBUCKING.employeeList[index].id 
+         });
+       });
+       assignTaskFormValues[this.selectedTaskTypeName].skills
+       .forEach((element, index) => {
+        prebuckingDataForApi.SkillIDlist.push({
+           "SkillId" : assignTaskFormValues.PREBUCKING.skills[index] 
+         });
+       });
          this.loaderService.display(true);
         this.taskCommonService.assignPrebuckingTask(prebuckingDataForApi).
         subscribe(
@@ -1062,7 +1083,7 @@ console.log(assignTaskFormValues)
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
             this.loaderService.display(false);
           }
-          else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Merged Sections'){
+          else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Selected Merged Sections'){
             this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
             detail: data[0]. RESULTKEY});
             this.loaderService.display(false);
@@ -1092,14 +1113,21 @@ console.log(assignTaskFormValues)
             "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
             "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
           },
-          EmployeeTypes:[]
+          EmployeeTypes:[],
+          SkillIDlist:[]
         };
         assignTaskFormValues[this.selectedTaskTypeName].employeeList
-        .forEach((element, index) => {
-          buckingDataForApi.EmployeeTypes.push({
-            "EmpId" : assignTaskFormValues.BUCKING.employeeList[index] 
-          });
-        });
+       .forEach((element, index) => {
+        buckingDataForApi.EmployeeTypes.push({
+           "EmpId" : assignTaskFormValues.BUCKING.employeeList[index].id 
+         });
+       });
+       assignTaskFormValues[this.selectedTaskTypeName].skills
+       .forEach((element, index) => {
+        buckingDataForApi.SkillIDlist.push({
+           "SkillId" : assignTaskFormValues.BUCKING.skills[index] 
+         });
+       });
         this.loaderService.display(true);
         this.taskCommonService.assignbuckingTask(buckingDataForApi).
         subscribe(
@@ -1122,7 +1150,7 @@ console.log(assignTaskFormValues)
               this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
               this.loaderService.display(false);
             }
-            else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Merged Sections'){
+            else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Selected Merged Sections'){
               this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
               detail: data[0]. RESULTKEY});
               this.loaderService.display(false);
@@ -1148,12 +1176,19 @@ console.log(assignTaskFormValues)
               "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
               "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
             },
-            EmployeeTypes:[]
+            EmployeeTypes:[],
+            SkillIDlist:[]
           };
           assignTaskFormValues[this.selectedTaskTypeName].employeeList
           .forEach((element, index) => {
             trimmingDataForApi.EmployeeTypes.push({
-              "EmpId" : assignTaskFormValues.TRIM.employeeList[index] 
+              "EmpId" : assignTaskFormValues.TRIM.employeeList[index].id 
+            });
+          });
+          assignTaskFormValues[this.selectedTaskTypeName].skills
+          .forEach((element, index) => {
+            trimmingDataForApi.SkillIDlist.push({
+              "SkillId" : assignTaskFormValues.TRIM.skills[index] 
             });
           });
           this.loaderService.display(true);
@@ -1174,7 +1209,7 @@ console.log(assignTaskFormValues)
               });
               this.loaderService.display(false);
             }
-            else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Merged Sections'){
+            else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Selected Merged Sections'){
               this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
               detail: data[0]. RESULTKEY});
               this.loaderService.display(false);

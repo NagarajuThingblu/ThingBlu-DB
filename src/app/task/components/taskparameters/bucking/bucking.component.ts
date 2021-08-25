@@ -149,23 +149,7 @@ export class BuckingComponent implements OnInit {
       {label: 'Important', value: 'Important'},
       {label: 'Critical', value: 'Critical'}
     ];
-    this.headings =[
-      {id:1, headingName:"Skilled Employees",  Num:2, isParent:true, parentId:0},
-      {id:0, headingName:"All Employees", Num:1, isParent:true, parentId:0},
-    ]
-    this.skilledempslist =[
-      {empid:1, empname:"jyothi",  isParent:false, ParentId:1},
-      {empid:2, empname:"saikumar",  isParent:false, ParentId:1},
-      {empid:3, empname:"sucharitha",  isParent:false, ParentId:1},
-    ]
-    this.allemplist = [
-      {empid:1, empname:"jyothi", isParent:false, ParentId:0},
-      {empid:2, empname:"saikumar",  isParent:false, ParentId:0},
-      {empid:3, empname:"sucharitha",  isParent:false, ParentId:0},
-      {empid:4, empname:"hemanth",  isParent:false, ParentId:0},
-      {empid:5, empname:"nagaraju",  isParent:false, ParentId:0},
-    ]
-
+ 
     if (this.PageFlag.page !== 'TaskAction') {
       this.TaskModel.BUCKING = {
         bins:'',
@@ -562,6 +546,7 @@ export class BuckingComponent implements OnInit {
     for(let employee of  this.globalData.employees){
         if(event.node.id === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
           this.employeeArray.push(employee.EmpName)
+          this.BUCKING.get('employeeList').patchValue(this.selectedSkillItems)
           return;
        }
        else{
