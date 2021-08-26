@@ -253,6 +253,7 @@ export class GeneticsMasterComponent implements OnInit {
           Description: Genetics.Description,
           VirtualRoleId: this._cookieService.VirtualRoleId,
           IsDeleted: IsDeleted,
+          ClientId: this._cookieService.ClientId,
           IsActive: Genetics.IsActive === true?1:0,
           ActiveInactive: ActivateInactivateKey,
           StrainTypeId:Genetics.StrainTypeID
