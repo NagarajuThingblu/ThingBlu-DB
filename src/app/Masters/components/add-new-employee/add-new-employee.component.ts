@@ -695,7 +695,7 @@ OnUnSelectNode(e) {
              if(NewSkill.isParent === true || NewSkill.isParent === "True"){
                this.plottedSkillItems.push(NewSkill)
                for(let j of data1){
-               if(j.ParentId ===   NewSkill.ParentId){
+               if(j.TaskTypeId ===   NewSkill.id){
                  this.selectedSkillItems.push(NewSkill)
                }
               }
