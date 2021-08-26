@@ -161,11 +161,9 @@ export class StrainMasterComponent implements OnInit {
     }
     filterBinomialNames(event:any){
       this.genetics=[];
-      for(let i of this.cultivarBasedBinomialNamesData){
-        if(i.StrainTypeID === event.value){
-          this.genetics.push({label:i.GeneticsName, value:i.GeneticsId})
-        }
-      }
+      
+      this.genetics = this.dropdwonTransformService.transform(
+        this.cultivarBasedBinomialNamesData.filter(x => x.StrainTypeID === this.strainmasterForm.controls.straintype.value), 'GeneticsName', 'GeneticsId', '-- Select --');
     }
     getAllStrainsType() {
       this.dropdownDataService.getStrainType().subscribe(
@@ -273,7 +271,7 @@ export class StrainMasterComponent implements OnInit {
         this.newStrainActionService.getStrainDetailList().subscribe(
           data => {
           //  console.log(data);
-           if (data !== 'No data found!') {
+           if (data != 'No data found!') {
               this.allStrainList = data;
               this.paginationValues = AppConstants.getPaginationOptions;
           if (this.allStrainList.length > 20) {
