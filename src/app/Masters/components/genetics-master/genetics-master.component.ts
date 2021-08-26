@@ -149,12 +149,17 @@ export class GeneticsMasterComponent implements OnInit {
           data => {
             // console.log(data);
             this.msgs = [];
-            if (data[0]['Result'] === 'Success') {
+            if (data[0]['Result'] === 'Success' &&  this.geneticsForUpdate === 0) {
               this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
               detail: this.newGeneticsResources.newGeneticsSavedSuccess });
               this.resetAll();
               this.getGeneticsDetails();
-            } else if (data === 'Failure') {
+            }else    if (data[0]['Result'] === 'Success' &&  this.geneticsForUpdate != 0) {
+              this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+              detail: "Species Updated Successfully" });
+              this.resetAll();
+              this.getGeneticsDetails();
+            }else if (data === 'Failure') {
               this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail:
               this.globalResource.serverError });
             } else if (data === 'Duplicate') {
@@ -182,6 +187,7 @@ export class GeneticsMasterComponent implements OnInit {
   }
 
   getGeneticsDetails() {
+    this.allGeneticsList = [];
     this.loaderService.display(true);
     this.geneticsService.getGeneticsDetails().subscribe(
       data => {

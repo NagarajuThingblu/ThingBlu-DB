@@ -208,8 +208,15 @@ export class StrainMasterComponent implements OnInit {
                 // console.log(data);
                 // alert(data[0]['Result']);
                 this.msgs = [];
-                if (data[0]['Result'] === 'Success') {
+                if (data[0]['Result'] === 'Success' && this.strainForUpdate === 0) {
                   this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg , detail: this.newStrainResources.newstrainsavedsuccess });
+
+                  // console.log(data[0]['StrainId']);
+                 // this.GetStrainOnSave(data[0]['StrainId']);
+                 this.resetAll();
+                  this.getAllStrainsbyClient();
+                } else  if (data[0]['Result'] === 'Success' && this.strainForUpdate != 0) {
+                  this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg , detail:"Cultivar Updated successfully." });
 
                   // console.log(data[0]['StrainId']);
                  // this.GetStrainOnSave(data[0]['StrainId']);
@@ -268,17 +275,19 @@ export class StrainMasterComponent implements OnInit {
         this.event = e;
       }
       getAllStrainsbyClient() {
+        this.allStrainList = [];
         this.loaderService.display(true);
         this.newStrainActionService.getStrainDetailList().subscribe(
           data => {
-          //  console.log(data);
+           console.log(data);
            if (data != 'No data found!') {
               this.allStrainList = data;
               this.paginationValues = AppConstants.getPaginationOptions;
           if (this.allStrainList.length > 20) {
             this.paginationValues[AppConstants.getPaginationOptions.length] = this.allStrainList.length;
           }
-           } else {
+           } 
+           else {
             this.allStrainList = [];
            }
            this.loaderService.display(false);
@@ -356,7 +365,7 @@ export class StrainMasterComponent implements OnInit {
               this.genetics = geneticsNewData;
               genetics.patchValue(this.strainOnEdit[0].GeneticsId);
              this.strainTypeDisabled = true;
-             this.geneticsDisabled = true;
+             this.geneticsDisabled = false;
            } else {
            this.allStrainList = [];
            }
