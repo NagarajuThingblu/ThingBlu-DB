@@ -150,7 +150,8 @@ export class StrainMasterComponent implements OnInit {
           //  this.allGeneticsList = data;
           this.cultivarBasedBinomialNamesData = data;
             this.cultivartypes = this.dropdwonTransformService.transform(data, 'StrainTypeName', 'StrainTypeID', '-- Select --');
-            // console.log(data);
+            const cultivartypesfilter = Array.from(this.cultivartypes.reduce((m, t) => m.set(t.label, t), new Map()).values())
+   this.cultivartypes = this.dropdwonTransformService.transform(cultivartypesfilter,'label', 'value')
          } else {
           this.cultivartypes = [];
          }

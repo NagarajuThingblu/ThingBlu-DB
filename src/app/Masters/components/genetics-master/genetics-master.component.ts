@@ -328,7 +328,7 @@ export class GeneticsMasterComponent implements OnInit {
       if (genetics.IsActive === true) {
         strMessage = 'Do you want to activate Species?';
       } else {
-        strMessage = 'Do you want to inactivate Species? Strain associated with this Species will also be inactivated.';
+        strMessage = 'Do you want to inactivate Species? Cultivar associated with this Species will also be inactivated.';
       }
 
       this.confirmationService.confirm({
