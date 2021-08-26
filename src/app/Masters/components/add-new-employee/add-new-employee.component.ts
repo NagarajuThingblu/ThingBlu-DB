@@ -694,6 +694,11 @@ OnUnSelectNode(e) {
            
              if(NewSkill.isParent === true || NewSkill.isParent === "True"){
                this.plottedSkillItems.push(NewSkill)
+               for(let j of data1){
+               if(j.ParentId ===   NewSkill.ParentId){
+                 this.selectedSkillItems.push(NewSkill)
+               }
+              }
              }
            });
            this.allSkillslist.forEach(element => {
@@ -720,6 +725,7 @@ OnUnSelectNode(e) {
                 this.selectedSkillItems.push(NewSkillchild)
               }
             }
+           
            })
          
            this.files = this.plottedSkillItems;
