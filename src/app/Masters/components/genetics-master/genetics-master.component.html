@@ -26,7 +26,7 @@
       <div class="paddingRL">
           <div class="le-su-12">
             <label for="cultivartype">
-              Cultivar Type<span class="star">*</span>:
+              Type<span class="star">*</span>:
             </label>
 
             <p-dropdown
@@ -44,7 +44,7 @@
               *ngIf="!geneticsMasterForm.controls['cultivartype'].valid&&geneticsMasterForm.controls['cultivartype'].dirty">
 
                 <span *ngIf="geneticsMasterForm.controls['cultivartype'].errors['required']">
-               Cultiver required
+              Type required
                 </span>
               
               </div>
@@ -66,7 +66,7 @@
                       autocomplete="off"
                       type="text"
                       class="clsControl"
-                      placeholder="Enter Genetics Name"
+                      placeholder="Enter Binomial  Name"
                       formControlName="genetics"
                     />
 
@@ -92,7 +92,7 @@
                 <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="description">
-                        {{ newGeneticsResources.enterdescription}}<span class="star"></span>:
+                        Description<span class="star"></span>:
                       </label>
 
                       <input pInputText
@@ -100,7 +100,7 @@
                         id="description"
                         class="clsControl"
                         autocomplete="off"
-                        placeholder="Enter Genetics Description"
+                        placeholder="Enter Description"
                         formControlName="description"
                       />
 
@@ -108,7 +108,7 @@
                         *ngIf="!geneticsMasterForm.controls['description'].valid&&geneticsMasterForm.controls['description'].dirty">
 
                           <span *ngIf="geneticsMasterForm.controls['description'].errors['required']">
-                            {{newGeneticsResources.descriptionrequired}}
+                           description required
                           </span>
                           <span *ngIf="StrainTypeMasterForm.controls['description'].errors['maxlength']">{{newStrainTypeResources.descriptionLength}}</span>
                         </div>
@@ -170,8 +170,8 @@
       </ng-template>
       <ng-template pTemplate="header">
           <tr>
-            <th [pSortableColumn]="'StrainTypeName'">Cultivar Type <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
-              <th [pSortableColumn]="'GeneticsName'">Genetics Name  <p-sortIcon [field]="'GeneticsName'"></p-sortIcon> </th>
+            <th [pSortableColumn]="'StrainTypeName'"> Type <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
+              <th [pSortableColumn]="'GeneticsName'">Binomial Name  <p-sortIcon [field]="'GeneticsName'"></p-sortIcon> </th>
               <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>            
               <th style="width:100px;"> </th>
           </tr>

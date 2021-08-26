@@ -94,7 +94,7 @@ export class StrainMasterComponent implements OnInit {
       this.strainmasterForm = this.fb.group({
         'straintype': new FormControl(null, Validators.required),
         'genetics': new FormControl(null),
-        'straincode':new FormControl(null, Validators.required),
+        'straincode':new FormControl(null),
         'strain': new FormControl(null, [Validators.required, Validators.maxLength(50)]),
         'description': new FormControl(null),
         // 'thc': new FormControl(null, [Validators.required, Validators.maxLength(5)]),
