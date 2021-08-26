@@ -248,12 +248,14 @@ export class GeneticsMasterComponent implements OnInit {
       const geneticsDetailsForApi = {
         Genetics: {
           GeneticsId: GeneticsId,
-          GeneticsName: this.appCommonService.trimString(this.geneticsMasterForm.value.genetics),
-          Description: this.appCommonService.trimString(this.geneticsMasterForm.value.description),
+          GeneticsCode:0,
+          GeneticsName: Genetics.GeneticsName,
+          Description: Genetics.Description,
           VirtualRoleId: this._cookieService.VirtualRoleId,
           IsDeleted: IsDeleted,
-          IsActive: Genetics.IsActive,
-          ActiveInactive: ActivateInactivateKey
+          IsActive: Genetics.IsActive === true?1:0,
+          ActiveInactive: ActivateInactivateKey,
+          StrainTypeId:Genetics.StrainTypeID
         }
       };
 
