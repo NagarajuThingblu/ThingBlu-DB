@@ -734,16 +734,16 @@
               
               <div class="input-container">
                 <input pInputText
-              
+                id="myTextBox"
                 class="clsControl"
                 placeholder="- - Choose - -"
                (click)="showSkills($event)"
               />
               <span class="viewer2" *ngIf="!showUpArrow">
-                <i class="fa fa-caret-down" ria-hidden="true"  (click)="showSkills($event)"></i>
+                <i id="myTextBox" class="fa fa-caret-down" ria-hidden="true"  (click)="showSkills($event)"></i>
               </span>
               <span class="viewer2" *ngIf="showUpArrow">
-                <i class="fa fa-caret-up" ria-hidden="true"  (click)="showSkills($event)"></i>
+                <i id="myTextBox" class="fa fa-caret-up" ria-hidden="true"  (click)="showSkills($event)"></i>
               </span>
             </div>
              

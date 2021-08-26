@@ -605,6 +605,9 @@ OnUnSelectNode(e) {
          if( this.employeeOnEdit[0].Role === "Temp"){
           this.selectedRole= "Temp"
        }
+       else{
+         this.selectedRole=this.employeeOnEdit[0].Role
+       }
        if(this.employeeOnEdit[0].Password != null){
          decryptedpwd = this.decode64(this.employeeOnEdit[0].Password);
          if(decryptedpwd.length >= 6){
@@ -808,6 +811,7 @@ OnUnSelectNode(e) {
   }
   resetForm() {
     // this.showTextbox = true;
+    this.visibility = false;
     this.selectedSkillItems = []
     this.empIdForUpdate = 0;
      this.showPWbox = true;

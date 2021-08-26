@@ -313,7 +313,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
           else   if (String(data[0].RESULTKEY)=== 'Duplicate') {
             this.msg.push({
               severity: 'warn', summary: this.globalResource.applicationmsg,
-              detail:" Duplicate Skill Set."
+              detail:data[0].ResultMsg+" is duplicate"
             });
             // this.SkillUpdateId = 0;
             // this.resetAll();
@@ -326,15 +326,15 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
       }
     }
 
-    GetSkillonEdit(SkillId) {
+    GetSkillonEdit(SkillTaskTypeMapId) {
       this.pageHeader = 'Edit Skill';
       this.clear = 'Cancel';
   this.plusOnEdit = false;
-      const data = this.allSkillslist.filter(rt => rt.SkillId == SkillId)
+      const data = this.allSkillslist.filter(rt => rt.SkillTaskTypeMapId == SkillTaskTypeMapId)
       var itemlist = this.employeeSkillForm.get('items')['controls'];
       if (data != 'No Data Found') {
-        this.SkillTaskTypeMapId = data[0].SkillTaskTypeMapId;
-        this.SkillUpdateId = SkillId;
+        this.SkillTaskTypeMapId = SkillTaskTypeMapId;
+        this.SkillUpdateId = data[0].SkillId;
         this.SkillTypeEdit = data;
         this.oncategoryChange(this.SkillTypeEdit[0].TaskCategoryID)
         const taskcategory = this.employeeSkillForm.controls['taskcategory'];

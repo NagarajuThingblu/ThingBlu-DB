@@ -129,16 +129,16 @@
               
         <div class="input-container">
           <input pInputText
-        
+          id="myTextBox"
           class="clsControl"
           placeholder="- - Choose - -"
          (click)="showEmps($event)"
         />
         <span class="viewer2" *ngIf="!showUpArrow">
-          <i class="fa fa-caret-down" ria-hidden="true"  (click)="showEmps($event)"></i>
+          <i id="myTextBox" class="fa fa-caret-down" ria-hidden="true"  (click)="showEmps($event)"></i>
         </span>
         <span class="viewer2" *ngIf="showUpArrow">
-          <i class="fa fa-caret-up" ria-hidden="true"  (click)="showEmps($event)"></i>
+          <i id="myTextBox" class="fa fa-caret-up" ria-hidden="true"  (click)="showEmps($event)"></i>
         </span>
       </div>
       <p-tree [value]="files"  [ngClass]="!visibility?'myskillsdropdown':'showmyskillsdropdown'" styleClass="clsRoleAccessTree" selectionMode="checkbox"  [(selection)]="selectedSkillItems"
