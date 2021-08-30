@@ -17,6 +17,7 @@ import { AppConstants } from '../../../shared/models/app.constants';
 import { Router } from '@angular/router';
 import {TreeModule} from 'primeng/tree';
 import {TreeNode} from 'primeng/api';
+// import {messageService} from 'primeng/api';
 
 
 declare function unescape(s: string): string;
@@ -92,9 +93,10 @@ passwordType: string = 'password';
   plottedSkillItems: any = [];
   public selectedSkillItems: any[];
   collapsed: any;
-
+public WhenToDisplayPWField: boolean = false
   public visibility:boolean = false;
   public showUpArrow:boolean = false;
+ 
   constructor(
     private fb: FormBuilder,
     private loaderService: LoaderService,
@@ -107,6 +109,7 @@ passwordType: string = 'password';
     private newEmployeeService: NewEmployeeService,
     private scrolltopservice: ScrollTopService,
     private router: Router,
+  //  private MessageService: messageService
     // private TreeModule :TreeModule,
     // private Tree:Tree,
     // private TreeNode:TreeNode,
@@ -504,7 +507,7 @@ if (element.IsParent === false || element.IsParent === "False" ) {
   });
   this.allSkillslist.forEach(element => {
     const NewSkillchild: any = {};
-    NewSkillchild.id = element.SkillId;
+    NewSkillchild.id = element.SkillTaskTypeMapId;
     NewSkillchild.label = element.SkillName;
     NewSkillchild.children = [];
     NewSkillchild.SkillTaskTypeMapId  = element.SkillTaskTypeMapId
@@ -534,6 +537,9 @@ OnUnSelectNode(e) {
     }
   
 }
+// nodeSelect(event) {
+//   this.messageService.add({severity: 'info', summary: 'Node Selected', detail: event.node.label});
+// }
   decode64 (input) {
     let output = '';
     let chr1: any = '', chr2: any = '', chr3: any = '' ;
@@ -577,10 +583,12 @@ OnUnSelectNode(e) {
     // return output;
   }
   GetEmployeeOnEdit(EmpId) {
+    
    this.resetForm();
       // this.showMang = false;
       // this.showFlc = false;
       // this.showTextbox = false;
+      this.WhenToDisplayPWField = true;
       var decryptedpwd
        this.showPWbox = false;
       this.showTerminationDate = true;
@@ -703,7 +711,7 @@ OnUnSelectNode(e) {
            });
            this.allSkillslist.forEach(element => {
              const NewSkillchild: any = {};
-             NewSkillchild.id = element.SkillId;
+             NewSkillchild.id = element.SkillTaskTypeMapId;
              NewSkillchild.label = element.SkillName;
              NewSkillchild.children = [];
              NewSkillchild.SkillTaskTypeMapId  = element.SkillTaskTypeMapId
@@ -721,7 +729,7 @@ OnUnSelectNode(e) {
                }
              }
              for(let i of data1){
-              if(i.SkillId === NewSkillchild.id){
+              if(i.SkillTaskTypeMapId === NewSkillchild.id){
                 this.selectedSkillItems.push(NewSkillchild)
               }
             }
@@ -817,6 +825,8 @@ OnUnSelectNode(e) {
   }
   resetForm() {
     // this.showTextbox = true;
+    this.WhenToDisplayPWField = false;
+    this.showUpArrow = false;
     this.visibility = false;
     this.selectedSkillItems = []
     this.empIdForUpdate = 0;
@@ -860,9 +870,17 @@ this.newEmployeeForm.controls['Managerlist'].patchValue("")
 // if(this.selectedRole != 'Temp'){
 //   this.showTextbox = true;
 // }
-if(this.selectedRole != 'Temp'){
-  this.showPWbox = true
- password.setValidators(Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)]));
+if(!this.WhenToDisplayPWField){
+  if(this.selectedRole != 'Temp'){
+    this.showPWbox = true
+   password.setValidators(Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)]));
+  }
+}
+if(this.WhenToDisplayPWField){
+  if(this.employeeOnEdit[0].Role === "Temp" &&  this.selectedRole != "Temp"){
+    this.showPWbox = true
+   password.setValidators(Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)]));
+  }
 }
 if(this.constantusrRole.Employee==this.selectedRole )
 {
