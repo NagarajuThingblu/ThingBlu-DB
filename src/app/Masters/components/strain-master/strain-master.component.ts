@@ -164,7 +164,7 @@ export class StrainMasterComponent implements OnInit {
       this.genetics=[];
       
       this.genetics = this.dropdwonTransformService.transform(
-        this.cultivarBasedBinomialNamesData.filter(x => x.StrainTypeID === this.strainmasterForm.controls.straintype.value), 'GeneticsName', 'GeneticsId', '-- Select --');
+        this.cultivarBasedBinomialNamesData.filter(x => x.StrainTypeID === this.strainmasterForm.controls.straintype.value), 'GeneticsName', 'GeneticId', '-- Select --');
     }
     getAllStrainsType() {
       this.dropdownDataService.getStrainType().subscribe(
@@ -233,10 +233,10 @@ export class StrainMasterComponent implements OnInit {
                     this.strainmasterForm.controls['straintype'].setErrors({ 'straintypenotpresent': true });
                     this.loaderService.display(false);
                   }
-                  if (data[0]['NoGenetics'] === 1) {
-                    this.strainmasterForm.controls['genetics'].setErrors({ 'geneticsnotpresent': true });
-                    this.loaderService.display(false);
-                  }
+                  // if (data[0]['NoGenetics'] === 1) {
+                  //   this.strainmasterForm.controls['genetics'].setErrors({ 'geneticsnotpresent': true });
+                  //   this.loaderService.display(false);
+                  // }
                 } else if (String(data[0].ResultKey).toUpperCase() === 'STRAINTYPEDELETED') {
 
                   this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
@@ -280,7 +280,7 @@ export class StrainMasterComponent implements OnInit {
         this.newStrainActionService.getStrainDetailList().subscribe(
           data => {
            console.log(data);
-           if (data != 'No data found!') {
+           if (data !== 'No data found!') {
               this.allStrainList = data;
               this.paginationValues = AppConstants.getPaginationOptions;
           if (this.allStrainList.length > 20) {
@@ -356,13 +356,13 @@ export class StrainMasterComponent implements OnInit {
             // End of Modified By Bharat T on 26th-Sept-2018 for showing straintype enable in edit mode
 
               straintype.patchValue(this.strainOnEdit[0].StrainTypeId);
-
+              this.filterBinomialNames(straintype)
               let geneticsNewData: any;
               geneticsNewData = [
-               { label: this.strainOnEdit[0].GeneticsName, value: this.strainOnEdit[0].GeneticsId }
+               { label: this.strainOnEdit[0].GeneticsName, value: this.strainOnEdit[0].GeneticId }
               ];
-              this.genetics = [];
-              this.genetics = geneticsNewData;
+              //this.genetics = [];
+              //this.genetics = geneticsNewData;
               genetics.patchValue(this.strainOnEdit[0].GeneticsId);
              this.strainTypeDisabled = true;
              this.geneticsDisabled = false;
@@ -408,7 +408,7 @@ export class StrainMasterComponent implements OnInit {
         Strain: {
           StrainId: StrainId,
           StrainTypeId: Strain.StrainTypeId,
-          GeneticsId: Strain.GeneticsId,
+          GeneticsId: Strain.GeneticId,
           VirtualRoleId: this._cookieService.VirtualRoleId,
           IsDeleted: IsDeleted,
           IsActive: Strain.IsActive,

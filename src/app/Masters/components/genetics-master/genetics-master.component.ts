@@ -187,7 +187,7 @@ export class GeneticsMasterComponent implements OnInit {
   }
 
   getGeneticsDetails() {
-    this.allGeneticsList = [];
+    //this.allGeneticsList = [];
     this.loaderService.display(true);
     this.geneticsService.getGeneticsDetails().subscribe(
       data => {
