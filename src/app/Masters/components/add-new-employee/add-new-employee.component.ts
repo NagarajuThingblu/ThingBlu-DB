@@ -29,7 +29,7 @@ export class AddNewEmployeeComponent implements OnInit {
   };
   paginationValues: any;
   showEmpTaskModal: any;
-  dateTime = new Date();
+  //dateTime = new Date();
 
   newEmployeeForm: FormGroup;
   private globaldata = {
@@ -91,7 +91,7 @@ export class AddNewEmployeeComponent implements OnInit {
     this.getAllEmployee();
     this.GetFLClist();
     this.saveButtonText = 'Save';
-    this.dateTime.setDate(this.dateTime.getDate());
+   // this.dateTime.setDate(this.dateTime.getDate());
    }
 
   //  EmployeeDetails = {
@@ -132,7 +132,12 @@ export class AddNewEmployeeComponent implements OnInit {
       this.newEmployeeForm.value.lastname = null;
       return;
     }
-
+    // if(String(this.newEmployeeForm.value.primaryemail).trim().length != 0){
+    //   this.newEmployeeForm.controls['primaryemail'].setErrors({'whitespace': true});
+    //   this.newEmployeeForm.value.lastname = null;
+    //   return;
+    // }
+    
     const primaryemail = this.newEmployeeForm.value.primaryemail;
     const secondaryemail = this.newEmployeeForm.value.secondaryemail;
     if (primaryemail !== '' && primaryemail !== null) {
@@ -661,8 +666,12 @@ else{
     'terminationdate': new FormControl(null),
     'cellphone': new FormControl(null, Validators.compose([ Validators.maxLength(15)])),
     'homephone': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
-    'primaryemail': new FormControl(null),
-    'secondaryemail': new FormControl(null, Validators.compose([Validators.maxLength(30)])),
+    // 'primaryemail': new FormControl(null,  {
+    //   validators: [Validators.pattern('^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$')], updateOn: 'blur'}),
+     'primaryemail': new FormControl(null,{validators: [
+        Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")], updateOn: 'blur'}),
+      'secondaryemail': new FormControl(null,{validators: [
+        Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")], updateOn: 'blur'}),
     'address': new FormControl(null, Validators.compose([ Validators.maxLength(50)])),
     'country': new FormControl(null, Validators.compose([Validators.maxLength(13)])),
     'state': new FormControl(null, Validators.compose([ Validators.maxLength(13)])),
@@ -713,7 +722,11 @@ getCountryList() {
     }
   );
 }
-
+// ValidateEmail(event:any){
+//   var regex= ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
+//   if(!regex.test(event.target.value))
+//   this.newEmployeeForm.controls['primaryemail'].setValidators
+// }
 getStateList() {
 this.dropdownDataService.getStatesList().subscribe(
   data => {

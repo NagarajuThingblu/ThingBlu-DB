@@ -281,7 +281,7 @@ this.Year = new Date().getFullYear();
                   this.loaderService.display(false);
                 }
               } else if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'DUPLICATE') {
-                this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.duplicateSection+this.newSectionResources.duplicateSection });
+                this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.duplicateSection+" "+"is"+" "+this.newSectionResources.duplicateSection });
                 this.loaderService.display(false);
                 // data.forEach(dataItem => {
                 // let formGroup;

@@ -187,7 +187,7 @@
                        [monthNavigator]="true"
                        [yearNavigator]="true" 
                        yearRange="1800:4030"
-                       [maxDate]="dateTime"
+                     
                       >
                       </p-calendar>
 
@@ -278,20 +278,20 @@
                       <input pInputText
                         name="primaryemail"
                         id="primaryemail"
-                        type="text"
+                        type="email"
                         autocomplete="new-password"
                         class="clsControl"
                         formControlName="primaryemail"
                         placeholder="Enter Primary Email"
-                        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                     
                       />
-
+                  
                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['primaryemail'].valid&&newEmployeeForm.controls['primaryemail'].dirty">
-
+<!-- 
                           <span *ngIf="newEmployeeForm.controls['primaryemail'].errors['required']">
                             {{newEmployeeResources.primaryemailrequired}}
-                          </span>
+                          </span> -->
                           <span *ngIf="newEmployeeForm.controls['primaryemail'].hasError('duplicateemail')">
                               {{newEmployeeResources.duplicateemail}}
                           </span>
@@ -324,14 +324,14 @@
                         class="clsControl"
                         formControlName="secondaryemail"
                         placeholder="Enter Secondary Email"
-                        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                    
                       />
 
                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['secondaryemail'].valid&&newEmployeeForm.controls['secondaryemail'].dirty">
-                          <span *ngIf="newEmployeeForm.controls['secondaryemail'].errors['maxlength']">
+                          <!-- <span *ngIf="newEmployeeForm.controls['secondaryemail'].errors['maxlength']">
                             {{newEmployeeResources.packageUnitLength}}
-                          </span>
+                          </span> -->
                           <span *ngIf="newEmployeeForm.controls['secondaryemail'].hasError('zeronotallowed')">
                             {{ globalResource.zeronotallow }}
                           </span>

@@ -275,7 +275,7 @@ export class StrainMasterComponent implements OnInit {
         this.event = e;
       }
       getAllStrainsbyClient() {
-        this.allStrainList = [];
+        //this.allStrainList = [];
         this.loaderService.display(true);
         this.newStrainActionService.getStrainDetailList().subscribe(
           data => {
