@@ -70,6 +70,7 @@ export class AddNewEmployeeComponent implements OnInit {
   public empIdForUpdate: any = 0;
   public _cookieService: any;
   public newEmployeeResources: any;
+  public minusEnable:boolean = false
   public showeye: boolean = false;
 public hideeye: boolean = true;
 passwordShown: boolean= false;
@@ -149,8 +150,11 @@ public WhenToDisplayPWField: boolean = false
     'terminationdate': new FormControl(null),
     'cellphone': new FormControl(null, Validators.compose([ Validators.maxLength(15)])),
     'homephone': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
-    'primaryemail': new FormControl(null),
-    'secondaryemail': new FormControl(null, Validators.compose([Validators.maxLength(30)])),
+    'primaryemail': new FormControl(null,{validators: [
+      Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")], updateOn: 'blur'}),
+      'secondaryemail': new FormControl(null,{validators: [
+        Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")], updateOn: 'blur'}),
+  
     'address': new FormControl(null, Validators.compose([ Validators.maxLength(50)])),
     'country': new FormControl(null, Validators.compose([Validators.maxLength(13)])),
     'state': new FormControl(null, Validators.compose([ Validators.maxLength(13)])),
@@ -693,12 +697,15 @@ OnUnSelectNode(e) {
              NewSkill.id = element.TaskTypeID;
              NewSkill.label = element.TaskTypeValue;
              NewSkill.children = [];
-             //NewSkill.Num  = element.Num
+            // NewSkill.expandedIcon  = "far fa-minus-square",
          NewSkill.isParent = element.IsParent;
          NewSkill.ParentId = element.ParentId;
          NewSkill.SkillTaskTypeMapId = 0
          NewSkill.Selectable = true;
-      
+         if (NewSkill.isParent === false || NewSkill.isParent === "False" ) {
+          this.selectedSkillItems.push(NewSkill)
+        }
+          
            
              if(NewSkill.isParent === true || NewSkill.isParent === "True"){
                this.plottedSkillItems.push(NewSkill)
@@ -730,7 +737,9 @@ OnUnSelectNode(e) {
              }
              for(let i of data1){
               if(i.SkillTaskTypeMapId === NewSkillchild.id){
+                // this.OnUnSelectNode(NewSkillchild)
                 this.selectedSkillItems.push(NewSkillchild)
+                // this.minusEnable =true
               }
             }
            

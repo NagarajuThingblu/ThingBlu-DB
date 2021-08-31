@@ -334,15 +334,15 @@
                         class="clsControl"
                         formControlName="primaryemail"
                         placeholder="Enter Primary Email"
-                        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                       
                       />
 
                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['primaryemail'].valid&&newEmployeeForm.controls['primaryemail'].dirty">
 
-                          <span *ngIf="newEmployeeForm.controls['primaryemail'].errors['required']">
+                          <!-- <span *ngIf="newEmployeeForm.controls['primaryemail'].errors['required']">
                             {{newEmployeeResources.primaryemailrequired}}
-                          </span>
+                          </span> -->
                           <span *ngIf="newEmployeeForm.controls['primaryemail'].hasError('duplicateemail')">
                               {{newEmployeeResources.duplicateemail}}
                           </span>
@@ -375,14 +375,14 @@
                         class="clsControl"
                         formControlName="secondaryemail"
                         placeholder="Enter Secondary Email"
-                        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                       
                       />
 
                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['secondaryemail'].valid&&newEmployeeForm.controls['secondaryemail'].dirty">
-                          <span *ngIf="newEmployeeForm.controls['secondaryemail'].errors['maxlength']">
+                          <!-- <span *ngIf="newEmployeeForm.controls['secondaryemail'].errors['maxlength']">
                             {{newEmployeeResources.packageUnitLength}}
-                          </span>
+                          </span> -->
                           <span *ngIf="newEmployeeForm.controls['secondaryemail'].hasError('zeronotallowed')">
                             {{ globalResource.zeronotallow }}
                           </span>
@@ -748,7 +748,7 @@
             </div>
              
              
-              <p-tree [value]="files" [ngClass]="!visibility?'myskillsdropdown':'showmyskillsdropdown'" styleClass="clsRoleAccessTree " selectionMode="checkbox"  [(selection)]="selectedSkillItems"
+              <p-tree  [value]="files" [ngClass]="!visibility?'myskillsdropdown':'showmyskillsdropdown'" styleClass="clsRoleAccessTree " selectionMode="checkbox"  [(selection)]="selectedSkillItems"
  (onNodeUnselect) = "OnUnSelectNode($event)"  ></p-tree>
             </div>
           </div>
