@@ -29,7 +29,7 @@ export class AddNewEmployeeComponent implements OnInit {
   };
   paginationValues: any;
   showEmpTaskModal: any;
-  //dateTime = new Date();
+  dateTime = new Date();
 
   newEmployeeForm: FormGroup;
   private globaldata = {
@@ -91,7 +91,7 @@ export class AddNewEmployeeComponent implements OnInit {
     this.getAllEmployee();
     this.GetFLClist();
     this.saveButtonText = 'Save';
-   // this.dateTime.setDate(this.dateTime.getDate());
+    this.dateTime.setDate(this.dateTime.getDate());
    }
 
   //  EmployeeDetails = {
