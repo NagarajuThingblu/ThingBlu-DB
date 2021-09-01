@@ -101,6 +101,7 @@ export class EmployeeSkillsetComponent implements OnInit {
     return this.fb.group({
       skills:new FormControl(null, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]),
       description: new FormControl(null, [Validators.maxLength(500)]),
+      chkRequired:new FormControl(false),
       chkSelectAll: new FormControl(true)
     });
     

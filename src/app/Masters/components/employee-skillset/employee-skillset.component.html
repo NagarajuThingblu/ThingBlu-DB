@@ -72,6 +72,7 @@
                     <th>Description
                       <span class="star"></span>
                     </th>
+                    <th style="width: 100px;">Required</th>
                     <th style="width: 100px;">Is Active</th>
                     <th style="width: 100px;">Action</th>
                   </tr>
@@ -99,6 +100,11 @@
                       formControlName="description"
                       placeholder="Enter Description "
                       min="0.1">
+                    </td>
+                    <td>
+                      <p-checkbox value="false"
+                       formControlName="chkRequired" checked="true"
+                      binary="true"></p-checkbox>                                      
                     </td>
                     <td>
                       <p-checkbox value="true"
@@ -154,7 +160,7 @@
    sortOrder="-1"
    [rowsPerPageOptions]="paginationValues"
    (onPage)="onPageChange($event)"
-   [globalFilterFields]="['CategoryName','TaskTypeName','SkillName','Description' ]">
+   [globalFilterFields]="['CategoryName','TaskTypeName','SkillName','Required','Description' ]">
 
    <ng-template pTemplate="caption">
     <div style="text-align: right;">
@@ -167,7 +173,8 @@
     <tr>
       <th [pSortableColumn]="'CategoryName'">Task Category  <p-sortIcon [field]="'CategoryName'"></p-sortIcon></th>
       <th [pSortableColumn]="'TaskTypeName'"> Task Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon></th>
-      <th [pSortableColumn]="'SkillName'">Skill Name<p-sortIcon [field]="'SkillName'"  ></p-sortIcon>  </th>           
+      <th [pSortableColumn]="'SkillName'">Skill Name<p-sortIcon [field]="'SkillName'"  ></p-sortIcon>  </th>      
+      <th [pSortableColumn]="'SkillName'">Required<p-sortIcon [field]="'SkillName'"  ></p-sortIcon>  </th>                
       <th [pSortableColumn]="'Description'">Description<p-sortIcon [field]="'Description'"  ></p-sortIcon>  </th>                    
       <th style="width:100px;"> </th>
     </tr>
@@ -182,6 +189,9 @@
         <input pInputText type="text" autocomplete="off" (input)="dtSkillList.filter($event.target.value,'SkillName','contains')" class="clsControl">
       </th>
       <th>
+        <input pInputText type="text" autocomplete="off" (input)="dtSkillList.filter($event.target.value,'Required','contains')" class="clsControl">
+      </th>
+      <th>
         <input pInputText type="text" autocomplete="off" (input)="dtSkillList.filter($event.target.value,'Description','contains')" class="clsControl">
       </th>
     <th rowspan="2"></th>
@@ -194,6 +204,7 @@
            <td>{{skillset?.CategoryName}}</td>
              <td>{{skillset?.TaskTypeName}}</td>
              <td>{{skillset?.SkillName}}</td>
+             <td></td>
              <td>{{skillset?.Description}}</td>
             <td style="width:65px;"> 
                <span class="ui-column-title">edit</span>
