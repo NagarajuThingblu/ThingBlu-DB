@@ -416,7 +416,7 @@
 <div class="ui-g">
   <div class="ui-g-12">
     <p-panel header="{{ growerResources.growerlist }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-      <p-table #dtGrowerList [value]="allGrowerList"
+      <p-table #dtGrowerList [value]="allGrowerList" [resizableColumns]="true"
       class="clsTableSelection"
       sortMode="single"                      
       [responsive]="true" 
@@ -441,12 +441,12 @@
       <ng-template pTemplate="header">
           <tr>
               <!-- <th [pSortableColumn]="'ClientName'">Client Name <p-sortIcon [field]="'ClientName'"></p-sortIcon></th> -->
-              <th [pSortableColumn]="'RawSupplierName'">Supplier Name <p-sortIcon [field]="'RawSupplierName'"></p-sortIcon></th>
-              <th [pSortableColumn]="'ContactPerson'"> Contact Person <p-sortIcon [field]="'ContactPerson'"></p-sortIcon></th>
-              <th [pSortableColumn]="'PrimaryEmail'">Primary Email <p-sortIcon [field]="'PrimaryEmail'"></p-sortIcon></th>    
-              <th [pSortableColumn]="'OfficePhone'">Office Phone <p-sortIcon [field]="'OfficePhone'"></p-sortIcon></th>                  
-              <th [pSortableColumn]="'StateName'">State  <p-sortIcon [field]="'StateName'"></p-sortIcon></th>              
-              <th [pSortableColumn]="'CityName'">City <p-sortIcon [field]="'CityName'"></p-sortIcon></th>              
+              <th pResizableColumn [pSortableColumn]="'RawSupplierName'">Supplier Name <p-sortIcon [field]="'RawSupplierName'"></p-sortIcon></th>
+              <th pResizableColumn [pSortableColumn]="'ContactPerson'"> Contact Person <p-sortIcon [field]="'ContactPerson'"></p-sortIcon></th>
+              <th pResizableColumn [pSortableColumn]="'PrimaryEmail'">Primary Email <p-sortIcon [field]="'PrimaryEmail'"></p-sortIcon></th>    
+              <th pResizableColumn  [pSortableColumn]="'OfficePhone'">Office Phone <p-sortIcon [field]="'OfficePhone'"></p-sortIcon></th>                  
+              <th pResizableColumn [pSortableColumn]="'StateName'">State  <p-sortIcon [field]="'StateName'"></p-sortIcon></th>              
+              <th pResizableColumn [pSortableColumn]="'CityName'">City <p-sortIcon [field]="'CityName'"></p-sortIcon></th>              
               <th style="width:100px;">Action</th>
           </tr>
 

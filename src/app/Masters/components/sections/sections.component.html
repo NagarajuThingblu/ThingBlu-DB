@@ -154,7 +154,7 @@
   <div class="ui-g-12">
     <p-panel header="{{ newSectionResources.tableheading }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
       <p-table #dtSecList [value]="allsectionslist" sortMode="single" [responsive]="true" [paginator]="true"
-    [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
+    [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues" [resizableColumns]="true"
     (onPage)="onPageChange($event)"
     [globalFilterFields]="['FieldName','SectionName','StrainName','PlantsCount','Year','IsLightDeprevation']">
         <ng-template pTemplate="caption">
@@ -168,17 +168,17 @@
           <tr>
             <!-- <th [pSortableColumn]="'FieldName'">Field Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
             </th> -->
-            <th [pSortableColumn]="'FieldName'">Field Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'FieldName'">Field Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'SectionName'">Section Name <p-sortIcon [field]="'SectionName'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'SectionName'">Section Name <p-sortIcon [field]="'SectionName'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'StrainName'">Cultivar <p-sortIcon [field]="'StrainName'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'StrainName'">Cultivar <p-sortIcon [field]="'StrainName'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'PlantsCount'"> Plant Count <p-sortIcon [field]="'PlantsCount'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'PlantsCount'"> Plant Count <p-sortIcon [field]="'PlantsCount'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'Year'"> Year <p-sortIcon [field]="'Year'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'Year'"> Year <p-sortIcon [field]="'Year'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'IsLightDeprevation'">Light Dept <p-sortIcon [field]="'IsLightDeprevation'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'IsLightDeprevation'">Light Dept <p-sortIcon [field]="'IsLightDeprevation'"></p-sortIcon>
             </th>
             <th style="width:120px;">Action </th>
           </tr>

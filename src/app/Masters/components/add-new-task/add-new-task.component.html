@@ -128,7 +128,7 @@
 <div class="ui-g">
 <div class="ui-g-12">
   <p-panel header="Task List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-   <p-table #dtTaskList [value]="allTaskList"
+   <p-table #dtTaskList [value]="allTaskList" [resizableColumns]="true"
    sortMode="single"
    [responsive]="true"
    [paginator]="true"
@@ -148,9 +148,9 @@
 <ng-template pTemplate="header">
   <tr>
    
-    <th [pSortableColumn]="'TaskName'">Task Name  <p-sortIcon [field]="'TaskName'"></p-sortIcon> </th>
-    <th [pSortableColumn]="'TaskTypeName'">Task Type  <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon> </th>
-    <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>
+    <th pResizableColumn [pSortableColumn]="'TaskName'">Task Name  <p-sortIcon [field]="'TaskName'"></p-sortIcon> </th>
+    <th pResizableColumn [pSortableColumn]="'TaskTypeName'">Task Type  <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon> </th>
+    <th pResizableColumn [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>
     <th style="width:100px;"> </th>
 </tr>
 </ng-template>

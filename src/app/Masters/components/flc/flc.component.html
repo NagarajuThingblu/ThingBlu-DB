@@ -196,7 +196,7 @@
         </form>
 
         <p-panel header="FLC List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-          <p-table #dtFLCList [value]="allcontractorList" 
+          <p-table #dtFLCList [value]="allcontractorList" [resizableColumns]="true"
           sortMode="single"                      
           [responsive]="true" 
           [paginator]="true" 
@@ -218,13 +218,13 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th [pSortableColumn]="'FLCName'">FLC  <p-sortIcon [field]="'FLCName'"></p-sortIcon></th>   
-            <th [pSortableColumn]="'CellPhone'">Cell Phone <p-sortIcon [field]="'CellPhone'"></p-sortIcon></th>
-            <th [pSortableColumn]="'Description'">Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>    
-            <th [pSortableColumn]="'Email'">Email <p-sortIcon [field]="'Email'"></p-sortIcon></th>              
-            <th [pSortableColumn]="'StateName'">State  <p-sortIcon [field]="'StateName'"></p-sortIcon></th>              
-            <th [pSortableColumn]="'CityName'">City <p-sortIcon [field]="'CityName'"></p-sortIcon></th>
-            <th [pSortableColumn]="'ZipCode'"> ZipCode<p-sortIcon [field]="'ZipCode'"></p-sortIcon></th>              
+            <th pResizableColumn [pSortableColumn]="'FLCName'">FLC  <p-sortIcon [field]="'FLCName'"></p-sortIcon></th>   
+            <th pResizableColumn [pSortableColumn]="'CellPhone'">Cell Phone <p-sortIcon [field]="'CellPhone'"></p-sortIcon></th>
+            <th pResizableColumn [pSortableColumn]="'Description'">Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>    
+            <th pResizableColumn [pSortableColumn]="'Email'">Email <p-sortIcon [field]="'Email'"></p-sortIcon></th>              
+            <th pResizableColumn [pSortableColumn]="'StateName'">State  <p-sortIcon [field]="'StateName'"></p-sortIcon></th>              
+            <th pResizableColumn [pSortableColumn]="'CityName'">City <p-sortIcon [field]="'CityName'"></p-sortIcon></th>
+            <th pResizableColumn [pSortableColumn]="'ZipCode'"> ZipCode<p-sortIcon [field]="'ZipCode'"></p-sortIcon></th>              
             <th style="width:100px;">Action</th>
           </tr>
           <tr>

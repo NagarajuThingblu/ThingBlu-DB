@@ -372,7 +372,7 @@
 <div class="ui-g">
   <div class="ui-g-12">
     <p-panel header="{{ newLabelResources.header }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-      <p-table #dtLabelList [value]="allLabelslist" sortMode="single" [responsive]="true" [paginator]="true"
+      <p-table #dtLabelList [value]="allLabelslist" [resizableColumns]="true" sortMode="single" [responsive]="true" [paginator]="true"
     [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
     (onPage)="onPageChange($event)"
     [globalFilterFields]="['TaskTypeName','BinNo','TotalWt','AvilableWt','StrainName','SkewType','IsLightDeprevation','TrimmingMethod']">
@@ -402,25 +402,25 @@
           <tr>
             <!-- <th [pSortableColumn]="'FieldName'">Field Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
             </th> -->
-            <th [pSortableColumn]="'TaskTypeName'">Category<p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'TaskTypeName'">Category<p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
             </th>
             <!-- <th [pSortableColumn]="'Fields'">Field <p-sortIcon [field]="'Fields'"></p-sortIcon>
             </th>
             <th [pSortableColumn]="'Sections'">Section <p-sortIcon [field]="'Sections'"></p-sortIcon>
             </th> -->
-            <th [pSortableColumn]="'BinNo'">Bin Number <p-sortIcon [field]="'BinNo'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'BinNo'">Bin Number <p-sortIcon [field]="'BinNo'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'StrainName'">Cultivar <p-sortIcon [field]="'StrainName'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'StrainName'">Cultivar <p-sortIcon [field]="'StrainName'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'SkewType'">Skew Type <p-sortIcon [field]="'SkewType'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'SkewType'">Skew Type <p-sortIcon [field]="'SkewType'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'IsLightDeprevation'">Light Dept <p-sortIcon [field]="'IsLightDeprevation'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'IsLightDeprevation'">Light Dept <p-sortIcon [field]="'IsLightDeprevation'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'TrimmingMethod'"> Trimming Method <p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'TrimmingMethod'"> Trimming Method <p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'TotalWt'">Total Bin Wt <p-sortIcon [field]="'TotalWt'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'TotalWt'">Total Bin Wt <p-sortIcon [field]="'TotalWt'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'AvilableWt'">Available Bin Wt <p-sortIcon [field]="'AvilableWt'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'AvilableWt'">Available Bin Wt <p-sortIcon [field]="'AvilableWt'"></p-sortIcon>
             </th>
             <th style="width:120px;">Action </th>
           </tr>

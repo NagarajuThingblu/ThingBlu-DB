@@ -532,7 +532,7 @@
              </div>
            </form>
            <p-panel [header]="taskCategory == 'GROWING'?'Customer List':'Retailer List'"  [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-              <p-table #dtRetailerList [value]="allretailerList" 
+              <p-table #dtRetailerList [value]="allretailerList" [resizableColumns]="true"
               sortMode="single"                      
               [responsive]="true" 
               [paginator]="true" 
@@ -562,13 +562,13 @@
                       <!-- <th [pSortableColumn]="'RetailerType'">Retailer Type
                           <p-sortIcon [field]="'RetailerType'"></p-sortIcon>
                       </th> -->
-                      <th [pSortableColumn]="'RetailerName'"> <span *ngIf="taskCategory == 'GROWING'">Customer</span><span  *ngIf="taskCategory != 'GROWING'">Retailer</span> <p-sortIcon [field]="'RetailerName'"></p-sortIcon></th>
-                      <th [pSortableColumn]="'LicenseNo'">License No <p-sortIcon [field]="'LicenseNo'"></p-sortIcon></th>    
-                      <th [pSortableColumn]="'UBINo'">UBI No<p-sortIcon [field]="'UBINo'"></p-sortIcon></th>    
-                      <th [pSortableColumn]="'OfficePhone'">Office Phone <p-sortIcon [field]="'OfficePhone'"></p-sortIcon></th>                  
-                      <th [pSortableColumn]="'StateName'">State  <p-sortIcon [field]="'StateName'"></p-sortIcon></th>              
-                      <th [pSortableColumn]="'CityName'">City <p-sortIcon [field]="'CityName'"></p-sortIcon></th>
-                      <th *ngIf="taskCategory == 'GROWING'" [pSortableColumn]="'shippingPre'">Shipping Preference <p-sortIcon [field]="'shippingPre'"></p-sortIcon></th>              
+                      <th pResizableColumn [pSortableColumn]="'RetailerName'"> <span *ngIf="taskCategory == 'GROWING'">Customer</span><span  *ngIf="taskCategory != 'GROWING'">Retailer</span> <p-sortIcon [field]="'RetailerName'"></p-sortIcon></th>
+                      <th pResizableColumn [pSortableColumn]="'LicenseNo'">License No <p-sortIcon [field]="'LicenseNo'"></p-sortIcon></th>    
+                      <th pResizableColumn [pSortableColumn]="'UBINo'">UBI No<p-sortIcon [field]="'UBINo'"></p-sortIcon></th>    
+                      <th pResizableColumn [pSortableColumn]="'OfficePhone'">Office Phone <p-sortIcon [field]="'OfficePhone'"></p-sortIcon></th>                  
+                      <th pResizableColumn [pSortableColumn]="'StateName'">State  <p-sortIcon [field]="'StateName'"></p-sortIcon></th>              
+                      <th pResizableColumn [pSortableColumn]="'CityName'">City <p-sortIcon [field]="'CityName'"></p-sortIcon></th>
+                      <th pResizableColumn *ngIf="taskCategory == 'GROWING'" [pSortableColumn]="'shippingPre'">Shipping Preference <p-sortIcon [field]="'shippingPre'"></p-sortIcon></th>              
                       <th style="width:100px;">Action</th>
                        
                   </tr>

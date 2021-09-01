@@ -59,7 +59,7 @@
         </form>
 
         <p-panel header="Plant Termination Reasons List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-          <p-table #dtPTRList [value]="allptrList" 
+          <p-table #dtPTRList [value]="allptrList" [resizableColumns]="true"
           sortMode="single"                      
           [responsive]="true" 
           [paginator]="true" 
@@ -81,8 +81,8 @@
         </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th [pSortableColumn]="'Reason'">Reason  <p-sortIcon [field]="'Reason'"></p-sortIcon></th>   
-            <th [pSortableColumn]="'Description'">Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>    
+            <th pResizableColumn [pSortableColumn]="'Reason'">Reason  <p-sortIcon [field]="'Reason'"></p-sortIcon></th>   
+            <th pResizableColumn [pSortableColumn]="'Description'">Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>    
             <th style="width:100px;">Action</th>
           </tr>
           <tr>

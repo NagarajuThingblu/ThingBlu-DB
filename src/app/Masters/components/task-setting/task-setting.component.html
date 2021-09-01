@@ -72,7 +72,7 @@
         </form>
         <p-panel header="{{ taskSettingResources.taskList }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
           <p-table 
-            #dtallTasksList [value]="allTasksList" 
+            #dtallTasksList [value]="allTasksList" [resizableColumns]="true"
             sortMode="single"                      
             [responsive]="true" 
             [paginator]="true" 
@@ -91,10 +91,10 @@
           </ng-template>
           <ng-template pTemplate="header">
             <tr>
-              <th [pSortableColumn]="'TaskCategory'"> Task Category <p-sortIcon [field]="'TaskCategory'"></p-sortIcon></th>
-              <th [pSortableColumn]="'TaskTypeName'"> Task Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon></th>
-              <th [pSortableColumn]="'IsReview'">Is Review <p-sortIcon [field]="'IsReview'"></p-sortIcon></th>    
-              <th [pSortableColumn]="'IsNotification'">Is Notification<p-sortIcon [field]="'IsNotification'"></p-sortIcon></th>              
+              <th pResizableColumn [pSortableColumn]="'TaskCategory'"> Task Category <p-sortIcon [field]="'TaskCategory'"></p-sortIcon></th>
+              <th pResizableColumn [pSortableColumn]="'TaskTypeName'"> Task Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon></th>
+              <th pResizableColumn [pSortableColumn]="'IsReview'">Is Review <p-sortIcon [field]="'IsReview'"></p-sortIcon></th>    
+              <th pResizableColumn [pSortableColumn]="'IsNotification'">Is Notification<p-sortIcon [field]="'IsNotification'"></p-sortIcon></th>              
               <th style="width:100px;">Action</th>                  
             </tr>
             <tr>

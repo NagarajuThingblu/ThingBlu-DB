@@ -3,7 +3,7 @@
       <div class="ui-g-12">
           <!-- New Product Type Listing -->
     <p-panel header="{{ newProductTypeResources.headingproducttypelist}}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >      
-      <p-table #dtNewProductTypeListing [value]="allProductTypeList"
+      <p-table #dtNewProductTypeListing [value]="allProductTypeList" [resizableColumns]="true"
           sortMode="single"                      
           [responsive]="true" 
           [paginator]="true" 
@@ -22,17 +22,17 @@
           </ng-template>
           <ng-template pTemplate="header">
               <tr>
-                  <th *ngIf="taskCategoryType != 'GROWING'" [pSortableColumn]="'BrandName'">{{ newProductTypeResources.brand}} <p-sortIcon [field]="'BrandName'"></p-sortIcon></th>
-                  <th *ngIf="taskCategoryType != 'GROWING'" [pSortableColumn]="'SubBrandName'">{{ newProductTypeResources.subbrand}} <p-sortIcon [field]="'SubBrandName'"></p-sortIcon></th>                  
-                  <th [pSortableColumn]="'StrainName'">{{ newProductTypeResources.strain}} <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>              
-                  <th [pSortableColumn]="'SkewKeyName'">{{ newProductTypeResources.skewtype}} <p-sortIcon [field]="'SkewKeyName'"></p-sortIcon></th> 
-                  <th *ngIf="taskCategoryType === 'GROWING'" [pSortableColumn]="'TrimmingMethod'">Trimming Method<p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon></th>
-                  <th *ngIf="taskCategoryType === 'GROWING'" [pSortableColumn]="'IsLD'">Light Dept<p-sortIcon [field]="'IsLD'"></p-sortIcon></th>  
-                  <th [pSortableColumn]="'PkgTypeName'">{{ newProductTypeResources.packagetype}} <p-sortIcon [field]="'PkgTypeName'"></p-sortIcon></th>
-                  <th [pSortableColumn]="'UnitPrice'">Package Unit Price($) <p-sortIcon [field]="'UnitPrice'"></p-sortIcon></th>
-                  <th class="wtg" [pSortableColumn]="'UnitValue'">{{ newProductTypeResources.packageunit}} <p-sortIcon [field]="'UnitValue'"></p-sortIcon></th>
-                  <th class="wtg" [pSortableColumn]="'ItemQty'">{{ newProductTypeResources.packageitemqty}} <p-sortIcon [field]="'ItemQty'"></p-sortIcon></th>           
-                  <th class="datewidth" [pSortableColumn]="'CreatedDate'">{{ newProductTypeResources.createddate}} <p-sortIcon [field]="'CreatedDate'"></p-sortIcon></th>
+                  <th pResizableColumn *ngIf="taskCategoryType != 'GROWING'" [pSortableColumn]="'BrandName'">{{ newProductTypeResources.brand}} <p-sortIcon [field]="'BrandName'"></p-sortIcon></th>
+                  <th pResizableColumn *ngIf="taskCategoryType != 'GROWING'" [pSortableColumn]="'SubBrandName'">{{ newProductTypeResources.subbrand}} <p-sortIcon [field]="'SubBrandName'"></p-sortIcon></th>                  
+                  <th pResizableColumn [pSortableColumn]="'StrainName'">{{ newProductTypeResources.strain}} <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>              
+                  <th pResizableColumn [pSortableColumn]="'SkewKeyName'">{{ newProductTypeResources.skewtype}} <p-sortIcon [field]="'SkewKeyName'"></p-sortIcon></th> 
+                  <th pResizableColumn *ngIf="taskCategoryType === 'GROWING'" [pSortableColumn]="'TrimmingMethod'">Trimming Method<p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon></th>
+                  <th pResizableColumn *ngIf="taskCategoryType === 'GROWING'" [pSortableColumn]="'IsLD'">Light Dept<p-sortIcon [field]="'IsLD'"></p-sortIcon></th>  
+                  <th pResizableColumn [pSortableColumn]="'PkgTypeName'">{{ newProductTypeResources.packagetype}} <p-sortIcon [field]="'PkgTypeName'"></p-sortIcon></th>
+                  <th pResizableColumn [pSortableColumn]="'UnitPrice'">Package Unit Price($) <p-sortIcon [field]="'UnitPrice'"></p-sortIcon></th>
+                  <th pResizableColumn class="wtg" [pSortableColumn]="'UnitValue'">{{ newProductTypeResources.packageunit}} <p-sortIcon [field]="'UnitValue'"></p-sortIcon></th>
+                  <th pResizableColumn class="wtg" [pSortableColumn]="'ItemQty'">{{ newProductTypeResources.packageitemqty}} <p-sortIcon [field]="'ItemQty'"></p-sortIcon></th>           
+                  <th pResizableColumn class="datewidth" [pSortableColumn]="'CreatedDate'">{{ newProductTypeResources.createddate}} <p-sortIcon [field]="'CreatedDate'"></p-sortIcon></th>
                   <!-- <th class="datewidth" [pSortableColumn]="'IsActiveFlag'">{{ globalResource.IsActiveFlag}} <p-sortIcon [field]="'IsActiveFlag'"></p-sortIcon></th> -->
                   <th style="width: 77px;">Action</th>
               </tr>
