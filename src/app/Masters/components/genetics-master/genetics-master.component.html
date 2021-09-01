@@ -150,7 +150,7 @@
  <div class="ui-g">
    <div class="ui-g-12">
     <p-panel header="Species List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-      <p-table #dtGeneticsList [value]="allGeneticsList" 
+      <p-table #dtGeneticsList [value]="allGeneticsList" [resizableColumns]="true"
       sortMode="single"                      
       [responsive]="true" 
       [paginator]="true" 
@@ -170,9 +170,9 @@
       </ng-template>
       <ng-template pTemplate="header">
           <tr>
-            <th [pSortableColumn]="'StrainTypeName'"> Type <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
-              <th [pSortableColumn]="'GeneticsName'">Binomial Name  <p-sortIcon [field]="'GeneticsName'"></p-sortIcon> </th>
-              <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>            
+            <th pResizableColumn [pSortableColumn]="'StrainTypeName'"> Type <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
+              <th pResizableColumn [pSortableColumn]="'GeneticsName'">Binomial Name  <p-sortIcon [field]="'GeneticsName'"></p-sortIcon> </th>
+              <th pResizableColumn [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>            
               <th style="width:100px;"> </th>
           </tr>
 

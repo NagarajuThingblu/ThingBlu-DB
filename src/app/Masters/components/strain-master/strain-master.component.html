@@ -369,7 +369,7 @@
      <div class="ui-g">
        <div class="ui-g-12">
         <p-panel header="Cultivar  List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-          <p-table #dtStrainList [value]="allStrainList" 
+          <p-table #dtStrainList [value]="allStrainList" [resizableColumns]="true"
           sortMode="single"                      
           [responsive]="true" 
           [paginator]="true" 
@@ -389,11 +389,11 @@
           </ng-template>
           <ng-template pTemplate="header">
               <tr>
-                  <th [pSortableColumn]="'StrainName'">Name   <p-sortIcon [field]="'StrainName'"></p-sortIcon> </th>
-                  <th [pSortableColumn]="'StrainCode'"> Code  <p-sortIcon [field]="'StrainCode'"></p-sortIcon> </th>
-                  <th [pSortableColumn]="'StrainTypeName'"> Type  <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
-                  <th [pSortableColumn]="'GeneticsName'"> Binomial Name <p-sortIcon [field]="'GeneticsName'"></p-sortIcon></th>
-                  <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>
+                  <th pResizableColumn [pSortableColumn]="'StrainName'">Name   <p-sortIcon [field]="'StrainName'"></p-sortIcon> </th>
+                  <th  pResizableColumn [pSortableColumn]="'StrainCode'"> Code  <p-sortIcon [field]="'StrainCode'"></p-sortIcon> </th>
+                  <th pResizableColumn  [pSortableColumn]="'StrainTypeName'"> Type  <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
+                  <th pResizableColumn [pSortableColumn]="'GeneticsName'"> Binomial Name <p-sortIcon [field]="'GeneticsName'"></p-sortIcon></th>
+                  <th pResizableColumn [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>
                   <!-- <th [pSortableColumn]="'THC'">THC(%) <p-sortIcon [field]="'THC'"></p-sortIcon></th>    
                   <th [pSortableColumn]="'CBD'">CBD(%) <p-sortIcon [field]="'CBD'"></p-sortIcon></th>                  
                   <th [pSortableColumn]="'THCA'">THCA(%)  <p-sortIcon [field]="'THCA'"></p-sortIcon></th>              
