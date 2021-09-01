@@ -8,7 +8,7 @@
         <form [formGroup]="employeeSkillForm"  (ngSubmit)="onSubmit(employeeSkillForm.value)" >
           <div class="ui-g">
             <div class="ui-g-12 ui-md-12" style="padding: 0">
-                 <a [routerLink]="" class="btn-link" (click)="backToEmpPage()" style="float: right;padding-right: 21px;text-decoration: underline" ><< Back</a>
+                 <a [routerLink]="" *ngIf="backUrl"  class="btn-link" (click)="backToEmpPage()" style="float: right;padding-right: 21px;text-decoration: underline" ><< Back</a>
             </div>
           </div>
  <!-- TaskCategory Name -->

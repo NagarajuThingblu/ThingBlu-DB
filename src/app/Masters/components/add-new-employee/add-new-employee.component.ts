@@ -195,6 +195,9 @@ public WhenToDisplayPWField: boolean = false
   state.patchValue(16);
  
   //this.plotSkillData()
+  if (this.appCommonService.employeePageBackLink) {
+    this.appCommonService.employeePageBackLink = false;
+  }
   }
 
   doOPenPanel() {
@@ -1018,6 +1021,7 @@ getCityOnStateChange() {
 
     NavigateToSkillsPage(){
       this.appCommonService.skillFormDetail = this.newEmployeeForm;
+      this.appCommonService.employeePageBackLink = true;
       this.router.navigate(['../home/skills']);
     }
     showSkills(event: any){

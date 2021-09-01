@@ -100,7 +100,7 @@
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="skills">Skills<span class="star">*</span></label>:
-      <p-multiSelect #checkedItems
+      <p-dropdown  #checkedItems
       [filter] ="true"
       [options]="skills"
       placeholder="-- Select --"
@@ -109,7 +109,7 @@
       class="clsControl"
       id="skills"
       name="skills">
-      </p-multiSelect>
+      </p-dropdown >
     </div>
   </div>
   <div class="ui-g-12 ui-md-6">
@@ -121,14 +121,16 @@
         <div class="input-container">
           <input pInputText
           id="myTextBox"
+          autocomplete="off"
           class="clsControl"
-          placeholder="- -Select- -"
+          [value]="employeeNameToBeDisplayedOnDropdown"
+          placeholder="--Select--"
          (click)="showEmps($event)"
         />
-        <span class="viewer2" *ngIf="!showUpArrow">
+        <span id="myTextBox" class="viewer2" *ngIf="!showUpArrow" (click)="showEmps($event)">
           <i id="myTextBox" class="fa fa-caret-down" ria-hidden="true"  (click)="showEmps($event)"></i>
         </span>
-        <span class="viewer2" *ngIf="showUpArrow">
+        <span id="myTextBox" class="viewer2" *ngIf="showUpArrow" (click)="showEmps($event)">
           <i id="myTextBox" class="fa fa-caret-up" ria-hidden="true"  (click)="showEmps($event)"></i>
         </span>
       </div>

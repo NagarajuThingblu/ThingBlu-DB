@@ -50,6 +50,7 @@ export class EmployeeSkillsetComponent implements OnInit {
   public SkillTypeEdit: any;
   public SkillListBox: boolean= true;
   public submitted: boolean;
+  public backUrl: boolean;
   skillSetdetails: {
     taskcategory: null,
     tasktype: null,
@@ -78,6 +79,7 @@ export class EmployeeSkillsetComponent implements OnInit {
   items = new FormArray([], this.customGroupValidation );
   arrayItems: FormArray;
   ngOnInit() {
+    this.backUrl = this.appCommonService.employeePageBackLink;
     this.chkIsActive = 1;
     this.pageHeader = 'Add New Skills';
     this.appComponentData.setTitle('Skills');

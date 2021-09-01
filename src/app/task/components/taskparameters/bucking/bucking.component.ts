@@ -71,6 +71,7 @@ export class BuckingComponent implements OnInit {
   plottedSkillItems: any = [];
   public selectedSkillItems: any[];
   public files: any = [];
+  public employeeNameToBeDisplayedOnDropdown="--Select--"
   constructor(
     private fb: FormBuilder,
     private dropdownDataService: DropdownValuesService,
@@ -122,6 +123,7 @@ export class BuckingComponent implements OnInit {
   isRActSecsDisabled: boolean;
   // public inputBinDetails :any[];
   ngOnInit() {
+    this.employeeNameToBeDisplayedOnDropdown="--Select--"
     this.getStrainListByTask();
     this.binsListByClient();
     this.employeeListByClient();
@@ -386,19 +388,21 @@ export class BuckingComponent implements OnInit {
     () => console.log('skillslistbytasktype complete'));
   }
   onSkillsSelect(event:any){
+    this.employeeNameToBeDisplayedOnDropdown="--Select--"
     let skillListApiDetails;
     skillListApiDetails = {
       TaskTypeId:Number(this.TaskModel.task),
     
       SkillList:[]
     };
-    for(let j of this.BUCKING.value.skills){
+    skillListApiDetails.SkillList.push({SkillID:event.value})
+    // for(let j of this.BUCKING.value.skills){
           
-      skillListApiDetails.SkillList.push({
-        SkillID: j,
+    //   skillListApiDetails.SkillList.push({
+    //     SkillID: j,
        
-      })
-    };
+    //   })
+    // };
     this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
     .subscribe(data => {
       this.headings = data.Table,
@@ -541,25 +545,63 @@ export class BuckingComponent implements OnInit {
   }
 
   
+ 
   OnSelectingEmployees(event: any){
-    
+    if(this.employeeNameToBeDisplayedOnDropdown === "--Select--"){
+      this.employeeNameToBeDisplayedOnDropdown=""
+    }
+    let count =0
     for(let employee of  this.globalData.employees){
         if(event.node.id === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
           this.employeeArray.push(employee.EmpName)
+          for(let i of this.employeeArray){
+           count++
+            if(count <=4){
+              if(this.employeeNameToBeDisplayedOnDropdown.indexOf(i) === -1){
+                this.employeeNameToBeDisplayedOnDropdown =this.employeeNameToBeDisplayedOnDropdown+" "+i+"  "
+              }
+            }
+          else{
+            this.employeeNameToBeDisplayedOnDropdown =count+" selected"
+          }
+          }
+          //this.employeeNameToBeDisplayedOnDropdown = ""+employee.EmpName
           this.BUCKING.get('employeeList').patchValue(this.selectedSkillItems)
           return;
        }
        else{
+      
+        // for(let i of this.employeeArray){
+        //   count--
+        //    if(count <=4){
+        //      if(this.employeeNameToBeDisplayedOnDropdown.indexOf(i) != -1){
+        //        this.employeeNameToBeDisplayedOnDropdown =this.employeeNameToBeDisplayedOnDropdown+" "+i+"  "
+        //      }
+        //    }
+        //  else{
+        //    this.employeeNameToBeDisplayedOnDropdown =count+" selected"
+        //  }
+        //  }
          if(event.node.id === employee.EmpId){
+          this.employeeNameToBeDisplayedOnDropdown=""
            let index = this.employeeArray.indexOf(employee.EmpName);
            this.employeeArray.splice(index,1)
-
+          let count1 = this.employeeArray.length
+           for(let i of this.employeeArray){
+             if(count1 <=4){
+               if(this.employeeNameToBeDisplayedOnDropdown.indexOf(i) === -1){
+                 this.employeeNameToBeDisplayedOnDropdown =this.employeeNameToBeDisplayedOnDropdown+" "+i+"  "
+               }
+             }
+           else{
+             this.employeeNameToBeDisplayedOnDropdown =count1+" selected"
+           }
+           }
          }
        }
       }
     
   }
-
   OnUnSelectNode(e) {
  
     if (e.node.selectable === false) {

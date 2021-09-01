@@ -6,9 +6,9 @@
           
         </p-header>
         <form  [formGroup]="newLabelsEntryForm" (ngSubmit)="onSubmit(newLabelsEntryForm.value)">
-          <div class="ui-g">
-            <div *ngIf = "visible === true"  style="float:left;">
-              <p-button  style="float: right;" class="toplinks" type="button" icon="fa fa-list-ul" label="Back"  id="btn_binshow" (click)="backtotaskpage()"  name="btnviewbins"></p-button>
+          <div class="ui-g" style="float:right;">
+            <div *ngIf = "visible === true"  style="float:right;">
+              <p-button  style="float: right;" class="toplinks" type="button"    id="btn_binshow" (click)="backtotaskpage()"  name="btnviewbins"><< back</p-button>
             </div>
           </div>
           <div class="ui-g ">
@@ -139,7 +139,7 @@
           </div>
           <div formArrayName="items" style="position: relative">
             <div style="width:calc(100% - 20px);float:left;">
-              <p-table [value]="labelDetailsArr?.controls" id="labelDetails" name="labelDetails">
+              <p-table [value]="labelDetailsArr?.controls" id="labelDetails" name="labelDetails"> 
                 <ng-template pTemplate="header">
                   <tr>
                     <th>{{ newLabelResources.binNo }}

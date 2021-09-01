@@ -897,13 +897,17 @@ console.log(assignTaskFormValues)
 
       }
       else if (this.selectedTaskTypeName === 'INDEPENDENT') {  // CUSTOM TASK
-        // assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = 0;
-        assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'INDEPENDENT';
-        assignTaskDetailsForWebApi.TaskDetails['LotId'] = 0;
-        // assignTaskDetailsForWebApi.TaskDetails['EmpId'] = 0;
-        assignTaskDetailsForWebApi.TaskDetails['NotifyEmp'] = false;
-        assignTaskDetailsForWebApi.TaskDetails['NotifyManager'] = false;
-        assignTaskDetailsForWebApi.TaskDetails['Priority'] = '';
+        // // assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = 0;
+        // assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'INDEPENDENT';
+        // assignTaskDetailsForWebApi.TaskDetails['LotId'] = 0;
+        // // assignTaskDetailsForWebApi.TaskDetails['EmpId'] = 0;
+        // assignTaskDetailsForWebApi.TaskDetails['NotifyEmp'] = false;
+        // assignTaskDetailsForWebApi.TaskDetails['NotifyManager'] = false;
+        // assignTaskDetailsForWebApi.TaskDetails['Priority'] = '';
+        let customtask = {
+
+        }
+        
 
       }
 
@@ -930,12 +934,15 @@ console.log(assignTaskFormValues)
           "EmpId" : assignTaskFormValues.PLANTING.employeeList[index].id 
         });
       });
-      assignTaskFormValues[this.selectedTaskTypeName].skills
-      .forEach((element, index) => {
-        plantingDataForApi.SkillIDlist.push({
-          "SkillId" : assignTaskFormValues.PLANTING.skills[index] 
-        });
-      });
+      // assignTaskFormValues[this.selectedTaskTypeName].skills
+      // .forEach((element, index) => {
+      //   plantingDataForApi.SkillIDlist.push({
+      //     "SkillId" : assignTaskFormValues.PLANTING.skills[index] 
+      //   });
+      // });
+      plantingDataForApi.SkillIDlist.push({
+            "SkillId" : assignTaskFormValues.PLANTING.skills
+          });
        this.loaderService.display(true);
       this.taskCommonService.assignPlantTask(plantingDataForApi).
       subscribe(
@@ -994,12 +1001,15 @@ console.log(assignTaskFormValues)
            "EmpId" : assignTaskFormValues.HARVESTING.employeeList[index].id 
          });
        });
-       assignTaskFormValues[this.selectedTaskTypeName].skills
-       .forEach((element, index) => {
-        harvestingDataForApi.SkillIDlist.push({
-           "SkillId" : assignTaskFormValues.HARVESTING.skills[index] 
-         });
-       });
+      //  assignTaskFormValues[this.selectedTaskTypeName].skills
+      //  .forEach((element, index) => {
+      //   harvestingDataForApi.SkillIDlist.push({
+      //      "SkillId" : assignTaskFormValues.HARVESTING.skills[index] 
+      //    });
+      //  });
+      harvestingDataForApi.SkillIDlist.push({
+        "SkillId" : assignTaskFormValues.HARVESTING.skills
+      });
         this.loaderService.display(true);
        this.taskCommonService.assignHarvestTask(harvestingDataForApi).
        subscribe(
@@ -1055,12 +1065,15 @@ console.log(assignTaskFormValues)
            "EmpId" : assignTaskFormValues.PREBUCKING.employeeList[index].id 
          });
        });
-       assignTaskFormValues[this.selectedTaskTypeName].skills
-       .forEach((element, index) => {
-        prebuckingDataForApi.SkillIDlist.push({
-           "SkillId" : assignTaskFormValues.PREBUCKING.skills[index] 
-         });
-       });
+      //  assignTaskFormValues[this.selectedTaskTypeName].skills
+      //  .forEach((element, index) => {
+      //   prebuckingDataForApi.SkillIDlist.push({
+      //      "SkillId" : assignTaskFormValues.PREBUCKING.skills[index] 
+      //    });
+      //  });
+      prebuckingDataForApi.SkillIDlist.push({
+        "SkillId" : assignTaskFormValues.PREBUCKING.skills
+      });
          this.loaderService.display(true);
         this.taskCommonService.assignPrebuckingTask(prebuckingDataForApi).
         subscribe(
@@ -1122,12 +1135,15 @@ console.log(assignTaskFormValues)
            "EmpId" : assignTaskFormValues.BUCKING.employeeList[index].id 
          });
        });
-       assignTaskFormValues[this.selectedTaskTypeName].skills
-       .forEach((element, index) => {
-        buckingDataForApi.SkillIDlist.push({
-           "SkillId" : assignTaskFormValues.BUCKING.skills[index] 
-         });
-       });
+      //  assignTaskFormValues[this.selectedTaskTypeName].skills
+      //  .forEach((element, index) => {
+      //   buckingDataForApi.SkillIDlist.push({
+      //      "SkillId" : assignTaskFormValues.BUCKING.skills[index] 
+      //    });
+      //  });
+      buckingDataForApi.SkillIDlist.push({
+        "SkillId" : assignTaskFormValues.BUCKING.skills
+      });
         this.loaderService.display(true);
         this.taskCommonService.assignbuckingTask(buckingDataForApi).
         subscribe(
@@ -1185,11 +1201,14 @@ console.log(assignTaskFormValues)
               "EmpId" : assignTaskFormValues.TRIM.employeeList[index].id 
             });
           });
-          assignTaskFormValues[this.selectedTaskTypeName].skills
-          .forEach((element, index) => {
-            trimmingDataForApi.SkillIDlist.push({
-              "SkillId" : assignTaskFormValues.TRIM.skills[index] 
-            });
+          // assignTaskFormValues[this.selectedTaskTypeName].skills
+          // .forEach((element, index) => {
+          //   trimmingDataForApi.SkillIDlist.push({
+          //     "SkillId" : assignTaskFormValues.TRIM.skills[index] 
+          //   });
+          // });
+          trimmingDataForApi.SkillIDlist.push({
+            "SkillId" : assignTaskFormValues.TRIM.skills
           });
           this.loaderService.display(true);
         this.taskCommonService.assignTrimmingTask(trimmingDataForApi).

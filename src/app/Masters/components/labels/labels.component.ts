@@ -107,6 +107,7 @@ import { Table } from 'primeng/table';
   public popupbinNo: any;
   public popupStrain:any;
   public popupSkew:any;
+  public backUrl: boolean;
   public popupld:any;
   public popupTm:any;
   public enableFieldSection: boolean = true;
@@ -159,7 +160,7 @@ import { Table } from 'primeng/table';
     // this.resetForm();
   }
   ngOnInit() {
-   
+    this.backUrl = this.appCommonService.addRawMaterialPageBackLink;
     console.log("TaskType list "+this.globalData.TaskType);
     this.saveButtonText = 'Save';
     this.pageheading="Add Bin";
