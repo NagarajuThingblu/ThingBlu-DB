@@ -11,7 +11,7 @@
         <!--Main New Product Entry Form-->
         <form
           [formGroup]="newEmployeeForm"
-          (ngSubmit)="onSubmit(newEmployeeForm.value)">
+          (ngSubmit)="onSubmit(newEmployeeForm.value)" autocomplete="off">
               <div class="ui-g ">
                 <!--Client Name -->
                   <!-- <div class="ui-g-12 ui-md-6">
@@ -489,6 +489,7 @@
 
                     <p-dropdown
                       [filter] ="true"
+                     
                       id="city"
                       formControlName="city"
                       [options]="cities"
@@ -736,6 +737,7 @@
                 <input pInputText
                 id="myTextBox"
                 class="clsControl"
+                autocomplete="off"
                 placeholder="- - Select - -"
                (click)="showSkills($event)"
               />

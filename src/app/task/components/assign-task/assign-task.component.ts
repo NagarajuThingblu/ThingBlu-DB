@@ -342,28 +342,37 @@ console.log(assignTaskFormValues)
     if (this.assignTaskForm.valid) {
     
       assignTaskDetailsForWebApi = {
-        TaskDetails: {
+        // TaskDetails: {
+        //   ClientId: this._cookieService.ClientId,
+        //   VirtualRoleId: this._cookieService.VirtualRoleId,
+        //   TaskTypeId: assignTaskFormValues.taskname,
+        //   LotId: lotid,
+        //   EmpId: Number(assignTaskFormValues[this.selectedTaskTypeName].employee),
+        
+        //   EstStartDate: assignTaskFormValues[this.selectedTaskTypeName].estimatedstartdate.toLocaleDateString().replace(/\u200E/g, ''),
+         
+        //   Comment: assignTaskFormValues[this.selectedTaskTypeName].comment,
+        //   NotifyEmp: assignTaskFormValues[this.selectedTaskTypeName].notifyemployee,
+        //   NotifyManager: assignTaskFormValues[this.selectedTaskTypeName].notifymanager,
+        //   Priority: assignTaskFormValues[this.selectedTaskTypeName].priority
+        // }
+
+        //It is for custom and independent tasks.
+
+        TaskDetails: { 
           ClientId: this._cookieService.ClientId,
           VirtualRoleId: this._cookieService.VirtualRoleId,
           TaskTypeId: assignTaskFormValues.taskname,
-          LotId: lotid,
-          EmpId: Number(assignTaskFormValues[this.selectedTaskTypeName].employee),
-          // EstHours: assignTaskFormValues.Trimming.esthrs,
-          // EstStartDate: assignTaskFormValues.Trimming.estimatedstartdate.toLocaleDateString(),
-          // EstEndDate:assignTaskFormValues.Trimming.estimatedenddate.toLocaleDateString() + ' ' + assignTaskFormValues.Trimming.endtime.toLocaleTimeString(),
-          // EstEndTime:  assignTaskFormValues.Trimming.endtime.toLocaleTimeString(),
-          // EstHours: 3,
           EstStartDate: assignTaskFormValues[this.selectedTaskTypeName].estimatedstartdate.toLocaleDateString().replace(/\u200E/g, ''),
-          // EstEndDate:assignTaskFormValues.Trimming.estimatedenddate.toLocaleDateString() + ' ' + assignTaskFormValues.Trimming.endtime.toLocaleTimeString(),
-          // EstEndDate:  assignTaskFormValues[this.selectedTaskTypeName].estimatedstartdate.toLocaleDateString(),
-          // EstEndTime: '12:00 PM',
-          // EstEmpHourlyCost: 23.50,
-          // EstEmpCost: 150,
           Comment: assignTaskFormValues[this.selectedTaskTypeName].comment,
           NotifyEmp: assignTaskFormValues[this.selectedTaskTypeName].notifyemployee,
           NotifyManager: assignTaskFormValues[this.selectedTaskTypeName].notifymanager,
           Priority: assignTaskFormValues[this.selectedTaskTypeName].priority
-        }
+        },
+        EmployeeTypes : [],
+        SkillIDlist : []
+
+        //End of common data for custom and independent tasks.
         // DynamicDetails: {
       };
     
@@ -689,16 +698,45 @@ console.log(assignTaskFormValues)
           return;
         }
 
-      } else if (this.selectedTaskTypeName === 'CUSTOMTASK') {  // CUSTOM TASK
-        // assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = 0;
-        assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'CUSTOMTASK';
-        assignTaskDetailsForWebApi.TaskDetails['LotId'] = 0;
-        assignTaskDetailsForWebApi.TaskDetails['EmpId'] = 0;
-        assignTaskDetailsForWebApi.TaskDetails['NotifyEmp'] = false;
-        assignTaskDetailsForWebApi.TaskDetails['NotifyManager'] = false;
-        assignTaskDetailsForWebApi.TaskDetails['Priority'] = '';
+      } 
 
-      } else if (this.selectedTaskTypeName === 'QACHECK') { // Order Fulfilment/ QA Check Task
+      //This code is commented as design is changes
+
+      // else if (this.selectedTaskTypeName === 'CUSTOMTASK') {  // CUSTOM TASK
+      //   // assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = 0;
+      //   assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'CUSTOMTASK';
+      //   assignTaskDetailsForWebApi.TaskDetails['LotId'] = 0;
+      //   assignTaskDetailsForWebApi.TaskDetails['EmpId'] = 0;
+      //   assignTaskDetailsForWebApi.TaskDetails['NotifyEmp'] = false;
+      //   assignTaskDetailsForWebApi.TaskDetails['NotifyManager'] = false;
+      //   assignTaskDetailsForWebApi.TaskDetails['Priority'] = '';
+
+      // } 
+        //End of commented code for custom task
+
+        //New Customtask code
+        else if (this.selectedTaskTypeName === 'CUSTOMTASK') {  // CUSTOM TASK
+           
+          assignTaskFormValues[this.selectedTaskTypeName].employeeList
+          .forEach((element, index) => {
+            assignTaskDetailsForWebApi.EmployeeTypes.push({
+              "EmpId" : assignTaskFormValues.CUSTOMTASK.employeeList[index].id 
+            });
+          });
+         //  assignTaskFormValues[this.selectedTaskTypeName].skills
+         //  .forEach((element, index) => {
+         //   harvestingDataForApi.SkillIDlist.push({
+         //      "SkillId" : assignTaskFormValues.HARVESTING.skills[index] 
+         //    });
+         //  });
+         assignTaskDetailsForWebApi.SkillIDlist.push({
+           "SkillId" : assignTaskFormValues.CUSTOMTASK.skills
+         });
+    
+          } 
+
+        //End new custom task code
+      else if (this.selectedTaskTypeName === 'QACHECK') { // Order Fulfilment/ QA Check Task
         assignTaskDetailsForWebApi['ProductTypeDetails'] = [];
 
         assignTaskDetailsForWebApi.TaskDetails['OrderId'] = assignTaskFormValues[this.selectedTaskTypeName].orderno;
@@ -896,20 +934,46 @@ console.log(assignTaskFormValues)
         }
 
       }
-      else if (this.selectedTaskTypeName === 'INDEPENDENT') {  // CUSTOM TASK
-        // // assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = 0;
-        // assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'INDEPENDENT';
-        // assignTaskDetailsForWebApi.TaskDetails['LotId'] = 0;
-        // // assignTaskDetailsForWebApi.TaskDetails['EmpId'] = 0;
-        // assignTaskDetailsForWebApi.TaskDetails['NotifyEmp'] = false;
-        // assignTaskDetailsForWebApi.TaskDetails['NotifyManager'] = false;
-        // assignTaskDetailsForWebApi.TaskDetails['Priority'] = '';
-        let customtask = {
+      //This code is commented as independent task has design changes
+      // else if (this.selectedTaskTypeName === 'INDEPENDENT') {  // CUSTOM TASK
+      //   // // assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = 0;
+      //   // assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'INDEPENDENT';
+      //   // assignTaskDetailsForWebApi.TaskDetails['LotId'] = 0;
+      //   // // assignTaskDetailsForWebApi.TaskDetails['EmpId'] = 0;
+      //   // assignTaskDetailsForWebApi.TaskDetails['NotifyEmp'] = false;
+      //   // assignTaskDetailsForWebApi.TaskDetails['NotifyManager'] = false;
+      //   // assignTaskDetailsForWebApi.TaskDetails['Priority'] = '';
+      //   let customtask = {
 
-        }
+      //   }
         
 
+      // }
+
+      //End of commented code for 
+    //New code for independent task
+
+      else if (this.selectedTaskTypeName === 'INDEPENDENT') {  // CUSTOM TASK
+     
+        assignTaskFormValues[this.selectedTaskTypeName].employeeList
+        .forEach((element, index) => {
+          assignTaskDetailsForWebApi.EmployeeTypes.push({
+            "EmpId" : assignTaskFormValues.INDEPENDENT.employeeList[index].id 
+          });
+        });
+       //  assignTaskFormValues[this.selectedTaskTypeName].skills
+       //  .forEach((element, index) => {
+       //   harvestingDataForApi.SkillIDlist.push({
+       //      "SkillId" : assignTaskFormValues.HARVESTING.skills[index] 
+       //    });
+       //  });
+       assignTaskDetailsForWebApi.SkillIDlist.push({
+         "SkillId" : assignTaskFormValues.INDEPENDENT.skills
+       });
+
       }
+     
+      //End of New code for independent task
 
       else if (this.selectedTaskTypeName === 'PLANTING') { // PLANTING TASK
        let plantingDataForApi = {

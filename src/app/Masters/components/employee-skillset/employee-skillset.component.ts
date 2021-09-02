@@ -286,6 +286,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
           Description:element.value.description ,
           IsActive: element.value.chkSelectAll ? 1 : 0,
           IsDeleted:this.IsDeletedForUpdate,
+          IsTaskOnlyForSkillEmployee:element.value.chkRequired ? 1 : 0,
           ActiveInactive:this.ActiveInActiveForUpdate
         });
     });
@@ -388,6 +389,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
           SkilId:SkillId,
           SkillName:skillset.SkillName,
           IsDeleted:IsDeleted,
+          IsTaskOnlyForSkillEmployee:skillset.skillset ? 1 : 0,
           IsActive:skillset.IsActive? 1:0,
           ActiveInactive:ActivateInactivateKey,
         });
