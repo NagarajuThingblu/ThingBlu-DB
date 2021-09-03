@@ -346,12 +346,14 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
         const skills = itemlist[0].controls['skills'];
         const description =  itemlist[0].controls['description'];
         const chkIsActive = itemlist[0].controls['chkSelectAll'];
-  
+        const chkRequired = itemlist[0].controls['chkRequired'];
+
         taskcategory.patchValue(this.SkillTypeEdit[0].TaskCategoryID);
         tasktype.patchValue(this.SkillTypeEdit[0].TaskTypeId);
         skills.patchValue(this.SkillTypeEdit[0].SkillName);
         description.patchValue(this.SkillTypeEdit[0].Description);
         chkIsActive.patchValue(this.SkillTypeEdit[0].IsActive);
+        chkRequired.patchValue(this.SkillTypeEdit[0].Required);
         this.saveButtontext = 'Update';
       }
       else {

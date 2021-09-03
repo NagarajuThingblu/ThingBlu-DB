@@ -285,7 +285,7 @@ export class CustomTaskComponent implements OnInit {
     .subscribe(data => {
       this.headings = data.Table,
       this.skilledempslist = data.Table1
-      this.allemplist = data.Table2
+      this.allemplist = data.Table2 ? data.Table2 : []
       this.empfilterBasedOnSkill()
     });
       }

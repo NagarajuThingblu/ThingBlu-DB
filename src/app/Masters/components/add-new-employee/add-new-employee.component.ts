@@ -93,6 +93,7 @@ passwordType: string = 'password';
   public star:boolean = false;
   plottedSkillItems: any = [];
   public selectedSkillItems: any[];
+  public HoldingSelectedHeadings:any[];
   collapsed: any;
 public WhenToDisplayPWField: boolean = false
   public visibility:boolean = false;
@@ -544,6 +545,11 @@ OnUnSelectNode(e) {
     }
   
 }
+onNodeSelect(e){
+  if(e.node.selectable === true){
+    console.log(e)
+  }
+}
 // nodeSelect(event) {
 //   this.messageService.add({severity: 'info', summary: 'Node Selected', detail: event.node.label});
 // }
@@ -692,7 +698,7 @@ OnUnSelectNode(e) {
         this.allEmployeeList = [];
        }
        if(data1 !== 'No data found!'){
-      
+      this.HoldingSelectedHeadings =[];
           this.plottedSkillItems = [];
            this.selectedSkillItems = [];
            this.alltaskslist.forEach(element => {
@@ -714,7 +720,8 @@ OnUnSelectNode(e) {
                this.plottedSkillItems.push(NewSkill)
                for(let j of data1){
                if(j.TaskTypeId ===   NewSkill.id){
-                 this.selectedSkillItems.push(NewSkill)
+                NewSkill.partialSelected= false
+                 this.HoldingSelectedHeadings.push(NewSkill)
                }
               }
              }
@@ -741,13 +748,45 @@ OnUnSelectNode(e) {
              for(let i of data1){
               if(i.SkillTaskTypeMapId === NewSkillchild.id){
                 // this.OnUnSelectNode(NewSkillchild)
+                NewSkillchild.partialSelected= false
                 this.selectedSkillItems.push(NewSkillchild)
+                
                 // this.minusEnable =true
               }
             }
+          
            
            })
-         
+           for(let j of this.selectedSkillItems){
+            for(let k of this.plottedSkillItems) {
+              if(j.ParentId === k.id){
+                var count1 = this.selectedSkillItems.filter(ur=>ur.ParentId === j.ParentId)
+             var count2 = this.plottedSkillItems.filter(ur=>ur.id === k.id)
+             if( count2[0].children.length ===count1.length){
+              for(let circle of this.HoldingSelectedHeadings){
+                if(circle.id === count2[0].id){
+                  this.selectedSkillItems.push(circle)
+                }
+              }
+              }
+              else{
+               count2[0].partialSelected = true;
+               count2[0].selectable = true
+             }
+              }
+            } 
+        }
+        // if( count2[0].children.length ===count1.length){
+        //  for(let circle of this.HoldingSelectedHeadings){
+        //    if(circle.id === count2[0].id){
+        //      this.selectedSkillItems.push(circle)
+        //    }
+        //  }
+        //  }
+        //  else{
+        //   count2[0].partialSelected = true;
+        //   count2[0].selectable = true
+        // }
            this.files = this.plottedSkillItems;
          }
         
