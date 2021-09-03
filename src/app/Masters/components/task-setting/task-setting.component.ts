@@ -93,7 +93,7 @@ export class TaskSettingComponent implements OnInit {
     this.dropdownDataService.getAllTask().subscribe(
       data => {
         this.globalData.TaskTypes = data;
-        this.taskTypes = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', '-- Select --', false) ;
+        this.taskTypes = this.dropdwonTransformService.transform(data, 'TaskTypeValue', 'TaskTypeId', '-- Select --', false) ;
 
       } ,
       error => {

@@ -483,6 +483,20 @@ nav.navbar-right > li{
     .ui-state-disabled, .ui-widget:disabled {
         opacity: 0.6 !important;
     }
+    .MyDialog.ui-dialog .ui-dialog-content {
+        overflow: visible !important;
+     }
+     /* .true .fa{
+        content: "\f068";
+     } */
+    /* .ui-dialog {
+        overflow: scroll;
+    } */
+    .showmyskillsdropdown .ui-tree {
+        width: 100%!important;
+        overflow: auto;
+        max-height: 150px;
+    }
     .ui-button.ui-button-secondary.ui-state-default, .ui-splitbutton.ui-button-secondary .ui-button.ui-state-default {
         background-color: #e6e6e6 !important;
         border-color: #ccc;

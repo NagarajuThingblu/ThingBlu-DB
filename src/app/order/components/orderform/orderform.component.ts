@@ -50,6 +50,7 @@ export class OrderformComponent implements OnInit {
   Customers: any[];
   strains: any[];
   producttype = [];
+  producttypenames = [];
   // productType: any[];
   // skewtype:any[];
   public skewtype = [];
@@ -76,6 +77,7 @@ export class OrderformComponent implements OnInit {
   public _cookieService: any;
   public defaultDate: Date = new Date();
   sysmbol:any;
+  public dataAfterDelete= [];
   // public plusOnEdit: boolean = true;
   public allProductTypeList: any;
    dropdownsData: any;
@@ -91,6 +93,7 @@ export class OrderformComponent implements OnInit {
   public orderTabSelected = true;
   event: any;
   public orderrequestResource: any;
+  public clearbutton:string ="Clear"
   orderformDetails = {
     strain: null,
     packagetype: null,
@@ -151,9 +154,12 @@ export class OrderformComponent implements OnInit {
 
   ngOnInit() {
     this.priorities =  [
-      {label: 'Ground', value: 'Ground'},
+     
+      {label: 'UPS Ground', value: 'UPSGround'},
+      {label: 'UPS 2 Day', value: 'UPS2Day'},
+      {label: 'UPS 3 Day', value: 'UPS3Day'},
+      {label: 'UPS Next Day Air', value: 'UPSNextDayAir'},
       {label: 'FedEx', value: 'FedEx'},
-      {label: 'UPS', value: 'UPS'},
       {label: 'USPS', value: 'USPS'}
     ];
     
@@ -178,6 +184,7 @@ export class OrderformComponent implements OnInit {
       'deliverydate':new FormControl(null, Validators.required),
       'orderno':new FormControl(null, Validators.required),
       'shippingpref':new FormControl(null, Validators.required),
+      'comment': new FormControl(null),
       items: new FormArray([], this.customGroupValidation),
     })
     this.addItem();
@@ -212,8 +219,26 @@ if(this.editData != null){
  
     
    }
+   getAllDetails2(index, data){
+    this.skewtype = null;
+    this.packagetype = null;
+    this.packagesize = null;
+    var product ='';
+    this.producttype = [];
+    for(let i of this.producttypenames){
+if(data.producttype === i.value){
+  product = i.label
+}
+    }
+    this.producttype.push({label:product, value:data.producttype})
+    this.productTypeDropdown.set(index,this.producttype )
+ 
+    
+   }
   EditFields(OrderId){
+    this.clearbutton ="Cancel"
   this.OrderId = OrderId
+  this.clearbutton ="Cancel";
     this.orderformservice.getOrderDetailsByClient(OrderId).subscribe(
       data => {
         if(data != 'No Data Found!'){
@@ -306,6 +331,7 @@ if(this.editData != null){
       orderqt: new FormControl(null, Validators.compose([ Validators.required, Validators.max(99999), Validators.min(1)])),
       producttype: new FormControl(null, Validators.compose([ Validators.max(99999), Validators.min(0.1)])),
       ordercost: new FormControl(null, Validators.compose([ Validators.max(99999), Validators.min(0.1)])),
+  
     });
   }
   
@@ -383,6 +409,7 @@ if(this.editData != null){
     const data = this.dropdownsData
         if (data) {
         this.globalData.dropdownsData = data
+      this.producttypenames = this.dropdwonTransformService.transform(data, 'ProductName', 'ProductTypeId', '-- Select --',false);
         this.strains = this.dropdwonTransformService.transform(data, 'StrainName', 'StrainId', '-- Select --',false);
         const fieldsfilter = Array.from(data.reduce((m, t) => m.set(t.StrainName, t), new Map()).values())
         this.strains = this.dropdwonTransformService.transform(fieldsfilter, 'StrainName', 'StrainId', '-- Select --',false);
@@ -405,6 +432,7 @@ for(let value of this.globalData.dropdownsData){
   if( value.StrainId === event.value || value.StrainId === event){
     this.producttype.push({label:value.ProductName, value:value.ProductTypeId})
     this.productTypeDropdown.set(index,this.producttype )
+   
   }
 }
     
@@ -416,7 +444,9 @@ for(let value of this.globalData.dropdownsData){
 getAllDetailsOnProducType(index, event?:any){
 for(let data of this.globalData.dropdownsData){
   if(event.value === data.ProductTypeId){
+    // this.orderForm.get('items')['controls'][index].controls['producttype'].setValue(data.ProductTypeId)
     this.skewtype = data.SkewKeyName
+    // this.orderForm.get('items')['controls'][index].controls['producttypeName'].setValue(data.ProductName)
     this.orderForm.get('items')['controls'][index].controls['skewtype'].setValue(this.skewtype)
     this.packagetype = data.PkgTypeName
     this.orderForm.get('items')['controls'][index].controls['packagetype'].setValue(this.packagetype)
@@ -428,20 +458,42 @@ for(let data of this.globalData.dropdownsData){
 }
 }
 
-  deleteItem(index: number) {
-    
+  deleteItem(index: number,event?:any) {
+    var index1 =0;
+    this.dataAfterDelete = [];
     const control = <FormArray>this.orderForm.controls['items'];
    
-    if (control.length !== 1) {
+    if (control.length != 1) {
       control.removeAt(index);
+     
     }
     console.log(this.orderForm.get('items'))
+     var itemlist = this.orderForm.get('items')['controls'];
+   for(let i of itemlist){
+     this.dataAfterDelete.push(i.value)
+   }
+for(let j of this.dataAfterDelete){
+  itemlist[index1].controls.strain.patchValue(j.strain);
+  this.getAllDetails2(index1,j)
+  itemlist[index1].controls.producttype.patchValue(j.producttype);
+  itemlist[index1].controls.skewtype.patchValue(j.skewtype);
+  itemlist[index1].controls.packagetype.patchValue(j.packagetype);
+  itemlist[index1].controls.packagetypeid.patchValue(j.packagetypeid);
+  itemlist[index1].controls.packagesize.patchValue(j.packagesize);
+  itemlist[index1].controls.orderqt.patchValue(j.orderqt);
+  index1++
+}
    
+
   }
 
   resetForm() {
+    if(this.clearbutton === "Cancel"){
+      this.router.navigate(['../home/orderlisting']);
+    }
+    else{
     this.orderForm.reset({ chkSelectAll: true });
-    
+    this.clearbutton ="Clear"
 this.saveButtonText ="save"
     const control = <FormArray>this.orderForm.controls['items'];
     
@@ -453,6 +505,7 @@ this.saveButtonText ="save"
    
     this.addItem();
   }
+}
   deleteItemAll(index: number) {
    
     const control = <FormArray>this.orderForm.controls['items'];
@@ -509,11 +562,15 @@ this.saveButtonText ="save"
            
             this.resetForm();
           }
-          else     if (String(data[0].RESULTKEY) === 'Order Updated Successfully') {
+          else if (String(data[0].RESULTKEY) === 'Order Updated Successfully') {
             this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
             detail: this.orderrequestResource.orderupdated });
            
             this.resetForm();
+          }
+           else     if (String(data[0].RESULTKEY) === 'Order In Progress You Can not Delete the Product') {
+            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+            detail:this.orderrequestResource.orderdeletewarn });
           }
           else if (String(data[0].ResultKey)  === "DUPLICATE") {
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.orderrequestResource.duplicateorder});
@@ -531,7 +588,7 @@ this.saveButtonText ="save"
         },
         error => {
           this.msgs = [];
-          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: error.message });
+          this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: 'Something went wrong  at server side!' });
          
           this.loaderService.display(false);
         }

@@ -43,4 +43,11 @@ export class NewLabelDetailsActionService {
     return this.http.get(url,{params: params}).map(data=>data);
   
       }
+      GetLabelsInfo(binid){
+        const url='api/Grower/GetSectionMergeDetails';
+        let params = new HttpParams();
+        params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
+        params=params.append('BinId',binid)
+        return this.http.get(url,{params: params}).map(data=>data);
+      }
   }

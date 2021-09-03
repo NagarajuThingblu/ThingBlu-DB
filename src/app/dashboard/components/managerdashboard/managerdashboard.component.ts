@@ -4,6 +4,8 @@ import { TaskCommonService } from '../../../task/services/task-common.service';
 import { DropdwonTransformService } from '../../../shared/services/dropdown-transform.service';
 import { DropdownValuesService } from '../../../shared/services/dropdown-values.service';
 import { SelectItem } from 'primeng/api';
+import { CookieService } from 'ngx-cookie-service';
+import { ConfirmationService, Confirmation } from 'primeng/api';
 import { AppConstants } from '../../../shared/models/app.constants';
 import { LoaderService } from '../../../shared/services/loader.service';
 import { GlobalResources } from '../../../global resource/global.resource';
@@ -14,6 +16,7 @@ import { environment } from './../../../../environments/environment';
 import { AppCommonService } from '../../../shared/services/app-common.service';
 import { Router } from '@angular/router';
 import { DashboardResource } from '../../dashboard.resource';
+import {managerdashboardService} from '../../services/managerdashboard.service'
 import { Table } from 'primeng/table';
 
 // create enum for managerdashboard tabs :: swapnil :: 22-Mar-2019
@@ -45,6 +48,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
   assignedTasksevent: any;
   inProcessTasksevent: any;
   pausedTasksevent: any;
+  public showButton: boolean = false;
   tasklotDetails: any;
   public tasklotDetailsBytaskId: any;
   completetasklotDetails: any;
@@ -91,7 +95,12 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
   public showMgr: boolean;
   public selectedShowMgr: number;
   public taskCount: any;
+  public msgs: any[];
   public isPrintClicked = false;
+  public selectedCheckBoxes:any=[];
+  public _cookieService: any;
+  public chooseCheckBox: boolean = true;
+  public chooseRow: boolean = true
   public dashboardObject = {
       reviewPending: [],
       assigned: [],
@@ -109,8 +118,11 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
     private dropdwonTransformService: DropdwonTransformService,
     private loaderService: LoaderService,
     private titleService: Title,
+    private cookieService: CookieService,
     private fb: FormBuilder,
     private router: Router,
+    private confirmationService: ConfirmationService,
+    private managerdashboardService:managerdashboardService,
     private refreshService: RefreshService,
     private appCommonService: AppCommonService
   ) { }
@@ -120,6 +132,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
     // this.startTimer();
     this.globalResource = GlobalResources.getResources().en;
     this.managerResources = DashboardResource.getResources().en.managerdashboard;
+    this._cookieService = this.appCommonService.getUserProfile();
     this.titleService.setTitle(this.globalResource.ManagerDashboard);
     this.showAllManagerOption = [
       {label: 'Only Me', value: '1'},
@@ -133,7 +146,8 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
       this.managerdashboardForm = this.fb.group({
         'taskTypes': new FormControl(null),
         'ShowallManager': new FormControl(2),
-        'ShowallManagerForTskComplete': new FormControl(1)
+        'ShowallManagerForTskComplete': new FormControl(1),
+       
       });
       // this.connection = this.chatService.getMessages().subscribe(message => {
      //   this.getTaskList(0);
@@ -276,7 +290,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
       data => {
         // console.log(data);
         this.globalData.taskTypes = data;
-        this.taskTypes = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', 'Show All', false) ;
+        this.taskTypes = this.dropdwonTransformService.transform(data, 'TaskTypeValue', 'TaskTypeId', 'Show All', false) ;
        // this.loaderService.display(false);
       } ,
       error => { console.log(error); this.loaderService.display(false); },
@@ -503,9 +517,148 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
 onRowSelect(e) {
   if (!this.display) {
     this.router.navigate(['../home/task/taskaction', e.TaskTypeKey, e.TaskId]);
-  }
+  // this.chooseRow = true
+  // if((this.chooseRow && this.chooseCheckBox) === true){
+    }
+  // }
+ 
 }
+// selectrow(event: any){
+//   // var value =this.managerdashboardForm.controls.checkbox
+//   if(this.managerdashboardForm.controls.checkbox.value === true){
+//     this.chooseCheckBox = false;
+//   }
+//   else{
+//     this.chooseCheckBox = true;
+//     this.chooseRow=false
+//   }
+  
+//   console.log("hi")
+// }
+selectrow(task){
 
+  if(this.selectedCheckBoxes.indexOf(task.TaskId)=== -1){
+    this.showButton = true;
+    this.selectedCheckBoxes.push(task.TaskId)
+  }
+  else{
+    let index = this.selectedCheckBoxes.indexOf(task.TaskId);
+    this.selectedCheckBoxes.splice(index,1)
+  }
+  if(this.selectedCheckBoxes.length === 0){
+    this.showButton = false;
+  }
+  
+}
+showConfirmationMessage(value){
+  let strMessage: any;
+  if(value[0].TaskStatus ==='ASSIGNED'){
+    strMessage ='Do you want to Delete these tasks?' ;
+  }
+  else{
+    strMessage ='Do you want to Pause these tasks?' ;
+  }
+  this.confirmationService.confirm({
+    message: strMessage,
+    header: 'Confirmation',
+    icon: 'fa fa-exclamation-triangle',
+    accept: () => {
+      if(value[0].TaskStatus ==='ASSIGNED'){
+       this.deleteTasks();
+      }
+      else{
+        this.pausetask();
+      }
+      },
+      reject: () => {
+       
+      }
+  });
+
+}
+deleteTasks(){
+
+  let TaskDetailsForApi;
+  TaskDetailsForApi = {
+  
+    VirtualRoleId:this._cookieService.VirtualRoleId,
+    TaskIdList : [],
+  };
+for(let value of this.selectedCheckBoxes){
+  TaskDetailsForApi.TaskIdList.push({
+    TaskId:value
+  })
+};
+this.loaderService.display(true);
+this.managerdashboardService.deleteMultipleTasks(TaskDetailsForApi).subscribe(
+  data => {
+    this.msgs = [];
+    if (String(data).toLocaleUpperCase() === 'SUCCESS') {
+      this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+      detail:'Tasks Successfully Deleted' });
+      this.showButton = false;
+      this.selectedCheckBoxes = []
+      this.selectedTaskTypeId = 1
+      this.onTabChange(null)
+    }
+    else if(String(data) === 'NoDelete') {
+      this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+      detail:'Tasks already Deleted' });
+      this.selectedCheckBoxes = []
+    }
+    else if(String(data) === 'Failure'){
+      this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg,
+      detail:'Something Went Wrong At Server Side' });
+      this.selectedCheckBoxes = []
+    }
+    this.loaderService.display(false);
+  }
+)
+}
+pausetask(){
+  
+  let TaskDetailsForApi;
+  TaskDetailsForApi = {
+    TaskDetails:{
+      TaskStatus:"PAUSED",
+      VirtualRoleId:this._cookieService.VirtualRoleId,
+    },
+  
+    TaskIdList : [],
+  };
+for(let value of this.selectedCheckBoxes){
+  TaskDetailsForApi.TaskIdList.push({
+    TaskId:value
+  })
+};
+this.loaderService.display(true);
+this.managerdashboardService.pauseMultipleTasks(TaskDetailsForApi).subscribe(
+  data => {
+    this.msgs = [];
+    if (String(data.Table[0].ResultKey).toLocaleUpperCase() === 'SUCCESS') {
+      this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+      detail:'Tasks Successfully Paused' });
+      this.selectedCheckBoxes = []
+      this.showButton = false;
+      this.selectedTaskTypeId = 1
+      this.onTabChange(null)
+    
+    }
+    else if (String(data.Table[0].ResultKey) === 'Record already Updated'){
+      this.selectedCheckBoxes = []
+      this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+      detail:'Tasks Already Paused' });
+    }
+    else if(String(data.Table[0].ResultKey) === 'Record Deleted'){
+      this.selectedCheckBoxes = []
+      this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+      detail:'Tasks Deleted' });
+    }
+    this.loaderService.display(false);
+  }
+)
+  console.log(this.selectedCheckBoxes)
+}
 closeDailog() {
   this.display = false;
   this.display = false;

@@ -1,7 +1,8 @@
 
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
-
+import {TreeModule} from 'primeng/tree';
+import {TreeNode} from 'primeng/api';
 import { GrowerDetailsActionService } from './services/grower-details-action.service';
 
 import { AssignTaskComponent } from './components/assign-task/assign-task.component';
@@ -47,6 +48,7 @@ import { TaskRoutingModule } from './task.routing';
 import { DashboardModule } from '../dashboard/dashboard.module';
 import {PTRService} from '../Masters/services/ptr.service';
 import  { NewSectionDetailsActionService } from './services/add-section-details.service';
+import {NewEmployeeActionService} from './services/add-employee';
 import { LotService } from '../lot/services/lot.service'
 import { OrderService } from '../order/service/order.service'
 
@@ -89,9 +91,10 @@ import { OrderService } from '../order/service/order.service'
   imports: [
     SharedModule,
     TaskRoutingModule,
-    DashboardModule
+    DashboardModule,
+    TreeModule
   ],
-  providers: [GrowerDetailsActionService, TaskCommonService, TaskResolver, SkewListResolver, OilService,PTRService,NewSectionDetailsActionService,LotService,OrderService],
+  providers: [GrowerDetailsActionService, TaskCommonService, TaskResolver, SkewListResolver, OilService,PTRService,NewSectionDetailsActionService,LotService,OrderService,NewEmployeeActionService],
   entryComponents: [ QuarantineComponent ],
   exports: [
      AssignTaskComponent, LoadComponentDirective, EmployeeAssignTaskComponent

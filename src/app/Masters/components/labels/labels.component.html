@@ -6,11 +6,17 @@
           
         </p-header>
         <form  [formGroup]="newLabelsEntryForm" (ngSubmit)="onSubmit(newLabelsEntryForm.value)">
+          <div class="ui-g" style="float:right;">
+            <div *ngIf = "visible === true"  style="float:right;">
+              <p-button  style="float: right;" class="toplinks" type="button"    id="btn_binshow" (click)="backtotaskpage()"  name="btnviewbins"><< back</p-button>
+            </div>
+          </div>
           <div class="ui-g ">
-            <div class="ui-g-12 ui-md-6" style="padding-left:0px;">
+            <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
               <div class="paddingRL">
-                <label for="TaskType" class="towlable">{{ newLabelResources.taskType }}<span class="star">*</span></label>
+                <label for="TaskType" class="towlable">Category<span class="star">*</span></label>
                   <p-dropdown
+                  [filter] ="true"
                     id="TaskType"
                     [options]="tasktypes"
                     formControlName="TaskType"
@@ -19,29 +25,134 @@
                     (onChange) = "TaskType_InChange($event)"
                     name="TaskType">
                   </p-dropdown>
+
+                  <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                  *ngIf="!newLabelsEntryForm.controls['TaskType'].valid&&newLabelsEntryForm.controls['TaskType'].dirty">
+                  <span *ngIf="newLabelsEntryForm.controls['TaskType'].errors['required']">
+                      Category required
+                </span>
+          
+                </div> -->
+                <!-- <div *ngIf="newLabelsEntryForm.controls['TaskType'].valid &&(newLabelsEntryForm.controls['TaskType'].dirty || newLabelsEntryForm.controls['TaskType'].touched)">
+                  <span>Category required</span>
+                </div> -->
+
               </div>
             </div>
-            <div *ngIf = "visible === true" class="ui-g-12 ui-md-6" style="float:right;">
-              <p-button  style="float: right;" class="toplinks" type="button" icon="fa fa-list-ul" label="Back"  id="btn_binshow" (click)="backtotaskpage()"  name="btnviewbins"></p-button>
+            <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
+              <div class="paddingRL">
+                <label for="strain" class="towlable">Strain<span class="star">*</span></label>
+                <p-dropdown
+                id="strain"
+                formControlName="strain"
+                placeholder="-- Select --"
+                [autoWidth]="false"
+                class="clsControl"
+                (onChange) = "onStrainSelect($event)"
+                [options]="strains"
+                name="strain"
+                [readonly]="enableFieldSection">
+              </p-dropdown> 
+
+              </div>
             </div>
-           
+            <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
+              <div class="paddingRL">
+                <label for="lightdept" class="towlable">Light Dept<span class="star">*</span></label>
+                <p-dropdown
+                [filter] ="true"
+                id="lightdept"
+                formControlName="lightdept"
+                [options]="LD"
+                placeholder="-- Select --"
+                [autoWidth]="false"
+                (onChange) = "onLDSelect($event)"
+                class="clsControl"
+                name="lightdept"
+                [readonly]="enableFieldSection">
+              </p-dropdown>
+              </div>
+            </div>
+          
+            <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
+              <div class="paddingRL">
+                <label for="field" class="towlable">Fields<span class="star">*</span></label>
+                  <p-multiSelect #checkedItems
+                  *ngIf ="multiselector"
+                    id="field"
+                    [options]="Fields"
+                    [(ngModel)]="selectedValues"
+                    formControlName="field"
+                    placeholder="-- Select --"
+                    (onChange) = "onFieldSelect($event)"
+                    class="clsControl"
+                    name="field"
+                    [disabled]="enableFieldSection"
+                    >
+                  </p-multiSelect>
+
+                  <p-dropdown
+                  *ngIf ="!multiselector"
+                  id="field"
+                  [options]="Fields"
+                  [(ngModel)]="selectedValues"
+                  formControlName="field"
+                  placeholder="-- Select --"
+                  (onChange) = "onFieldSelect($event)"
+                  class="clsControl"
+                  name="field"
+                  [disabled]="enableFieldSection">
+                </p-dropdown>
+              </div>
+            </div>
+            <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
+              <div class="paddingRL">
+                <label for="Section" class="towlable">Sections<span class="star">*</span></label>
+                <p-multiSelect #checkedItems
+                *ngIf ="multiselector"
+                    id="Section"
+                    [options]="Sections"
+                    [(ngModel)]="selectedSections"
+                    (onChange) = "onSectionSelect($event)"
+                    formControlName="Section"
+                    placeholder="-- Select --"
+                    class="clsControl"
+                    name="Section"
+                    [disabled]="enableFieldSection"
+                    >
+                </p-multiSelect>
+
+                <p-dropdown
+                *ngIf ="!multiselector"
+                id="Section"
+                    [options]="Sections"
+                    [(ngModel)]="selectedSections"
+                    (onChange) = "onSectionSelect($event)"
+                    formControlName="Section"
+                    placeholder="-- Select --"
+                    class="clsControl"
+                    name="Section"
+                    [disabled]="enableFieldSection">
+              </p-dropdown>
+              </div>
+            </div>
           </div>
           <div formArrayName="items" style="position: relative">
             <div style="width:calc(100% - 20px);float:left;">
-              <p-table [value]="labelDetailsArr?.controls" id="labelDetails" name="labelDetails">
+              <p-table [value]="labelDetailsArr?.controls" id="labelDetails" name="labelDetails"> 
                 <ng-template pTemplate="header">
                   <tr>
                     <th>{{ newLabelResources.binNo }}
                       <span class="star">*</span>
                     </th>
-                    <th>{{ newLabelResources.strain }}
+                    <!-- <th>{{ newLabelResources.strain }}
                       <span class="star">*</span>
-                    </th>
+                    </th> -->
                     <th>{{ newLabelResources.skewType }}
                        <span class="star">*</span>
                     </th>
-                    <th style="width: 80px;">{{ newLabelResources.lightDept }}
-                    </th>
+                    <!-- <th style="width: 80px;">{{ newLabelResources.lightDept }}
+                    </th> -->
                     <th>{{ newLabelResources.trimmingMethod }}
                       <span class="star">*</span>
                    </th>
@@ -66,8 +177,8 @@
                         placeholder="Enter Bin Number "
                         min="0.1">
                     </td>
-                    <td>
-                      <p-dropdown
+                    <!-- <td> -->
+                      <!-- <p-dropdown
                       id="strain"
                       formControlName="strain"
                       placeholder="-- Select --"
@@ -75,8 +186,19 @@
                       class="clsControl"
                       [options]="strains"
                       name="strain">
-                    </p-dropdown>
-                  </td>
+                    </p-dropdown> -->
+                    <!-- <input pInputText
+                      
+                    name="strain"
+                    [ngModel]="strainName"
+                    id="strain"
+                    type="string"
+                    autocomplete="off"
+                    class="clsControl"       
+                    formControlName="strain"
+                    readonly ="true"
+                  >
+                  </td> -->
                     <td>
                       <p-dropdown
                       id="skewType"
@@ -89,17 +211,16 @@
                       </p-dropdown>
                       
                     </td>
-                    <td>
-                      <p-checkbox value="true"
+                    <!-- <td>
+                      <p-checkbox  [ngModel]="strainName"
                        formControlName="lightDept" checked="true"
                       binary="true"></p-checkbox>                                      
-                    </td>
+                    </td> -->
                      <td Style="text-align:center">
                      
                       <div class="radio" *ngFor="let TrimmingMethod of TrimmingMethods;" >
                         <p-radioButton [name]=i
                          [value]="TrimmingMethod" 
-                         [(ngModel)]="HT"
                          label={{TrimmingMethod}} 
                          [disabled]="enableDropDown"
                          formControlName="TrimmingMethod"
@@ -120,6 +241,8 @@
                         autocomplete="off"
                         class="clsControl"       
                         formControlName="bincount"
+                        min="1"
+                        onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57"
                       >
                     </td>
                     <td>
@@ -252,9 +375,46 @@
       <p-table #dtLabelList [value]="allLabelslist" sortMode="single" [responsive]="true" [paginator]="true"
     [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
     (onPage)="onPageChange($event)"
-    [globalFilterFields]="['TaskTypeName','BinNo','TotalWt','AvilableWt','StrainName','SkewType','IsLightDeprevation','TrimmingMethod']">
+    [globalFilterFields]="['TaskTypeName','Fields','Sections','BinNo','TotalWt','AvilableWt','StrainName','SkewType','IsLightDeprevation','TrimmingMethod']">
         <ng-template pTemplate="caption">
+          <div style="text-align: right; float: left;">
+<!--         
+              <span>Fields :</span>
+              <p-dropdown
+            [options]="fieldsFilter"
+            placeholder="-- Select --"
+            class="clsControl"
+            style="width:auto;"
+          >
+            </p-dropdown> -->
+            
+          
+          </div>
+          <div style="text-align: left; float: left; width:200px;  margin:4px 4px 0 0">
+         
+            <p-dropdown
+           
+            placeholder="Select Field"
+            [options]="fieldsFilter" 
+            class="clsControl"
+            (onChange) = "filterSections($event)"
+          ></p-dropdown>
+         
+          </div>
+          <div style="text-align: left; float: left;  width:200px; margin:4px 4px 0 0">
+           
+            <p-dropdown
+           
+            placeholder="Select Section"
+            [options]="sectionsFilter" 
+            class="clsControl"
+            (onChange) = "dtLabelList.filterGlobal($event.value, 'contains')"
+          ></p-dropdown>
+        
+          </div>
+          
           <div style="text-align: right">
+            
             <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
             <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter"
               (input)="dtLabelList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
@@ -264,7 +424,11 @@
           <tr>
             <!-- <th [pSortableColumn]="'FieldName'">Field Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
             </th> -->
-            <th [pSortableColumn]="'TaskTypeName'">Task Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
+            <th [pSortableColumn]="'TaskTypeName'">Category<p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
+            </th>
+            <th style="display:none" [pSortableColumn]="'Fields'">Field <p-sortIcon [field]="'Fields'"></p-sortIcon>
+            </th>
+            <th style="display:none" [pSortableColumn]="'Sections'">Section <p-sortIcon [field]="'Sections'"></p-sortIcon>
             </th>
             <th [pSortableColumn]="'BinNo'">Bin Number <p-sortIcon [field]="'BinNo'"></p-sortIcon>
             </th>
@@ -280,7 +444,7 @@
             </th>
             <th [pSortableColumn]="'AvilableWt'">Available Bin Wt <p-sortIcon [field]="'AvilableWt'"></p-sortIcon>
             </th>
-            <th style="width:100px;">Action </th>
+            <th style="width:120px;">Action </th>
           </tr>
           <tr>
             <!-- <th>
@@ -290,6 +454,14 @@
             <th>
               <input pInputText type="text" autocomplete="off"
                 (input)="dtLabelList.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
+            </th>
+            <th style="display:none">
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtLabelList.filter($event.target.value, 'Fields', 'contains')" class="clsControl">
+            </th>
+            <th style="display:none">
+              <input pInputText type="text" autocomplete="off"
+                (input)="dtLabelList.filter($event.target.value, 'Sections', 'contains')" class="clsControl">
             </th>
             <th>
               <input pInputText type="text" autocomplete="off"
@@ -328,6 +500,8 @@
         <ng-template pTemplate="body" let-label let-rowData let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
             <td>{{label?.TaskTypeName}}</td>
+            <td style="display:none">{{label?.Fields}}</td>
+            <td style="display:none">{{label?.Sections}}</td>
             <td>{{label?.BinNo}}</td>
             <td>{{label?.StrainName}}</td>
             <td>{{label?.SkewType }}</td>
@@ -343,7 +517,9 @@
               <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(label?.LabelId,label,1,0)">
                 <span class="fa fa-trash"></span>
               </a>
-            
+              <a href="#" [routerLink]="" (click)="showLabelDetails(label)">
+                <span class="fa fa-info-circle"></span>
+              </a>
               <div class="clsToggleButtonDiv">
                 <p-toggleButton [(ngModel)]="label.IsActive" onLabel="Active" offLabel="InActive"
                   [style]="{'width':'90px'}"

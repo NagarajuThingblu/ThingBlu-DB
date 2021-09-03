@@ -19,11 +19,13 @@ import { AppCommonService } from '../../../../shared/services/app-common.service
 import { LoaderService } from '../../../../shared/services/loader.service';
 import { Title } from '@angular/platform-browser';
 import { RefreshService } from '../../../../dashboard/services/refresh.service';
+import { NewEmployeeActionService } from '../../../services/add-employee';
 
 @Component({
   moduleId: module.id,
   selector: 'app-custom-task',
   templateUrl: 'custom-task.component.html',
+  styleUrls: ['./custom-task.component.css']
 })
 export class CustomTaskComponent implements OnInit {
   CUSTOMTASK: FormGroup;
@@ -64,6 +66,7 @@ export class CustomTaskComponent implements OnInit {
     private titleService: Title,
     private refreshService: RefreshService,
     private dropdownDataService: DropdownValuesService,
+    private newEmployeeActionService: NewEmployeeActionService,
   ) {
     this._cookieService = this.appCommonService.getUserProfile();
   }
@@ -84,6 +87,20 @@ export class CustomTaskComponent implements OnInit {
   public msgs: Message[] = [];
   // Commented by Devdan :: 26-Oct-2018 :: Unused
   // TaskActionDetails: any;
+  //added skills list and multiple emp//
+  public skills: SelectItem[];
+  public allSkillslist: any;
+  public allemplist : any[]
+  public skilledempslist: any[]
+  public headings: any[];
+  plottedSkillItems: any = [];
+  public selectedSkillItems: any[];
+  public files: any = [];
+  public visibility:boolean = false;
+  public showUpArrow:boolean = false;
+  public employeeArray:any=[];
+  public employeeNameToBeDisplayedOnDropdown="--Select--"
+  //end of added skills list and multiple emp//
   public taskid: any;
   public taskType: any;
   public defaultDate: Date;
@@ -101,6 +118,7 @@ export class CustomTaskComponent implements OnInit {
     strains: []
   };
   ngOnInit() {
+    this.employeeNameToBeDisplayedOnDropdown="--Select--"
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
     this.taskStatus =  AppConstants.getStatusList;
@@ -137,6 +155,8 @@ export class CustomTaskComponent implements OnInit {
         // 'brand': new FormControl(''),
         // 'strain': new FormControl(''),
         'employee': new FormControl(0),
+        'employeeList': new FormControl('', Validators.required),
+        'skills':new FormControl('', Validators.required),
         'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
         'esthrs': new FormControl('',  Validators.compose([  ])),
         'emprate': new FormControl(''),
@@ -208,6 +228,7 @@ export class CustomTaskComponent implements OnInit {
       // this.completionForm.addControl('skewTypeGroup', this.qcs.toFormGroup(this.questions));
     }
     this.employeeListByClient();
+    this.getSkills()
     this.priorities =  [
       {label: 'Normal', value: 'Normal'},
       {label: 'Important', value: 'Important'},
@@ -224,6 +245,195 @@ export class CustomTaskComponent implements OnInit {
   //   return new Date(dateObject).toLocaleDateString().replace(/\u200E/g, '');
   // }
 
+  //skills
+  getSkills(){
+    let TaskTypeId = this.ParentFormGroup != undefined?
+    this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
+    this.newEmployeeActionService.GetSkillslist().subscribe(data => {
+      if (data !== 'No Data found') {
+        this.allSkillslist = data;
+       
+        this.skills = this.dropdwonTransformService.transform(this.allSkillslist.filter(x => x.TaskTypeId === TaskTypeId), 'SkillName', 'SkillTaskTypeMapId');
+      }
+      else{
+        this.allSkillslist = [];
+        this.skills = []
+      }
+    },
+    error => { console.log(error); },
+    () => console.log('skillslistbytasktype complete'));
+  }
+
+  //on selecting skill
+  onSkillsSelect(event:any){
+    this.employeeNameToBeDisplayedOnDropdown="--Select--"
+    let skillListApiDetails;
+    skillListApiDetails = {
+      TaskTypeId:Number(this.TaskModel.task),
+    
+      SkillList:[]
+    };
+    skillListApiDetails.SkillList.push({SkillID:event.value})
+    // for(let j of this.GROWERTRIMMING.value.skills){
+          
+    //   skillListApiDetails.SkillList.push({
+    //     SkillID: j,
+       
+    //   })
+    // };
+    this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
+    .subscribe(data => {
+      this.headings = data.Table,
+      this.skilledempslist = data.Table1
+      this.allemplist = data.Table2 ? data.Table2 : []
+      this.empfilterBasedOnSkill()
+    });
+      }
+
+  //filtering employees based on skill
+  empfilterBasedOnSkill(){
+    this.plottedSkillItems = [];
+    this.selectedSkillItems = [];
+    this.headings.forEach(element => {
+      const NewEmpList: any = {};
+      NewEmpList.id = element.ID;
+      NewEmpList.label = element.HeadingName;
+      NewEmpList.children = [];
+      NewEmpList.Num  = element.Num
+      NewEmpList.isParent = element.IsParent;
+      NewEmpList.ParentId = element.ParentID;
+      NewEmpList.Selectable = true;
+      if(element.IsParent === false || element.IsParent === "False"){
+        this.selectedSkillItems.push(NewEmpList)
+      }
+      if(NewEmpList.isParent === true || NewEmpList.isParent === "True"){
+        this.plottedSkillItems.push(NewEmpList)
+      }
+    });
+    this.allemplist.forEach(element => {
+      const NewAllEmpList: any = {};
+      NewAllEmpList.id = element.EmpID;
+      NewAllEmpList.label = element.EmpName;
+      NewAllEmpList.children = [];
+     // NewAllEmpList.Num  = element.Num
+      NewAllEmpList.isParent = element.IsParent;
+      NewAllEmpList.ParentId = element.ParentID;
+      NewAllEmpList.Selectable = true;
+      if (element.IsParent === false || element.IsParent === "False" ) {
+        if (this.plottedSkillItems.length) {
+          this.plottedSkillItems.forEach(parent => {
+            if (parent.id === element.ParentId) {
+              parent.children.push(NewAllEmpList);
+            } 
+          })
+       
+        }
+      }
+    })
+    this.skilledempslist.forEach(element => {
+      const NewAllEmpList: any = {};
+      NewAllEmpList.id = element.EmpID;
+      NewAllEmpList.label = element.EmpName;
+      NewAllEmpList.children = [];
+     // NewAllEmpList.Num  = element.Num
+      NewAllEmpList.isParent = element.IsParent;
+      NewAllEmpList.ParentId = element.ParentId;
+      NewAllEmpList.Selectable = true;
+      if (element.IsParent === false || element.IsParent === "False") {
+        if (this.plottedSkillItems.length) {
+          this.plottedSkillItems.forEach(parent => {
+            if (parent.id === element.ParentId) {
+              parent.children.push(NewAllEmpList);
+            } 
+          })
+       
+        }
+      }
+    })
+    this.files = this.plottedSkillItems;
+  }
+
+  //To Show and hide Employees
+  showEmps(event: any){
+    if(this.visibility === true){
+      this.visibility = false;
+      this.showUpArrow = false
+    }
+    else{
+      this.visibility = true;
+      this.showUpArrow = true
+    }
+  
+  console.log(event)
+  }
+//on selecting an employee
+ 
+OnSelectingEmployees(event: any){
+  if(this.employeeNameToBeDisplayedOnDropdown === "--Select--"){
+    this.employeeNameToBeDisplayedOnDropdown=""
+  }
+  let count =0
+  for(let employee of  this.globalData.employees){
+      if(event.node.id === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
+        this.employeeArray.push(employee.EmpName)
+        for(let i of this.employeeArray){
+         count++
+          if(count <=4){
+            if(this.employeeNameToBeDisplayedOnDropdown.indexOf(i) === -1){
+              this.employeeNameToBeDisplayedOnDropdown =this.employeeNameToBeDisplayedOnDropdown+" "+i+"  "
+            }
+          }
+        else{
+          this.employeeNameToBeDisplayedOnDropdown =count+" selected"
+        }
+        }
+        //this.employeeNameToBeDisplayedOnDropdown = ""+employee.EmpName
+        this.CUSTOMTASK.get('employeeList').patchValue(this.selectedSkillItems)
+        return;
+     }
+     else{
+    
+      // for(let i of this.employeeArray){
+      //   count--
+      //    if(count <=4){
+      //      if(this.employeeNameToBeDisplayedOnDropdown.indexOf(i) != -1){
+      //        this.employeeNameToBeDisplayedOnDropdown =this.employeeNameToBeDisplayedOnDropdown+" "+i+"  "
+      //      }
+      //    }
+      //  else{
+      //    this.employeeNameToBeDisplayedOnDropdown =count+" selected"
+      //  }
+      //  }
+       if(event.node.id === employee.EmpId){
+        this.employeeNameToBeDisplayedOnDropdown=""
+         let index = this.employeeArray.indexOf(employee.EmpName);
+         this.employeeArray.splice(index,1)
+        let count1 = this.employeeArray.length
+         for(let i of this.employeeArray){
+           if(count1 <=4){
+             if(this.employeeNameToBeDisplayedOnDropdown.indexOf(i) === -1){
+               this.employeeNameToBeDisplayedOnDropdown =this.employeeNameToBeDisplayedOnDropdown+" "+i+"  "
+             }
+           }
+         else{
+           this.employeeNameToBeDisplayedOnDropdown =count1+" selected"
+         }
+         }
+       }
+     }
+    }
+  
+}
+
+  //On Unselecting an employee
+  OnUnSelectNode(e) {
+
+    if (e.node.selectable === false) {
+     // this.selectedmenuItems.push(e.node.parent);
+    }
+    this.OnSelectingEmployees(e)
+  
+  }
   // Complete Parameter Saving
   completeTask(formModel) {
     let taskCompletionWebApi;

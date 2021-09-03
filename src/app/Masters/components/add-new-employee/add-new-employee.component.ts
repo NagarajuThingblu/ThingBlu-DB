@@ -14,6 +14,12 @@ import { NewEmployeeActionService } from '../../../task/services/add-employee';
 import { NewEmployeeService } from '../../services/new-employee.service';
 import { ScrollTopService } from '../../../shared/services/ScrollTop.service';
 import { AppConstants } from '../../../shared/models/app.constants';
+import { Router } from '@angular/router';
+import {TreeModule} from 'primeng/tree';
+import {TreeNode} from 'primeng/api';
+// import {messageService} from 'primeng/api';
+
+
 declare function unescape(s: string): string;
 @Component({
   selector: 'app-add-new-employee',
@@ -42,6 +48,7 @@ export class AddNewEmployeeComponent implements OnInit {
     roles: []
   };
   showTextbox: any = true;
+  showPWbox: any = true;
   clear: any;
   msgs: any[];
   clients: any[];
@@ -50,26 +57,49 @@ export class AddNewEmployeeComponent implements OnInit {
   cities: any[];
   roles:  any[];
   genders: SelectItem[];
+  sampleData:any[]
+  sampleDataChild:any[]
   stringEscapeRegex: any = /[^ a-zA-Z0-9]/g;
   chkIsActive: boolean;
   public allEmployeeList: any;
+  public allSkillsList :any;
+  public allSkillslistforBelowList : any
   public getInventoryList: any;
   public employeeOnEdit: any;
   public saveButtonText: any;
   public empIdForUpdate: any = 0;
   public _cookieService: any;
   public newEmployeeResources: any;
+  public minusEnable:boolean = false
+  public showeye: boolean = false;
+public hideeye: boolean = true;
+passwordShown: boolean= false;
+passwordType: string = 'password';
   public constantusrRole:any;
+  public alltaskslist: any;
+  public allSkillslist: any;
+  public displatSkillSet: boolean = false;
   public selectedRole:any;
   public Managerlist:any;
+  public Skilllist:TreeNode[];
+  selectedFile:  TreeNode[];
+  public ManagerlistOptional : boolean = false;
   public flclist:any;
+  public files: any = [];
   public showMang: boolean =false;
   public showFlc: boolean =false;
   public globalResource: any;
   public showTerminationDate: boolean = false;
   public star:boolean = false;
   public defaultDate: Date = new Date();
+  plottedSkillItems: any = [];
+  public selectedSkillItems: any[];
+  public HoldingSelectedHeadings:any[];
   collapsed: any;
+public WhenToDisplayPWField: boolean = false
+  public visibility:boolean = false;
+  public showUpArrow:boolean = false;
+ 
   constructor(
     private fb: FormBuilder,
     private loaderService: LoaderService,
@@ -81,6 +111,11 @@ export class AddNewEmployeeComponent implements OnInit {
    // private cookieService: CookieService, ::unused
     private newEmployeeService: NewEmployeeService,
     private scrolltopservice: ScrollTopService,
+    private router: Router,
+  //  private MessageService: messageService
+    // private TreeModule :TreeModule,
+    // private Tree:Tree,
+    // private TreeNode:TreeNode,
   ) {
     this.getClientList();
     this.getAllRoles();
@@ -90,31 +125,82 @@ export class AddNewEmployeeComponent implements OnInit {
     this.GetManagerlist();
     this.getAllEmployee();
     this.GetFLClist();
+    this.getSkills();
     this.saveButtonText = 'Save';
     this.dateTime.setDate(this.dateTime.getDate());
    }
 
-  //  EmployeeDetails = {
-  //   clientname: null,
-  //   firstname: null,
-  //   middlename: null,
-  //   lastname: null,
-  //   gender: null,
-  //   dob: null,
-  //   cellphone: null,
-  //   homephone: null,
-  //   primaryemail: null,
-  //   secondaryemail: null,
-  //   address: null,
-  //   country: null,
-  //   state: null,
-  //   city: null,
-  //   zipcode: null,
-  //   username: null,
-  //   password: null,
-  //   userrole: null,
-  //   hourlylabourrate: null
-  // };
+   ngOnInit() {
+    this.saveButtonText = 'Save';
+    this.clear = 'Clear';
+    this.chkIsActive = true;
+    this.newEmployeeResources = MastersResource.getResources().en.addnewemployee;
+    this.globalResource = GlobalResources.getResources().en;
+    this.loaderService.display(false);
+    this.appComponentData.setTitle('Employee');
+    this._cookieService = this.appCommonService.getUserProfile();
+    this.constantusrRole=  AppConstants.getUserRoles;
+    // new product type form defination(reactive form)
+  this.newEmployeeForm = this.fb.group({
+    'clientname': new FormControl(null, Validators.required),
+    'firstname': new FormControl(null, Validators.required),
+    'middlename': new FormControl(null),
+    'lastname': new FormControl(null, Validators.required),
+    'gender': new FormControl(null),
+    'dob': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
+    'hiredate': new FormControl(null, Validators.compose([ Validators.required,Validators.maxLength(15)])),
+    'terminationdate': new FormControl(null),
+    'cellphone': new FormControl(null, Validators.compose([ Validators.maxLength(15)])),
+    'homephone': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
+    'primaryemail': new FormControl(null,{validators: [
+      Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")], updateOn: 'blur'}),
+      'secondaryemail': new FormControl(null,{validators: [
+        Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")], updateOn: 'blur'}),
+  
+    'address': new FormControl(null, Validators.compose([ Validators.maxLength(50)])),
+    'country': new FormControl(null, Validators.compose([Validators.maxLength(13)])),
+    'state': new FormControl(null, Validators.compose([ Validators.maxLength(13)])),
+    'city': new FormControl(null, Validators.compose([ Validators.maxLength(13)])),
+    'zipcode': new FormControl(null, Validators.compose([ Validators.maxLength(9)])),
+    'empusername': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(20)])),
+    'emppassword': new FormControl(null, Validators.compose([Validators.minLength(6), Validators.maxLength(20)])),
+    'userrole': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
+    'hourlylabourrate': new FormControl(0, Validators.compose([ Validators.maxLength(13)])),
+    'chkIsActive': new FormControl(null),
+    'Managerlist': new FormControl(null),
+    'flclist':new FormControl(null),
+    'skills':new FormControl(null),
+  });
+  // const managerdata = this.newEmployeeForm.get('Managerlist');
+  const clientname = this.newEmployeeForm.controls['clientname'];
+  clientname.patchValue(Number(this._cookieService.ClientId));
+  // this.sampleData = [
+  //   { ClientId:4, Id:62, IsParent:true, label:"Planting", Num:1,parentId:0 },
+   
+  //   { ClientId:4, Id:65, IsParent:true, label:"Harvesting", Num:4,parentId:0 },
+ 
+  // ];
+  // this.sampleDataChild = [
+  //   { ClientId:4, Id:1, IsParent:false, label:"good at plants selection", Num:2,parentId:62 },
+  //   { ClientId:4, Id:2, IsParent:false, label:"good at pestisides", Num:3,parentId:62 },
+  //   { ClientId:4, Id:3, IsParent:false, label:"good at xyz", Num:5,parentId:65 },
+  //   { ClientId:4, Id:4, IsParent:false, label:"good at zbc", Num:6,parentId:65 },
+  // ]
+  this.genders = [
+    { label: '-- Select --', value: null },
+    { label: 'Male', value: 'M' },
+    { label: 'Female', value: 'F' }
+  ];
+  const Country = this.newEmployeeForm.controls['country'];
+  Country.patchValue(31);
+  const state = this.newEmployeeForm.controls['state'];
+  state.patchValue(16);
+ 
+  //this.plotSkillData()
+  if (this.appCommonService.employeePageBackLink) {
+    this.appCommonService.employeePageBackLink = false;
+  }
+  }
 
   doOPenPanel() {
     this.collapsed = false;
@@ -122,6 +208,10 @@ export class AddNewEmployeeComponent implements OnInit {
   }
    // Save the form details
    onSubmit(value: any) {
+    // if (String(this.newEmployeeForm.value.country) != null) {
+    //   this.newEmployeeForm.controls['state'].setValidators(Validators.compose([Validators.required]));
+    //   this.newEmployeeForm.controls['city'].setValidators(Validators.compose([Validators.required]));
+    // }
     if (String(this.newEmployeeForm.value.firstname).trim().length === 0) {
       this.newEmployeeForm.controls['firstname'].setErrors({'whitespace': true});
       this.newEmployeeForm.value.firstname = null;
@@ -142,7 +232,10 @@ export class AddNewEmployeeComponent implements OnInit {
         }
       }
     }
-    const encryptedPwd = this.encode64(String(this.newEmployeeForm.value.emppassword).trim());
+    if(this.newEmployeeForm.value.emppassword != null){
+      var encryptedPwd = this.encode64(String(this.newEmployeeForm.value.emppassword).trim());
+    }
+   
     let newRoleDetailsForApi;
     newRoleDetailsForApi = {
       Employee: {
@@ -164,7 +257,7 @@ export class AddNewEmployeeComponent implements OnInit {
           CityId: this.newEmployeeForm.value.city,
           ZipCode: this.newEmployeeForm.value.zipcode,
           UserName: this.appCommonService.trimString(this.newEmployeeForm.value.empusername),
-          Password: encryptedPwd,
+          Password: encryptedPwd ? encryptedPwd : null ,
           PasswordText: this.appCommonService.trimString(this.newEmployeeForm.value.emppassword),
           UserRoleId: this.newEmployeeForm.value.userrole,
           UserRole: (this.roles.filter(x => x.value === this.newEmployeeForm.value.userrole))[0].label,
@@ -179,8 +272,15 @@ export class AddNewEmployeeComponent implements OnInit {
           ManagerId:this.newEmployeeForm.value.Managerlist,
           FLCId:this.newEmployeeForm.value.flclist,
 
-      }
+      },
+      SkillList:[]
     };
+    this.selectedSkillItems.forEach((element, index) => {
+      newRoleDetailsForApi.SkillList.push({
+        SkilId: element.SkillTaskTypeMapId,
+
+      });
+    });
     // this.NewProductTypeForm_copy = JSON.parse(JSON.stringify(Object.assign({}, this.newEmployeeForm.value)));
 
     // console.log(newRoleDetailsForApi);
@@ -195,6 +295,8 @@ export class AddNewEmployeeComponent implements OnInit {
             if (String(data[0].Result).toLocaleUpperCase() === 'SUCCESS') {
               this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
               detail: this.newEmployeeResources.newemployeesavedsuccess });
+              // this.newEmployeeForm.controls['state'].clearValidators()
+              // this.newEmployeeForm.controls['city'].clearValidators()
               this.NewEmployeeSave = data;
               this.resetForm();
               this.showTerminationDate = false;
@@ -255,8 +357,15 @@ export class AddNewEmployeeComponent implements OnInit {
           ActiveInactive: AllValues.ActiveInactiveFlag,
           // EditorType: 'Manager'
           EditorType: this._cookieService.UserRole
-      }
+      },
+      SkillList:[]
     };
+    this.selectedSkillItems.forEach((element, index) => {
+      newRoleDetailsForApi.SkillList.push({
+        SkilId: element.SkillTaskTypeMapId,
+
+      });
+    });
     // this.NewProductTypeForm_copy = JSON.parse(JSON.stringify(Object.assign({}, this.newEmployeeForm.value)));
 
     // console.log(newRoleDetailsForApi);
@@ -336,7 +445,8 @@ export class AddNewEmployeeComponent implements OnInit {
     this.newEmployeeService.getAllEmployeeList().subscribe(
       data => {
        if (data != 'No data found!') {
-          this.allEmployeeList = data;
+          this.allEmployeeList = data.Table;
+          this.allSkillslistforBelowList = data.Table1;
           this.paginationValues = AppConstants.getPaginationOptions;
           if (this.allEmployeeList.length > 20) {
             this.paginationValues[AppConstants.getPaginationOptions.length] = this.allEmployeeList.length;
@@ -360,7 +470,90 @@ export class AddNewEmployeeComponent implements OnInit {
       () => console.log('Get all Managerlist complete'));
   
 }
+getSkills(){
+  this.newEmployeeActionService.SkillslistForEmp().subscribe(data => {
+    if (data !== 'No Data found') {
+      this.displatSkillSet = true;
+      this.alltaskslist = data.Table,
+      this.allSkillslist = data.Table1
+      if(this.allSkillslist){
+         this.plotSkillData()
+      }
+     // this.Skilllist=this.dropdwonTransformService.transform(this.allSkillslist,'SkillName','SkillID');
+    }
+    else {
+      this.displatSkillSet = false;
+      this.Skilllist = [];
+      this.allSkillslist = [];
+    }
+  
+  },
 
+    error => { console.log(error); this.loaderService.display(false); },
+    () => console.log('GetAllSkillsList complete'));
+}
+
+plotSkillData(){
+  this.plottedSkillItems = [];
+  this.selectedSkillItems = [];
+  this.alltaskslist.forEach(element => {
+    const NewSkill: any = {};
+    NewSkill.id = element.TaskTypeID;
+    NewSkill.label = element.TaskTypeValue;
+    NewSkill.children = [];
+    //NewSkill.Num  = element.Num
+NewSkill.isParent = element.IsParent;
+NewSkill.ParentId = element.ParentId;
+NewSkill.SkillTaskTypeMapId = 0
+NewSkill.Selectable = true;
+if (element.IsParent === false || element.IsParent === "False" ) {
+  this.selectedSkillItems.push(NewSkill)
+}
+  
+    if(NewSkill.isParent === true || NewSkill.isParent === "True"){
+      this.plottedSkillItems.push(NewSkill)
+    }
+  });
+  this.allSkillslist.forEach(element => {
+    const NewSkillchild: any = {};
+    NewSkillchild.id = element.SkillTaskTypeMapId;
+    NewSkillchild.label = element.SkillName;
+    NewSkillchild.children = [];
+    NewSkillchild.SkillTaskTypeMapId  = element.SkillTaskTypeMapId
+    NewSkillchild.isParent = element.IsParent;
+    NewSkillchild.ParentId = element.ParentId;
+   NewSkillchild.selectable = true;
+    if (element.IsParent === false ||element.IsParent === "False") {
+      if (this.plottedSkillItems.length) {
+        this.plottedSkillItems.forEach(parent => {
+          if (parent.id === element.ParentId) {
+            parent.children.push(NewSkillchild);
+          } 
+        })
+     
+      }
+    }
+  })
+
+  this.files = this.plottedSkillItems;
+}
+
+
+OnUnSelectNode(e) {
+ 
+    if (e.node.selectable === false) {
+     // this.selectedmenuItems.push(e.node.parent);
+    }
+  
+}
+onNodeSelect(e){
+  if(e.node.selectable === true){
+    console.log(e)
+  }
+}
+// nodeSelect(event) {
+//   this.messageService.add({severity: 'info', summary: 'Node Selected', detail: event.node.label});
+// }
   decode64 (input) {
     let output = '';
     let chr1: any = '', chr2: any = '', chr3: any = '' ;
@@ -404,12 +597,19 @@ export class AddNewEmployeeComponent implements OnInit {
     // return output;
   }
   GetEmployeeOnEdit(EmpId) {
-    // this.newEmployeeService.GetAllEmployeeList().subscribe(
-      this.showMang = false;
-      this.showFlc = false;
-      this.showTextbox = false;
+    
+   this.resetForm();
+      // this.showMang = false;
+      // this.showFlc = false;
+      // this.showTextbox = false;
+      this.WhenToDisplayPWField = true;
+      var decryptedpwd
+       this.showPWbox = false;
       this.showTerminationDate = true;
+      const password = this.newEmployeeForm.controls['emppassword'];
+      password.clearValidators();
       const data = this.allEmployeeList.filter(x => x.EmpId === EmpId);
+      const data1 = this.allSkillslistforBelowList.filter(x => x.EmpId === EmpId)
        if (data !== 'No data found!') {
           this.empIdForUpdate = EmpId;
           this.getStateList();
@@ -417,10 +617,26 @@ export class AddNewEmployeeComponent implements OnInit {
 
           this.employeeOnEdit = data.filter(x => x.EmpId === EmpId);
           if( this.employeeOnEdit[0].FLCId != null){
-             this. showMang = true
-             this. showFlc = true
+            //  this. showMang = true
+            //  this. showFlc = true
           }
-           const decryptedpwd = this.decode64(this.employeeOnEdit[0].Password);
+          if( this.employeeOnEdit[0].ManagerId != null){
+            // this. showMang = true
+          
+         }
+         if( this.employeeOnEdit[0].Role === "Temp"){
+          this.selectedRole= "Temp"
+       }
+       else{
+         this.selectedRole=this.employeeOnEdit[0].Role
+       }
+       if(this.employeeOnEdit[0].Password != null){
+         decryptedpwd = this.decode64(this.employeeOnEdit[0].Password);
+         if(decryptedpwd.length >= 6){
+          password.patchValue(decryptedpwd);
+        }
+       }
+          
           const clientname = this.newEmployeeForm.controls['clientname'];
           const firstname = this.newEmployeeForm.controls['firstname'];
           const middlename = this.newEmployeeForm.controls['middlename'];
@@ -439,7 +655,7 @@ export class AddNewEmployeeComponent implements OnInit {
           const city = this.newEmployeeForm.controls['city'];
           const zipcode = this.newEmployeeForm.controls['zipcode'];
           const username = this.newEmployeeForm.controls['empusername'];
-          const password = this.newEmployeeForm.controls['emppassword'];
+         
           const userrole = this.newEmployeeForm.controls['userrole'];
           const managerlist = this.newEmployeeForm.controls['Managerlist'];
           const flclist = this.newEmployeeForm.controls['flclist'];
@@ -451,7 +667,10 @@ export class AddNewEmployeeComponent implements OnInit {
           middlename.patchValue(this.employeeOnEdit[0].MiddleName);
           lastname.patchValue(this.employeeOnEdit[0].LastName);
           gender.patchValue(this.employeeOnEdit[0].Gender);
-          dob.patchValue(new Date(this.employeeOnEdit[0].DOB));
+          if(this.employeeOnEdit[0].DOB != null){
+            dob.patchValue(new Date(this.employeeOnEdit[0].DOB));
+          }
+         
           hiredate.patchValue(new Date(this.employeeOnEdit[0].HireDate));
           if(this.employeeOnEdit[0].TerminationDate != null){
             terminationdate.patchValue(new Date(this.employeeOnEdit[0].TerminationDate));
@@ -466,7 +685,8 @@ export class AddNewEmployeeComponent implements OnInit {
           city.patchValue(this.employeeOnEdit[0].CityId);
           zipcode.patchValue(this.employeeOnEdit[0].ZipCode);
           username.patchValue(this.employeeOnEdit[0].Username);
-          password.patchValue(decryptedpwd);
+         
+        
           userrole.patchValue(this.employeeOnEdit[0].RoleId);
           managerlist.patchValue(this.employeeOnEdit[0].ManagerId);
           flclist.patchValue(this.employeeOnEdit[0].FLCId);
@@ -478,6 +698,101 @@ export class AddNewEmployeeComponent implements OnInit {
        } else {
         this.allEmployeeList = [];
        }
+       if(data1 !== 'No data found!'){
+      this.HoldingSelectedHeadings =[];
+          this.plottedSkillItems = [];
+           this.selectedSkillItems = [];
+           this.alltaskslist.forEach(element => {
+             const NewSkill: any = {};
+             NewSkill.id = element.TaskTypeID;
+             NewSkill.label = element.TaskTypeValue;
+             NewSkill.children = [];
+            // NewSkill.expandedIcon  = "far fa-minus-square",
+         NewSkill.isParent = element.IsParent;
+         NewSkill.ParentId = element.ParentId;
+         NewSkill.SkillTaskTypeMapId = 0
+         NewSkill.Selectable = true;
+         if (NewSkill.isParent === false || NewSkill.isParent === "False" ) {
+          this.selectedSkillItems.push(NewSkill)
+        }
+          
+           
+             if(NewSkill.isParent === true || NewSkill.isParent === "True"){
+               this.plottedSkillItems.push(NewSkill)
+               for(let j of data1){
+               if(j.TaskTypeId ===   NewSkill.id){
+                NewSkill.partialSelected= false
+                 this.HoldingSelectedHeadings.push(NewSkill)
+               }
+              }
+             }
+           });
+           this.allSkillslist.forEach(element => {
+             const NewSkillchild: any = {};
+             NewSkillchild.id = element.SkillTaskTypeMapId;
+             NewSkillchild.label = element.SkillName;
+             NewSkillchild.children = [];
+             NewSkillchild.SkillTaskTypeMapId  = element.SkillTaskTypeMapId
+             NewSkillchild.isParent = element.IsParent;
+             NewSkillchild.ParentId = element.ParentId;
+            NewSkillchild.selectable = true;
+             if (element.IsParent === false ||element.IsParent === "False") {
+               if (this.plottedSkillItems.length) {
+                 this.plottedSkillItems.forEach(parent => {
+                   if (parent.id === element.ParentId) {
+                     parent.children.push(NewSkillchild);
+                   } 
+                 })
+              
+               }
+             }
+             for(let i of data1){
+              if(i.SkillTaskTypeMapId === NewSkillchild.id){
+                // this.OnUnSelectNode(NewSkillchild)
+                NewSkillchild.partialSelected= false
+                this.selectedSkillItems.push(NewSkillchild)
+                
+                // this.minusEnable =true
+              }
+            }
+          
+           
+           })
+           for(let j of this.selectedSkillItems){
+            for(let k of this.plottedSkillItems) {
+              if(j.ParentId === k.id){
+                var count1 = this.selectedSkillItems.filter(ur=>ur.ParentId === j.ParentId)
+             var count2 = this.plottedSkillItems.filter(ur=>ur.id === k.id)
+             if( count2[0].children.length ===count1.length){
+              for(let circle of this.HoldingSelectedHeadings){
+                if(circle.id === count2[0].id){
+                  this.selectedSkillItems.push(circle)
+                }
+              }
+              }
+              else{
+               count2[0].partialSelected = true;
+               count2[0].selectable = true
+             }
+              }
+            } 
+        }
+        // if( count2[0].children.length ===count1.length){
+        //  for(let circle of this.HoldingSelectedHeadings){
+        //    if(circle.id === count2[0].id){
+        //      this.selectedSkillItems.push(circle)
+        //    }
+        //  }
+        //  }
+        //  else{
+        //   count2[0].partialSelected = true;
+        //   count2[0].selectable = true
+        // }
+           this.files = this.plottedSkillItems;
+         }
+        
+      
+       
        this.loaderService.display(false);
       this.scrolltopservice.setScrollTop();
   }
@@ -547,40 +862,32 @@ export class AddNewEmployeeComponent implements OnInit {
   isNumber(value) {return typeof value === 'number'; }
 
   resetAll() {
-    this.empIdForUpdate = 0;
+    // this.showFlc = false
+   
     this.saveButtonText = 'Save';
     this.clear = 'Clear';
     this.showTerminationDate = false;
     this.newEmployeeResources.pageheading = 'Add New Employee';
     this.resetForm();
-    this.showTextbox = true;
+    // this.showTextbox = true;
+    // this.showPWbox = true;
     this.states = null;
     this.cities = null;
     this.star = false;
   }
   resetForm() {
+    // this.showTextbox = true;
+    this.WhenToDisplayPWField = false;
+    this.showUpArrow = false;
+    this.visibility = false;
+    this.selectedSkillItems = []
+    this.empIdForUpdate = 0;
+     this.showPWbox = true;
+    this.selectedRole = ""
     this.newEmployeeForm.reset({ chkIsActive: true });
-    // this.EmployeeDetails = {
-    //   clientname: null,
-    //   firstname: null,
-    //   middlename: null,
-    //   lastname: null,
-    //   gender: null,
-    //   dob: null,
-    //   cellphone: null,
-    //   homephone: null,
-    //   primaryemail: null,
-    //   secondaryemail: null,
-    //   address: null,
-    //   country: null,
-    //   state: null,
-    //   city: null,
-    //   zipcode: null,
-    //   username: null,
-    //   password: null,
-    //   userrole: null,
-    //   hourlylabourrate: null
-    // };
+    // this.showFlc = false;
+    const password = this.newEmployeeForm.get('emppassword')
+    password.clearValidators();
     const clientname = this.newEmployeeForm.controls['clientname'];
     clientname.patchValue(Number(this._cookieService.ClientId));
     const Country = this.newEmployeeForm.controls['country'];
@@ -602,80 +909,62 @@ export class AddNewEmployeeComponent implements OnInit {
 
   Managerdrpdwnchng(event)
 {
-  this.showMang = false;
-  this.showFlc = false;
+  // this.showMang = false;
+  // this.showFlc = false;
+  //this.showTextbox = false;
   const selectedRole=this.roles.filter(ur=>ur.value==event.value);
   this.selectedRole=selectedRole[0].label;
 const managerdata = this.newEmployeeForm.get('Managerlist');
+const password = this.newEmployeeForm.get('emppassword')
+const flc = this.newEmployeeForm.get('flclist')
+this.newEmployeeForm.controls['flclist'].patchValue("") 
+this.newEmployeeForm.controls['Managerlist'].patchValue("")
+// if(this.selectedRole != 'Temp'){
+//   this.showTextbox = true;
+// }
+if(!this.WhenToDisplayPWField){
+  if(this.selectedRole != 'Temp'){
+    this.showPWbox = true
+   password.setValidators(Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)]));
+  }
+}
+if(this.WhenToDisplayPWField){
+  if(this.employeeOnEdit[0].Role === "Temp" &&  this.selectedRole != "Temp"){
+    this.showPWbox = true
+   password.setValidators(Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)]));
+  }
+}
 if(this.constantusrRole.Employee==this.selectedRole )
 {
+ 
+    // this.showPWbox = true;
   managerdata.setValidators(Validators.required);
-  this.showMang = true;
+ 
+  flc.clearValidators();
+  //flc.updateValueAndValidity();
+  // this.showMang = true;
   
 }
 else if(this.constantusrRole.Temp==this.selectedRole){
+  this.showPWbox = false
+  password.setValidators(Validators.compose([Validators.minLength(6), Validators.maxLength(20)]));
   managerdata.setValidators(Validators.required);
-  this.showFlc = true;
+  flc.setValidators(Validators.required);
+  //password.updateValueAndValidity();
+
+  // this.showFlc = true;
 }
 else{
   managerdata.clearValidators();
+  //password.clearValidators();
+  flc.clearValidators();
   }
   managerdata.updateValueAndValidity();
+  password.updateValueAndValidity();
+  flc.updateValueAndValidity();
 }
 
-  ngOnInit() {
-    this.saveButtonText = 'Save';
-    this.clear = 'Clear';
-    this.chkIsActive = true;
-    this.newEmployeeResources = MastersResource.getResources().en.addnewemployee;
-    this.globalResource = GlobalResources.getResources().en;
-    this.loaderService.display(false);
-    this.appComponentData.setTitle('Employee');
-    this._cookieService = this.appCommonService.getUserProfile();
-    this.constantusrRole=  AppConstants.getUserRoles;
-    this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
-    // new product type form defination(reactive form)
-  this.newEmployeeForm = this.fb.group({
-    'clientname': new FormControl(null, Validators.required),
-    'firstname': new FormControl(null, Validators.required),
-    'middlename': new FormControl(null),
-    'lastname': new FormControl(null, Validators.required),
-    'gender': new FormControl(null, Validators.required),
-    'dob': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
-    'hiredate': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(15)])),
-    'terminationdate': new FormControl(null),
-    'cellphone': new FormControl(null, Validators.compose([ Validators.maxLength(15)])),
-    'homephone': new FormControl(null, Validators.compose([Validators.maxLength(15)])),
-    'primaryemail': new FormControl(null),
-    'secondaryemail': new FormControl(null, Validators.compose([Validators.maxLength(30)])),
-    'address': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(50)])),
-    'country': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
-    'state': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
-    'city': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
-    'zipcode': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(9)])),
-    'empusername': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(20)])),
-    'emppassword': new FormControl(null, Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(20)])),
-    'userrole': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
-    'hourlylabourrate': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(13)])),
-    'chkIsActive': new FormControl(null),
-    'Managerlist': new FormControl(null),
-    'flclist':new FormControl(null),
-  });
-  this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
-  // const managerdata = this.newEmployeeForm.get('Managerlist');
-  const clientname = this.newEmployeeForm.controls['clientname'];
-  clientname.patchValue(Number(this._cookieService.ClientId));
-
-  this.genders = [
-    { label: '-- Select --', value: null },
-    { label: 'Male', value: 'M' },
-    { label: 'Female', value: 'F' }
-  ];
-  const Country = this.newEmployeeForm.controls['country'];
-  Country.patchValue(31);
-  const state = this.newEmployeeForm.controls['state'];
-  state.patchValue(16);
-  }
+ 
 
   
 
@@ -754,4 +1043,37 @@ getCityOnStateChange() {
     this.newUserInfo.role = null;
     this.newUserInfo.ShowAddUserRolePopup = true;
   }
+
+  public  togglepw(){
+    if(this.passwordShown){
+      this.passwordShown = false;
+      this.passwordType = 'text';
+      this.showeye = true
+      this.hideeye = false;
+    }
+    else{
+      this.passwordShown = true;
+      this.passwordType = 'password';
+      this.showeye = false
+      this.hideeye = true;
+    }
+    }
+
+    NavigateToSkillsPage(){
+      this.appCommonService.skillFormDetail = this.newEmployeeForm;
+      this.appCommonService.employeePageBackLink = true;
+      this.router.navigate(['../home/master/skills']);
+    }
+    showSkills(event: any){
+      if(this.visibility === true){
+        this.visibility = false;
+        this.showUpArrow = false
+      }
+      else{
+        this.visibility = true;
+        this.showUpArrow = true
+      }
+   
+console.log(event)
+    }
 }

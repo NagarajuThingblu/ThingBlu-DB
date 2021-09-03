@@ -156,7 +156,7 @@
       <p-table #dtSecList [value]="allsectionslist" sortMode="single" [responsive]="true" [paginator]="true"
     [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
     (onPage)="onPageChange($event)"
-    [globalFilterFields]="['FieldName','SectionName','StrainName','PlantsCount','IsLightDeprevation','Year']">
+    [globalFilterFields]="['FieldName','SectionName','StrainName','PlantsCount','Year','IsLightDeprevation']">
         <ng-template pTemplate="caption">
           <div style="text-align: right">
             <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
@@ -180,7 +180,7 @@
             </th>
             <th [pSortableColumn]="'IsLightDeprevation'">Light Dept <p-sortIcon [field]="'IsLightDeprevation'"></p-sortIcon>
             </th>
-            <th style="width:100px;">Action </th>
+            <th style="width:120px;">Action </th>
           </tr>
           <tr>
             <!-- <th>
@@ -210,7 +210,7 @@
             </th>
             <th>
               <input pInputText type="text" autocomplete="off"
-                (input)="dtLabelList.filter($event.target.value, 'IsLightDeprevation', 'contains')" class="clsControl">
+                (input)="dtSecList.filter($event.target.value, 'IsLightDeprevation', 'contains')" class="clsControl">
             </th>
           
             <th rowspan="2"></th>
@@ -227,13 +227,16 @@
             <td>{{section?.IsLightDeprevation }}</td>
             <td style="width:65px;">
               <span class="ui-column-title">edit</span>
-              <a href="#" [routerLink]="" (click)="getSectionOnEdit(section?.SectionId)">
+              <!-- <a href="#" [routerLink]="" (click)="getSectionOnEdit(section?.SectionId)"> -->
+                <a href="#" [routerLink]="" (click)="showTerminationReasonPopup(section)">
                 <span class="fa fa-edit"></span>
               </a>
               <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(section?.SectionId,section,1,0)">
                 <span class="fa fa-trash"></span>
               </a>
-            
+              <a href="#" [routerLink]="" (click)="showSectionDetails(section)">
+                <span class="fa fa-info-circle"></span>
+              </a>
               <div class="clsToggleButtonDiv">
                 <p-toggleButton [(ngModel)]="section.IsActive" onLabel="Active" offLabel="InActive"
                   [style]="{'width':'90px'}"

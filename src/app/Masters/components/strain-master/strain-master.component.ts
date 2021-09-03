@@ -43,6 +43,7 @@ export class StrainMasterComponent implements OnInit {
     newStrainDetails = {
       straintype: null,
       strain: null,
+      straincode:null,
       description: null,
       genetics: null,
       chkIsActive: 1
@@ -89,6 +90,7 @@ export class StrainMasterComponent implements OnInit {
       this.strainmasterForm = this.fb.group({
         'straintype': new FormControl(null, Validators.required),
         'genetics': new FormControl(null),
+        'straincode':new FormControl(null, Validators.required),
         'strain': new FormControl(null, [Validators.required, Validators.maxLength(50)]),
         'description': new FormControl(null),
         // 'thc': new FormControl(null, [Validators.required, Validators.maxLength(5)]),
@@ -130,6 +132,7 @@ export class StrainMasterComponent implements OnInit {
         strain: null,
         description: null,
         genetics: null,
+        straincode:null,
         chkIsActive: 1
       };
     }
@@ -158,6 +161,7 @@ export class StrainMasterComponent implements OnInit {
             StrainId: this.strainForUpdate,
             StrainTypeId: this.strainmasterForm.value.straintype,
             StrainName: this.appCommonService.trimString(this.strainmasterForm.value.strain),
+            StrainCode: this.appCommonService.trimString(this.strainmasterForm.value.straincode),
             Description: this.appCommonService.trimString(this.strainmasterForm.value.description),
             // THC: this.strainmasterForm.value.thc,
             // THCA: this.strainmasterForm.value.thca,
@@ -208,7 +212,14 @@ export class StrainMasterComponent implements OnInit {
                   detail: this.newStrainResources.straintypedeleted });
 
                     this.loaderService.display(false);
-                } else if (data === 'Failure') {
+                } 
+                else if (String(data[0].RESULTKEY) === 'Duplicate Strain Code') {
+
+                  this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+                  detail:"Strain Code already exists"});
+
+                    this.loaderService.display(false);
+                }else if (data === 'Failure') {
                   this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
                 } else if (data === 'Duplicate') {
                   this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.newStrainResources.strainalreadyexist });
@@ -274,6 +285,7 @@ export class StrainMasterComponent implements OnInit {
              const straintype = this.strainmasterForm.controls['straintype'];
              const genetics = this.strainmasterForm.controls['genetics'];
              const strain = this.strainmasterForm.controls['strain'];
+             const straincode = this.strainmasterForm.controls['straincode'];
              const description = this.strainmasterForm.controls['description'];
             //  const thc = this.strainmasterForm.controls['thc'];
             //  const cbd = this.strainmasterForm.controls['cbd'];
@@ -285,6 +297,7 @@ export class StrainMasterComponent implements OnInit {
               // straintype.patchValue(this.strainOnEdit[0].StrainTypeId);
               // this.getAllGenetics();
               strain.patchValue(this.strainOnEdit[0].StrainName);
+              straincode.patchValue(this.strainOnEdit[0].StrainCode)
               // genetics.patchValue(this.strainOnEdit[0].GeneticsId);
               // thc.patchValue(this.strainOnEdit[0].THC);
               // cbd.patchValue(this.strainOnEdit[0].CBD);

@@ -34,6 +34,13 @@ export class NewSectionDetailsActionService {
       // .do(data =>console.log('All : ' + JSON.stringify(data)))
      .map(data =>  data );
     }
+    updateTermination(newUpdateTerminationForApi: any) {
+      const url = 'api/Grower/UpdateTaskStatus';
+
+      return this.http.post(url, newUpdateTerminationForApi, this.headers)
+      // .do(data =>console.log('All : ' + JSON.stringify(data)))
+     .map(data =>  data );
+    }
 
     Getsectionlist()
     {
@@ -42,6 +49,45 @@ export class NewSectionDetailsActionService {
   params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
   return this.http.get(url,{params: params}).map(data=>data);
 
+    }
+
+    GetDetailsOnTaskType(taskid){
+      const url='api/Grower/GetFieldSectionDetails';
+  let params = new HttpParams();
+  params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
+  params=params.append('TaskTypeId',taskid);
+  return this.http.get(url,{params: params}).map(data=>data);
+    }
+    GetSectionDetails(SectionId, TaskName){
+      const url='api/Grower/GetTerminatedPlantCount';
+      let params = new HttpParams();
+      params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
+      params=params.append('SectionId',SectionId);
+      params=params.append('TaskTypeId',TaskName);
+      return this.http.get(url,{params: params}).map(data=>data);
+    
+    }
+    GetUpdatedTerminationList(sectionid)
+    {
+      const url='api/Grower/GetTerminatedPlantCount';
+  let params = new HttpParams();
+  params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
+  params=params.append('SectionId',sectionid);
+  return this.http.get(url,{params: params}).map(data=>data);
+
+    }
+    GetPhasesInfo(sectionid){
+      const url='api/Grower/GetSectionDetails';
+  let params = new HttpParams();
+  params=params.append('SectionId',sectionid);
+  return this.http.get(url,{params: params}).map(data=>data);
+    }
+    GetCompleteInfo(sectionid,TaskTypeId){
+      const url='api/Grower/GetTerminationDetails';
+  let params = new HttpParams();
+  params=params.append('SectionId',sectionid);
+  params=params.append('TaskTypeId',TaskTypeId);
+  return this.http.get(url,{params: params}).map(data=>data);
     }
     getFieldsInGrowers() {
   const url = 'api/Grower/GetFieldsSectionList';

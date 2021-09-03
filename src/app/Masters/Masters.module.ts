@@ -1,6 +1,8 @@
 import { AddNewSkewPopupComponent } from './components/add-new-skew-popup/add-new-skew-popup.component';
 
 import { NgModule } from '@angular/core';
+import {TreeModule} from 'primeng/tree';
+import {TreeNode} from 'primeng/api';
 import { SharedModule } from '../shared/shared.module';
 import { NewProductTypeComponent } from './components/new-product-type/new-product-type.component';
 import { NewProductTypeDetailsActionService } from '../task/services/new-product-type.service';
@@ -78,6 +80,10 @@ import { PlantTerminationReasonsComponent } from './components/plant-termination
 import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-material.component';
 import { ChemicalPurchaseComponent } from './components/chemical-purchase/chemical-purchase.component';
 import { ChemicalMasterPageComponent } from './components/chemical-master-page/chemical-master-page.component';
+import { UpdateTerminationreasonComponent } from './components/update-terminationreason/update-terminationreason.component';
+import { SectionDetailsComponent } from './components/section-details/section-details.component';
+import { LabelDetailsComponent } from './components/label-details/label-details.component';
+import { EmployeeSkillsetComponent } from './components/employee-skillset/employee-skillset.component';
 
 import { MastersRoutingModule } from './Masters.routing';
 
@@ -125,12 +131,18 @@ import { MastersRoutingModule } from './Masters.routing';
     PlantTerminationReasonsComponent,
     AddRawMaterialComponent,
     ChemicalPurchaseComponent,
-    ChemicalMasterPageComponent
+    ChemicalMasterPageComponent,
+    UpdateTerminationreasonComponent,
+    SectionDetailsComponent,
+    LabelDetailsComponent,
+    EmployeeSkillsetComponent
    
   ],
   imports: [
     SharedModule,
-    MastersRoutingModule
+    MastersRoutingModule,
+    TreeModule,
+  
   ],
   providers: [
     NewProductTypeDetailsActionService,

@@ -29,7 +29,7 @@ import {HttpModule} from '@angular/http';
 // import { LotModule } from './lot/lot.module';
 import { LoaderService } from './shared/services/loader.service';
 // import { MastersModule } from './Masters/Masters.module';
-
+import {managerdashboardService} from './dashboard/services/managerdashboard.service'
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import { NgIdleModule } from '@ng-idle/core';
 import { MsalService } from './azureb2c/msal.service';
@@ -89,6 +89,7 @@ import { promise } from 'protractor';
     MsalService,
     ResetPasswordMsalService,
     AppLoadService,
+    managerdashboardService,
     AppLoadFOrgotPasswordService,
     // { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppLoadService], multi: true },
     // { provide: APP_INITIALIZER, useFactory: init_app_resetpassword, deps: [AppLoadFOrgotPasswordService], multi: true }

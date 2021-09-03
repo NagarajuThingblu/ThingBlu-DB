@@ -101,17 +101,47 @@
   </div>
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
-      <label for="employeeList">Assigned To<span class="star">*</span></label>:
-      <p-multiSelect #checkedItems
+      <label for="skills">Skills<span class="star">*</span></label>:
+      <p-dropdown #checkedItems
       [filter] ="true"
-      [options]="employees"
+      [options]="skills"
+      (onChange)="onSkillsSelect($event)"
       placeholder="-- Select --"
-      (onChange)="OnSelectingEmployees($event, checkedItems)"
-      formControlName="employeeList"
+      formControlName="skills"
       class="clsControl"
-      id="employeeList"
-      name="employeeList">
-      </p-multiSelect>
+      id="skills"
+      name="skills">
+    </p-dropdown>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="employeeList">Assigned To<span class="star">*</span></label>:
+      <div>
+
+              
+        <div class="input-container">
+          <input pInputText
+          id="myTextBox"
+          autocomplete="off"
+          class="clsControl"
+          [value]="employeeNameToBeDisplayedOnDropdown"
+          placeholder="--Select--"
+         (click)="showEmps($event)"
+        />
+        <span id="myTextBox" class="viewer2" *ngIf="!showUpArrow" (click)="showEmps($event)">
+          <i  id="myTextBox" class="fa fa-caret-down" ria-hidden="true"  (click)="showEmps($event)"></i>
+        </span>
+        <span id="myTextBox" class="viewer2" *ngIf="showUpArrow" (click)="showEmps($event)">
+          <i  id="myTextBox" class="fa fa-caret-up" ria-hidden="true"  (click)="showEmps($event)"></i>
+        </span>
+      </div>
+      <p-tree [value]="files"  [ngClass]="!visibility?'myskillsdropdown':'showmyskillsdropdown'" styleClass="clsRoleAccessTree" selectionMode="checkbox"  [(selection)]="selectedSkillItems"
+      [propagateSelectionUp]="false" (onNodeSelect)="OnSelectingEmployees($event)" (onNodeUnselect) = "OnUnSelectNode($event)" [propagateSelectionDown]="true"></p-tree>
+       
+      
+      </div>
+     
     </div>
   </div>
 
@@ -312,7 +342,7 @@
           {{TaskModel?.TerminatedPlantCnt }}
       </div>
     </div>
-    <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess" >
+    <!-- <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&TaskModel?.TaskStatus !== taskStatus.InProcess" >
       <div class="paddingRL">
           <label>
             <strong>{{ globalResource.RevCompletedPlantCnt }}: </strong>
@@ -320,8 +350,8 @@
         
             {{TaskModel?.RevCompletedPlantCnt }}
         </div>
-      </div>
-    <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
+      </div> -->
+    <!-- <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
       <div class="paddingRL">
           <label>
             <strong>{{ globalResource.terminatedreason }}: </strong>
@@ -329,7 +359,7 @@
         
             {{TaskModel?.TerminationReason }}
         </div>
-      </div>
+      </div> -->
 <div class="ui-g-12 ui-md-6" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''" >
   <div class="paddingRL">
       <label>
@@ -398,12 +428,12 @@
          </div>
          
       </div>
-      <div class="ui-g-12 ui-md-6">
+      <!-- <div class="ui-g-12 ui-md-6">
         <div class="paddingRL">
           <label for="completedPC">Completed Plant Count</label>:
         </div>
-      </div>
-      <div class="ui-g-12 ui-md-6">
+      </div> -->
+      <!-- <div class="ui-g-12 ui-md-6">
         <div>
           <input type="number" 
           pInputText 
@@ -415,7 +445,7 @@
           class="clsControl"   
         />
         </div>
-      </div>
+      </div> -->
 
       <!-- <div class="ui-g-12 ui-md-6">
         <div class="paddingRL">
@@ -435,12 +465,12 @@
         />
         </div>
       </div> -->
-      <div class="ui-g-12 ui-md-6">
+      <!-- <div class="ui-g-12 ui-md-6">
         <div class="paddingRL">
           <label for="terminatedtedPC">Terminated Plant Count</label>:
         </div>
-      </div>
-      <div class="ui-g-12 ui-md-6">
+      </div> -->
+      <!-- <div class="ui-g-12 ui-md-6">
         <div>
           <input type="number" 
           pInputText 
@@ -452,22 +482,15 @@
           class="clsControl"   
         />
         </div>
-      </div>
-      <div class="ui-g-12 ui-md-6">
+      </div> -->
+      <!-- <div class="ui-g-12 ui-md-6">
         <div class="paddingRL">
           <label for="terminationReason">Termination Reason</label>:
         </div>
-      </div>
-      <div class="ui-g-12 ui-md-6">
+      </div> -->
+      <!-- <div class="ui-g-12 ui-md-6">
         <div>
-          <!-- <input type="text" 
-          pInputText 
-          autocomplete="off"
-          id="terminationReason" 
-          name="terminationReason" 
-          formControlName="terminationReason"              
-          class="clsControl"   
-        /> -->
+         
 
         <p-dropdown
         [options]="TerminatioReasons"
@@ -478,7 +501,7 @@
         name="terminationReason">
       </p-dropdown>
         </div>
-      </div>
+      </div> -->
       <div class="ui-g-12 ui-md-6">
         <div class="paddingRL">
           <label for="comment">Comment</label>:
@@ -486,7 +509,7 @@
       </div>
       <div class="ui-g-12 ui-md-6">
         <div>
-          <input type="text" 
+          <textarea type="text" 
           pInputText 
           autocomplete="off"
           id="comment" 
@@ -494,7 +517,7 @@
           [(ngModel)]="taskCompletionModel.miscComment"
           formControlName="comment"              
           class="clsControl"   
-        />
+        ></textarea>
         </div>
       </div>
     </div>
@@ -509,7 +532,7 @@
 <p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
   <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-      <div class="ui-grid-row">
+      <!-- <div class="ui-grid-row">
         <div class="ui-grid-col-6">
           <label for="completedPC">Completed Plant Count:</label>
         </div> 
@@ -527,13 +550,13 @@
           />
           </div>
         </div> 
-        </div>
-        <div class="ui-g-12 ui-md-6">
+        </div> -->
+        <!-- <div class="ui-g-12 ui-md-6">
           <div>
             <label for="terminatedtedPC">Terminated Plant Count</label>:
           </div>
-        </div>
-        <div class="ui-g-12 ui-md-6">
+        </div> -->
+        <!-- <div class="ui-g-12 ui-md-6">
           <div>
             <input type="number" 
             pInputText 
@@ -545,13 +568,13 @@
             class="clsControl"   
           />
           </div>
-        </div>
-        <div class="ui-g-12 ui-md-6">
+        </div> -->
+        <!-- <div class="ui-g-12 ui-md-6">
           <div>
             <label for="terminationReason">Termination Reason</label>:
           </div>
-        </div>
-        <div class="ui-g-12 ui-md-6">
+        </div> -->
+        <!-- <div class="ui-g-12 ui-md-6">
           <div>
             <p-dropdown
             [options]="TerminatioReasons"
@@ -562,7 +585,7 @@
             name="terminationReason">
           </p-dropdown>
           </div>
-        </div>
+        </div> -->
         <div class="ui-grid-row">
           <div class="ui-grid-col-4">
             {{ assignTaskResources.actualhrs }}:

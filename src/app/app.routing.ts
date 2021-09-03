@@ -1,4 +1,5 @@
 import { MsalComponent } from './msal.component';
+import {NgModule} from '@angular/core';
 import { DefaultComponent } from './default/default.component';
 // import { AddEmployeeComponent } from './employee/components/add-employee/add-employee.component';
 // import { PrerollReportComponent } from './reports/preroll-report/preroll-report.component';
@@ -56,6 +57,7 @@ import { RoleGuard } from './guards/role.guard';
 // import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { ResetPasswordComponent } from './azureb2c/reset-password/reset-password.component';
 import { AppSignupComponent } from './azureb2c/app-signup/app-signup.component';
+import { CustomPreloadingStrategyService } from './task/services/CustomPreloadingStrategyService';
 // import { InviteNewEmployeeComponent } from './employee/components/invite-new-employee/invite-new-employee.component';
 // import { EmployeesComponent } from './employee/components/employees/employees.component';
 // import { IdentifyOrderComponent } from './order/components/order-automation/identify-order/identify-order.component';
@@ -79,6 +81,10 @@ import { AppSignupComponent } from './azureb2c/app-signup/app-signup.component';
 // import { OrderformComponent } from './order/components/orderform/orderform.component';
 // import { ChemicalPurchaseComponent } from './Masters/components/chemical-purchase/chemical-purchase.component';
 // import { ChemicalMasterPageComponent } from './Masters/components/chemical-master-page/chemical-master-page.component';
+// import { UpdateTerminationreasonComponent } from './Masters/components/update-terminationreason/update-terminationreason.component';
+// import { SectionDetailsComponent } from './Masters/components/section-details/section-details.component';
+// import { LabelDetailsComponent } from './Masters/components/label-details/label-details.component';
+
 const appRoutes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   // { path: 'login', component: LoginComponent },
@@ -171,9 +177,10 @@ const appRoutes: Routes = [
       // {path:'chemicalType', component:ChemicalMasterPageComponent,canActivate:[AuthGuard,RoleGuard]},
       // {path:'help', component:HelpComponent},
       // {path:'orderform', component:OrderformComponent},
-      // {path:'planting', component:PlantingComponent}
-     // {path:'harvesting',component:HarvestingComponent}
-
+      // { path: 'taskupdate', component: UpdateTerminationreasonComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'infoofsection', component: SectionDetailsComponent, canActivate: [AuthGuard, RoleGuard] },
+      // { path: 'sectionsMergeinfo', component: LabelDetailsComponent, canActivate: [AuthGuard, RoleGuard] },
+    
 
      {
       path:'order',
@@ -181,6 +188,7 @@ const appRoutes: Routes = [
     },
      {
       path:'task',
+      data: {preload: true},
       loadChildren:'./task/task.module#TaskModule'
     },
     {
@@ -206,5 +214,14 @@ const appRoutes: Routes = [
     ]
   }
 ];
+//export const routing = RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload'});//No Pre-loading
+ export const routing = RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload', preloadingStrategy: CustomPreloadingStrategyService });//pre-loading all modules
+//export const routing = RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload',preloadingStrategy:CustomPreloadingStrategyService });//pre-loading all modules
 
-export const routing = RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload',preloadingStrategy:PreloadAllModules });
+// @NgModule({
+//   imports: [RouterModule.forRoot(appRoutes, {onSameUrlNavigation: 'reload', preloadingStrategy: CustomPreloadingStrategyService})],
+//   exports: [RouterModule]
+// })
+export class AppRoutingModule {
+
+}

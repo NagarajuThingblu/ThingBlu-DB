@@ -11,7 +11,7 @@
         <!--Main New Product Entry Form-->
         <form
           [formGroup]="newEmployeeForm"
-          (ngSubmit)="onSubmit(newEmployeeForm.value)">
+          (ngSubmit)="onSubmit(newEmployeeForm.value)" autocomplete="off">
               <div class="ui-g ">
                 <!--Client Name -->
                   <!-- <div class="ui-g-12 ui-md-6">
@@ -38,7 +38,58 @@
                       </div>
                 </div> -->
                 <!--End Client Name -->
+     <!-- User Role -->
+     <div class="ui-g-12 ui-md-6">
+      <div class="paddingRL">
+        <label for="userrole">{{ newEmployeeResources.userrole }}<span class="star">*</span></label>:
 
+        <p-dropdown
+          [filter] ="true"
+          id="userrole"
+          formControlName="userrole"
+          [options]="roles"
+          placeholder="-- Select --"
+          [autoWidth]="false"
+          (onChange)="Managerdrpdwnchng($event)"
+          class="clsControl"
+          name="userrole">
+        </p-dropdown>
+
+          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+            *ngIf="!newEmployeeForm.controls['userrole'].valid&&newEmployeeForm.controls['userrole'].dirty">
+
+              {{ newEmployeeResources.userrolerequired }}
+          </div>
+
+          <p-button  type="button" class="links" icon="fa fa-plus" label="{{ newEmployeeResources.adduserrole}}" id="btn_userroleshow" (click)="showUserRolePopup()" name="btnshow" ></p-button>
+        </div>
+      </div>
+    <!--End User Role-->
+    <div class="ui-g-12 ui-md-6" style="visibility:hidden;">
+      <div class="paddingRL">
+        <label for="userrole">{{ newEmployeeResources.userrole }}<span class="star">*</span></label>:
+
+        <p-dropdown
+          [filter] ="true"
+          id="userrole"
+          formControlName="userrole"
+          [options]="roles"
+          placeholder="-- Select --"
+          [autoWidth]="false"
+          (onChange)="Managerdrpdwnchng($event)"
+          class="clsControl"
+          name="userrole">
+        </p-dropdown>
+
+          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+            *ngIf="!newEmployeeForm.controls['userrole'].valid&&newEmployeeForm.controls['userrole'].dirty">
+
+              {{ newEmployeeResources.userrolerequired }}
+          </div>
+
+          <p-button  type="button" class="links" icon="fa fa-plus" label="{{ newEmployeeResources.adduserrole}}" id="btn_userroleshow" (click)="showUserRolePopup()" name="btnshow" ></p-button>
+        </div>
+      </div>
                 <!--Employee First Name -->
                 <div class="ui-g-12 ui-md-6">
                   <div class="paddingRL">
@@ -147,7 +198,7 @@
                 <!-- Gender  -->
                 <div class="ui-g-12 ui-md-6">
                     <div class="paddingRL">
-                      <label for="gender">{{ newEmployeeResources.gender }}<span class="star">*</span>:
+                      <label for="gender">{{ newEmployeeResources.gender }}<span class="star"></span>:
                       </label>
                       <p-dropdown
                         [filter] ="true"
@@ -170,11 +221,11 @@
                 <!--End Gender  -->
 
                 <!--DOB -->
-                <div class="ui-g-12 ui-md-6">
+                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp !=this.selectedRole">
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="dob">
-                        {{ newEmployeeResources.dob}}<span class="star">*</span>:
+                        {{ newEmployeeResources.dob}}<span class="star"></span>:
                       </label>
 
                       <p-calendar                                                            
@@ -187,18 +238,10 @@
                        [monthNavigator]="true"
                        [yearNavigator]="true" 
                        yearRange="1800:4030"
-                       required
                        [maxDate]="dateTime"
                       >
                       </p-calendar>
 
-                      <div
-                      class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                      *ngIf="!newEmployeeForm.controls['dob'].valid&&newEmployeeForm.controls['dob'].dirty">
-                      <span *ngIf="newEmployeeForm.controls['dob'].errors['required']">
-                          {{ newEmployeeResources.dobrequired }}
-                      </span>                      
-                  </div>
                     </div>
                   </div>
                 </div>
@@ -209,7 +252,7 @@
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="cellphone">
-                        {{ newEmployeeResources.cellphone}}<span class="star">*</span>:
+                        {{ newEmployeeResources.cellphone}}<span class="star"></span>:
                       </label>
 
                       <input pInputText
@@ -276,7 +319,7 @@
                 <!--End Home Phone -->
 
                 <!--Primary Email -->
-                <div class="ui-g-12 ui-md-6">
+                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp !=this.selectedRole">
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="primaryemail">
@@ -291,15 +334,15 @@
                         class="clsControl"
                         formControlName="primaryemail"
                         placeholder="Enter Primary Email"
-                        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                       
                       />
 
                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['primaryemail'].valid&&newEmployeeForm.controls['primaryemail'].dirty">
 
-                          <span *ngIf="newEmployeeForm.controls['primaryemail'].errors['required']">
+                          <!-- <span *ngIf="newEmployeeForm.controls['primaryemail'].errors['required']">
                             {{newEmployeeResources.primaryemailrequired}}
-                          </span>
+                          </span> -->
                           <span *ngIf="newEmployeeForm.controls['primaryemail'].hasError('duplicateemail')">
                               {{newEmployeeResources.duplicateemail}}
                           </span>
@@ -317,7 +360,7 @@
                 </div>
                 <!--End Primary Email -->
                 <!--Secondary Email -->
-                <div class="ui-g-12 ui-md-6">
+                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp !=this.selectedRole">
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="secondaryemail">
@@ -332,14 +375,14 @@
                         class="clsControl"
                         formControlName="secondaryemail"
                         placeholder="Enter Secondary Email"
-                        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                       
                       />
 
                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['secondaryemail'].valid&&newEmployeeForm.controls['secondaryemail'].dirty">
-                          <span *ngIf="newEmployeeForm.controls['secondaryemail'].errors['maxlength']">
+                          <!-- <span *ngIf="newEmployeeForm.controls['secondaryemail'].errors['maxlength']">
                             {{newEmployeeResources.packageUnitLength}}
-                          </span>
+                          </span> -->
                           <span *ngIf="newEmployeeForm.controls['secondaryemail'].hasError('zeronotallowed')">
                             {{ globalResource.zeronotallow }}
                           </span>
@@ -363,7 +406,7 @@
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="address">
-                        {{ newEmployeeResources.address}}<span class="star">*</span>:
+                        {{ newEmployeeResources.address}}<span class="star"></span>:
                       </label>
 
                       <textarea pInputTextarea
@@ -376,15 +419,15 @@
                         formControlName="address"
                       ></textarea>
 
-                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['address'].valid&&newEmployeeForm.controls['address'].dirty">
 
                           <span *ngIf="newEmployeeForm.controls['address'].errors['required']">
                             {{newEmployeeResources.addressrequired}}
                           </span>
-                          <!-- <span *ngIf="newEmployeeForm.controls['address'].errors['maxlength']">{{newEmployeeResources.packageUnitLength}}</span>
-                          <span *ngIf="newEmployeeForm.controls['address'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span> -->
-                        </div>
+                          <span *ngIf="newEmployeeForm.controls['address'].errors['maxlength']">{{newEmployeeResources.packageUnitLength}}</span>
+                          <span *ngIf="newEmployeeForm.controls['address'].hasError('zeronotallowed')">{{ globalResource.zeronotallow }}</span>
+                        </div> -->
                     </div>
                   </div>
                 </div>
@@ -393,7 +436,7 @@
                 <!-- Country  -->
                   <div class="ui-g-12 ui-md-6">
                     <div class="paddingRL">
-                      <label for="country">{{ newEmployeeResources.country }}<span class="star">*</span></label>:
+                      <label for="country">{{ newEmployeeResources.country }}<span class="star"></span></label>:
 
                       <p-dropdown
                         [filter] ="true"
@@ -407,10 +450,10 @@
                         name="country">
                       </p-dropdown>
 
-                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['country'].valid&&newEmployeeForm.controls['country'].dirty">
                           {{ newEmployeeResources.countryrequired }}
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 <!--End  Country  -->
@@ -418,7 +461,7 @@
                 <!-- State -->
                 <div class="ui-g-12 ui-md-6">
                   <div class="paddingRL">
-                    <label for="state">{{ newEmployeeResources.state }}<span class="star">*</span></label>:
+                    <label for="state">{{ newEmployeeResources.state }}<span class="star"></span></label>:
 
                     <p-dropdown
                       [filter] ="true"
@@ -432,20 +475,21 @@
                       name="state">
                     </p-dropdown>
 
-                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['state'].valid&&newEmployeeForm.controls['state'].dirty">
                           {{ newEmployeeResources.staterequired }}
-                      </div>
+                      </div> -->
                   </div>
                 </div>
                 <!-- End State -->
                 <!-- City -->
                 <div class="ui-g-12 ui-md-6">
                   <div class="paddingRL">
-                    <label for="city">{{ newEmployeeResources.city }}<span class="star">*</span></label>:
+                    <label for="city">{{ newEmployeeResources.city }}<span class="star"></span></label>:
 
                     <p-dropdown
                       [filter] ="true"
+                     
                       id="city"
                       formControlName="city"
                       [options]="cities"
@@ -455,10 +499,10 @@
                       name="city">
                     </p-dropdown>
 
-                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                     *ngIf="!newEmployeeForm.controls['city'].valid&&newEmployeeForm.controls['city'].dirty">
                       {{ newEmployeeResources.cityrequired }}
-                  </div>
+                  </div> -->
                     </div>
                   </div>
                   <!-- End City -->
@@ -467,7 +511,7 @@
                     <div class="paddingRL">
                       <div class="le-su-12">
                         <label for="zipcode">
-                          {{ newEmployeeResources.zipcode}}<span class="star">*</span>:
+                          {{ newEmployeeResources.zipcode}}<span class="star"></span>:
                         </label>
 
                         <input pInputText
@@ -481,19 +525,20 @@
                           maxlength="9"
                         />
 
-                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                           *ngIf="!newEmployeeForm.controls['zipcode'].valid&&newEmployeeForm.controls['zipcode'].dirty">
                           <span *ngIf="newEmployeeForm.controls['zipcode'].errors['required']">
                           {{ newEmployeeResources.zipcoderequired }}
                           </span>
                           <span *ngIf="newEmployeeForm.controls['zipcode'].errors['maxlength']">{{newEmployeeResources.zipcodeLength}}</span>
-                        </div>
+                        </div> -->
                       </div>
                   </div>
                 </div>
                 <!--End Zip Code -->
+                    
                 <!-- User Name -->
-                <div class="ui-g-12 ui-md-6" *ngIf="showTextbox === true">
+                <div class="ui-g-12 ui-md-6" >
                   <div class="paddingRL">
                       <div class="le-su-12">
                         <label for="empusername">
@@ -519,34 +564,51 @@
                             <span *ngIf="newEmployeeForm.controls['empusername'].hasError('duplicateusername')">
                                 {{newEmployeeResources.duplicateusername}}
                             </span>
-                            <!-- <span *ngIf="newEmployeeForm.controls['empusername'].errors['maxlength']">{{newEmployeeResources.packageItemQtyLength}}</span> -->
+                            <span *ngIf="newEmployeeForm.controls['empusername'].errors['maxlength']">Maximum 20 characters are allowed.</span>
                           </div>
                       </div>
                   </div>
                 </div>
                 <!-- End User Name -->
                 <!-- Password -->
-                <div class="ui-g-12 ui-md-6" *ngIf="showTextbox === true">
+                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp !=this.selectedRole && showPWbox === true" >
                   <div class="paddingRL">
                       <div class="le-su-12">
                         <label for="emppassword">
                           {{ newEmployeeResources.password}}<span class="star">*</span>:
                         </label>
 
-                        <input pInputText               
+                        <!-- <input pInputText               
                           autocomplete="new-password"
                           type="password"
                           class="clsControl"
                           placeholder="Enter Password"
                           formControlName="emppassword"
-                        />
+                        /> -->
 
+                        <div class="input-container">
+                          <input pInputText               
+                          autocomplete="new-password"
+                          [type]="passwordType"
+                          class="clsControl"
+                          placeholder="Enter Password"
+                          formControlName="emppassword"
+                        />
+                          <!-- class="clsControl" -->
+                          <span class="p-viewer2" *ngIf="showeye === true">
+                              <i class="fa fa-eye eyeicon"   ria-hidden="true" (click)="togglepw()">    </i>
+                          </span>
+                          <span class="p-viewer2" *ngIf="hideeye === true">
+                              <i class="fa fa-eye-slash eyeicon"  ria-hidden="true" (click)="togglepw()">                     </i>
+                          </span>
+                      </div>
+                        
                         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                           *ngIf="!newEmployeeForm.controls['emppassword'].valid&&newEmployeeForm.controls['emppassword'].dirty">
                           <span *ngIf="newEmployeeForm.controls['emppassword'].errors['required']">
                             {{newEmployeeResources.passwordrequired}}
                           </span>
-                            <!-- <span *ngIf="newEmployeeForm.controls['emppassword'].errors['pattern']">dfgdfg</span> -->
+                          
                           <span *ngIf="newEmployeeForm.controls['emppassword'].errors['minlength']">
                               {{newEmployeeResources.passwordMinLength}}
                           </span>
@@ -596,7 +658,7 @@
                 <!-- End Hire Date -->
 
                  <!-- Termination Date -->
-                 <div class="ui-g-12 ui-md-6" *ngIf = "showTerminationDate === true" >
+                 <div class="ui-g-12 ui-md-6" *ngIf = "showTerminationDate === true">
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="terminationdate">
@@ -613,7 +675,7 @@
                        [monthNavigator]="true"
                        [yearNavigator]="true" 
                        yearRange="2021:4030"
-                     
+                      
                       >
                       </p-calendar>
 
@@ -629,40 +691,14 @@
                 </div>
                 <!-- End Termination Date -->
 
-                <!-- User Role -->
-                <div class="ui-g-12 ui-md-6">
-                  <div class="paddingRL">
-                    <label for="userrole">{{ newEmployeeResources.userrole }}<span class="star">*</span></label>:
-
-                    <p-dropdown
-                      [filter] ="true"
-                      id="userrole"
-                      formControlName="userrole"
-                      [options]="roles"
-                      placeholder="-- Select --"
-                      [autoWidth]="false"
-                      (onChange)="Managerdrpdwnchng($event)"
-                      class="clsControl"
-                      name="userrole">
-                    </p-dropdown>
-
-                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                        *ngIf="!newEmployeeForm.controls['userrole'].valid&&newEmployeeForm.controls['userrole'].dirty">
-
-                          {{ newEmployeeResources.userrolerequired }}
-                      </div>
-
-                      <p-button  type="button" class="links" icon="fa fa-plus" label="{{ newEmployeeResources.adduserrole}}" id="btn_userroleshow" (click)="showUserRolePopup()" name="btnshow" ></p-button>
-                    </div>
-                  </div>
-                  <!-- End User Role -->
+           
 
                   <!-- Hourly labour Rate -->
                 <div class="ui-g-12 ui-md-6">
                   <div class="paddingRL">
                       <div class="le-su-12">
                         <label for="hourlylabourrate">
-                          {{ newEmployeeResources.hourlylabourrate}}<span class="star">*</span>:
+                          {{ newEmployeeResources.hourlylabourrate}}<span class="star"></span>:
                         </label>
 
                         <input pInputText
@@ -675,35 +711,89 @@
                           formControlName="hourlylabourrate"
                         />
 
-                        <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                        <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['hourlylabourrate'].valid&&newEmployeeForm.controls['hourlylabourrate'].dirty">
 
                           {{ newEmployeeResources.hourlylabourraterequired }}
-                      </div>
+                      </div> -->
                       </div>
                   </div>
                 </div>
                 <!-- End Hourly labour Rate -->
+
+                  <!-- End User Role -->
+        <!-- Skills -->
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <div class="le-su-12">
+              <label for="skills">
+                Skills<span class="star"></span>:
+              </label>
+              <p-button class="toplinks" type="button" icon="fa fa-plus" label="Add Skills" id="btn_geneticshow" (click)="NavigateToSkillsPage()"  name="btnviewGenetics" ></p-button>
+              
+              <div>
+
+              
+              <div class="input-container">
+                <input pInputText
+                id="myTextBox"
+                class="clsControl"
+                autocomplete="off"
+                placeholder="- - Select - -"
+               (click)="showSkills($event)"
+              />
+              <span class="viewer2" *ngIf="!showUpArrow">
+                <i id="myTextBox" class="fa fa-caret-down" ria-hidden="true"  (click)="showSkills($event)"></i>
+              </span>
+              <span class="viewer2" *ngIf="showUpArrow">
+                <i id="myTextBox" class="fa fa-caret-up" ria-hidden="true"  (click)="showSkills($event)"></i>
+              </span>
+            </div>
+             
+             
+              <p-tree  [value]="files" [ngClass]="!visibility?'myskillsdropdown':'showmyskillsdropdown'" styleClass="clsRoleAccessTree " selectionMode="checkbox"  [(selection)]="selectedSkillItems"
+ (onNodeUnselect) = "OnUnSelectNode($event)" (onNodeSelect)="onNodeSelect($event)" ></p-tree>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--End Skills -->
                 <!--Manager List-->
-                <div class="ui-g-12 ui-md-6">
+                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole">
                   <div class="paddingRL">
                     <div class="le-su-12">
-                      <label for="managerlist" class="towlable fwLabelBold">ManagerList</label>
+                      <label for="managerlist" class="towlable fwLabelBold">ManagerList<span class="star">*</span></label>
                       <p-dropdown [filter]="true" id="managerlist" [options]="Managerlist" placeholder="-- Select --"
                       [autoWidth]="false" [tabindex]="10" class="clsControl" name="managerlist" formControlName="Managerlist">
                     </p-dropdown>
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!newEmployeeForm.controls['Managerlist'].valid&&newEmployeeForm.controls['Managerlist'].dirty">
+                    <span *ngIf="newEmployeeForm.controls['Managerlist'].errors['required']">
+                     Manager Required
+                    </span>
+                      <!-- <span *ngIf="newEmployeeForm.controls['emppassword'].errors['pattern']">dfgdfg</span> -->
+                   
+                  </div>
                     </div>
                   </div>
                 </div>
                 <!--End Manager List-->
                  <!--FLC List-->
-                 <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp==this.selectedRole || showFlc === true">
+                 <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp==this.selectedRole" >
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="flclist" class="towlable fwLabelBold">FLC List<span class="star"> *</span></label>
                       <p-dropdown [filter]="true" id="flclist" [options]="flclist" placeholder="-- Select --"
                       [autoWidth]="false" [tabindex]="10" class="clsControl" name="flclist" formControlName="flclist">
                     </p-dropdown>
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!newEmployeeForm.controls['flclist'].valid&&newEmployeeForm.controls['flclist'].dirty">
+                    <span *ngIf="newEmployeeForm.controls['flclist'].errors['required']">
+                     Flc Required
+                    </span>
+                      <!-- <span *ngIf="newEmployeeForm.controls['emppassword'].errors['pattern']">dfgdfg</span> -->
+                   
+                  </div>
                     </div>
                   </div>
                  </div>
@@ -740,6 +830,7 @@
 (EmployeeDeleteEvent)="EmployeeDeleteEvent($event)"
 (EmployeeDeactivateEvent)="EmployeeDeleteEvent($event)"
 [allEmployeeList]="allEmployeeList"
+[allSkillsList]="allSkillslistforBelowList"
 [PaginationValues]="paginationValues"></app-employee-listing>
 
 

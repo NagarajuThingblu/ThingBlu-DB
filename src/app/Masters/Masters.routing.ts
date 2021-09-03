@@ -31,6 +31,10 @@ import { TaskSettingComponent } from "./components/task-setting/task-setting.com
 import { TpProcessorComponent } from "./components/tp-processor/tp-processor.component";
 import { TppPackageTypeMappingMasterComponent } from "./components/tpp-package-type-mapping-master/tpp-package-type-mapping-master.component";
 import { ZonesComponent } from "./components/zones/zones.component";
+import { EmployeeSkillsetComponent } from "./components/employee-skillset/employee-skillset.component";
+import { SectionDetailsComponent } from "./components/section-details/section-details.component";
+import { LabelDetailsComponent } from "./components/label-details/label-details.component";
+import { UpdateTerminationreasonComponent } from "./components/update-terminationreason/update-terminationreason.component";
 
 const routes:Routes =[
       { path: 'newproducttype', component: NewProductTypeComponent, canActivate: [AuthGuard, RoleGuard] },
@@ -63,6 +67,10 @@ const routes:Routes =[
      {path:'addrawmaterial', component:AddRawMaterialComponent},
     {path:'chemicalsaddupdate', component:ChemicalPurchaseComponent},
       {path:'chemicalType', component:ChemicalMasterPageComponent,canActivate:[AuthGuard,RoleGuard]},
+      {path:'skills', component:EmployeeSkillsetComponent,canActivate:[AuthGuard,RoleGuard]},
+      { path: 'taskupdate', component: UpdateTerminationreasonComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'infoofsection', component: SectionDetailsComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'sectionsMergeinfo', component: LabelDetailsComponent, canActivate: [AuthGuard, RoleGuard] },
 ]
 @NgModule({
     imports:[RouterModule.forChild(routes)],

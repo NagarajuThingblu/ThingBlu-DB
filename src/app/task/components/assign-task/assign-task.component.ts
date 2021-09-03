@@ -60,6 +60,7 @@ export class AssignTaskComponent implements OnInit, OnDestroy {
 
   public tasktypelist:any;
   taskcategoriesMap: Map<number,string> = new Map<number,string>();
+  tasknameMap: Map<number,string> = new Map<number,string>();
   constructor(
     private fb: FormBuilder,
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -238,7 +239,7 @@ this.tasknames=this.dropdwonTransformService.transform(
     String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBING' &&
     String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBELABELING'
   ),
-  'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+  'TaskTypeValue', 'TaskTypeId', '-- Select --', false);
   this.assignTaskForm = this.fb.group({
     'taskCategory': new FormControl(this.assignTask.taskcategory, Validators.required),
     'taskname': new FormControl(null, Validators.required)
@@ -250,7 +251,7 @@ else{
     categorylist.filter(item =>
       String(item.TaskTypeKey).toLocaleUpperCase() == 'CUSTOMTASK'
     ),
-    'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+    'TaskTypeValue', 'TaskTypeId', '-- Select --', false);
     this.assignTaskForm = this.fb.group({
       'taskCategory': new FormControl(this.assignTask.taskcategory, Validators.required),
       'taskname': new FormControl(null, Validators.required)
@@ -274,7 +275,7 @@ else{
         if ((<UserModel>this.appCommonService.getUserProfile()).UserRole === this.userRoles.Manager || (<UserModel>this.appCommonService.getUserProfile()).UserRole === this.userRoles.SystemAdmin || this.prodDBRouteParams) {
           if (this.prodDBRouteParams) {
             
-            this.tasknames = this.dropdwonTransformService.transform(data, 'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+            this.tasknames = this.dropdwonTransformService.transform(data, 'TaskTypeValue', 'TaskTypeId', '-- Select --', false);
             this.taskcategories=this.dropdwonTransformService.transform(data,'CategoryName','TaskCategoryID','-- Select --', false);
           } else {
             this.tasknames = this.dropdwonTransformService.transform(
@@ -285,7 +286,7 @@ else{
                 String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBING' &&
                 String(item.TaskTypeKey).toLocaleUpperCase() !== 'TUBELABELING'
               ),
-              'TaskTypeName', 'TaskTypeId', '-- Select --', false);
+              'TaskTypeValue', 'TaskTypeId', '-- Select --', false);
               const categories= Array.from(data.reduce((m, t) => m.set(t.CategoryName, t), new Map()).values())
               this.taskcategories=this.dropdwonTransformService.transform(categories,'CategoryName','TaskCategoryID','-- Select --', false);       }
         } else {
@@ -297,6 +298,11 @@ else{
             'CategoryName','TaskCategoryID','-- Select --', false
 
           );
+        }
+        if(this.tasknames){
+          for(let item of this.tasknames){
+            this.tasknameMap.set(item.value,item.label)
+          }
         }
         if(this.taskcategories){
           for(let item of this.taskcategories){
@@ -336,28 +342,37 @@ console.log(assignTaskFormValues)
     if (this.assignTaskForm.valid) {
     
       assignTaskDetailsForWebApi = {
-        TaskDetails: {
+        // TaskDetails: {
+        //   ClientId: this._cookieService.ClientId,
+        //   VirtualRoleId: this._cookieService.VirtualRoleId,
+        //   TaskTypeId: assignTaskFormValues.taskname,
+        //   LotId: lotid,
+        //   EmpId: Number(assignTaskFormValues[this.selectedTaskTypeName].employee),
+        
+        //   EstStartDate: assignTaskFormValues[this.selectedTaskTypeName].estimatedstartdate.toLocaleDateString().replace(/\u200E/g, ''),
+         
+        //   Comment: assignTaskFormValues[this.selectedTaskTypeName].comment,
+        //   NotifyEmp: assignTaskFormValues[this.selectedTaskTypeName].notifyemployee,
+        //   NotifyManager: assignTaskFormValues[this.selectedTaskTypeName].notifymanager,
+        //   Priority: assignTaskFormValues[this.selectedTaskTypeName].priority
+        // }
+
+        //It is for custom and independent tasks.
+
+        TaskDetails: { 
           ClientId: this._cookieService.ClientId,
           VirtualRoleId: this._cookieService.VirtualRoleId,
           TaskTypeId: assignTaskFormValues.taskname,
-          LotId: lotid,
-          EmpId: Number(assignTaskFormValues[this.selectedTaskTypeName].employee),
-          // EstHours: assignTaskFormValues.Trimming.esthrs,
-          // EstStartDate: assignTaskFormValues.Trimming.estimatedstartdate.toLocaleDateString(),
-          // EstEndDate:assignTaskFormValues.Trimming.estimatedenddate.toLocaleDateString() + ' ' + assignTaskFormValues.Trimming.endtime.toLocaleTimeString(),
-          // EstEndTime:  assignTaskFormValues.Trimming.endtime.toLocaleTimeString(),
-          // EstHours: 3,
           EstStartDate: assignTaskFormValues[this.selectedTaskTypeName].estimatedstartdate.toLocaleDateString().replace(/\u200E/g, ''),
-          // EstEndDate:assignTaskFormValues.Trimming.estimatedenddate.toLocaleDateString() + ' ' + assignTaskFormValues.Trimming.endtime.toLocaleTimeString(),
-          // EstEndDate:  assignTaskFormValues[this.selectedTaskTypeName].estimatedstartdate.toLocaleDateString(),
-          // EstEndTime: '12:00 PM',
-          // EstEmpHourlyCost: 23.50,
-          // EstEmpCost: 150,
           Comment: assignTaskFormValues[this.selectedTaskTypeName].comment,
           NotifyEmp: assignTaskFormValues[this.selectedTaskTypeName].notifyemployee,
           NotifyManager: assignTaskFormValues[this.selectedTaskTypeName].notifymanager,
           Priority: assignTaskFormValues[this.selectedTaskTypeName].priority
-        }
+        },
+        EmployeeTypes : [],
+        SkillIDlist : []
+
+        //End of common data for custom and independent tasks.
         // DynamicDetails: {
       };
     
@@ -378,7 +393,7 @@ console.log(assignTaskFormValues)
           return;
         }
 
-      } else if (this.selectedTaskTypeName === 'BUDPACKAGING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) != 'Growing') { // BUDPACKAGING TASK
+      } else if (this.selectedTaskTypeName === 'BUDPACKAGING'&&this.tasknameMap.get(this.assignTaskForm.controls.taskname.value) === 'BUDPACKAGING') { // BUDPACKAGING TASK
         // Changed added by Devdan :: Calling common methods to get n set local storage :: 27-Sep-2018
         // let lotDetails = JSON.parse(localStorage.getItem('selectedLotsArray'));
         let lotDetails = null;
@@ -683,16 +698,45 @@ console.log(assignTaskFormValues)
           return;
         }
 
-      } else if (this.selectedTaskTypeName === 'CUSTOMTASK') {  // CUSTOM TASK
-        // assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = 0;
-        assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'CUSTOMTASK';
-        assignTaskDetailsForWebApi.TaskDetails['LotId'] = 0;
-        assignTaskDetailsForWebApi.TaskDetails['EmpId'] = 0;
-        assignTaskDetailsForWebApi.TaskDetails['NotifyEmp'] = false;
-        assignTaskDetailsForWebApi.TaskDetails['NotifyManager'] = false;
-        assignTaskDetailsForWebApi.TaskDetails['Priority'] = '';
+      } 
 
-      } else if (this.selectedTaskTypeName === 'QACHECK') { // Order Fulfilment/ QA Check Task
+      //This code is commented as design is changes
+
+      // else if (this.selectedTaskTypeName === 'CUSTOMTASK') {  // CUSTOM TASK
+      //   // assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = 0;
+      //   assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'CUSTOMTASK';
+      //   assignTaskDetailsForWebApi.TaskDetails['LotId'] = 0;
+      //   assignTaskDetailsForWebApi.TaskDetails['EmpId'] = 0;
+      //   assignTaskDetailsForWebApi.TaskDetails['NotifyEmp'] = false;
+      //   assignTaskDetailsForWebApi.TaskDetails['NotifyManager'] = false;
+      //   assignTaskDetailsForWebApi.TaskDetails['Priority'] = '';
+
+      // } 
+        //End of commented code for custom task
+
+        //New Customtask code
+        else if (this.selectedTaskTypeName === 'CUSTOMTASK') {  // CUSTOM TASK
+           
+          assignTaskFormValues[this.selectedTaskTypeName].employeeList
+          .forEach((element, index) => {
+            assignTaskDetailsForWebApi.EmployeeTypes.push({
+              "EmpId" : assignTaskFormValues.CUSTOMTASK.employeeList[index].id 
+            });
+          });
+         //  assignTaskFormValues[this.selectedTaskTypeName].skills
+         //  .forEach((element, index) => {
+         //   harvestingDataForApi.SkillIDlist.push({
+         //      "SkillId" : assignTaskFormValues.HARVESTING.skills[index] 
+         //    });
+         //  });
+         assignTaskDetailsForWebApi.SkillIDlist.push({
+           "SkillId" : assignTaskFormValues.CUSTOMTASK.skills
+         });
+    
+          } 
+
+        //End new custom task code
+      else if (this.selectedTaskTypeName === 'QACHECK') { // Order Fulfilment/ QA Check Task
         assignTaskDetailsForWebApi['ProductTypeDetails'] = [];
 
         assignTaskDetailsForWebApi.TaskDetails['OrderId'] = assignTaskFormValues[this.selectedTaskTypeName].orderno;
@@ -890,16 +934,46 @@ console.log(assignTaskFormValues)
         }
 
       }
+      //This code is commented as independent task has design changes
+      // else if (this.selectedTaskTypeName === 'INDEPENDENT') {  // CUSTOM TASK
+      //   // // assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = 0;
+      //   // assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'INDEPENDENT';
+      //   // assignTaskDetailsForWebApi.TaskDetails['LotId'] = 0;
+      //   // // assignTaskDetailsForWebApi.TaskDetails['EmpId'] = 0;
+      //   // assignTaskDetailsForWebApi.TaskDetails['NotifyEmp'] = false;
+      //   // assignTaskDetailsForWebApi.TaskDetails['NotifyManager'] = false;
+      //   // assignTaskDetailsForWebApi.TaskDetails['Priority'] = '';
+      //   let customtask = {
+
+      //   }
+        
+
+      // }
+
+      //End of commented code for 
+    //New code for independent task
+
       else if (this.selectedTaskTypeName === 'INDEPENDENT') {  // CUSTOM TASK
-        // assignTaskDetailsForWebApi.TaskDetails['AssignedWt'] = 0;
-        assignTaskDetailsForWebApi.TaskDetails['TaskKeyName'] = 'INDEPENDENT';
-        assignTaskDetailsForWebApi.TaskDetails['LotId'] = 0;
-        // assignTaskDetailsForWebApi.TaskDetails['EmpId'] = 0;
-        assignTaskDetailsForWebApi.TaskDetails['NotifyEmp'] = false;
-        assignTaskDetailsForWebApi.TaskDetails['NotifyManager'] = false;
-        assignTaskDetailsForWebApi.TaskDetails['Priority'] = '';
+     
+        assignTaskFormValues[this.selectedTaskTypeName].employeeList
+        .forEach((element, index) => {
+          assignTaskDetailsForWebApi.EmployeeTypes.push({
+            "EmpId" : assignTaskFormValues.INDEPENDENT.employeeList[index].id 
+          });
+        });
+       //  assignTaskFormValues[this.selectedTaskTypeName].skills
+       //  .forEach((element, index) => {
+       //   harvestingDataForApi.SkillIDlist.push({
+       //      "SkillId" : assignTaskFormValues.HARVESTING.skills[index] 
+       //    });
+       //  });
+       assignTaskDetailsForWebApi.SkillIDlist.push({
+         "SkillId" : assignTaskFormValues.INDEPENDENT.skills
+       });
 
       }
+     
+      //End of New code for independent task
 
       else if (this.selectedTaskTypeName === 'PLANTING') { // PLANTING TASK
        let plantingDataForApi = {
@@ -915,14 +989,24 @@ console.log(assignTaskFormValues)
           "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
           "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
        },
-       EmployeeTypes:[]
+       EmployeeTypes:[],
+       SkillIDlist:[]
       };
       assignTaskFormValues[this.selectedTaskTypeName].employeeList
       .forEach((element, index) => {
         plantingDataForApi.EmployeeTypes.push({
-          "EmpId" : assignTaskFormValues.PLANTING.employeeList[index] 
+          "EmpId" : assignTaskFormValues.PLANTING.employeeList[index].id 
         });
       });
+      // assignTaskFormValues[this.selectedTaskTypeName].skills
+      // .forEach((element, index) => {
+      //   plantingDataForApi.SkillIDlist.push({
+      //     "SkillId" : assignTaskFormValues.PLANTING.skills[index] 
+      //   });
+      // });
+      plantingDataForApi.SkillIDlist.push({
+            "SkillId" : assignTaskFormValues.PLANTING.skills
+          });
        this.loaderService.display(true);
       this.taskCommonService.assignPlantTask(plantingDataForApi).
       subscribe(
@@ -972,14 +1056,24 @@ console.log(assignTaskFormValues)
            "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
            "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
         },
-        EmployeeTypes:[]
+        EmployeeTypes:[],
+        SkillIDlist:[]
        };
        assignTaskFormValues[this.selectedTaskTypeName].employeeList
        .forEach((element, index) => {
         harvestingDataForApi.EmployeeTypes.push({
-           "EmpId" : assignTaskFormValues.HARVESTING.employeeList[index] 
+           "EmpId" : assignTaskFormValues.HARVESTING.employeeList[index].id 
          });
        });
+      //  assignTaskFormValues[this.selectedTaskTypeName].skills
+      //  .forEach((element, index) => {
+      //   harvestingDataForApi.SkillIDlist.push({
+      //      "SkillId" : assignTaskFormValues.HARVESTING.skills[index] 
+      //    });
+      //  });
+      harvestingDataForApi.SkillIDlist.push({
+        "SkillId" : assignTaskFormValues.HARVESTING.skills
+      });
         this.loaderService.display(true);
        this.taskCommonService.assignHarvestTask(harvestingDataForApi).
        subscribe(
@@ -1014,8 +1108,9 @@ console.log(assignTaskFormValues)
         let prebuckingDataForApi = {
           PreBucking: {
             "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
-            "SectionId": assignTaskFormValues.PREBUCKING.section,
-            "StrainId": assignTaskFormValues.PREBUCKING.strainid,
+            "BatchId": assignTaskFormValues.PREBUCKING.batchId,
+           // "SectionId": assignTaskFormValues.PREBUCKING.section,
+            "StrainId": assignTaskFormValues.PREBUCKING.strain,
             "IsLightDeprevation": assignTaskFormValues.PREBUCKING.lightdept,
             "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
             "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
@@ -1025,14 +1120,24 @@ console.log(assignTaskFormValues)
             "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
             "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
           },
-          EmployeeTypes:[]
+          EmployeeTypes:[],
+          SkillIDlist:[]
         };
         assignTaskFormValues[this.selectedTaskTypeName].employeeList
-        .forEach((element, index) => {
-          prebuckingDataForApi.EmployeeTypes.push({
-            "EmpId" : assignTaskFormValues.PREBUCKING.employeeList[index] 
-          });
-        });
+       .forEach((element, index) => {
+        prebuckingDataForApi.EmployeeTypes.push({
+           "EmpId" : assignTaskFormValues.PREBUCKING.employeeList[index].id 
+         });
+       });
+      //  assignTaskFormValues[this.selectedTaskTypeName].skills
+      //  .forEach((element, index) => {
+      //   prebuckingDataForApi.SkillIDlist.push({
+      //      "SkillId" : assignTaskFormValues.PREBUCKING.skills[index] 
+      //    });
+      //  });
+      prebuckingDataForApi.SkillIDlist.push({
+        "SkillId" : assignTaskFormValues.PREBUCKING.skills
+      });
          this.loaderService.display(true);
         this.taskCommonService.assignPrebuckingTask(prebuckingDataForApi).
         subscribe(
@@ -1051,8 +1156,13 @@ console.log(assignTaskFormValues)
               });
               this.loaderService.display(false);
           }
-          else if (String(data).toLocaleUpperCase() === 'FAILURE') {
+          else if (String(data[0]. RESULTKEY).toLocaleUpperCase() === 'FAILURE') {
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+            this.loaderService.display(false);
+          }
+          else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Selected Merged Sections'){
+            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+            detail: data[0]. RESULTKEY});
             this.loaderService.display(false);
           }
           else if (String(data) === 'Something went wrong  at server side!'){
@@ -1067,8 +1177,11 @@ console.log(assignTaskFormValues)
         let buckingDataForApi = {
           Bucking:{
             "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
-            "BinId": assignTaskFormValues.BUCKING.bins,
-            "EmpId": assignTaskFormValues.BUCKING.employeeList,
+            //"BinId": assignTaskFormValues.BUCKING.bins,
+            "BatchId": assignTaskFormValues.BUCKING.batchId,
+            //"EmpId": assignTaskFormValues.BUCKING.employeeList,
+            "StrainId": assignTaskFormValues.BUCKING.strain,
+            "IsLightDeprevation": assignTaskFormValues.BUCKING.lightdept,
             "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
             "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
             "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority ,
@@ -1076,8 +1189,25 @@ console.log(assignTaskFormValues)
             "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
             "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
             "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
-          }
+          },
+          EmployeeTypes:[],
+          SkillIDlist:[]
         };
+        assignTaskFormValues[this.selectedTaskTypeName].employeeList
+       .forEach((element, index) => {
+        buckingDataForApi.EmployeeTypes.push({
+           "EmpId" : assignTaskFormValues.BUCKING.employeeList[index].id 
+         });
+       });
+      //  assignTaskFormValues[this.selectedTaskTypeName].skills
+      //  .forEach((element, index) => {
+      //   buckingDataForApi.SkillIDlist.push({
+      //      "SkillId" : assignTaskFormValues.BUCKING.skills[index] 
+      //    });
+      //  });
+      buckingDataForApi.SkillIDlist.push({
+        "SkillId" : assignTaskFormValues.BUCKING.skills
+      });
         this.loaderService.display(true);
         this.taskCommonService.assignbuckingTask(buckingDataForApi).
         subscribe(
@@ -1096,15 +1226,28 @@ console.log(assignTaskFormValues)
               });
               this.loaderService.display(false);
             }
+            else if (String(data).toLocaleUpperCase() === 'FAILURE') {
+              this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
+              this.loaderService.display(false);
+            }
+            else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Selected Merged Sections'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail: data[0]. RESULTKEY});
+              this.loaderService.display(false);
+            }
           }
         )
         }
-        else if(this.selectedTaskTypeName === 'TRIM'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+        else if(this.selectedTaskTypeName === 'TRIM'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Processing'){
           let trimmingDataForApi = {
             Trimming:{
               "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
-              "BinId": assignTaskFormValues.TRIM.bins,
-              "EmpId": assignTaskFormValues.TRIM.employeeList,
+              //"BinId": assignTaskFormValues.TRIM.bins,
+              "TrimmingMethod":assignTaskFormValues.TRIM.tm,
+              "BatchId": assignTaskFormValues.TRIM.batchId,
+              //"EmpId": assignTaskFormValues.TRIM.employeeList,
+              "StrainId": assignTaskFormValues.TRIM.strain,
+              "IsLightDeprevation": assignTaskFormValues.TRIM.lightdept,
               "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
               "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
               "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority ,
@@ -1112,9 +1255,26 @@ console.log(assignTaskFormValues)
               "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
               "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
               "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
-            }
+            },
+            EmployeeTypes:[],
+            SkillIDlist:[]
           };
-          // this.loaderService.display(true);
+          assignTaskFormValues[this.selectedTaskTypeName].employeeList
+          .forEach((element, index) => {
+            trimmingDataForApi.EmployeeTypes.push({
+              "EmpId" : assignTaskFormValues.TRIM.employeeList[index].id 
+            });
+          });
+          // assignTaskFormValues[this.selectedTaskTypeName].skills
+          // .forEach((element, index) => {
+          //   trimmingDataForApi.SkillIDlist.push({
+          //     "SkillId" : assignTaskFormValues.TRIM.skills[index] 
+          //   });
+          // });
+          trimmingDataForApi.SkillIDlist.push({
+            "SkillId" : assignTaskFormValues.TRIM.skills
+          });
+          this.loaderService.display(true);
         this.taskCommonService.assignTrimmingTask(trimmingDataForApi).
         subscribe(
           data => {
@@ -1132,10 +1292,15 @@ console.log(assignTaskFormValues)
               });
               this.loaderService.display(false);
             }
+            else if(String(data[0]. RESULTKEY) === 'Please Create Bins With the Selected Merged Sections'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+              detail: data[0]. RESULTKEY});
+              this.loaderService.display(false);
+            }
           }
         )
         }
-        else if(this.selectedTaskTypeName === 'BUDPACKAGING'&&this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+        else if(this.selectedTaskTypeName === 'BUDPACKAGING'&&this.tasknameMap.get(this.assignTaskForm.controls.taskname.value) === 'Packaging'){
          let BinTypeDetails
          BinTypeDetails = JSON.parse(this.appCommonService.getSessionStorage('selectedLotsArray'));
           let packagingDataForApi = {
@@ -1233,7 +1398,7 @@ console.log(assignTaskFormValues)
         }
           // http call starts
         
-   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING' && this.selectedTaskTypeName != 'BUCKING'&& this.selectedTaskTypeName != 'TRIM'&& (this.selectedTaskTypeName != 'BUDPACKAGING' && this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) != 'Growing')){
+   if(this.selectedTaskTypeName != 'PREBUCKING' && this.selectedTaskTypeName != 'HARVESTING' && this.selectedTaskTypeName != 'PLANTING' && this.selectedTaskTypeName != 'BUCKING'&& this.selectedTaskTypeName != 'TRIM'&& (this.selectedTaskTypeName != 'BUDPACKAGING' && this.tasknameMap.get(this.assignTaskForm.controls.taskname.value) === 'Packaging')){
 
    
           this.loaderService.display(true);
@@ -1359,7 +1524,7 @@ console.log(assignTaskFormValues)
               });
             }
 
-      else  if(this.selectedTaskTypeName === 'CUSTOMTASK'  ||this.selectedTaskTypeName === 'INDEPENDENT' &&  this.taskcategoriesMap.get(this.assignTaskForm.controls.taskCategory.value) === 'Growing'){
+      else  if(this.selectedTaskTypeName === 'CUSTOMTASK'  ||this.selectedTaskTypeName === 'INDEPENDENT'){
 
    
         this.loaderService.display(true);

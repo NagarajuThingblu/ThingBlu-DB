@@ -9,7 +9,9 @@ export const environment = {
     // apiEndpoint: 'http://localhost/thingbluwebapinew/'
     // apiEndpoint: 'https://thingbluapiuat.azurewebsites.net/',
     tolerance: 5,
-    //  apiEndpoint:'https://hwg-api.azurewebsites.net/',
+       //apiEndpoint:'https://hwg-api.azurewebsites.net/',
+      // apiEndpoint:   'https://pcgapi.azurewebsites.net/',//pre-production
+     //apiEndpoint: 'https://tbgrowqc-api.azurewebsites.net/',//Arbre dev
   apiEndpoint: 'https://tbappapitest.azurewebsites.net/', // Growers dev
     // apiEndpoint: 'https://tbappapihannah.azurewebsites.net/', //Processor dev
     //  apiEndpoint: 'https://tbdemowebapi.azurewebsites.net/',

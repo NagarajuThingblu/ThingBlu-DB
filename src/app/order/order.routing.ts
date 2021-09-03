@@ -21,7 +21,7 @@ const routes:Routes =[
     { path: 'acceptorder', component: AcceptOrderComponent, canActivate: [AuthGuard] },
     { path: 'acceptorder/:incomingOrderId', component: AcceptOrderComponent, canActivate: [AuthGuard] },
     { path: 'changeOrder/:incomingOrderId', component: ChangeOrderComponent, canActivate: [AuthGuard] },
-    {path:'orderform', component:OrderformComponent},
+    {path:'orderform', component:OrderformComponent, canActivate: [AuthGuard, RoleGuard]},
 ]
 @NgModule({
     imports:[RouterModule.forChild(routes)],
