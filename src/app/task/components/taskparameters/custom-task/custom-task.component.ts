@@ -147,7 +147,7 @@ export class CustomTaskComponent implements OnInit {
         usercomment: '',
         emprate: '',
         empcost: '',
-        priority: this.TaskModel.TaskPriority
+        priority: 'Normal'
       };
       this.TaskTypeKey=this.TaskModel.TaskTypeKey;
       this.CUSTOMTASK = this.fb.group({
@@ -162,8 +162,8 @@ export class CustomTaskComponent implements OnInit {
         'emprate': new FormControl(''),
         'actualcost': new FormControl(0),
         'priority': new FormControl(''),
-        'notifymanager': new FormControl(null),
-        'notifyemployee': new FormControl(null),
+        'notifymanager': new FormControl(''),
+        'notifyemployee': new FormControl(''),
         'comment': new FormControl('', Validators.maxLength(500)),
       });
 
