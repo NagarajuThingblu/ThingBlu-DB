@@ -51,6 +51,8 @@ export class AppCommonService implements OnChanges, OnInit {
 
   public strainFormDetail: FormGroup; // add by :: swapnil :: 02-april-2019
   public strainPageBackLink = false; // add by :: swapnil :: 02-april-2019
+  public addRawMaterialPageBackLink = false;
+  public employeePageBackLink = false;
   public ChemicalPurchasePageBackLink = false;
   public lotPageBackLink = false;
   public lotFormDetail: FormGroup;
@@ -58,6 +60,7 @@ export class AppCommonService implements OnChanges, OnInit {
   public TPProcessorFormDetail: FormGroup;
   public ProductTypeBackLink = false;
   public ProductTypeFormDetail: FormGroup;
+  public skillFormDetail: FormGroup; 
 
   public LotBackLink = false;
   public costoflot: any;

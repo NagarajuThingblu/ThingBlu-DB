@@ -92,7 +92,7 @@
                             <label>{{loginResources.password}}</label>
                             <div class="clear"></div>
                             <input type="password"  readonly 
-                            onfocus="this.removeAttribute('readonly');"  pPassword formControlName="password" [feedback]="false" />
+                            onfocus="this.removeAttribute('readonly');" autocomplete="off"  pPassword formControlName="password" [feedback]="false" />
 
                             <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="!loginForm.controls['password'].valid&&loginForm.controls['password'].dirty">
                                 <span *ngIf="loginForm.controls['password'].errors['required']">{{loginResources.passwordRequired}}</span>

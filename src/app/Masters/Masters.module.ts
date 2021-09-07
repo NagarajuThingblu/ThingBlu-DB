@@ -1,6 +1,8 @@
 import { AddNewSkewPopupComponent } from './components/add-new-skew-popup/add-new-skew-popup.component';
 
 import { NgModule } from '@angular/core';
+import {TreeModule} from 'primeng/tree';
+import {TreeNode} from 'primeng/api';
 import { SharedModule } from '../shared/shared.module';
 import { NewProductTypeComponent } from './components/new-product-type/new-product-type.component';
 import { NewProductTypeDetailsActionService } from '../task/services/new-product-type.service';
@@ -78,6 +80,7 @@ import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-m
 import { UpdateTerminationreasonComponent } from './components/update-terminationreason/update-terminationreason.component';
 import { SectionDetailsComponent } from './components/section-details/section-details.component';
 import { LabelDetailsComponent } from './components/label-details/label-details.component';
+import { EmployeeSkillsetComponent } from './components/employee-skillset/employee-skillset.component';
 
 
 @NgModule({
@@ -125,11 +128,14 @@ import { LabelDetailsComponent } from './components/label-details/label-details.
     AddRawMaterialComponent,
     UpdateTerminationreasonComponent,
     SectionDetailsComponent,
-    LabelDetailsComponent
+    LabelDetailsComponent,
+    EmployeeSkillsetComponent
    
   ],
   imports: [
     SharedModule,
+    TreeModule,
+  
   ],
   providers: [
     NewProductTypeDetailsActionService,

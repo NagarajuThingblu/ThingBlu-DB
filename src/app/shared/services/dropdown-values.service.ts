@@ -203,12 +203,13 @@ getFieldsSectionsInGrowers(TaskTypeId) {
    });
 }
 
-getEmpAlreadyWorkingOnATask(sectionId,taskid){
+getEmpAlreadyWorkingOnATask(sectionId,taskid,batchId){
   const url = 'api/Grower/GetEmpListBySectionId';
 
   let params = new HttpParams();
   params = params.append('SectionId', sectionId);
   params = params.append('TaskTypeId', taskid);
+  params = params.append('BatchId', batchId);
 return this.http
 .get(url, {params: params})
 

@@ -1,0 +1,248 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header="{{pageHeader}}" [toggleable]="true" >
+        <p-header>
+         
+        </p-header>
+        <form [formGroup]="employeeSkillForm"  (ngSubmit)="onSubmit(employeeSkillForm.value)" >
+          <div class="ui-g">
+            <div class="ui-g-12 ui-md-12" style="padding: 0">
+                 <a [routerLink]="" *ngIf="backUrl"  class="btn-link" (click)="backToEmpPage()" style="float: right;padding-right: 21px;text-decoration: underline" ><< Back</a>
+            </div>
+          </div>
+ <!-- TaskCategory Name -->
+          <div class="ui-g">
+             <div class="ui-g-12 ui-md-6" style="padding-left:0px;">
+              <div class="paddingRL">
+                <!-- <div class="le-su-12"> -->
+                  <label for="taskcategory">
+                    <b>Task Category</b><span class="star">*</span>:
+                  </label>
+                  <p-dropdown
+                  [filter] ="true"
+                  id="taskcategory"
+                  [options]="taskcategories"
+                  formControlName="taskcategory"
+                  placeholder="-- Select --"
+                  (onChange)="oncategoryChange($event)"
+                  [autoWidth]="false"
+                  class="clsControl"
+                  name="taskcategory">
+                </p-dropdown>
+                <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                *ngIf="!employeeSkillForm.controls['taskcategory'].valid && employeeSkillForm.controls['taskcategory'].dirty">
+                <span *ngIf="employeeSkillForm.controls['taskcategory'].errors['required']">
+                 Task Category required
+                </span>
+               </div> 
+                <!-- </div> -->
+              </div>
+             </div>
+              <!-- TaskType Name -->
+            <div class="ui-g-12 ui-md-6" style="padding-left:0px;">
+              <div class="paddingRL">
+                <!-- <div class="le-su-12"> -->
+                  <label for="tasktype">
+                    <b>Task Type</b><span class="star">*</span>:
+                  </label>
+                  <p-dropdown
+                  [filter] ="true"
+                  id="tasktype"
+                  [options]="tasknames"
+                  formControlName="tasktype"
+                  placeholder="-- Select --"
+                  [autoWidth]="false"
+                  class="clsControl"
+                  name="tasktype">
+                </p-dropdown>
+                <!-- </div> -->
+              </div>
+             </div>
+             <!-- Skills -->
+         
+          <div formArrayName="items" style="position: relative">
+            <div style="width:calc(100% - 20px);float:left;">
+              <p-table [value]="skillDetailsArr?.controls" id="skillDetails" name="skillDetails">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Skill
+                      <span class="star">*</span>
+                    </th>
+                    <th>Description
+                      <span class="star"></span>
+                    </th>
+                    <th style="width: 100px;">Required</th>
+                    <th style="width: 100px;">Is Active</th>
+                    <th style="width: 100px;">Action</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-i="rowIndex" >
+                  <tr [formGroupName]="i">
+                    <td>
+                      <input pInputText
+                      name="skills"
+                      id="skills"
+                      type="text"
+                      autocomplete="off"
+                      class="clsControl"       
+                      formControlName="skills"
+                      placeholder="Enter skill "
+                      min="0.1">
+                    </td>
+                    <td>
+                      <input pInputText
+                      name="description"
+                      id="description"
+                      type="text"
+                      autocomplete="off"
+                      class="clsControl"       
+                      formControlName="description"
+                      placeholder="Enter Description "
+                      min="0.1">
+                    </td>
+                    <td>
+                      <p-checkbox value="false"
+                       formControlName="chkRequired" checked="true"
+                      binary="true"></p-checkbox>                                      
+                    </td>
+                    <td>
+                      <p-checkbox value="true"
+                       formControlName="chkSelectAll" checked="true"
+                      binary="true"></p-checkbox>                                      
+                    </td>
+                    <td>
+                      <a (click)="deleteItem(i)" >                                                    
+                          <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                          </span>
+                      </a> 
+                        <a (click)="addItem()" *ngIf="employeeSkillForm.get('items').valid&&plusOnEdit === true">
+                            <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                            </span>
+                        </a>
+                        </td>
+                        <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
+                          This Skill already exists.
+                        </div> 
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+                       
+            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="skillDetailsArr.hasError('duplicate')">
+              duplicate entries
+            </div>  
+          </div>
+          <div class="ui-g-12 ui-md-12" style="text-align: right;">
+            <div class="paddingRL">
+            <p-button type="submit" label="{{ saveButtontext}}" id="btnRoomTypeSave" name="btnRoomTypeSave">
+            </p-button>
+
+            <button pButton (click)="resetAll()" type="button" label="{{clear}}" class="ui-button-secondary">
+            </button>
+          </div>
+</div>
+          </div>
+      
+       
+        </form>
+      </p-panel>
+    </div>
+  </div>
+
+  
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header="Skills List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+<p-table #dtSkillList [value]="allSkillslist"
+   sortMode="single" [responsive]="true" [paginator]="true" [rows]="10"           
+   sortField="skillId"
+   sortOrder="-1"
+   [rowsPerPageOptions]="paginationValues"
+   (onPage)="onPageChange($event)"
+   [globalFilterFields]="['CategoryName','TaskTypeName','SkillName','Required','Description' ]">
+
+   <ng-template pTemplate="caption">
+    <div style="text-align: right;">
+      <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+      <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" (input)="allSkillslist.filterGlobal($event.target.value,'contains')"
+      style="width: auto;">
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header" >
+    <tr>
+      <th [pSortableColumn]="'CategoryName'">Task Category  <p-sortIcon [field]="'CategoryName'"></p-sortIcon></th>
+      <th [pSortableColumn]="'TaskTypeName'"> Task Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon></th>
+      <th [pSortableColumn]="'SkillName'">Skill Name<p-sortIcon [field]="'SkillName'"  ></p-sortIcon>  </th>      
+      <th [pSortableColumn]="'SkillName'">Required<p-sortIcon [field]="'SkillName'"  ></p-sortIcon>  </th>                
+      <th [pSortableColumn]="'Description'">Description<p-sortIcon [field]="'Description'"  ></p-sortIcon>  </th>                    
+      <th style="width:100px;"> </th>
+    </tr>
+    <tr>
+      <th>
+          <input pInputText type="text" autocomplete="off" (input)="dtSkillList.filter($event.target.value, 'CategoryName', 'contains')" class="clsControl">
+      </th>
+      <th>
+          <input pInputText type="text" autocomplete="off" (input)="dtSkillList.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
+      </th>
+      <th>
+        <input pInputText type="text" autocomplete="off" (input)="dtSkillList.filter($event.target.value,'SkillName','contains')" class="clsControl">
+      </th>
+      <th>
+        <input pInputText type="text" autocomplete="off" (input)="dtSkillList.filter($event.target.value,'Required','contains')" class="clsControl">
+      </th>
+      <th>
+        <input pInputText type="text" autocomplete="off" (input)="dtSkillList.filter($event.target.value,'Description','contains')" class="clsControl">
+      </th>
+    <th rowspan="2"></th>
+                            
+    </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-skillset let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+           <td>{{skillset?.CategoryName}}</td>
+             <td>{{skillset?.TaskTypeName}}</td>
+             <td>{{skillset?.SkillName}}</td>
+             <td>{{skillset?.Required}}</td>
+             <td>{{skillset?.Description}}</td>
+            <td style="width:65px;"> 
+               <span class="ui-column-title">edit</span>
+              <a href="#" [routerLink]="" (click)="GetSkillonEdit(skillset?.SkillTaskTypeMapId)" >                             
+                  <span class="fa fa-edit"></span>
+              </a>
+              <a href="#" [routerLink]="" (click)="showConformationMessaegForDelete(skillset?.SkillId,skillset,1,0)" >
+                <span class="fa fa-trash"></span>
+              </a>
+            <div class="clsToggleButtonDiv">
+                  <p-toggleButton 
+                    [(ngModel)]="skillset.IsActive" 
+                    onLabel="Active" offLabel="InActive"  
+                    [style]="{'width':'90px'}"
+                    (onChange)="showConformationMessaegForDeactive(skillset?.SkillId,skillset,0,1)"
+                    >
+                   </p-toggleButton>
+            </div>
+        </td>  
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="paginatorleft" let-state>
+      <pagination-counts
+        *ngIf="allSkillslist?.length"
+        [inputData]="allSkillslist"
+        [inputEvent]="event"
+      ></pagination-counts>
+    </ng-template>
+</p-table>
+      </p-panel>
+    </div>
+  </div>
+</div>
+<p-growl [(value)]="msg" life='5000'></p-growl>
+<p-confirmDialog 
+  header="Confirmation" 
+  icon="fa fa-question-circle" 
+  width="425" 
+  *ngIf="true"
+  class="clsConfirmBox" >
+</p-confirmDialog>

@@ -193,6 +193,7 @@ export class GeneticsMasterComponent implements OnInit {
       data => {
       //  console.log(data);
        if (data !== 'No data found!') {
+
           this.allGeneticsList = data;
           this.allGeneticsList =data.filter(x => x.GeneticId != 0);
           this.paginationValues = AppConstants.getPaginationOptions;

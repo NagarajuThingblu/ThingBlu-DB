@@ -13,7 +13,7 @@
           sortOrder="-1"
           [rowsPerPageOptions]="PaginationValues"
           (onPage)="onPageChange($event)"
-          [globalFilterFields]="['FirstName','LastName','Username','Gender','DOB','Role','FLCName','CityName','CellPhone']"
+          [globalFilterFields]="['FirstName','LastName','Username','Gender','Role','FLCName','CityName','CellPhone','Skills']"
           >                    
           <ng-template pTemplate="caption">
               <div style="text-align: right">
@@ -34,6 +34,7 @@
                   <th pResizableColumn [pSortableColumn]="'CityName'">{{ newEmployeeResources.city}} <p-sortIcon [field]="'CityName'"></p-sortIcon></th>           
                   <th pResizableColumn [pSortableColumn]="'CellPhone'">{{ newEmployeeResources.cellphone}} <p-sortIcon [field]="'CellPhone'"></p-sortIcon></th>
                   <!-- <th [pSortableColumn]="'PrimaryEmail'">{{ newEmployeeResources.primaryemail}} <p-sortIcon [field]="'PrimaryEmail'"></p-sortIcon></th> -->
+                  <th>Skills</th>
                   <th style="width:100px;"> </th>
               </tr>
     
@@ -53,9 +54,9 @@
                   <th>
                       <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'Gender', 'contains')" class="clsControl">
                   </th>                 
-                  <th>
+                  <!-- <th>
                       <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'DOB', 'contains')" class="clsControl">
-                  </th>
+                  </th> -->
                   <th>
                     <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'Role', 'contains')" class="clsControl">
                 </th>
@@ -71,6 +72,7 @@
                 <!-- <th>
                   <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'PrimaryEmail', 'contains')" class="clsControl">
                 </th> -->
+                <th></th>
                 <th rowspan="2"></th>  
           </ng-template>
           <ng-template pTemplate="body" let-newemployee let-rowData let-columns="columns" let-rowIndex="rowIndex">
@@ -80,11 +82,12 @@
                   <td>{{newemployee?.LastName }}</td>
                   <td>{{newemployee?.Username }}</td>
                   <td>{{newemployee?.GenderName }}</td>                  
-                  <td>{{newemployee?.DOB | date: 'MM/dd/yyyy' }}</td>
+                  <!-- <td>{{newemployee?.DOB | date: 'MM/dd/yyyy' }}</td> -->
                   <td>{{newemployee?.Role}}</td>
                   <td>{{newemployee?.FLCName}}</td>
                   <td>{{newemployee?.CityName}}</td>
                   <td>{{newemployee?.CellPhone}}</td>
+                  <td style="text-align: center;"><span><a class="btn-link" (click)="openSkillsPopUp(newemployee?.EmpId)"  ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span></td>
                   <!-- <td>{{newemployee?.PrimaryEmail}}</td>    -->
                   <td style="width:65px;"> 
                       <span class="ui-column-title">{{ newEmployeeResources.edit }}</span>
@@ -131,6 +134,26 @@
     </div>
   </div>
 </div>
+
+<p-dialog header="Skill Details" [(visible)]="openSkillPopUp" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
+  <div class="ui-g-12 ui-md-6">
+    <label for="skill" class="towlable"><b>Employee Name:-</b>{{EmpName}}</label>
+    </div>
+  <p-table [value]="skillOnPopUP">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Task Name</th>
+        <th>Skill</th>
+    </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-taskstatus>
+      <tr>
+        <td>{{taskstatus.TaskTypeValue}}</td>
+        <td>{{taskstatus.SkillName}}</td>
+    </tr>
+    </ng-template>
+  </p-table>
+</p-dialog>
 <p-confirmDialog 
     class="clsConfirmBox" 
     header="Confirmation" 

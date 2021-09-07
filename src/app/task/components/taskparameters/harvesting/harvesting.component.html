@@ -100,20 +100,50 @@
   </div>
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
-      <label for="employeeList">Assigned To<span class="star">*</span></label>:
-      <p-multiSelect #checkedItems
+      <label for="skills">Skills<span class="star">*</span></label>:
+      <p-dropdown  #checkedItems
       [filter] ="true"
-      [options]="employees"
-      
+      [options]="skills"
       placeholder="-- Select --"
-      (onChange)="OnSelectingEmployees($event, checkedItems)"
-      formControlName="employeeList"
+      (onChange)="onSkillsSelect($event)"
+      formControlName="skills"
       class="clsControl"
-      id="employeeList"
-      name="employeeList">
-      </p-multiSelect>
+      id="skills"
+      name="skills">
+      </p-dropdown>
     </div>
   </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="employeeList">Assigned To<span class="star">*</span></label>:
+      <div>
+
+              
+        <div class="input-container">
+          <input pInputText
+          id="myTextBox"
+          autocomplete="off"
+          class="clsControl"
+          [value]="employeeNameToBeDisplayedOnDropdown"
+          placeholder="--Select--"
+         (click)="showEmps($event)"
+        />
+        <span id="myTextBox" class="viewer2" *ngIf="!showUpArrow" (click)="showEmps($event)">
+          <i id="myTextBox" class="fa fa-caret-down" ria-hidden="true"  (click)="showEmps($event)"></i>
+        </span>
+        <span id="myTextBox" class="viewer2" *ngIf="showUpArrow" (click)="showEmps($event)">
+          <i id="myTextBox" class="fa fa-caret-up" ria-hidden="true"  (click)="showEmps($event)"></i>
+        </span>
+      </div>
+      <p-tree [value]="files"  [ngClass]="!visibility?'myskillsdropdown':'showmyskillsdropdown'" styleClass="clsRoleAccessTree" selectionMode="checkbox"  [(selection)]="selectedSkillItems"
+      [propagateSelectionUp]="false" (onNodeSelect)="OnSelectingEmployees($event)" (onNodeUnselect) = "OnUnSelectNode($event)" [propagateSelectionDown]="true"></p-tree>
+       
+      
+      </div>
+     
+    </div>
+  </div>
+
   <!-- <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="assignedPC">Assigned Plants Count<span class="star">*</span></label>:

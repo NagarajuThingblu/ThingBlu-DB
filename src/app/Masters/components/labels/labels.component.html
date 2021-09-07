@@ -6,9 +6,9 @@
           
         </p-header>
         <form  [formGroup]="newLabelsEntryForm" (ngSubmit)="onSubmit(newLabelsEntryForm.value)">
-          <div class="ui-g">
-            <div *ngIf = "visible === true"  style="float:left;">
-              <p-button  style="float: right;" class="toplinks" type="button" icon="fa fa-list-ul" label="Back"  id="btn_binshow" (click)="backtotaskpage()"  name="btnviewbins"></p-button>
+          <div class="ui-g" style="float:right;">
+            <div *ngIf = "visible === true"  style="float:right;">
+              <p-button  style="float: right;" class="toplinks" type="button"    id="btn_binshow" (click)="backtotaskpage()"  name="btnviewbins"><< back</p-button>
             </div>
           </div>
           <div class="ui-g ">
@@ -139,7 +139,7 @@
           </div>
           <div formArrayName="items" style="position: relative">
             <div style="width:calc(100% - 20px);float:left;">
-              <p-table [value]="labelDetailsArr?.controls" id="labelDetails" name="labelDetails">
+              <p-table [value]="labelDetailsArr?.controls" id="labelDetails" name="labelDetails"> 
                 <ng-template pTemplate="header">
                   <tr>
                     <th>{{ newLabelResources.binNo }}
@@ -375,7 +375,7 @@
       <p-table #dtLabelList [value]="allLabelslist" [resizableColumns]="true" sortMode="single" [responsive]="true" [paginator]="true"
     [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
     (onPage)="onPageChange($event)"
-    [globalFilterFields]="['TaskTypeName','BinNo','TotalWt','AvilableWt','StrainName','SkewType','IsLightDeprevation','TrimmingMethod']">
+    [globalFilterFields]="['TaskTypeName','Fields','Sections','BinNo','TotalWt','AvilableWt','StrainName','SkewType','IsLightDeprevation','TrimmingMethod']">
         <ng-template pTemplate="caption">
           <div style="text-align: right; float: left;">
 <!--         
@@ -389,6 +389,28 @@
             </p-dropdown> -->
             
           
+          </div>
+          <div style="text-align: left; float: left; width:200px;  margin:4px 4px 0 0">
+         
+            <p-dropdown
+           
+            placeholder="Select Field"
+            [options]="fieldsFilter" 
+            class="clsControl"
+            (onChange) = "filterSections($event)"
+          ></p-dropdown>
+         
+          </div>
+          <div style="text-align: left; float: left;  width:200px; margin:4px 4px 0 0">
+           
+            <p-dropdown
+           
+            placeholder="Select Section"
+            [options]="sectionsFilter" 
+            class="clsControl"
+            (onChange) = "dtLabelList.filterGlobal($event.value, 'contains')"
+          ></p-dropdown>
+        
           </div>
           
           <div style="text-align: right">
@@ -404,11 +426,11 @@
             </th> -->
             <th pResizableColumn [pSortableColumn]="'TaskTypeName'">Category<p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
             </th>
-            <!-- <th [pSortableColumn]="'Fields'">Field <p-sortIcon [field]="'Fields'"></p-sortIcon>
+            <th style="display:none" [pSortableColumn]="'Fields'">Field <p-sortIcon [field]="'Fields'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'Sections'">Section <p-sortIcon [field]="'Sections'"></p-sortIcon>
-            </th> -->
-            <th pResizableColumn [pSortableColumn]="'BinNo'">Bin Number <p-sortIcon [field]="'BinNo'"></p-sortIcon>
+            <th style="display:none" [pSortableColumn]="'Sections'">Section <p-sortIcon [field]="'Sections'"></p-sortIcon>
+            </th>
+            <th [pSortableColumn]="'BinNo'">Bin Number <p-sortIcon [field]="'BinNo'"></p-sortIcon>
             </th>
             <th pResizableColumn [pSortableColumn]="'StrainName'">Cultivar <p-sortIcon [field]="'StrainName'"></p-sortIcon>
             </th>
@@ -433,14 +455,14 @@
               <input pInputText type="text" autocomplete="off"
                 (input)="dtLabelList.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
             </th>
-            <!-- <th>
+            <th style="display:none">
               <input pInputText type="text" autocomplete="off"
                 (input)="dtLabelList.filter($event.target.value, 'Fields', 'contains')" class="clsControl">
             </th>
-            <th>
+            <th style="display:none">
               <input pInputText type="text" autocomplete="off"
                 (input)="dtLabelList.filter($event.target.value, 'Sections', 'contains')" class="clsControl">
-            </th> -->
+            </th>
             <th>
               <input pInputText type="text" autocomplete="off"
                 (input)="dtLabelList.filter($event.target.value, 'BinNo', 'contains')" class="clsControl">
@@ -478,8 +500,8 @@
         <ng-template pTemplate="body" let-label let-rowData let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
             <td>{{label?.TaskTypeName}}</td>
-            <!-- <td>{{label?.Fields}}</td>
-            <td>{{label?.Sections}}</td> -->
+            <td style="display:none">{{label?.Fields}}</td>
+            <td style="display:none">{{label?.Sections}}</td>
             <td>{{label?.BinNo}}</td>
             <td>{{label?.StrainName}}</td>
             <td>{{label?.SkewType }}</td>

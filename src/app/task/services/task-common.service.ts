@@ -206,7 +206,7 @@ completeBuckingTask(taskCompletionWebApi: any){
 completeTrimmingTask(taskCompletionWebApi: any){
   const apiUrl = 'api/Grower/TrimmingTaskComplete';
 
-    taskCompletionWebApi.Trimming.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
+    taskCompletionWebApi.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
     return this.http.post(apiUrl, taskCompletionWebApi, this.headers)
     .map(data =>  data );
 }
@@ -228,6 +228,11 @@ submitPlantTaskReview(taskReviewWebApi) {
   .map(data =>  data );
 }
 
+getEmployeeListBasedOnSkills(skillListApiDetails){
+  const apiUrl = 'api/Grower/GetEmployee';
+  return this.http.post(apiUrl, skillListApiDetails, this.headers)
+  .map(data =>  data );
+}
 // completePackagingCompleteTask(taskCompletionWebApi){
 //   const apiUrl = 'api/Grower/PackagingTaskComplete';
 //   taskCompletionWebApi.CompleteHarvesting.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
@@ -254,7 +259,7 @@ submitbuckingTaskReview(taskReviewWebApi) {
 submittrimmingTaskReview(taskReviewWebApi) {
   const apiUrl = 'api/Grower/TrimmingTaskReview';
 
-  taskReviewWebApi.Trimming.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
+  taskReviewWebApi.VirtualRoleId = this.appCommonService.getUserProfile().VirtualRoleId;
   return this.http.post(apiUrl, taskReviewWebApi, this.headers)
   .map(data =>  data );
 }

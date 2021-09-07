@@ -238,6 +238,7 @@ deleteItem(index: number) {
  
 }
 GoToBinsPage(){
+  this.appCommonService.addRawMaterialPageBackLink = true
   this.router.navigate(['../home/labels']);
 }
 

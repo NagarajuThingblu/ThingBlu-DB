@@ -25,6 +25,7 @@ import { NewSectionDetailsActionService } from '../../../services/add-section-de
 import { filter } from 'rxjs/operator/filter';
 import { NewClientService } from '../../../../Masters/services/new-client.service';
 import { FormArray } from '@angular/forms';
+import { NewEmployeeActionService } from '../../../services/add-employee';
 
 
 @Component({
@@ -60,6 +61,17 @@ export class BuckingComponent implements OnInit {
   public priorities: SelectItem[];
   public workingEmp: any=[];
   public workingemp:boolean =false
+  public skills: SelectItem[];
+  public allSkillslist: any;
+  public visibility:boolean = false;
+  public showUpArrow:boolean = false;
+  public allemplist : any[]
+  public skilledempslist: any[]
+  public headings: any[];
+  plottedSkillItems: any = [];
+  public selectedSkillItems: any[];
+  public files: any = [];
+  public employeeNameToBeDisplayedOnDropdown="--Select--"
   constructor(
     private fb: FormBuilder,
     private dropdownDataService: DropdownValuesService,
@@ -78,7 +90,8 @@ export class BuckingComponent implements OnInit {
     private titleService: Title,
     private refreshService: RefreshService,
     private render: Renderer2,
-    private elref: ElementRef
+    private elref: ElementRef,
+    private newEmployeeActionService: NewEmployeeActionService,
   ) { 
     this._cookieService = this.appCommonService.getUserProfile();
   }
@@ -90,19 +103,31 @@ export class BuckingComponent implements OnInit {
    public msgs: Message[] = [];
    public employees: any[];
    public binsArray:any=[];
- 
+   public employeeArray:any=[];
+   public completeDataBasedOnTaskType : any;
+   public strainid: any[];
+   public sections: any[];
+   public strains: any[];
+   public lightdepts = [];
+   public fields = [];
+   public sectionslist = [];
+   public batchId : any;
+   public LD= [];
     taskTypeId: any;
    public taskType: any;
    private globalData = {
-    bins: [],
-    employees:[]
+    employees: [],
+    sections: [],
+    workingEmp:[],
   };
   isRActSecsDisabled: boolean;
   // public inputBinDetails :any[];
   ngOnInit() {
+    this.employeeNameToBeDisplayedOnDropdown="--Select--"
+    this.getStrainListByTask();
     this.binsListByClient();
     this.employeeListByClient();
-    
+    this.getSkills();
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle('Bucking');
@@ -126,7 +151,7 @@ export class BuckingComponent implements OnInit {
       {label: 'Important', value: 'Important'},
       {label: 'Critical', value: 'Critical'}
     ];
-
+ 
     if (this.PageFlag.page !== 'TaskAction') {
       this.TaskModel.BUCKING = {
         bins:'',
@@ -142,7 +167,13 @@ export class BuckingComponent implements OnInit {
         usercomment: '',
       };
       this.BUCKING = this.fb.group({
-        'bins': new FormControl('', Validators.required),
+        'section': new FormControl(null,Validators.required),
+        'strain': new FormControl(null, Validators.required),
+        'field':new FormControl(null,Validators.required),
+        'strainid':new FormControl(''),
+        'batchId':new FormControl(''),
+        'lightdept': new FormControl(null,Validators.required),
+        'skills':new FormControl('', Validators.required),
         'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
         'employeeList': new FormControl('', Validators.required),
         'priority': new FormControl(''),
@@ -159,7 +190,7 @@ export class BuckingComponent implements OnInit {
         BinWeight: this.TaskModel.IPBinWt,
         CompletedBinWt:'', 
         WasteWt:'',
-        binId: this.TaskModel.binId,
+       // binId: this.TaskModel.binId,
         binsId:'',
         weight:'',
         binFull: this.TaskModel.binFull,
@@ -181,16 +212,19 @@ export class BuckingComponent implements OnInit {
        }
 
       this.completionForm = this.fb.group({
-        'inputBin': new FormControl(null),
-        'binWt': new FormControl(''),
-        'completeWt':new FormControl('',Validators.compose([Validators.required])),
-        'wasteWt':new FormControl(''),
-        'items': new FormArray([
-          this.createItem()
-        ], this.customGroupValidation),
+        // 'strain': new FormControl(null),
+        // 'inputBin': new FormControl(null),
+        // 'binWt': new FormControl(''),
+        // 'completeWt':new FormControl('',Validators.compose([Validators.required])),
+        // 'wasteWt':new FormControl(''),
+        'binId': new FormControl(null, Validators.compose([Validators.required])),
+        // 'items': new FormArray([
+        //   this.createItem()
+        // ], this.customGroupValidation),
       });
 
       this.reviewForm = this.fb.group({
+        'binId': new FormControl(null, Validators.compose([Validators.required])),
         // 'inputBin': new FormControl(null),
         // 'binWt': new FormControl(''),
         // 'completeWt':new FormControl('',Validators.compose([Validators.required])),
@@ -205,6 +239,10 @@ export class BuckingComponent implements OnInit {
           'rmisccost': new FormControl(null),
           'rmisccomment': new FormControl(null)
       })
+
+      if(!this.PageFlag.showReviewmodal){
+        this.reviewForm.controls['binId'].patchValue(this.BinData[0].OutPutBinId)
+      }
     }
     // if(this.BinData != null){
     //   this.inputBinDetails = []
@@ -212,7 +250,7 @@ export class BuckingComponent implements OnInit {
     //    this.inputBinDetails[i] = this.BinData[i]
     //  }
     // }
-
+   // this.empfilterBasedOnSkill()
   }
 
   createItem(): FormGroup {
@@ -271,7 +309,307 @@ export class BuckingComponent implements OnInit {
       error => { console.log(error); },
       () => console.log('GetPrscrStrainListByTask complete'));
   }
+  empfilterBasedOnSkill(){
+    this.plottedSkillItems = [];
+    this.selectedSkillItems = [];
+    this.headings.forEach(element => {
+      const NewEmpList: any = {};
+      NewEmpList.id = element.ID;
+      NewEmpList.label = element.HeadingName;
+      NewEmpList.children = [];
+      NewEmpList.Num  = element.Num
+      NewEmpList.isParent = element.IsParent;
+      NewEmpList.ParentId = element.ParentID;
+      NewEmpList.Selectable = true;
+      if(element.IsParent === false || element.IsParent === "False"){
+        this.selectedSkillItems.push(NewEmpList)
+      }
+      if(NewEmpList.isParent === true || NewEmpList.isParent === "True"){
+        this.plottedSkillItems.push(NewEmpList)
+      }
+    });
+    this.allemplist.forEach(element => {
+      const NewAllEmpList: any = {};
+      NewAllEmpList.id = element.EmpID;
+      NewAllEmpList.label = element.EmpName;
+      NewAllEmpList.children = [];
+     // NewAllEmpList.Num  = element.Num
+      NewAllEmpList.isParent = element.IsParent;
+      NewAllEmpList.ParentId = element.ParentID;
+      NewAllEmpList.Selectable = true;
+      if (element.IsParent === false || element.IsParent === "False" ) {
+        if (this.plottedSkillItems.length) {
+          this.plottedSkillItems.forEach(parent => {
+            if (parent.id === element.ParentId) {
+              parent.children.push(NewAllEmpList);
+            } 
+          })
+       
+        }
+      }
+    })
+    this.skilledempslist.forEach(element => {
+      const NewAllEmpList: any = {};
+      NewAllEmpList.id = element.EmpID;
+      NewAllEmpList.label = element.EmpName;
+      NewAllEmpList.children = [];
+     // NewAllEmpList.Num  = element.Num
+      NewAllEmpList.isParent = element.IsParent;
+      NewAllEmpList.ParentId = element.ParentId;
+      NewAllEmpList.Selectable = true;
+      if (element.IsParent === false || element.IsParent === "False") {
+        if (this.plottedSkillItems.length) {
+          this.plottedSkillItems.forEach(parent => {
+            if (parent.id === element.ParentId) {
+              parent.children.push(NewAllEmpList);
+            } 
+          })
+       
+        }
+      }
+    })
+    this.files = this.plottedSkillItems;
+  }
+  getSkills(){
+    let TaskTypeId = this.ParentFormGroup != undefined?
+    this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
+    this.newEmployeeActionService.GetSkillslist().subscribe(data => {
+      if (data !== 'No Data found') {
+        this.allSkillslist = data;
+       
+        this.skills = this.dropdwonTransformService.transform(this.allSkillslist.filter(x => x.TaskTypeId === TaskTypeId), 'SkillName', 'SkillTaskTypeMapId');
+      }
+      else{
+        this.allSkillslist = [];
+        this.skills = []
+      }
+    },
+    error => { console.log(error); },
+    () => console.log('skillslistbytasktype complete'));
+  }
+  onSkillsSelect(event:any){
+    this.employeeNameToBeDisplayedOnDropdown="--Select--"
+    let skillListApiDetails;
+    skillListApiDetails = {
+      TaskTypeId:Number(this.TaskModel.task),
+    
+      SkillList:[]
+    };
+    skillListApiDetails.SkillList.push({SkillID:event.value})
+    // for(let j of this.BUCKING.value.skills){
+          
+    //   skillListApiDetails.SkillList.push({
+    //     SkillID: j,
+       
+    //   })
+    // };
+    this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
+    .subscribe(data => {
+      this.headings = data.Table,
+      this.skilledempslist = data.Table1,
+      this.allemplist = data.Table2 ? data.Table2 : []
+      this.globalData
+      this.empfilterBasedOnSkill()
+    });
+      }
+      
+  getStrainListByTask() {
+    this.globalData.workingEmp =[];
+    this.workingEmp = [];
+    this.workingemp=false;
+    let TaskTypeId = this.ParentFormGroup != undefined?
+    this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
+    this.dropdownDataService. getStrainsByTaskType(TaskTypeId).subscribe(
+      data => {
+        this.completeDataBasedOnTaskType = data;
+        this.globalData.sections = data;
+        if (data !== 'No Data Found') {
+          this.strains = this.dropdwonTransformService.transform(data, 'StrainName', 'StrainId', '-- Select --');
+          const strainsfilter = Array.from(this.strains.reduce((m, t) => m.set(t.label, t), new Map()).values())
+          this.strains = this.dropdwonTransformService.transform(strainsfilter,'label', 'value')
+        } else {
+          this.strains = [];
+        }
+      } ,
+      error => { console.log(error); },
+      () => console.log('GetPrscrStrainListByTask complete'));
+  }
+
+  onStrainSelect(event?: any){
+    this.sectionslist = []
+    this.lightdepts = []
+    this.globalData.workingEmp=[]
+    this.workingEmp = []
+    this.LD = []
+//this.LD = null
+    for(let i of this.completeDataBasedOnTaskType){
+      if(i.StrainId === event.value){
+        this.lightdepts.push({label:i.IsLightDeprevation,value: i.IsLightDeprevation});
+      }
+    }
+    const ldfilter = Array.from(this.lightdepts.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.lightdepts = this.dropdwonTransformService.transform(ldfilter,'label', 'value','-- Select --')
+    if(this.lightdepts.length === 3){
+      this.LD=[
+        {label: "-- Select --", value: null},
+        {label: 'true', value: true},
+        {label: 'false', value: false},
+      ]
+    }
+      else if(this.lightdepts[1].value === true)
+      {
+        this.LD=[
+          {label: "-- Select --", value: null},
+          {label: 'true', value: true},
+        ]
+        // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
+      }
+      else 
+      {
+        this.LD=[
+          {label: "-- Select --", value: null},
+          {label: 'false', value: false},
+        ]
+        // this.newLabelsEntryForm.controls.lightdept.patchValue(this.LD[0].value)
+      }
+      if(this.BUCKING.controls['lightdept'].value !=null){
+        this.onLdSelect(this.BUCKING.controls['lightdept'].value);
+      }
+      if(this.BUCKING.controls['lightdept'].value !=null){
+        this.onLdSelect(this.BUCKING.controls['lightdept'].value);
+      }
+  }
+
+  onLdSelect(event?: any){
+    this.fields = []
+    for(let i of this.completeDataBasedOnTaskType){
+      if(i.StrainId === this.BUCKING.controls['strain'].value && (i.IsLightDeprevation === event.value || i.IsLightDeprevation === event)){
+        this.fields.push({label:i.Fields,value: i.FieldUniqueId});
+      }
+    }
+    const fieldfilter = Array.from(this.fields.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.fields = this.dropdwonTransformService.transform(fieldfilter,'label', 'value','-- Select --',false)
+    if(this.BUCKING.controls['field'].value !=null){
+      this.onFieldSelect(this.BUCKING.controls['field'].value);
+    }
+  }
+  onFieldSelect(event?: any){
+    this.sectionslist = []
+    for(let i of this.completeDataBasedOnTaskType){
+      if(i.StrainId === this.BUCKING.controls['strain'].value && i.IsLightDeprevation ===this.BUCKING.controls['lightdept'].value && (i.FieldUniqueId === event.value || i.FieldUniqueId === event)){
+        this.sectionslist.push({label:i.Sections,value: i.SectionUniqueId});
+        this.BUCKING.controls['batchId'].patchValue(i.BatchId);
+      }
+    }
+    const sectionfilter = Array.from(this.sectionslist.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.sectionslist = this.dropdwonTransformService.transform(sectionfilter,'label', 'value','-- Select --',false)
+  }
+
+  getWorkingEmpList(event?: any){
+    this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.BUCKING.controls['batchId'].value).subscribe(
+      data=>{
+        if(data != 'No Data Found'){
+          this.globalData.workingEmp = data;
+          this.getWorkingEmpsList();
+        }
+        else{
+          this.globalData.workingEmp = [];
+          this.workingEmp = [];
+        }
+      }
+    )
+  }
+
+  getWorkingEmpsList(){
+    if(this.globalData.workingEmp != null){
+      for(let employee of this.globalData.workingEmp){
+        this.workingEmp.push(employee.Column1)
+    }
+    }
+    else{
+      this.workingEmp = [];
+    }
+  this. filterEmpList()
+  }
+
+  filterEmpList(){
+    for(let j of this.globalData.workingEmp){
+      // for(let i of this.employees){
+        // if(i.value === j.EmpId){
+          let index = this.employees.findIndex(x => x.value === j.EmpId)
+          
+          this.employees.splice(index,1)
+        // }
+      // }
+    }
+  }
+
+  
  
+  OnSelectingEmployees(event: any){
+    if(this.employeeNameToBeDisplayedOnDropdown === "--Select--"){
+      this.employeeNameToBeDisplayedOnDropdown=""
+    }
+    let count =0
+    for(let employee of  this.globalData.employees){
+        if(event.node.id === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
+          this.employeeArray.push(employee.EmpName)
+          for(let i of this.employeeArray){
+           count++
+            if(count <=4){
+              if(this.employeeNameToBeDisplayedOnDropdown.indexOf(i) === -1){
+                this.employeeNameToBeDisplayedOnDropdown =this.employeeNameToBeDisplayedOnDropdown+" "+i+"  "
+              }
+            }
+          else{
+            this.employeeNameToBeDisplayedOnDropdown =count+" selected"
+          }
+          }
+          //this.employeeNameToBeDisplayedOnDropdown = ""+employee.EmpName
+          this.BUCKING.get('employeeList').patchValue(this.selectedSkillItems)
+          return;
+       }
+       else{
+      
+        // for(let i of this.employeeArray){
+        //   count--
+        //    if(count <=4){
+        //      if(this.employeeNameToBeDisplayedOnDropdown.indexOf(i) != -1){
+        //        this.employeeNameToBeDisplayedOnDropdown =this.employeeNameToBeDisplayedOnDropdown+" "+i+"  "
+        //      }
+        //    }
+        //  else{
+        //    this.employeeNameToBeDisplayedOnDropdown =count+" selected"
+        //  }
+        //  }
+         if(event.node.id === employee.EmpId){
+          this.employeeNameToBeDisplayedOnDropdown=""
+           let index = this.employeeArray.indexOf(employee.EmpName);
+           this.employeeArray.splice(index,1)
+          let count1 = this.employeeArray.length
+           for(let i of this.employeeArray){
+             if(count1 <=4){
+               if(this.employeeNameToBeDisplayedOnDropdown.indexOf(i) === -1){
+                 this.employeeNameToBeDisplayedOnDropdown =this.employeeNameToBeDisplayedOnDropdown+" "+i+"  "
+               }
+             }
+           else{
+             this.employeeNameToBeDisplayedOnDropdown =count1+" selected"
+           }
+           }
+         }
+       }
+      }
+    
+  }
+  OnUnSelectNode(e) {
+ 
+    if (e.node.selectable === false) {
+     // this.selectedmenuItems.push(e.node.parent);
+    }
+    this.OnSelectingEmployees(e)
+  
+  }
 //method to get bins dropdown in complete page
   getAllBins(){
     let TaskId =this.TaskModel.TaskId
@@ -281,7 +619,7 @@ export class BuckingComponent implements OnInit {
         // newdata = this.removeDuplicatesById(data);
    
         if (data !== 'No Data Found!') {
-          this.binslist = this.dropdwonTransformService.transform(data, 'LabelName', 'LabelId', '-- Select --');
+          this.binslist = this.dropdwonTransformService.transform(data,'BinName', 'BinId', '-- Select --');
         } else {
           this.binslist = [];
         }
@@ -303,6 +641,13 @@ export class BuckingComponent implements OnInit {
       error => { console.log(error); },
       () => console.log('Get all employees by client complete'));
   }
+
+  resetForm() {
+    
+    this.completionForm.reset({ isStrainComplete: false });
+ 
+  }
+ 
   deleteItem(index: number) {
     
     const control = <FormArray>this.completionForm.controls['items'];
@@ -316,6 +661,7 @@ export class BuckingComponent implements OnInit {
   viewBinsList(e){
     this.router.navigate(['../home/labels', e]);
   }
+ 
   CaluculateTotalSecs(Hours, Mins, Secs) {
     return (Number(Hours) * 3600) + (Number(Mins) * 60) + Number(Secs);
   }
@@ -350,36 +696,36 @@ submitReview(formModel) {
         TaskId:Number(this.taskid),
         VirtualRoleId:Number(this._cookieService.VirtualRoleId),
         Comment: formModel.rmisccomment === null? "": formModel.rmisccomment,
-        IsStrainCompleted:formModel.isStrainComplete === ""?0:1,
+        BinId:this.reviewForm.controls['binId'].value,
         MiscCost: formModel.rmisccost === null?0:formModel.rmisccost,
         RevTimeInSec: this.CaluculateTotalSecs(formModel.ActHrs, formModel.ActMins, ActSeconds),
       },
-      InputBinDetails:[],
-      OutputBinDetails:[]
+      // InputBinDetails:[],
+      // OutputBinDetails:[]
     };
-    this.inpubinData.forEach((element, index) => {
-      // this.duplicateSection = element.value.section
-      taskReviewWebApi.InputBinDetails.push({
-        BinId:element.InputBinId,
-        DryWt: element.IPBinWt,
-        WetWt: 0,
-        WasteWt: element.TotalWasteWt,
+    // this.inpubinData.forEach((element, index) => {
+    //   // this.duplicateSection = element.value.section
+    //   taskReviewWebApi.InputBinDetails.push({
+    //     BinId:element.InputBinId,
+    //     DryWt: element.IPBinWt,
+    //     WetWt: 0,
+    //     WasteWt: element.TotalWasteWt,
             
-         });
+    //      });
     
-     });
-     this.BinData.forEach((element, index) => {
-      // this.duplicateSection = element.value.section
-      taskReviewWebApi.OutputBinDetails.push({
-        BinId:element.OPBinId,
-        DryWt: element.OPBinWt,
-        WetWt: 0,
-        WasteWt: element.WasteWt,
-        IsOpBinFilledCompletely: element.IsOpBinFilledCompletely == true?1:0
+    //  });
+    //  this.BinData.forEach((element, index) => {
+    //   // this.duplicateSection = element.value.section
+    //   taskReviewWebApi.OutputBinDetails.push({
+    //     BinId:element.OPBinId,
+    //     DryWt: element.OPBinWt,
+    //     WetWt: 0,
+    //     WasteWt: element.WasteWt,
+    //     IsOpBinFilledCompletely: element.IsOpBinFilledCompletely == true?1:0
             
-         });
+    //      });
     
-     });
+    //  });
   }
   this.confirmationService.confirm({
     message: this.assignTaskResources.taskcompleteconfirm,
@@ -458,32 +804,33 @@ completeTask(formModel){
         TaskId:Number(this.taskid),
         Comment:" ",
         VirtualRoleId: Number(this._cookieService.VirtualRoleId),
+        BinId:this.completionForm.controls['binId'].value,
       },
-      InputBinDetails:[],
-      OutputBinDetails:[]
+      // InputBinDetails:[],
+      // OutputBinDetails:[]
     };
    
       // this.duplicateSection = element.value.section
-      taskCompletionWebApi.InputBinDetails.push({
-        BinId:this.TaskModel.InputBinId,
-        DryWt: Number(formModel.completeWt),
-        WetWt: 0,
-        WasteWt:Number(formModel.wasteWt) ,
+      // taskCompletionWebApi.InputBinDetails.push({
+      //   BinId:this.TaskModel.InputBinId,
+      //   DryWt: Number(formModel.completeWt),
+      //   WetWt: 0,
+      //   WasteWt:Number(formModel.wasteWt) ,
             
-         });
+      //    });
         
    
     
-     this.buckingDetailsArr.controls.forEach((element, index) => {
-      // this.duplicateSection = element.value.section
-      taskCompletionWebApi.OutputBinDetails.push({
-        BinId:element.value.binsId,
-        DryWt: element.value.weight,
-        IsOpBinFilledCompletely: element.value.binFull == true?1:0
+    //  this.buckingDetailsArr.controls.forEach((element, index) => {
+    //   // this.duplicateSection = element.value.section
+    //   taskCompletionWebApi.OutputBinDetails.push({
+    //     BinId:element.value.binsId,
+    //     DryWt: element.value.weight,
+    //     IsOpBinFilledCompletely: element.value.binFull == true?1:0
             
-         });
+    //      });
         
-     });
+    //  });
    
      
 
@@ -586,5 +933,17 @@ completeTask(formModel){
 
     }
   });
+}
+showEmps(event: any){
+  if(this.visibility === true){
+    this.visibility = false;
+    this.showUpArrow = false
+  }
+  else{
+    this.visibility = true;
+    this.showUpArrow = true
+  }
+
+console.log(event)
 }
 }

@@ -128,8 +128,8 @@ public data = 0;
     this.getStrains();
     this.ld=
       [
-        {label: 'true', value: true},
-        {label: 'false', value: false},
+        {label: 'true', value: 'true'},
+        {label: 'false', value: 'false'},
       ];
     
     this.globalResource = GlobalResources.getResources().en;
@@ -382,7 +382,7 @@ this.selectedForNoEditLD = false;
 this.selectedForEditLD = true;
 this.disableLDDropdown = false;
 const ld = this.updateTerminationReason.controls['ld'];
-ld.patchValue(this.AllSectionData.IsLightDeprevation); 
+ld.patchValue(String(this.AllSectionData.IsLightDeprevation)); 
   }
   closeEditLD(){
     this.selectedForNoEditLD = true;
@@ -432,7 +432,7 @@ this.disableLDDropdown = true;
       IsActive:this.AllSectionData.IsActive === true? 1: 0,
       PlantsCount:this.updateTerminationReason.value.TPC === null? this.AllSectionData.TotalPlantCount : this.updateTerminationReason.value.TPC,
       year:this.updateTerminationReason.value.year === null? this.AllSectionData.Year:this.updateTerminationReason.value.year ,
-      IsLightDeprevation:this.updateTerminationReason.value.ld === null?this.AllSectionData.IsLightDeprevation === (true || "true")? 1:0 :this.updateTerminationReason.value.ld === true? 1: 0 ,
+      IsLightDeprevation:this.updateTerminationReason.value.ld === null?(this.AllSectionData.IsLightDeprevation ===true || this.AllSectionData.IsLightDeprevation ==="true")? 1:0 :(this.updateTerminationReason.value.ld === true ||this.updateTerminationReason.value.ld === "true")? 1: 0 ,
       IsDeleted:0,
       ActiveInactive:0,
     });

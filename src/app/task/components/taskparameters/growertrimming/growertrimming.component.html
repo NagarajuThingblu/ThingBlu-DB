@@ -1,20 +1,90 @@
 <div class="ui-g " [formGroup]="GROWERTRIMMING" *ngIf="PageFlag.page =='AssignTask'">
-  <!-- <div class="ui-g-12 ui-md-6">
+  <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
-      <label for="bins">Bins<span class="star">*</span></label>:
-      <div class="clear"></div>
-      <p-dropdown #checkedItems
-      placeholder="-- Select --"
-      [filter] ="true"
-      [options]="bins"
-      formControlName="bins"
-      class="clsControl"
-      id="bins"
-      name="bins"
-      >
+      <label for="tm">Trimming Method<span class="star">*</span></label>:
+      <p-dropdown
+          [filter] ="true"
+          [options]="tm"
+          placeholder="-- Select --"
+          [autoWidth]="true"
+          formControlName="tm"
+          class="clsControl"
+          id="tm"
+          name="tm">
       </p-dropdown>
     </div>
-  </div> -->
+  </div>
+
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="strain">Strain<span class="star">*</span></label>:
+      <div class="clear"></div>
+      <p-dropdown
+      [filter] ="true"
+      [options]="strains"
+      (onChange)="onStrainSelect($event)"
+      placeholder="-- Select --"
+      [autoWidth]="true"
+      formControlName="strain"
+      class="clsControl"
+      id="strain"
+      name="strain">
+      </p-dropdown>
+   
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="lightdept">Light Dept<span class="star">*</span></label>:
+      <p-dropdown
+      [filter] ="true"
+      id="lightdept"
+      (onChange)=" onLdSelect($event)"
+      formControlName="lightdept"
+      [options]="LD"
+      placeholder="-- Select --"
+      [autoWidth]="false"
+      class="clsControl"
+      name="lightdept">
+    </p-dropdown>
+    </div>
+  </div>
+
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="field">Field<span class="star">*</span></label>:
+      <div class="clear"></div>
+      <p-dropdown
+      [filter] ="true"
+      [options]="fields"
+      (onChange)=" onFieldSelect($event)"
+      placeholder="-- Select --"
+      [autoWidth]="true"
+      formControlName="field"
+      class="clsControl"
+      id="field"
+      name="field">
+      </p-dropdown>
+    </div>
+  </div>
+
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="section">Section<span class="star">*</span></label>:
+      <div class="clear"></div>
+      <p-dropdown
+      [filter] ="true"
+      [options]="sectionslist"
+      (onChange)=" getWorkingEmpList($event)"
+      placeholder="-- Select --"
+      [autoWidth]="true"
+      formControlName="section"
+      class="clsControl"
+      id="section"
+      name="section">
+      </p-dropdown>
+    </div>
+  </div> 
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="EmployeeListBox">Employees Working For Trimming</label>
@@ -29,19 +99,50 @@
   </div>
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
-      <label for="employeeList">Assigned To<span class="star">*</span></label>:
-      <p-dropdown
+      <label for="skills">Skills<span class="star">*</span></label>:
+      <p-dropdown  #checkedItems
       [filter] ="true"
-      [options]="employees"
+      [options]="skills"
       placeholder="-- Select --"
-      [autoWidth]="true"
-      formControlName="employeeList"
+      (onChange)="onSkillsSelect($event)"
+      formControlName="skills"
       class="clsControl"
-      id="employeeList"
-      name="employeeList">
-      </p-dropdown>
+      id="skills"
+      name="skills">
+      </p-dropdown >
     </div>
   </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="employeeList">Assigned To<span class="star">*</span></label>:
+      <div>
+
+              
+        <div class="input-container">
+          <input pInputText
+          id="myTextBox"
+          autocomplete="off"
+          class="clsControl"
+          [value]="employeeNameToBeDisplayedOnDropdown"
+          placeholder="--Select--"
+         (click)="showEmps($event)"
+        />
+        <span id="myTextBox" class="viewer2" *ngIf="!showUpArrow" (click)="showEmps($event)">
+          <i id="myTextBox" class="fa fa-caret-down" ria-hidden="true"  (click)="showEmps($event)"></i>
+        </span>
+        <span id="myTextBox" class="viewer2" *ngIf="showUpArrow" (click)="showEmps($event)">
+          <i id="myTextBox" class="fa fa-caret-up" ria-hidden="true"  (click)="showEmps($event)"></i>
+        </span>
+      </div>
+      <p-tree [value]="files"  [ngClass]="!visibility?'myskillsdropdown':'showmyskillsdropdown'" styleClass="clsRoleAccessTree" selectionMode="checkbox"  [(selection)]="selectedSkillItems"
+      [propagateSelectionUp]="false" (onNodeSelect)="OnSelectingEmployees($event)" (onNodeUnselect) = "OnUnSelectNode($event)" [propagateSelectionDown]="true"></p-tree>
+       
+      
+      </div>
+     
+    </div>
+  </div>
+  
   <!-- <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="BinsListBox">Bins List</label>
@@ -75,6 +176,19 @@
            name="estimatedstartdate"
            >
          </p-calendar>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="EmployeeListBox">Employee List</label>
+      <div  class="EmployeeListBox">
+        <ul class="emp-list" style='padding: 0px;'>
+          <li  *ngFor="let i of employeeArray; let id=index" class="EmployeeListItem" >
+            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
+            
+          </li>
+        </ul>
+      </div>  
     </div>
   </div>
   <div class="ui-g-12 ui-md-6">
@@ -138,17 +252,49 @@
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label>
-        <strong>Cultivar: </strong>
+        <strong>{{ globalResource.strain }}: </strong>
       </label>
           {{TaskModel?.StrainName}}
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6">
+  <!-- <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label>
         <strong>{{ globalResource.inputBinName }}: </strong>
       </label>
           {{TaskModel?.IPLabelName}}
+    </div>
+  </div> -->
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>Field: </strong>
+      </label>
+          {{BinData[0]?.Fields}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>Section: </strong>
+      </label>
+          {{BinData[0]?.Sections}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>Trimming Method: </strong>
+      </label>
+          {{BinData[0]?.TrimmingMethod}}
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label>
+        <strong>Light Dept: </strong>
+      </label>
+          {{BinData[0]?.IsLightDeprevation}}
     </div>
   </div>
   <div class="ui-g-12 ui-md-6">
@@ -226,7 +372,7 @@
       {{TaskModel?.RevHrs  | minutesToTime}}
     </div>
   </div>
-  <div class="ui-g-12" style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
+  <!-- <div class="ui-g-12" style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''">
     <div><b>Input Bin Details</b></div>
   <p-table [value]="inpubinData">
     <ng-template pTemplate="header">
@@ -266,13 +412,37 @@
       </tr>
   </ng-template>
   </p-table>
+</div> -->
+<div class="ui-g-12" style="padding-top: 10px;" *ngIf="TaskModel?.TaskStatus !== taskStatus.Assigned&&TaskModel?.TaskStatus !== ''&&  inpubinData.length > 0">
+  <div><b> Bin Details</b></div>
+<p-table [value]="inpubinData">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Bin Name</th>
+      <th>Completed Weight</th>
+      <th *ngIf="TaskModel?.TaskStatus === 'COMPLETED'"> Review Completed Weight</th>
+      <!-- <th *ngIf="TaskModel?.TaskStatus ==='REVIEW PENDING'">Action</th> -->
+  </tr>
+  </ng-template>
+  <ng-template pTemplate="body"  let-TaskMode  >
+    <tr>
+        <td >{{TaskMode.BinName}}</td>
+        <td >{{TaskMode.CompletedWt}}</td>
+        <td *ngIf="TaskModel?.TaskStatus === 'COMPLETED'">{{TaskMode.RevCompletedWt}}</td>
+        <!-- <td *ngIf="TaskModel?.TaskStatus ==='REVIEW PENDING'">Edit</td> -->
+    </tr>
+</ng-template>
+</p-table>
 </div>
-
   <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
     
     <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
       <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
         <div  class="ui-g-12">
+          <span><b>Trimming Method :- </b>{{BinData[0]?.TrimmingMethod}}</span>
+         
+        </div>
+        <!-- <div  class="ui-g-12">
           <span><b>Input Bin</b></span>
         </div>
         <div class="ui-g-12 ui-md-3">
@@ -354,30 +524,38 @@
             class="clsControl"   
           />
           </div>
-        </div>
+        </div> -->
 
         <div formArrayName="items" style="position: relative">
           <div style="width:calc(100% - 20px);float:left;">
-            <div style="padding:5px;">
-              <span><b>Output Bin</b></span>
-              <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ assignTaskResources.viewaddbin}}" id="btn_binshow" (click)="viewBinsList(TaskModel)"  name="btnviewbins"></p-button>
-            </div>
+           
             <p-table [value]="trimmingDetailsArr?.controls" id="trimmingDetailsArr" name="trimmingDetailsArr">
               <ng-template pTemplate="header">
                 <tr>
+                  <th>Strain
+                    <span class="star">*</span>
+                  </th>
                   <th>Bin
                     <span class="star">*</span>
                   </th>
                   <th>Weight (lb)
                     <span class="star">*</span>
                   </th>
-                  <th style="width: 80px;">IsBinFull
-                </th>
-                <th style="width: 80px;">Action</th>
+                  <!-- <th style="width: 80px;">IsBinFull
+                </th> -->
+                <th  *ngIf="BinData[0]?.TrimmingMethod === 'MT'" style="width: 80px;">Action</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-item let-i="rowIndex">
                 <tr [formGroupName]="i">
+                  <td>
+                    <input pInputText
+                    pInputText 
+                    [value]="BinData[0].StrainName"
+                    autocomplete="off"
+                    readonly="true">
+                   
+                  </td>
                   <td>
                     <p-dropdown
                     id="binsId"
@@ -400,12 +578,12 @@
                       placeholder="Enter  Weight "
                       min="0.1">
                   </td>
-                  <td>
+                  <!-- <td>
                     <p-checkbox value="true"
                      formControlName="binFull" checked="true"
                     binary="true"></p-checkbox>                                      
-                  </td>
-                  <td>
+                  </td> -->
+                  <td *ngIf="BinData[0]?.TrimmingMethod === 'MT'">
                       <a (click)="deleteItem(i)" >                                                    
                           <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
                           </span>
@@ -427,6 +605,7 @@
       <div class="ui-g" style="width:100%;text-align:right;">
         <div class="ui-g-12">
           <button pButton type="submit" label="Save" ></button>
+          <button  *ngIf ="BinData[0]?.TrimmingMethod === 'MT'" pButton type="submit" label="Draft"  (click)="SaveAsDraft(completionForm.value)" ></button>
           <button 
               pButton 
               (click)="resetForm()" 
@@ -439,41 +618,148 @@
     </form>
   </p-dialog>
 
-  <p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" >
+  <p-dialog header="Submit Review" [(visible)]="PageFlag.showReviewmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="800" [minWidth]="200" (onShow)="bindData(inpubinData)">
     <form [formGroup]="reviewForm" (ngSubmit)="submitReviewParameter(reviewForm.value)">
       <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
-        <div class="ui-g-12 ui-md-6" style="text-align:left;">
-          <div class="paddingRL">
-            <span>Cultivar :- </span><span>{{TaskModel?.StrainName}}</span>
-          </div>
-        </div>
-        <div class="ui-g-12 ui-md-6"style="text-align:right;">
-          <div class="paddingRL">
-            <p-checkbox value="BinData[0].IsStrainCompleted" label="IsStrainComplete"
-            formControlName="isStrainComplete" checked="true"
-           binary="true"></p-checkbox>  
-          </div>
-        </div>
-
-        <div class="ui-g-12"  style="padding-top: 10px;" >
-          <div><b>Output Bin Details</b></div>
-            <p-table [value]="BinData">
-             <ng-template pTemplate="header">
-               <tr>
-                  <th>Ouput Bin Name</th>
-                  <th>Bin Weight</th>
-                  <th>Is Bin Full</th>
-                </tr>
-            </ng-template>
-              <ng-template pTemplate="body" let-TaskModel>
+       
+        <div formArrayName="items1" style="position: relative">
+          <div style="width:calc(100% - 20px);float:left;">
+           
+            <p-table [value]="trimmingReviewDetailsArr?.controls" id="trimmingReviewDetailsArr" name="trimmingReviewDetailsArr">
+              <ng-template pTemplate="header">
                 <tr>
-                <td>{{TaskModel.OPLabelName}}</td>
-                <td>{{TaskModel.OPBinWt}}</td>
-                <td>{{TaskModel.IsOpBinFilledCompletely}}</td>
+                  <th>Strain
+                    <span class="star">*</span>
+                  </th>
+                  <th>Bin
+                    <span class="star">*</span>
+                  </th>
+                  <th>Weight (lb)
+                    <span class="star">*</span>
+                  </th>
+                  <!-- <th style="width: 80px;">IsBinFull
+                </th> -->
+                <th  *ngIf="BinData[0]?.TrimmingMethod === 'MT'" style="width: 80px;">Action</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-item let-i="rowIndex">
+                <tr [formGroupName]="i">
+                  <td>
+                    <input pInputText
+                    pInputText 
+                    [value]="BinData[0].StrainName"
+                    autocomplete="off"
+                    readonly="true">
+                   
+                  </td>
+                  <td>
+                    <p-dropdown
+                    id="binsId"
+                    formControlName="binsId"
+                    [options]="binslist"
+                    placeholder="-- Select --"
+                    [autoWidth]="false"
+                    class="clsControl"
+                    name="binsId">
+                    </p-dropdown>
+                  </td>
+                  <td>
+                    <input pInputText
+                      name="weight"
+                      id="weight"
+                      type="number"
+                      autocomplete="off"
+                      class="clsControl"       
+                      formControlName="weight"
+                      placeholder="Enter  Weight "
+                      min="0.1">
+                  </td>
+                  <!-- <td>
+                    <p-checkbox value="true"
+                     formControlName="binFull" checked="true"
+                    binary="true"></p-checkbox>                                      
+                  </td> -->
+                  <td *ngIf="BinData[0]?.TrimmingMethod === 'MT'">
+                      <a (click)="deleteItems(i,$event)" >                                                    
+                          <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                          </span>
+                      </a> 
+                        <a (click)="addItem1()" *ngIf="reviewForm.get('items1').valid">
+                            <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                            </span>
+                        </a>
+                  </td>
                 </tr>
               </ng-template>
             </p-table>
           </div>
+           <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="trimmingDetailsArr.hasError('duplicate')">
+          duplicate entries
+        </div>   -->
+        </div>
+        <!-- <p-table [value]="trimmingReviewDetailsArr?.controls" id="trimmingReviewDetailsArr" name="trimmingReviewDetailsArr">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Strain
+                <span class="star">*</span>
+              </th>
+              <th>Bin
+                <span class="star">*</span>
+              </th>
+              <th>Weight (lb)
+                <span class="star">*</span>
+              </th>
+         
+            <th  *ngIf="BinData[0]?.TrimmingMethod === 'MT'" style="width: 80px;">Action</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item let-i="rowIndex">
+            <tr [formGroupName]="j">
+              <td>
+                <input pInputText
+                pInputText 
+                [value]="BinData[0].StrainName"
+                autocomplete="off"
+                readonly="true">
+               
+              </td>
+              <td>
+                <p-dropdown
+                id="binsId"
+                formControlName="binsId"
+                [options]="binslist"
+                placeholder="-- Select --"
+                [autoWidth]="false"
+                class="clsControl"
+                name="binsId">
+                </p-dropdown>
+              </td>
+              <td>
+                <input pInputText
+                  name="weight"
+                  id="weight"
+                  type="number"
+                  autocomplete="off"
+                  class="clsControl"       
+                  formControlName="weight"
+                  placeholder="Enter  Weight "
+                  min="0.1">
+              </td>
+             
+              <td *ngIf="BinData[0]?.TrimmingMethod === 'MT'">
+                  <a (click)="deleteItem(i)" >                                                    
+                      <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                      </span>
+                  </a> 
+                    <a (click)="addItem()" *ngIf="completionForm.get('items').valid">
+                        <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                        </span>
+                    </a>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table> -->
+      
        </div>
        <div class="ui-grid-row" style="padding-top: 20px;">
         <div class="ui-grid-col-4">
@@ -572,7 +858,7 @@
      <p-footer>
     <button type="submit" pButton icon="fa-check"  label="Confirm"  ></button>
     <!-- [disabled]="!completionForm.valid" -->
-    <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showReviewmodal=false" label="Cancel"></button>
+    <button type="button" class="ui-button-secondary" pButton icon="fa-close" (click)="PageFlag.showReviewmodal=false"  (click)="resetForm()" label="Cancel"></button>
   </p-footer>
     </form>
   </p-dialog>

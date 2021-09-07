@@ -11,7 +11,7 @@
         <!--Main New Product Entry Form-->
         <form
           [formGroup]="newEmployeeForm"
-          (ngSubmit)="onSubmit(newEmployeeForm.value)">
+          (ngSubmit)="onSubmit(newEmployeeForm.value)" autocomplete="off">
               <div class="ui-g ">
                 <!--Client Name -->
                   <!-- <div class="ui-g-12 ui-md-6">
@@ -38,7 +38,58 @@
                       </div>
                 </div> -->
                 <!--End Client Name -->
+     <!-- User Role -->
+     <div class="ui-g-12 ui-md-6">
+      <div class="paddingRL">
+        <label for="userrole">{{ newEmployeeResources.userrole }}<span class="star">*</span></label>:
 
+        <p-dropdown
+          [filter] ="true"
+          id="userrole"
+          formControlName="userrole"
+          [options]="roles"
+          placeholder="-- Select --"
+          [autoWidth]="false"
+          (onChange)="Managerdrpdwnchng($event)"
+          class="clsControl"
+          name="userrole">
+        </p-dropdown>
+
+          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+            *ngIf="!newEmployeeForm.controls['userrole'].valid&&newEmployeeForm.controls['userrole'].dirty">
+
+              {{ newEmployeeResources.userrolerequired }}
+          </div>
+
+          <p-button  type="button" class="links" icon="fa fa-plus" label="{{ newEmployeeResources.adduserrole}}" id="btn_userroleshow" (click)="showUserRolePopup()" name="btnshow" ></p-button>
+        </div>
+      </div>
+    <!--End User Role-->
+    <div class="ui-g-12 ui-md-6" style="visibility:hidden;">
+      <div class="paddingRL">
+        <label for="userrole">{{ newEmployeeResources.userrole }}<span class="star">*</span></label>:
+
+        <p-dropdown
+          [filter] ="true"
+          id="userrole"
+          formControlName="userrole"
+          [options]="roles"
+          placeholder="-- Select --"
+          [autoWidth]="false"
+          (onChange)="Managerdrpdwnchng($event)"
+          class="clsControl"
+          name="userrole">
+        </p-dropdown>
+
+          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+            *ngIf="!newEmployeeForm.controls['userrole'].valid&&newEmployeeForm.controls['userrole'].dirty">
+
+              {{ newEmployeeResources.userrolerequired }}
+          </div>
+
+          <p-button  type="button" class="links" icon="fa fa-plus" label="{{ newEmployeeResources.adduserrole}}" id="btn_userroleshow" (click)="showUserRolePopup()" name="btnshow" ></p-button>
+        </div>
+      </div>
                 <!--Employee First Name -->
                 <div class="ui-g-12 ui-md-6">
                   <div class="paddingRL">
@@ -170,7 +221,7 @@
                 <!--End Gender  -->
 
                 <!--DOB -->
-                <div class="ui-g-12 ui-md-6">
+                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp !=this.selectedRole">
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="dob">
@@ -268,7 +319,7 @@
                 <!--End Home Phone -->
 
                 <!--Primary Email -->
-                <div class="ui-g-12 ui-md-6">
+                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp !=this.selectedRole">
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="primaryemail">
@@ -283,13 +334,13 @@
                         class="clsControl"
                         formControlName="primaryemail"
                         placeholder="Enter Primary Email"
-                     
+                       
                       />
                   
                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['primaryemail'].valid&&newEmployeeForm.controls['primaryemail'].dirty">
-<!-- 
-                          <span *ngIf="newEmployeeForm.controls['primaryemail'].errors['required']">
+
+                          <!-- <span *ngIf="newEmployeeForm.controls['primaryemail'].errors['required']">
                             {{newEmployeeResources.primaryemailrequired}}
                           </span> -->
                           <span *ngIf="newEmployeeForm.controls['primaryemail'].hasError('duplicateemail')">
@@ -309,7 +360,7 @@
                 </div>
                 <!--End Primary Email -->
                 <!--Secondary Email -->
-                <div class="ui-g-12 ui-md-6">
+                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp !=this.selectedRole">
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="secondaryemail">
@@ -324,7 +375,7 @@
                         class="clsControl"
                         formControlName="secondaryemail"
                         placeholder="Enter Secondary Email"
-                    
+                       
                       />
 
                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
@@ -438,6 +489,7 @@
 
                     <p-dropdown
                       [filter] ="true"
+                     
                       id="city"
                       formControlName="city"
                       [options]="cities"
@@ -484,8 +536,9 @@
                   </div>
                 </div>
                 <!--End Zip Code -->
+                    
                 <!-- User Name -->
-                <div class="ui-g-12 ui-md-6" *ngIf="showTextbox === true">
+                <div class="ui-g-12 ui-md-6" >
                   <div class="paddingRL">
                       <div class="le-su-12">
                         <label for="empusername">
@@ -518,29 +571,44 @@
                 </div>
                 <!-- End User Name -->
                 <!-- Password -->
-                <div class="ui-g-12 ui-md-6" *ngIf="showTextbox === true">
+                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp !=this.selectedRole && showPWbox === true" >
                   <div class="paddingRL">
                       <div class="le-su-12">
                         <label for="emppassword">
                           {{ newEmployeeResources.password}}<span class="star">*</span>:
                         </label>
 
-                        <input pInputText               
+                        <!-- <input pInputText               
                           autocomplete="new-password"
                           type="password"
                           class="clsControl"
                           placeholder="Enter Password"
                           formControlName="emppassword"
+                        /> -->
+
+                        <div class="input-container">
+                          <input pInputText               
+                          autocomplete="new-password"
+                          [type]="passwordType"
+                          class="clsControl"
+                          placeholder="Enter Password"
+                          formControlName="emppassword"
                         />
-                        <!-- <span class="p-viewer2" *ngIf="showeye === true">
-                          <i class="fa fa-eye eyeicon"   ria-hidden="true" (click)="togglepw()">    </i>
-                      </span> -->
+                          <!-- class="clsControl" -->
+                          <span class="p-viewer2" *ngIf="showeye === true">
+                              <i class="fa fa-eye eyeicon"   ria-hidden="true" (click)="togglepw()">    </i>
+                          </span>
+                          <span class="p-viewer2" *ngIf="hideeye === true">
+                              <i class="fa fa-eye-slash eyeicon"  ria-hidden="true" (click)="togglepw()">                     </i>
+                          </span>
+                      </div>
+                        
                         <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                           *ngIf="!newEmployeeForm.controls['emppassword'].valid&&newEmployeeForm.controls['emppassword'].dirty">
                           <span *ngIf="newEmployeeForm.controls['emppassword'].errors['required']">
                             {{newEmployeeResources.passwordrequired}}
                           </span>
-                            <!-- <span *ngIf="newEmployeeForm.controls['emppassword'].errors['pattern']">dfgdfg</span> -->
+                          
                           <span *ngIf="newEmployeeForm.controls['emppassword'].errors['minlength']">
                               {{newEmployeeResources.passwordMinLength}}
                           </span>
@@ -572,7 +640,7 @@
                        [yearNavigator]="true" 
                        yearRange="1800:4030"
                        required
-                   
+                      
                       >
                       </p-calendar>
 
@@ -589,7 +657,7 @@
                 <!-- End Hire Date -->
 
                  <!-- Termination Date -->
-                 <div class="ui-g-12 ui-md-6" *ngIf = "showTerminationDate === true" >
+                 <div class="ui-g-12 ui-md-6" *ngIf = "showTerminationDate === true">
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="terminationdate">
@@ -606,7 +674,7 @@
                        [monthNavigator]="true"
                        [yearNavigator]="true" 
                        yearRange="2021:4030"
-                     
+                      
                       >
                       </p-calendar>
 
@@ -622,33 +690,7 @@
                 </div>
                 <!-- End Termination Date -->
 
-                <!-- User Role -->
-                <div class="ui-g-12 ui-md-6">
-                  <div class="paddingRL">
-                    <label for="userrole">{{ newEmployeeResources.userrole }}<span class="star">*</span></label>:
-
-                    <p-dropdown
-                      [filter] ="true"
-                      id="userrole"
-                      formControlName="userrole"
-                      [options]="roles"
-                      placeholder="-- Select --"
-                      [autoWidth]="false"
-                      (onChange)="Managerdrpdwnchng($event)"
-                      class="clsControl"
-                      name="userrole">
-                    </p-dropdown>
-
-                      <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                        *ngIf="!newEmployeeForm.controls['userrole'].valid&&newEmployeeForm.controls['userrole'].dirty">
-
-                          {{ newEmployeeResources.userrolerequired }}
-                      </div>
-
-                      <p-button  type="button" class="links" icon="fa fa-plus" label="{{ newEmployeeResources.adduserrole}}" id="btn_userroleshow" (click)="showUserRolePopup()" name="btnshow" ></p-button>
-                    </div>
-                  </div>
-                  <!-- End User Role -->
+           
 
                   <!-- Hourly labour Rate -->
                 <div class="ui-g-12 ui-md-6">
@@ -677,8 +719,46 @@
                   </div>
                 </div>
                 <!-- End Hourly labour Rate -->
+
+                  <!-- End User Role -->
+        <!-- Skills -->
+        <div class="ui-g-12 ui-md-6">
+          <div class="paddingRL">
+            <div class="le-su-12">
+              <label for="skills">
+                Skills<span class="star"></span>:
+              </label>
+              <p-button class="toplinks" type="button" icon="fa fa-plus" label="Add Skills" id="btn_geneticshow" (click)="NavigateToSkillsPage()"  name="btnviewGenetics" ></p-button>
+              
+              <div>
+
+              
+              <div class="input-container">
+                <input pInputText
+                id="myTextBox"
+                class="clsControl"
+                autocomplete="off"
+                placeholder="- - Select - -"
+               (click)="showSkills($event)"
+              />
+              <span class="viewer2" *ngIf="!showUpArrow">
+                <i id="myTextBox" class="fa fa-caret-down" ria-hidden="true"  (click)="showSkills($event)"></i>
+              </span>
+              <span class="viewer2" *ngIf="showUpArrow">
+                <i id="myTextBox" class="fa fa-caret-up" ria-hidden="true"  (click)="showSkills($event)"></i>
+              </span>
+            </div>
+             
+             
+              <p-tree  [value]="files" [ngClass]="!visibility?'myskillsdropdown':'showmyskillsdropdown'" styleClass="clsRoleAccessTree " selectionMode="checkbox"  [(selection)]="selectedSkillItems"
+ (onNodeUnselect) = "OnUnSelectNode($event)" (onNodeSelect)="onNodeSelect($event)" ></p-tree>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--End Skills -->
                 <!--Manager List-->
-                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole|| showMang === true">
+                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Employee==this.selectedRole ||this.constantusrRole.Temp==this.selectedRole">
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="managerlist" class="towlable fwLabelBold">ManagerList<span class="star">*</span></label>
@@ -698,7 +778,7 @@
                 </div>
                 <!--End Manager List-->
                  <!--FLC List-->
-                 <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp==this.selectedRole || showFlc === true">
+                 <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp==this.selectedRole" >
                   <div class="paddingRL">
                     <div class="le-su-12">
                       <label for="flclist" class="towlable fwLabelBold">FLC List<span class="star"> *</span></label>
@@ -749,6 +829,7 @@
 (EmployeeDeleteEvent)="EmployeeDeleteEvent($event)"
 (EmployeeDeactivateEvent)="EmployeeDeleteEvent($event)"
 [allEmployeeList]="allEmployeeList"
+[allSkillsList]="allSkillslistforBelowList"
 [PaginationValues]="paginationValues"></app-employee-listing>
 
 

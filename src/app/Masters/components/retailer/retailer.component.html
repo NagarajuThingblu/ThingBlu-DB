@@ -9,7 +9,7 @@
         <p-panel [header]="taskCategory == 'GROWING'?'Add New Customer':'Add New Retailer'"  [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
           <form
             [formGroup]="retailerForm"
-            (ngSubmit)="onSubmit(retailerForm.value)">
+            (ngSubmit)="onSubmit(retailerForm.value)" autocomplete="off">
              
              <div class="ui-g">
                          <!-- Client Name Commented by Devdan :: 28-Sep2018 -->

@@ -24,6 +24,7 @@ import { NewSectionDetailsActionService } from '../../../services/add-section-de
 import { filter } from 'rxjs/operator/filter';
 import { NewClientService } from '../../../../Masters/services/new-client.service';
 import { PTRService } from '../../../../Masters/services/ptr.service';
+import { NewEmployeeActionService } from '../../../services/add-employee';
 
 @Component({
   moduleId: module.id,
@@ -53,6 +54,9 @@ export class HarvestingComponent implements OnInit{
   public showPastDateLabel = false;
   public priorities: SelectItem[];
   public termination:SelectItem[];
+  public skills: SelectItem[];
+  public allSkillslist: any;
+  public employeeNameToBeDisplayedOnDropdown="--Select--"
   constructor(
     private fb: FormBuilder,
     private dropdownDataService: DropdownValuesService,
@@ -72,7 +76,8 @@ export class HarvestingComponent implements OnInit{
     private titleService: Title,
     private refreshService: RefreshService,
     private render: Renderer2,
-    private elref: ElementRef
+    private elref: ElementRef,
+    private newEmployeeActionService: NewEmployeeActionService,
   ) { 
     this._cookieService = this.appCommonService.getUserProfile();
     // this.questions = service.getQuestions();
@@ -102,6 +107,15 @@ export class HarvestingComponent implements OnInit{
   public taskReviewModel: any;
   public allsectionslist:any;
   public TerminatioReasons: any[];
+  
+  public visibility:boolean = false;
+  public showUpArrow:boolean = false;
+  public allemplist : any[]
+  public skilledempslist: any[]
+  public headings: any[]
+  public files: any = [];
+  plottedSkillItems: any = [];
+  public selectedSkillItems: any[];
   private globalData = {
     lots: [],
     employees: [],
@@ -114,10 +128,12 @@ export class HarvestingComponent implements OnInit{
  
   isRActSecsDisabled: boolean;
   ngOnInit() {
+    this.employeeNameToBeDisplayedOnDropdown="--Select--"
     this.getAllFieldsAndSections();
     // this.getAllsectionlist();
     this.employeeListByClient();
     this.getTerminationReasons();
+    this.getSkills();
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
     this.titleService.setTitle('Harvesting');
@@ -137,6 +153,23 @@ export class HarvestingComponent implements OnInit{
   
     
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
+    // this.headings =[
+    //   {id:1, headingName:"Skilled Employees",  Num:2, isParent:true, parentId:0},
+    //   {id:0, headingName:"All Employees", Num:1, isParent:true, parentId:0},
+    // ]
+    // this.skilledempslist =[
+    //   {empid:1, empname:"jyothi",  isParent:false, ParentId:1},
+    //   {empid:2, empname:"saikumar",  isParent:false, ParentId:1},
+    //   {empid:3, empname:"sucharitha",  isParent:false, ParentId:1},
+    // ]
+    // this.allemplist = [
+    //   {empid:1, empname:"jyothi", isParent:false, ParentId:0},
+    //   {empid:2, empname:"saikumar",  isParent:false, ParentId:0},
+    //   {empid:3, empname:"sucharitha",  isParent:false, ParentId:0},
+    //   {empid:4, empname:"hemanth",  isParent:false, ParentId:0},
+    //   {empid:5, empname:"nagaraju",  isParent:false, ParentId:0},
+    // ]
+  
     this.priorities =  [
       {label: 'Normal', value: 'Normal'},
       {label: 'Important', value: 'Important'},
@@ -167,6 +200,7 @@ export class HarvestingComponent implements OnInit{
       'field' : new FormControl('', Validators.required),
       'section': new FormControl('', Validators.required),
       'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
+      'skills':new FormControl('', Validators.required),
       // 'estimatedenddate': new FormControl('',  Validators.compose([Validators.required])),
       'employeeList': new FormControl('', Validators.required),
      'plantCount' : new FormControl('', Validators.required),
@@ -233,7 +267,7 @@ export class HarvestingComponent implements OnInit{
     }
     // const terminationReason = this.reviewForm.controls['terminationReason'];
     // terminationReason.patchValue(this.taskReviewModel.TerminationReasonId);
-  
+    //this.empfilterBasedOnSkill()
   }
 
   // getAllFieldsAndSections() {
@@ -252,8 +286,67 @@ export class HarvestingComponent implements OnInit{
   //     error => { console.log(error); },
   //     () => console.log('Get all brands complete'));
   // }
-
-  
+  empfilterBasedOnSkill(){
+    this.plottedSkillItems = [];
+    this.selectedSkillItems = [];
+    this.headings.forEach(element => {
+      const NewEmpList: any = {};
+      NewEmpList.id = element.ID;
+      NewEmpList.label = element.HeadingName;
+      NewEmpList.children = [];
+      NewEmpList.Num  = element.Num
+      NewEmpList.isParent = element.IsParent;
+      NewEmpList.ParentId = element.ParentID;
+      NewEmpList.Selectable = true;
+      if(element.IsParent === false || element.IsParent === "False"){
+        this.selectedSkillItems.push(NewEmpList)
+      }
+      if(NewEmpList.isParent === true || NewEmpList.isParent === "True"){
+        this.plottedSkillItems.push(NewEmpList)
+      }
+    });
+    this.allemplist.forEach(element => {
+      const NewAllEmpList: any = {};
+      NewAllEmpList.id = element.EmpID;
+      NewAllEmpList.label = element.EmpName;
+      NewAllEmpList.children = [];
+     // NewAllEmpList.Num  = element.Num
+      NewAllEmpList.isParent = element.IsParent;
+      NewAllEmpList.ParentId = element.ParentID;
+      NewAllEmpList.Selectable = true;
+      if (element.IsParent === false || element.IsParent === "False" ) {
+        if (this.plottedSkillItems.length) {
+          this.plottedSkillItems.forEach(parent => {
+            if (parent.id === element.ParentId) {
+              parent.children.push(NewAllEmpList);
+            } 
+          })
+       
+        }
+      }
+    })
+    this.skilledempslist.forEach(element => {
+      const NewAllEmpList: any = {};
+      NewAllEmpList.id = element.EmpID;
+      NewAllEmpList.label = element.EmpName;
+      NewAllEmpList.children = [];
+     // NewAllEmpList.Num  = element.Num
+      NewAllEmpList.isParent = element.IsParent;
+      NewAllEmpList.ParentId = element.ParentId;
+      NewAllEmpList.Selectable = true;
+      if (element.IsParent === false || element.IsParent === "False") {
+        if (this.plottedSkillItems.length) {
+          this.plottedSkillItems.forEach(parent => {
+            if (parent.id === element.ParentId) {
+              parent.children.push(NewAllEmpList);
+            } 
+          })
+       
+        }
+      }
+    })
+    this.files = this.plottedSkillItems;
+  }
   getAllFieldsAndSections() {
     this.fields = [];
 
@@ -280,6 +373,30 @@ export class HarvestingComponent implements OnInit{
   padLeft(text: string, padChar: string, size: number): string {
     return (String(padChar).repeat(size) + text).substr( (size * -1), size) ;
   }
+  onSkillsSelect(event:any){
+    this.employeeNameToBeDisplayedOnDropdown="--Select--"
+    let skillListApiDetails;
+    skillListApiDetails = {
+      TaskTypeId:Number(this.TaskModel.task),
+    
+      SkillList:[]
+    };
+    skillListApiDetails.SkillList.push({SkillID:event.value})
+    // for(let j of this.HARVESTING.value.skills){
+          
+    //   skillListApiDetails.SkillList.push({
+    //     SkillID: j,
+       
+    //   })
+    // };
+    this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
+    .subscribe(data => {
+      this.headings = data.Table,
+      this.skilledempslist = data.Table1
+      this.allemplist = data.Table2 ? data.Table2 : []
+      this.empfilterBasedOnSkill()
+    });
+      }
   getTerminationReasons(){
     this.ptrActionService.GetAllPTRListByClient().subscribe(
       data => {
@@ -305,7 +422,23 @@ export class HarvestingComponent implements OnInit{
       this.appCommonService.validateAllFields(this.completionForm);
     }
 }
-
+getSkills(){
+  let TaskTypeId = this.ParentFormGroup != undefined?
+  this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
+  this.newEmployeeActionService.GetSkillslist().subscribe(data => {
+    if (data !== 'No Data found') {
+      this.allSkillslist = data;
+     
+      this.skills = this.dropdwonTransformService.transform(this.allSkillslist.filter(x => x.TaskTypeId === TaskTypeId), 'SkillName', 'SkillTaskTypeMapId');
+    }
+    else{
+      this.allSkillslist = [];
+      this.skills = []
+    }
+  },
+  error => { console.log(error); },
+  () => console.log('skillslistbytasktype complete'));
+}
 submitReviewParameter(formModel) {
   if (this.reviewForm.valid) {
     this.submitReview(formModel);
@@ -581,7 +714,7 @@ completeTask(formModel){
     this.getWorkingEmpList(event.value);
   }
   getWorkingEmpList(sectionId){
-    this.dropdownDataService.getEmpAlreadyWorkingOnATask(sectionId,this.TaskModel.task).subscribe(
+    this.dropdownDataService.getEmpAlreadyWorkingOnATask(sectionId,this.TaskModel.task,0).subscribe(
       data=>{
         if(data != 'No Data Found'){
           this.globalData.workingEmp = data;
@@ -603,19 +736,19 @@ completeTask(formModel){
     else{
       this.workingEmp = [];
     }
-    this.filterEmpList()
+    //this.filterEmpList()
   }
-  filterEmpList(){
-    for(let j of this.globalData.workingEmp){
-      // for(let i of this.employees){
-        // if(i.value === j.EmpId){
-          let index = this.employees.findIndex(x => x.value === j.EmpId)
+  // filterEmpList(){
+  //   for(let j of this.globalData.workingEmp){
+  //     // for(let i of this.employees){
+  //       // if(i.value === j.EmpId){
+  //         let index = this.employees.findIndex(x => x.value === j.EmpId)
           
-          this.employees.splice(index,1)
-        // }
-      // }
-    }
-  }
+  //         this.employees.splice(index,1)
+  //       // }
+  //     // }
+  //   }
+  // }
   employeeListByClient() {
     this.dropdownDataService.getEmployeeListByClient().subscribe(
       data => {
@@ -630,25 +763,85 @@ completeTask(formModel){
       () => console.log('Get all employees by client complete'));
   }
 
-  OnSelectingEmployees(event: any, checkedItem: any){
-    for(let employee of this.globalData.employees){
-      if(event.itemValue === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
-        this.employeeArray.push(employee.EmpName)
-        return;
-     }
-     else{
-       if(event.itemValue === employee.EmpId){
-         let index = this.employeeArray.indexOf(employee.EmpName);
-         this.employeeArray.splice(index,1)
-
-       }
-     }
+  OnSelectingEmployees(event: any){
+    if(this.employeeNameToBeDisplayedOnDropdown === "--Select--"){
+      this.employeeNameToBeDisplayedOnDropdown=""
     }
+    let count =0
+    for(let employee of  this.globalData.employees){
+        if(event.node.id === employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
+          this.employeeArray.push(employee.EmpName)
+          for(let i of this.employeeArray){
+           count++
+            if(count <=4){
+              if(this.employeeNameToBeDisplayedOnDropdown.indexOf(i) === -1){
+                this.employeeNameToBeDisplayedOnDropdown =this.employeeNameToBeDisplayedOnDropdown+" "+i+"  "
+              }
+            }
+          else{
+            this.employeeNameToBeDisplayedOnDropdown =count+" selected"
+          }
+          }
+          //this.employeeNameToBeDisplayedOnDropdown = ""+employee.EmpName
+          this.HARVESTING.get('employeeList').patchValue(this.selectedSkillItems)
+          return;
+       }
+       else{
+      
+        // for(let i of this.employeeArray){
+        //   count--
+        //    if(count <=4){
+        //      if(this.employeeNameToBeDisplayedOnDropdown.indexOf(i) != -1){
+        //        this.employeeNameToBeDisplayedOnDropdown =this.employeeNameToBeDisplayedOnDropdown+" "+i+"  "
+        //      }
+        //    }
+        //  else{
+        //    this.employeeNameToBeDisplayedOnDropdown =count+" selected"
+        //  }
+        //  }
+         if(event.node.id === employee.EmpId){
+          this.employeeNameToBeDisplayedOnDropdown=""
+           let index = this.employeeArray.indexOf(employee.EmpName);
+           this.employeeArray.splice(index,1)
+          let count1 = this.employeeArray.length
+           for(let i of this.employeeArray){
+             if(count1 <=4){
+               if(this.employeeNameToBeDisplayedOnDropdown.indexOf(i) === -1){
+                 this.employeeNameToBeDisplayedOnDropdown =this.employeeNameToBeDisplayedOnDropdown+" "+i+"  "
+               }
+             }
+           else{
+             this.employeeNameToBeDisplayedOnDropdown =count1+" selected"
+           }
+           }
+         }
+       }
+      }
+    
   }
+  OnUnSelectNode(e) {
+ 
+    if (e.node.selectable === false) {
+     // this.selectedmenuItems.push(e.node.parent);
+    }
+    this.OnSelectingEmployees(e)
+  
+}
   // removeitem(deleteitem){
   //   this.employeeArray.splice(deleteitem,1)
   //  let element = this.checkedElements.nativeElement
   //  console.log(element)
   // }
+  showEmps(event: any){
+    if(this.visibility === true){
+      this.visibility = false;
+      this.showUpArrow = false
+    }
+    else{
+      this.visibility = true;
+      this.showUpArrow = true
+    }
  
+console.log(event)
+  }
 }
