@@ -57,7 +57,7 @@ import { RoleGuard } from './guards/role.guard';
 // import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { ResetPasswordComponent } from './azureb2c/reset-password/reset-password.component';
 import { AppSignupComponent } from './azureb2c/app-signup/app-signup.component';
-import { CustomPreloadingStrategyService } from './task/services/CustomPreloadingStrategyService';
+//import { CustomPreloadingStrategyService } from './task/services/CustomPreloadingStrategyService';
 // import { InviteNewEmployeeComponent } from './employee/components/invite-new-employee/invite-new-employee.component';
 // import { EmployeesComponent } from './employee/components/employees/employees.component';
 // import { IdentifyOrderComponent } from './order/components/order-automation/identify-order/identify-order.component';
@@ -215,7 +215,7 @@ const appRoutes: Routes = [
   }
 ];
 //export const routing = RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload'});//No Pre-loading
- export const routing = RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload', preloadingStrategy: CustomPreloadingStrategyService });//pre-loading all modules
+ export const routing = RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload', preloadingStrategy: PreloadAllModules });//pre-loading all modules
 //export const routing = RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload',preloadingStrategy:CustomPreloadingStrategyService });//pre-loading all modules
 
 // @NgModule({

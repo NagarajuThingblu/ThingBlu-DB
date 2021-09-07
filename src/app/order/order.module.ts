@@ -17,12 +17,12 @@ import { AcceptOrderComponent } from './components/order-automation/accept-order
 import { ChangeOrderComponent } from './components/order-automation/change-order/change-order.component';
 import { OrderformComponent } from './components/orderform/orderform.component';
 import { OrdersRoutingModule } from './order.routing';
-import { AddNewSkewPopupComponent } from '../Masters/components/add-new-skew-popup/add-new-skew-popup.component';
-import { AddNewSubBrandComponent } from '../Masters/components/add-new-sub-brand/add-new-sub-brand.component';
-import { AddNewStrainComponent } from '../Masters/components/add-new-strain/add-new-strain.component';
-import { AddNewBrandComponent } from '../Masters/components/add-new-brand/add-new-brand.component';
-import { AddNewPackagetypeComponent } from '../Masters/components/add-new-packagetype/add-new-packagetype.component';
-import { AddNewStraintypeComponent } from '../Masters/components/add-new-straintype/add-new-straintype.component';
+// import { AddNewSkewPopupComponent } from '../Masters/components/add-new-skew-popup/add-new-skew-popup.component';
+// import { AddNewSubBrandComponent } from '../Masters/components/add-new-sub-brand/add-new-sub-brand.component';
+// import { AddNewStrainComponent } from '../Masters/components/add-new-strain/add-new-strain.component';
+// import { AddNewBrandComponent } from '../Masters/components/add-new-brand/add-new-brand.component';
+// import { AddNewPackagetypeComponent } from '../Masters/components/add-new-packagetype/add-new-packagetype.component';
+// import { AddNewStraintypeComponent } from '../Masters/components/add-new-straintype/add-new-straintype.component';
 
 @NgModule({
   declarations: [
@@ -37,12 +37,12 @@ import { AddNewStraintypeComponent } from '../Masters/components/add-new-straint
     PkgAllocateEmployeeComponent,
     PkgAllocateSubstractionEmployeeComponent,
     OrderformComponent,
-    AddNewSkewPopupComponent,
-    AddNewSubBrandComponent,
-    AddNewStrainComponent,
-    AddNewBrandComponent,
-    AddNewPackagetypeComponent,
-    AddNewStraintypeComponent
+    // AddNewSkewPopupComponent,
+    // AddNewSubBrandComponent,
+    // AddNewStrainComponent,
+    // AddNewBrandComponent,
+    // AddNewPackagetypeComponent,
+    // AddNewStraintypeComponent
  
   ],
   imports: [
