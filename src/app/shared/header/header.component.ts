@@ -225,7 +225,7 @@ this.closable = false;
               label: 'Dashboard',
               icon: 'fa-dashboard',
               items: [
-                  {label: 'Manager Dashboard', icon: 'fa-area-chart', routerLink: 'managerdashboard' },
+                  {label: 'Manager Dashboard', icon: 'fa-area-chart', routerLink: 'dashboard/managerdashboard' },
                   {label: 'Whiteboards', icon: 'fa-area-chart', routerLink: 'whiteboards'},
               ]
             },

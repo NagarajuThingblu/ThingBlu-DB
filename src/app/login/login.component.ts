@@ -256,7 +256,7 @@ export class LoginComponent implements OnInit {
               let routeName;
               if (this.menuItems.length > 0) {
                   routeName = this.menuItems[0].RouterLink;
-                  this.router.navigate(['home/dashboard/' + routeName] );
+                  this.router.navigate(['home/' + routeName] );
                 } else {
                   this.router.navigate(['home/erroraccessdenieded']);
               }
