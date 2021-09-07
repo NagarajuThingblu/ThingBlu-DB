@@ -362,11 +362,12 @@ console.log(assignTaskFormValues)
         TaskDetails: { 
           ClientId: this._cookieService.ClientId,
           VirtualRoleId: this._cookieService.VirtualRoleId,
+          TaskKeyName:this.selectedTaskTypeName,
           TaskTypeId: assignTaskFormValues.taskname,
           EstStartDate: assignTaskFormValues[this.selectedTaskTypeName].estimatedstartdate.toLocaleDateString().replace(/\u200E/g, ''),
           Comment: assignTaskFormValues[this.selectedTaskTypeName].comment,
-          NotifyEmp: assignTaskFormValues[this.selectedTaskTypeName].notifyemployee,
-          NotifyManager: assignTaskFormValues[this.selectedTaskTypeName].notifymanager,
+          NotifyEmp: assignTaskFormValues[this.selectedTaskTypeName].notifyemployee? 1:0,
+          NotifyManager: assignTaskFormValues[this.selectedTaskTypeName].notifymanager? 1:0,
           Priority: assignTaskFormValues[this.selectedTaskTypeName].priority
         },
         EmployeeTypes : [],
