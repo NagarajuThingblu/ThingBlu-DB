@@ -137,9 +137,9 @@
    sortIrder="-1"
    [rowsPerPageOptions]="paginationValues"
    (onPage)="onPageChange($event)"
-   [globalFilterFields]="['TaskName','TaskTypeName','Description']"
+   [globalFilterFields]="['TaskTypeName','CategoryName','Description']"
    >
-<ng-template pTemplate="captio">
+<ng-template pTemplate="caption">
   <div style="text-align:right">
   <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
   <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" (input)="dtTaskList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
@@ -148,10 +148,24 @@
 <ng-template pTemplate="header">
   <tr>
    
-    <th [pSortableColumn]="'TaskName'">Task Name  <p-sortIcon [field]="'TaskName'"></p-sortIcon> </th>
-    <th [pSortableColumn]="'TaskTypeName'">Task Type  <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon> </th>
+    <th [pSortableColumn]="'TaskTypeName'">Task Name  <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon> </th>
+    <th [pSortableColumn]="'CategoryName'">Task Type  <p-sortIcon [field]="'CategoryName'"></p-sortIcon> </th>
     <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>
     <th style="width:100px;"> </th>
+</tr>
+<tr>
+  <th>
+    <input pInputText type="text" autocomplete="off"
+      (input)="dtTaskList.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
+  </th>
+  <th>
+  <input pInputText type="text" autocomplete="off"
+      (input)="dtTaskList.filter($event.target.value, 'CategoryName', 'contains')" class="clsControl">
+  </th>
+  <th>
+  <input pInputText type="text" autocomplete="off"
+      (input)="dtTaskList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+  </th>
 </tr>
 </ng-template>
 <ng-template pTemplate="body" let-Task let-rowData let-columns="columns" let-rowIndex="rowIndex">
