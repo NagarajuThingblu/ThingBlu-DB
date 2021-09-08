@@ -442,7 +442,8 @@
                   <td>{{Strain?.StrainName}}</td>
                   <td>{{Strain?.StrainCode}}</td>
                   <td>{{Strain?.StrainTypeName}}</td>
-                  <td>{{Strain?.GeneticsName }}</td>
+                  <td *ngIf="Strain?.GeneticsName==='Unknown'"></td>
+                  <td *ngIf="Strain?.GeneticsName!='Unknown'">{{Strain?.GeneticsName }}</td>
                   <td>{{Strain?.Description }}</td>
                   <!-- <td>{{Strain?.THC }}</td>   
                   <td>{{Strain?.CBD }}  </td>                  

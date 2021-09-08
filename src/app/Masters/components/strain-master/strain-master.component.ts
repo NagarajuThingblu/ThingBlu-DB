@@ -363,7 +363,13 @@ export class StrainMasterComponent implements OnInit {
               ];
               //this.genetics = [];
               //this.genetics = geneticsNewData;
-              genetics.patchValue(this.strainOnEdit[0].GeneticsId);
+              if(this.strainOnEdit[0].GeneticsId!=0){
+                genetics.patchValue(this.strainOnEdit[0].GeneticsId);
+              }
+              else{
+                genetics.patchValue(null);
+              }
+              
              this.strainTypeDisabled = true;
              this.geneticsDisabled = false;
            } else {

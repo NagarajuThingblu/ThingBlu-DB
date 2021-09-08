@@ -222,7 +222,7 @@ public backUrl: boolean;
    const description = this.TaskmasterForm.controls['description'];
    const chkIsActive = this.TaskmasterForm.controls['chkIsActive'];
    task.patchValue(this.taskOnEdit[0].TaskTypeName);
-   chkIsActive.patchValue(this.taskOnEdit[0].Active);
+   chkIsActive.patchValue(this.taskOnEdit[0].IsActive);
    description.patchValue(this.taskOnEdit[0].Description);
    this.clear='Cancel';
    this.saveButtonText='Update';
