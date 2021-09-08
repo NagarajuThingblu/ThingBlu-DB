@@ -592,6 +592,7 @@ export class NewProductTypeComponent implements OnInit {
       let newRoleDetailsForApi;
       newRoleDetailsForApi = {
         ClientProductType: {
+          ClientId: Number(this._cookieService.ClientId),
             ProductTypeId: value.ProductTypeId,
             VirtualRoleId: Number(this._cookieService.VirtualRoleId),
             IsDeleted: IsDeleted,
