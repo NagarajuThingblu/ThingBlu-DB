@@ -26,8 +26,8 @@
                   <th pResizableColumn *ngIf="taskCategoryType != 'GROWING'" [pSortableColumn]="'SubBrandName'">{{ newProductTypeResources.subbrand}} <p-sortIcon [field]="'SubBrandName'"></p-sortIcon></th>                  
                   <th pResizableColumn [pSortableColumn]="'StrainName'">{{ newProductTypeResources.strain}} <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>              
                   <th pResizableColumn [pSortableColumn]="'SkewKeyName'">{{ newProductTypeResources.skewtype}} <p-sortIcon [field]="'SkewKeyName'"></p-sortIcon></th> 
-                  <th pResizableColumn *ngIf="taskCategoryType === 'GROWING'" [pSortableColumn]="'TrimmingMethod'">Trimming Method<p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon></th>
-                  <th pResizableColumn *ngIf="taskCategoryType === 'GROWING'" [pSortableColumn]="'IsLD'">Light Dept<p-sortIcon [field]="'IsLD'"></p-sortIcon></th>  
+                  <th style="display: none" pResizableColumn *ngIf="taskCategoryType === 'GROWING'" [pSortableColumn]="'TrimmingMethod'">Trimming Method<p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon></th>
+                  <th style="display: none" pResizableColumn *ngIf="taskCategoryType === 'GROWING'" [pSortableColumn]="'IsLD'">Light Dept<p-sortIcon [field]="'IsLD'"></p-sortIcon></th>  
                   <th pResizableColumn [pSortableColumn]="'PkgTypeName'">{{ newProductTypeResources.packagetype}} <p-sortIcon [field]="'PkgTypeName'"></p-sortIcon></th>
                   <th pResizableColumn [pSortableColumn]="'UnitPrice'">Package Unit Price($) <p-sortIcon [field]="'UnitPrice'"></p-sortIcon></th>
                   <th pResizableColumn class="wtg" [pSortableColumn]="'UnitValue'">{{ newProductTypeResources.packageunit}} <p-sortIcon [field]="'UnitValue'"></p-sortIcon></th>
@@ -50,10 +50,10 @@
                   <th>
                       <input pInputText autocomplete="off" type="text" (input)="dtNewProductTypeListing.filter($event.target.value, 'SkewKeyName', 'contains')" class="clsControl">
                   </th>  
-                  <th *ngIf="taskCategoryType === 'GROWING'">
+                  <th style="display: none" *ngIf="taskCategoryType === 'GROWING'">
                     <input pInputText autocomplete="off" type="text" (input)="dtNewProductTypeListing.filter($event.target.value, 'TrimmingMethod', 'contains')" class="clsControl">
                 </th>    
-                <th *ngIf="taskCategoryType === 'GROWING'">
+                <th style="display: none" *ngIf="taskCategoryType === 'GROWING'">
                   <input pInputText autocomplete="off" type="text" (input)="dtNewProductTypeListing.filter($event.target.value, 'IsLD', 'contains')" class="clsControl">
               </th>             
                   <th>
@@ -82,8 +82,8 @@
                   <td *ngIf="taskCategoryType != 'GROWING'">{{newproducttype?.SubBrandName}}</td>
                   <td>{{newproducttype?.StrainName }}</td>
                   <td>{{newproducttype?.SkewKeyName }}</td>  
-                  <td *ngIf="taskCategoryType === 'GROWING'">{{newproducttype?.TrimmingMethod }}</td>   
-                  <td *ngIf="taskCategoryType === 'GROWING'">{{newproducttype?.IsLD }}</td>                
+                  <td style="display: none" *ngIf="taskCategoryType === 'GROWING'">{{newproducttype?.TrimmingMethod }}</td>   
+                  <td style="display: none" *ngIf="taskCategoryType === 'GROWING'">{{newproducttype?.IsLD }}</td>                
                   <td>{{newproducttype?.PkgTypeName }}</td>
                   <td>{{newproducttype?.UnitPrice }}</td>
                   <td class="wtg">{{newproducttype?.UnitValue}}</td>
