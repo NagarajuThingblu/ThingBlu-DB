@@ -835,6 +835,9 @@ onNodeSelect(e){
   stringEscapeFn(c) {
     return '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4);
   }
+  // getcityName(){
+  //   console.log(this.newEmployeeForm.controls['city'].value)
+  // }
   escape(value) {
     if (this.isString(value)) {
         return '' + value.replace(this.stringEscapeRegex, this.stringEscapeFn) + '';
