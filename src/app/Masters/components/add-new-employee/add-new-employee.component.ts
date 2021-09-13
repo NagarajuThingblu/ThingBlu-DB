@@ -71,10 +71,10 @@ export class AddNewEmployeeComponent implements OnInit {
   public _cookieService: any;
   public newEmployeeResources: any;
   public minusEnable:boolean = false
-  public showeye: boolean = false;
-public hideeye: boolean = true;
-passwordShown: boolean= false;
-passwordType: string = 'password';
+  public showeye: boolean = true;
+public hideeye: boolean = false;
+passwordShown: boolean= true;
+passwordType: string = 'text';
   public constantusrRole:any;
   public alltaskslist: any;
   public allSkillslist: any;
@@ -280,10 +280,11 @@ public WhenToDisplayPWField: boolean = false
       SkillList:[]
     };
     this.selectedSkillItems.forEach((element, index) => {
-      newRoleDetailsForApi.SkillList.push({
-        SkilId: element.SkillTaskTypeMapId,
-
-      });
+      if(element.SkillTaskTypeMapId != 0){
+        newRoleDetailsForApi.SkillList.push({
+          SkilId: element.SkillTaskTypeMapId,
+        });
+      }
     });
     // this.NewProductTypeForm_copy = JSON.parse(JSON.stringify(Object.assign({}, this.newEmployeeForm.value)));
 
@@ -870,7 +871,7 @@ onNodeSelect(e){
 
   resetAll() {
     // this.showFlc = false
-   
+   this.passwordType='text';
     this.saveButtonText = 'Save';
     this.clear = 'Clear';
     this.showTerminationDate = false;
@@ -884,6 +885,7 @@ onNodeSelect(e){
   }
   resetForm() {
     // this.showTextbox = true;
+    this.passwordType = 'text';
     this.WhenToDisplayPWField = false;
     this.showUpArrow = false;
     this.visibility = false;
@@ -1056,17 +1058,17 @@ getCityOnStateChange() {
   }
 
   public  togglepw(){
-    if(this.passwordShown){
-      this.passwordShown = false;
-      this.passwordType = 'text';
-      this.showeye = true
-      this.hideeye = false;
-    }
-    else{
+    if(!this.passwordShown){
       this.passwordShown = true;
       this.passwordType = 'password';
       this.showeye = false
       this.hideeye = true;
+    }
+    else{
+      this.passwordShown = false;
+      this.passwordType = 'text';
+      this.showeye = true
+      this.hideeye = false;
     }
     }
 

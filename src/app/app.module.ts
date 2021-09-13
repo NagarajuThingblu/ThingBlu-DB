@@ -35,6 +35,7 @@ import { NgIdleModule } from '@ng-idle/core';
 import { MsalService } from './azureb2c/msal.service';
 import { ResetPasswordMsalService } from './azureb2c/reset-password-msal.service';
 import { promise } from 'protractor';
+import { HashLocationStrategy, LocationStrategy  } from '@angular/common';
 
 // import { UserIdleModule } from 'angular-user-idle/user-idle.module';
 
@@ -91,6 +92,7 @@ import { promise } from 'protractor';
     AppLoadService,
     managerdashboardService,
     AppLoadFOrgotPasswordService,
+    {provide : LocationStrategy , useClass: HashLocationStrategy}
     // { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppLoadService], multi: true },
     // { provide: APP_INITIALIZER, useFactory: init_app_resetpassword, deps: [AppLoadFOrgotPasswordService], multi: true }
     // {
