@@ -1,0 +1,38 @@
+.myskillsdropdown{
+    display: none;
+   }
+    /* .ui-tree  {
+       width:546px;
+   } */
+   .viewer2{
+       width:24px;
+       text-align: center;
+   }
+   #myTextBox{
+    cursor: pointer;
+    }
+    .EmployeeListBox{
+        border:1px solid #D5D5D5;
+        height:40px;
+        overflow: auto;
+    }
+    .emp-list{
+        list-style-type: none;
+    }
+    .emplisttext{
+        font-size:15px;
+      }
+      .EmployeeListItem{
+        display:inline;
+        float:left;
+    }
+    .divLotMixing hr, .divRevLotMixing hr {
+        margin-top: 5px; margin-bottom: 0px;
+      }
+  
+      .divLotMixing, .divRevLotMixing {
+        margin-top: 10px;
+      }
+      .clsVisible {
+        visibility: hidden;
+      }

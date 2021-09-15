@@ -506,7 +506,7 @@ export class BuckingComponent implements OnInit {
   }
 
   getWorkingEmpList(event?: any){
-    this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.BUCKING.controls['batchId'].value).subscribe(
+    this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.BUCKING.controls['batchId'].value,0).subscribe(
       data=>{
         if(data != 'No Data Found'){
           this.globalData.workingEmp = data;

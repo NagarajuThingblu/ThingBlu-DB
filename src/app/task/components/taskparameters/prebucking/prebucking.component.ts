@@ -576,7 +576,7 @@ export class PrebuckingComponent implements OnInit {
   getWorkingEmpList(event?: any){
        this.globalData.workingEmp = [];
     this.workingEmp = [];
-    this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.PREBUCKING.controls['batchId'].value).subscribe(
+    this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.PREBUCKING.controls['batchId'].value,0).subscribe(
       data=>{
         if(data != 'No Data Found'){
           this.globalData.workingEmp = data;

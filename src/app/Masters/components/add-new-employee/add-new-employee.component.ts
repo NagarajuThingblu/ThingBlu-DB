@@ -71,10 +71,10 @@ export class AddNewEmployeeComponent implements OnInit {
   public _cookieService: any;
   public newEmployeeResources: any;
   public minusEnable:boolean = false
-  public showeye: boolean = false;
-public hideeye: boolean = true;
-passwordShown: boolean= false;
-passwordType: string = 'password';
+  public showeye: boolean = true;
+public hideeye: boolean = false;
+passwordShown: boolean= true;
+passwordType: string = 'text';
   public constantusrRole:any;
   public alltaskslist: any;
   public allSkillslist: any;
@@ -221,7 +221,12 @@ public WhenToDisplayPWField: boolean = false
       this.newEmployeeForm.value.lastname = null;
       return;
     }
-
+    // if(String(this.newEmployeeForm.value.primaryemail).trim().length != 0){
+    //   this.newEmployeeForm.controls['primaryemail'].setErrors({'whitespace': true});
+    //   this.newEmployeeForm.value.lastname = null;
+    //   return;
+    // }
+    
     const primaryemail = this.newEmployeeForm.value.primaryemail;
     const secondaryemail = this.newEmployeeForm.value.secondaryemail;
     if (primaryemail !== '' && primaryemail !== null) {
@@ -275,10 +280,11 @@ public WhenToDisplayPWField: boolean = false
       SkillList:[]
     };
     this.selectedSkillItems.forEach((element, index) => {
-      newRoleDetailsForApi.SkillList.push({
-        SkilId: element.SkillTaskTypeMapId,
-
-      });
+      if(element.SkillTaskTypeMapId != 0){
+        newRoleDetailsForApi.SkillList.push({
+          SkilId: element.SkillTaskTypeMapId,
+        });
+      }
     });
     // this.NewProductTypeForm_copy = JSON.parse(JSON.stringify(Object.assign({}, this.newEmployeeForm.value)));
 
@@ -830,6 +836,9 @@ onNodeSelect(e){
   stringEscapeFn(c) {
     return '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4);
   }
+  // getcityName(){
+  //   console.log(this.newEmployeeForm.controls['city'].value)
+  // }
   escape(value) {
     if (this.isString(value)) {
         return '' + value.replace(this.stringEscapeRegex, this.stringEscapeFn) + '';
@@ -862,7 +871,7 @@ onNodeSelect(e){
 
   resetAll() {
     // this.showFlc = false
-   
+   this.passwordType='text';
     this.saveButtonText = 'Save';
     this.clear = 'Clear';
     this.showTerminationDate = false;
@@ -876,6 +885,7 @@ onNodeSelect(e){
   }
   resetForm() {
     // this.showTextbox = true;
+    this.passwordType = 'text';
     this.WhenToDisplayPWField = false;
     this.showUpArrow = false;
     this.visibility = false;
@@ -905,9 +915,7 @@ onNodeSelect(e){
       () => console.log('Get all roles complete'));
   }
 
-  // getCityName(){
-  //   console.log("hi")
-  // }
+
   Managerdrpdwnchng(event)
 {
   // this.showMang = false;
@@ -989,7 +997,11 @@ getCountryList() {
     }
   );
 }
-
+// ValidateEmail(event:any){
+//   var regex= ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
+//   if(!regex.test(event.target.value))
+//   this.newEmployeeForm.controls['primaryemail'].setValidators
+// }
 getStateList() {
 this.dropdownDataService.getStatesList().subscribe(
   data => {
@@ -1046,17 +1058,17 @@ getCityOnStateChange() {
   }
 
   public  togglepw(){
-    if(this.passwordShown){
-      this.passwordShown = false;
-      this.passwordType = 'text';
-      this.showeye = true
-      this.hideeye = false;
-    }
-    else{
+    if(!this.passwordShown){
       this.passwordShown = true;
       this.passwordType = 'password';
       this.showeye = false
       this.hideeye = true;
+    }
+    else{
+      this.passwordShown = false;
+      this.passwordType = 'text';
+      this.showeye = true
+      this.hideeye = false;
     }
     }
 
