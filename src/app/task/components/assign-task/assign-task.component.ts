@@ -1319,6 +1319,7 @@ console.log(assignTaskFormValues)
           };
           packagingDataForApi['BinTypeDetails'] = [];
           packagingDataForApi['ProductTypeDetails'] = [];
+          packagingDataForApi['SkillIDlist'] = [];
           if (BinTypeDetails !== null) {
             BinTypeDetails
             .forEach((item, index) => {
@@ -1352,6 +1353,11 @@ console.log(assignTaskFormValues)
             );
           }
         })
+        packagingDataForApi['SkillIDlist'].push(
+          {
+            SkillId:assignTaskFormValues.BUDPACKAGING.skills
+          }
+        );
           // assignTaskFormValues[this.selectedTaskTypeName].allocateEmpArr.forEach((element, index) =>
           // {
           //   packagingDataForApi.BinTypeDetails.push({

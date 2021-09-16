@@ -751,7 +751,7 @@ public reqWt:any;
           const formGroup = this.createItem(splitObj, parentUniqueId);
   
           this.allocateEmpArr.insert((index + 1), formGroup);
-          this.visibility[index].push({label:'false'})
+         this.visibility.push({label:'false'})
           this.selectedLotsArray.set(parentUniqueId, []);
           this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
         }
@@ -954,11 +954,11 @@ public reqWt:any;
     showEmps(i,event: any){
       if(this.visibility[i].label === true){
         this.visibility[i].label = false;
-        this.showUpArrow[i].label = false
+        //this.showUpArrow[i].label = false
       }
       else{
         this.visibility[i].label = true;
-        this.showUpArrow[i].label = true
+       // this.showUpArrow[i].label = true
       }
     
     console.log(event)
@@ -972,7 +972,7 @@ public reqWt:any;
       for(let employee of this.AllocateEmpData.employees){
         if(event.node.id === employee.EmpId){
           this.employeeNameToBeDisplayedOnDropdown =employee.EmpName
-          this.allocateEmpArr.controls[i]['controls'].employee.value = this.employeeNameToBeDisplayedOnDropdown
+          this.allocateEmpArr.controls[i]['controls'].employee.value = employee.EmpId
         }
       }
       this.rowEmpChange(i)
