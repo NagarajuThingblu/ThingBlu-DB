@@ -727,7 +727,7 @@ completeTask(formModel){
         this.PLANTING.controls["plantCount"].setValue(this.plantCount)
       }
     }
-    this.getWorkingEmpList(event.value,);
+    this.getWorkingEmpList(event.value);
    
   }
 

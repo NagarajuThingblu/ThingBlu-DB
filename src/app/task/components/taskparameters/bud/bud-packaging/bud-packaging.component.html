@@ -1,4 +1,21 @@
 <div class="ui-g " [formGroup]="BUDPACKAGING" *ngIf="PageFlag.page =='AssignTask'">
+  <!--Skills-->
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="skills">Skills<span class="star">*</span></label>:
+      <p-dropdown  #checkedItems
+      [filter] ="true"
+      [options]="skills"
+      placeholder="-- Select --"
+      (onChange)="onSkillsSelect($event)"
+      formControlName="skills"
+      class="clsControl"
+      id="skills"
+      name="skills">
+      </p-dropdown >
+    </div>
+  </div>
+  <!--End Skills-->
     <!--Order No-->
     <div class="ui-g-12 ui-md-6">
         <div class="paddingRL">
@@ -28,7 +45,21 @@
         </div>
       </div>
       <!--End Order NO -->
-
+<!--Already Working Employees-->
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="EmployeeListBox">Employees Working For Packaging</label>
+      <div  class="EmployeeListBox" style="border:1px solid #D5D5D5;height:40px;overflow: auto;">
+        <ul class="emp-list" style='padding: 0px;'>
+          <li  *ngFor="let i of workingEmp; let id=index" class="EmployeeListItem" >
+            <span class="badge badge-pill badge-light emplisttext">{{i}}&nbsp;</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!--End Already Working Employees-->
+  
       <!--Delivery Date-->
       <div class="ui-g-12 ui-md-6">
           <div class="paddingRL">
