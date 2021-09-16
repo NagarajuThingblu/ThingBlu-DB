@@ -98,6 +98,7 @@ export class SidebarComponent implements OnInit {
   navigatesubitems(index: number, i:number) {
     this.link = null
     this.subLink = this.plottedmenuItems[i].items[index].routerLink
+   
 }
 
   logOut() {

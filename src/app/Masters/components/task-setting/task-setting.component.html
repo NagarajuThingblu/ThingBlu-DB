@@ -78,7 +78,7 @@
             [paginator]="true" 
             [rows]="10"          
             sortOrder="-1"
-            [globalFilterFields]="['TaskCategory','TaskTypeName','IsReview','IsNotification']"              
+            [globalFilterFields]="['CategoryName','TaskTypeName','IsReview','IsNotification']"              
             [rowsPerPageOptions]="paginationValues"
             class="clsTableSelection"
             dataKey="taskId">
@@ -91,13 +91,17 @@
           </ng-template>
           <ng-template pTemplate="header">
             <tr>
-              <th [pSortableColumn]="'TaskCategory'"> Task Category <p-sortIcon [field]="'TaskCategory'"></p-sortIcon></th>
+              <th [pSortableColumn]="'CategoryName'"> Task Category <p-sortIcon [field]="'CategoryName'"></p-sortIcon></th>
               <th [pSortableColumn]="'TaskTypeName'"> Task Name <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon></th>
               <th [pSortableColumn]="'IsReview'">Is Review <p-sortIcon [field]="'IsReview'"></p-sortIcon></th>    
               <th [pSortableColumn]="'IsNotification'">Is Notification<p-sortIcon [field]="'IsNotification'"></p-sortIcon></th>              
               <th style="width:100px;">Action</th>                  
             </tr>
             <tr>
+              <th>
+                <input pInputText type="text" autocomplete="off" 
+                (input)="dtallTasksList.filter($event.target.value, 'CategoryName', 'contains')" class="clsControl">
+              </th>
               <th>
                 <input pInputText type="text" autocomplete="off" 
                 (input)="dtallTasksList.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
@@ -110,6 +114,8 @@
                 <input pInputText type="text" autocomplete="off" 
                 (input)="dtallTasksList.filter($event.target.value, 'IsNotification', 'contains')" class="clsControl">
               </th>
+             
+              <th></th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-task let-rowData let-columns="columns" let-rowIndex="rowIndex">

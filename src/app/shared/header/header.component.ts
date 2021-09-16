@@ -572,9 +572,9 @@ encode64(input) {
 
   logoClick() {
     if (this.appCommonService.getUserProfile().UserRole === this.userRoles.Manager) {
-      this.router.navigate(['home/managerdashboard']);
+      this.router.navigate(['home/dashboard/managerdashboard']);
     } else {
-      this.router.navigate(['home/empdashboard']);
+      this.router.navigate(['home/dashboard/empdashboard']);
     }
   }
   ShowForgotPasswordPopup() {

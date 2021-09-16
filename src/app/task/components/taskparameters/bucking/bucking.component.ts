@@ -506,7 +506,7 @@ export class BuckingComponent implements OnInit {
   }
 
   getWorkingEmpList(event?: any){
-    this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.BUCKING.controls['batchId'].value).subscribe(
+    this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.BUCKING.controls['batchId'].value,0).subscribe(
       data=>{
         if(data != 'No Data Found'){
           this.globalData.workingEmp = data;
@@ -751,10 +751,10 @@ submitReview(formModel) {
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
           setTimeout( () => {
             if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-              this.router.navigate(['home/managerdashboard']);
+              this.router.navigate(['home/dashboard/managerdashboard']);
             }
             else {
-              this.router.navigate(['home/empdashboard']);
+              this.router.navigate(['home/dashboard/empdashboard']);
             }
           }, 1000);
         }
@@ -784,9 +784,9 @@ submitReview(formModel) {
           detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
            setTimeout( () => {
                       if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                        this.router.navigate(['home/managerdashboard']);
+                        this.router.navigate(['home/dashboard/managerdashboard']);
                       } else {
-                        this.router.navigate(['home/empdashboard']);
+                        this.router.navigate(['home/dashboard/empdashboard']);
                       }
                     }, 1000);
         }

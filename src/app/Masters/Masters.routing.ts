@@ -62,7 +62,7 @@ const routes:Routes =[
       { path:'sections', component:SectionsComponent,canActivate:[AuthGuard,RoleGuard]},
       { path:'labels', component:LabelsComponent,canActivate:[AuthGuard,RoleGuard]},
       { path:'help', component:HelpComponent},
-      {path:'flc', component:FlcComponent,canActivate:[AuthGuard,RoleGuard]},
+      {path:'flc', component:FlcComponent},
       {path:'plantterminationreasons', component:PlantTerminationReasonsComponent,canActivate:[AuthGuard,RoleGuard]},
      {path:'addrawmaterial', component:AddRawMaterialComponent},
     {path:'chemicalsaddupdate', component:ChemicalPurchaseComponent},

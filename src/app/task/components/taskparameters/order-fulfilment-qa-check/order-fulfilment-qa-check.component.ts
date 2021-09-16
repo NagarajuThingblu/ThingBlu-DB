@@ -879,9 +879,9 @@ export class OrderFulfilmentQaCheckComponent implements OnInit, OnDestroy {
 
                 setTimeout(() => {
                   if (this._cookieService.UserRole === this.userRoles.Manager) {
-                    this.router.navigate(['home/managerdashboard']);
+                    this.router.navigate(['home/dashboard/managerdashboard']);
                   } else {
-                    this.router.navigate(['home/empdashboard']);
+                    this.router.navigate(['home/dashboard/empdashboard']);
                   }
 
                   this.loaderService.display(false);
@@ -904,9 +904,9 @@ export class OrderFulfilmentQaCheckComponent implements OnInit, OnDestroy {
 
                 setTimeout(() => {
                   if (this._cookieService.UserRole === this.userRoles.Manager) {
-                    this.router.navigate(['home/managerdashboard']);
+                    this.router.navigate(['home/dashboard/managerdashboard']);
                   } else {
-                    this.router.navigate(['home/empdashboard']);
+                    this.router.navigate(['home/dashboard/empdashboard']);
                   }
 
                   this.loaderService.display(false);

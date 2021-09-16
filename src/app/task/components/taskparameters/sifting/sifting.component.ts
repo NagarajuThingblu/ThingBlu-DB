@@ -696,9 +696,9 @@ export class SiftingComponent implements OnInit, OnChanges {
                     this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
                   setTimeout( () => {
                     if (this._cookieService.UserRole === this.userRoles.Manager) {
-                      this.router.navigate(['home/managerdashboard']);
+                      this.router.navigate(['home/dashboard/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/empdashboard']);
+                      this.router.navigate(['home/dashboard/empdashboard']);
                     }
                   }, 1000);
                 } else if (data === 'Failure') {
@@ -715,9 +715,9 @@ export class SiftingComponent implements OnInit, OnChanges {
 
                   setTimeout( () => {
                     if (this._cookieService.UserRole === this.userRoles.Manager) {
-                      this.router.navigate(['home/managerdashboard']);
+                      this.router.navigate(['home/dashboard/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/empdashboard']);
+                      this.router.navigate(['home/dashboard/empdashboard']);
                     }
                   }, 1000);
                 }
@@ -945,7 +945,7 @@ export class SiftingComponent implements OnInit, OnChanges {
                   }
 
                   setTimeout( () => {
-                    this.router.navigate(['home/taskaction', this.taskType, this.taskid]);
+                    this.router.navigate(['home/task/taskaction', this.taskType, this.taskid]);
                   }, 1000);
 
                 } else if (data === 'Deleted') {
@@ -954,9 +954,9 @@ export class SiftingComponent implements OnInit, OnChanges {
 
                   setTimeout( () => {
                     if (this._cookieService.UserRole === this.userRoles.Manager) {
-                      this.router.navigate(['home/managerdashboard']);
+                      this.router.navigate(['home/dashboard/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/empdashboard']);
+                      this.router.navigate(['home/dashboard/empdashboard']);
                     }
                   }, 1000);
                 } else if (data === 'Failure') {
@@ -976,9 +976,9 @@ export class SiftingComponent implements OnInit, OnChanges {
 
                   setTimeout( () => {
                     if (this._cookieService.UserRole === this.userRoles.Manager) {
-                      this.router.navigate(['home/managerdashboard']);
+                      this.router.navigate(['home/dashboard/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/empdashboard']);
+                      this.router.navigate(['home/dashboard/empdashboard']);
                     }
                   }, 1000);
                 }

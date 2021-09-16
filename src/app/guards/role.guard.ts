@@ -26,9 +26,21 @@ export class RoleGuard implements CanActivate {
       this.menuItems = this.appCommonService.getRoleAccess();
     }
     if (this.menuItems.length > 0) {
-      if ((this.menuItems.filter(R => R.RouterLink === next.routeConfig.path).length)) {
+      if ((this.menuItems.filter(R => R.RouterLink.split('/')[1] === next.routeConfig.path).length)) {
+     
         return true;
-      } else if ('lotentry' === next.routeConfig.path && (this.menuItems.filter(R => R.RouterLink === next.routeConfig.path).length <= 0)) {
+      } 
+      // if ((this.menuItems.filter(R => R.RouterLink != null))) {
+      //   for(let i of this.menuItems){
+      //     if(i.RouterLink != null){
+      //       if ((("'"+i.RouterLink.split('/')[1] === next.routeConfig.path))) {
+      //         return true;
+      //       }
+      //     }
+      //   }
+        
+      // }
+      else if ('lotentry' === next.routeConfig.path && (this.menuItems.filter(R => R.RouterLink === next.routeConfig.path).length <= 0)) {
         let SubMenu = [];
         SubMenu = this.menuItems.filter(r => r.IsDefaultPage === 1);
         if (SubMenu.length > 0) {
@@ -71,5 +83,8 @@ export class RoleGuard implements CanActivate {
         return false;
       }
     }
+  }
+  cut(input){
+
   }
 }

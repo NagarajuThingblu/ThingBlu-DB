@@ -329,14 +329,14 @@
                       <input pInputText
                         name="primaryemail"
                         id="primaryemail"
-                        type="text"
+                        type="email"
                         autocomplete="new-password"
                         class="clsControl"
                         formControlName="primaryemail"
                         placeholder="Enter Primary Email"
                        
                       />
-
+                  
                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newEmployeeForm.controls['primaryemail'].valid&&newEmployeeForm.controls['primaryemail'].dirty">
 
@@ -489,10 +489,10 @@
 
                     <p-dropdown
                       [filter] ="true"
-                     
                       id="city"
                       formControlName="city"
                       [options]="cities"
+                      autocomplete="new-password"
                       placeholder="-- Select --"
                       [autoWidth]="false"
                       class="clsControl"
@@ -630,8 +630,7 @@
                       </label>
 
                       <p-calendar                                                            
-                       [showIcon]="true"    
-                       [defaultDate]="defaultDate"                                   
+                       [showIcon]="true"                                     
                        formControlName="hiredate"          
                        class="clsControl"
                        id="hiredate"
@@ -864,7 +863,7 @@
                         <tr>
                           <th   class="lotNum">TaskName                       
                           </th>
-                          <th   class="lotNum">Strain Name                       
+                          <th   class="lotNum">Cultivar Name                       
                           </th>
                           <th   class="lotNum">Lot                   
                           </th>
