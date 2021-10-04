@@ -143,9 +143,9 @@
                       <!-- <td>
                           <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
                       </td> -->  
-                      <td>{{city?.CountryName }}  </td>                  
-                      <td>{{city?.StateName }}  </td>
-                      <td>{{city?.CityName }}</td>
+                      <td><span class="ui-column-title">Country</span>{{city?.CountryName }}  </td>                  
+                      <td><span class="ui-column-title">State/Province</span>{{city?.StateName }}  </td>
+                      <td><span class="ui-column-title">City</span>{{city?.CityName }}</td>
                   </tr>
               </ng-template>
           </p-table>

@@ -26,7 +26,7 @@ export class RoleGuard implements CanActivate {
       this.menuItems = this.appCommonService.getRoleAccess();
     }
     if (this.menuItems.length > 0) {
-      if ((this.menuItems.filter(R => R.RouterLink.split('/')[1] === next.routeConfig.path).length)) {
+      if ((this.menuItems.filter(R => R.RouterLink.split('/')[1] === next.routeConfig.path).length) || (this.menuItems.filter(R => R.RouterLink=== next.routeConfig.path).length)) {
      
         return true;
       } 

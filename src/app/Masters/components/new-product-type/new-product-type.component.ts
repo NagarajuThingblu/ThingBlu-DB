@@ -859,12 +859,12 @@ export class NewProductTypeComponent implements OnInit {
   viewAllStrains() {
   this.appCommonService.ProductTypeBackLink = true;
   this.appCommonService.ProductTypeFormDetail = this.newProductTypeEntryForm;
-    this.router.navigate(['../home/master/strainmaster']);
+    this.router.navigate(['../home/strainmaster']);
   }
 
   viewAllPackageType() {
   this.appCommonService.ProductTypeBackLink = true;
   this.appCommonService.ProductTypeFormDetail = this.newProductTypeEntryForm;
-    this.router.navigate(['../home/master/addnewpackagetype']);
+    this.router.navigate(['../home/addnewpackagetype']);
   }
 }

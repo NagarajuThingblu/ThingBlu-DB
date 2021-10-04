@@ -174,15 +174,15 @@
         <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
     </td> -->
    
-    <td>{{Task?.TaskTypeName}}</td>
-    <td>{{Task?.CategoryName}}</td>
-    <td>{{Task?.Description }}</td>
+    <td> <span class="ui-column-title">Task Name</span>{{Task?.TaskTypeName}}</td>
+    <td> <span class="ui-column-title">Task Type</span>{{Task?.CategoryName}}</td>
+    <td> <span class="ui-column-title">Description</span>{{Task?.Description }}</td>
     <!-- <td>{{Strain?.THC }}</td>   
     <td>{{Strain?.CBD }}  </td>                  
     <td>{{Strain?.THCA }}  </td>
     <td>{{Strain?.CBDA }}</td> -->
     <td style="width:65px;"> 
-       <span class="ui-column-title">edit</span>
+       <span class="ui-column-title">Action</span>
       <a href="#" [routerLink]="" (click)="getTaskOnEdit(Task?.Id)" >                             
           <span class="fa fa-edit"></span>
       </a>

@@ -20,7 +20,8 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
     SharedModule,
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule
+    RouterModule,
+    HttpModule,
   ],
   declarations: [LoginComponent, ForgotPasswordComponent],
   providers: [],

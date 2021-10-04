@@ -96,12 +96,12 @@
         </ng-template>
         <ng-template pTemplate="body" let-ptr let-rowData let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-            <td>{{ptr?.TerminationReason }}</td>
+            <td>  <span class="ui-column-title">Reason</span>{{ptr?.TerminationReason }}</td>
               
-            <td>{{ptr?.Description }}</td>   
+            <td>  <span class="ui-column-title">Description</span>{{ptr?.Description }}</td>   
            
             <td style="width:65px;" (click)="$event.stopPropagation();"> 
-              <span class="ui-column-title">edit</span>
+              <span class="ui-column-title">Action</span>
               <a href="#" [routerLink]="" (click)="GetPtrOnEdit(ptr?.TerminationId)" >                             
                 <span class="fa fa-edit"></span>
               </a>

@@ -35,7 +35,7 @@ import { NgIdleModule } from '@ng-idle/core';
 import { MsalService } from './azureb2c/msal.service';
 import { ResetPasswordMsalService } from './azureb2c/reset-password-msal.service';
 import { promise } from 'protractor';
-
+import {ForgotPasswordService} from './task/services/forgot-password.service'
 // import { UserIdleModule } from 'angular-user-idle/user-idle.module';
 
 // export function startupServiceFactory(startupService: StartupService): Function {
@@ -62,6 +62,7 @@ import { promise } from 'protractor';
     // LotModule,
     // OrderModule,
     HomeModule,
+
     // DashboardModule,
     routing,
     HttpClientModule,
@@ -91,6 +92,7 @@ import { promise } from 'protractor';
     AppLoadService,
     managerdashboardService,
     AppLoadFOrgotPasswordService,
+    ForgotPasswordService
     // { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppLoadService], multi: true },
     // { provide: APP_INITIALIZER, useFactory: init_app_resetpassword, deps: [AppLoadFOrgotPasswordService], multi: true }
     // {

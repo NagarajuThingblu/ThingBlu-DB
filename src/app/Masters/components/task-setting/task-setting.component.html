@@ -120,12 +120,12 @@
           </ng-template>
           <ng-template pTemplate="body" let-task let-rowData let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-              <td>{{task?.CategoryName }}</td>
-              <td>{{task?.TaskTypeName }}</td>
-              <td>{{task?.IsReview }}</td>   
-              <td>{{task?.IsNotification }}</td>            
+              <td> <span class="ui-column-title">Task Category</span>{{task?.CategoryName }}</td>
+              <td> <span class="ui-column-title">Task Name</span>{{task?.TaskTypeName }}</td>
+              <td> <span class="ui-column-title">Is Review</span>{{task?.IsReview }}</td>   
+              <td> <span class="ui-column-title">Is Notification</span>{{task?.IsNotification }}</td>            
               <td style="width:65px;" (click)="$event.stopPropagation();"> 
-                <span class="ui-column-title">edit</span>
+                <span class="ui-column-title">Action</span>
                 <a href="#" [routerLink]="" (click)="editTaskSetting(task?.TaskTypeId)" >                             
                   <span class="fa fa-edit"></span>
                 </a>              

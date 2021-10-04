@@ -6,7 +6,7 @@
           <div class="ui-g">
             <div class="ui-g-6 ui-md-3">
               <div class="paddingRL">
-                <label for="chemicalname">Chemical Type Name<span class="star">*</span></label>:
+                <label for="chemicalname">Chemical Type<span class="star">*</span></label>:
                 <p-dropdown
                    [options]="chemicaltypes"
                    [autoWidth]="true"
@@ -141,13 +141,13 @@
         </ng-template>
         <ng-template pTemplate="body" let-chemicaltype let-rowData let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-            <td>{{chemicaltype?.ChemicalTypeName }}</td>
-            <td>{{chemicaltype?.Qty }}</td> 
-            <td>{{chemicaltype?.UOMName }}</td> 
-            <td>{{chemicaltype?.TotalChemicalCost }}</td>   
+            <td> <span class="ui-column-title">Chemical Type Name</span>{{chemicaltype?.ChemicalTypeName }}</td>
+            <td> <span class="ui-column-title">Quantity</span>{{chemicaltype?.Qty }}</td> 
+            <td> <span class="ui-column-title">UOM</span>{{chemicaltype?.UOMName }}</td> 
+            <td> <span class="ui-column-title">Cost ($)</span>{{chemicaltype?.TotalChemicalCost }}</td>   
 
             <td style="width:65px;" (click)="$event.stopPropagation();"> 
-              <span class="ui-column-title">edit</span>
+              <span class="ui-column-title">Action</span>
               <a href="#" [routerLink]="" (click)="GetCPOnEdit(chemicaltype?.ChemicalPurchaseId)" >                             
                 <span class="fa fa-edit"></span>
               </a>

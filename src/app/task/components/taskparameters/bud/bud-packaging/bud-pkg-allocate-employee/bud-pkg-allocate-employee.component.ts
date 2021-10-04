@@ -125,9 +125,10 @@ public reqWt:any;
    }
    
    arrayItems: FormArray
-
+   employeeSelected: Map<number, any> = new Map<number, any>()
   ngOnInit() {
-    this.visibility.push({label:'false'});
+   var count=0
+    // this.visibility.push({label:'false'});
     this.showUpArrow.push({label:'false'})
     console.log(this.files)
     this.globalResource = GlobalResources.getResources().en;
@@ -148,7 +149,11 @@ public reqWt:any;
         this.allocateEmpArr.push(this.createItem(object, null));
       });
    
-    
+    for(let i of this.allocateEmpArr.controls){
+      this.visibility.push({label:'false'});
+      this.employeeSelected.set(count,"")
+     count++
+    }
 
     this.questionForm = this.fb.group({
       questions: new FormArray([])
@@ -532,10 +537,21 @@ public reqWt:any;
   }
 
   assignToAllChange() {
+    let i=0
+    let empName=""
     const assignToAllEmp =  this.BudPkgForm.value.assignToAll;
+for(let j of this.AllocateEmpData.employees){
+  if(assignToAllEmp === j.EmpId){
+    empName = j.EmpName
+  }
+}
     this.allocateEmpArr.controls.forEach((element: FormGroup) => {
       if (element.value.assignQty) {
-        element.controls['employee'].patchValue(assignToAllEmp ? assignToAllEmp : null);
+       //  element.controls['employee'].patchValue(assignToAllEmp ? assignToAllEmp : null);
+       element.value.employee = assignToAllEmp
+       this.employeeSelected.set(i,empName)
+       i++
+        console.log(this.AllocateEmpData.files)
       }
     });
 
@@ -698,6 +714,7 @@ public reqWt:any;
 
   splitTask(formRow: FormGroup, index: number): void {
     // this.visibility[index].push({label:'false'});
+  
     // if (!this.validateDuplicateRows()) {
       if(this.taskCategory === 'GROWING'){
         if (Number(formRow.value.TotalWt) <= 1) {
@@ -752,6 +769,7 @@ public reqWt:any;
   
           this.allocateEmpArr.insert((index + 1), formGroup);
          this.visibility.push({label:'false'})
+         this.employeeSelected.set(index+1,"")
           this.selectedLotsArray.set(parentUniqueId, []);
           this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
         }
@@ -972,6 +990,7 @@ public reqWt:any;
       for(let employee of this.AllocateEmpData.employees){
         if(event.node.id === employee.EmpId){
           this.employeeNameToBeDisplayedOnDropdown =employee.EmpName
+          this.employeeSelected.set(i,employee.EmpName )
           this.allocateEmpArr.controls[i]['controls'].employee.value = employee.EmpId
         }
       }

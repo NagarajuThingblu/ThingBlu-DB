@@ -308,6 +308,8 @@ public WhenToDisplayPWField: boolean = false
               this.getAllEmployee();
             } else if(String(data[0].RESULTKEY) === 'Termination Date less Than HireDate'){
               this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail:data[0].RESULTKEY });
+            }else if(String(data[0].RESULTKEY) === 'Date Of Birth Greater Than The HireDate'){
+              this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail:data[0].RESULTKEY });
             }else if (String(data).toLocaleUpperCase() === 'NOTUPDATED') {
                 this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                 detail: this.newEmployeeResources.noupdate });

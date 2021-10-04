@@ -1347,7 +1347,7 @@ console.log(assignTaskFormValues)
               //      UnitValue: item.packageunit, Qty: item.assignPackageWt}
               {
                 ProductTypeId: item.productTypeId,
-                EmployeeId: item.employee,
+                EmployeeId: item.employee?  item.employee : assignTaskFormValues.BUDPACKAGING.assignToAll,
                 UniqueId: item.uniqueId,
               }
             );

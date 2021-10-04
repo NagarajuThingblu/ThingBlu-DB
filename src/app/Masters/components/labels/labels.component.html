@@ -6,12 +6,12 @@
           
         </p-header>
         <form  [formGroup]="newLabelsEntryForm" (ngSubmit)="onSubmit(newLabelsEntryForm.value)">
-          <div class="ui-g" style="float:right;">
+          <div class="ui-g" style="float:right; padding-bottom: 0px;">
             <div *ngIf = "visible === true"  style="float:right;">
               <p-button  style="float: right;" class="toplinks" type="button"    id="btn_binshow" (click)="backtotaskpage()"  name="btnviewbins"><< back</p-button>
             </div>
           </div>
-          <div class="ui-g ">
+          <div class="ui-g-12" style="padding-top:0px;">
             <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
               <div class="paddingRL">
                 <label for="TaskType" class="towlable">Category<span class="star">*</span></label>
@@ -499,18 +499,18 @@
         </ng-template>
         <ng-template pTemplate="body" let-label let-rowData let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-            <td>{{label?.TaskTypeName}}</td>
-            <td style="display:none">{{label?.Fields}}</td>
-            <td style="display:none">{{label?.Sections}}</td>
-            <td>{{label?.BinNo}}</td>
-            <td>{{label?.StrainName}}</td>
-            <td>{{label?.SkewType }}</td>
-            <td>{{label?.IsLightDeprevation }}</td>
-            <td>{{label?.TrimmingMethod }}</td>
-            <td>{{label?.TotalWt}}</td>
-            <td>{{label?.AvilableWt}}</td>
+            <td><span class="ui-column-title">Category</span>{{label?.TaskTypeName}}</td>
+            <td style="display:none"><span class="ui-column-title">Field</span>{{label?.Fields}}</td>
+            <td style="display:none"><span class="ui-column-title">Section</span>{{label?.Sections}}</td>
+            <td><span class="ui-column-title">Bin Number</span>{{label?.BinNo}}</td>
+            <td><span class="ui-column-title">Strain</span>{{label?.StrainName}}</td>
+            <td><span class="ui-column-title">Skew Type </span>{{label?.SkewType }}</td>
+            <td><span class="ui-column-title">Light Dept </span>{{label?.IsLightDeprevation }}</td>
+            <td><span class="ui-column-title">Trimming Method </span>{{label?.TrimmingMethod }}</td>
+            <td><span class="ui-column-title">Total Bin Wt</span>{{label?.TotalWt}}</td>
+            <td><span class="ui-column-title">Available Bin Wt</span>{{label?.AvilableWt}}</td>
             <td style="width:65px;">
-              <span class="ui-column-title">edit</span>
+              <span class="ui-column-title">Action</span>
               <a href="#" [routerLink]="" (click)="getLabelsOnEdit(label?.LabelId)">
                 <span class="fa fa-edit"></span>
               </a>

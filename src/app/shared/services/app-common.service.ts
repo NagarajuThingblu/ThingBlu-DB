@@ -5,6 +5,7 @@ import * as crypto from 'crypto-js';
 import { CookieService } from '../../../../node_modules/ngx-cookie-service';
 import { UserModel } from '../models/user.model';
 import { ConfirmationService } from 'primeng/api';
+import { HttpClient, HttpHeaders, HttpClientModule } from '@angular/common/http';
 
 const originFormControlNameNgOnChanges = FormControlName.prototype.ngOnChanges;
 const originFormControlNgOnChanges = FormControlDirective.prototype.ngOnChanges;
