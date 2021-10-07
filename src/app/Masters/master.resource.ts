@@ -328,7 +328,23 @@ export class MastersResource {
                     citysuccess: 'City added successfully',
                     cityexists: 'City already exist'
                 },
+                addNewCrew: {
+                    pageheading: 'Add New Crew',
+                    crewsaved:'Crew Saved Successfully',
+                    CrewUpdated:'Crew Updated Successfully',
+                    deleteCrewMsg: 'Do you want to delete this Crew?',
+                    activeCrewMsg: 'Do you want to activate this Crew?',
+                    deactivateCrewMsg: 'Do you want to inactivate this Crew?',
+                    inactivated: 'Crew inactivated successfully.',
+                    activated: 'Crew activated successfully',
+                    deletedSuccess: 'Crew deleted successfully',
+                    notdeleted:'Crew Not deleted',
+                    noupdate: 'Can not update this Crew. Might be it does not exist.',
+                    notactivated: 'Can not activate this Crew. Might be it does not exist.',
+                    notinactivated: 'Can not inactivate this Crew. Might be it does not exist.',
+                    CrewAlreadyExists:'Crew already Exists',
 
+                },
                 tpprocessor: {
                     pageheading: 'Add New TP Processor',
                     tpprocessorsuccess: 'TP processor saved successfully.',

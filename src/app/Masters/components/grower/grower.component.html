@@ -483,14 +483,14 @@
               </td> -->
 
               <!-- <td>{{grower?.ClientName}}</td> -->
-              <td>{{grower?.RawSupplierName}}</td>
-              <td>{{grower?.ContactPerson }}</td>
-              <td>{{grower?.PrimaryEmail }}</td>   
-              <td>{{grower?.OfficePhone }}  </td>                  
-              <td>{{grower?.StateName }}  </td>
-              <td>{{grower?.CityName }}</td>
+              <td> <span class="ui-column-title">Supplier Name </span>{{grower?.RawSupplierName}}</td>
+              <td> <span class="ui-column-title">Contact Person</span>{{grower?.ContactPerson }}</td>
+              <td> <span class="ui-column-title">>Primary Email </span>{{grower?.PrimaryEmail }}</td>   
+              <td> <span class="ui-column-title">Office Phone </span>{{grower?.OfficePhone }}  </td>                  
+              <td> <span class="ui-column-title">State</span>{{grower?.StateName }}  </td>
+              <td> <span class="ui-column-title">City</span>{{grower?.CityName }}</td>
               <td style="width:65px;" (click)="$event.stopPropagation();"> 
-                 <span class="ui-column-title">edit</span>
+                 <span class="ui-column-title">Action</span>
                 <a href="#" [routerLink]="" (click)="getGrowerOnEdit(grower?.RawSupId)" >                             
                     <span class="fa fa-edit"></span>
                 </a>

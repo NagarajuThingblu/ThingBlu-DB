@@ -80,18 +80,18 @@
               <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
                   <td *ngIf="taskCategoryType != 'GROWING'">{{newproducttype?.BrandName}}</td>
                   <td *ngIf="taskCategoryType != 'GROWING'">{{newproducttype?.SubBrandName}}</td>
-                  <td>{{newproducttype?.StrainName }}</td>
-                  <td>{{newproducttype?.SkewKeyName }}</td>  
-                  <td *ngIf="taskCategoryType === 'GROWING'">{{newproducttype?.TrimmingMethod }}</td>   
-                  <td *ngIf="taskCategoryType === 'GROWING'">{{newproducttype?.IsLD }}</td>                
-                  <td>{{newproducttype?.PkgTypeName }}</td>
-                  <td>{{newproducttype?.UnitPrice }}</td>
-                  <td class="wtg">{{newproducttype?.UnitValue}}</td>
-                  <td class="wtg">{{newproducttype?.ItemQty}}</td>
-                  <td class="datewidth">{{newproducttype?.CreatedDate | date: 'MM/dd/yyyy'}}</td>
+                  <td><span class="ui-column-title">{{ newProductTypeResources.strain}}</span>{{newproducttype?.StrainName }}</td>
+                  <td><span class="ui-column-title">{{ newProductTypeResources.skewtype}} </span>{{newproducttype?.SkewKeyName }}</td>  
+                  <td *ngIf="taskCategoryType === 'GROWING'"><span class="ui-column-title">Trimming Method</span>{{newproducttype?.TrimmingMethod }}</td>   
+                  <td *ngIf="taskCategoryType === 'GROWING'"><span class="ui-column-title">Light Dept</span>{{newproducttype?.IsLD }}</td>                
+                  <td><span class="ui-column-title">{{ newProductTypeResources.packagetype}} </span>{{newproducttype?.PkgTypeName }}</td>
+                  <td><span class="ui-column-title">Package Unit Price($)</span>{{newproducttype?.UnitPrice }}</td>
+                  <td class="wtg"><span class="ui-column-title">{{ newProductTypeResources.packageunit}} </span>{{newproducttype?.UnitValue}}</td>
+                  <td class="wtg"><span class="ui-column-title">{{ newProductTypeResources.packageitemqty}} </span>{{newproducttype?.ItemQty}}</td>
+                  <td class="datewidth"><span class="ui-column-title">{{ newProductTypeResources.createddate}}</span>{{newproducttype?.CreatedDate | date: 'MM/dd/yyyy'}}</td>
                   <!-- <td class="wtg">{{newproducttype?.IsActiveFlag}}</td> -->
                   <td style="width:50px;">
-                    <span class="ui-column-title"></span>
+                    <span class="ui-column-title">Action</span>
                     <!-- <a href="#" [routerLink]="" (click)="editEmployee(newproducttype?.ProductTypeId)" >                             
                         <span class="fa fa-edit"></span>
                     </a> -->

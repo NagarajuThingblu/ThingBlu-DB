@@ -86,6 +86,8 @@ import { LabelDetailsComponent } from './components/label-details/label-details.
 import { EmployeeSkillsetComponent } from './components/employee-skillset/employee-skillset.component';
 
 import { MastersRoutingModule } from './Masters.routing';
+import { CrewComponent } from './components/crew/crew.component';
+import { CrewService} from './services/crew.service'
 
 @NgModule({
   declarations: [
@@ -135,7 +137,8 @@ import { MastersRoutingModule } from './Masters.routing';
     UpdateTerminationreasonComponent,
     SectionDetailsComponent,
     LabelDetailsComponent,
-    EmployeeSkillsetComponent
+    EmployeeSkillsetComponent,
+    CrewComponent
    
   ],
   imports: [
@@ -179,7 +182,8 @@ import { MastersRoutingModule } from './Masters.routing';
     NewSectionDetailsActionService,
     NewLabelDetailsActionService,
     NewARMDetailsActionService,
-    GrowerDetailsActionService
+    GrowerDetailsActionService,
+    CrewService
   ],
   exports: [
     NewProductTypeComponent,

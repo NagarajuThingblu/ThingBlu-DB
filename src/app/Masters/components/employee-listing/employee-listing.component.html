@@ -78,19 +78,19 @@
           <ng-template pTemplate="body" let-newemployee let-rowData let-columns="columns" let-rowIndex="rowIndex">
               <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
                   <!-- <td>{{newemployee?.ClientName}}</td> -->
-                  <td>{{newemployee?.FirstName}}</td>
-                  <td>{{newemployee?.LastName }}</td>
-                  <td>{{newemployee?.Username }}</td>
-                  <td>{{newemployee?.GenderName }}</td>                  
+                  <td><span class="ui-column-title">{{ newEmployeeResources.firstnameshort}}</span>{{newemployee?.FirstName}}</td>
+                  <td><span class="ui-column-title">{{ newEmployeeResources.lastnameshort}}</span>{{newemployee?.LastName }}</td>
+                  <td><span class="ui-column-title">UserName</span>{{newemployee?.Username }}</td>
+                  <td><span class="ui-column-title">{{ newEmployeeResources.gender}}</span>{{newemployee?.GenderName }}</td>                  
                   <!-- <td>{{newemployee?.DOB | date: 'MM/dd/yyyy' }}</td> -->
-                  <td>{{newemployee?.Role}}</td>
-                  <td>{{newemployee?.FLCName}}</td>
-                  <td>{{newemployee?.CityName}}</td>
-                  <td>{{newemployee?.CellPhone}}</td>
+                  <td><span class="ui-column-title">{{ newEmployeeResources.userrole}} </span>{{newemployee?.Role}}</td>
+                  <td><span class="ui-column-title">FLC Name</span>{{newemployee?.FLCName}}</td>
+                  <td><span class="ui-column-title">{{ newEmployeeResources.city}}</span>{{newemployee?.CityName}}</td>
+                  <td><span class="ui-column-title">{{ newEmployeeResources.cellphone}}</span>{{newemployee?.CellPhone}}</td>
                   <td style="text-align: center;"><span><a class="btn-link" (click)="openSkillsPopUp(newemployee?.EmpId)"  ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span></td>
                   <!-- <td>{{newemployee?.PrimaryEmail}}</td>    -->
                   <td style="width:65px;"> 
-                      <span class="ui-column-title">{{ newEmployeeResources.edit }}</span>
+                      <span class="ui-column-title">Action</span>
                       <a href="#" [routerLink]="" (click)="editEmployee(newemployee?.EmpId)" >                             
                           <span class="fa fa-edit"></span>
                       </a>

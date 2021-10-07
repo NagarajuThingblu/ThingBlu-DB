@@ -35,6 +35,7 @@ import { EmployeeSkillsetComponent } from "./components/employee-skillset/employ
 import { SectionDetailsComponent } from "./components/section-details/section-details.component";
 import { LabelDetailsComponent } from "./components/label-details/label-details.component";
 import { UpdateTerminationreasonComponent } from "./components/update-terminationreason/update-terminationreason.component";
+import { CrewComponent } from "./components/crew/crew.component";
 
 const routes:Routes =[
       { path: 'newproducttype', component: NewProductTypeComponent, canActivate: [AuthGuard, RoleGuard] },
@@ -71,6 +72,7 @@ const routes:Routes =[
       { path: 'taskupdate', component: UpdateTerminationreasonComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'infoofsection', component: SectionDetailsComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'sectionsMergeinfo', component: LabelDetailsComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'crew', component: CrewComponent, canActivate: [AuthGuard, RoleGuard] },
 ]
 @NgModule({
     imports:[RouterModule.forChild(routes)],

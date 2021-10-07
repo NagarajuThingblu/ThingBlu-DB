@@ -161,10 +161,10 @@
                   <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
               </td> -->
 
-              <td>{{Genetics?.GeneticsName}}</td>
-               <td>{{Genetics?.Description}}</td>
+              <td> <span class="ui-column-title">Genetics Name </span>{{Genetics?.GeneticsName}}</td>
+               <td> <span class="ui-column-title">Description</span>{{Genetics?.Description}}</td>
               <td style="width:65px;"> 
-                 <span class="ui-column-title">edit</span>
+                 <span class="ui-column-title">Action</span>
                 <a href="#" [routerLink]="" (click)="getGeneticsOnEdit(Genetics?.GeneticsId)" >                             
                     <span class="fa fa-edit"></span>
                 </a>

@@ -391,7 +391,7 @@
                   <th [pSortableColumn]="'StrainName'">Strain  <p-sortIcon [field]="'StrainName'"></p-sortIcon> </th>
                   <th [pSortableColumn]="'StrainCode'">Strain Code  <p-sortIcon [field]="'StrainCode'"></p-sortIcon> </th>
                   <th [pSortableColumn]="'StrainTypeName'">Strain Type  <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
-                  <th [pSortableColumn]="'GeneticsName'"> GeneticsName <p-sortIcon [field]="'GeneticsName'"></p-sortIcon></th>
+                  <th [pSortableColumn]="'GeneticsName'"> Genetics Name <p-sortIcon [field]="'GeneticsName'"></p-sortIcon></th>
                   <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>
                   <!-- <th [pSortableColumn]="'THC'">THC(%) <p-sortIcon [field]="'THC'"></p-sortIcon></th>    
                   <th [pSortableColumn]="'CBD'">CBD(%) <p-sortIcon [field]="'CBD'"></p-sortIcon></th>                  
@@ -438,17 +438,17 @@
                       <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
                   </td> -->
   
-                  <td>{{Strain?.StrainName}}</td>
-                  <td>{{Strain?.StrainCode}}</td>
-                  <td>{{Strain?.StrainTypeName}}</td>
-                  <td>{{Strain?.GeneticsName }}</td>
-                  <td>{{Strain?.Description }}</td>
+                  <td><span class="ui-column-title">Strain</span>{{Strain?.StrainName}}</td>
+                  <td><span class="ui-column-title">Strain Code </span>{{Strain?.StrainCode}}</td>
+                  <td><span class="ui-column-title">Strain Type </span>{{Strain?.StrainTypeName}}</td>
+                  <td><span class="ui-column-title">Genetics Name</span>{{Strain?.GeneticsName }}</td>
+                  <td><span class="ui-column-title">Description</span>{{Strain?.Description }}</td>
                   <!-- <td>{{Strain?.THC }}</td>   
                   <td>{{Strain?.CBD }}  </td>                  
                   <td>{{Strain?.THCA }}  </td>
                   <td>{{Strain?.CBDA }}</td> -->
                   <td style="width:65px;"> 
-                     <span class="ui-column-title">edit</span>
+                     <span class="ui-column-title">Action</span>
                     <a href="#" [routerLink]="" (click)="getStrainOnEdit(Strain?.StrainId)" >                             
                         <span class="fa fa-edit"></span>
                     </a>
