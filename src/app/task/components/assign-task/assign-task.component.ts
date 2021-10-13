@@ -720,9 +720,11 @@ console.log(assignTaskFormValues)
            
           assignTaskFormValues[this.selectedTaskTypeName].employeeList
           .forEach((element, index) => {
-            assignTaskDetailsForWebApi.EmployeeTypes.push({
-              "EmpId" : assignTaskFormValues.CUSTOMTASK.employeeList[index].id 
-            });
+            if(element.isParent=="False"){
+              assignTaskDetailsForWebApi.EmployeeTypes.push({
+                "EmpId" : assignTaskFormValues.CUSTOMTASK.employeeList[index].id 
+              });
+            }
           });
          //  assignTaskFormValues[this.selectedTaskTypeName].skills
          //  .forEach((element, index) => {
@@ -958,9 +960,11 @@ console.log(assignTaskFormValues)
      
         assignTaskFormValues[this.selectedTaskTypeName].employeeList
         .forEach((element, index) => {
-          assignTaskDetailsForWebApi.EmployeeTypes.push({
-            "EmpId" : assignTaskFormValues.INDEPENDENT.employeeList[index].id 
-          });
+          if(element.isParent=="False"){
+            assignTaskDetailsForWebApi.EmployeeTypes.push({
+              "EmpId" :assignTaskFormValues.INDEPENDENT.employeeList[index].id
+            });
+          }
         });
        //  assignTaskFormValues[this.selectedTaskTypeName].skills
        //  .forEach((element, index) => {

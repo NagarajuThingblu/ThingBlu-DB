@@ -228,7 +228,11 @@ export class StrainMasterComponent implements OnInit {
                 } else if (data[0]['Result'] === 'NotInserted') {
                   this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                   detail: this.newStrainResources.cannotinsert });
-                } else if (String(data[0].ResultKey).toUpperCase() === 'NOTPRESENT') {
+                } else if (data[0]['RESULTKEY'] === 'Duplicate Code') {
+                  this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+                  detail:'Duplicate Code' });
+                } 
+                else if (String(data[0].ResultKey).toUpperCase() === 'NOTPRESENT') {
                   if (data[0]['NoStrainType'] === 1) {
                     this.strainmasterForm.controls['straintype'].setErrors({ 'straintypenotpresent': true });
                     this.loaderService.display(false);
