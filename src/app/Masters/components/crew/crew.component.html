@@ -70,7 +70,12 @@
            
           </div>
         </form>
-
+      </p-panel>
+    </div>
+  </div>
+</div>
+<div class="ui-g">
+  <div class="ui-g-12">
         <!--Crew List-->
         <p-panel header="Crew List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
           <p-table #dtCrewList [value]="allCrewlist" 
@@ -139,8 +144,6 @@
           </p-table>
         </p-panel>
         <!--End Crew List-->
-      </p-panel>
-    </div>
   </div>
 </div>
 <p-growl [(value)]="msgs" life='5000'></p-growl>

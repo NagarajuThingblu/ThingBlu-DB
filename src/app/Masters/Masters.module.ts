@@ -87,7 +87,8 @@ import { EmployeeSkillsetComponent } from './components/employee-skillset/employ
 
 import { MastersRoutingModule } from './Masters.routing';
 import { CrewComponent } from './components/crew/crew.component';
-import { CrewService} from './services/crew.service'
+import { CrewService} from './services/crew.service';
+import { SubcrewComponent } from './components/subcrew/subcrew.component'
 
 @NgModule({
   declarations: [
@@ -138,7 +139,8 @@ import { CrewService} from './services/crew.service'
     SectionDetailsComponent,
     LabelDetailsComponent,
     EmployeeSkillsetComponent,
-    CrewComponent
+    CrewComponent,
+    SubcrewComponent
    
   ],
   imports: [

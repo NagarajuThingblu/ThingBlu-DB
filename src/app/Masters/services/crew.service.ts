@@ -23,7 +23,13 @@ export class CrewService {
        .map(data =>  data );
       }
 
-      
+      addSubCrewDetails(newSubCrewForApi: any) {
+        const url = 'api/employee/AddUpdateSubCrew';
+    
+        return this.http.post(url, newSubCrewForApi, this.headers)
+        // .do(data =>console.log('All : ' + JSON.stringify(data)))
+       .map(data =>  data );
+      }
  
   getAllCrewList(){
     const url = 'api/employee/GetCrewList';
@@ -36,6 +42,24 @@ export class CrewService {
     .map(data => {
 
     console.log('GetAllCrewListByClient Service success');
+  // console.log(data);
+    return data;
+});
+
+  }
+
+
+  getAllSubCrewList(){
+    const url = 'api/employee/GetSubCrewList';
+    let params = new HttpParams();
+    params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+    return this.http
+    .get(url, {params: params})
+
+    .map(data => {
+
+    console.log('GetAllSWubCrewListByClient Service success');
   // console.log(data);
     return data;
 });

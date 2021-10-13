@@ -222,6 +222,7 @@ export class GlobalResources {
                      total: 'Total',
                      taskCategory:'Task Category',
                      Crew:'Crew',
+                     PrimarySupervisor:'Primary Supervisor',
                      CrewRequired:'Crew Required',
                      Description:'Description',
                      Employees:'Employees',

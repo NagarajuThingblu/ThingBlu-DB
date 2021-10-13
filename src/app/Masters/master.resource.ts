@@ -345,6 +345,23 @@ export class MastersResource {
                     CrewAlreadyExists:'Crew already Exists',
 
                 },
+                addNewSubCrew: {
+                    pageheading: 'Add New Sub Crew',
+                    subcrewsaved:'Sub Crew Saved Successfully',
+                    subCrewUpdated:'Sub Crew Updated Successfully',
+                    deletesubCrewMsg: 'Do you want to delete this Sub Crew?',
+                    activesubCrewMsg: 'Do you want to activate this Sub Crew?',
+                    deactivatesubCrewMsg: 'Do you want to inactivate this Sub Crew?',
+                    inactivated: 'Sub Crew inactivated successfully.',
+                    activated: 'Sub Crew activated successfully',
+                    deletedSuccess: 'Sub Crew deleted successfully',
+                    notdeleted:'Sub Crew Not deleted',
+                    noupdate: 'Can not update this Sub Crew. Might be it does not exist.',
+                    notactivated: 'Can not activate this Sub Crew. Might be it does not exist.',
+                    notinactivated: 'Can not inactivate this Sub Crew. Might be it does not exist.',
+                    subCrewAlreadyExists:'Sub Crew already Exists',
+
+                },
                 tpprocessor: {
                     pageheading: 'Add New TP Processor',
                     tpprocessorsuccess: 'TP processor saved successfully.',

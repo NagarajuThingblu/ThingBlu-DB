@@ -30,9 +30,10 @@ export class CrewComponent implements OnInit {
   public msgs: any[];
   public allCrewlist: any
   paginationValues: any;
-  public CrewIDForUpdate:0
+  public CrewIDForUpdate=0
   public CrewOnEdit:any;
   public submitted: boolean;
+  public event: any;
   
   constructor(
     private loaderService: LoaderService,
@@ -89,7 +90,7 @@ onSubmit(value: string){
       .subscribe(
         data => {
           this.msgs = [];
-          if (data[0]['ResultKey'].toLocaleUpperCase() == 'SUCCESS') {
+          if (data[0]['RESULTKEY'].toLocaleUpperCase() == 'SUCCESS') {
             this.msgs.push({
               severity: 'success', summary: this.globalResource.applicationmsg,
               detail: this.CrewResources.crewsaved
@@ -98,7 +99,7 @@ onSubmit(value: string){
             this.GetCrewList();
             this.CrewIDForUpdate=0;
           }
-          else if(data[0]['ResultKey'].toLocaleUpperCase() == 'UPDATED'){
+          else if(data[0]['RESULTKEY'].toLocaleUpperCase() == 'UPDATED'){
             this.msgs.push({
               severity: 'success', summary: this.globalResource.applicationmsg,
               detail: this.CrewResources.CrewUpdated
@@ -149,7 +150,9 @@ GetCrewList() {
   () => console.log('GetAllCrewListbyClient complete'));
 }
 
-
+onPageChange(e) {
+  this.event = e;
+}
 GetCrewOnEdit(CrewID)
 {
   const data = this.allCrewlist.filter(x => x.CrewID === CrewID);
@@ -235,7 +238,7 @@ activateDeleteCrew(CrewID, Crew,IsDeleted, ActiveInactiveFlag) {
         data => {
           // console.log(data);
           this.msgs = [];
-          if (data[0]['ResultKey'].toLocaleUpperCase()  === 'SUCCESS' && ActiveInactiveFlag === 1) {
+          if (data[0]['RESULTKEY'].toLocaleUpperCase()  === 'SUCCESS' && ActiveInactiveFlag === 1) {
             if (Crew.IsActive === true) {
               this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
               detail:  this.CrewResources.activated});
@@ -249,7 +252,7 @@ activateDeleteCrew(CrewID, Crew,IsDeleted, ActiveInactiveFlag) {
               this.GetCrewList();
               this.loaderService.display(false);
             }
-          } else if (data[0]['ResultKey'].toLocaleUpperCase()  === 'SUCCESS' && IsDeleted === 1) {
+          } else if (data[0]['RESULTKEY'].toLocaleUpperCase()  === 'SUCCESS' && IsDeleted === 1) {
             this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
             detail: this.CrewResources.deletedSuccess});
             this.ResetForm();
@@ -271,7 +274,30 @@ activateDeleteCrew(CrewID, Crew,IsDeleted, ActiveInactiveFlag) {
               Crew.IsActive = !Crew.IsActive;
               this.loaderService.display(false);
             }
-          }  else if (data === 'Failure') {
+          }  else if (data[0]['RESULTKEY'] === 'Please Delete the sub crews') {
+            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail:data[0]['RESULTKEY']  });
+          } else if (data[0]['RESULTKEY'] === 'Please Inactivate the sub crews') {
+            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail:data[0]['RESULTKEY']  });
+          }
+          else if (data[0]['RESULTKEY'] === 'Duplicate Record') {
+            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail:data[0]['RESULTKEY']  });
+            this.ResetForm();
+            this.GetCrewList();
+            this.loaderService.display(false);
+          } 
+          else if (data[0]['RESULTKEY'] === 'Duplicate record found') {
+            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail:data[0]['RESULTKEY']  });
+            this.ResetForm();
+            this.GetCrewList();
+            this.loaderService.display(false);
+          }
+          else if (data[0]['RESULTKEY'] === 'already deleted') {
+            this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail:"Already Deleted"});
+            this.ResetForm();
+            this.GetCrewList();
+            this.loaderService.display(false);
+          }
+           else if (data === 'Failure') {
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
           } else if (data === 'Duplicate') {
             this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.CrewResources.CrewAlreadyExists });

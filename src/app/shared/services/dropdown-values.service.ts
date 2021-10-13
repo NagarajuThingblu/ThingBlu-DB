@@ -455,6 +455,40 @@ getManagerList() {
   return data;
  });
 }
+
+getAllEmpList(){
+  const url = 'api/employee/GetEmployeeLisForSubCrews';
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+  return this.http
+  .get(url, {params: params})
+
+  .map(data => {
+
+  console.log('GetAllSWubCrewListByClient Service success');
+// console.log(data);
+  return data;
+});
+
+}
+
+getAllEmployeeList() {
+  const url = 'api/Employee/GetEmployeeList';
+
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+  return this.http
+
+  .get(url , { params: params})
+  // return this.http
+  // .get(url)
+  .map(data => {
+    console.log('GetEmployeeList Service success');
+    // console.log(data);
+    return data;
+  });
+}
 GetFLClist() {
   const url = 'api/Grower/GetFLCList';
   let params = new HttpParams();
