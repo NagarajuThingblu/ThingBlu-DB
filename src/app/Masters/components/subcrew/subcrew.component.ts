@@ -123,7 +123,7 @@ export class SubcrewComponent implements OnInit {
     return this.fb.group({
       subcrew: new FormControl(null),
       emp: new FormControl(null),
-      monitor:new FormControl(null),
+      monitor:new FormControl(0),
       chkSelectAll: new FormControl(true)
     });
     

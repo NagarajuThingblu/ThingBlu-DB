@@ -291,7 +291,7 @@ activateDeleteCrew(CrewID, Crew,IsDeleted, ActiveInactiveFlag) {
             this.GetCrewList();
             this.loaderService.display(false);
           }
-          else if (data[0]['RESULTKEY'] === 'already deleted') {
+          else if (data[0]['RESULTKEY'] === 'Already Deleted') {
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail:"Already Deleted"});
             this.ResetForm();
             this.GetCrewList();
