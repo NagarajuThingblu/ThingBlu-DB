@@ -178,20 +178,21 @@ export class SubcrewComponent implements OnInit {
         () => console.log('Get all employeelist complete'));
 
   }
-  filterEmployees(index){
+  filterEmployees(indexValue){
     var Emplistfilter=[]
     Emplistfilter =this.Emplist
-    for(let i of this.SubCrewForm.value.items[index-1].emp){
+    for(let i of this.SubCrewForm.value.items[indexValue-1].emp){
       for(let j of this.Emplist){
         if(i == j.value){
           let Empindex = Emplistfilter.indexOf(j)
           Emplistfilter.splice(Empindex,1)
+          this.EmpForEachRow.set(indexValue,Emplistfilter)
         }
       }
       // index = Emplistfilter.indexOf(i)
       // Emplistfilter.slice(index)
     }
-    this.EmpForEachRow.set(index,Emplistfilter)
+   
   }
   resetForm(){
     this.GetEmpList()

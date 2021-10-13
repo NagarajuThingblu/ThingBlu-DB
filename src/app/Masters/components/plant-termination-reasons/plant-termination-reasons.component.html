@@ -17,6 +17,10 @@
                 placeholder="Enter Termination Reason"
                 />
               </div>
+              <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+              *ngIf="!ptrForm.controls['terminationReason'].valid&&ptrForm.controls['terminationReason'].dirty">
+              "Termination Reason Required"
+            </div>
             </div>
 
             <div class="ui-g-12 ui-md-6">
