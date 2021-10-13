@@ -6,17 +6,17 @@
           
         </p-header>
         <form  [formGroup]="newLabelsEntryForm" (ngSubmit)="onSubmit(newLabelsEntryForm.value)">
-          <div class="ui-g" style="float:right; padding-bottom: 0px;">
+          <div class="ui-g" style="float:right;">
             <div *ngIf = "visible === true"  style="float:right;">
               <p-button  style="float: right;" class="toplinks" type="button"    id="btn_binshow" (click)="backtotaskpage()"  name="btnviewbins"><< back</p-button>
             </div>
           </div>
-          <div class="ui-g-12" style="padding-top:0px;">
+          <div class="ui-g ">
             <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
               <div class="paddingRL">
                 <label for="TaskType" class="towlable">Category<span class="star">*</span></label>
                   <p-dropdown
-                     [filter] ="true"
+                  [filter] ="true"
                     id="TaskType"
                     [options]="tasktypes"
                     formControlName="TaskType"
@@ -41,7 +41,7 @@
             </div>
             <div class="ui-g-12 ui-md-4" style="padding-left:0px;">
               <div class="paddingRL">
-                <label for="strain" class="towlable">Strain<span class="star">*</span></label>
+                <label for="strain" class="towlable">Cultivar <span class="star">*</span></label>
                 <p-dropdown
                 id="strain"
                 formControlName="strain"
@@ -372,7 +372,7 @@
 <div class="ui-g">
   <div class="ui-g-12">
     <p-panel header="{{ newLabelResources.header }}" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-      <p-table #dtLabelList [value]="allLabelslist" sortMode="single" [responsive]="true" [paginator]="true"
+      <p-table #dtLabelList [value]="allLabelslist" [resizableColumns]="true" sortMode="single" [responsive]="true" [paginator]="true"
     [rows]="10" sortField="sectionId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
     (onPage)="onPageChange($event)"
     [globalFilterFields]="['TaskTypeName','Fields','Sections','BinNo','TotalWt','AvilableWt','StrainName','SkewType','IsLightDeprevation','TrimmingMethod']">
@@ -424,7 +424,7 @@
           <tr>
             <!-- <th [pSortableColumn]="'FieldName'">Field Name <p-sortIcon [field]="'FieldName'"></p-sortIcon>
             </th> -->
-            <th [pSortableColumn]="'TaskTypeName'">Category<p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'TaskTypeName'">Category<p-sortIcon [field]="'TaskTypeName'"></p-sortIcon>
             </th>
             <th style="display:none" [pSortableColumn]="'Fields'">Field <p-sortIcon [field]="'Fields'"></p-sortIcon>
             </th>
@@ -432,17 +432,17 @@
             </th>
             <th [pSortableColumn]="'BinNo'">Bin Number <p-sortIcon [field]="'BinNo'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'StrainName'">Strain<p-sortIcon [field]="'StrainName'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'StrainName'">Cultivar <p-sortIcon [field]="'StrainName'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'SkewType'">Skew Type <p-sortIcon [field]="'SkewType'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'SkewType'">Skew Type <p-sortIcon [field]="'SkewType'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'IsLightDeprevation'">Light Dept <p-sortIcon [field]="'IsLightDeprevation'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'IsLightDeprevation'">Light Dept <p-sortIcon [field]="'IsLightDeprevation'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'TrimmingMethod'"> Trimming Method <p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'TrimmingMethod'"> Trimming Method <p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'TotalWt'">Total Bin Wt <p-sortIcon [field]="'TotalWt'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'TotalWt'">Total Bin Wt <p-sortIcon [field]="'TotalWt'"></p-sortIcon>
             </th>
-            <th [pSortableColumn]="'AvilableWt'">Available Bin Wt <p-sortIcon [field]="'AvilableWt'"></p-sortIcon>
+            <th pResizableColumn [pSortableColumn]="'AvilableWt'">Available Bin Wt <p-sortIcon [field]="'AvilableWt'"></p-sortIcon>
             </th>
             <th style="width:120px;">Action </th>
           </tr>
@@ -510,7 +510,7 @@
             <td>{{label?.TotalWt}}</td>
             <td>{{label?.AvilableWt}}</td>
             <td style="width:65px;">
-              <span class="ui-column-title">Action</span>
+              <span class="ui-column-title">edit</span>
               <a href="#" [routerLink]="" (click)="getLabelsOnEdit(label?.LabelId)">
                 <span class="fa fa-edit"></span>
               </a>

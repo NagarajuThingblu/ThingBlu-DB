@@ -66,11 +66,12 @@ export class SubcrewComponent implements OnInit {
     this.GetSubCrewList();
     this.GetEmpList();
    }
-
+   EmpForEachRow: Map<number, any> = new Map<number, any>()
   ngOnInit() {
     this.saveButtonText = 'Save';
     this.pageheading="Add New Sub Crew";
     this.clear = 'Clear';
+
     this.SubCrewResources = MastersResource.getResources().en.addNewSubCrew
     this.globalResource = GlobalResources.getResources().en;
     this._Cookieservice=this.appCommonservice.getUserProfile();
@@ -87,7 +88,7 @@ export class SubcrewComponent implements OnInit {
   get subcrewDetailsArr(): FormArray {
     return this.SubCrewForm.get('items') as FormArray;
   }
-  EmpForEachRow: Map<number, any> = new Map<number, any>()
+
   customGroupValidation (formArray) {
     let isError = false;
     const result = _.groupBy( formArray.controls , c => {
@@ -113,9 +114,9 @@ export class SubcrewComponent implements OnInit {
      this.arrayItems = this.SubCrewForm.get('items') as FormArray;
      this.arrayItems.push(this.createItem());
      let index =  this.arrayItems.length-1
-    //  if(index >0){
-    //   this.filterEmployees(index)
-    //  }
+     if(index >0){
+      this.filterEmployees(index)
+     }
    }
 
    createItem(): FormGroup {
@@ -163,12 +164,19 @@ export class SubcrewComponent implements OnInit {
   }
   GetEmpList(){
     this.dropdownDataService.getAllEmpList().subscribe(data=>{
-      this.Emplist=this.dropdwonTransformService.transform(data,'EmpName','EmpId','--Select--');
+      if(data !="No data found!"){
+        this.Emplist=this.dropdwonTransformService.transform(data,'EmpName','EmpId','--Select--');
+      }
+     else{
+      this.Emplist=[]
+     }
+   this.EmpForEachRow.set(0,this.Emplist)
     }
     ,
         error => { console.log(error);
           this.loaderService.display(false); },
         () => console.log('Get all employeelist complete'));
+
   }
   filterEmployees(index){
     var Emplistfilter=[]
@@ -176,13 +184,14 @@ export class SubcrewComponent implements OnInit {
     for(let i of this.SubCrewForm.value.items[index-1].emp){
       for(let j of this.Emplist){
         if(i == j.value){
-          index = Emplistfilter.indexOf(Emplistfilter.filter(x=>x.value == j.value))
+          let Empindex = Emplistfilter.indexOf(j)
+          Emplistfilter.splice(Empindex,1)
         }
       }
-      index = Emplistfilter.indexOf(i)
-      Emplistfilter.slice(index)
+      // index = Emplistfilter.indexOf(i)
+      // Emplistfilter.slice(index)
     }
-    this.EmpForEachRow.set(index,Emplistfilter )
+    this.EmpForEachRow.set(index,Emplistfilter)
   }
   resetForm(){
     this.GetEmpList()

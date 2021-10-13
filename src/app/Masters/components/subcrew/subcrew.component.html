@@ -192,7 +192,7 @@
             <td><span class="ui-column-title">Crew Name</span>{{SubCrew?.CrewName }}</td>
             <td><span class="ui-column-title">Primary Supervisor</span>{{SubCrew?.LeadSupervisor }}</td>
             <td><span class="ui-column-title">Sub Crew</span>{{SubCrew?.SubCrewName }}</td>
-            <td style="text-align: center;"><span><a class="btn-link" (click)="openEmployeesPopUp(SubCrew?.SubCrewID)"  ><i style="font-size: 16px" class="fa fa-info-circle" aria-hidden="true"></i></a></span></td>
+            <td style="text-align: center;"><span><a class="btn-link" (click)="openEmployeesPopUp(SubCrew?.SubCrewID)"  >{{SubCrew?.EmpCount}}<i style="font-size: 16px;margin-left: 5px;" class="fa fa-info-circle" aria-hidden="true"></i></a></span></td>
             <td><span class="ui-column-title">Sub Supervisor</span>{{SubCrew?.SubSupervisor }}</td>   
             <td style="width:65px;" (click)="$event.stopPropagation();"> 
               <span class="ui-column-title">Action</span>
