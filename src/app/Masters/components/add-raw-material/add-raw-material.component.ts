@@ -445,7 +445,10 @@ GoToBinsPage(){
         this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
         detail: this.addNewRawMaterial.binisbeingused });
         this.loaderService.display(false);
-      } else {
+      }   else if (String(data[0].RESULTKEY) === 'Grower Deleted') {
+        this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+        detail: this.addNewRawMaterial.growerdeleted });
+      }else {
         this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: data });
       }
         
