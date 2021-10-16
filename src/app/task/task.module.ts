@@ -92,7 +92,8 @@ import { OrderService } from '../order/service/order.service'
     SharedModule,
     TaskRoutingModule,
     DashboardModule,
-    TreeModule
+    TreeModule,
+
   ],
   providers: [GrowerDetailsActionService, TaskCommonService, TaskResolver, SkewListResolver, OilService,PTRService,NewSectionDetailsActionService,LotService,OrderService,NewEmployeeActionService],
   entryComponents: [ QuarantineComponent ],

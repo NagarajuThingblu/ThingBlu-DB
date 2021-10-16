@@ -219,7 +219,7 @@ export class SubcrewComponent implements OnInit {
   }
 
   deleteItem(index: number) {
-    
+    this.GetEmpList()
     const control = <FormArray>this.SubCrewForm.controls['items'];
    
     if (control.length !== 1) {

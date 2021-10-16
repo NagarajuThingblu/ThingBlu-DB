@@ -3,7 +3,7 @@ export const environment = {
      // apiEndpoint: 'http://192.168.5.148/tbwebapinew/',
     //apiEndpoint: 'http://localhost:44386/',
     
-    //  apiEndpoint: 'https://tbdevtestapi.azurewebsites.net/', //demo API processor
+    //apiEndpoint: 'https://tbdevtestapi.azurewebsites.net/', //demo API processor
      //  apiEndpoint: 'http://localhost:54302/',
      // apiEndpoint: 'http://192.168.5.148/tbtestapi/',
     // apiEndpoint: 'http://localhost/thingbluwebapinew/'
