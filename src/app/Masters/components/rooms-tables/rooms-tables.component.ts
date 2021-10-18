@@ -84,9 +84,10 @@ public ZoneVisible:boolean=false;
 
 GetRoomTables()
 {
+  //this.RoomTableList=[]
 this.loaderservice.display(true);
 this.NewRoomgeneration.GetRoomTableList().subscribe(data=>{
-  if(data!="No Data found!")
+  if(data!='No data found!')
   {
     this.RoomTableList=data;
     this.paginationvalues=AppConstants.getPaginationOptions;
