@@ -78,7 +78,7 @@ export class ZonesComponent implements OnInit {
   GetRoomlist()
   {
 this.NewRoomgeneration.GetRoomList().subscribe(data=>{
-if(data!="No data found")
+if(data!="No data found!")
 {
 this.Roomlist=this.dropdwonTransformService.transform(data,"RoomName","RoomId",'-- Select --')
 }

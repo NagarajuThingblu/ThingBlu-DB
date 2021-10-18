@@ -81,7 +81,7 @@ public RoomTypeDisabled:any;
   {
     this.loadService.display(true);
     this.NewRoomgeneration.GetRoomTypes().subscribe(data=>{
-      if(data!="No Data found!"){
+      if(data!="No data found"){
         this.RoomTypes=this.dropdwonTransformService.transform(data, 'RoomTypeName', 'RoomTypeId', '-- Select --');;
         this.paginationvalues=AppConstants.getPaginationOptions;
         if(this.RoomTypes.length>20)
@@ -101,7 +101,7 @@ public RoomTypeDisabled:any;
   {
     this.loadService.display(true);
     this.NewRoomgeneration.GetZonelist().subscribe(data=>{
-      if(data!="No Data found!"){
+      if(data!="No data found"){
         this.Zonestypes=this.dropdwonTransformService.transform(data, 'ZoneName', 'ZoneId', '-- Select --');;
         this.paginationvalues=AppConstants.getPaginationOptions;
         if(this.Zonestypes.length>20)
@@ -120,7 +120,7 @@ public RoomTypeDisabled:any;
   GetRooms() {
     this.loadService.display(true);
     this.NewRoomgeneration.GetRoomList().subscribe(data=>{
-      if(data!="No Data found!"){
+      if(data!="No data found!"){
         this.allRoomtypelist=data;
         this.paginationvalues=AppConstants.getPaginationOptions;
         if(this.allRoomtypelist.length>20)
