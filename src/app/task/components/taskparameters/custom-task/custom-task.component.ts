@@ -470,9 +470,9 @@ OnSelectingEmployees(event: any){
 
             setTimeout( () => {
               if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                this.router.navigate(['home/managerdashboard']);
+                this.router.navigate(['home/dashboard/managerdashboard']);
               } else {
-                this.router.navigate(['home/empdashboard']);
+                this.router.navigate(['home/dashboard/empdashboard']);
               }
             }, 2000);
           } else if (data === 'Failure') {
@@ -489,9 +489,9 @@ OnSelectingEmployees(event: any){
 
             setTimeout( () => {
               if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                this.router.navigate(['home/managerdashboard']);
+                this.router.navigate(['home/dashboard/managerdashboard']);
               } else {
-                this.router.navigate(['home/empdashboard']);
+                this.router.navigate(['home/dashboard/empdashboard']);
               }
             }, 2000);
           }
@@ -558,9 +558,9 @@ OnSelectingEmployees(event: any){
 
         setTimeout( () => {
           if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-            this.router.navigate(['home/managerdashboard']);
+            this.router.navigate(['home/dashboard/managerdashboard']);
           } else {
-            this.router.navigate(['home/empdashboard']);
+            this.router.navigate(['home/dashboard/empdashboard']);
           }
         }, 2000);
       } else if (data === 'Failure') {
@@ -577,9 +577,9 @@ OnSelectingEmployees(event: any){
 
         setTimeout( () => {
           if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-            this.router.navigate(['home/managerdashboard']);
+            this.router.navigate(['home/dashboard/managerdashboard']);
           } else {
-            this.router.navigate(['home/empdashboard']);
+            this.router.navigate(['home/dashboard/empdashboard']);
           }
         }, 2000);
       }

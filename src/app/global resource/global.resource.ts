@@ -220,7 +220,15 @@ export class GlobalResources {
                      units: 'Units',
                      gramUnit: 'g',
                      total: 'Total',
-                     taskCategory:'Task Category'
+                     taskCategory:'Task Category',
+                     Crew:'Crew',
+                     PrimarySupervisor:'Primary Supervisor',
+                     CrewRequired:'Crew Required',
+                     Description:'Description',
+                     Employees:'Employees',
+                     Monitor:'Monitor By',
+                     EmployeesRequired:'Employees Required',
+                     MonitorRequired:'Monitor Required',
                 }
             };
     }

@@ -19,6 +19,7 @@ import { NewStrainTypeActionService } from '../task/services/new-strain-type-act
 import { ProductTypeListingComponent } from './components/product-type-listing/product-type-listing.component';
 import { NewProductTypeService } from './services/new-product-type.service';
 import { GrowerComponent } from './components/grower/grower.component';
+import { GrowerDetailsActionService } from '../task/services/grower-details-action.service'
 import { CityComponent } from './components/city/city.component';
 import { AddNewCountryComponent } from './components/add-new-country/add-new-country.component';
 import { TpProcessorComponent } from './components/tp-processor/tp-processor.component';
@@ -82,6 +83,10 @@ import { SectionDetailsComponent } from './components/section-details/section-de
 import { LabelDetailsComponent } from './components/label-details/label-details.component';
 import { EmployeeSkillsetComponent } from './components/employee-skillset/employee-skillset.component';
 
+import { MastersRoutingModule } from './Masters.routing';
+import { CrewComponent } from './components/crew/crew.component';
+import { CrewService} from './services/crew.service';
+import { SubcrewComponent } from './components/subcrew/subcrew.component'
 
 @NgModule({
   declarations: [
@@ -129,11 +134,14 @@ import { EmployeeSkillsetComponent } from './components/employee-skillset/employ
     UpdateTerminationreasonComponent,
     SectionDetailsComponent,
     LabelDetailsComponent,
-    EmployeeSkillsetComponent
+    EmployeeSkillsetComponent,
+    CrewComponent,
+    SubcrewComponent
    
   ],
   imports: [
     SharedModule,
+    MastersRoutingModule,
     TreeModule,
   
   ],
@@ -171,7 +179,9 @@ import { EmployeeSkillsetComponent } from './components/employee-skillset/employ
     NewFieldGenerationService,
     NewSectionDetailsActionService,
     NewLabelDetailsActionService,
-    NewARMDetailsActionService
+    NewARMDetailsActionService,
+    GrowerDetailsActionService,
+    CrewService
   ],
   exports: [
     NewProductTypeComponent,

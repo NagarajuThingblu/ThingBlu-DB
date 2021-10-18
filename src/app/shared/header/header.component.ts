@@ -225,7 +225,7 @@ this.closable = false;
               label: 'Dashboard',
               icon: 'fa-dashboard',
               items: [
-                  {label: 'Manager Dashboard', icon: 'fa-area-chart', routerLink: 'managerdashboard' },
+                  {label: 'Manager Dashboard', icon: 'fa-area-chart', routerLink: 'dashboard/managerdashboard' },
                   {label: 'Whiteboards', icon: 'fa-area-chart', routerLink: 'whiteboards'},
               ]
             },
@@ -572,9 +572,9 @@ encode64(input) {
 
   logoClick() {
     if (this.appCommonService.getUserProfile().UserRole === this.userRoles.Manager) {
-      this.router.navigate(['home/managerdashboard']);
+      this.router.navigate(['home/dashboard/managerdashboard']);
     } else {
-      this.router.navigate(['home/empdashboard']);
+      this.router.navigate(['home/dashboard/empdashboard']);
     }
   }
   ShowForgotPasswordPopup() {

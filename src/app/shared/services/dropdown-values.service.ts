@@ -203,13 +203,14 @@ getFieldsSectionsInGrowers(TaskTypeId) {
    });
 }
 
-getEmpAlreadyWorkingOnATask(sectionId,taskid,batchId){
+getEmpAlreadyWorkingOnATask(sectionId,taskid,batchId,OrderId){
   const url = 'api/Grower/GetEmpListBySectionId';
 
   let params = new HttpParams();
   params = params.append('SectionId', sectionId);
   params = params.append('TaskTypeId', taskid);
   params = params.append('BatchId', batchId);
+  params = params.append('OrderId', OrderId);
 return this.http
 .get(url, {params: params})
 
@@ -453,6 +454,40 @@ getManagerList() {
   // console.log('GetRoleList Service success');
   return data;
  });
+}
+
+getAllEmpList(){
+  const url = 'api/employee/GetEmployeeLisForSubCrews';
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+  return this.http
+  .get(url, {params: params})
+
+  .map(data => {
+
+  console.log('GetAllSWubCrewListByClient Service success');
+// console.log(data);
+  return data;
+});
+
+}
+
+getAllEmployeeList() {
+  const url = 'api/Employee/GetEmployeeList';
+
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+  return this.http
+
+  .get(url , { params: params})
+  // return this.http
+  // .get(url)
+  .map(data => {
+    console.log('GetEmployeeList Service success');
+    // console.log(data);
+    return data;
+  });
 }
 GetFLClist() {
   const url = 'api/Grower/GetFLCList';

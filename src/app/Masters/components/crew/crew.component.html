@@ -1,0 +1,151 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header={{pageheading}} [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+        <form [formGroup]="CrewForm" (ngSubmit)="onSubmit(CrewForm.value)">
+          <div class="ui-g">
+            <!--Crew -->
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="crew" class="towlable">{{ globalResource.Crew}}<span class="star">*</span></label>:
+                <input pInputText
+                      name="crew"
+                      autocomplete="off"
+                      placeholder="Enter Crew Name"
+                      id="crew"
+                      type="text"
+                      class="clsControl"
+                      formControlName="crew"
+                    />
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                    *ngIf="!CrewForm.controls['crew'].valid&&CrewForm.controls['crew'].dirty">
+                    {{ globalResource.CrewRequired }}
+                    </div>
+              </div>
+            </div>
+            <!--End Crew -->
+
+             <!--Description -->
+             <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="description" class="towlable">{{ globalResource.Description}}</label>:
+                    <textarea 
+                    pInputTextarea           
+                    formControlName="description"
+                    placeholder="Add Description..."
+                    autocomplete="off"
+                    maxLength="500"
+                    name="description"
+                    class="clsControl"
+                  ></textarea>      
+              </div>
+            </div>
+            <!--End Description -->
+
+            <!-- IsActive -->
+            <div class="ui-g-12 ui-md-12">
+              <div class="paddingRL">
+                <p-checkbox value="true" 
+                [(ngModel)]="IsActive" 
+                label="{{globalResource.IsActiveFlag}}" 
+                formControlName="chkIsActive" 
+                binary="true"></p-checkbox>
+              </div>
+            </div>
+
+              <!--End IsActive -->
+              
+              
+            <!--Save & Clear Buttons-->
+            <div class="ui-g-12 ui-md-12" style="text-align:right;">
+              <div class="paddingRL">
+                <p-button  type="submit" id="btnetailerSave" 
+                label="{{ SaveButtonText}}"  name="btnRetailerSave" ></p-button>
+                <button pButton (click)="ResetForm()" type="button" label="{{ Clear }}"
+                  class="ui-button-secondary"></button>
+              </div>
+            </div>
+            <!--End Save & Clear Buttons-->
+
+           
+          </div>
+        </form>
+      </p-panel>
+    </div>
+  </div>
+</div>
+<div class="ui-g">
+  <div class="ui-g-12">
+        <!--Crew List-->
+        <p-panel header="Crew List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+          <p-table #dtCrewList [value]="allCrewlist" 
+          sortMode="single"                      
+          [responsive]="true" 
+          [paginator]="true" 
+          [rows]="10"          
+          sortOrder="-1"
+          [globalFilterFields]="['CrewName','Description']"
+          selectionMode="single"
+          (onPage)="onPageChange($event)"
+          [rowsPerPageOptions]="paginationValues"
+          dataKey="CrewID"
+          class="clsTableSelection"
+          >
+          <ng-template pTemplate="caption">
+            <div style="text-align: right">
+              <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+              <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" 
+                  (input)="dtCrewList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th [pSortableColumn]="'CrewName'">Crew Name  <p-sortIcon [field]="'CrewName'"></p-sortIcon></th>   
+              <th [pSortableColumn]="'Description'">Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>  
+              <th style="width:100px;">Action</th>    
+            </tr>
+
+            <tr>
+              <th>
+                <input pInputText type="text" autocomplete="off" (input)="dtCrewList.filter($event.target.value, 'Crew', 'contains')" class="clsControl">
+              </th>
+              <th>
+                <input pInputText type="text" autocomplete="off" (input)="dtCrewList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+            </th>  
+           <th rowspan="2"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-Crew let-rowData let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+              <td><span class="ui-column-title">Crew Name</span>{{Crew?.CrewName }}</td>
+              <td><span class="ui-column-title">Description</span>{{Crew?.Description }}</td>   
+              <td style="width:65px;" (click)="$event.stopPropagation();"> 
+                <span class="ui-column-title">Action</span>
+                <a href="#" [routerLink]="" (click)="GetCrewOnEdit(Crew?.CrewID)" >                             
+                  <span class="fa fa-edit"></span>
+                </a>
+                <a href="#" [routerLink]="" 
+                  (click)="ShowConformationMessaegForDelete(Crew?.CrewID,Crew,1,0)" >
+                  <span class="fa fa-trash"></span>
+                </a>
+                <div class="clsToggleButtonDiv">
+                  <p-toggleButton 
+                    [(ngModel)]="Crew.IsActive" 
+                    onLabel="Active" offLabel="InActive"  
+                    [style]="{'width':'90px'}"
+                    id
+                    (onChange)="showConformationMessaegForDeactive(Crew?.CrewID,Crew,
+                      rowIndex,0,1)">                    
+                  </p-toggleButton>
+                </div>
+              </td>   
+            </tr>
+          </ng-template>
+          </p-table>
+        </p-panel>
+        <!--End Crew List-->
+  </div>
+</div>
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" *ngIf="true" class="clsConfirmBox">
+</p-confirmDialog>

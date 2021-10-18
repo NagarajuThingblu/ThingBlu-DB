@@ -523,15 +523,15 @@ export class StrainMasterComponent implements OnInit {
     viewGeneticList() {
       this.appCommonService.strainFormDetail = this.strainmasterForm;
       this.appCommonService.strainPageBackLink = true;
-      this.router.navigate(['../home/addnewsgenetics']);
+      this.router.navigate(['../home/master/addnewsgenetics']);
     }
 
     backToLot() {
       if (this.appCommonService.lotPageBackLink) {
-        this.router.navigate(['../home/lotentry']);
+        this.router.navigate(['../home/lot/lotentry']);
         }
         if (this.appCommonService.ProductTypeBackLink) {
-          this.router.navigate(['../home/newproducttype']);
+          this.router.navigate(['../home/master/newproducttype']);
         }
     }
 }

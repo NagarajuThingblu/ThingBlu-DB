@@ -981,7 +981,7 @@ export class EditTaskComponent implements OnInit {
             this.taskTypeChange();
             // Redirect User to manager dashboard after updating the task details
             setTimeout(() => {
-              this.router.navigate(['home/managerdashboard']);
+              this.router.navigate(['home/dashboard/managerdashboard']);
             }, 1000);
           }
           this.loaderService.display(false);

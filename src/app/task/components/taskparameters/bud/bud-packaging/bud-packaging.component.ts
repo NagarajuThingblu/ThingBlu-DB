@@ -9,7 +9,7 @@ import { TaskResources } from '../../../../task.resources';
 import { OrderService } from '../../../../../order/service/order.service';
 import { DropdwonTransformService } from '../../../../../shared/services/dropdown-transform.service';
 import * as _ from 'lodash';
-
+import { NewEmployeeActionService } from './../../../../services/add-employee';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserModel } from '../../../../../shared/models/user.model';
 import { CookieService } from 'ngx-cookie-service';
@@ -23,18 +23,7 @@ import { RefreshService } from '../../../../../dashboard/services/refresh.servic
   moduleId: module.id,
   selector: 'app-bud-packaging',
   templateUrl: 'bud-packaging.component.html',
-  styles: [`
-    .divLotMixing hr, .divRevLotMixing hr {
-      margin-top: 5px; margin-bottom: 0px;
-    }
-
-    .divLotMixing, .divRevLotMixing {
-      margin-top: 10px;
-    }
-    .clsVisible {
-      visibility: hidden;
-    }
-  `]
+  styles: ['./bud-packaging.component.css']
 })
 export class BudPackagingComponent implements OnInit, OnDestroy {
   BUDPACKAGING: FormGroup;
@@ -46,6 +35,8 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   public growerOrderDetailsComplete:any;
   public orderDetailsBS: any;
   public orderDetailsBS_filteredData: any = [];
+  public workingEmp: any=[];
+  public workingemp:boolean =false
   public allOrders: any;
   public allOrderNos: any;
   public showLotSelectionModel = false;
@@ -67,7 +58,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     showLotNoteModal: false,
     showLotCommentModal: false
   };
-
+  
   public selLotBrandStrainRow = {
     BrandId: null,
     StrainId: null,
@@ -94,7 +85,13 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     GeneticsId: null,
     GeneticsName: null
   };
-
+  public employeeNameToBeDisplayedOnDropdown="--Select--"
+  public allemplist : any[]
+  public skilledempslist: any[]
+  public headings: any[];
+  plottedSkillItems: any = [];
+  public selectedSkillItems: any[];
+  public files: any = [];
   public orderObject: any;
   public defaultDate: Date;
   public showToManager = false;
@@ -123,7 +120,8 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     private appCommonService: AppCommonService,
     private confirmationService: ConfirmationService,
     private titleService: Title,
-    private refreshService: RefreshService
+    private refreshService: RefreshService,
+    private newEmployeeActionService: NewEmployeeActionService,
   ) {
     this._cookieService = this.appCommonService.getUserProfile();
   }
@@ -137,11 +135,15 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   public assignTaskResources: any;
   public globalResource: any;
   public taskStatus: any;
-
+  public skills: SelectItem[];
+  public allSkillslist: any;
   public globalData = {
     employees: [],
     orderDetails: [],
-    binDetails:[]
+    binDetails:[],
+    workingEmp:[],
+    files:[],
+    
   };
 
   public brandStrainLots: any;
@@ -178,6 +180,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
+    this.employeeNameToBeDisplayedOnDropdown="--Select--"
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
     this.globalResource = GlobalResources.getResources().en;
     this.taskStatus = AppConstants.getStatusList;
@@ -227,6 +230,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
         'binno': new FormControl(''),
         'brand': new FormControl(''),
         'strain': new FormControl(''),
+        'skills':new FormControl('', Validators.required),
         // 'employee': new FormControl('', Validators.required),
         'estimatedstartdate': new FormControl('', Validators.compose([Validators.required])),
         'estimatedenddate': new FormControl(''),
@@ -317,6 +321,8 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
       }
       // this.setCompanies();
     }
+
+    this.getSkills()
   }
 
   ngOnDestroy() {
@@ -1616,6 +1622,7 @@ else{
     } else {
       this.getSelectedOrderDetails(this.TaskModel.BUDPACKAGING.orderno, true);
     }
+   
   }
 
   onLotSelectionChange() {
@@ -1924,10 +1931,10 @@ else{
             }
             this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
             setTimeout( () => {
-              if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                this.router.navigate(['home/managerdashboard']);
+              if (this._cookieService.UserRole === this.userRoles.Manager) {
+                this.router.navigate(['home/dashboard/managerdashboard']);
               } else {
-                this.router.navigate(['home/empdashboard']);
+                this.router.navigate(['home/dashboard/empdashboard']);
               }
             }, 1000);
           }
@@ -2191,10 +2198,10 @@ else{
                   this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
 
                   setTimeout(() => {
-                    if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                      this.router.navigate(['home/managerdashboard']);
+                    if (this._cookieService.UserRole === this.userRoles.Manager) {
+                      this.router.navigate(['dashboard/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/empdashboard']);
+                      this.router.navigate(['home/dashboard/empdashboard']);
                     }
                   }, 1000);
                 } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
@@ -2212,10 +2219,10 @@ else{
                   });
 
                   setTimeout(() => {
-                    if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                      this.router.navigate(['home/managerdashboard']);
+                    if (this._cookieService.UserRole === this.userRoles.Manager) {
+                      this.router.navigate(['home/dashboard/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/empdashboard']);
+                      this.router.navigate(['home/dashboard/empdashboard']);
                     }
                   }, 1000);
                 } else {
@@ -2329,10 +2336,10 @@ else{
         if (data[0].RESULTKEY  === 'SUCCESS') {
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
           setTimeout( () => {
-            if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-              this.router.navigate(['home/managerdashboard']);
+            if (this._cookieService.UserRole === this.userRoles.Manager) {
+              this.router.navigate(['home/dashboard/managerdashboard']);
             } else {
-              this.router.navigate(['home/empdashboard']);
+              this.router.navigate(['home/dashboard/empdashboard']);
             }
           }, 1000);
         }
@@ -2583,7 +2590,7 @@ else{
                   }
 
                   setTimeout(() => {
-                    this.router.navigate(['home/taskaction', this.taskType, this.taskId]);
+                    this.router.navigate(['home/task/taskaction', this.taskType, this.taskId]);
                   }, 1000);
 
                 } else if (String(data).toLocaleUpperCase() === 'DELETED') {
@@ -2591,10 +2598,10 @@ else{
                   this.msgs.push({ severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformR });
 
                   setTimeout(() => {
-                    if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                      this.router.navigate(['home/managerdashboard']);
+                    if (this._cookieService.UserRole === this.userRoles.Manager) {
+                      this.router.navigate(['home/dashboard/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/empdashboard']);
+                      this.router.navigate(['home/dashboard/empdashboard']);
                     }
                   }, 1000);
                 } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
@@ -2612,10 +2619,10 @@ else{
                   this.msgs.push({ severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.reviewsubmittedsuccess });
 
                   setTimeout(() => {
-                    if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                      this.router.navigate(['home/managerdashboard']);
+                    if (this._cookieService.UserRole === this.userRoles.Manager) {
+                      this.router.navigate(['home/dashboard/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/empdashboard']);
+                      this.router.navigate(['home/dashboard/empdashboard']);
                     }
                   }, 1000);
                 } else {
@@ -2730,6 +2737,140 @@ else{
   //   }
   // }
 
+
+  getWorkingEmpList(event?: any){
+    this.dropdownDataService.getEmpAlreadyWorkingOnATask(0,this.TaskModel.task,this.BUDPACKAGING.controls['batchId'].value,0).subscribe(
+      data=>{
+        if(data != 'No Data Found'){
+          this.globalData.workingEmp = data;
+          this.getWorkingEmpsList();
+        }
+        else{
+          this.globalData.workingEmp = [];
+          this.workingEmp = [];
+        }
+      }
+    )
+  }
+  getWorkingEmpsList(){
+    if(this.globalData.workingEmp != null){
+      for(let employee of this.globalData.workingEmp){
+        this.workingEmp.push(employee.Column1)
+    }
+    }
+    else{
+      this.workingEmp = [];
+    }
+  //this. filterEmpList()
+  }
+  getSkills(){
+    let TaskTypeId = this.ParentFormGroup != undefined?
+    this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
+    this.newEmployeeActionService.GetSkillslist().subscribe(data => {
+      if (data !== 'No Data found') {
+        this.allSkillslist = data;
+       
+        this.skills = this.dropdwonTransformService.transform(this.allSkillslist.filter(x => x.TaskTypeId === TaskTypeId), 'SkillName', 'SkillTaskTypeMapId');
+      }
+      else{
+        this.allSkillslist = [];
+        this.skills = []
+      }
+    },
+    error => { console.log(error); },
+    () => console.log('skillslistbytasktype complete'));
+  }
+
+
+   //on selecting skill
+   onSkillsSelect(event:any){
+    this.employeeNameToBeDisplayedOnDropdown="--Select--"
+    let skillListApiDetails;
+    skillListApiDetails = {
+      TaskTypeId:Number(this.TaskModel.task),
+    
+      SkillList:[]
+    };
+    skillListApiDetails.SkillList.push({SkillID:event.value})
+    // for(let j of this.GROWERTRIMMING.value.skills){
+          
+    //   skillListApiDetails.SkillList.push({
+    //     SkillID: j,
+       
+    //   })
+    // };
+    this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
+    .subscribe(data => {
+      this.headings = data.Table,
+      this.skilledempslist = data.Table1
+      this.allemplist = data.Table2 ? data.Table2 : []
+      this.empfilterBasedOnSkill()
+    });
+      }
+
+       //filtering employees based on skill
+  empfilterBasedOnSkill(){
+    this.plottedSkillItems = [];
+    this.selectedSkillItems = [];
+    this.headings.forEach(element => {
+      const NewEmpList: any = {};
+      NewEmpList.id = element.ID;
+      NewEmpList.label = element.HeadingName;
+      NewEmpList.children = [];
+      NewEmpList.Num  = element.Num
+      NewEmpList.isParent = element.IsParent;
+      NewEmpList.ParentId = element.ParentID;
+      NewEmpList.Selectable = true;
+      if(element.IsParent === false || element.IsParent === "False"){
+        this.selectedSkillItems.push(NewEmpList)
+      }
+      if(NewEmpList.isParent === true || NewEmpList.isParent === "True"){
+        this.plottedSkillItems.push(NewEmpList)
+      }
+    });
+    this.allemplist.forEach(element => {
+      const NewAllEmpList: any = {};
+      NewAllEmpList.id = element.EmpID;
+      NewAllEmpList.label = element.EmpName;
+      NewAllEmpList.children = [];
+     // NewAllEmpList.Num  = element.Num
+      NewAllEmpList.isParent = element.IsParent;
+      NewAllEmpList.ParentId = element.ParentID;
+      NewAllEmpList.Selectable = true;
+      if (element.IsParent === false || element.IsParent === "False" ) {
+        if (this.plottedSkillItems.length) {
+          this.plottedSkillItems.forEach(parent => {
+            if (parent.id === element.ParentId) {
+              parent.children.push(NewAllEmpList);
+            } 
+          })
+       
+        }
+      }
+    })
+    this.skilledempslist.forEach(element => {
+      const NewAllEmpList: any = {};
+      NewAllEmpList.id = element.EmpID;
+      NewAllEmpList.label = element.EmpName;
+      NewAllEmpList.children = [];
+     // NewAllEmpList.Num  = element.Num
+      NewAllEmpList.isParent = element.IsParent;
+      NewAllEmpList.ParentId = element.ParentId;
+      NewAllEmpList.Selectable = true;
+      if (element.IsParent === false || element.IsParent === "False") {
+        if (this.plottedSkillItems.length) {
+          this.plottedSkillItems.forEach(parent => {
+            if (parent.id === element.ParentId) {
+              parent.children.push(NewAllEmpList);
+            } 
+          })
+       
+        }
+      }
+    })
+    this.globalData.files = []
+    this.globalData.files = this.plottedSkillItems;
+  }
 }
 
 

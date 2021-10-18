@@ -6,6 +6,7 @@ import { LotService } from './services/lot.service';
 import { LotEntryFormComponent } from './components/lotentryform/lot-entry-form.component';
 import { LotTrackingComponent } from './components/lot-tracking/lot-tracking.component';
 import { LotEditComponent } from './components/lot-edit/lot-edit.component';
+import { LotRoutingModule } from './lot.routing';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { LotEditComponent } from './components/lot-edit/lot-edit.component';
     LotEditComponent
   ],
   imports: [
-    SharedModule
+    SharedModule,
+    LotRoutingModule
   ],
   providers: [LotService],
   exports: [

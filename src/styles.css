@@ -497,6 +497,9 @@ nav.navbar-right > li{
         overflow: auto;
         max-height: 150px;
     }
+    .myskillsdropdown .ui-tree{
+        display:none
+    }
     .ui-button.ui-button-secondary.ui-state-default, .ui-splitbutton.ui-button-secondary .ui-button.ui-state-default {
         background-color: #e6e6e6 !important;
         border-color: #ccc;

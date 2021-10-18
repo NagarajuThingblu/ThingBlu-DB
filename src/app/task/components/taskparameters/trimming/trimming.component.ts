@@ -771,9 +771,9 @@ export class TrimmingComponent implements OnInit, OnChanges {
 
                     setTimeout( () => {
                       if (this._cookieService.UserRole === this.userRoles.Manager) {
-                        this.router.navigate(['home/managerdashboard']);
+                        this.router.navigate(['home/dashboard/managerdashboard']);
                       } else {
-                        this.router.navigate(['home/empdashboard']);
+                        this.router.navigate(['home/dashboard/empdashboard']);
                       }
                     }, 1000);
                   } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
@@ -800,9 +800,9 @@ export class TrimmingComponent implements OnInit, OnChanges {
 
                     setTimeout( () => {
                       if (this._cookieService.UserRole === this.userRoles.Manager) {
-                        this.router.navigate(['home/managerdashboard']);
+                        this.router.navigate(['home/dashboard/managerdashboard']);
                       } else {
-                        this.router.navigate(['home/empdashboard']);
+                        this.router.navigate(['home/dashboard/empdashboard']);
                       }
                     }, 1000);
 
@@ -888,7 +888,7 @@ export class TrimmingComponent implements OnInit, OnChanges {
             }
 
             setTimeout( () => {
-              this.router.navigate(['home/taskaction', this.taskType, this.taskid]);
+              this.router.navigate(['home/task/taskaction', this.taskType, this.taskid]);
             }, 1000);
 
           } else if (String(data).toLocaleUpperCase() === 'DELETED') {
@@ -897,9 +897,9 @@ export class TrimmingComponent implements OnInit, OnChanges {
 
             setTimeout( () => {
               if (this._cookieService.UserRole === this.userRoles.Manager) {
-                this.router.navigate(['home/managerdashboard']);
+                this.router.navigate(['home/dashboard/managerdashboard']);
               } else {
-                this.router.navigate(['home/empdashboard']);
+                this.router.navigate(['home/dashboard/empdashboard']);
               }
             }, 1000);
           } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
@@ -933,9 +933,9 @@ export class TrimmingComponent implements OnInit, OnChanges {
 
             setTimeout( () => {
               if (this._cookieService.UserRole === this.userRoles.Manager) {
-                this.router.navigate(['home/managerdashboard']);
+                this.router.navigate(['home/dashboard/managerdashboard']);
               } else {
-                this.router.navigate(['home/empdashboard']);
+                this.router.navigate(['home/dashboard/empdashboard']);
               }
             }, 1000);
 

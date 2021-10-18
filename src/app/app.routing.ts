@@ -81,6 +81,8 @@ import { OrderformComponent } from './order/components/orderform/orderform.compo
 import { UpdateTerminationreasonComponent } from './Masters/components/update-terminationreason/update-terminationreason.component';
 import { SectionDetailsComponent } from './Masters/components/section-details/section-details.component';
 import { LabelDetailsComponent } from './Masters/components/label-details/label-details.component';
+import { CrewComponent } from './Masters/components/crew/crew.component';
+import { SubcrewComponent } from './Masters/components/subcrew/subcrew.component';
 
 
 const appRoutes: Routes = [
@@ -177,6 +179,8 @@ const appRoutes: Routes = [
       { path: 'taskupdate', component: UpdateTerminationreasonComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'infoofsection', component: SectionDetailsComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'sectionsMergeinfo', component: LabelDetailsComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'crew', component: CrewComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'subcrew', component: SubcrewComponent, canActivate: [AuthGuard, RoleGuard] },
       // {path:'planting', component:PlantingComponent}
      // {path:'harvesting',component:HarvestingComponent}
 

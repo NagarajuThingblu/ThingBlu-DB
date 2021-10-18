@@ -49,7 +49,7 @@
                   <th *ngIf="taskCategory === 'GROWING'" style="width: 15%;"> Assigned Wt(lb) <span class="star">*</span> </th>
                   <th *ngIf="taskCategory != 'GROWING'" style="width: 15%;"> {{globalResource.lot + '(s)'}} </th>
                   <th *ngIf="taskCategory === 'GROWING'" style="width: 15%;"> Bin(s) </th>
-                  <th style="width: 20%;"> {{globalResource.employee}} <span class="star">*</span> </th>
+                  <th style="width: 30%;"> {{globalResource.employee}} <span class="star">*</span> </th>
                   <th style="width: 5%;"> </th>
                   <th style="width: 5%;"> </th>
                 </tr>
@@ -191,7 +191,7 @@
                   <td class="text-center"> 
                       <span class="ui-column-title">{{globalResource.employee}}</span>
                       <div>
-                        <p-dropdown
+                        <!-- <p-dropdown
                           [filter] ="true"
                           [options]="employees"
                           [readonly]="rowData.value.assignQty == 0"
@@ -202,9 +202,32 @@
                           class="clsControl"
                           id="employee"
                           name="employee"
-                        ></p-dropdown>
+                        ></p-dropdown> -->
+
+                          <div class="input-container">
+                            <input pInputText
+                           style="cursor: pointer;"
+                            autocomplete="off"
+                            formControlName="employee"
+                            id="employee"
+                            name="employee"
+                            [value]="employeeSelected.get(i)"
+                            class="clsControl"
+                            placeholder="- -Select- -"
+                           (click)="showEmps(i,$event)"
+                          />
+                          <span  style="width:24px;text-align: center; cursor: pointer;" (click)="showEmps(i,$event)">
+                            <i  style="cursor: pointer;" class="fa fa-caret-down" ria-hidden="true"  (click)="showEmps(i,$event)"></i>
+                          </span>
+                          <!-- <span style="width:24px;text-align: center; cursor: pointer;"  *ngIf="showUpArrow[i].label" (click)="showEmps(i,$event)">
+                            <i style="cursor: pointer;" class="fa fa-caret-up" ria-hidden="true"  (click)="showEmps(i,$event)"></i>
+                          </span> -->
+                        </div>
+                        <p-tree [value]="AllocateEmpData.files" [ngClass]="visibility[i].label !== true?'myskillsdropdown':'showmyskillsdropdown'" styleClass="clsRoleAccessTree" selectionMode="single"  [(selection)]="selectedSkillItems"
+                        [propagateSelectionUp]="false" (onNodeSelect)="OnSelectingEmployees(i,$event)" (onNodeUnselect) = "OnUnSelectNode($event)" [propagateSelectionDown]="true"></p-tree>
+                       
                       </div>
-                      <div
+                      <!-- <div
                         class="ui-message ui-messages-error ui-corner-all" appErrorTooltip tooltipPosition="left"
                         *ngIf="!rowData.controls['employee'].valid&&rowData.controls['employee'].dirty">
                         <span *ngIf="rowData.controls['employee'].errors['required']">
@@ -213,7 +236,7 @@
                           <span *ngIf="rowData.controls['employee'].hasError('duplicateProductEmployee')">
                            {{assignTaskResources.errSameEmpForTask}}
                           </span>
-                      </div>
+                      </div> -->
                       
                   </td>  
                   <td class="text-center"> 

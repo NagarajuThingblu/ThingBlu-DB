@@ -543,7 +543,7 @@ this.disableLDDropdown = true;
 //   }
 
   backToSectionsPge(){
-    this.router.navigate(['../home/sections']);
+    this.router.navigate(['../home/master/sections']);
   }
 //   GetAllDetails(){
 //     if(this.topTaskTypeId === null){

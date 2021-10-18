@@ -10,6 +10,7 @@ import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angu
 import { SelectItem, Message } from 'primeng/api';
 
 
+
 import * as _ from 'lodash';
 import { OrderService } from '../../../../../../order/service/order.service';
 import { AddNewClientComponent } from '../../../../../../Masters/components/add-new-client/add-new-client.component';
@@ -39,16 +40,19 @@ import { AddNewClientComponent } from '../../../../../../Masters/components/add-
 })
 export class BudPkgAllocateEmployeeComponent implements OnInit, OnDestroy {
   @Input() BudPkgForm: FormGroup;
+  @Input() ParentFormGroup:FormGroup;
+  @Input() TaskModel: any;
   public questionForm: FormGroup;
   public BinsForm: FormGroup;
   @Input() AllocateEmpData: any;
+  @Input() files: any;
   @Output() CancelTask: EventEmitter<any> = new EventEmitter<any>();
 
   public globalResource: any;
   public employees: SelectItem[];
   public msgs: Message[] = [];
   public taskCategory: any;
-  
+  public employeeNameToBeDisplayedOnDropdown="--Select--"
   BinsDetailsMap: Map<any, any> = new Map<any,any>();
   public _cookieService: UserModel;
   items = new FormArray([]);
@@ -107,20 +111,26 @@ public reqWt:any;
     UniqueId: null,
     BinNo:null
   };
-
+  public visibility=[]
+  public showUpArrow=[];
   constructor(
     private fb: FormBuilder,
     private dropdwonTransformService: DropdwonTransformService,
     private appCommonService: AppCommonService,
     private loaderService: LoaderService,
     private orderService: OrderService,
+
   ) {
     this._cookieService = this.appCommonService.getUserProfile();
    }
    
    arrayItems: FormArray
-
+   employeeSelected: Map<number, any> = new Map<number, any>()
   ngOnInit() {
+   var count=0
+    // this.visibility.push({label:'false'});
+    this.showUpArrow.push({label:'false'})
+    console.log(this.files)
     this.globalResource = GlobalResources.getResources().en;
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
 
@@ -129,7 +139,7 @@ public reqWt:any;
     this.taskCategory = this._cookieService.TaskCategory,
     this.employees = this.dropdwonTransformService.transform(this.AllocateEmpData.employees, 'EmpName', 'EmpId', '-- Select --');
 
-   
+ // this.getSkills()
       // this.AllocateEmpData.orderDetails.map((object, index) => {
       //   this.allocateEmpArr.push(this.createItem(object, null));
       // });
@@ -139,7 +149,11 @@ public reqWt:any;
         this.allocateEmpArr.push(this.createItem(object, null));
       });
    
-    
+    for(let i of this.allocateEmpArr.controls){
+      this.visibility.push({label:'false'});
+      this.employeeSelected.set(count,"")
+     count++
+    }
 
     this.questionForm = this.fb.group({
       questions: new FormArray([])
@@ -162,7 +176,7 @@ public reqWt:any;
   getLotSyncWt(lotId): number {
     return this.lotSyncWtArr.get(lotId);
   }
-
+  
   setLotSyncWt(lotId, weight) {
     this.lotSyncWtArr.set(lotId, weight);
   }
@@ -221,7 +235,7 @@ public reqWt:any;
       previousWt: new FormControl(parentUniqueId ? object.splitQty : object.TotalWt || null),
       assignQty: new FormControl(parentUniqueId ? object.splitQty : object.RequiredQty || null),
       previousQty: new FormControl(parentUniqueId ? object.splitQty : object.RequiredQty || null),
-      employee: new FormControl(null, Validators.compose([Validators.required])),
+      employee: new FormControl(null),
       lotCount: lotCount || null,
       // binCount: binCount || null,
       parentUniqueId: parentUniqueId,
@@ -523,10 +537,21 @@ public reqWt:any;
   }
 
   assignToAllChange() {
+    let i=0
+    let empName=""
     const assignToAllEmp =  this.BudPkgForm.value.assignToAll;
+for(let j of this.AllocateEmpData.employees){
+  if(assignToAllEmp === j.EmpId){
+    empName = j.EmpName
+  }
+}
     this.allocateEmpArr.controls.forEach((element: FormGroup) => {
       if (element.value.assignQty) {
-        element.controls['employee'].patchValue(assignToAllEmp ? assignToAllEmp : null);
+       //  element.controls['employee'].patchValue(assignToAllEmp ? assignToAllEmp : null);
+       element.value.employee = assignToAllEmp
+       this.employeeSelected.set(i,empName)
+       i++
+        console.log(this.AllocateEmpData.files)
       }
     });
 
@@ -688,6 +713,8 @@ public reqWt:any;
   
 
   splitTask(formRow: FormGroup, index: number): void {
+    // this.visibility[index].push({label:'false'});
+  
     // if (!this.validateDuplicateRows()) {
       if(this.taskCategory === 'GROWING'){
         if (Number(formRow.value.TotalWt) <= 1) {
@@ -741,6 +768,8 @@ public reqWt:any;
           const formGroup = this.createItem(splitObj, parentUniqueId);
   
           this.allocateEmpArr.insert((index + 1), formGroup);
+         this.visibility.push({label:'false'})
+         this.employeeSelected.set(index+1,"")
           this.selectedLotsArray.set(parentUniqueId, []);
           this.appCommonService.setSessionStorage('selectedLotsArray', JSON.stringify(Array.from(this.selectedLotsArray.values())));
         }
@@ -939,4 +968,33 @@ public reqWt:any;
     }
     
   }
+    //To Show and hide Employees
+    showEmps(i,event: any){
+      if(this.visibility[i].label === true){
+        this.visibility[i].label = false;
+        //this.showUpArrow[i].label = false
+      }
+      else{
+        this.visibility[i].label = true;
+       // this.showUpArrow[i].label = true
+      }
+    
+    console.log(event)
+    }
+    //on selecting an employee
+ 
+    OnSelectingEmployees(i,event: any){
+      if(this.employeeNameToBeDisplayedOnDropdown === "--Select--"){
+        this.employeeNameToBeDisplayedOnDropdown=""
+      }
+      for(let employee of this.AllocateEmpData.employees){
+        if(event.node.id === employee.EmpId){
+          this.employeeNameToBeDisplayedOnDropdown =employee.EmpName
+          this.employeeSelected.set(i,employee.EmpName )
+          this.allocateEmpArr.controls[i]['controls'].employee.value = employee.EmpId
+        }
+      }
+      this.rowEmpChange(i)
+    }
+  
 }

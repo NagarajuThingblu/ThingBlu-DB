@@ -144,12 +144,12 @@
       <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
         
 
-        <td>{{Field?.FieldName}}</td>
-        <td>{{Field?.Acres}}</td>
-        <td>{{Field?.Description }}</td>
+        <td> <span class="ui-column-title">Field Name</span>{{Field?.FieldName}}</td>
+        <td> <span class="ui-column-title">Acres</span>{{Field?.Acres}}</td>
+        <td> <span class="ui-column-title">Description</span>{{Field?.Description }}</td>
        
         <td style="width:65px;">
-          <span class="ui-column-title">edit</span>
+          <span class="ui-column-title">Action</span>
           <a href="#" [routerLink]="" (click)="getFieldOnEdit(Field?.FieldId)">
             <span class="fa fa-edit"></span>
           </a>

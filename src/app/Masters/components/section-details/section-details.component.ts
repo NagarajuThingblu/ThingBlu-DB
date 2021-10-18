@@ -68,7 +68,7 @@ public completeInfo:any;
     
   }
   backToSectionsPge(){
-    this.router.navigate(['../home/sections']);
+    this.router.navigate(['../home/master/sections']);
   }
 
 }

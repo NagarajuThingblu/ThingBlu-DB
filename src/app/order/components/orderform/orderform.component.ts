@@ -489,7 +489,7 @@ for(let j of this.dataAfterDelete){
 
   resetForm() {
     if(this.clearbutton === "Cancel"){
-      this.router.navigate(['../home/orderlisting']);
+      this.router.navigate(['../home/order/orderlisting']);
     }
     else{
     this.orderForm.reset({ chkSelectAll: true });

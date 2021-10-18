@@ -262,11 +262,11 @@ export class LoginComponent implements OnInit {
               }
             } else {
               if (this.userModel.UserRole.toString() === this.userRoles.Manager) {
-                this.router.navigate(['home/managerdashboard']);
+                this.router.navigate(['home/dashboard/managerdashboard']);
               } else if (this.userModel.UserRole.toString() === this.userRoles.SuperAdmin) {
-                this.router.navigate(['home/managerdashboard']);
+                this.router.navigate(['home/dashboard/managerdashboard']);
               } else {
-                this.router.navigate(['home/empdashboard']);
+                this.router.navigate(['home/dashboard/empdashboard']);
               }
             }
 

@@ -716,7 +716,7 @@ console.log(assignTaskFormValues)
         //End of commented code for custom task
 
         //New Customtask code
-        else if (this.selectedTaskTypeName === 'CUSTOMTASK') {  // CUSTOM TASK
+          else if (this.selectedTaskTypeName === 'CUSTOMTASK') {  // CUSTOM TASK
            
           assignTaskFormValues[this.selectedTaskTypeName].employeeList
           .forEach((element, index) => {
@@ -737,7 +737,6 @@ console.log(assignTaskFormValues)
          });
     
           } 
-
         //End new custom task code
       else if (this.selectedTaskTypeName === 'QACHECK') { // Order Fulfilment/ QA Check Task
         assignTaskDetailsForWebApi['ProductTypeDetails'] = [];
@@ -1319,6 +1318,7 @@ console.log(assignTaskFormValues)
           };
           packagingDataForApi['BinTypeDetails'] = [];
           packagingDataForApi['ProductTypeDetails'] = [];
+          packagingDataForApi['SkillIDlist'] = [];
           if (BinTypeDetails !== null) {
             BinTypeDetails
             .forEach((item, index) => {
@@ -1346,12 +1346,17 @@ console.log(assignTaskFormValues)
               //      UnitValue: item.packageunit, Qty: item.assignPackageWt}
               {
                 ProductTypeId: item.productTypeId,
-                EmployeeId: item.employee,
+                EmployeeId: item.employee?  item.employee : assignTaskFormValues.BUDPACKAGING.assignToAll,
                 UniqueId: item.uniqueId,
               }
             );
           }
         })
+        packagingDataForApi['SkillIDlist'].push(
+          {
+            SkillId:assignTaskFormValues.BUDPACKAGING.skills
+          }
+        );
           // assignTaskFormValues[this.selectedTaskTypeName].allocateEmpArr.forEach((element, index) =>
           // {
           //   packagingDataForApi.BinTypeDetails.push({

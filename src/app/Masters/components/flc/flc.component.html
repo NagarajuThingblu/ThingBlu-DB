@@ -253,15 +253,15 @@
         </ng-template>
         <ng-template pTemplate="body" let-flc let-rowData let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-            <td>{{flc?.FLCName }}</td>
-            <td>{{flc?.PhoneNo }}</td>   
-            <td>{{flc?.Description }}</td>   
-            <td>{{flc?.PrimaryEmail }}  </td>                  
-            <td>{{flc?.StateName }}  </td>
-            <td>{{flc?.CityName }}</td>
-            <td>{{flc?.ZipCode }}</td>
+            <td><span class="ui-column-title">FLC</span>{{flc?.FLCName }}</td>
+            <td><span class="ui-column-title">Cell Phone </span>{{flc?.PhoneNo }}</td>   
+            <td><span class="ui-column-title">Description</span>{{flc?.Description }}</td>   
+            <td><span class="ui-column-title">Email</span>{{flc?.PrimaryEmail }}  </td>                  
+            <td><span class="ui-column-title">State</span>{{flc?.StateName }}  </td>
+            <td><span class="ui-column-title">City</span>{{flc?.CityName }}</td>
+            <td><span class="ui-column-title">ZipCode</span>{{flc?.ZipCode }}</td>
             <td style="width:65px;" (click)="$event.stopPropagation();"> 
-              <span class="ui-column-title">edit</span>
+              <span class="ui-column-title">Action</span>
               <a href="#" [routerLink]="" (click)="GetFlcOnEdit(flc?.FLCId)" >                             
                 <span class="fa fa-edit"></span>
               </a>

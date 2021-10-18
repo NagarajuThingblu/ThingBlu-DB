@@ -612,15 +612,15 @@
     
                       <!-- <td>{{retailer?.ClientName}}</td> -->
                       <!-- <td>{{retailer?.RetailerType}}</td> -->
-                      <td>{{retailer?.RetailerName }}</td>
-                      <td>{{retailer?.License }}</td>   
-                      <td>{{retailer?.UBINo }}</td>   
-                      <td>{{retailer?.OfficePhone }}  </td>                  
-                      <td>{{retailer?.StateName }}  </td>
-                      <td>{{retailer?.CityName }}</td>
-                      <td *ngIf="taskCategory == 'GROWING'">{{retailer?.ShippingPreference }}</td>
+                      <td><span *ngIf="taskCategory == 'GROWING'" class="ui-column-title">Customer</span><span *ngIf="taskCategory != 'GROWING'" class="ui-column-title">Retailer</span>{{retailer?.RetailerName }}</td>
+                      <td><span class="ui-column-title">License No </span>{{retailer?.License }}</td>   
+                      <td><span class="ui-column-title">UBI No</span>{{retailer?.UBINo }}</td>   
+                      <td><span class="ui-column-title">Office Phone</span>{{retailer?.OfficePhone }}  </td>                  
+                      <td><span class="ui-column-title">State</span>{{retailer?.StateName }}  </td>
+                      <td><span class="ui-column-title">City</span>{{retailer?.CityName }}</td>
+                      <td *ngIf="taskCategory == 'GROWING'"><span class="ui-column-title">Shipping Preference</span>{{retailer?.ShippingPreference }}</td>
                       <td style="width:65px;" (click)="$event.stopPropagation();"> 
-                        <span class="ui-column-title">edit</span>
+                        <span class="ui-column-title">Action</span>
                         <a href="#" [routerLink]="" (click)="GetRetailerOnEdit(retailer?.RetailerId)" >                             
                           <span class="fa fa-edit"></span>
                         </a>

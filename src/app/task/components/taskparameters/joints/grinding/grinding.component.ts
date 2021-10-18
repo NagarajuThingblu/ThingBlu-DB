@@ -580,9 +580,9 @@ export class GrindingComponent implements OnInit, OnChanges, OnDestroy {
 
                   setTimeout( () => {
                     if (this._cookieService.UserRole === this.userRoles.Manager) {
-                      this.router.navigate(['home/managerdashboard']);
+                      this.router.navigate(['home/dashboard/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/empdashboard']);
+                      this.router.navigate(['home/dashboard/empdashboard']);
                     }
                   }, 2000);
                 } else if (data === 'Failure') {
@@ -784,7 +784,7 @@ export class GrindingComponent implements OnInit, OnChanges, OnDestroy {
               }
 
               setTimeout( () => {
-                this.router.navigate(['home/taskaction', this.taskType, this.taskid]);
+                this.router.navigate(['home/task/taskaction', this.taskType, this.taskid]);
               }, 2000);
 
             } else if (data === 'Deleted') {
@@ -793,9 +793,9 @@ export class GrindingComponent implements OnInit, OnChanges, OnDestroy {
 
               setTimeout( () => {
                 if (this._cookieService.UserRole === this.userRoles.Manager) {
-                  this.router.navigate(['home/managerdashboard']);
+                  this.router.navigate(['home/dashboard/managerdashboard']);
                 } else {
-                  this.router.navigate(['home/empdashboard']);
+                  this.router.navigate(['home/dashboard/empdashboard']);
                 }
               }, 2000);
             } else if (data === 'Failure') {

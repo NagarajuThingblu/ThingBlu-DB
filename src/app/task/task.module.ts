@@ -44,8 +44,13 @@ import { PrebuckingComponent } from './components/taskparameters/prebucking/preb
 import { BuckingComponent } from './components/taskparameters/bucking/bucking.component';
 import { GrowertrimmingComponent } from './components/taskparameters/growertrimming/growertrimming.component';
 import { D8DistillateComponent } from './components/taskparameters/d8-distillate/d8-distillate.component';
-
-
+import { TaskRoutingModule } from './task.routing';
+import { DashboardModule } from '../dashboard/dashboard.module';
+import {PTRService} from '../Masters/services/ptr.service';
+import  { NewSectionDetailsActionService } from './services/add-section-details.service';
+import {NewEmployeeActionService} from './services/add-employee';
+import { LotService } from '../lot/services/lot.service'
+import { OrderService } from '../order/service/order.service'
 
 @NgModule({
   declarations: [
@@ -85,9 +90,12 @@ import { D8DistillateComponent } from './components/taskparameters/d8-distillate
   ],
   imports: [
     SharedModule,
-    TreeModule
+    TaskRoutingModule,
+    DashboardModule,
+    TreeModule,
+
   ],
-  providers: [GrowerDetailsActionService, TaskCommonService, TaskResolver, SkewListResolver, OilService],
+  providers: [GrowerDetailsActionService, TaskCommonService, TaskResolver, SkewListResolver, OilService,PTRService,NewSectionDetailsActionService,LotService,OrderService,NewEmployeeActionService],
   entryComponents: [ QuarantineComponent ],
   exports: [
      AssignTaskComponent, LoadComponentDirective, EmployeeAssignTaskComponent

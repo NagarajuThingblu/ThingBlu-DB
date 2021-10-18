@@ -361,7 +361,7 @@ export class OrderListingComponent implements OnInit, OnDestroy {
   }
   GetOrderOnEdit(order){
    
-      this.router.navigate(['../home/orderform' , order]);
+      this.router.navigate(['../home/order/orderform' , order]);
     
   }
 

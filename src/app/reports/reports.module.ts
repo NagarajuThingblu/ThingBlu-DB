@@ -4,11 +4,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderReportComponent } from './order-report/order-report.component';
 import { SharedModule } from '../shared/shared.module';
+import { ReportsRoutingModule } from './reports.routing';
 
 @NgModule({
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
+    ReportsRoutingModule
   ],
   declarations: [OrderReportComponent,
     PrerollReportComponent,

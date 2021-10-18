@@ -98,6 +98,7 @@ export class SidebarComponent implements OnInit {
   navigatesubitems(index: number, i:number) {
     this.link = null
     this.subLink = this.plottedmenuItems[i].items[index].routerLink
+   
 }
 
   logOut() {
@@ -245,7 +246,7 @@ export class SidebarComponent implements OnInit {
         {
           label: 'New Lot Entry',
           icon: 'fa-cube',
-          'routerLink': 'lotentry',
+          'routerLink': 'lot/lotentry',
           name: 'newLot',
           newLot: 'inactive',
           num: 1
@@ -253,7 +254,7 @@ export class SidebarComponent implements OnInit {
         {
           label: 'Lot List',
           icon: 'fa-cube',
-          'routerLink': 'lotlisting',
+          'routerLink': 'lot/lotlisting',
           name: 'newList',
           newLot: 'inactive',
           num: 2
@@ -266,33 +267,33 @@ export class SidebarComponent implements OnInit {
             {
               label: 'Order Request',
               icon: 'fa-plus',
-              'routerLink': 'orderrequestform'
+              'routerLink': 'order/orderrequestform'
             },
             {
               label: 'All Orders',
               icon: 'fa-plus',
-              'routerLink': 'orderlisting'
+              'routerLink': 'order/orderlisting'
             },
           ]
         },
         {
           label: 'Assign Task',
           icon: 'fa-list-alt',
-          'routerLink': 'assigntask',
+          'routerLink': 'task/assigntask',
           num: 4,
           name: 'Task',
         },
         {
           label: 'Manager Dashboard',
           icon: 'fa-dashboard',
-          'routerLink': 'managerdashboard',
+          'routerLink': 'dashboard/managerdashboard',
           name: 'Dashboard',
           num: 5
         },
         {
           label: 'Joints Production Dashboard',
           icon: 'fa-dashboard',
-          'routerLink': 'jointsproductiondashboard',
+          'routerLink': 'dashboard/jointsproductiondashboard',
           name: 'Dashboard',
           num: 6
         },
@@ -313,19 +314,19 @@ export class SidebarComponent implements OnInit {
           icon: 'fa-list',
           num: 8,
           items: [
-            { label: 'Strain Type', routerLink: 'straintypemaster' },
-            { label: 'Genetics', routerLink: 'addnewsgenetics' },
-            { label: 'Strain', routerLink: 'strainmaster' },
+            { label: 'Strain Type', routerLink: 'master/straintypemaster' },
+            { label: 'Genetics', routerLink: 'master/addnewsgenetics' },
+            { label: 'Strain', routerLink: 'master/strainmaster' },
             { label: 'Brand', routerLink: 'addnewbrand' },
             { label: 'Sub Brand', routerLink: 'addnewsubbrand' },
-            { label: 'Package Type', routerLink: 'addnewpackagetype' },
-            { label: 'Product Type', routerLink: 'newproducttype' },
-            { label: 'Grower', routerLink: 'grower' },
+            { label: 'Package Type', routerLink: 'master/addnewpackagetype' },
+            { label: 'Product Type', routerLink: 'master/newproducttype' },
+            { label: 'Grower', routerLink: 'master/grower' },
             { label: 'TP Processor', routerLink: 'tpprocessor' },
             { label: 'TP Prcsr. Pkg. Type', routerLink: 'addtpppackagetype' },
-            { label: 'Retailer', routerLink: 'retailer' },
-            { label: 'Employee', routerLink: 'addemployee' },
-            { label: 'Task Setting', routerLink: 'tasksetting' },
+            { label: 'Retailer', routerLink: 'master/retailer' },
+            { label: 'Employee', routerLink: 'master/addemployee' },
+            { label: 'Task Setting', routerLink: 'master/tasksetting' },
           ]
         },
       ];
@@ -342,21 +343,21 @@ export class SidebarComponent implements OnInit {
         {
           label: 'Custom Task',
           icon: 'fa-list-alt',
-          'routerLink': 'assigntask',
+          'routerLink': 'task/assigntask',
           name: 'Task',
           Task: 'inactive'
         },
         {
           label: 'My Dashboard',
           icon: 'fa-dashboard',
-          'routerLink': 'empdashboard',
+          'routerLink': 'dashboard/empdashboard',
           name: 'Dashboard',
           num: 3
         },
         {
           label: 'Joints Production Dashboard',
           icon: 'fa-dashboard',
-          'routerLink': 'jointsproductiondashboard',
+          'routerLink': 'dashboard/jointsproductiondashboard',
           name: 'Dashboard',
           num: 4
         },

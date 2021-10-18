@@ -239,7 +239,7 @@ deleteItem(index: number) {
 }
 GoToBinsPage(){
   this.appCommonService.addRawMaterialPageBackLink = true
-  this.router.navigate(['../home/labels']);
+  this.router.navigate(['../home/master/labels']);
 }
 
   onSubmit(value: string){

@@ -101,6 +101,58 @@ export class SectionsComponent implements OnInit {
     
    
   }
+
+  
+  ngOnInit() {
+    console.log("Field list "+this.globalData.Fields);
+    this.saveButtonText = 'Save';
+    this.pageheading="Add New Section";
+    this.clear = 'Clear';
+    this.newEmployeeResources = MastersResource.getResources().en.addnewemployee;
+    this.newProductTypeResources = MastersResource.getResources().en.newproductype;
+    this.newSectionResources = MastersResource.getResources().en.addnewsection;
+    this.globalResource = GlobalResources.getResources().en;
+    this.appComponentData.setTitle('Sections');
+    this._cookieService = this.appCommonService.getUserProfile();
+    this.getAllFields();
+    this.getAllStrains();
+    this.getAllsectionlist();
+    setTimeout(() => {this.loaderService.display(true);
+    }, 0);
+    
+  this.newSectionEntryForm = this.fb.group({
+    'Field': new FormControl(null, Validators.required),
+      items: new FormArray([], this.customGroupValidation),
+  });
+  this.TerminationReasons = this.fb.group({
+    'phase': new FormControl(null, Validators.required),
+    'completed':new FormControl(null),
+    'cpc':new FormControl(null),
+    'Terminationreason':new FormControl(null),
+    'tpc':new FormControl(null),
+  })
+  this.addItem();
+  this.Year = new Date().getFullYear();
+  if (this.appCommonService.ProductTypeBackLink && this.appCommonService.ProductTypeFormDetail) {
+        this.newSectionEntryForm = this.appCommonService.ProductTypeFormDetail;
+        this.appCommonService.ProductTypeFormDetail = null;
+  } else if (this.appCommonService.TPProcessorBackLink && this.appCommonService.ProductTypeFormDetail) {
+        this.newSectionEntryForm = this.appCommonService.ProductTypeFormDetail;
+        this.appCommonService.ProductTypeFormDetail = null;
+  } else if (this.appCommonService.lotPageBackLink && this.appCommonService.ProductTypeFormDetail) {
+        this.newSectionEntryForm = this.appCommonService.ProductTypeFormDetail;
+        this.appCommonService.ProductTypeFormDetail = null;
+  }
+
+  setTimeout(() => {
+    this.loaderService.display(false);
+  }, 500);
+  this.Phases =  [
+    {label: '--Select--', value: 'null'},
+    {label: 'Planting', value: 'Planting'},
+    {label: 'Harvesting', value: 'Harvesting'}
+  ];
+  }
   items = new FormArray([], this.customGroupValidation );
   arrayItems: FormArray;
   removeDuplicatesById(dataObject) {
@@ -333,56 +385,6 @@ this.Year = new Date().getFullYear();
       if (isError) { return {'duplicate': 'duplicate entries'}; }
   }
 
-  ngOnInit() {
-    console.log("Field list "+this.globalData.Fields);
-    this.saveButtonText = 'Save';
-    this.pageheading="Add New Section";
-    this.clear = 'Clear';
-    this.newEmployeeResources = MastersResource.getResources().en.addnewemployee;
-    this.newProductTypeResources = MastersResource.getResources().en.newproductype;
-    this.newSectionResources = MastersResource.getResources().en.addnewsection;
-    this.globalResource = GlobalResources.getResources().en;
-    this.appComponentData.setTitle('Sections');
-    this._cookieService = this.appCommonService.getUserProfile();
-    this.getAllFields();
-    this.getAllStrains();
-    this.getAllsectionlist();
-    setTimeout(() => {this.loaderService.display(true);
-    }, 0);
-    
-  this.newSectionEntryForm = this.fb.group({
-    'Field': new FormControl(null, Validators.required),
-      items: new FormArray([], this.customGroupValidation),
-  });
-  this.TerminationReasons = this.fb.group({
-    'phase': new FormControl(null, Validators.required),
-    'completed':new FormControl(null),
-    'cpc':new FormControl(null),
-    'Terminationreason':new FormControl(null),
-    'tpc':new FormControl(null),
-  })
-  this.addItem();
-  this.Year = new Date().getFullYear();
-  if (this.appCommonService.ProductTypeBackLink && this.appCommonService.ProductTypeFormDetail) {
-        this.newSectionEntryForm = this.appCommonService.ProductTypeFormDetail;
-        this.appCommonService.ProductTypeFormDetail = null;
-  } else if (this.appCommonService.TPProcessorBackLink && this.appCommonService.ProductTypeFormDetail) {
-        this.newSectionEntryForm = this.appCommonService.ProductTypeFormDetail;
-        this.appCommonService.ProductTypeFormDetail = null;
-  } else if (this.appCommonService.lotPageBackLink && this.appCommonService.ProductTypeFormDetail) {
-        this.newSectionEntryForm = this.appCommonService.ProductTypeFormDetail;
-        this.appCommonService.ProductTypeFormDetail = null;
-  }
-
-  setTimeout(() => {
-    this.loaderService.display(false);
-  }, 500);
-  this.Phases =  [
-    {label: '--Select--', value: 'null'},
-    {label: 'Planting', value: 'Planting'},
-    {label: 'Harvesting', value: 'Harvesting'}
-  ];
-  }
 
   get SectionDetailsArr(): FormArray {
     return this.newSectionEntryForm.get('items') as FormArray;
@@ -424,19 +426,19 @@ this.Year = new Date().getFullYear();
 
  
 
-  viewAllBrands() {
-    this.appCommonService.ProductTypeBackLink = true;
-    this.appCommonService.ProductTypeFormDetail = this.newSectionEntryForm;
-    this.router.navigate(['../home/addnewbrand']);
-  }
+  // viewAllBrands() {
+  //   this.appCommonService.ProductTypeBackLink = true;
+  //   this.appCommonService.ProductTypeFormDetail = this.newSectionEntryForm;
+  //   this.router.navigate(['../home/addnewbrand']);
+  // }
 
  
 
-  viewAllStrains() {
-  this.appCommonService.ProductTypeBackLink = true;
-  this.appCommonService.ProductTypeFormDetail = this.newSectionEntryForm;
-    this.router.navigate(['../home/strainmaster']);
-  }
+  // viewAllStrains() {
+  // this.appCommonService.ProductTypeBackLink = true;
+  // this.appCommonService.ProductTypeFormDetail = this.newSectionEntryForm;
+  //   this.router.navigate(['../home/master/strainmaster']);
+  // }
   // getSectionOnEdit(SectionId) {
   //   this.plusOnEdit = false;
   //   console.log(this.allsectionslist)
@@ -604,10 +606,10 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
 }
 
 showTerminationReasonPopup(section){
-  this.router.navigate(['../home/taskupdate', section]);
+  this.router.navigate(['../home/master/taskupdate', section]);
 }
 showSectionDetails(section){
-  this.router.navigate(['../home/infoofsection', section]);
+  this.router.navigate(['../home/master/infoofsection', section]);
 }
 getAllTerminationReasons(){
   this.ptrActionService.GetAllPTRListByClient().subscribe(

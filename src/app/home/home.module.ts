@@ -3,7 +3,7 @@ import { SharedModule } from './../shared/shared.module';
 
 import { NgModule } from '@angular/core';
 import { HomeComponent } from './home.component';
-import { TaskModule } from '../task/task.module';
+// import { TaskModule } from '../task/task.module';
 
 
 @NgModule({
@@ -13,10 +13,10 @@ import { TaskModule } from '../task/task.module';
   ],
   imports: [
     SharedModule,
-    TaskModule
+    // TaskModule
   ],
   exports: [
-    HomeComponent, SharedModule, TaskModule, DefaultComponent
+    HomeComponent, SharedModule, DefaultComponent
   ]
 })
 

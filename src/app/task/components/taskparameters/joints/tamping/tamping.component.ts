@@ -456,9 +456,9 @@ export class TampingComponent implements OnInit, OnDestroy {
 
                 setTimeout( () => {
                   if (this._cookieService.UserRole === this.userRoles.Manager) {
-                    this.router.navigate(['home/managerdashboard']);
+                    this.router.navigate(['home/dashboard/managerdashboard']);
                   } else {
-                    this.router.navigate(['home/empdashboard']);
+                    this.router.navigate(['home/dashboard/empdashboard']);
                   }
                 }, 2000);
               } else if (data === 'Failure') {
@@ -481,15 +481,15 @@ export class TampingComponent implements OnInit, OnDestroy {
                 ///  }
                   // for navigate joint dashboard if employee assign task :: 20-Mar-2019 :: swapnil
                   if (this._cookieService.UserRole === this.userRoles.Manager) {
-                          this.router.navigate(['home/jointsproductiondashboard']);
+                          this.router.navigate(['home/dashboard/jointsproductiondashboard']);
                         } else {
                           // if employee assign task to self then redirect to joint dashboard else employee dashboard
                           if (this.assignRole.length !== 0) {
                           if (this.assignRole[0].RoleName === 'Employee') {
-                            this.router.navigate(['home/jointsproductiondashboard']);
+                            this.router.navigate(['home/dashboard/jointsproductiondashboard']);
                           }
                          } else {
-                          this.router.navigate(['home/empdashboard']);  }
+                          this.router.navigate(['home/dashboard/empdashboard']);  }
                         }
                 }, 2000);
               }
@@ -573,7 +573,7 @@ export class TampingComponent implements OnInit, OnDestroy {
                 }
 
                 setTimeout( () => {
-                  this.router.navigate(['home/taskaction', this.taskType, this.taskid]);
+                  this.router.navigate(['home/task/taskaction', this.taskType, this.taskid]);
                 }, 2000);
 
               } else if (data === 'Deleted') {
@@ -582,9 +582,9 @@ export class TampingComponent implements OnInit, OnDestroy {
 
                 setTimeout( () => {
                   if (this._cookieService.UserRole === this.userRoles.Manager) {
-                    this.router.navigate(['home/managerdashboard']);
+                    this.router.navigate(['home/dashboard/managerdashboard']);
                   } else {
-                    this.router.navigate(['home/empdashboard']);
+                    this.router.navigate(['home/dashboard/empdashboard']);
                   }
                 }, 2000);
               } else if (data === 'Failure') {
@@ -603,9 +603,9 @@ export class TampingComponent implements OnInit, OnDestroy {
 
                 setTimeout( () => {
                   if (this._cookieService.UserRole === this.userRoles.Manager) {
-                    this.router.navigate(['home/managerdashboard']);
+                    this.router.navigate(['home/dashboard/managerdashboard']);
                   } else {
-                    this.router.navigate(['home/empdashboard']);
+                    this.router.navigate(['home/dashboard/empdashboard']);
                   }
                 }, 2000);
               }

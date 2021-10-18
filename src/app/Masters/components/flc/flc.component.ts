@@ -121,13 +121,19 @@ export class FlcComponent implements OnInit {
  getAllStates() {
   this.dropdownDataService.getStatesList().subscribe(
     data => {
-      this.globalData.States = data;
-      this.States = this.dropdwonTransformService.transform(
-        data.filter(x => x.CountryID === this.flcForm.value.country), 'StateName', 'StateId', '-- Select --');
-        // Get the Clients State from the Cookie ::: Added by Devdan :: 28-Sep-2018
-      this.selectedState = this._cookieService.StateId;
-      if (this.selectedState > 0) {
-        this.flcForm.controls['state'].patchValue(this.selectedState);
+      if(data != 'No Data Found'){
+        this.globalData.States = data;
+        this.States = this.dropdwonTransformService.transform(
+          data.filter(x => x.CountryID === this.flcForm.value.country), 'StateName', 'StateId', '-- Select --');
+          // Get the Clients State from the Cookie ::: Added by Devdan :: 28-Sep-2018
+        this.selectedState = this._cookieService.StateId;
+        if (this.selectedState > 0) {
+          this.flcForm.controls['state'].patchValue(this.selectedState);
+      }
+      else{
+        this.States = [];
+      }
+      
         // this.StateChange();
       }
     } ,

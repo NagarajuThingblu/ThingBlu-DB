@@ -72,9 +72,12 @@
                     <th>Description
                       <span class="star"></span>
                     </th>
-                    <th style="width: 100px;">Required</th>
+                    <!-- <th style="width: 100px;">Required</th>
                     <th style="width: 100px;">Is Active</th>
-                    <th style="width: 100px;">Action</th>
+                    <th style="width: 100px;">Action</th> -->
+                    <th >Required</th>
+                    <th>Is Active</th>
+                    <th >Action</th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-item let-i="rowIndex" >
@@ -201,13 +204,13 @@
 
       <ng-template pTemplate="body" let-skillset let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
-           <td>{{skillset?.CategoryName}}</td>
-             <td>{{skillset?.TaskTypeName}}</td>
-             <td>{{skillset?.SkillName}}</td>
-             <td>{{skillset?.Required}}</td>
-             <td>{{skillset?.Description}}</td>
+           <td>  <span class="ui-column-title">Task Category </span>{{skillset?.CategoryName}}</td>
+             <td>  <span class="ui-column-title">Task Name</span>{{skillset?.TaskTypeName}}</td>
+             <td>  <span class="ui-column-title">Skill Name</span>{{skillset?.SkillName}}</td>
+             <td>  <span class="ui-column-title">Required</span>{{skillset?.Required}}</td>
+             <td>  <span class="ui-column-title">Description</span>{{skillset?.Description}}</td>
             <td style="width:65px;"> 
-               <span class="ui-column-title">edit</span>
+               <span class="ui-column-title">Action</span>
               <a href="#" [routerLink]="" (click)="GetSkillonEdit(skillset?.SkillTaskTypeMapId)" >                             
                   <span class="fa fa-edit"></span>
               </a>
