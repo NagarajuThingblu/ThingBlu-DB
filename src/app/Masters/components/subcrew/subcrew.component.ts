@@ -131,7 +131,7 @@ export class SubcrewComponent implements OnInit {
   getCrewList(){
     this.loaderService.display(true);
     this.subcrewService.getAllCrewList().subscribe(data=>{
-      if(data!="No Data Found"){
+      if(data!="No data found!"){
         this.Crewlist=this.dropdwonTransformService.transform(data, 'CrewName', 'CrewID', '-- Select --')
       }
     },
@@ -235,7 +235,7 @@ export class SubcrewComponent implements OnInit {
   GetSubCrewList(){
     this.loaderService.display(true);
     this.subcrewService.getAllSubCrewList().subscribe(data=>{
-      if(data!="No Data Found"){
+      if(data!="No data found!"){
         this.allSubCrewlist=data.Table;
         this.listLinkingData=data.Table1;
         this.paginationValues=AppConstants.getPaginationOptions;

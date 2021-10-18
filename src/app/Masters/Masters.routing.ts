@@ -19,8 +19,8 @@ import { NewPackageTypeFormComponent } from "./components/new-package-type-form/
 import { NewProductTypeComponent } from "./components/new-product-type/new-product-type.component";
 import { PlantTerminationReasonsComponent } from "./components/plant-termination-reasons/plant-termination-reasons.component";
 import { RetailerComponent } from "./components/retailer/retailer.component";
-import { ChemicalPurchaseComponent } from './components/chemical-purchase/chemical-purchase.component';
-import { ChemicalMasterPageComponent } from './components/chemical-master-page/chemical-master-page.component';
+// import { ChemicalPurchaseComponent } from './components/chemical-purchase/chemical-purchase.component';
+// import { ChemicalMasterPageComponent } from './components/chemical-master-page/chemical-master-page.component';
 import { RoomsTablesComponent } from "./components/rooms-tables/rooms-tables.component";
 import { RoomsComponent } from "./components/rooms/rooms.component";
 import { RoomtypeMasterComponent } from "./components/roomtype-master/roomtype-master.component";
@@ -67,8 +67,8 @@ const routes:Routes =[
       {path:'flc', component:FlcComponent},
       {path:'plantterminationreasons', component:PlantTerminationReasonsComponent,canActivate:[AuthGuard,RoleGuard]},
      {path:'addrawmaterial', component:AddRawMaterialComponent},
-    {path:'chemicalsaddupdate', component:ChemicalPurchaseComponent},
-      {path:'chemicalType', component:ChemicalMasterPageComponent,canActivate:[AuthGuard,RoleGuard]},
+    // {path:'chemicalsaddupdate', component:ChemicalPurchaseComponent},
+    //   {path:'chemicalType', component:ChemicalMasterPageComponent,canActivate:[AuthGuard,RoleGuard]},
       {path:'skills', component:EmployeeSkillsetComponent,canActivate:[AuthGuard,RoleGuard]},
       { path: 'taskupdate', component: UpdateTerminationreasonComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'infoofsection', component: SectionDetailsComponent, canActivate: [AuthGuard, RoleGuard] },
