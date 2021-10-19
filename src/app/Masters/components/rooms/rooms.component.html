@@ -123,7 +123,7 @@
     <div class="ui-g-12">
       <p-panel header="Room List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
         <p-table #dtRoomList [value]="allRoomtypelist" sortMode="single" [responsive]="true" [paginator]="true"
-        [rows]="10" sortField="RoomTypeId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
+        [rows]="10" sortField="RoomTypeId" sortOrder="-1" [rowsPerPageOptions]="paginationvalues"
         (onPage)="onPageChange($event)"
         [globalFilterFields]="['RoomName','RoomTypeName','Zone','Description']">
         <ng-template pTemplate="caption">

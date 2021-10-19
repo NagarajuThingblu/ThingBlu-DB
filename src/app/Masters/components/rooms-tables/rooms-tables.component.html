@@ -4,7 +4,7 @@
         <p-panel header="{{pageheading}}" [toggleable]="true" >
            <p-header>
            </p-header>
-           <form [formGroup]="RoomtableMasterform" (ngSubmit)="saveRoomtble()" >
+           <form [formGroup]="RoomtableMasterform" (ngSubmit)="saveRoomtble(RoomtableMasterform)" >
            <div class="ui-g">
               <!--Room-->
               <div class="ui-g-12 ui-md-6">
@@ -151,7 +151,7 @@
      <div class="ui-g-12">
         <p-panel header="RoomTable list" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
          <p-table #dtRoomtablelist [value]="RoomTableList" sortMode="single" [responsive]="true" [paginator]="true"
-         [rows]="10" sortfield="TableId" sortorder="-1" [rowsPerPageOptions]="paginationValues"
+         [rows]="10" sortfield="TableId" sortorder="-1" [rowsPerPageOptions]="paginationvalues"
          (onPage)="onPageChange($event)"
         [globalFilterFields]="['TableName','ZoneName','RoomName','TableDescription']">
         <ng-template pTemplate="caption">

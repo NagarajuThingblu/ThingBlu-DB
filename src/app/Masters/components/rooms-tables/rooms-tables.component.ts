@@ -103,6 +103,9 @@ this.NewRoomgeneration.GetRoomTableList().subscribe(data=>{
   
 })
 }
+onPageChange(e) {
+  this.event = e;
+}
 GetRoomTableMaplist()
 {
 this.loaderservice.display(true);

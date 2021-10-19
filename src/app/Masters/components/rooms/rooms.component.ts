@@ -117,6 +117,9 @@ public RoomTypeDisabled:any;
     error => { console.log(error); this.loadService.display(false); },
     () => console.log('GetAllZones complete'));
   }
+  onPageChange(e) {
+    this.event = e;
+  }
   GetRooms() {
     this.loadService.display(true);
     this.NewRoomgeneration.GetRoomList().subscribe(data=>{

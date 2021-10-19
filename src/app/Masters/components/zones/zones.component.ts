@@ -205,7 +205,9 @@ this.Roomlist=this.dropdwonTransformService.transform(data,"RoomName","RoomId",'
       () => console.log('GetAllRoomTypesbyClient complete'));
 
   }
-
+  onPageChange(e) {
+    this.event = e;
+  }
   GetZoneonEdit(ZoneID) {
     this.pageHeader = 'Edit Zone';
     this.clear = 'Cancel';
