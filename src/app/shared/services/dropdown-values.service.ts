@@ -265,9 +265,10 @@ getCitiesList() {
 }
 getRetailerTypeList() {
   const url = 'api/Retailer/GetRetailerTypes';
-
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
   return this.http
-  .get(url)
+  .get(url, {params: params})
 
  .map(data => {
   // console.log('GetRetailerTypeList Service success');

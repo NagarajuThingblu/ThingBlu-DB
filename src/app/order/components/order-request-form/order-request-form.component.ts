@@ -329,10 +329,14 @@ export class OrderRequestFormComponent implements OnInit {
     this.loaderService.display(true);
     this.orderService.getRetailers(true).subscribe(
       data => {
-        // console.log(data);
+      if(data !='No data found!'){
         this.retailers = this.dropdwonTransformService.transform(data, 'RetailerName', 'RetailerId', '-- Select --') ;
         this.retailersNew = data;
         this.loaderService.display(false);
+      }
+     else{
+      this.retailers = []
+     }
       } ,
       error => { console.log(error);  this.loaderService.display(false); },
       () => console.log('sucess')

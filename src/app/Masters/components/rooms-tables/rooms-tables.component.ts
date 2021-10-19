@@ -324,7 +324,8 @@ this.NewRoomgeneration.addNewRoomTable(RoomTablesforAPI).subscribe(data=>{
     this.msg.push({severity: 'success', summary: this.globalresource.applicationmsg,
     detail:  this.newRoomTableresource.newRoomTableDeleted});
     this.resetAll();
-    this.globalresource();
+    this.GetRoomTables();
+    // this.globalresource();
     this.loaderservice.display(false);
   }else if (String(data.toLocaleUpperCase()) === 'NOTUPDATED') {
     if (IsDeleted === 1) {

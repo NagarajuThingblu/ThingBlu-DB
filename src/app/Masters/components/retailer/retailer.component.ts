@@ -217,12 +217,15 @@ export class RetailerComponent implements OnInit {
   getAllRetailerTypes() {
     this.dropdownDataService.getRetailerTypeList().subscribe(
       data => {
-        this.globalData.RetailTypes = data;
-        this.retailerTypes = this.dropdwonTransformService.transform(
-          data, 'RType', 'RTypeId', '-- Select --');
-      } ,
-      error => { console.log(error); },
-      () => console.log('Get all State complete')
+        if(data!="No data found!"){
+          this.globalData.RetailTypes = data;
+          this.retailerTypes = this.dropdwonTransformService.transform(
+            data, 'RType', 'RTypeId', '-- Select --');
+        } 
+        else{
+          this.retailerTypes =[]
+        }
+        }
     );
   }
 
