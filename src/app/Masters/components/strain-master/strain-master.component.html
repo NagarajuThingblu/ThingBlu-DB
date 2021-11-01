@@ -21,7 +21,7 @@
                     <div class="ui-g-12 ui-md-6">
                         <div class="paddingRL">
                             <div class="le-su-12">
-                                <label for="enterstraintype">{{ newStrainResources.enterstraintype}}<span class="star">*</span></label>:
+                                <label for="enterstraintype">Type<span class="star">*</span></label>:
                                 <p-dropdown
                                     [filter] ="true"
                                     id="straintype"
@@ -56,7 +56,7 @@
                           <label for="genetics">
                               {{ newStrainResources.genetics}}:
                           </label>
-                          <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="{{ newStrainResources.viewaddgenetic}}" id="btn_geneticshow" (click)="viewGeneticList()"  name="btnviewGenetics" ></p-button>
+                          <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="View/Add Species" id="btn_geneticshow" (click)="viewGeneticList()"  name="btnviewGenetics" ></p-button>
 
                           <p-dropdown
                             [filter] ="true"
@@ -90,14 +90,14 @@
                           <div class="paddingRL">
                               <div class="le-su-12">
                                 <label for="enterstrain">
-                                  {{ newStrainResources.enterstrain}}<span class="star">*</span>:
+                                Name<span class="star">*</span>:
                                 </label>
   
                                 <input pInputText
                                   name="strain"
                                   id="strain"
                                   autocomplete="off"
-                                  placeholder="Enter Strain Name"
+                                  placeholder="Enter Name"
                                   type="text"
                                   class="clsControl"
                                   formControlName="strain"
@@ -119,14 +119,14 @@
                     <div class="paddingRL">
                         <div class="le-su-12">
                           <label for="enterstrain">
-                           Strain Code<span class="star">*</span>:
+                            Code<span class="star">*</span>:
                           </label>
 
                           <input pInputText
                             name="straincode"
                             id="straincode"
                             autocomplete="off"
-                            placeholder="Enter Strain Code"
+                            placeholder="Enter Code"
                             type="text"
                             class="clsControl"
                             formControlName="straincode"
@@ -134,7 +134,7 @@
 
                           <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                             *ngIf="!strainmasterForm.controls['straincode'].valid&&strainmasterForm.controls['straincode'].dirty">
-                            <span *ngIf="strainmasterForm.controls['straincode'].errors['required']">Strain code required</span>
+                            <span *ngIf="strainmasterForm.controls['straincode'].errors['required']"> code required</span>
                           
                             </div>
                         </div>
@@ -157,7 +157,7 @@
                           type="text"
                           autocomplete="off"
                           class="clsControl"
-                          placeholder="Enter Strain Description"
+                          placeholder="Enter Description"
                           formControlName="description"
                         />
                       </div>
@@ -388,10 +388,10 @@
           </ng-template>
           <ng-template pTemplate="header">
               <tr>
-                  <th [pSortableColumn]="'StrainName'">Strain  <p-sortIcon [field]="'StrainName'"></p-sortIcon> </th>
-                  <th [pSortableColumn]="'StrainCode'">Strain Code  <p-sortIcon [field]="'StrainCode'"></p-sortIcon> </th>
-                  <th [pSortableColumn]="'StrainTypeName'">Strain Type  <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
-                  <th [pSortableColumn]="'GeneticsName'"> Genetics Name <p-sortIcon [field]="'GeneticsName'"></p-sortIcon></th>
+                  <th [pSortableColumn]="'StrainName'">Name  <p-sortIcon [field]="'StrainName'"></p-sortIcon> </th>
+                  <th [pSortableColumn]="'StrainCode'"> Code  <p-sortIcon [field]="'StrainCode'"></p-sortIcon> </th>
+                  <th [pSortableColumn]="'StrainTypeName'"> Type  <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
+                  <th [pSortableColumn]="'GeneticsName'">  Binomial Name <p-sortIcon [field]="'GeneticsName'"></p-sortIcon></th>
                   <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>
                   <!-- <th [pSortableColumn]="'THC'">THC(%) <p-sortIcon [field]="'THC'"></p-sortIcon></th>    
                   <th [pSortableColumn]="'CBD'">CBD(%) <p-sortIcon [field]="'CBD'"></p-sortIcon></th>                  
@@ -438,10 +438,10 @@
                       <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
                   </td> -->
   
-                  <td><span class="ui-column-title">Strain</span>{{Strain?.StrainName}}</td>
-                  <td><span class="ui-column-title">Strain Code </span>{{Strain?.StrainCode}}</td>
-                  <td><span class="ui-column-title">Strain Type </span>{{Strain?.StrainTypeName}}</td>
-                  <td><span class="ui-column-title">Genetics Name</span>{{Strain?.GeneticsName }}</td>
+                  <td><span class="ui-column-title">Name</span>{{Strain?.StrainName}}</td>
+                  <td><span class="ui-column-title"> Code </span>{{Strain?.StrainCode}}</td>
+                  <td><span class="ui-column-title"> Type </span>{{Strain?.StrainTypeName}}</td>
+                  <td><span class="ui-column-title">Binomial Name</span>{{Strain?.GeneticsName }}</td>
                   <td><span class="ui-column-title">Description</span>{{Strain?.Description }}</td>
                   <!-- <td>{{Strain?.THC }}</td>   
                   <td>{{Strain?.CBD }}  </td>                  

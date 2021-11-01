@@ -11,7 +11,7 @@ export class CrewService {
       private http: DataService,
       private appCommonService: AppCommonService
     ) {
-      this._cookieService = this.appCommonService.getUserProfile();
+      this._cookieService = <UserModel>this.appCommonService.getUserProfile();
     }
     private headers = new Headers({ 'Content-Type': 'application/json' });
 

@@ -368,7 +368,8 @@ console.log(assignTaskFormValues)
           Comment: assignTaskFormValues[this.selectedTaskTypeName].comment,
           NotifyEmp: assignTaskFormValues[this.selectedTaskTypeName].notifyemployee? 1:0,
           NotifyManager: assignTaskFormValues[this.selectedTaskTypeName].notifymanager? 1:0,
-          Priority: assignTaskFormValues[this.selectedTaskTypeName].priority
+          Priority: assignTaskFormValues[this.selectedTaskTypeName].priority,
+          "SubCrewID":assignTaskFormValues[this.selectedTaskTypeName].subcrew,
         },
         EmployeeTypes : [],
         SkillIDlist : []
@@ -722,7 +723,8 @@ console.log(assignTaskFormValues)
           .forEach((element, index) => {
             if(element.isParent == "False"){
               assignTaskDetailsForWebApi.EmployeeTypes.push({
-                "EmpId" : assignTaskFormValues.CUSTOMTASK.employeeList[index].id 
+                "EmpId" : assignTaskFormValues.CUSTOMTASK.employeeList[index].id ,
+               
               });
             }
        
@@ -962,7 +964,8 @@ console.log(assignTaskFormValues)
         .forEach((element, index) => {
           if(element.isParent == "False"){
             assignTaskDetailsForWebApi.EmployeeTypes.push({
-              "EmpId" : assignTaskFormValues.INDEPENDENT.employeeList[index].id 
+              "EmpId" : assignTaskFormValues.INDEPENDENT.employeeList[index].id ,
+              
             });
           }
         });
@@ -992,7 +995,8 @@ console.log(assignTaskFormValues)
           "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
           "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
           "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
-          "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
+          "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0,
+          "SubCrewID": assignTaskFormValues.PLANTING.subcrew
        },
        EmployeeTypes:[],
        SkillIDlist:[]
@@ -1059,7 +1063,8 @@ console.log(assignTaskFormValues)
            "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
            "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
            "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
-           "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
+           "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0,
+           "SubCrewID": assignTaskFormValues.HARVESTING.subcrew
         },
         EmployeeTypes:[],
         SkillIDlist:[]
@@ -1123,7 +1128,8 @@ console.log(assignTaskFormValues)
             "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
             "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
             "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
-            "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
+            "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0,
+            "SubCrewID": assignTaskFormValues.PREBUCKING.subcrew
           },
           EmployeeTypes:[],
           SkillIDlist:[]
@@ -1193,7 +1199,8 @@ console.log(assignTaskFormValues)
             "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
             "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
             "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
-            "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
+            "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0,
+            "SubCrewID": assignTaskFormValues.BUCKING.subcrew
           },
           EmployeeTypes:[],
           SkillIDlist:[]
@@ -1259,7 +1266,8 @@ console.log(assignTaskFormValues)
               "VirtualRoleId":assignTaskDetailsForWebApi.TaskDetails.VirtualRoleId,
               "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
               "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
-              "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
+              "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0,
+              "SubCrewID": assignTaskFormValues.TRIM.subcrew
             },
             EmployeeTypes:[],
             SkillIDlist:[]
@@ -1318,7 +1326,8 @@ console.log(assignTaskFormValues)
               "Priority": assignTaskDetailsForWebApi.TaskDetails.Priority === ""? null: assignTaskDetailsForWebApi.TaskDetails.Priority ,
               "Comment": assignTaskDetailsForWebApi.TaskDetails.Comment,
               "NotifyManager": assignTaskDetailsForWebApi.TaskDetails.NotifyManager? 1:0,
-              "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0
+              "NotifyEmp":assignTaskDetailsForWebApi.TaskDetails.NotifyEmp? 1:0,
+              "SubCrewID": assignTaskFormValues.BUDPACKAGING.subcrew
             },
           };
           packagingDataForApi['BinTypeDetails'] = [];

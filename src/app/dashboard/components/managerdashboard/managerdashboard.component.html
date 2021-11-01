@@ -83,7 +83,7 @@
                                 rowHover='true'
                                 [rowsPerPageOptions]="paginationValuesreviewPendingTasks"
                                 (onPage)="reviewPendingTasksonPageChange($event)"
-                                [globalFilterFields]="['EmpName','TaskTypeName','OrderRefId','StrainName','ManagerName','TotalWorkhrs','TaskStatus','LastActionDate']"                        
+                                [globalFilterFields]="['EmpName','TaskTypeName','SubcrewName','StrainName','ManagerName','TotalWorkhrs','TaskStatus','LastActionDate']"                        
                                 id="tblRevPendingTasks"
                                 name="tblRevPendingTasks"
                                 styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders tablelayout"
@@ -105,7 +105,8 @@
                                         </th>
                                         <th  class="taskwidth" [pSortableColumn]="'TaskTypeName'">{{globalResource.task}}  
                                             <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon></th>
-                                        <th  [pSortableColumn]="'GrowerName'">{{globalResource.order}} <p-sortIcon [field]="'OrderRefId'"></p-sortIcon></th>
+                                        <!-- <th  [pSortableColumn]="'GrowerName'">{{globalResource.order}} <p-sortIcon [field]="'OrderRefId'"></p-sortIcon></th> -->
+                                        <th  [pSortableColumn]="'GrowerName'">Crew <p-sortIcon [field]="'SubcrewName'"></p-sortIcon></th>
                                         <th  [pSortableColumn]="'StrainName'">{{globalResource.strain}}  <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>
                                         <!-- <th [pSortableColumn]="'GrowerLotNo'" class="lotNum">{{globalResource.lot}}#  <p-sortIcon [field]="'GrowerLotNo'"></p-sortIcon></th>                       -->
                                         <th  [pSortableColumn]="'TotalWorkhrs'" class="clsElpTime">{{managerResources.elipsedtime}}  <p-sortIcon [field]="'TotalWorkhrs'"></p-sortIcon></th>
@@ -122,8 +123,11 @@
                                         <th class="taskwidth">
                                             <input pInputText type="text" (input)="dtReviewPending.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
                                         </th>
-                                        <th class="orderrefwidth">
+                                        <!-- <th class="orderrefwidth">
                                             <input pInputText type="text" (input)="dtReviewPending.filter($event.target.value, 'OrderRefId', 'contains')" class="clsControl">
+                                        </th> -->
+                                        <th class="orderrefwidth">
+                                            <input pInputText type="text" (input)="dtReviewPending.filter($event.target.value, 'SubcrewName', 'contains')" class="clsControl">
                                         </th>
                                         <th class="orderrefwidth">
                                             <input pInputText type="text" (input)="dtReviewPending.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
@@ -149,7 +153,8 @@
                                             <!-- <u><a href="#" [routerLink]="['../taskaction', task?.TaskTypeKey, task?.TaskId]">{{task?.EmpName}}</a></u> -->
                                         </td>
                                         <td class="taskwidth">{{task?.TaskTypeName}}</td>
-                                        <td class="orderrefwidth">{{task?.OrderRefId}}</td>
+                                        <!-- <td class="orderrefwidth">{{task?.OrderRefId}}</td> -->
+                                        <td class="orderrefwidth">{{task?.SubcrewName}}</td>
                                         <td class="orderrefwidth">{{task?.StrainName}}
                                                 <!-- <div class="clear"></div> -->
                                                  <span *ngIf="task?.LotCounts > 1"> 
@@ -192,7 +197,7 @@
                                     rowHover='true'
                                     [rowsPerPageOptions]="paginationValuesassignedTasks"
                                     (onPage)="assignedTasksonPageChange($event)"
-                                    [globalFilterFields]="['EmpName','TaskTypeName','OrderRefId','StrainName','TotalWorkhrs','TaskStatus','LastActionDate','ManagerName']"
+                                    [globalFilterFields]="['EmpName','TaskTypeName','SubcrewName','StrainName','TotalWorkhrs','TaskStatus','LastActionDate','ManagerName']"
                                     id="tblAssigned"
                                     name="tblAssigned"
                                     styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders"
@@ -219,7 +224,8 @@
                                                 </th>
                                                 <th class="taskwidth" [pSortableColumn]="'TaskTypeName'">{{globalResource.task}}  
                                                     <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon></th>
-                                                <th [pSortableColumn]="'OrderRefId'">{{globalResource.order}}  <p-sortIcon [field]="'OrderRefId'"></p-sortIcon></th>
+                                                <!-- <th [pSortableColumn]="'OrderRefId'">{{globalResource.order}}  <p-sortIcon [field]="'OrderRefId'"></p-sortIcon></th> -->
+                                                <th [pSortableColumn]="'SubcrewName'">Crew <p-sortIcon [field]="'SubcrewName'"></p-sortIcon></th>
                                                 <th [pSortableColumn]="'StrainName'">{{globalResource.strain}}  <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>
                                                 <!-- <th [pSortableColumn]="'GrowerLotNo'" class="lotNum">{{globalResource.lot}}#  <p-sortIcon [field]="'GrowerLotNo'"></p-sortIcon></th>  -->
                                                 <!-- <th [pSortableColumn]="'TotalWorkhrs'" class="clsElpTime">{{managerResources.elipsedtime}}  <p-sortIcon [field]="'TotalWorkhrs'"></p-sortIcon></th>                      -->
@@ -236,8 +242,11 @@
                                                     <th class="taskwidth">
                                                         <input pInputText type="text" (input)="dt.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
                                                     </th>
-                                                    <th class="orderrefwidth">
+                                                    <!-- <th class="orderrefwidth">
                                                         <input pInputText type="text" (input)="dt.filter($event.target.value, 'OrderRefId', 'contains')" class="clsControl">
+                                                    </th> -->
+                                                    <th class="orderrefwidth">
+                                                        <input pInputText type="text" (input)="dt.filter($event.target.value, 'SubcrewName', 'contains')" class="clsControl">
                                                     </th>
                                                     <th class="orderrefwidth">
                                                         <input pInputText type="text" (input)="dt.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
@@ -272,7 +281,8 @@
                                                     <!-- <u><a href="#" [routerLink]="['../taskaction', task?.TaskTypeKey, task?.TaskId]">{{task?.EmpName}}</a></u> -->
                                                 </td>
                                                 <td (click)= "onRowSelect(task)" class="taskwidth">{{task?.TaskTypeName}}</td>
-                                                <td (click)= "onRowSelect(task)" class="orderrefwidth">{{task?.OrderRefId}}</td>
+                                                <!-- <td (click)= "onRowSelect(task)" class="orderrefwidth">{{task?.OrderRefId}}</td> -->
+                                                <td (click)= "onRowSelect(task)" class="orderrefwidth">{{task?.SubcrewName}}</td>
                                                 <td (click)= "onRowSelect(task)" class="orderrefwidth">{{task?.StrainName}}
                                                     <!-- <div class="clear"></div> -->
                                                     <span *ngIf="task?.LotCounts > 1"> 
@@ -316,7 +326,7 @@
                                     rowHover='true'                   
                                     [rowsPerPageOptions]="paginationValuesinProcessTasks"
                                     (onPage)="inProcessTasksonPageChange($event)"
-                                    [globalFilterFields]="['EmpName','TaskTypeName','OrderRefId','TotalWorkhrs','ManagerName','StrainName','TaskStatus','LastActionDate']"                    
+                                    [globalFilterFields]="['EmpName','TaskTypeName','SubcrewName','TotalWorkhrs','ManagerName','StrainName','TaskStatus','LastActionDate']"                    
                                     id="tblInProcessed"
                                     name="tblInProcessed"
                                     styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders tablelayout"
@@ -343,7 +353,8 @@
                                             </th>
                                             <th class="taskwidth" [pSortableColumn]="'TaskTypeName'">{{globalResource.task}}  
                                                 <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon></th>
-                                            <th [pSortableColumn]="'OrderRefId'">{{globalResource.order}}  <p-sortIcon [field]="'OrderRefId'"></p-sortIcon></th>
+                                            <!-- <th [pSortableColumn]="'OrderRefId'">{{globalResource.order}}  <p-sortIcon [field]="'OrderRefId'"></p-sortIcon></th> -->
+                                            <th [pSortableColumn]="'SubcrewName'">Crew <p-sortIcon [field]="'SubcrewName'"></p-sortIcon></th>
                                             <th [pSortableColumn]="'StrainName'">{{globalResource.strain}}  <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>
                                             <!-- <th [pSortableColumn]="'GrowerLotNo'" class="lotNum">{{globalResource.lot}}#  <p-sortIcon [field]="'GrowerLotNo'"></p-sortIcon></th>  -->
                                             <th [pSortableColumn]="'TotalWorkhrs'" class="clsElpTime">{{managerResources.elipsedtime}}  <p-sortIcon [field]="'TotalWorkhrs'"></p-sortIcon></th>                     
@@ -361,8 +372,11 @@
                                             <th class="taskwidth">
                                                 <input pInputText type="text" (input)="dtInProcess.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
                                             </th>
-                                            <th class="orderrefwidth">
+                                            <!-- <th class="orderrefwidth">
                                                 <input pInputText type="text" (input)="dtInProcess.filter($event.target.value, 'OrderRefId', 'contains')" class="clsControl">
+                                            </th> -->
+                                            <th class="orderrefwidth">
+                                                <input pInputText type="text" (input)="dtInProcess.filter($event.target.value, 'SubcrewName', 'contains')" class="clsControl">
                                             </th>
                                             <th class="orderrefwidth">
                                                 <input pInputText type="text" (input)="dtInProcess.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
@@ -396,7 +410,8 @@
                                                 <!-- <u><a href="#" [routerLink]="['../taskaction', task?.TaskTypeKey, task?.TaskId]">{{task?.EmpName}}</a></u> -->
                                             </td>
                                             <td (click)= "onRowSelect(task)" class="taskwidth">{{task?.TaskTypeName}}</td>
-                                            <td (click)= "onRowSelect(task)" class="orderrefwidth">{{task?.OrderRefId}}</td>
+                                            <!-- <td (click)= "onRowSelect(task)" class="orderrefwidth">{{task?.OrderRefId}}</td> -->
+                                            <td (click)= "onRowSelect(task)" class="orderrefwidth">{{task?.SubcrewName}}</td>
                                             <td (click)= "onRowSelect(task)" class="orderrefwidth">{{task?.StrainName}}
                                                 <!-- <div class="clear"></div> -->
                                                 <span *ngIf="task?.LotCounts > 1"> 
@@ -438,7 +453,7 @@
                                     rowHover='true'
                                     [rowsPerPageOptions]="paginationValuespausedTasks"
                                     (onPage)="pausedTasksonPageChange($event)"
-                                    [globalFilterFields]="['EmpName','TaskTypeName','OrderRefId','StrainName','TotalWorkhrs','ManagerName','TaskStatus','LastActionDate']"                    
+                                    [globalFilterFields]="['EmpName','TaskTypeName','SubcrewName','StrainName','TotalWorkhrs','ManagerName','TaskStatus','LastActionDate']"                    
                                     id="tblPausedTasks"
                                     name="tblPausedTasks"
                                     styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders tablelayout"
@@ -457,7 +472,8 @@
                                             </th>
                                             <th class="taskwidth" [pSortableColumn]="'TaskTypeName'">{{globalResource.task}}  
                                                 <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon></th>
-                                            <th [pSortableColumn]="'OrderRefId'">{{globalResource.order}}  <p-sortIcon [field]="'OrderRefId'"></p-sortIcon></th>
+                                            <!-- <th [pSortableColumn]="'OrderRefId'">{{globalResource.order}}  <p-sortIcon [field]="'OrderRefId'"></p-sortIcon></th> -->
+                                            <th [pSortableColumn]="'SubcrewName'">Crew<p-sortIcon [field]="'SubcrewName'"></p-sortIcon></th>
                                             <th [pSortableColumn]="'StrainName'">{{globalResource.strain}}  <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>
                                             <!-- <th [pSortableColumn]="'GrowerLotNo'" class="lotNum">{{globalResource.lot}}#  <p-sortIcon [field]="'GrowerLotNo'"></p-sortIcon></th>                       -->
                                             <th [pSortableColumn]="'TotalWorkhrs'" class="clsElpTime">{{managerResources.elipsedtime}}  <p-sortIcon [field]="'TotalWorkhrs'"></p-sortIcon></th>
@@ -474,8 +490,11 @@
                                             <th class="taskwidth">
                                                 <input pInputText type="text" (input)="dtPaused.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
                                             </th>
-                                            <th class="orderrefwidth">
+                                            <!-- <th class="orderrefwidth">
                                                 <input pInputText type="text" (input)="dtPaused.filter($event.target.value, 'OrderRefId', 'contains')" class="clsControl">
+                                            </th> -->
+                                            <th class="orderrefwidth">
+                                                <input pInputText type="text" (input)="dtPaused.filter($event.target.value, 'SubcrewName', 'contains')" class="clsControl">
                                             </th>
                                             <th class="orderrefwidth">
                                                 <input pInputText type="text" (input)="dtPaused.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
@@ -504,7 +523,8 @@
                                                 <!-- <u><a href="#" [routerLink]="['../taskaction', task?.TaskTypeKey, task?.TaskId]">{{task?.EmpName}}</a></u> -->
                                             </td>
                                             <td class="taskwidth">{{task?.TaskTypeName}}</td>
-                                            <td class="orderrefwidth">{{task?.OrderRefId}}</td>
+                                            <!-- <td class="orderrefwidth">{{task?.OrderRefId}}</td> -->
+                                            <td class="orderrefwidth">{{task?.SubcrewName}}</td>
                                             <td class="orderrefwidth">{{task?.StrainName}}
                                                     <!-- <div class="clear"></div> -->
                                                      <span *ngIf="task?.LotCounts > 1"> 
@@ -547,7 +567,7 @@
                                 rowHover='true'
                                 [rowsPerPageOptions]="paginationValuescompletedTasks"
                                 (onPage)="completedTasksonPageChange($event)"
-                                [globalFilterFields]="['EmpName','TaskTypeName','ManagerName','TotalWorkhrs','OrderRefId','StrainName','TaskStatus','LastActionDate','ManagerName']"                    
+                                [globalFilterFields]="['EmpName','TaskTypeName','ManagerName','TotalWorkhrs','SubcrewName','StrainName','TaskStatus','LastActionDate','ManagerName']"                    
                                 id="tblCompletedTasks"
                                 name="tblCompletedTasks"
                                 styleClass="clsTableWithoutHeaderColorCss clsRemoveTableInnerBorders tablelayout"
@@ -562,7 +582,8 @@
                                         </th>
                                         <th class="taskwidth" [pSortableColumn]="'TaskTypeName'">{{globalResource.task}}  
                                             <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon></th>
-                                        <th [pSortableColumn]="'OrderRefId'">{{globalResource.order}} <p-sortIcon [field]="'OrderRefId'"></p-sortIcon></th>
+                                        <!-- <th [pSortableColumn]="'OrderRefId'">{{globalResource.order}} <p-sortIcon [field]="'OrderRefId'"></p-sortIcon></th> -->
+                                        <th [pSortableColumn]="'SubcrewName'">Crew<p-sortIcon [field]="'SubcrewName'"></p-sortIcon></th>
                                         <th [pSortableColumn]="'StrainName'">{{globalResource.strain}}  <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>
                                         <!-- <th [pSortableColumn]="'GrowerLotNo'" class="lotNum">{{globalResource.lot}}#  <p-sortIcon [field]="'GrowerLotNo'"></p-sortIcon></th>                       -->
                                         <th [pSortableColumn]="'TotalWorkhrs'" class="clsElpTime">{{managerResources.elipsedtime}}  <p-sortIcon [field]="'TotalWorkhrs'"></p-sortIcon></th>
@@ -580,8 +601,11 @@
                                         <th class="taskwidth">
                                             <input pInputText type="text" (input)="dtCompleted.filter($event.target.value, 'TaskTypeName', 'contains')" class="clsControl">
                                         </th>
-                                        <th class="orderrefwidth">
+                                        <!-- <th class="orderrefwidth">
                                             <input pInputText type="text" (input)="dtCompleted.filter($event.target.value, 'OrderRefId', 'contains')" class="clsControl">
+                                        </th> -->
+                                        <th class="orderrefwidth">
+                                            <input pInputText type="text" (input)="dtCompleted.filter($event.target.value, 'SubcrewName', 'contains')" class="clsControl">
                                         </th>
                                         <th class="orderrefwidth">
                                             <input pInputText type="text" (input)="dtCompleted.filter($event.target.value, 'StrainName', 'contains')" class="clsControl">
@@ -610,7 +634,8 @@
                                             <!-- <u><a href="#" [routerLink]="['../taskaction', task?.TaskTypeKey, task?.TaskId]">{{task?.EmpName}}</a></u> -->
                                         </td>
                                         <td class="taskwidth">{{task?.TaskTypeName}}</td>
-                                        <td class="orderrefwidth">{{task?.OrderRefId}}</td>
+                                        <!-- <td class="orderrefwidth">{{task?.OrderRefId}}</td> -->
+                                        <td class="orderrefwidth">{{task?.SubcrewName}}</td>
                                         <td class="orderrefwidth">{{task?.StrainName}}
                                                 <!-- <div class="clear"></div> -->
                                                  <span *ngIf="task?.LotCounts > 1"> 

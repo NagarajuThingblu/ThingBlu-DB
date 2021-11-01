@@ -100,7 +100,37 @@
   </div>
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
-      <label for="skills">Skills<span class="star">*</span></label>:
+      <label for="crew">Crew</label>:
+      <p-dropdown #checkedItems
+      [filter] ="true"
+      [options]="filteredCrewList"
+      (onChange)="onCrewSelect($event)"
+      placeholder="-- Select --"
+      formControlName="crew"
+      class="clsControl"
+      id="crew"
+      name="crew">
+    </p-dropdown>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="subcrew">Sub Crew</label>:
+      <p-dropdown #checkedItems
+      [filter] ="true"
+      [options]="subcrewlist"
+      placeholder="-- Select --"
+      (onChange)="onSubCrewSelect($event)"
+      formControlName="subcrew"
+      class="clsControl"
+      id="subcrew"
+      name="subcrew">
+    </p-dropdown>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="skills">Skills</label>:
       <p-dropdown  #checkedItems
       [filter] ="true"
       [options]="skills"

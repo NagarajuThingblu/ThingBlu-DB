@@ -25,6 +25,7 @@ import { filter } from 'rxjs/operator/filter';
 import { NewClientService } from '../../../../Masters/services/new-client.service';
 import { PTRService } from '../../../../Masters/services/ptr.service';
 import { NewEmployeeActionService } from '../../../services/add-employee';
+//import { CrewService } from '../../../../Masters/services/crew.service';
 declare var $: any;
 @Component({
   moduleId: module.id,
@@ -61,6 +62,10 @@ export class PlantingComponent implements OnInit{
   public employeeNameToBeDisplayedOnDropdown="--Select--"
   public visibility:boolean = false;
   public showUpArrow:boolean = false;
+  public allSubCrewlist: any;
+  public crewlist: SelectItem[];
+  public subcrewlist: SelectItem[];
+  public filteredCrewList:any[]
   constructor(
     private fb: FormBuilder,
     private dropdownDataService: DropdownValuesService,
@@ -129,6 +134,7 @@ export class PlantingComponent implements OnInit{
   ngOnInit() {
     this.employeeNameToBeDisplayedOnDropdown="--Select--"
     this.getAllFieldsAndSections();
+    this.getCrewList()
     this.getSkills();
     // this.getAllsectionlist();
     this.employeeListByClient();
@@ -155,37 +161,13 @@ export class PlantingComponent implements OnInit{
 
     
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
-    // this.headings =[
-    //   {id:1, headingName:"Skilled Employees",  Num:2, isParent:true, parentId:0},
-    //   {id:0, headingName:"All Employees", Num:1, isParent:true, parentId:0},
-    // ]
-    // this.skilledempslist =[
-    //   {empid:1, empname:"jyothi",  isParent:false, ParentId:1},
-    //   {empid:2, empname:"saikumar",  isParent:false, ParentId:1},
-    //   {empid:3, empname:"sucharitha",  isParent:false, ParentId:1},
-    // ]
-    // this.allemplist = [
-    //   {empid:1, empname:"jyothi", isParent:false, ParentId:0},
-    //   {empid:2, empname:"saikumar",  isParent:false, ParentId:0},
-    //   {empid:3, empname:"sucharitha",  isParent:false, ParentId:0},
-    //   {empid:4, empname:"hemanth",  isParent:false, ParentId:0},
-    //   {empid:5, empname:"nagaraju",  isParent:false, ParentId:0},
-    // ]
-  
-    // this.skills =  [
-    //   {label: 'Good At Grooming Plants', value: 'Good At Grooming Plants'},
-    //   {label: 'Good At checking water', value: 'Good At checking water'},
-    //   {label: 'Good At pesticides', value: 'Good At pesticides'}
-    // ];
+   
     this.priorities =  [
       {label: 'Normal', value: 'Normal'},
       {label: 'Important', value: 'Important'},
       {label: 'Critical', value: 'Critical'}
     ];
-// this.employees = [
-//   {label: 'Skilled Employees', value: 'Skilled Employees'},
-//   {label: 'All Employees', value: 'All Employees'}
-// ]
+
     if (this.PageFlag.page !== 'TaskAction') {
       this.TaskModel.PLANTING = {
         field: '',
@@ -211,11 +193,11 @@ export class PlantingComponent implements OnInit{
       'field' : new FormControl('', Validators.required),
       'section': new FormControl('', Validators.required),
       'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
-      // 'estimatedenddate': new FormControl('',  Validators.compose([Validators.required])),
-    //
      'employeeList': new FormControl('', Validators.required),
      'plantCount' : new FormControl('', Validators.required),
-     'skills':new FormControl('', Validators.required),
+     'crew': new FormControl(0),
+     'subcrew': new FormControl(0),
+     'skills':new FormControl(0),
      'assignedPC' : new FormControl(''),// hem growers don't assign particular number of palnts to emp
       'priority': new FormControl(''),
       'notifymanager': new FormControl(''),
@@ -389,22 +371,37 @@ export class PlantingComponent implements OnInit{
        () => console.log('getTerminationReasons complete'));
 
   }
+  onCrewSelect(event:any){
+  this.subcrewlist = this.dropdwonTransformService.transform(this.allSubCrewlist.filter(x => x.CrewID === event.value && x.IsActive == true), 'SubCrewName', 'SubCrewID');
+ 
+  }
+  onSubCrewSelect(event:any){
+    this.employeeNameToBeDisplayedOnDropdown="--Select--"
+    let skillListApiDetails;
+    skillListApiDetails = {
+      TaskTypeId:Number(this.TaskModel.task),
+      CrewId:event.value,
+      SkillList:[]
+    };
+    skillListApiDetails.SkillList.push({SkillID:this.PLANTING.value.skills})
+    this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
+    .subscribe(data => {
+      this.headings = data.Table,
+      this.skilledempslist = data.Table1,
+      this.allemplist =data.Table2 ? data.Table2 : []
+      this.globalData
+      this.empfilterBasedOnSkill()
+    });
+  }
   onSkillsSelect(event:any){
     this.employeeNameToBeDisplayedOnDropdown="--Select--"
 let skillListApiDetails;
 skillListApiDetails = {
   TaskTypeId:Number(this.TaskModel.task),
-
+  CrewId:this.PLANTING.value.subcrew,
   SkillList:[]
 };
 skillListApiDetails.SkillList.push({SkillID:event.value})
-// for(let j of this.PLANTING.value.skills){
-      
-//   skillListApiDetails.SkillList.push({
-//     SkillID: j,
-   
-//   })
-// };
 this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
 .subscribe(data => {
   this.headings = data.Table,
@@ -665,6 +662,24 @@ completeTask(formModel){
     } else {
       this.showPastDateLabel = false;
     }
+  }
+
+  getCrewList(){
+    this.ptrActionService.getAllSubCrewList().subscribe(data=>{
+      if(data!="No Data Found"){
+        this.allSubCrewlist=data.Table;
+        this.crewlist = this.dropdwonTransformService.transform(this.allSubCrewlist, 'CrewName', 'CrewID', '-- Select --',false);
+        const crewfilter = Array.from(this.allSubCrewlist.reduce((m, t) => m.set(t.CrewName, t), new Map()).values())
+        this.filteredCrewList = this.dropdwonTransformService.transform(crewfilter,'CrewName', 'CrewID', '-- Select --',false)
+       
+      }
+      else{
+        this.allSubCrewlist=[];
+      }
+      this.loaderService.display(false);
+    },
+    error => { console.log(error); this.loaderService.display(false); },
+    () => console.log('GetAllCrewListbyClient complete'));
   }
   getSkills(){
     let TaskTypeId = this.ParentFormGroup != undefined?
