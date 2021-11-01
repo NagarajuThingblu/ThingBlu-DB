@@ -1697,9 +1697,9 @@ export class TubingComponent implements OnInit, OnDestroy {
 
                   setTimeout( () => {
                     if (this._cookieService.UserRole === this.userRoles.Manager) {
-                      this.router.navigate(['home/dashboard/managerdashboard']);
+                      this.router.navigate(['home/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/dashboard/empdashboard']);
+                      this.router.navigate(['home/empdashboard']);
                     }
                   }, 2000);
                 } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
@@ -1722,15 +1722,15 @@ export class TubingComponent implements OnInit, OnDestroy {
 
                     // for navigate joint dashboard if employee assign task :: 20-Mar-2019 :: swapnil
                   if (this._cookieService.UserRole === this.userRoles.Manager) {
-                          this.router.navigate(['home/dashboard/jointsproductiondashboard']);
+                          this.router.navigate(['home/jointsproductiondashboard']);
                         } else {
                           // if employee assign task to self then redirect to joint dashboard else employee dashboard
                           if (this.assignRole.length !== 0) {
                           if (this.assignRole[0].RoleName === 'Employee') {
-                            this.router.navigate(['home/dashboard/jointsproductiondashboard']);
+                            this.router.navigate(['home/jointsproductiondashboard']);
                           }
                          } else {
-                          this.router.navigate(['home/dashboard/empdashboard']);  }
+                          this.router.navigate(['home/empdashboard']);  }
                         }
                   }, 2000);
                 }
@@ -1935,9 +1935,9 @@ export class TubingComponent implements OnInit, OnDestroy {
 
                   setTimeout( () => {
                     if (this._cookieService.UserRole === this.userRoles.Manager) {
-                      this.router.navigate(['home/dashboard/managerdashboard']);
+                      this.router.navigate(['home/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/dashboard/empdashboard']);
+                      this.router.navigate(['home/empdashboard']);
                     }
                   }, 2000);
                 } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
@@ -1954,9 +1954,9 @@ export class TubingComponent implements OnInit, OnDestroy {
 
                   setTimeout( () => {
                    if (this._cookieService.UserRole === this.userRoles.Manager) {
-                      this.router.navigate(['home/dashboard/managerdashboard']);
+                      this.router.navigate(['home/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/dashboard/empdashboard']);
+                      this.router.navigate(['home/empdashboard']);
                     }
 
                   }, 2000);

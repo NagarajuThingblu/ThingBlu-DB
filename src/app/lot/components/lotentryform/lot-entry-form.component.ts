@@ -681,7 +681,7 @@ export class LotEntryFormComponent implements OnInit {
     this.appCommonService.lotPageBackLink = true;
     this.appCommonService.shortageoverage = this.lotDetails.shortageoverage;
     this.appCommonService.costoflot = this.lotDetails.costoflot;
-    this.router.navigate(['../master/grower']);
+    this.router.navigate(['../grower']);
   }
 
   viewStrainList() {
@@ -690,7 +690,7 @@ export class LotEntryFormComponent implements OnInit {
     this.appCommonService.lotPageBackLink = true;
     this.appCommonService.shortageoverage = this.lotDetails.shortageoverage;
     this.appCommonService.costoflot = this.lotDetails.costoflot;
-    this.router.navigate(['../home/master/strainmaster']);
+    this.router.navigate(['../home/strainmaster']);
    // this.router.navigate([]).then(result => {  window.open('../home/strainmaster', '_blank'); });
   }
 
@@ -729,7 +729,7 @@ export class LotEntryFormComponent implements OnInit {
   // Redirect to grower page
   addGrower() {
     this.appCommonService.LotBackLink = true;
-    this.router.navigate(['../home/master/grower']);
+    this.router.navigate(['../home/grower']);
   }
 
   canDeactivate(): Promise<boolean> | boolean {

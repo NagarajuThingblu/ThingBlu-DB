@@ -479,10 +479,10 @@ submitReview(formModel) {
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
           setTimeout( () => {
             if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-              this.router.navigate(['home/dashboard/managerdashboard']);
+              this.router.navigate(['home/managerdashboard']);
             }
             else {
-              this.router.navigate(['home/dashboard/empdashboard']);
+              this.router.navigate(['home/empdashboard']);
             }
           }, 1000);
         }
@@ -524,9 +524,9 @@ submitReview(formModel) {
           detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
            setTimeout( () => {
                       if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                        this.router.navigate(['home/dashboard/managerdashboard']);
+                        this.router.navigate(['home/managerdashboard']);
                       } else {
-                        this.router.navigate(['home/dashboard/empdashboard']);
+                        this.router.navigate(['home/empdashboard']);
                       }
                     }, 1000);
         }
@@ -579,9 +579,9 @@ completeTask(formModel){
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskActionCannotPerformC });
           setTimeout( () => {
             if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin ) {
-              this.router.navigate(['home/dashboard/managerdashboard']);
+              this.router.navigate(['home/managerdashboard']);
             } else {
-              this.router.navigate(['home/dashboard/empdashboard']);
+              this.router.navigate(['home/empdashboard']);
             }
           }, 1000);
         }
@@ -622,9 +622,9 @@ completeTask(formModel){
                     detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
                     setTimeout( () => {
                       if (this._cookieService.UserRole === this.userRoles.Manager||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                        this.router.navigate(['home/dashboard/managerdashboard']);
+                        this.router.navigate(['home/managerdashboard']);
                       } else {
-                        this.router.navigate(['home/dashboard/empdashboard']);
+                        this.router.navigate(['home/empdashboard']);
                       }
                     }, 1000);
         }

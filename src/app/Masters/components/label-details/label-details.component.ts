@@ -49,6 +49,6 @@ export class LabelDetailsComponent implements OnInit {
        () => console.log('Get Complete Data'));
   }
   backToLabelsPge(){
-    this.router.navigate(['../home/master/labels']);
+    this.router.navigate(['../home/labels']);
   }
 }

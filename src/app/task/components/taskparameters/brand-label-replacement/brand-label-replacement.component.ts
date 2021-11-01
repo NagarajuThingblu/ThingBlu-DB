@@ -814,9 +814,9 @@ submitCompleteParameter(formModel) {
 
               setTimeout(() => {
                 if (this._cookieService.UserRole === this.userRoles.Manager) {
-                  this.router.navigate(['home/dashboard/managerdashboard']);
+                  this.router.navigate(['home/managerdashboard']);
                 } else {
-                  this.router.navigate(['home/dashboard/empdashboard']);
+                  this.router.navigate(['home/empdashboard']);
                 }
 
                 this.loaderService.display(false);
@@ -839,9 +839,9 @@ submitCompleteParameter(formModel) {
 
               setTimeout(() => {
                 if (this._cookieService.UserRole === this.userRoles.Manager) {
-                  this.router.navigate(['home/dashboard/managerdashboard']);
+                  this.router.navigate(['home/managerdashboard']);
                 } else {
-                  this.router.navigate(['home/dashboard/empdashboard']);
+                  this.router.navigate(['home/empdashboard']);
                 }
 
                 this.loaderService.display(false);

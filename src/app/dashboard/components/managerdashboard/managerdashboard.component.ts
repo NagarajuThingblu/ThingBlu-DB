@@ -516,7 +516,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
 
 onRowSelect(e) {
   if (!this.display) {
-    this.router.navigate(['../home/task/taskaction', e.TaskTypeKey, e.TaskId]);
+    this.router.navigate(['../home/taskaction', e.TaskTypeKey, e.TaskId]);
   // this.chooseRow = true
   // if((this.chooseRow && this.chooseCheckBox) === true){
     }

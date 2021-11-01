@@ -339,7 +339,7 @@ export class NewPackageTypeFormComponent implements OnInit {
       this.router.navigate(['../home/addtpppackagetype']);
         }
     if (this.appCommonService.ProductTypeBackLink) {
-        this.router.navigate(['../home/master/newproducttype']);
+        this.router.navigate(['../home/newproducttype']);
         }
   }
 }

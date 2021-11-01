@@ -244,7 +244,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
    
   }
   backToEmpPage() {
-    this.router.navigate(['../home/master/addemployee']);
+    this.router.navigate(['../home/addemployee']);
   }
 
   //save skillset

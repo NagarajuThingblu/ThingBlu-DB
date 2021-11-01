@@ -1932,9 +1932,9 @@ else{
             this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
             setTimeout( () => {
               if (this._cookieService.UserRole === this.userRoles.Manager) {
-                this.router.navigate(['home/dashboard/managerdashboard']);
+                this.router.navigate(['home/managerdashboard']);
               } else {
-                this.router.navigate(['home/dashboard/empdashboard']);
+                this.router.navigate(['home/empdashboard']);
               }
             }, 1000);
           }
@@ -2199,9 +2199,9 @@ else{
 
                   setTimeout(() => {
                     if (this._cookieService.UserRole === this.userRoles.Manager) {
-                      this.router.navigate(['dashboard/managerdashboard']);
+                      this.router.navigate(['home/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/dashboard/empdashboard']);
+                      this.router.navigate(['home/empdashboard']);
                     }
                   }, 1000);
                 } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
@@ -2220,9 +2220,9 @@ else{
 
                   setTimeout(() => {
                     if (this._cookieService.UserRole === this.userRoles.Manager) {
-                      this.router.navigate(['home/dashboard/managerdashboard']);
+                      this.router.navigate(['home/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/dashboard/empdashboard']);
+                      this.router.navigate(['home/empdashboard']);
                     }
                   }, 1000);
                 } else {
@@ -2337,9 +2337,9 @@ else{
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg, detail: this.assignTaskResources.taskcompleteddetailssavesuccess });
           setTimeout( () => {
             if (this._cookieService.UserRole === this.userRoles.Manager) {
-              this.router.navigate(['home/dashboard/managerdashboard']);
+              this.router.navigate(['home/managerdashboard']);
             } else {
-              this.router.navigate(['home/dashboard/empdashboard']);
+              this.router.navigate(['home/empdashboard']);
             }
           }, 1000);
         }
@@ -2590,7 +2590,7 @@ else{
                   }
 
                   setTimeout(() => {
-                    this.router.navigate(['home/task/taskaction', this.taskType, this.taskId]);
+                    this.router.navigate(['home/taskaction', this.taskType, this.taskId]);
                   }, 1000);
 
                 } else if (String(data).toLocaleUpperCase() === 'DELETED') {
@@ -2599,9 +2599,9 @@ else{
 
                   setTimeout(() => {
                     if (this._cookieService.UserRole === this.userRoles.Manager) {
-                      this.router.navigate(['home/dashboard/managerdashboard']);
+                      this.router.navigate(['home/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/dashboard/empdashboard']);
+                      this.router.navigate(['home/empdashboard']);
                     }
                   }, 1000);
                 } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
@@ -2620,9 +2620,9 @@ else{
 
                   setTimeout(() => {
                     if (this._cookieService.UserRole === this.userRoles.Manager) {
-                      this.router.navigate(['home/dashboard/managerdashboard']);
+                      this.router.navigate(['home/managerdashboard']);
                     } else {
-                      this.router.navigate(['home/dashboard/empdashboard']);
+                      this.router.navigate(['home/empdashboard']);
                     }
                   }, 1000);
                 } else {

@@ -354,6 +354,6 @@ export class AddNewBrandFormComponent implements OnInit {
 
   // Link changes
   backPackageType() {
-    this.router.navigate(['../home/master/newproducttype']);
+    this.router.navigate(['../home/newproducttype']);
   }
 }

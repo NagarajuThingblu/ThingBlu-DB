@@ -1820,9 +1820,9 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
 
                 setTimeout( () => {
                   if (this._cookieService.UserRole === this.userRoles.Manager) {
-                    this.router.navigate(['home/dashboard/managerdashboard']);
+                    this.router.navigate(['home/managerdashboard']);
                   } else {
-                    this.router.navigate(['home/dashboard/empdashboard']);
+                    this.router.navigate(['home/empdashboard']);
                   }
                 }, 2000);
               } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
@@ -1839,9 +1839,9 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
 
                 setTimeout( () => {
                   if (this._cookieService.UserRole === this.userRoles.Manager) {
-                    this.router.navigate(['home/dashboard/managerdashboard']);
+                    this.router.navigate(['home/managerdashboard']);
                   } else {
-                    this.router.navigate(['home/dashboard/empdashboard']);
+                    this.router.navigate(['home/empdashboard']);
                   }
                 }, 2000);
               } else {
@@ -2130,9 +2130,9 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
 
                 setTimeout( () => {
                   if (this._cookieService.UserRole === this.userRoles.Manager) {
-                    this.router.navigate(['home/dashboard/managerdashboard']);
+                    this.router.navigate(['home/managerdashboard']);
                   } else {
-                    this.router.navigate(['home/dashboard/empdashboard']);
+                    this.router.navigate(['home/empdashboard']);
                   }
                 }, 2000);
               } else if (String(data).toLocaleUpperCase() === 'FAILURE') {
@@ -2149,9 +2149,9 @@ export class OilPackagingComponent implements OnInit, OnDestroy {
 
                 setTimeout( () => {
                   if (this._cookieService.UserRole === this.userRoles.Manager) {
-                    this.router.navigate(['home/dashboard/managerdashboard']);
+                    this.router.navigate(['home/managerdashboard']);
                   } else {
-                    this.router.navigate(['home/dashboard/empdashboard']);
+                    this.router.navigate(['home/empdashboard']);
                   }
                 }, 2000);
               } else {

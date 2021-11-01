@@ -228,10 +228,10 @@ import { Table } from 'primeng/table';
 
   back(e){
     if(e.TaskTypeKey!= null){
-      this.router.navigate(['home/task/taskaction/', e.TaskTypeKey, e.TaskId]);
+      this.router.navigate(['home/taskaction/', e.TaskTypeKey, e.TaskId]);
     }
     else{
-      this.router.navigate(['home/master/addrawmaterial']);
+      this.router.navigate(['home/addrawmaterial']);
     }
   }
 createItem(): FormGroup {
@@ -1015,7 +1015,7 @@ for( let m of this.LabelOnEditSectionandField){
 
 
   showLabelDetails(label){
-    this.router.navigate(['../home/master/sectionsMergeinfo', label]);
+    this.router.navigate(['../home/sectionsMergeinfo', label]);
   }
 
   // filetrFields(event: any){

@@ -606,10 +606,10 @@ activateDeleteSection(SectionId, section, IsDeleted, ActiveInactiveFlag){
 }
 
 showTerminationReasonPopup(section){
-  this.router.navigate(['../home/master/taskupdate', section]);
+  this.router.navigate(['../home/taskupdate', section]);
 }
 showSectionDetails(section){
-  this.router.navigate(['../home/master/infoofsection', section]);
+  this.router.navigate(['../home/infoofsection', section]);
 }
 getAllTerminationReasons(){
   this.ptrActionService.GetAllPTRListByClient().subscribe(

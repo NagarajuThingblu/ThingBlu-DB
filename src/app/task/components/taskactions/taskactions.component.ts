@@ -155,9 +155,9 @@ export class TaskactionsComponent implements OnInit {
 
           setTimeout( () => {
             if (this._cookieService.UserRole === this.userRoles.Manager) {
-              this.router.navigate(['home/dashboard/managerdashboard']);
+              this.router.navigate(['home/managerdashboard']);
             } else {
-              this.router.navigate(['home/dashboard/empdashboard']);
+              this.router.navigate(['home/empdashboard']);
             }
           }, 2000);
           return;
@@ -311,7 +311,7 @@ export class TaskactionsComponent implements OnInit {
             }
   
             setTimeout( () => {
-              this.router.navigate(['home/task/taskaction', this.taskType, this.taskid]);
+              this.router.navigate(['home/taskaction', this.taskType, this.taskid]);
             }, 2000);
   
           } else if (data === 'Deleted') {
@@ -323,9 +323,9 @@ export class TaskactionsComponent implements OnInit {
   
             setTimeout( () => {
               if (this._cookieService.UserRole === this.userRoles.Manager) {
-                this.router.navigate(['home/dashboard/managerdashboard']);
+                this.router.navigate(['home/managerdashboard']);
               } else {
-                this.router.navigate(['home/dashboard/empdashboard']);
+                this.router.navigate(['home/empdashboard']);
               }
             }, 2000);
           } else if (flag === 'Pause') {
@@ -388,7 +388,7 @@ export class TaskactionsComponent implements OnInit {
               this.taskActionDetails.TaskStatus = this.TaskStatus.InProcess;
 
               setTimeout( () => {
-                this.router.navigate(['home/task/taskaction', this.taskType, this.taskid]);
+                this.router.navigate(['home/taskaction', this.taskType, this.taskid]);
               }, 2000);
             } else if (data === 'LOTTRIMCOMPLETED') {
               this.msgs = [];
@@ -399,9 +399,9 @@ export class TaskactionsComponent implements OnInit {
 
               setTimeout( () => {
                 if (this._cookieService.UserRole === this.userRoles.Manager) {
-                  this.router.navigate(['home/dashboard/managerdashboard']);
+                  this.router.navigate(['home/managerdashboard']);
                 } else {
-                  this.router.navigate(['home/dashboard/empdashboard']);
+                  this.router.navigate(['home/empdashboard']);
                 }
               }, 2000);
             } else if (data === 'Success'){
@@ -450,7 +450,7 @@ export class TaskactionsComponent implements OnInit {
           }
 
           setTimeout( () => {
-            this.router.navigate(['home/task/taskaction', this.taskType, this.taskid]);
+            this.router.navigate(['home/taskaction', this.taskType, this.taskid]);
           }, 2000);
 
         } else if (data === 'Deleted') {
@@ -462,9 +462,9 @@ export class TaskactionsComponent implements OnInit {
 
           setTimeout( () => {
             if (this._cookieService.UserRole === this.userRoles.Manager) {
-              this.router.navigate(['home/dashboard/managerdashboard']);
+              this.router.navigate(['home/managerdashboard']);
             } else {
-              this.router.navigate(['home/dashboard/empdashboard']);
+              this.router.navigate(['home/empdashboard']);
             }
           }, 2000);
         } else if (flag === 'Pause') {
@@ -517,7 +517,7 @@ export class TaskactionsComponent implements OnInit {
         this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
         detail:"Record Updated Successfully"});
         setTimeout( () => {
-          this.router.navigate(['home/dashboard/managerdashboard']);
+          this.router.navigate(['home/managerdashboard']);
         }, 2000);
         // this.router.navigate(['home/managerdashboard']);
       }
@@ -535,7 +535,7 @@ export class TaskactionsComponent implements OnInit {
         this.msgs = [];
         this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
         detail:"Record Updated Successfully"});
-        this.router.navigate(['home/dashboard/managerdashboard']);
+        this.router.navigate(['home/managerdashboard']);
       }
     })
   }
@@ -558,7 +558,7 @@ export class TaskactionsComponent implements OnInit {
           this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
             detail: this.taskActionResource.lottrimcompletedmsgForEdit });
         } else {
-          this.router.navigate(['home/task/assigntask', this.taskid]);
+          this.router.navigate(['home/assigntask', this.taskid]);
           return;
         }
         // setTimeout( () => {
@@ -614,9 +614,9 @@ export class TaskactionsComponent implements OnInit {
 
             setTimeout( () => {
               if (this._cookieService.UserRole === this.userRoles.Manager) {
-                this.router.navigate(['home/dashboard/managerdashboard']);
+                this.router.navigate(['home/managerdashboard']);
               } else {
-                this.router.navigate(['home/dashboard/empdashboard']);
+                this.router.navigate(['home/empdashboard']);
               }
               this.loaderService.display(false);
             }, 2000);
@@ -635,9 +635,9 @@ export class TaskactionsComponent implements OnInit {
   // Added by Devdan :: 20-Nov-2018 :: Back button redirect to dashboard
   backToDashboard() {
     if (this._cookieService.UserRole === this.userRoles.Manager) {
-      this.router.navigate(['home/dashboard/managerdashboard']);
+      this.router.navigate(['home/managerdashboard']);
     } else {
-      this.router.navigate(['home/dashboard/empdashboard']);
+      this.router.navigate(['home/empdashboard']);
     }
   }
 

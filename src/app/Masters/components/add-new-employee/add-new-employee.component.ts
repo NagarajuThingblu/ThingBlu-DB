@@ -1077,7 +1077,7 @@ getCityOnStateChange() {
     NavigateToSkillsPage(){
       this.appCommonService.skillFormDetail = this.newEmployeeForm;
       this.appCommonService.employeePageBackLink = true;
-      this.router.navigate(['../home/master/skills']);
+      this.router.navigate(['../home/skills']);
     }
     showSkills(event: any){
       if(this.visibility === true){
