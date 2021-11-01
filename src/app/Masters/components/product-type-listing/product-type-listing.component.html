@@ -24,7 +24,7 @@
               <tr>
                   <th *ngIf="taskCategoryType != 'GROWING'" [pSortableColumn]="'BrandName'">{{ newProductTypeResources.brand}} <p-sortIcon [field]="'BrandName'"></p-sortIcon></th>
                   <th *ngIf="taskCategoryType != 'GROWING'" [pSortableColumn]="'SubBrandName'">{{ newProductTypeResources.subbrand}} <p-sortIcon [field]="'SubBrandName'"></p-sortIcon></th>                  
-                  <th [pSortableColumn]="'StrainName'">{{ newProductTypeResources.strain}} <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>              
+                  <th [pSortableColumn]="'StrainName'">Cultivar<p-sortIcon [field]="'StrainName'"></p-sortIcon></th>              
                   <th [pSortableColumn]="'SkewKeyName'">{{ newProductTypeResources.skewtype}} <p-sortIcon [field]="'SkewKeyName'"></p-sortIcon></th> 
                   <th *ngIf="taskCategoryType === 'GROWING'" [pSortableColumn]="'TrimmingMethod'">Trimming Method<p-sortIcon [field]="'TrimmingMethod'"></p-sortIcon></th>
                   <th *ngIf="taskCategoryType === 'GROWING'" [pSortableColumn]="'IsLD'">Light Dept<p-sortIcon [field]="'IsLD'"></p-sortIcon></th>  
@@ -80,7 +80,7 @@
               <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
                   <td *ngIf="taskCategoryType != 'GROWING'">{{newproducttype?.BrandName}}</td>
                   <td *ngIf="taskCategoryType != 'GROWING'">{{newproducttype?.SubBrandName}}</td>
-                  <td><span class="ui-column-title">{{ newProductTypeResources.strain}}</span>{{newproducttype?.StrainName }}</td>
+                  <td><span class="ui-column-title">Cultivar</span>{{newproducttype?.StrainName }}</td>
                   <td><span class="ui-column-title">{{ newProductTypeResources.skewtype}} </span>{{newproducttype?.SkewKeyName }}</td>  
                   <td *ngIf="taskCategoryType === 'GROWING'"><span class="ui-column-title">Trimming Method</span>{{newproducttype?.TrimmingMethod }}</td>   
                   <td *ngIf="taskCategoryType === 'GROWING'"><span class="ui-column-title">Light Dept</span>{{newproducttype?.IsLD }}</td>                

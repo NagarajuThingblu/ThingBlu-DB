@@ -39,7 +39,7 @@ export class DashboardResource {
                     title: 'Labeling Task',
                     lblAvailableTask: 'Available Tasks',
                     lblUpcomingTask: 'Upcoming Tasks',
-                    lblStrain: 'Strain',
+                    lblStrain: 'Cultivar',
                     lblPkgSize: 'Package Size',
                     lblSize: 'Size',
                     lblOrder: 'Order #',
@@ -53,7 +53,7 @@ export class DashboardResource {
                     unitGrams: 'g',
                     requiredQty: 'Required Qty.',
                     availMaterial: 'Available Material',
-                    lblAvailableStrains: 'Available Strains',
+                    lblAvailableStrains: 'Available Cultivar',
                     lblUnits: 'units',
                     lblPreroll: 'pre-roll'
                 },
