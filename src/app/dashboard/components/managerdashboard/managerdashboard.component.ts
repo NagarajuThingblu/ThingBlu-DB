@@ -43,6 +43,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
   public assignedTasks: any;
   public inProcessTasks: any;
   public  display = false;
+  public showStrainAndSectionDetails:boolean= false;
   public pausedTasks: any;
   public completedTasks: any;
   assignedTasksevent: any;
@@ -50,7 +51,9 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
   pausedTasksevent: any;
   public showButton: boolean = false;
   tasklotDetails: any;
+  taskStrainDetails:any;
   public tasklotDetailsBytaskId: any;
+  public taskStrainDetailsBytaskId: any;
   completetasklotDetails: any;
   reviewPendingTasksevent: any;
   completedTasksevent: any;
@@ -220,6 +223,7 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
       data => {
         // this.tasks = data;
        if (data !== 'No data found!') {
+         this.taskStrainDetails = data.Table2;
          this.tasklotDetails = data.Table1.filter(Result =>  String(Result.TaskStatus).toLocaleUpperCase() !== this.taskStatus.Completed);
          this.completetasklotDetails = data.Table1.filter(Result =>  String(Result.TaskStatus).toLocaleUpperCase() === this.taskStatus.Completed);
          if (TaskTypeId) {
@@ -512,6 +516,14 @@ export class ManagerdashboardComponent implements OnInit , OnDestroy {
     this.display = true;
     // event.stopPropagation();
     //  return;
+  }
+  showDialogForSectionAndStrainDetails(TaskId, TaskStatus){
+  
+    this.showStrainAndSectionDetails = false;
+      this.taskStrainDetailsBytaskId = this.taskStrainDetails.filter(Result => Result.Taskid === TaskId);
+ 
+
+    this.showStrainAndSectionDetails = true;
   }
 
 onRowSelect(e) {

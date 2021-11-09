@@ -13,6 +13,8 @@ import { AddGeneticsActionService } from '../../../task/services/add-genetics-ac
 import { GeneticsService } from '../../services/genetics.service';
 import { AppConstants } from '../../../shared/models/app.constants';
 import { Router } from '@angular/router';
+import { DropdownValuesService } from '../../../shared/services/dropdown-values.service';
+import { DropdwonTransformService } from '../../../shared/services/dropdown-transform.service';
 
 @Component({
   selector: 'app-genetics-master',
@@ -40,7 +42,12 @@ export class GeneticsMasterComponent implements OnInit {
       straintype: null,
       description: null
     };
-
+    straintypes: any[];
+    newStrainTypes: any[];
+    private globalData = {
+      straintypes: [],
+ 
+    };
     // public StrainTypeInfo: any = {
     //   StrainTypeName: null
     // };
@@ -51,6 +58,8 @@ export class GeneticsMasterComponent implements OnInit {
   constructor(  private fb: FormBuilder,
     private loaderService: LoaderService,
     private cookieService: CookieService,
+    private dropdownDataService: DropdownValuesService, 
+    private dropdwonTransformService: DropdwonTransformService,
     private appComponentData: AppComponent,
     private geneticsService: GeneticsService,
     // tslint:disable-next-line:no-shadowed-variable
@@ -62,18 +71,19 @@ export class GeneticsMasterComponent implements OnInit {
   ngOnInit() {
     this.backUrl = this.appCommonService.strainPageBackLink;
     this.chkIsActive = 1;
-    this.pageHeader = 'Add New Binomial Name';
-    this.appComponentData.setTitle('Binomial Name');
+    this.pageHeader = 'Add New Species';
+    this.appComponentData.setTitle('Species');
     this.newStrainTypeResources = MastersResource.getResources().en.addnewstraintype;
     this.newGeneticsResources = MastersResource.getResources().en.addnewgenetics;
     this.globalResource = GlobalResources.getResources().en;
     this.loaderService.display(false);
     this._cookieService = this.appCommonService.getUserProfile();
     this.getGeneticsDetails();
-
+    this.getAllStrainsType();
 
   // New StrainType form defination(reactive form)
   this.geneticsMasterForm = this.fb.group({
+    'cultivartype':new FormControl(null, [Validators.required]),
     'genetics': new FormControl(null, [Validators.required, Validators.minLength(1), Validators.maxLength(50)]),
     'description': new FormControl(null, [Validators.maxLength(500)]),
     'chkIsActive': new FormControl(null)
@@ -84,7 +94,7 @@ export class GeneticsMasterComponent implements OnInit {
     this.geneticsForUpdate = 0;
     this.saveButtonText = 'Save';
     this.clear = 'Clear';
-    this.pageHeader = 'Add New Binomial Name';
+    this.pageHeader = 'Add New Species';
     this.resetForm();
   }
 
@@ -99,6 +109,17 @@ export class GeneticsMasterComponent implements OnInit {
   onPageChange(e) {
     this.event = e;
   }
+  getAllStrainsType() {
+    this.dropdownDataService.getStrainType().subscribe(
+      data => {
+        this.globalData.straintypes = data;
+        this.newStrainTypes = this.dropdwonTransformService.transform(data, 'StrainTypeName', 'StrainTypeId', '-- Select --');
+        this.straintypes = this.dropdwonTransformService.transform(data, 'StrainTypeName', 'StrainTypeId', '-- Select --');
+        // this.straintypes = this.newStrainTypes;
+      } ,
+      error => { console.log(error); },
+      () => console.log('Get all strains types complete'));
+  }
   onSubmit(formModel) {
     if (String(this.geneticsMasterForm.value.genetics).trim().length === 0) {
       this.geneticsMasterForm.controls['genetics'].setErrors({'whitespace': true});
@@ -108,11 +129,15 @@ export class GeneticsMasterComponent implements OnInit {
     const geneticsDetailsForApi = {
       Genetics: {
         GeneticsId: this.geneticsForUpdate,
+        GeneticsCode:0,
         GeneticsName: this.appCommonService.trimString(this.geneticsMasterForm.value.genetics),
         Description: this.appCommonService.trimString(this.geneticsMasterForm.value.description),
         VirtualRoleId: this._cookieService.VirtualRoleId,
+        IsDeleted: 0,
+        ActiveInactive:0,
         IsActive: this.geneticsMasterForm.value.chkIsActive ? 1 : 0,
-        ClientId: this._cookieService.ClientId
+        ClientId: this._cookieService.ClientId,
+        StrainTypeId:  this.geneticsMasterForm.value.cultivartype
       }
     };
     // console.log(geneticsDetailsForApi);
@@ -124,12 +149,17 @@ export class GeneticsMasterComponent implements OnInit {
           data => {
             // console.log(data);
             this.msgs = [];
-            if (data[0]['Result'] === 'Success') {
+            if (data[0]['Result'] === 'Success' &&  this.geneticsForUpdate === 0) {
               this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
               detail: this.newGeneticsResources.newGeneticsSavedSuccess });
               this.resetAll();
               this.getGeneticsDetails();
-            } else if (data === 'Failure') {
+            }else    if (data[0]['Result'] === 'Success' &&  this.geneticsForUpdate != 0) {
+              this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+              detail: "Species Updated Successfully" });
+              this.resetAll();
+              this.getGeneticsDetails();
+            }else if (data === 'Failure') {
               this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail:
               this.globalResource.serverError });
             } else if (data === 'Duplicate') {
@@ -157,6 +187,7 @@ export class GeneticsMasterComponent implements OnInit {
   }
 
   getGeneticsDetails() {
+    //this.allGeneticsList = [];
     this.loaderService.display(true);
     this.geneticsService.getGeneticsDetails().subscribe(
       data => {
@@ -164,7 +195,7 @@ export class GeneticsMasterComponent implements OnInit {
        if (data !== 'No data found!') {
 
           this.allGeneticsList = data;
-        
+          this.allGeneticsList =data.filter(x => x.GeneticId != 0);
           this.paginationValues = AppConstants.getPaginationOptions;
           if (this.allGeneticsList.length > 20) {
             this.paginationValues[AppConstants.getPaginationOptions.length] = this.allGeneticsList.length;
@@ -176,11 +207,11 @@ export class GeneticsMasterComponent implements OnInit {
        this.loaderService.display(false);
       } ,
       error => { console.log(error);  this.loaderService.display(false); },
-      () => console.log('GetBinomialNameDetails complete'));
+      () => console.log('GetGeneticsDetails complete'));
   }
 
   getGeneticsOnEdit(geneticsId) {
-    this.pageHeader = 'Edit Binomial Name';
+    this.pageHeader = 'Edit Species';
     this.clear = 'Cancel';
     // this.NewStrainTypeActionService.GetStrainTypeDetailByStrainTypeId(StrainTypeId).subscribe(
 
@@ -188,10 +219,11 @@ export class GeneticsMasterComponent implements OnInit {
       //  console.log(data);
        if (data !== 'No data found!') {
          this.geneticsForUpdate = geneticsId;
+         const cultivar = this.geneticsMasterForm.controls['cultivartype'];
          const genetics = this.geneticsMasterForm.controls['genetics'];
          const description = this.geneticsMasterForm.controls['description'];
          const chkIsActive = this.geneticsMasterForm.controls['chkIsActive'];
-
+         cultivar.patchValue(data[0].StrainTypeID);
          genetics.patchValue(data[0].GeneticsName);
           description.patchValue(data[0].Description);
           chkIsActive.patchValue(data[0].IsActive);
@@ -204,7 +236,7 @@ export class GeneticsMasterComponent implements OnInit {
 
  showConformationMessaegForDelete(strainTypeId, strainType, isDeleted, activateInactivateKey) {
       let strMessage: any;
-      strMessage = 'Do you want to delete the Binomial Name?';
+      strMessage = 'Do you want to delete the Species?';
       this.confirmationService.confirm({
         message: strMessage,
         header: 'Confirmation',
@@ -224,12 +256,15 @@ export class GeneticsMasterComponent implements OnInit {
       const geneticsDetailsForApi = {
         Genetics: {
           GeneticsId: GeneticsId,
-          GeneticsName: this.appCommonService.trimString(this.geneticsMasterForm.value.genetics),
-          Description: this.appCommonService.trimString(this.geneticsMasterForm.value.description),
+          GeneticsCode:0,
+          GeneticsName: Genetics.GeneticsName,
+          Description: Genetics.Description,
           VirtualRoleId: this._cookieService.VirtualRoleId,
           IsDeleted: IsDeleted,
-          IsActive: Genetics.IsActive,
-          ActiveInactive: ActivateInactivateKey
+          ClientId: this._cookieService.ClientId,
+          IsActive: Genetics.IsActive === true?1:0,
+          ActiveInactive: ActivateInactivateKey,
+          StrainTypeId:Genetics.StrainTypeID
         }
       };
 
@@ -302,9 +337,9 @@ export class GeneticsMasterComponent implements OnInit {
     showConformationMessaegForDeactive(geneticsId, genetics, rowIndex, isDeleted: number, activeAction: number) {
       let strMessage: any;
       if (genetics.IsActive === true) {
-        strMessage = 'Do you want to activate Binomial Name?';
+        strMessage = 'Do you want to activate Species?';
       } else {
-        strMessage = 'Do you want to inactivate Binomial Name? Strain associated with this Binomial Name will also be inactivated.';
+        strMessage = 'Do you want to inactivate Species? Cultivar associated with this Species will also be inactivated.';
       }
 
       this.confirmationService.confirm({

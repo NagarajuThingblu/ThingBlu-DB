@@ -13,6 +13,7 @@ import { ConfirmationService } from 'primeng/api';
 import { AppComponent } from '../../../app.component';
 import { AppConstants } from '../../../shared/models/app.constants';
 import { Router } from '@angular/router';
+import { GeneticsService } from '../../services/genetics.service';
 
 @Component({
   moduleId: module.id,
@@ -39,6 +40,8 @@ export class StrainMasterComponent implements OnInit {
   clear: any;
   public event: any;
   paginationValues: any;
+  public cultivarBasedBinomialNamesData: any;
+  public cultivartypes: any;
     // all form fiels model object
     newStrainDetails = {
       straintype: null,
@@ -75,6 +78,7 @@ export class StrainMasterComponent implements OnInit {
     private dropdwonTransformService: DropdwonTransformService,
     private strainMasterAppService: StrainMasterService,
     private confirmationService: ConfirmationService,
+    private geneticsService: GeneticsService,
     private appComponentData: AppComponent,
     private appCommonService: AppCommonService,
     private router: Router
@@ -90,7 +94,7 @@ export class StrainMasterComponent implements OnInit {
       this.strainmasterForm = this.fb.group({
         'straintype': new FormControl(null, Validators.required),
         'genetics': new FormControl(null),
-        'straincode':new FormControl(null, Validators.required),
+        'straincode':new FormControl(null),
         'strain': new FormControl(null, [Validators.required, Validators.maxLength(50)]),
         'description': new FormControl(null),
         // 'thc': new FormControl(null, [Validators.required, Validators.maxLength(5)]),
@@ -106,12 +110,13 @@ export class StrainMasterComponent implements OnInit {
       this.loaderService.display(false);
       this._cookieService = this.appCommonService.getUserProfile();
       this.getAllStrainsType();
-      this.getAllGenetics();
+     // this.getAllGenetics();
       this.getAllStrainsbyClient();
+      this.getGeneticsDetails();
       this.saveButtonText = 'Save';
       this.pageheading = 'Add New Cultivar';
       this.clear = 'Clear';
-      this.appComponentData.setTitle('Cultivar');
+      this.appComponentData.setTitle('Strain');
       this.chkIsActive = true;
       this.strainTypeDisabled = false;
       this.geneticsDisabled = false;
@@ -136,7 +141,31 @@ export class StrainMasterComponent implements OnInit {
         chkIsActive: 1
       };
     }
-
+    getGeneticsDetails() {
+      this.loaderService.display(true);
+      this.geneticsService.getGeneticsDetails().subscribe(
+        data => {
+        //  console.log(data);
+         if (data !== 'No data found!') {
+          //  this.allGeneticsList = data;
+          this.cultivarBasedBinomialNamesData = data;
+            this.cultivartypes = this.dropdwonTransformService.transform(data, 'StrainTypeName', 'StrainTypeID', '-- Select --');
+            const cultivartypesfilter = Array.from(this.cultivartypes.reduce((m, t) => m.set(t.label, t), new Map()).values())
+   this.cultivartypes = this.dropdwonTransformService.transform(cultivartypesfilter,'label', 'value')
+         } else {
+          this.cultivartypes = [];
+         }
+         this.loaderService.display(false);
+        } ,
+        error => { console.log(error);  this.loaderService.display(false); },
+        () => console.log('GetGeneticsDetails complete'));
+    }
+    filterBinomialNames(event:any){
+      this.genetics=[];
+      
+      this.genetics = this.dropdwonTransformService.transform(
+        this.cultivarBasedBinomialNamesData.filter(x => x.StrainTypeID === this.strainmasterForm.controls.straintype.value), 'GeneticsName', 'GeneticId', '-- Select --');
+    }
     getAllStrainsType() {
       this.dropdownDataService.getStrainType().subscribe(
         data => {
@@ -146,7 +175,7 @@ export class StrainMasterComponent implements OnInit {
           // this.straintypes = this.newStrainTypes;
         } ,
         error => { console.log(error); },
-        () => console.log('Get all Cultivar types complete'));
+        () => console.log('Get all strains types complete'));
     }
 
     onSubmit(value: string) {
@@ -163,11 +192,6 @@ export class StrainMasterComponent implements OnInit {
             StrainName: this.appCommonService.trimString(this.strainmasterForm.value.strain),
             StrainCode: this.appCommonService.trimString(this.strainmasterForm.value.straincode),
             Description: this.appCommonService.trimString(this.strainmasterForm.value.description),
-            // THC: this.strainmasterForm.value.thc,
-            // THCA: this.strainmasterForm.value.thca,
-            // CBD: this.strainmasterForm.value.cbd,
-            // CBDA: this.strainmasterForm.value.cbda,
-            // Total: this.strainmasterForm.value.total,
             VirtualRoleId: this._cookieService.VirtualRoleId,
             GeneticsId: this.strainmasterForm.value.genetics?this.strainmasterForm.value.genetics:0,
             IsActive: this.strainmasterForm.value.chkIsActive ? 1 : 0,
@@ -184,8 +208,15 @@ export class StrainMasterComponent implements OnInit {
                 // console.log(data);
                 // alert(data[0]['Result']);
                 this.msgs = [];
-                if (data[0]['Result'] === 'Success') {
+                if (data[0]['Result'] === 'Success' && this.strainForUpdate === 0) {
                   this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg , detail: this.newStrainResources.newstrainsavedsuccess });
+
+                  // console.log(data[0]['StrainId']);
+                 // this.GetStrainOnSave(data[0]['StrainId']);
+                 this.resetAll();
+                  this.getAllStrainsbyClient();
+                } else  if (data[0]['Result'] === 'Success' && this.strainForUpdate != 0) {
+                  this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg , detail:"Cultivar Updated successfully." });
 
                   // console.log(data[0]['StrainId']);
                  // this.GetStrainOnSave(data[0]['StrainId']);
@@ -197,15 +228,19 @@ export class StrainMasterComponent implements OnInit {
                 } else if (data[0]['Result'] === 'NotInserted') {
                   this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
                   detail: this.newStrainResources.cannotinsert });
-                } else if (String(data[0].ResultKey).toUpperCase() === 'NOTPRESENT') {
+                } else if (data[0]['RESULTKEY'] === 'Duplicate Code') {
+                  this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
+                  detail:'Duplicate Code' });
+                } 
+                else if (String(data[0].ResultKey).toUpperCase() === 'NOTPRESENT') {
                   if (data[0]['NoStrainType'] === 1) {
                     this.strainmasterForm.controls['straintype'].setErrors({ 'straintypenotpresent': true });
                     this.loaderService.display(false);
                   }
-                  if (data[0]['NoGenetics'] === 1) {
-                    this.strainmasterForm.controls['genetics'].setErrors({ 'geneticsnotpresent': true });
-                    this.loaderService.display(false);
-                  }
+                  // if (data[0]['NoGenetics'] === 1) {
+                  //   this.strainmasterForm.controls['genetics'].setErrors({ 'geneticsnotpresent': true });
+                  //   this.loaderService.display(false);
+                  // }
                 } else if (String(data[0].ResultKey).toUpperCase() === 'STRAINTYPEDELETED') {
 
                   this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
@@ -244,36 +279,38 @@ export class StrainMasterComponent implements OnInit {
         this.event = e;
       }
       getAllStrainsbyClient() {
+        //this.allStrainList = [];
         this.loaderService.display(true);
         this.newStrainActionService.getStrainDetailList().subscribe(
           data => {
-          //  console.log(data);
+           console.log(data);
            if (data !== 'No data found!') {
               this.allStrainList = data;
               this.paginationValues = AppConstants.getPaginationOptions;
           if (this.allStrainList.length > 20) {
             this.paginationValues[AppConstants.getPaginationOptions.length] = this.allStrainList.length;
           }
-           } else {
+           } 
+           else {
             this.allStrainList = [];
            }
            this.loaderService.display(false);
           } ,
           error => { console.log(error);  this.loaderService.display(false); },
-          () => console.log('getAllCultivarbyClient complete'));
+          () => console.log('getAllStrainsbyClient complete'));
       }
 
-      getAllGenetics() {
-        this.strainMasterAppService.getGeneticsList().subscribe(
-          data => {
-            this.globalData.genetics = data;
-            this.newGenetics = this.dropdwonTransformService.transform(data, 'GeneticsName', 'GeneticsId', '-- Select --');
-            this.genetics = this.newGenetics;
-            // console.log(data);
-          } ,
-          error => { console.log(error); },
-          () => console.log('Get all clients complete'));
-      }
+      // getAllGenetics() {
+      //   this.strainMasterAppService.getGeneticsList().subscribe(
+      //     data => {
+      //       this.globalData.genetics = data;
+      //       this.newGenetics = this.dropdwonTransformService.transform(data, 'GeneticsName', 'GeneticsId', '-- Select --');
+      //       this.genetics = this.newGenetics;
+      //       // console.log(data);
+      //     } ,
+      //     error => { console.log(error); },
+      //     () => console.log('Get all clients complete'));
+      // }
 
       getStrainOnEdit(StrainId) {
         // this.strainMasterAppService.getStrainListByStrainId(StrainId).subscribe(
@@ -323,16 +360,22 @@ export class StrainMasterComponent implements OnInit {
             // End of Modified By Bharat T on 26th-Sept-2018 for showing straintype enable in edit mode
 
               straintype.patchValue(this.strainOnEdit[0].StrainTypeId);
-
+              this.filterBinomialNames(straintype)
               let geneticsNewData: any;
               geneticsNewData = [
-               { label: this.strainOnEdit[0].GeneticsName, value: this.strainOnEdit[0].GeneticsId }
+               { label: this.strainOnEdit[0].GeneticsName, value: this.strainOnEdit[0].GeneticId }
               ];
-              this.genetics = [];
-              this.genetics = geneticsNewData;
-              genetics.patchValue(this.strainOnEdit[0].GeneticsId);
+              //this.genetics = [];
+              //this.genetics = geneticsNewData;
+              if(this.strainOnEdit[0].GeneticsId!=0){
+                genetics.patchValue(this.strainOnEdit[0].GeneticsId);
+              }
+              else{
+                genetics.patchValue(null);
+              }
+              
              this.strainTypeDisabled = true;
-             this.geneticsDisabled = true;
+             this.geneticsDisabled = false;
            } else {
            this.allStrainList = [];
            }
@@ -375,7 +418,7 @@ export class StrainMasterComponent implements OnInit {
         Strain: {
           StrainId: StrainId,
           StrainTypeId: Strain.StrainTypeId,
-          GeneticsId: Strain.GeneticsId,
+          GeneticsId: Strain.GeneticId,
           VirtualRoleId: this._cookieService.VirtualRoleId,
           IsDeleted: IsDeleted,
           IsActive: Strain.IsActive,

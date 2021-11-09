@@ -25,7 +25,8 @@
                                 <p-dropdown
                                     [filter] ="true"
                                     id="straintype"
-                                    [options]="straintypes"
+                                    [options]="cultivartypes"
+                                    (onChange)="filterBinomialNames($event)"
                                     formControlName="straintype"
                                     placeholder="-- Select --"
                                     [autoWidth]="false"
@@ -37,10 +38,10 @@
                                 <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                                   *ngIf="!strainmasterForm.controls['straintype'].valid&&strainmasterForm.controls['straintype'].dirty">
                                   <span *ngIf="strainmasterForm.controls['straintype'].errors['required']">
-                                  {{ newStrainResources.straintyperequired }}
+                                     type required
                                 </span>
                                 <span *ngIf="strainmasterForm.controls['straintype'].hasError('straintypenotpresent')">
-                                    {{ newStrainResources.straintypenotpresent }} 
+                                   type not present
                                 </span>
                                 </div>
                           <!-- <p-button  type="button" label="Add new strain type" id="btn_straintype" (click)="ShowstraintypePopup()" name="btnstraintype" ></p-button> -->
@@ -56,7 +57,7 @@
                           <label for="genetics">
                               {{ newStrainResources.genetics}}:
                           </label>
-                          <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="View/Add Species" id="btn_geneticshow" (click)="viewGeneticList()"  name="btnviewGenetics" ></p-button>
+                          <p-button class="toplinks" type="button" icon="fa fa-list-ul" label="Add/View Species" id="btn_geneticshow" (click)="viewGeneticList()"  name="btnviewGenetics" ></p-button>
 
                           <p-dropdown
                             [filter] ="true"
@@ -90,14 +91,14 @@
                           <div class="paddingRL">
                               <div class="le-su-12">
                                 <label for="enterstrain">
-                                Name<span class="star">*</span>:
+                                  Name<span class="star">*</span>:
                                 </label>
   
                                 <input pInputText
                                   name="strain"
                                   id="strain"
                                   autocomplete="off"
-                                  placeholder="Enter Name"
+                                  placeholder="Enter  Name"
                                   type="text"
                                   class="clsControl"
                                   formControlName="strain"
@@ -105,7 +106,7 @@
   
                                 <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                                   *ngIf="!strainmasterForm.controls['strain'].valid&&strainmasterForm.controls['strain'].dirty">
-                                  <span *ngIf="strainmasterForm.controls['strain'].errors['required']">{{newStrainResources.strainrequired}}</span>
+                                  <span *ngIf="strainmasterForm.controls['strain'].errors['required']">Name required</span>
                                   <span *ngIf="strainmasterForm.controls['strain'].errors['maxlength']">{{newStrainResources.strainLength}}</span>
                                   <span *ngIf="strainmasterForm.controls['strain'].errors['whitespace']">{{newStrainResources.strainrequired}}</span>
                                   </div>
@@ -119,24 +120,24 @@
                     <div class="paddingRL">
                         <div class="le-su-12">
                           <label for="enterstrain">
-                            Code<span class="star">*</span>:
+                             Code<span class="star"></span>:
                           </label>
 
                           <input pInputText
                             name="straincode"
                             id="straincode"
                             autocomplete="off"
-                            placeholder="Enter Code"
+                            placeholder="Enter  Code"
                             type="text"
                             class="clsControl"
                             formControlName="straincode"
                           />
 
-                          <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                          <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                             *ngIf="!strainmasterForm.controls['straincode'].valid&&strainmasterForm.controls['straincode'].dirty">
-                            <span *ngIf="strainmasterForm.controls['straincode'].errors['required']"> code required</span>
+                            <span *ngIf="strainmasterForm.controls['straincode'].errors['required']">  code required</span>
                           
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                   </div>
@@ -148,7 +149,7 @@
                     <div class="paddingRL">
                         <div class="le-su-12">
                         <label for="description">
-                          {{ newStrainResources.description}}<span class="star"></span>:
+                          Description<span class="star"></span>:
                         </label>
   
                         <input pInputText
@@ -157,7 +158,7 @@
                           type="text"
                           autocomplete="off"
                           class="clsControl"
-                          placeholder="Enter Description"
+                          placeholder="Enter  Description"
                           formControlName="description"
                         />
                       </div>
@@ -367,8 +368,8 @@
     </div>
      <div class="ui-g">
        <div class="ui-g-12">
-        <p-panel header="Strain List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-          <p-table #dtStrainList [value]="allStrainList" 
+        <p-panel header="Cultivar  List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+          <p-table #dtStrainList [value]="allStrainList" [resizableColumns]="true"
           sortMode="single"                      
           [responsive]="true" 
           [paginator]="true" 
@@ -388,11 +389,11 @@
           </ng-template>
           <ng-template pTemplate="header">
               <tr>
-                  <th [pSortableColumn]="'StrainName'">Name  <p-sortIcon [field]="'StrainName'"></p-sortIcon> </th>
-                  <th [pSortableColumn]="'StrainCode'"> Code  <p-sortIcon [field]="'StrainCode'"></p-sortIcon> </th>
-                  <th [pSortableColumn]="'StrainTypeName'"> Type  <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
-                  <th [pSortableColumn]="'GeneticsName'">  Binomial Name <p-sortIcon [field]="'GeneticsName'"></p-sortIcon></th>
-                  <th [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>
+                  <th pResizableColumn [pSortableColumn]="'StrainName'">Name   <p-sortIcon [field]="'StrainName'"></p-sortIcon> </th>
+                  <th  pResizableColumn [pSortableColumn]="'StrainCode'"> Code  <p-sortIcon [field]="'StrainCode'"></p-sortIcon> </th>
+                  <th pResizableColumn  [pSortableColumn]="'StrainTypeName'"> Type  <p-sortIcon [field]="'StrainTypeName'"></p-sortIcon> </th>
+                  <th pResizableColumn [pSortableColumn]="'GeneticsName'"> Binomial Name <p-sortIcon [field]="'GeneticsName'"></p-sortIcon></th>
+                  <th pResizableColumn [pSortableColumn]="'Description'"> Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>
                   <!-- <th [pSortableColumn]="'THC'">THC(%) <p-sortIcon [field]="'THC'"></p-sortIcon></th>    
                   <th [pSortableColumn]="'CBD'">CBD(%) <p-sortIcon [field]="'CBD'"></p-sortIcon></th>                  
                   <th [pSortableColumn]="'THCA'">THCA(%)  <p-sortIcon [field]="'THCA'"></p-sortIcon></th>              
@@ -438,11 +439,12 @@
                       <u><a href="#" [routerLink]="['../taskaction', order?.TaskTypeName, order?.TaskId]">{{order?.EmpName}}</a></u>
                   </td> -->
   
-                  <td><span class="ui-column-title">Name</span>{{Strain?.StrainName}}</td>
-                  <td><span class="ui-column-title"> Code </span>{{Strain?.StrainCode}}</td>
-                  <td><span class="ui-column-title"> Type </span>{{Strain?.StrainTypeName}}</td>
-                  <td><span class="ui-column-title">Binomial Name</span>{{Strain?.GeneticsName }}</td>
-                  <td><span class="ui-column-title">Description</span>{{Strain?.Description }}</td>
+                  <td>{{Strain?.StrainName}}</td>
+                  <td>{{Strain?.StrainCode}}</td>
+                  <td>{{Strain?.StrainTypeName}}</td>
+                  <td *ngIf="Strain?.GeneticsName==='Unknown'"></td>
+                  <td *ngIf="Strain?.GeneticsName!='Unknown'">{{Strain?.GeneticsName }}</td>
+                  <td>{{Strain?.Description }}</td>
                   <!-- <td>{{Strain?.THC }}</td>   
                   <td>{{Strain?.CBD }}  </td>                  
                   <td>{{Strain?.THCA }}  </td>

@@ -155,11 +155,12 @@
                                         <td class="taskwidth">{{task?.TaskTypeName}}</td>
                                         <!-- <td class="orderrefwidth">{{task?.OrderRefId}}</td> -->
                                         <td class="orderrefwidth">{{task?.SubcrewName}}</td>
-                                        <td class="orderrefwidth">{{task?.StrainName}}
-                                                <!-- <div class="clear"></div> -->
-                                                 <span *ngIf="task?.LotCounts > 1"> 
+                                        <td (click)= "onRowSelect(task)" *ngIf="task?.StrainsCount == 1 ||task?.StrainsCount == 0" class="orderrefwidth">{{task?.StrainName}}</td>
+                                        <td (click)= "onRowSelect(task)" *ngIf="task?.StrainsCount > 1" class="orderrefwidth">
+                                           
+                                            <span *ngIf="task?.StrainsCount > 1"> 
                                             <a class="btn-link" (click)="showDialog(task?.TaskId,task?.TaskStatus)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span></td>
-                                        <!-- <td  class="lotNum"><span>{{task?.GrowerLotNo}}</span></td>   -->
+                                   
                                         <td class="taskwidth"><span>{{task?.TotalWorkhrs | minutesToTime}}</span></td>
                                         <td class="assignby" ><span>{{task?.ManagerName}}</span></td>
                                         <td class="datewidth"><span> {{task?.LastActionDate | date: 'MM/dd/yyyy' }} <br>{{task?.LastActionDate | date: 'hh:mm a' }}</span></td>                             
@@ -224,7 +225,7 @@
                                                 </th>
                                                 <th class="taskwidth" [pSortableColumn]="'TaskTypeName'">{{globalResource.task}}  
                                                     <p-sortIcon [field]="'TaskTypeName'"></p-sortIcon></th>
-                                                <!-- <th [pSortableColumn]="'OrderRefId'">{{globalResource.order}}  <p-sortIcon [field]="'OrderRefId'"></p-sortIcon></th> -->
+                                                <!--    th [pSortableColumn]="'OrderRefId'">{{globalResource.order}}  <p-sortIcon [field]="'OrderRefId'"></p-sortIcon></th> -->
                                                 <th [pSortableColumn]="'SubcrewName'">Crew <p-sortIcon [field]="'SubcrewName'"></p-sortIcon></th>
                                                 <th [pSortableColumn]="'StrainName'">Cultivar <p-sortIcon [field]="'StrainName'"></p-sortIcon></th>
                                                 <!-- <th [pSortableColumn]="'GrowerLotNo'" class="lotNum">{{globalResource.lot}}#  <p-sortIcon [field]="'GrowerLotNo'"></p-sortIcon></th>  -->
@@ -283,12 +284,12 @@
                                                 <td (click)= "onRowSelect(task)" class="taskwidth">{{task?.TaskTypeName}}</td>
                                                 <!-- <td (click)= "onRowSelect(task)" class="orderrefwidth">{{task?.OrderRefId}}</td> -->
                                                 <td (click)= "onRowSelect(task)" class="orderrefwidth">{{task?.SubcrewName}}</td>
-                                                <td (click)= "onRowSelect(task)" class="orderrefwidth">{{task?.StrainName}}
-                                                    <!-- <div class="clear"></div> -->
-                                                    <span *ngIf="task?.LotCounts > 1"> 
+                                                <td (click)= "onRowSelect(task)" *ngIf="task?.StrainsCount == 1||task?.StrainsCount == 0" class="orderrefwidth">{{task?.StrainName}}</td>
+                                                <td (click)= "onRowSelect(task)" *ngIf="task?.StrainsCount > 1" class="orderrefwidth">
+                                                   
+                                                    <span *ngIf="task?.StrainsCount > 1"> 
                                                     <a class="btn-link" (click)="showDialog(task?.TaskId,task?.TaskStatus)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span></td>
-                                                <!-- <td  class="lotNum"><span>{{task?.GrowerLotNo}}</span></td> -->
-                                                <!-- <td class="taskwidth"><span>{{task?.TotalWorkhrs | minutesToTime}}</span></td> -->
+                                             
                                                 <td (click)= "onRowSelect(task)" class="assignby"><span>{{task?.ManagerName}}</span></td>
                                        
                                         <td (click)= "onRowSelect(task)" class="datewidth">{{task?.LastActionDate | date: 'MM/dd/yyyy hh:mm a' }} </td>
@@ -412,9 +413,10 @@
                                             <td (click)= "onRowSelect(task)" class="taskwidth">{{task?.TaskTypeName}}</td>
                                             <!-- <td (click)= "onRowSelect(task)" class="orderrefwidth">{{task?.OrderRefId}}</td> -->
                                             <td (click)= "onRowSelect(task)" class="orderrefwidth">{{task?.SubcrewName}}</td>
-                                            <td (click)= "onRowSelect(task)" class="orderrefwidth">{{task?.StrainName}}
-                                                <!-- <div class="clear"></div> -->
-                                                <span *ngIf="task?.LotCounts > 1"> 
+                                            <td (click)= "onRowSelect(task)" *ngIf="task?.StrainsCount == 1 ||task?.StrainsCount == 0" class="orderrefwidth">{{task?.StrainName}}</td>
+                                            <td (click)= "onRowSelect(task)" *ngIf="task?.StrainsCount > 1" class="orderrefwidth">
+                                               
+                                                <span *ngIf="task?.StrainsCount > 1"> 
                                                 <a class="btn-link" (click)="showDialog(task?.TaskId,task?.TaskStatus)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span></td>
                                             <!-- <td  class="lotNum"><span>{{task?.GrowerLotNo}}</span></td> -->
                                             <td (click)= "onRowSelect(task)" class="taskwidth"><span>{{task?.TotalWorkhrs | minutesToTime}}</span></td>
@@ -525,9 +527,10 @@
                                             <td class="taskwidth">{{task?.TaskTypeName}}</td>
                                             <!-- <td class="orderrefwidth">{{task?.OrderRefId}}</td> -->
                                             <td class="orderrefwidth">{{task?.SubcrewName}}</td>
-                                            <td class="orderrefwidth">{{task?.StrainName}}
-                                                    <!-- <div class="clear"></div> -->
-                                                     <span *ngIf="task?.LotCounts > 1"> 
+                                            <td (click)= "onRowSelect(task)" *ngIf="task?.StrainsCount == 1||task?.StrainsCount == 0" class="orderrefwidth">{{task?.StrainName}}</td>
+                                            <td (click)= "onRowSelect(task)" *ngIf="task?.StrainsCount > 1" class="orderrefwidth">
+                                               
+                                                <span *ngIf="task?.StrainsCount > 1"> 
                                                 <a class="btn-link" (click)="showDialog(task?.TaskId,task?.TaskStatus)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span></td>
                                             <!-- <td  class="lotNum"><span>{{task?.GrowerLotNo}}</span></td> -->
                                             <td class="taskwidth"><span>{{task?.TotalWorkhrs | minutesToTime}}</span></td>
@@ -636,11 +639,16 @@
                                         <td class="taskwidth">{{task?.TaskTypeName}}</td>
                                         <!-- <td class="orderrefwidth">{{task?.OrderRefId}}</td> -->
                                         <td class="orderrefwidth">{{task?.SubcrewName}}</td>
-                                        <td class="orderrefwidth">{{task?.StrainName}}
-                                                <!-- <div class="clear"></div> -->
+                                        <!-- <td class="orderrefwidth">{{task?.StrainName}}
+                                            
                                                  <span *ngIf="task?.LotCounts > 1"> 
                                             <a class="btn-link" (click)="showDialog(task?.TaskId,task?.TaskStatus)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span>
-                                        </td>
+                                        </td> -->
+                                        <td (click)= "onRowSelect(task)" *ngIf="task?.StrainsCount == 1||task?.StrainsCount == 0" class="orderrefwidth">{{task?.StrainName}}</td>
+                                        <td (click)= "onRowSelect(task)" *ngIf="task?.StrainsCount > 1" class="orderrefwidth">
+                                           
+                                            <span *ngIf="task?.StrainsCount > 1"> 
+                                            <a class="btn-link" (click)="showDialog(task?.TaskId,task?.TaskStatus)" [routerLink]="" ><i style="font-size: 16px" class="fa fa-plus-circle" aria-hidden="true"></i></a></span></td>
                                         <!-- <td  class="lotNum"><span>{{task?.GrowerLotNo}}</span></td> -->
                                         <td class="taskwidth"><span>{{task?.TotalWorkhrs | minutesToTime}}</span></td>
                                         <td class="assignby" ><span>{{task?.ManagerName}}</span></td>
@@ -1298,15 +1306,15 @@ style="display:none;"
                 <ng-template pTemplate="header">
                     <tr>
                         <th style="width:50%">Cultivar</th>
-                        <th  style="width:50%">{{ globalResource.lot }}</th>
+                        <!-- <th  style="width:50%">{{ globalResource.lot }}</th> -->
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-task let-rowData let-columns="columns" let-rowIndex="rowIndex">
                     <tr >
                         <td>{{task?.StrainName}}</td>
-                        <td>
+                        <!-- <td>
                             {{task?.GrowerLotNo}}
-                            <!-- Added by Devdan :: 21-Nov-2018 :: Adding Lot Note and Lot Details Icon -->
+                            
                             <app-lot-comment
                             [LotId]="task?.LotId"
                             [LotCommentsCount]="task?.LotNoteCount"
@@ -1317,7 +1325,7 @@ style="display:none;"
                             [LotId]="task?.LotId"                                
                             (NoteIconClicked)="ShowLotNote($event)"
                         ></app-lot-note-icon>
-                        </td>
+                        </td> -->
                         </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage" let-columns>

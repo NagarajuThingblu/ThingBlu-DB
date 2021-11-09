@@ -987,7 +987,7 @@ console.log(assignTaskFormValues)
        let plantingDataForApi = {
         Plants: {
           "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
-          "SectionId": assignTaskFormValues.PLANTING.section,
+         // "SectionId": assignTaskFormValues.PLANTING.section,
           "AssignedPlantsCount": 0,// hem growers don't assign particular number of palnts to emp
           "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
           "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
@@ -999,12 +999,14 @@ console.log(assignTaskFormValues)
           "SubCrewID": assignTaskFormValues.PLANTING.subcrew
        },
        EmployeeTypes:[],
-       SkillIDlist:[]
+       SkillIDlist:[],
+       SectionIdlist:[]
       };
       assignTaskFormValues[this.selectedTaskTypeName].employeeList
       .forEach((element, index) => {
         plantingDataForApi.EmployeeTypes.push({
-          "EmpId" : assignTaskFormValues.PLANTING.employeeList[index].id 
+          //"EmpId" : assignTaskFormValues.PLANTING.employeeList[index].id 
+          "EmpId" :  assignTaskFormValues.PLANTING.employeeList[index].id? assignTaskFormValues.PLANTING.employeeList[index].id :assignTaskFormValues.PLANTING.employeeList[index]
         });
       });
       // assignTaskFormValues[this.selectedTaskTypeName].skills
@@ -1015,6 +1017,12 @@ console.log(assignTaskFormValues)
       // });
       plantingDataForApi.SkillIDlist.push({
             "SkillId" : assignTaskFormValues.PLANTING.skills
+          });
+      assignTaskFormValues[this.selectedTaskTypeName].section
+          .forEach((element, index) => {
+            plantingDataForApi.SectionIdlist.push({
+              "SectionId" : assignTaskFormValues.PLANTING.section[index]
+            });
           });
        this.loaderService.display(true);
       this.taskCommonService.assignPlantTask(plantingDataForApi).
@@ -1055,7 +1063,7 @@ console.log(assignTaskFormValues)
         let harvestingDataForApi = {
           Harvesting: {
            "ClientId": assignTaskDetailsForWebApi.TaskDetails.ClientId,
-           "SectionId": assignTaskFormValues.HARVESTING.section,
+           //"SectionId": assignTaskFormValues.HARVESTING.section,
            "AssignedPlantsCount": assignTaskFormValues.HARVESTING.assignedPC,
            "TaskTypeId":assignTaskDetailsForWebApi.TaskDetails.TaskTypeId,
            "EstStartDate":assignTaskDetailsForWebApi.TaskDetails.EstStartDate ,
@@ -1067,12 +1075,20 @@ console.log(assignTaskFormValues)
            "SubCrewID": assignTaskFormValues.HARVESTING.subcrew
         },
         EmployeeTypes:[],
-        SkillIDlist:[]
+        SkillIDlist:[],
+        SectionIdlist:[]
        };
        assignTaskFormValues[this.selectedTaskTypeName].employeeList
        .forEach((element, index) => {
         harvestingDataForApi.EmployeeTypes.push({
-           "EmpId" : assignTaskFormValues.HARVESTING.employeeList[index].id 
+          //  "EmpId" : assignTaskFormValues.HARVESTING.employeeList[index].id 
+          "EmpId" :  assignTaskFormValues.HARVESTING.employeeList[index].id? assignTaskFormValues.HARVESTING.employeeList[index].id :assignTaskFormValues.HARVESTING.employeeList[index]
+         });
+       });
+       assignTaskFormValues[this.selectedTaskTypeName].section
+       .forEach((element, index) => {
+        harvestingDataForApi.SectionIdlist.push({
+           "SectionId" : assignTaskFormValues.HARVESTING.section[index]
          });
        });
       //  assignTaskFormValues[this.selectedTaskTypeName].skills
