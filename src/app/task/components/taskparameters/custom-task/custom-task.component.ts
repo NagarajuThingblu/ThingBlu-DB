@@ -20,6 +20,7 @@ import { LoaderService } from '../../../../shared/services/loader.service';
 import { Title } from '@angular/platform-browser';
 import { RefreshService } from '../../../../dashboard/services/refresh.service';
 import { NewEmployeeActionService } from '../../../services/add-employee';
+import { PTRService } from '../../../../Masters/services/ptr.service';
 
 @Component({
   moduleId: module.id,
@@ -63,6 +64,7 @@ export class CustomTaskComponent implements OnInit {
     private lotService: LotService,
     private loaderService: LoaderService,
     private appCommonService: AppCommonService,
+    private ptrActionService: PTRService,
     private titleService: Title,
     private refreshService: RefreshService,
     private dropdownDataService: DropdownValuesService,
@@ -106,6 +108,10 @@ export class CustomTaskComponent implements OnInit {
   public defaultDate: Date;
   public showToManager = false;
   public LotCommentsCount = 10;
+  public allSubCrewlist: any;
+  public crewlist: SelectItem[];
+  public subcrewlist: SelectItem[];
+  public filteredCrewList:any[]
   // Added by Devdan :: 10-Oct-2018
   taskTypeId: any;
   // Added by Devdan :: Sec to Min change :: 06-Nov-2018 :: Variable to Enable/Disable Second Text Box
@@ -156,7 +162,9 @@ export class CustomTaskComponent implements OnInit {
         // 'strain': new FormControl(''),
         'employee': new FormControl(0),
         'employeeList': new FormControl('', Validators.required),
-        'skills':new FormControl('', Validators.required),
+        'crew': new FormControl(''),
+        'subcrew': new FormControl(''),
+        'skills':new FormControl(''),
         'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
         'esthrs': new FormControl('',  Validators.compose([  ])),
         'emprate': new FormControl(''),
@@ -228,6 +236,7 @@ export class CustomTaskComponent implements OnInit {
       // this.completionForm.addControl('skewTypeGroup', this.qcs.toFormGroup(this.questions));
     }
     this.employeeListByClient();
+    this.getCrewList();
     this.getSkills()
     this.priorities =  [
       {label: 'Normal', value: 'Normal'},
@@ -246,6 +255,23 @@ export class CustomTaskComponent implements OnInit {
   // }
 
   //skills
+  getCrewList(){
+    this.ptrActionService.getAllSubCrewList().subscribe(data=>{
+      if(data!="No Data Found"){
+        this.allSubCrewlist=data.Table;
+        this.crewlist = this.dropdwonTransformService.transform(this.allSubCrewlist, 'CrewName', 'CrewID', '-- Select --',false);
+        const crewfilter = Array.from(this.allSubCrewlist.reduce((m, t) => m.set(t.CrewName, t), new Map()).values())
+        this.filteredCrewList = this.dropdwonTransformService.transform(crewfilter,'CrewName', 'CrewID', '-- Select --',false)
+       
+      }
+      else{
+        this.allSubCrewlist=[];
+      }
+      this.loaderService.display(false);
+    },
+    error => { console.log(error); this.loaderService.display(false); },
+    () => console.log('GetAllCrewListbyClient complete'));
+  }
   getSkills(){
     let TaskTypeId = this.ParentFormGroup != undefined?
     this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
@@ -263,14 +289,34 @@ export class CustomTaskComponent implements OnInit {
     error => { console.log(error); },
     () => console.log('skillslistbytasktype complete'));
   }
-
+  onSubCrewSelect(event:any){
+    this.employeeNameToBeDisplayedOnDropdown="--Select--"
+    let skillListApiDetails;
+    skillListApiDetails = {
+      TaskTypeId:Number(this.TaskModel.task),
+      CrewId:event.value,
+      SkillList:[]
+    };
+    skillListApiDetails.SkillList.push({SkillID:this.CUSTOMTASK.value.skills})
+    this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
+    .subscribe(data => {
+      this.headings = data.Table,
+      this.skilledempslist = data.Table1,
+      this.allemplist =data.Table2 ? data.Table2 : []
+      this.globalData
+      this.empfilterBasedOnSkill()
+    });
+  }
+  onCrewSelect(event:any){
+    this.subcrewlist = this.dropdwonTransformService.transform(this.allSubCrewlist.filter(x => x.CrewID === event.value && x.IsActive == true), 'SubCrewName', 'SubCrewID');
+    }
   //on selecting skill
   onSkillsSelect(event:any){
     this.employeeNameToBeDisplayedOnDropdown="--Select--"
     let skillListApiDetails;
     skillListApiDetails = {
       TaskTypeId:Number(this.TaskModel.task),
-    
+      CrewId:this.CUSTOMTASK.value.subcrew,
       SkillList:[]
     };
     skillListApiDetails.SkillList.push({SkillID:event.value})

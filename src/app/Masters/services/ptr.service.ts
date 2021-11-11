@@ -36,4 +36,21 @@ export class PTRService {
           return data;
         });
       }
+
+      getAllSubCrewList(){
+        const url = 'api/employee/GetSubCrewList';
+        let params = new HttpParams();
+        params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+    
+        return this.http
+        .get(url, {params: params})
+    
+        .map(data => {
+    
+        console.log('GetAllSWubCrewListByClient Service success');
+      // console.log(data);
+        return data;
+    });
+    
+      }
 }

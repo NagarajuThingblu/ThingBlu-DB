@@ -27,6 +27,7 @@ import { NewClientService } from '../../../../Masters/services/new-client.servic
 import { FormArray } from '@angular/forms';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { NewEmployeeActionService } from '../../../services/add-employee';
+import { PTRService } from '../../../../Masters/services/ptr.service';
 
 @Component({
   moduleId: module.id,
@@ -88,6 +89,7 @@ export class PrebuckingComponent implements OnInit {
     private refreshService: RefreshService,
     private render: Renderer2,
     private elref: ElementRef,
+    private ptrActionService: PTRService,
     private newEmployeeActionService: NewEmployeeActionService,
   ) {
    
@@ -123,6 +125,10 @@ export class PrebuckingComponent implements OnInit {
    public defaulDryWeight = 0;
    public pagename: 'taskaction/PREBUCKING'
    public defaultWasteWeight = 0;
+   public allSubCrewlist: any;
+   public crewlist: SelectItem[];
+   public subcrewlist: SelectItem[];
+   public filteredCrewList:any[]
    private globalData = {
     employees: [],
     sections: [],
@@ -134,6 +140,7 @@ export class PrebuckingComponent implements OnInit {
     this.employeeNameToBeDisplayedOnDropdown="--Select--"
     this.employeeListByClient();
      this.getStrainListByTask();
+     this.getCrewList();
      this.getSkills();
     console.log("bins details : "+this.BinData)
     this.assignTaskResources = TaskResources.getResources().en.assigntask;
@@ -186,7 +193,9 @@ export class PrebuckingComponent implements OnInit {
         'strainid':new FormControl(''),
         'batchId':new FormControl(''),
         'lightdept': new FormControl(null,Validators.required),
-        'skills':new FormControl('', Validators.required),
+        'crew': new FormControl(''),
+        'subcrew': new FormControl(''),
+        'skills':new FormControl(''),
         'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
         'employeeList': new FormControl('', Validators.required),
         'priority': new FormControl(''),
@@ -287,12 +296,34 @@ export class PrebuckingComponent implements OnInit {
   //   });
     
   // }
+  onCrewSelect(event:any){
+    this.subcrewlist = this.dropdwonTransformService.transform(this.allSubCrewlist.filter(x => x.CrewID === event.value && x.IsActive == true), 'SubCrewName', 'SubCrewID');
+    
+    }
+    onSubCrewSelect(event:any){
+      this.employeeNameToBeDisplayedOnDropdown="--Select--"
+      let skillListApiDetails;
+      skillListApiDetails = {
+        TaskTypeId:Number(this.TaskModel.task),
+        CrewId:event.value,
+        SkillList:[]
+      };
+      skillListApiDetails.SkillList.push({SkillID:this.PREBUCKING.value.skills})
+      this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
+      .subscribe(data => {
+        this.headings = data.Table,
+        this.skilledempslist = data.Table1,
+        this.allemplist =data.Table2 ? data.Table2 : []
+        this.globalData
+        this.empfilterBasedOnSkill()
+      });
+    }
   onSkillsSelect(event:any){
     this.employeeNameToBeDisplayedOnDropdown="--Select--"
     let skillListApiDetails;
     skillListApiDetails = {
       TaskTypeId:Number(this.TaskModel.task),
-    
+      CrewId:this.PREBUCKING.value.subcrew,
       SkillList:[]
     };
     skillListApiDetails.SkillList.push({SkillID:event.value})
@@ -440,6 +471,23 @@ export class PrebuckingComponent implements OnInit {
       } ,
       error => { console.log(error); },
       () => console.log('Get all bins complete'));
+  }
+  getCrewList(){
+    this.ptrActionService.getAllSubCrewList().subscribe(data=>{
+      if(data!="No Data Found"){
+        this.allSubCrewlist=data.Table;
+        this.crewlist = this.dropdwonTransformService.transform(this.allSubCrewlist, 'CrewName', 'CrewID', '-- Select --',false);
+        const crewfilter = Array.from(this.allSubCrewlist.reduce((m, t) => m.set(t.CrewName, t), new Map()).values())
+        this.filteredCrewList = this.dropdwonTransformService.transform(crewfilter,'CrewName', 'CrewID', '-- Select --',false)
+       
+      }
+      else{
+        this.allSubCrewlist=[];
+      }
+      this.loaderService.display(false);
+    },
+    error => { console.log(error); this.loaderService.display(false); },
+    () => console.log('GetAllCrewListbyClient complete'));
   }
   getSkills(){
     let TaskTypeId = this.ParentFormGroup != undefined?

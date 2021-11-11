@@ -77,6 +77,7 @@ import { LabelsComponent } from './components/labels/labels.component';
 import { HelpComponent } from './components/help/help.component';
 import { FlcComponent } from './components/flc/flc.component';
 import { PlantTerminationReasonsComponent } from './components/plant-termination-reasons/plant-termination-reasons.component';
+//import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-material.component';
 import { AddRawMaterialComponent } from './components/add-raw-material/add-raw-material.component';
 import { UpdateTerminationreasonComponent } from './components/update-terminationreason/update-terminationreason.component';
 import { SectionDetailsComponent } from './components/section-details/section-details.component';

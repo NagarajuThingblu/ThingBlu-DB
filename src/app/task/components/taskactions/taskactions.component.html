@@ -152,7 +152,8 @@
           *ngIf="taskActionDetails?.TaskTypeKey=='PLANTING'&&taskActionDetails" 
               style="width:100%;"            
               [PageFlag]="page"
-              [TaskModel]="taskActionDetails"     
+              [TaskModel]="taskActionDetails"  
+              [sectionData]="taskActionDetails_additionalInfo"   
               (TaskCompleteOrReviewed)="getTaskDetaisByTask()"    
         >
           </app-planting>
@@ -161,7 +162,8 @@
           *ngIf="taskActionDetails?.TaskTypeKey=='HARVESTING'&&taskActionDetails" 
               style="width:100%;"            
               [PageFlag]="page"
-              [TaskModel]="taskActionDetails"     
+              [TaskModel]="taskActionDetails"    
+              [sectionData]="taskActionDetails_additionalInfo" 
               (TaskCompleteOrReviewed)="getTaskDetaisByTask()"    
         >
           </app-harvesting>
@@ -171,7 +173,7 @@
               style="width:100%;"            
               [PageFlag]="page"
               [TaskModel]="taskActionDetails"     
-              [BinData]="binDetails"
+              [BinData]="taskActionDetails_additionalInfo"
               (TaskCompleteOrReviewed)="getTaskDetaisByTask()"    
         >
           </app-prebucking>
@@ -181,7 +183,7 @@
               style="width:100%;"            
               [PageFlag]="page"
               [TaskModel]="taskActionDetails"     
-              [BinData]="binDetails"
+              [BinData]="taskActionDetails_additionalInfo"
               [inpubinData]="inputbinDetails"
               (TaskCompleteOrReviewed)="getTaskDetaisByTask()"    
         >
@@ -192,7 +194,7 @@
               style="width:100%;"            
               [PageFlag]="page"
               [TaskModel]="taskActionDetails"     
-              [BinData]="binDetails"
+              [BinData]="taskActionDetails_additionalInfo"
               [inpubinData]="inputbinDetails"
               (TaskCompleteOrReviewed)="getTaskDetaisByTask()"    
         >

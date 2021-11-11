@@ -25,6 +25,7 @@ import { filter } from 'rxjs/operator/filter';
 import { NewClientService } from '../../../../Masters/services/new-client.service';
 import { PTRService } from '../../../../Masters/services/ptr.service';
 import { NewEmployeeActionService } from '../../../services/add-employee';
+//import { CrewService } from '../../../../Masters/services/crew.service';
 declare var $: any;
 @Component({
   moduleId: module.id,
@@ -37,6 +38,7 @@ export class PlantingComponent implements OnInit{
   completionForm: FormGroup;
   reviewForm: FormGroup;
   // tslint:disable-next-line:no-input-rename
+  @Input() sectionData: any;
   @Input() TaskModel: any;
   @Input() PageFlag: any;
   @Input() ParentFormGroup: FormGroup;
@@ -61,6 +63,11 @@ export class PlantingComponent implements OnInit{
   public employeeNameToBeDisplayedOnDropdown="--Select--"
   public visibility:boolean = false;
   public showUpArrow:boolean = false;
+  public allSubCrewlist: any;
+  public crewlist: SelectItem[];
+  public subcrewlist: SelectItem[];
+  public filteredCrewList:any[];
+  public showDefaultEmployees:boolean=true;
   constructor(
     private fb: FormBuilder,
     private dropdownDataService: DropdownValuesService,
@@ -88,12 +95,15 @@ export class PlantingComponent implements OnInit{
   }
   display = false;
   public sectionList = [];
+  public totalPlantCount=0;
+  public strainList=[];
   public  Fields: any[];
   public TerminatioReasons: any[];
   public fields: any[];
   public workingEmp: any=[];
   public workingemp:boolean =false
   public strains: any[];
+  public defaultEmployees:any[]
   public employees: any[];
   public globalResource: any;
   public msgs: Message[] = [];
@@ -120,6 +130,7 @@ export class PlantingComponent implements OnInit{
   private globalData = {
     lots: [],
     employees: [],
+    defaultEmployees:[],
     strains: [],
     Fields: [],
     TerminationReasons: [],
@@ -129,6 +140,7 @@ export class PlantingComponent implements OnInit{
   ngOnInit() {
     this.employeeNameToBeDisplayedOnDropdown="--Select--"
     this.getAllFieldsAndSections();
+    this.getCrewList()
     this.getSkills();
     // this.getAllsectionlist();
     this.employeeListByClient();
@@ -155,37 +167,13 @@ export class PlantingComponent implements OnInit{
 
     
     this.defaultDate = this.appCommonService.calcTime(this._cookieService.UTCTime);
-    // this.headings =[
-    //   {id:1, headingName:"Skilled Employees",  Num:2, isParent:true, parentId:0},
-    //   {id:0, headingName:"All Employees", Num:1, isParent:true, parentId:0},
-    // ]
-    // this.skilledempslist =[
-    //   {empid:1, empname:"jyothi",  isParent:false, ParentId:1},
-    //   {empid:2, empname:"saikumar",  isParent:false, ParentId:1},
-    //   {empid:3, empname:"sucharitha",  isParent:false, ParentId:1},
-    // ]
-    // this.allemplist = [
-    //   {empid:1, empname:"jyothi", isParent:false, ParentId:0},
-    //   {empid:2, empname:"saikumar",  isParent:false, ParentId:0},
-    //   {empid:3, empname:"sucharitha",  isParent:false, ParentId:0},
-    //   {empid:4, empname:"hemanth",  isParent:false, ParentId:0},
-    //   {empid:5, empname:"nagaraju",  isParent:false, ParentId:0},
-    // ]
-  
-    // this.skills =  [
-    //   {label: 'Good At Grooming Plants', value: 'Good At Grooming Plants'},
-    //   {label: 'Good At checking water', value: 'Good At checking water'},
-    //   {label: 'Good At pesticides', value: 'Good At pesticides'}
-    // ];
+   
     this.priorities =  [
       {label: 'Normal', value: 'Normal'},
       {label: 'Important', value: 'Important'},
       {label: 'Critical', value: 'Critical'}
     ];
-// this.employees = [
-//   {label: 'Skilled Employees', value: 'Skilled Employees'},
-//   {label: 'All Employees', value: 'All Employees'}
-// ]
+
     if (this.PageFlag.page !== 'TaskAction') {
       this.TaskModel.PLANTING = {
         field: '',
@@ -211,11 +199,11 @@ export class PlantingComponent implements OnInit{
       'field' : new FormControl('', Validators.required),
       'section': new FormControl('', Validators.required),
       'estimatedstartdate': new FormControl('',  Validators.compose([Validators.required])),
-      // 'estimatedenddate': new FormControl('',  Validators.compose([Validators.required])),
-    //
      'employeeList': new FormControl('', Validators.required),
      'plantCount' : new FormControl('', Validators.required),
-     'skills':new FormControl('', Validators.required),
+     'crew': new FormControl(null),
+     'subcrew': new FormControl(null),
+     'skills':new FormControl(null),
      'assignedPC' : new FormControl(''),// hem growers don't assign particular number of palnts to emp
       'priority': new FormControl(''),
       'notifymanager': new FormControl(''),
@@ -389,30 +377,64 @@ export class PlantingComponent implements OnInit{
        () => console.log('getTerminationReasons complete'));
 
   }
+  onCrewSelect(event:any){
+    if(event.value !=null){
+      this.showDefaultEmployees=false;
+      this.subcrewlist = this.dropdwonTransformService.transform(this.allSubCrewlist.filter(x => x.CrewID === event.value && x.IsActive == true), 'SubCrewName', 'SubCrewID');
+    }
+  else{
+    this.showDefaultEmployees=true;
+  }
+ 
+  }
+  onSubCrewSelect(event:any){
+    if(event.value !=null){
+      this.showDefaultEmployees=false;
+      this.employeeNameToBeDisplayedOnDropdown="--Select--"
+      let skillListApiDetails;
+      skillListApiDetails = {
+        TaskTypeId:Number(this.TaskModel.task),
+        CrewId:event.value,
+        SkillList:[]
+      };
+      skillListApiDetails.SkillList.push({SkillID:this.PLANTING.value.skills})
+      this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
+      .subscribe(data => {
+        this.headings = data.Table,
+        this.skilledempslist = data.Table1,
+        this.allemplist =data.Table2 ? data.Table2 : []
+        this.globalData
+        this.empfilterBasedOnSkill()
+      });
+    }
+    else{
+      this.showDefaultEmployees=true;
+    }
+  
+  }
   onSkillsSelect(event:any){
-    this.employeeNameToBeDisplayedOnDropdown="--Select--"
-let skillListApiDetails;
-skillListApiDetails = {
-  TaskTypeId:Number(this.TaskModel.task),
-
-  SkillList:[]
-};
-skillListApiDetails.SkillList.push({SkillID:event.value})
-// for(let j of this.PLANTING.value.skills){
-      
-//   skillListApiDetails.SkillList.push({
-//     SkillID: j,
-   
-//   })
-// };
-this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
-.subscribe(data => {
-  this.headings = data.Table,
-  this.skilledempslist = data.Table1,
-  this.allemplist =data.Table2 ? data.Table2 : []
-  this.globalData
-  this.empfilterBasedOnSkill()
-});
+    if(event.value !=null){
+      this.showDefaultEmployees=false;
+      this.employeeNameToBeDisplayedOnDropdown="--Select--"
+  let skillListApiDetails;
+  skillListApiDetails = {
+    TaskTypeId:Number(this.TaskModel.task),
+    CrewId:this.PLANTING.value.subcrew,
+    SkillList:[]
+  };
+  skillListApiDetails.SkillList.push({SkillID:event.value})
+  this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
+  .subscribe(data => {
+    this.headings = data.Table,
+    this.skilledempslist = data.Table1,
+    this.allemplist =data.Table2 ? data.Table2 : []
+    this.globalData
+    this.empfilterBasedOnSkill()
+  });
+    }
+    else{
+      this.showDefaultEmployees=true;
+    }
   }
   
   padLeft(text: string, padChar: string, size: number): string {
@@ -666,6 +688,24 @@ completeTask(formModel){
       this.showPastDateLabel = false;
     }
   }
+
+  getCrewList(){
+    this.ptrActionService.getAllSubCrewList().subscribe(data=>{
+      if(data!="No Data Found"){
+        this.allSubCrewlist=data.Table;
+        this.crewlist = this.dropdwonTransformService.transform(this.allSubCrewlist, 'CrewName', 'CrewID', '-- Select --',false);
+        const crewfilter = Array.from(this.allSubCrewlist.reduce((m, t) => m.set(t.CrewName, t), new Map()).values())
+        this.filteredCrewList = this.dropdwonTransformService.transform(crewfilter,'CrewName', 'CrewID', '-- Select --',false)
+       
+      }
+      else{
+        this.allSubCrewlist=[];
+      }
+      this.loaderService.display(false);
+    },
+    error => { console.log(error); this.loaderService.display(false); },
+    () => console.log('GetAllCrewListbyClient complete'));
+  }
   getSkills(){
     let TaskTypeId = this.ParentFormGroup != undefined?
     this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
@@ -702,34 +742,67 @@ completeTask(formModel){
     // End of getting unique record accroding brand and strain
   }
 
-  getSectionListByFieldName(event?:any){
-    this.sectionList = [];
-      for(let sec of this.globalData.Fields ){
-        if(event.value === sec.FieldId){
-          this.sectionList.push({label: sec.SectionName, value: sec.SectionId})
+  // getSectionListByFieldName(event?:any){
+  //   this.sectionList = [];
+  //     for(let sec of this.globalData.Fields ){
+  //       if(event.value === sec.FieldId){
+  //         this.sectionList.push({label: sec.SectionName, value: sec.SectionId})
+  //       }
+  //     }
+    
+  // }
+
+  onFieldSelect(event?:any){
+    this.strainList = [];
+      const strainData= this.globalData.Fields.filter(x=>x.FieldId === event.value);
+      this.strainList = this.dropdwonTransformService.transform(strainData, 'StrainName', 'StrainId', '-- Select --',false);
+      const strainListfilter = Array.from(strainData.reduce((m, t) => m.set(t.StrainName, t), new Map()).values())
+      this.strainList = this.dropdwonTransformService.transform(strainListfilter,'StrainName', 'StrainId', '-- Select --',false)
+  }
+  onStrainSelect(event?:any){
+    this.sectionList=[];
+    for(let j of event.value){
+      for(let i of this.globalData.Fields){
+        if((i.StrainId === j|| i.StrainId === event) && (i.FieldId === this.PLANTING.controls.field.value)){
+              this.sectionList.push({label: i.SectionName, value:i.SectionId})
         }
       }
-    
+    }
+
   }
-  getStrainAndPlantCount(event?: any){
-    this.globalData.workingEmp =[];
-    this.workingEmp = [];
-    this.workingemp=false;
-    for(let sec of this.globalData.Fields ){
-      if(event.value === sec.SectionId)
-      {
-        this.strainName = sec.StrainName;
-        this.plantCount =sec.AvilablePlantCount;
-        this.TaskModel.PLANTING.section = sec.SectionName
-        this.TaskModel.PLANTING.strain =  this.strainName
-        this.PLANTING.controls["strain"].setValue(this.strainName)
-        this.TaskModel.PLANTING.totalPC  = this.plantCount
-        this.PLANTING.controls["plantCount"].setValue(this.plantCount)
+  onSectionSelect(event?:any){
+    this.plantCount=0;
+    for(let j of event.value){
+      for(let i of this.globalData.Fields){
+        if((i.SectionId === j|| i.SectionId === event)){
+          this.plantCount = this.plantCount+ i.AvilablePlantCount;
+          this.PLANTING.controls["plantCount"].setValue(this.plantCount)
+              // this.sectionList.push({label: i.SectionName, value:i.SectionId})
+             this.getWorkingEmpList(event.itemValue);
+        }
       }
     }
-    this.getWorkingEmpList(event.value);
    
   }
+  // getStrainAndPlantCount(event?: any){
+  //   this.globalData.workingEmp =[];
+  //   this.workingEmp = [];
+  //   this.workingemp=false;
+  //   for(let sec of this.globalData.Fields ){
+  //     if(event.value === sec.SectionId)
+  //     {
+  //       this.strainName = sec.StrainName;
+  //       this.plantCount =sec.AvilablePlantCount;
+  //       this.TaskModel.PLANTING.section = sec.SectionName
+  //       this.TaskModel.PLANTING.strain =  this.strainName
+  //       this.PLANTING.controls["strain"].setValue(this.strainName)
+  //       this.TaskModel.PLANTING.totalPC  = this.plantCount
+  //       this.PLANTING.controls["plantCount"].setValue(this.plantCount)
+  //     }
+  //   }
+  //   this.getWorkingEmpList(event.value);
+   
+  // }
 
   getWorkingEmpList(sectionId){
     this.dropdownDataService.getEmpAlreadyWorkingOnATask(sectionId,this.TaskModel.task,0,0).subscribe(
@@ -738,30 +811,34 @@ completeTask(formModel){
           this.globalData.workingEmp = data;
           this.getWorkingEmpsList();
         }
-        else{
-          this.globalData.workingEmp = [];
-          this.workingEmp = [];
-        }
+        // else{
+        //   this.globalData.workingEmp = [];
+        //   this.workingEmp = [];
+        // }
       }
     )
   }
   getWorkingEmpsList(){
     if(this.globalData.workingEmp != null){
       for(let employee of this.globalData.workingEmp){
-        this.workingEmp.push(employee.Column1)
+        if( this.workingEmp.indexOf(employee.Column1) == -1){
+          this.workingEmp.push(employee.Column1)
+        }
+       
     }
     }
-    else{
-      this.workingEmp = [];
-    }
+    // else{
+    //   this.workingEmp = [];
+    // }
  // this.filterEmpList()
   }
   employeeListByClient() {
     this.dropdownDataService.getEmployeeListByClient().subscribe(
       data => {
         this.globalData.employees = data;
+        this.globalData.defaultEmployees = data;
         if (data !== 'No data found!') {
-        //this.employees = this.dropdwonTransformService.transform(data, 'EmpName', 'EmpId', '-- Select --');
+        this.defaultEmployees = this.dropdwonTransformService.transform(data, 'EmpName', 'EmpId', '-- Select --');
         } else {
           this.employees = [];
         }
@@ -781,6 +858,20 @@ completeTask(formModel){
   //   }
   // }
 
+  onSelectingDefaultEmp(event: any){
+    // for(let i of event.value){
+      for(let employee of  this.globalData.defaultEmployees){
+        if(event.itemValue=== employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
+          this.employeeArray.push(employee.EmpName)
+        }
+        else if(event.itemValue=== employee.EmpId && this.employeeArray.indexOf(employee.EmpName) !=-1){
+          let index = this.employeeArray.indexOf(employee.EmpName);
+          this.employeeArray.splice(index,1)
+        }
+      }
+    //}
+  
+  }
   OnSelectingEmployees(event: any){
     if(this.employeeNameToBeDisplayedOnDropdown === "--Select--"){
       this.employeeNameToBeDisplayedOnDropdown=""

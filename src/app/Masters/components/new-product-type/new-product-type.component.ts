@@ -135,7 +135,7 @@ export class NewProductTypeComponent implements OnInit {
     private router: Router,
     private packagingTypesService: PackagingTypesService,
   ) {
-    this.getAllBrands();
+    //this.getAllBrands();
     this.getAllStrains();
     this.getAllSkewTypes();
     // this.getAllSkew();

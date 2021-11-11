@@ -78,8 +78,8 @@
                 <!-- Starin  -->
                   <div class="ui-g-12 ui-md-6">
                     <div class="paddingRL">
-                      <label for="strain">{{ newProductTypeResources.strain }}<span class="star">*</span></label>:
-<!-- 
+                      <label for="strain">Cultivar<span class="star">*</span></label>:
+
                       <p-dropdown
                         [filter] ="true"
                         id="strain"
@@ -90,7 +90,7 @@
                         (onChange)=" getSkewTypeByStrainName($event)"
                         class="clsControl"
                         name="strain">
-                      </p-dropdown> -->
+                      </p-dropdown> 
                       <p-dropdown
                       [filter] ="true"
                       id="strain"
@@ -104,10 +104,10 @@
                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newProductTypeEntryForm.controls['strain'].valid&&newProductTypeEntryForm.controls['strain'].dirty">
                         <span *ngIf="newProductTypeEntryForm.controls['strain'].errors['required']">
-                            {{ newProductTypeResources.strainrequired }}
+                          Cultivar required
                         </span>
                         <span *ngIf="newProductTypeEntryForm.controls['strain'].hasError('strainnotpresent')">
-                            {{ newProductTypeResources.strainnotpresent }} 
+                          Cultivar not present
                         </span>
                     </div>
 

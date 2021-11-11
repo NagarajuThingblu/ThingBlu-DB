@@ -17,6 +17,7 @@ import { LoaderService } from '../../../../../shared/services/loader.service';
 import { AppCommonService } from '../../../../../shared/services/app-common.service';
 import { Title } from '@angular/platform-browser';
 import { RefreshService } from '../../../../../dashboard/services/refresh.service';
+import { PTRService } from '../../../../../Masters/services/ptr.service';
 
 // const tolerance = environment.tolerance;
 @Component({
@@ -120,6 +121,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
     private appCommonService: AppCommonService,
     private confirmationService: ConfirmationService,
     private titleService: Title,
+    private ptrActionService: PTRService,
     private refreshService: RefreshService,
     private newEmployeeActionService: NewEmployeeActionService,
   ) {
@@ -172,7 +174,10 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
   // Added by Devdan :: 12-Oct-2018
   taskTypeId: any;
   readOnlyFlag: boolean;
-
+  public allSubCrewlist: any;
+   public crewlist: SelectItem[];
+   public subcrewlist: SelectItem[];
+   public filteredCrewList:any[]
   allocateEmpData = {
     showDialog: false,
     orderDetails: {},
@@ -230,7 +235,9 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
         'binno': new FormControl(''),
         'brand': new FormControl(''),
         'strain': new FormControl(''),
-        'skills':new FormControl('', Validators.required),
+        'crew': new FormControl(''),
+        'subcrew': new FormControl(''),
+        'skills':new FormControl(''),
         // 'employee': new FormControl('', Validators.required),
         'estimatedstartdate': new FormControl('', Validators.compose([Validators.required])),
         'estimatedenddate': new FormControl(''),
@@ -321,7 +328,7 @@ export class BudPackagingComponent implements OnInit, OnDestroy {
       }
       // this.setCompanies();
     }
-
+    this.getCrewList();
     this.getSkills()
   }
 
@@ -2763,6 +2770,23 @@ else{
     }
   //this. filterEmpList()
   }
+  getCrewList(){
+    this.ptrActionService.getAllSubCrewList().subscribe(data=>{
+      if(data!="No Data Found"){
+        this.allSubCrewlist=data.Table;
+        this.crewlist = this.dropdwonTransformService.transform(this.allSubCrewlist, 'CrewName', 'CrewID', '-- Select --',false);
+        const crewfilter = Array.from(this.allSubCrewlist.reduce((m, t) => m.set(t.CrewName, t), new Map()).values())
+        this.filteredCrewList = this.dropdwonTransformService.transform(crewfilter,'CrewName', 'CrewID', '-- Select --',false)
+       
+      }
+      else{
+        this.allSubCrewlist=[];
+      }
+      this.loaderService.display(false);
+    },
+    error => { console.log(error); this.loaderService.display(false); },
+    () => console.log('GetAllCrewListbyClient complete'));
+  }
   getSkills(){
     let TaskTypeId = this.ParentFormGroup != undefined?
     this.ParentFormGroup.controls.taskname.value : this.TaskModel.TaskTypeId
@@ -2781,7 +2805,27 @@ else{
     () => console.log('skillslistbytasktype complete'));
   }
 
-
+  onCrewSelect(event:any){
+    this.subcrewlist = this.dropdwonTransformService.transform(this.allSubCrewlist.filter(x => x.CrewID === event.value && x.IsActive == true), 'SubCrewName', 'SubCrewID');
+    }
+    onSubCrewSelect(event:any){
+      this.employeeNameToBeDisplayedOnDropdown="--Select--"
+      let skillListApiDetails;
+      skillListApiDetails = {
+        TaskTypeId:Number(this.TaskModel.task),
+        CrewId:event.value,
+        SkillList:[]
+      };
+      skillListApiDetails.SkillList.push({SkillID:this.BUDPACKAGING.value.skills})
+      this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
+      .subscribe(data => {
+        this.headings = data.Table,
+        this.skilledempslist = data.Table1,
+        this.allemplist =data.Table2 ? data.Table2 : []
+        this.globalData
+        this.empfilterBasedOnSkill()
+      });
+    }
    //on selecting skill
    onSkillsSelect(event:any){
     this.employeeNameToBeDisplayedOnDropdown="--Select--"

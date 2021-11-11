@@ -281,7 +281,7 @@ getEmployeeListByClient() {
        // console.log(this.globalData.todaysData);
       } ,
       error => { console.log(error); this.loaderService.display(false); },
-      () => { console.log('Get all strains complete'); this.loaderService.display(false); });
+      () => { console.log('Get all Cultivar complete'); this.loaderService.display(false); });
   }
   showDialog(TaskId) {
     // event.stopPropagation();

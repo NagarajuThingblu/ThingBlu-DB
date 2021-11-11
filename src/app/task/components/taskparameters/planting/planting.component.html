@@ -9,7 +9,7 @@
         placeholder="-- Select --"
         [options]="fields"
         [autoWidth]="true"
-        (onChange)="getSectionListByFieldName($event)"
+        (onChange)="onFieldSelect($event)"
         formControlName="field"
         class="clsControl"
         id="field"
@@ -29,10 +29,36 @@
 
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
+      <label for="strain">Cultivar<span class="star">*</span></label>:
+      
+      <p-multiSelect #checkedItems
+        id="strain"
+        [options]="strainList"
+        formControlName="strain"
+        placeholder="-- Select --"
+        (onChange) = "onStrainSelect($event)"
+        class="clsControl"
+        name="strain"
+        >
+      </p-multiSelect>
+    </div>
+  </div>
+
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
       <label for="section">Section<span class="star">*</span></label>:
       <div class="clear"></div>
-      <p-dropdown
-          [filter] ="true"
+      <p-multiSelect #checkedItems
+      id="section"
+      [options]="sectionList"
+      formControlName="section"
+      placeholder="-- Select --"
+      (onChange) = "onSectionSelect($event)"
+      class="clsControl"
+      name="section"
+      >
+    </p-multiSelect>
+      <!-- <p-dropdown
           [options]="sectionList"
           (onChange)=" getStrainAndPlantCount($event)"
          
@@ -44,7 +70,7 @@
           class="clsControl"
           id="section"
           name="section">
-      </p-dropdown>
+      </p-dropdown> -->
       <!-- <div
       class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
       *ngIf="!TRIMMING.controls['lotno'].valid&&TRIMMING.controls['lotno'].dirty">
@@ -55,7 +81,7 @@
     </div> -->
     </div>
   </div>
-  <div class="ui-g-12 ui-md-6">
+  <!-- <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="strain">Cultivar<span class="star">*</span></label>:
       
@@ -71,7 +97,7 @@
       readonly
     />
     </div>
-  </div>
+  </div> -->
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="plantCount">Total Plants Count<span class="star">*</span></label>:
@@ -101,7 +127,37 @@
   </div>
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
-      <label for="skills">Skills<span class="star">*</span></label>:
+      <label for="crew">Crew</label>:
+      <p-dropdown #checkedItems
+      [filter] ="true"
+      [options]="filteredCrewList"
+      (onChange)="onCrewSelect($event)"
+      placeholder="-- Select --"
+      formControlName="crew"
+      class="clsControl"
+      id="crew"
+      name="crew">
+    </p-dropdown>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="subcrew">Sub Crew</label>:
+      <p-dropdown #checkedItems
+      [filter] ="true"
+      [options]="subcrewlist"
+      placeholder="-- Select --"
+      (onChange)="onSubCrewSelect($event)"
+      formControlName="subcrew"
+      class="clsControl"
+      id="subcrew"
+      name="subcrew">
+    </p-dropdown>
+    </div>
+  </div>
+  <div class="ui-g-12 ui-md-6">
+    <div class="paddingRL">
+      <label for="skills">Skills</label>:
       <p-dropdown #checkedItems
       [filter] ="true"
       [options]="skills"
@@ -114,13 +170,24 @@
     </p-dropdown>
     </div>
   </div>
+
   <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="employeeList">Assigned To<span class="star">*</span></label>:
+      <p-multiSelect #checkedItems
+      *ngIf="showDefaultEmployees"
+      [options]="defaultEmployees"
+      (onChange)="onSelectingDefaultEmp($event)"
+      placeholder="-- Select --"
+      formControlName="employeeList"
+      class="clsControl"
+      id="employeeList"
+      name="employeeList">
+    </p-multiSelect>
       <div>
 
               
-        <div class="input-container">
+        <div class="input-container"  *ngIf="!showDefaultEmployees">
           <input pInputText
           id="myTextBox"
           autocomplete="off"
@@ -275,14 +342,14 @@
         </label>
       </div>
     </div>
-  <div class="ui-g-12 ui-md-6">
+  <!-- <div class="ui-g-12 ui-md-6">
   <div class="paddingRL">
     <label>
       <strong>Cultivar: </strong>
     </label>
         {{TaskModel?.StrainName}}
   </div>
-</div>
+</div> -->
 <div class="ui-g-12 ui-md-6">
   <div class="paddingRL">
     <label>
@@ -291,14 +358,14 @@
         {{TaskModel?.FieldName}}
   </div>
 </div>
-<div class="ui-g-12 ui-md-6">
+<!-- <div class="ui-g-12 ui-md-6">
   <div class="paddingRL">
     <label>
       <strong>Section: </strong>
     </label>
         {{TaskModel?.SectionName}}
   </div>
-</div>
+</div> -->
 <div class="ui-g-12 ui-md-6">
   <div class="paddingRL">
     <label>
@@ -419,6 +486,29 @@
     {{TaskModel?.RevHrs  | minutesToTime}}
   </div>
 </div>
+
+<div class="sectionData">
+  <span class="ui-panel-title">
+    <h3 class="first">Section Details</h3>
+  </span>
+  <p-table [value]="sectionData">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Section</th>
+            <th>Cultivar</th>
+            <th>Total Plant Count</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-taskstatus>
+        <tr>
+            <td>{{taskstatus.SectionName}}</td>
+            <td>{{taskstatus.StrainName}}</td>
+            <td>{{taskstatus.TotalPlantCount}}</td>
+        </tr>
+    </ng-template>
+  </p-table>
+</div>
+
 <p-dialog header="Task Completion" [(visible)]="PageFlag.showmodal" modal="modal" [resizable]="true" [responsive]="true" [width]="500" [minWidth]="200" >
   <form [formGroup]="completionForm" (ngSubmit)="submitCompleteParameter(completionForm.value)">
     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
