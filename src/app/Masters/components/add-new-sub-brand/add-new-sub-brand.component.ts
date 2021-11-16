@@ -63,8 +63,11 @@ export class AddNewSubBrandComponent implements OnInit {
   getAllBrands() {
     this.dropdownDataService.getBrands().subscribe(
       data => {
-        this.globalData.brands = data;
-        this.brands = this.dropdwonTransformService.transform(data.filter(x => x.ParentId === 0), 'BrandName', 'BrandId', '-- Select --');
+        if(data != "No data found!"){
+          this.globalData.brands = data;
+          this.brands = this.dropdwonTransformService.transform(data.filter(x => x.ParentId === 0), 'BrandName', 'BrandId', '-- Select --');
+        }
+      
       } ,
       error => { console.log(error); },
       () => console.log('Get all brands complete'));

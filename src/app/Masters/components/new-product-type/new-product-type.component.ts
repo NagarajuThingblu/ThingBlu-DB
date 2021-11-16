@@ -17,9 +17,6 @@ import * as _ from 'lodash';
 import { routing } from '../../../app.routing';
 import { Router } from '@angular/router';
 import { routerNgProbeToken } from '@angular/router/src/router_module';
-import { NewStrainActionService } from '../../../task/services/new-strain-action.service';
-import { PackagingTypesService } from '../../services/packagingtypes.service';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   moduleId: module.id,
@@ -131,13 +128,10 @@ export class NewProductTypeComponent implements OnInit {
     private newProductTypeService: NewProductTypeService,
     private appComponentData: AppComponent,
     private scrolltopservice: ScrollTopService,
-    private newStrainActionService: NewStrainActionService, 
-    private router: Router,
-    private packagingTypesService: PackagingTypesService,
+    private router: Router
   ) {
-    //this.getAllBrands();
+    this.getAllBrands();
     this.getAllStrains();
-    this.getAllSkewTypes();
     // this.getAllSkew();
     this.getAllPackageType();
     
@@ -164,32 +158,18 @@ export class NewProductTypeComponent implements OnInit {
   getAllBrands() {
     this.dropdownDataService.getBrands().subscribe(
       data => {
-        this.globalData.brands = data;
-        this.brands = this.dropdwonTransformService.transform(data.filter(x => x.ParentId === 0), 'BrandName', 'BrandId', '-- Select --');
-        this.SubBrandInfo.allBrands = this.brands;
-        this.getSubBrands();
+        if(data != "No data found!"){
+          this.globalData.brands = data;
+          this.brands = this.dropdwonTransformService.transform(data.filter(x => x.ParentId === 0), 'BrandName', 'BrandId', '-- Select --');
+          this.SubBrandInfo.allBrands = this.brands;
+          this.getSubBrands();
+        }
+       
       } ,
       error => { console.log(error); },
       () => console.log('Get all brands complete'));
   }
-  getAllSkewTypes() {
-    this.dropdownDataService.getSkewListByClient().subscribe(
-      data => {
-        if(data != 'No data found!'){
-         // this.skewtype = data;
-          this.skewtypes = this.dropdwonTransformService.transform(data, 'SkwTypeName', 'SkwTypeName', '-- Select --');
-          console.log( this.skewtypes )
-          this.skewtypes = this.skewtypes.filter(x => x.label == 'Shakes' || x.label == 'A Buds' ||x.label == 'Smalls' )
-          console.log(this.skewtypes);
-        }
-        else{
-          this.skewtypes = [];
-        }
-      
-    },
-      error => { console.log(error); },
-      () => console.log('Get all skew types complete'));
-  }
+ 
 
   getSubBrands() {
     // console.log('Get all sub brands complete');
@@ -202,72 +182,62 @@ export class NewProductTypeComponent implements OnInit {
      this.getSubBrands();
   }
 
-  // getAllStrains() {
-  //   this.dropdownDataService.getAllDetails().subscribe(
-  //     data => {
-  //       // alert('');
-  //       this.globalData.strains = data;
-  //       this.globalData.skewtypes = data;
-  //       this.globalData.trimmingMethods = data;
-  //       this.strains = this.dropdwonTransformService.transform(this.allData, 'StrainName', 'StrainId', '-- Select --');
-  //       const strainsfilter = Array.from(data.reduce((m, t) => m.set(t.StrainName, t), new Map()).values())
-  //       this.strains = this.dropdwonTransformService.transform(strainsfilter,'StrainName', 'StrainId', '-- Select --',false)
-  //     } ,
-  //     error => { console.log(error); },
-  //     () => console.log('Get all strains complete'));
-  // }
-  getAllStrains(){
-    this.newStrainActionService.getStrainDetailList().subscribe(
+  getAllStrains() {
+    this.dropdownDataService.getAllDetails().subscribe(
       data => {
-        console.log(data);
-        if (data !== 'No data found!') {
-          this.strains = this.dropdwonTransformService.transform(data, 'StrainName', 'StrainId', '-- Select --');
+        // alert('');
+        if(data !="No Data Found"){
+          this.globalData.strains = data;
+          this.globalData.skewtypes = data;
+          this.globalData.trimmingMethods = data;
+          this.strains = this.dropdwonTransformService.transform(this.allData, 'StrainName', 'StrainId', '-- Select --');
           const strainsfilter = Array.from(data.reduce((m, t) => m.set(t.StrainName, t), new Map()).values())
-           this.strains = this.dropdwonTransformService.transform(strainsfilter,'StrainName', 'StrainId', '-- Select --',false)
-        } 
-       },
-       error => { console.log(error); },
-         () => console.log('Get all strains complete'));
+          this.strains = this.dropdwonTransformService.transform(strainsfilter,'StrainName', 'StrainId', '-- Select --',false)
+        }
+        
+      } ,
+      error => { console.log(error); },
+      () => console.log('Get all strains complete'));
   }
 
-  // getSkewTypeByStrainName(event?:any){
-  //   this.skewtypes = null;
-  //   this.trimmingMethods = null;
-  //   this.lightDept = null;
-  //   this.skewtypeList = [];
-  //     for(let sec of this.globalData.strains ){
-  //       if(event.value === sec.StrainId){
-  //         this.skewtypeList.push({label: sec.SkewType, value: sec.SkewTypeId})
-  //       }
-  //     }
-  //     const skewfilter = Array.from(this.skewtypeList.reduce((m, t) => m.set(t.label, t), new Map()).values())
-  //     this.skewtypes = this.dropdwonTransformService.transform(skewfilter,'label', 'value', '-- Select --',false)
+  getSkewTypeByStrainName(event?:any){
+    this.skewtypes = null;
+    this.trimmingMethods = null;
+    this.lightDept = null;
+    this.skewtypeList = [];
+      for(let sec of this.globalData.strains ){
+        if(event.value === sec.StrainId){
+          this.skewtypeList.push({label: sec.SkewType, value: sec.SkewTypeId})
+        }
+      }
+      const skewfilter = Array.from(this.skewtypeList.reduce((m, t) => m.set(t.label, t), new Map()).values())
+      this.skewtypes = this.dropdwonTransformService.transform(skewfilter,'label', 'value', '-- Select --',false)
     
-  // }getSkewListByClient
- 
-  // getTMOnSkewTypeChange(event?:any){
-  //   this.trimmingMethods = null;
-  //   this.trimmingMethod = [];
-  //   for(let skew of this.globalData.skewtypes){
-  //     if(skew.SkewTypeId === event.value && skew.StrainId ===this.newProductTypeEntryForm.value.strain){
-  //       this.trimmingMethod.push({label: skew.TrimmingMethod, value:skew.TrimmingMethod})
-  //     }
-  //   }
-  //   const tmfilter = Array.from(this.trimmingMethod.reduce((m, t) => m.set(t.label, t), new Map()).values())
-  //   this.trimmingMethods = this.dropdwonTransformService.transform(tmfilter,'label', 'value', '-- Select --',false)
+  }
 
-  // }
-  // getLDOnTMChange(event?:any){
-  //   this.lightDept = null;
-  //   this.lightDept = [];
-  //   for(let lightdept of this.globalData.trimmingMethods){
-  //     if(lightdept.TrimmingMethod === event.value && lightdept.StrainId ===this.newProductTypeEntryForm.value.strain && lightdept.SkewTypeId === this.newProductTypeEntryForm.value.skewType){
-  //       this.lightDept.push({label: lightdept.IsLightDeprevation, value:lightdept.IsLightDeprevation})
-  //     }
-  //   }
-  //   const ldfilter = Array.from(this.lightDept.reduce((m, t) => m.set(t.label, t), new Map()).values())
-  //   this.lightDept = this.dropdwonTransformService.transform(ldfilter,'label', 'value', '-- Select --',false)
-  // }
+  getTMOnSkewTypeChange(event?:any){
+    this.trimmingMethods = null;
+    this.trimmingMethod = [];
+    for(let skew of this.globalData.skewtypes){
+      if(skew.SkewTypeId === event.value && skew.StrainId ===this.newProductTypeEntryForm.value.strain){
+        this.trimmingMethod.push({label: skew.TrimmingMethod, value:skew.TrimmingMethod})
+      }
+    }
+    const tmfilter = Array.from(this.trimmingMethod.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.trimmingMethods = this.dropdwonTransformService.transform(tmfilter,'label', 'value', '-- Select --',false)
+
+  }
+  getLDOnTMChange(event?:any){
+    this.lightDept = null;
+    this.lightDept = [];
+    for(let lightdept of this.globalData.trimmingMethods){
+      if(lightdept.TrimmingMethod === event.value && lightdept.StrainId ===this.newProductTypeEntryForm.value.strain && lightdept.SkewTypeId === this.newProductTypeEntryForm.value.skewType){
+        this.lightDept.push({label: lightdept.IsLightDeprevation, value:lightdept.IsLightDeprevation})
+      }
+    }
+    const ldfilter = Array.from(this.lightDept.reduce((m, t) => m.set(t.label, t), new Map()).values())
+    this.lightDept = this.dropdwonTransformService.transform(ldfilter,'label', 'value', '-- Select --',false)
+  }
 
   // getAllSkew() {
   //   //     this.skewtypes = [
@@ -297,7 +267,7 @@ export class NewProductTypeComponent implements OnInit {
 
 
   getAllPackageType() {
-    this.packagingTypesService.getPackagingTypesDetails().subscribe(
+    this.dropdownDataService.getPackageTypeList().subscribe(
       data => {
         this.globalData.packagetypes = data;
         this.packagetypes = this.dropdwonTransformService.transform(data, 'PkgTypeName', 'PkgTypeId', '-- Select --');
@@ -592,7 +562,6 @@ export class NewProductTypeComponent implements OnInit {
       let newRoleDetailsForApi;
       newRoleDetailsForApi = {
         ClientProductType: {
-          ClientId: Number(this._cookieService.ClientId),
             ProductTypeId: value.ProductTypeId,
             VirtualRoleId: Number(this._cookieService.VirtualRoleId),
             IsDeleted: IsDeleted,
@@ -720,15 +689,6 @@ export class NewProductTypeComponent implements OnInit {
   ngOnInit() {
     this.saveButtonText = 'Save';
     this.clear = 'Clear';
-    this.trimmingMethods =[
-      {label:"HT", value:'HT'},
-      {label:"MT", value:'MT'}
-    ]
-
-    this.lightDept  =[
-      {label:"true", value:"true"},
-      {label:"false", value:"false"}
-    ]
     this.newEmployeeResources = MastersResource.getResources().en.addnewemployee;
     this.newProductTypeResources = MastersResource.getResources().en.newproductype;
     this.globalResource = GlobalResources.getResources().en;
@@ -745,10 +705,8 @@ export class NewProductTypeComponent implements OnInit {
     'strain': new FormControl(null, Validators.required),
     'skewType': new FormControl(null, Validators.required),
     'packageType': new FormControl(null, Validators.required),
-    // 'trimmingmethod': new FormControl(null, Validators.required),
-    // 'lightdept':new FormControl(null, Validators.required),
-    'trimmingmethod': new FormControl(null),
-    'lightdept':new FormControl(0),
+    'trimmingmethod': new FormControl(null, Validators.required),
+    'lightdept':new FormControl(null, Validators.required),
     // 'packageUnit': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(8), Validators.min(0.1)])),
     // 'packageItemQty': new FormControl(null, Validators.compose([Validators.required, Validators.maxLength(8), Validators.min(1)])),
     // 'packageLable': new FormControl(null, Validators.maxLength(50)),

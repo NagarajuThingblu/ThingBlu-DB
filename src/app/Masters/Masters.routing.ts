@@ -19,7 +19,7 @@ import { NewPackageTypeFormComponent } from "./components/new-package-type-form/
 import { NewProductTypeComponent } from "./components/new-product-type/new-product-type.component";
 import { PlantTerminationReasonsComponent } from "./components/plant-termination-reasons/plant-termination-reasons.component";
 import { RetailerComponent } from "./components/retailer/retailer.component";
-// import { ChemicalPurchaseComponent } from './components/chemical-purchase/chemical-purchase.component';
+//import { ChemicalPurchaseComponent } from './components/chemical-purchase/chemical-purchase.component';
 // import { ChemicalMasterPageComponent } from './components/chemical-master-page/chemical-master-page.component';
 import { RoomsTablesComponent } from "./components/rooms-tables/rooms-tables.component";
 import { RoomsComponent } from "./components/rooms/rooms.component";

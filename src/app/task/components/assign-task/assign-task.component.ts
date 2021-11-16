@@ -721,12 +721,13 @@ console.log(assignTaskFormValues)
            
           assignTaskFormValues[this.selectedTaskTypeName].employeeList
           .forEach((element, index) => {
-            if(element.isParent=="False"){
+            // if(element.isParent=="False"){
               assignTaskDetailsForWebApi.EmployeeTypes.push({
-                "EmpId" : assignTaskFormValues.CUSTOMTASK.employeeList[index].id ,
+               // "EmpId" : assignTaskFormValues.CUSTOMTASK.employeeList[index].id ,
+               "EmpId" :  assignTaskFormValues.CUSTOMTASK.employeeList[index].id? assignTaskFormValues.CUSTOMTASK.employeeList[index].id :assignTaskFormValues.CUSTOMTASK.employeeList[index]
                
               });
-            }
+            // }
           });
          //  assignTaskFormValues[this.selectedTaskTypeName].skills
          //  .forEach((element, index) => {
@@ -961,12 +962,13 @@ console.log(assignTaskFormValues)
      
         assignTaskFormValues[this.selectedTaskTypeName].employeeList
         .forEach((element, index) => {
-          if(element.isParent=="False"){
+          // if(element.isParent=="False" ){
             assignTaskDetailsForWebApi.EmployeeTypes.push({
-              "EmpId" : assignTaskFormValues.INDEPENDENT.employeeList[index].id ,
+              //"EmpId" : assignTaskFormValues.INDEPENDENT.employeeList[index].id ,
+              "EmpId" :  assignTaskFormValues.INDEPENDENT.employeeList[index].id? assignTaskFormValues.INDEPENDENT.employeeList[index].id :assignTaskFormValues.INDEPENDENT.employeeList[index]
               
             });
-          }
+          // }
         });
        //  assignTaskFormValues[this.selectedTaskTypeName].skills
        //  .forEach((element, index) => {

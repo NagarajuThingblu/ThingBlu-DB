@@ -91,16 +91,6 @@
                         class="clsControl"
                         name="strain">
                       </p-dropdown> 
-                      <p-dropdown
-                      [filter] ="true"
-                      id="strain"
-                      formControlName="strain"
-                      [options]="strains"
-                      placeholder="-- Select --"
-                      [autoWidth]="false"
-                      class="clsControl"
-                      name="strain">
-                    </p-dropdown>
                       <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                         *ngIf="!newProductTypeEntryForm.controls['strain'].valid&&newProductTypeEntryForm.controls['strain'].dirty">
                         <span *ngIf="newProductTypeEntryForm.controls['strain'].errors['required']">
