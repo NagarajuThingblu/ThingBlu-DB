@@ -50,10 +50,20 @@
    <div class="ui-g-12 ui-md-6">
     <div class="paddingRL">
       <label for="employeeList">Assigned To<span class="star">*</span></label>:
+      <p-multiSelect #checkedItems
+      *ngIf="showDefaultEmployees"
+      [options]="defaultEmployees"
+      (onChange)="onSelectingDefaultEmp($event)"
+      placeholder="-- Select --"
+      formControlName="employeeList"
+      class="clsControl"
+      id="employeeList"
+      name="employeeList">
+    </p-multiSelect>
       <div>
 
               
-        <div class="input-container">
+        <div class="input-container" *ngIf="!showDefaultEmployees">
           <input pInputText
           id="myTextBox"
           autocomplete="off"

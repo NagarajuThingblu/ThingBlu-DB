@@ -32,6 +32,7 @@ export class CustomTaskComponent implements OnInit {
   CUSTOMTASK: FormGroup;
   completionForm: FormGroup;
   reviewForm: FormGroup;
+  public showDefaultEmployees:boolean=true;
 
   @Input() PageFlag: any;
   @Input() ParentFormGroup: FormGroup;
@@ -111,7 +112,8 @@ export class CustomTaskComponent implements OnInit {
   public allSubCrewlist: any;
   public crewlist: SelectItem[];
   public subcrewlist: SelectItem[];
-  public filteredCrewList:any[]
+  public filteredCrewList:any[];
+  public defaultEmployees:any[]
   // Added by Devdan :: 10-Oct-2018
   taskTypeId: any;
   // Added by Devdan :: Sec to Min change :: 06-Nov-2018 :: Variable to Enable/Disable Second Text Box
@@ -121,6 +123,7 @@ export class CustomTaskComponent implements OnInit {
   private globalData = {
     lots: [],
     employees: [],
+    defaultEmployees:[],
     strains: []
   };
   ngOnInit() {
@@ -290,51 +293,65 @@ export class CustomTaskComponent implements OnInit {
     () => console.log('skillslistbytasktype complete'));
   }
   onSubCrewSelect(event:any){
-    this.employeeNameToBeDisplayedOnDropdown="--Select--"
-    let skillListApiDetails;
-    skillListApiDetails = {
-      TaskTypeId:Number(this.TaskModel.task),
-      CrewId:event.value,
-      SkillList:[]
-    };
-    skillListApiDetails.SkillList.push({SkillID:this.CUSTOMTASK.value.skills})
-    this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
-    .subscribe(data => {
-      this.headings = data.Table,
-      this.skilledempslist = data.Table1,
-      this.allemplist =data.Table2 ? data.Table2 : []
-      this.globalData
-      this.empfilterBasedOnSkill()
-    });
+    if(event.value !=null){
+      this.showDefaultEmployees=false;
+      this.employeeNameToBeDisplayedOnDropdown="--Select--"
+      let skillListApiDetails;
+      skillListApiDetails = {
+        TaskTypeId:Number(this.TaskModel.task),
+        CrewId:event.value,
+        SkillList:[]
+      };
+      skillListApiDetails.SkillList.push({SkillID:this.CUSTOMTASK.value.skills})
+      this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
+      .subscribe(data => {
+        this.headings = data.Table,
+        this.skilledempslist = data.Table1,
+        this.allemplist =data.Table2 ? data.Table2 : []
+        this.globalData
+        this.empfilterBasedOnSkill()
+      });
+    }
+    else{
+      this.showDefaultEmployees=true;
+    }
+  
   }
   onCrewSelect(event:any){
-    this.subcrewlist = this.dropdwonTransformService.transform(this.allSubCrewlist.filter(x => x.CrewID === event.value && x.IsActive == true), 'SubCrewName', 'SubCrewID');
+    if(event.value !=null){
+      this.showDefaultEmployees=false;
+      this.subcrewlist = this.dropdwonTransformService.transform(this.allSubCrewlist.filter(x => x.CrewID === event.value && x.IsActive == true), 'SubCrewName', 'SubCrewID');
     }
+  else{
+    this.showDefaultEmployees=true;
+  }
+ 
+  }
   //on selecting skill
   onSkillsSelect(event:any){
-    this.employeeNameToBeDisplayedOnDropdown="--Select--"
-    let skillListApiDetails;
-    skillListApiDetails = {
-      TaskTypeId:Number(this.TaskModel.task),
-      CrewId:this.CUSTOMTASK.value.subcrew,
-      SkillList:[]
-    };
-    skillListApiDetails.SkillList.push({SkillID:event.value})
-    // for(let j of this.GROWERTRIMMING.value.skills){
-          
-    //   skillListApiDetails.SkillList.push({
-    //     SkillID: j,
-       
-    //   })
-    // };
-    this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
-    .subscribe(data => {
-      this.headings = data.Table,
-      this.skilledempslist = data.Table1
-      this.allemplist = data.Table2 ? data.Table2 : []
-      this.empfilterBasedOnSkill()
-    });
-      }
+    if(event.value !=null){
+      this.showDefaultEmployees=false;
+      this.employeeNameToBeDisplayedOnDropdown="--Select--"
+  let skillListApiDetails;
+  skillListApiDetails = {
+    TaskTypeId:Number(this.TaskModel.task),
+    CrewId:this.CUSTOMTASK.value.subcrew,
+    SkillList:[]
+  };
+  skillListApiDetails.SkillList.push({SkillID:event.value})
+  this.taskCommonService.getEmployeeListBasedOnSkills(skillListApiDetails)
+  .subscribe(data => {
+    this.headings = data.Table,
+    this.skilledempslist = data.Table1,
+    this.allemplist =data.Table2 ? data.Table2 : []
+    this.globalData
+    this.empfilterBasedOnSkill()
+  });
+    }
+    else{
+      this.showDefaultEmployees=true;
+    }
+  }
 
   //filtering employees based on skill
   empfilterBasedOnSkill(){
@@ -413,6 +430,21 @@ export class CustomTaskComponent implements OnInit {
   console.log(event)
   }
 //on selecting an employee
+
+onSelectingDefaultEmp(event: any){
+  // for(let i of event.value){
+    for(let employee of  this.globalData.defaultEmployees){
+      if(event.itemValue=== employee.EmpId && this.employeeArray.indexOf(employee.EmpName) === -1){
+        this.employeeArray.push(employee.EmpName)
+      }
+      else if(event.itemValue=== employee.EmpId && this.employeeArray.indexOf(employee.EmpName) !=-1){
+        let index = this.employeeArray.indexOf(employee.EmpName);
+        this.employeeArray.splice(index,1)
+      }
+    }
+  //}
+
+}
  
 OnSelectingEmployees(event: any){
   if(this.employeeNameToBeDisplayedOnDropdown === "--Select--"){
@@ -516,9 +548,9 @@ OnSelectingEmployees(event: any){
 
             setTimeout( () => {
               if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                this.router.navigate(['home/dashboard/managerdashboard']);
+                this.router.navigate(['home/managerdashboard']);
               } else {
-                this.router.navigate(['home/dashboard/empdashboard']);
+                this.router.navigate(['home/empdashboard']);
               }
             }, 2000);
           } else if (data === 'Failure') {
@@ -535,9 +567,9 @@ OnSelectingEmployees(event: any){
 
             setTimeout( () => {
               if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-                this.router.navigate(['home/dashboard/managerdashboard']);
+                this.router.navigate(['home/managerdashboard']);
               } else {
-                this.router.navigate(['home/dashboard/empdashboard']);
+                this.router.navigate(['home/empdashboard']);
               }
             }, 2000);
           }
@@ -604,9 +636,9 @@ OnSelectingEmployees(event: any){
 
         setTimeout( () => {
           if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-            this.router.navigate(['home/dashboard/managerdashboard']);
+            this.router.navigate(['home/managerdashboard']);
           } else {
-            this.router.navigate(['home/dashboard/empdashboard']);
+            this.router.navigate(['home/empdashboard']);
           }
         }, 2000);
       } else if (data === 'Failure') {
@@ -623,9 +655,9 @@ OnSelectingEmployees(event: any){
 
         setTimeout( () => {
           if (this._cookieService.UserRole === this.userRoles.Manager ||this._cookieService.UserRole === this.userRoles.SystemAdmin || this._cookieService.UserRole === this.userRoles.SuperAdmin) {
-            this.router.navigate(['home/dashboard/managerdashboard']);
+            this.router.navigate(['home/managerdashboard']);
           } else {
-            this.router.navigate(['home/dashboard/empdashboard']);
+            this.router.navigate(['home/empdashboard']);
           }
         }, 2000);
       }
@@ -664,8 +696,9 @@ OnSelectingEmployees(event: any){
       this.dropdownDataService.getEmployeeListByClient().subscribe(
         data => {
           this.globalData.employees = data;
+          this.globalData.defaultEmployees = data;
           if (data !== 'No data found!') {
-          this.employees = this.dropdwonTransformService.transform(data, 'EmpName', 'EmpId', '-- Select --');
+          this.defaultEmployees = this.dropdwonTransformService.transform(data, 'EmpName', 'EmpId', '-- Select --');
           } else {
             this.employees = [];
           }
