@@ -516,6 +516,22 @@ export class MastersResource {
                     duplicate:'Duplicate record found',
                     AlreadyDeleted:'Plant Termination Reason Already Deleted'
                 },
+
+                os:{
+                    contractorsuccess:'Source  added successfully',
+                    updateSuccess: 'Source  updated successfully.',
+                    inactivated:'Source  inactivated successfully.',
+                    ptrinactivated:'Source  inactivated successfully.',
+                    activated: 'Source  activated successfully.',
+                    alreadydlt:'Source  Already Deleted',
+                    deletedSuccess: 'Source  deleted successfully.',
+                    cannotActivate: 'Can not activate this Source. Might be it does not exist.',
+                    cannotdelete: 'Can not delete this Source. Might be it does not exist.',
+                    cannotInactivate: 'Can not inactivate this Source. Might be it does not exist.',
+                    inuse: 'Can not delete this Source. It is in use.',
+                    duplicate:'Duplicate record found',
+                    AlreadyDeleted:'Source Already Deleted'
+                },
                 chemicalmaster:{
                     success:"Chemical Type Saved Successfully ",
                     updated:"Chemical Type Updated Successfully ",

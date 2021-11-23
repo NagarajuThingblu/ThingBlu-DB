@@ -28,6 +28,7 @@ import { RetailerComponent } from './components/retailer/retailer.component';
 import { RetailerService } from './services/retailer.service';
 import { FLCService } from './services/flc.service';
 import { PTRService } from './services/ptr.service';
+import { OSService } from './services/otherSource.service';
 import {ChemicalMasterService} from './services/chemicalmaster.service'
 import { AddNewClientComponent } from './components/add-new-client/add-new-client.component';
 import { NewClientService } from './services/new-client.service';
@@ -89,7 +90,8 @@ import { EmployeeSkillsetComponent } from './components/employee-skillset/employ
 import { MastersRoutingModule } from './Masters.routing';
 import { CrewComponent } from './components/crew/crew.component';
 import { CrewService} from './services/crew.service';
-import { SubcrewComponent } from './components/subcrew/subcrew.component'
+import { SubcrewComponent } from './components/subcrew/subcrew.component';
+import { OthersourceComponent } from './components/othersource/othersource.component';
 
 @NgModule({
   declarations: [
@@ -141,7 +143,9 @@ import { SubcrewComponent } from './components/subcrew/subcrew.component'
     LabelDetailsComponent,
     EmployeeSkillsetComponent,
     CrewComponent,
-    SubcrewComponent
+    SubcrewComponent,
+    OthersourceComponent
+   
    
   ],
   imports: [
@@ -161,6 +165,7 @@ import { SubcrewComponent } from './components/subcrew/subcrew.component'
     TpprocessorService,
     RetailerService,
     FLCService,
+    OSService,
     PTRService,
     ChemicalMasterService,
     NewClientService,

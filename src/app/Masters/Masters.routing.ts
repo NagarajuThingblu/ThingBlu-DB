@@ -37,7 +37,7 @@ import { LabelDetailsComponent } from "./components/label-details/label-details.
 import { UpdateTerminationreasonComponent } from "./components/update-terminationreason/update-terminationreason.component";
 import { CrewComponent } from "./components/crew/crew.component";
 import { SubcrewComponent } from "./components/subcrew/subcrew.component";
-
+import { OthersourceComponent } from "./components/othersource/othersource.component";
 const routes:Routes =[
       { path: 'newproducttype', component: NewProductTypeComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'grower', component: GrowerComponent, canActivate: [AuthGuard, RoleGuard] },
@@ -75,6 +75,7 @@ const routes:Routes =[
       { path: 'sectionsMergeinfo', component: LabelDetailsComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'crew', component: CrewComponent, canActivate: [AuthGuard, RoleGuard] },
       { path: 'subcrew', component: SubcrewComponent, canActivate: [AuthGuard, RoleGuard] },
+      { path: 'othersource', component: OthersourceComponent, canActivate: [AuthGuard, RoleGuard] },
 ]
 @NgModule({
     imports:[RouterModule.forChild(routes)],

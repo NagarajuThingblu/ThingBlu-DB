@@ -43,7 +43,11 @@ export class SidebarComponent implements OnInit {
   public userRoles: any;
   public userRoleName: any;
  public link;
+ public thirdLink;
  public subLink;
+ public thirdLevelData
+ public recordActive;
+ public thirdSubLink;
 
   navigationSubState: any = {
     1: 'inactive',
@@ -84,6 +88,7 @@ export class SidebarComponent implements OnInit {
       this.plottedmenuItems[index].subState = (this.plottedmenuItems[index].subState === 'inactive' ? 'active' : 'inactive');
       this.plottedmenuItems[index].arrow = (this.plottedmenuItems[index].arrow === 'pull-right-container' ? 'pull-right-containerr' : 'pull-right-container');
     //  this.xyz.hight = 'hightlight'
+    
     this.link =  this.plottedmenuItems[index].routerLink 
 
    
@@ -98,8 +103,26 @@ export class SidebarComponent implements OnInit {
   navigatesubitems(index: number, i:number) {
     this.link = null
     this.subLink = this.plottedmenuItems[i].items[index].routerLink
-   
 }
+navigatesubitems1(index: number, i:number){
+  this.link= null;
+  this.plottedmenuItems[i].items[index].subState = (this.plottedmenuItems[i].items[index].subState === 'inactive' ? 'active' : 'inactive');
+  this.plottedmenuItems[i].items[index].arrow = ( this.plottedmenuItems[i].items[index].arrow === 'pull-right-container' ? 'pull-right-containerr' : 'pull-right-container');
+  this.subLink = this.plottedmenuItems[i].items[index].routerLink
+}
+navigatesubitems2(j:number,index: number, i:number){
+  this.link= null;
+  this.plottedmenuItems[i].items[j].items[index].subState = (this.plottedmenuItems[i].items[j].items[index].subState=== 'inactive' ? 'active' : 'inactive');
+  this.plottedmenuItems[i].items[j].items[index].arrow = (this.plottedmenuItems[i].items[j].items[index].arrow === 'pull-right-container' ? 'pull-right-containerr' : 'pull-right-container');
+  this.subLink =this.plottedmenuItems[i].items[j].items[index].routerLink
+}
+navigatesubitems3(j:number,l:number,index: number, i:number){
+  this.link= null;
+  this.plottedmenuItems[i].items[j].items[l].items[index].subState = ( this.plottedmenuItems[i].items[j].items[l].items[index].subState=== 'inactive' ? 'active' : 'inactive');
+  this.plottedmenuItems[i].items[j].items[l].items[index].arrow = ( this.plottedmenuItems[i].items[j].items[l].items[index].arrow === 'pull-right-container' ? 'pull-right-containerr' : 'pull-right-container');
+  this.subLink = this.plottedmenuItems[i].items[j].items[l].items[index].routerLink
+}
+
 
   logOut() {
     this.cookieService.deleteAll();
@@ -190,6 +213,7 @@ export class SidebarComponent implements OnInit {
         Newmenu.name = element.Name;
         Newmenu.num = element.Num;
         Newmenu.items = [];
+        Newmenu.Level = element.Level;
         Newmenu.isParent = element.IsParent;
         Newmenu.parentId = element.ParentId;
         Newmenu.subState = element.SubState;
@@ -197,7 +221,7 @@ export class SidebarComponent implements OnInit {
         Newmenu.IsDefault = element.IsDefaultPage;
         Newmenu.Hightlight = null;
 
-        if (Newmenu.isParent === true) {
+        if (Newmenu.isParent === true &&  Newmenu.Level == 1) {
           this.plottedmenuItems.push(Newmenu);
           // this.plottedmenuItems.push('Hightlight')
           if (unparentlist.length) {
@@ -222,7 +246,82 @@ export class SidebarComponent implements OnInit {
               }
             });
           }
-        } else if (element.IsParent === false) {
+        } else if(Newmenu.isParent === true &&  Newmenu.Level == 2){
+          this.plottedmenuItems.forEach(x =>{
+            if(x.id === element.ParentId){
+              x.items.push(Newmenu)
+              if (unparentlist.length) {
+                this.plottedmenuItems.forEach(unparent => {
+                  unparent.items.forEach(a =>{
+                    if (a.id === Newmenu.id) {
+                      unparentlist.filter(r => r.parentId === Newmenu.id).forEach(unparentelement => {
+                        const unparentMenu: any = {};
+                        unparentMenu.id = unparentelement.id;
+                        unparentMenu.label = unparentelement.label;
+                        unparentMenu.icon = unparentelement.icon;
+                        unparentMenu.routerLink = unparentelement.routerLink;
+                        unparentMenu.name = unparentelement.name;
+                        unparentMenu.num = unparentelement.num;
+                        unparentMenu.items = [];
+                        unparentMenu.isParent = unparentelement.isParent;
+                        unparentMenu.parentId = unparentelement.parentId;
+                        unparentMenu.subState = unparentelement.subState;
+                        unparentMenu.arrow = unparentelement.sideArrow;
+                        unparentMenu.IsDefault = unparentelement.IsDefault;
+                        a.items.push(unparentMenu);
+                      });
+                    }
+                  })
+               
+                });
+              }
+            }
+            else{
+              unparentlist.push(Newmenu);
+            }
+          })
+        }
+         else if(Newmenu.isParent === true &&  Newmenu.Level == 3){
+          this.plottedmenuItems.forEach(x =>{
+           x.items.forEach(y =>{
+              if(y.id === element.ParentId){
+                y.items.push(Newmenu)
+                if (unparentlist.length) {
+                  this.plottedmenuItems.forEach(unparent => {
+                    unparent.items.forEach(a =>{
+                      a.items.forEach(b =>{
+                        if (b.id === Newmenu.id) {
+                          unparentlist.filter(r => r.parentId === Newmenu.id).forEach(unparentelement => {
+                            const unparentMenu: any = {};
+                            unparentMenu.id = unparentelement.id;
+                            unparentMenu.label = unparentelement.label;
+                            unparentMenu.icon = unparentelement.icon;
+                            unparentMenu.routerLink = unparentelement.routerLink;
+                            unparentMenu.name = unparentelement.name;
+                            unparentMenu.num = unparentelement.num;
+                            unparentMenu.items = [];
+                            unparentMenu.isParent = unparentelement.isParent;
+                            unparentMenu.parentId = unparentelement.parentId;
+                            unparentMenu.subState = unparentelement.subState;
+                            unparentMenu.arrow = unparentelement.sideArrow;
+                            unparentMenu.IsDefault = unparentelement.IsDefault;
+                            b.items.push(unparentMenu);
+                          });
+                        }
+                      })
+                   
+                    })
+                 
+                  });
+                }
+              }
+              else{
+                unparentlist.push(Newmenu);
+              }
+            })
+          })
+        }
+        else if (element.IsParent === false && element.Level == 2) {
           if (this.plottedmenuItems.length) {
             this.plottedmenuItems.forEach(parent => {
               if (parent.id === element.ParentId) {
@@ -235,9 +334,43 @@ export class SidebarComponent implements OnInit {
             unparentlist.push(Newmenu);
           }
         }
+        else if (element.IsParent === false && element.Level == 3) {
+          if (this.plottedmenuItems.length) {
+            this.plottedmenuItems.forEach(parent => {
+              parent.items.forEach(a =>{
+                if (a.id === element.ParentId) {
+                  a.items.push(Newmenu);
+                } else {
+                  unparentlist.push(Newmenu);
+                }
+              })
+            });
+          } else {
+            unparentlist.push(Newmenu);
+          }
+        }
+        else if (element.IsParent === false && element.Level == 4) {
+          if (this.plottedmenuItems.length) {
+            this.plottedmenuItems.forEach(parent => {
+              parent.items.forEach(a =>{
+                a.items.forEach(b =>{
+                  if (b.id === element.ParentId) {
+                    b.items.push(Newmenu);
+                  } else {
+                    unparentlist.push(Newmenu);
+                  }
+                })
+               
+              })
+            });
+          } else {
+            unparentlist.push(Newmenu);
+          }
+        }
       });
     }
     this.items = this.plottedmenuItems;
+    console.log(this.items)
   }
 
   PlotSidebarMenu() {
