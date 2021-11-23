@@ -167,7 +167,13 @@ public backUrl: boolean;
         data=>{
           this.msgs=[];
           if(data[0]['Result']==='Success'){
-            this.msgs.push({severity:'success', summary: this.globalResource.applicationmsg, detail: this.newTaskResources.newTasksavedsuccess});
+            if(this.taskForUpdate >0){
+              this.msgs.push({severity:'success', summary: this.globalResource.applicationmsg, detail: this.newTaskResources.newTaskupdatedsuccess});
+            }
+            else{
+              this.msgs.push({severity:'success', summary: this.globalResource.applicationmsg, detail: this.newTaskResources.newTasksavedsuccess});
+            }
+       
 
              this.resetAll();
              this.getAllTasksbyClient();
@@ -222,7 +228,7 @@ public backUrl: boolean;
    const description = this.TaskmasterForm.controls['description'];
    const chkIsActive = this.TaskmasterForm.controls['chkIsActive'];
    task.patchValue(this.taskOnEdit[0].TaskTypeName);
-   chkIsActive.patchValue(this.taskOnEdit[0].Active);
+   chkIsActive.patchValue(this.taskOnEdit[0].IsActive);
    description.patchValue(this.taskOnEdit[0].Description);
    this.clear='Cancel';
    this.saveButtonText='Update';

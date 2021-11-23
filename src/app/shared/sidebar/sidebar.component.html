@@ -40,6 +40,7 @@
                         <ul [@toggleHeight]="plottedmenuItems[i]?.subState">
                             <li *ngFor="let subitem of item.items; let j= index">
                                 <a *ngIf="subitem.items?.length > 0" (click)="navigatesubitems1(j, i)" href="javascript:void(0);" [ngClass]="subLink === subitem.routerLink? 'Hightlight':''">
+                                    <label class="fa {{subitem.icon}} material-icons"></label>
                                     <span>{{ subitem?.label }}</span>
                                     <span [ngClass]="subitem?.arrow"><i class="fa fa-angle-left pull-right"></i>
                                     </span>

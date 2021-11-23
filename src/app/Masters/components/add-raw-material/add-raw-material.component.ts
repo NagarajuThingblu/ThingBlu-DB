@@ -271,8 +271,14 @@ GoToBinsPage(){
       data => {
         this.msgs = [];
         if (String(data[0].RESULTKEY).toLocaleUpperCase() === 'SUCCESS') {
+          if(this.GrowBinMapId >0){
+            this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
+            detail: this.addNewRawMaterial.newRawMaterialupdatedsuccess });
+          }
+         else{
           this.msgs.push({severity: 'success', summary: this.globalResource.applicationmsg,
           detail: this.addNewRawMaterial.newRawMaterialavedsuccess });
+         }
          
           this.resetForm();
           this.getAllRawMaterialList();

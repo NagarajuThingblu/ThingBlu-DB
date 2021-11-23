@@ -761,7 +761,7 @@ else{
     //  this.LD = null
     this.edit = false;
     this.multiselector = true;
-    this.saveButtonText ="save"
+    this.saveButtonText ="Save"
     this.pageheading = "Add New Bin"
     this.enableDropDown = true;
     this.GetAllSections()

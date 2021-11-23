@@ -25,14 +25,11 @@
                     (onChange) = "TaskType_InChange($event)"
                     name="TaskType">
                   </p-dropdown>
-
-                  <!-- <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
-                  *ngIf="!newLabelsEntryForm.controls['TaskType'].valid&&newLabelsEntryForm.controls['TaskType'].dirty">
-                  <span *ngIf="newLabelsEntryForm.controls['TaskType'].errors['required']">
-                      Category required
-                </span>
-          
-                </div> -->
+                  <div class="ui-message ui-messages-error ui-corner-all" style="top:67px;left:-5px;" appErrorTooltip
+                  *ngIf="!newLabelsEntryForm.controls['TaskType'].valid && 
+                  newLabelsEntryForm.controls['TaskType'].dirty">
+                Category Required
+                </div>
                 <!-- <div *ngIf="newLabelsEntryForm.controls['TaskType'].valid &&(newLabelsEntryForm.controls['TaskType'].dirty || newLabelsEntryForm.controls['TaskType'].touched)">
                   <span>Category required</span>
                 </div> -->

@@ -202,7 +202,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
   }
   resetAll() {
     this.SkillUpdateId = 0;
-    this.saveButtontext = 'save';
+    this.saveButtontext = 'Save';
     this.pageHeader = 'Add New Skills';
     this.clear = 'Clear';
  this.plusOnEdit=  true;
@@ -364,7 +364,7 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
 
     showConformationMessaegForDelete(SkillId, skillset, IsDeleted, ActivateInactivateKey) {
       let strMessage: any;
-      strMessage = 'Do you want to delete the Skill?';
+      strMessage = 'Do you want to delete this Skill?';
       this.confirmationService.confirm({
         message: strMessage,
         header: 'Confirmation',
@@ -430,40 +430,32 @@ this.tasknames = this.dropdwonTransformService.transform(tasknamefilter,'label',
           if (IsDeleted === 1) {
             this.msg.push({
               severity: 'warn', summary: this.globalResource.applicationmsg,
-              detail: "hi"
+              detail: "Not Updated"
             });
             this.loaderService.display(false);
           } else if (skillset.IsActive === true) {
             this.msg.push({
               severity: 'warn', summary: this.globalResource.applicationmsg,
-              detail:  "hi"
+              detail:  "Not Updated"
             });
             skillset.IsActive = !skillset.IsActive;
             this.loaderService.display(false);
           } else {
             this.msg.push({
               severity: 'warn', summary: this.globalResource.applicationmsg,
-              detail:  "hi"
+              detail:  "Not Updated"
             });
             skillset.IsActive = !skillset.IsActive;
             this.loaderService.display(false);
           }
         }
-        else if (String(data[0].RESULTKEY) === 'ZoneINACTIVE') {
-          // alert('in in use');
-          this.msg.push({
-            severity: 'warn', summary: this.globalResource.applicationmsg,
-            detail:  "hi"
-          });
-          skillset.IsActive = !skillset.IsActive;
-          this.loaderService.display(false);
-        }
+   
         else if (data === 'Failure') {
           this.msg.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
         } else if (String(data[0].RESULTKEY) === 'INUSE') {
           this.msg.push({
             severity: 'warn', summary: this.globalResource.applicationmsg,
-            detail:  "hi"
+            detail:  "Skill is in use"
           });
         } else {
           this.msg.push({ severity: 'error', summary: this.globalResource.applicationmsg, detail: data });

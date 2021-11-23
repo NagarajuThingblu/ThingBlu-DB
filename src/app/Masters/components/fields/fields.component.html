@@ -97,7 +97,7 @@
 <div class="ui-g">
 <div class="ui-g-12">
   <p-panel header="Field List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
-    <p-table #dtFieldList [value]="allFieldslist" [scrollable]="true" scrollHeight="200px" sortMode="single" [responsive]="true" [paginator]="true"
+    <p-table #dtFieldList [value]="allFieldslist"  scrollHeight="200px" sortMode="single" [responsive]="true" [paginator]="true"
     [rows]="10" sortField="FieldId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
     (onPage)="onPageChange($event)"
     [globalFilterFields]="['FieldName','Acres','Description']">
