@@ -188,7 +188,7 @@ export class PlantTerminationReasonsComponent implements OnInit {
       header: 'Confirmation',
       icon: 'fa fa-exclamation-triangle',
       accept: () => {
-        this.ActivateDeleteFLC(TerminationId, ptr, IsDeleted, ActiveInactiveFlag);
+        this.ActivateDeletePTR(TerminationId, ptr, IsDeleted, ActiveInactiveFlag);
       },
       reject: () => {
       }
@@ -211,7 +211,7 @@ export class PlantTerminationReasonsComponent implements OnInit {
       header: 'Confirmation',
       icon: 'fa fa-exclamation-triangle',
       accept: () => {
-         this.ActivateDeleteFLC(TerminationId, ptr, IsDeleted, ActiveInactiveFlag);
+         this.ActivateDeletePTR(TerminationId, ptr, IsDeleted, ActiveInactiveFlag);
         },
         reject: () => {
           ptr.IsActive = !ptr.IsActive;
@@ -219,7 +219,7 @@ export class PlantTerminationReasonsComponent implements OnInit {
     });
   }
 
-  ActivateDeleteFLC(TerminationId, ptr, IsDeleted, ActiveInactiveFlag) {
+  ActivateDeletePTR(TerminationId, ptr, IsDeleted, ActiveInactiveFlag) {
     this.submitted = true;
     let PTRDetailsForApi;
     // console.log(this.growerForm.value);

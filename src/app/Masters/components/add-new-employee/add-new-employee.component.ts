@@ -168,6 +168,7 @@ public WhenToDisplayPWField: boolean = false
     'chkIsActive': new FormControl(null),
     'Managerlist': new FormControl(null),
     'flclist':new FormControl(null),
+    //'oslist':new FormControl(null),
     'skills':new FormControl(null),
   });
   // const managerdata = this.newEmployeeForm.get('Managerlist');

@@ -28,7 +28,7 @@ export class ZonesComponent implements OnInit {
   public msg: any[];
   public ZoneTypeforupdate: any = 0;
   public ZoneTypeEdit: any;
-  public saveButtontext = 'save';
+  public saveButtontext = 'Save';
   public clear = 'Clear';
   public paginationValues: any;
   chkIsActive: any;
