@@ -781,9 +781,9 @@
                  <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp==this.selectedRole" >
                   <div class="paddingRL">
                     <div class="le-su-12">
-                      <label for="flclist" class="towlable fwLabelBold">FLC List<span class="star">*</span></label>
+                      <label for="flclist" class="towlable fwLabelBold">FLC List<span *ngIf="makeFlcOptional == false" class="star">*</span></label>
                       <p-dropdown [filter]="true" id="flclist" [options]="flclist" placeholder="-- Select --"
-                      [autoWidth]="false" [tabindex]="10" class="clsControl" name="flclist" formControlName="flclist">
+                      [autoWidth]="false"   (onChange)="MakeFlcOrOsOptional($event)" [tabindex]="10" class="clsControl" name="flclist" formControlName="flclist">
                     </p-dropdown>
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                     *ngIf="!newEmployeeForm.controls['flclist'].valid&&newEmployeeForm.controls['flclist'].dirty">
@@ -799,16 +799,16 @@
                 <!--End FLC List-->
 
                 <!--OtherSources-->
-                <!-- <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp==this.selectedRole" >
+                <div class="ui-g-12 ui-md-6" *ngIf="this.constantusrRole.Temp==this.selectedRole" >
                   <div class="paddingRL">
                     <div class="le-su-12">
-                      <label for="oslist" class="towlable fwLabelBold">Other Source</label>
-                      <p-dropdown [filter]="true" id="oslist" [options]="flclist" placeholder="-- Select --"
+                      <label for="oslist" class="towlable fwLabelBold">Other Source<span *ngIf="makeOSOptional == false" class="star">*</span></label>
+                      <p-dropdown [filter]="true" id="oslist"   (onChange)="MakeFlcOrOsOptional($event)" [options]="othersourceList" placeholder="-- Select --"
                       [autoWidth]="false" [tabindex]="10" class="clsControl" name="oslist" formControlName="oslist">
                     </p-dropdown>
                     </div>
                   </div>
-                </div> -->
+                </div>
                 <!--End OtherSources-->
                 <!-- IsActive -->
                 <div class="ui-g-12 ui-md-12">

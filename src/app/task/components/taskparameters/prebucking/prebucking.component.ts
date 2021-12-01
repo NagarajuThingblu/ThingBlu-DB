@@ -297,7 +297,12 @@ export class PrebuckingComponent implements OnInit {
     
   // }
   onCrewSelect(event:any){
-    this.subcrewlist = this.dropdwonTransformService.transform(this.allSubCrewlist.filter(x => x.CrewID === event.value && x.IsActive == true), 'SubCrewName', 'SubCrewID');
+    if(event.value !=null){
+   this.subcrewlist = this.dropdwonTransformService.transform(this.allSubCrewlist.filter(x => x.CrewID === event.value && x.IsActive == true), 'SubCrewName', 'SubCrewID');
+    }
+ else{
+   this.subcrewlist =[]
+ }
     
     }
     onSubCrewSelect(event:any){

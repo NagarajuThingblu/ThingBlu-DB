@@ -383,6 +383,7 @@ export class PlantingComponent implements OnInit{
       this.subcrewlist = this.dropdwonTransformService.transform(this.allSubCrewlist.filter(x => x.CrewID === event.value && x.IsActive == true), 'SubCrewName', 'SubCrewID');
     }
   else{
+    this.subcrewlist=[]
     this.showDefaultEmployees=true;
   }
  

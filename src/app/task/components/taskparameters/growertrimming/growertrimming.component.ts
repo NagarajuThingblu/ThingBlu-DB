@@ -416,7 +416,12 @@ export class GrowertrimmingComponent implements OnInit {
     () => console.log('skillslistbytasktype complete'));
   }
   onCrewSelect(event:any){
+    if(event.value!=null){
     this.subcrewlist = this.dropdwonTransformService.transform(this.allSubCrewlist.filter(x => x.CrewID === event.value && x.IsActive == true), 'SubCrewName', 'SubCrewID');
+    }
+else{
+   this.subcrewlist =[]
+}
    
     }
     onSubCrewSelect(event:any){
