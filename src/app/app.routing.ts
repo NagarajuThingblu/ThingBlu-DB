@@ -83,6 +83,7 @@ import { SectionDetailsComponent } from './Masters/components/section-details/se
 import { LabelDetailsComponent } from './Masters/components/label-details/label-details.component';
 import { CrewComponent } from './Masters/components/crew/crew.component';
 import { SubcrewComponent } from './Masters/components/subcrew/subcrew.component';
+import { OthersourceComponent } from './Masters/components/othersource/othersource.component';
 
 
 const appRoutes: Routes = [
@@ -183,7 +184,7 @@ const appRoutes: Routes = [
       { path: 'subcrew', component: SubcrewComponent, canActivate: [AuthGuard, RoleGuard] },
       // {path:'planting', component:PlantingComponent}
      // {path:'harvesting',component:HarvestingComponent}
-
+     { path: 'othersource', component: OthersourceComponent, canActivate: [AuthGuard, RoleGuard] },
     ]
   }
 ];
