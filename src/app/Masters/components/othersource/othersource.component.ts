@@ -60,6 +60,7 @@ export class OthersourceComponent implements OnInit {
     this.submitted = true;
     let OtherSourceDetailsForApi;
     OtherSourceDetailsForApi = {
+      OtherSourceDetailsForApi:{
         "OSId": this.OSId,
         "ClientId": this._cookieService.ClientId,
         "OSName": this.othersourceForm.value.othersourceName,
@@ -68,6 +69,8 @@ export class OthersourceComponent implements OnInit {
         "IsActive":this.othersourceForm.value.chkIsActive ? 1 : 0,
         "IsDeleted": 0,
         "ActiveInactive": 0
+      }
+
     };
     if (this.othersourceForm.valid) {
       this.loaderService.display(true);
@@ -200,6 +203,7 @@ export class OthersourceComponent implements OnInit {
     OtherSourceDetailsForApi = {
       OtherSourceDetailsForApi:{
       OSId:OSId,
+      OSName:os.OSName,
         ClientId:this._cookieService.ClientId,
         VirtualRoleId:this._cookieService.VirtualRoleId,
         IsActive:os.IsActive == true?1:0,

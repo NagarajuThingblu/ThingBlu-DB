@@ -85,6 +85,7 @@ passwordType: string = 'text';
   selectedFile:  TreeNode[];
   public ManagerlistOptional : boolean = false;
   public flclist:any;
+  public othersourceList:any
   public files: any = [];
   public showMang: boolean =false;
   public showFlc: boolean =false;
@@ -98,7 +99,8 @@ passwordType: string = 'text';
 public WhenToDisplayPWField: boolean = false
   public visibility:boolean = false;
   public showUpArrow:boolean = false;
- 
+   public makeFlcOptional:boolean=false;
+    public makeOSOptional:boolean=false;
   constructor(
     private fb: FormBuilder,
     private loaderService: LoaderService,
@@ -111,6 +113,7 @@ public WhenToDisplayPWField: boolean = false
     private newEmployeeService: NewEmployeeService,
     private scrolltopservice: ScrollTopService,
     private router: Router,
+  
   //  private MessageService: messageService
     // private TreeModule :TreeModule,
     // private Tree:Tree,
@@ -124,6 +127,7 @@ public WhenToDisplayPWField: boolean = false
     this.GetManagerlist();
     this.getAllEmployee();
     this.GetFLClist();
+    this.GetOtherSourceList()
     this.getSkills();
     this.saveButtonText = 'Save';
     this.dateTime.setDate(this.dateTime.getDate());
@@ -168,7 +172,7 @@ public WhenToDisplayPWField: boolean = false
     'chkIsActive': new FormControl(null),
     'Managerlist': new FormControl(null),
     'flclist':new FormControl(null),
-    //'oslist':new FormControl(null),
+    'oslist':new FormControl(null),
     'skills':new FormControl(null),
   });
   // const managerdata = this.newEmployeeForm.get('Managerlist');
@@ -201,17 +205,25 @@ public WhenToDisplayPWField: boolean = false
     this.appCommonService.employeePageBackLink = false;
   }
   }
-
+MakeFlcOrOsOptional(event:any){
+  if(event.value==this.newEmployeeForm.controls['flclist'].value && event.value != null){
+    this.newEmployeeForm.controls['oslist'].patchValue(null);
+    this.makeOSOptional= true;
+    this.makeFlcOptional=false;
+  }
+  else if(event.value== this.newEmployeeForm.controls['oslist'].value && event.value != null){
+   this.newEmployeeForm.controls['flclist'].patchValue(null);
+  this.makeFlcOptional= true;
+  this.makeOSOptional=false;
+  }
+}
   doOPenPanel() {
     this.collapsed = false;
     this.resetAll();
   }
    // Save the form details
    onSubmit(value: any) {
-    // if (String(this.newEmployeeForm.value.country) != null) {
-    //   this.newEmployeeForm.controls['state'].setValidators(Validators.compose([Validators.required]));
-    //   this.newEmployeeForm.controls['city'].setValidators(Validators.compose([Validators.required]));
-    // }
+    
     if (String(this.newEmployeeForm.value.firstname).trim().length === 0) {
       this.newEmployeeForm.controls['firstname'].setErrors({'whitespace': true});
       this.newEmployeeForm.value.firstname = null;
@@ -222,11 +234,7 @@ public WhenToDisplayPWField: boolean = false
       this.newEmployeeForm.value.lastname = null;
       return;
     }
-    // if(String(this.newEmployeeForm.value.primaryemail).trim().length != 0){
-    //   this.newEmployeeForm.controls['primaryemail'].setErrors({'whitespace': true});
-    //   this.newEmployeeForm.value.lastname = null;
-    //   return;
-    // }
+
     
     const primaryemail = this.newEmployeeForm.value.primaryemail;
     const secondaryemail = this.newEmployeeForm.value.secondaryemail;
@@ -245,7 +253,6 @@ public WhenToDisplayPWField: boolean = false
     newRoleDetailsForApi = {
       Employee: {
           EmpId: this.empIdForUpdate,
-          // ClientId: this.appCommonService.trimString(this.newEmployeeForm.value.clientname),
           ClientId: this._cookieService.ClientId,
           FirstName: this.appCommonService.trimString(this.newEmployeeForm.value.firstname),
           MiddleName: this.appCommonService.trimString(this.newEmployeeForm.value.middlename),
@@ -270,12 +277,12 @@ public WhenToDisplayPWField: boolean = false
           VirtualRoleId: Number(this._cookieService.VirtualRoleId),
           IsActive: this.newEmployeeForm.value.chkIsActive ? 1 : 0,
           HireDate: new Date(this.newEmployeeForm.value.hiredate).toLocaleDateString().replace(/\u200E/g, ''),
-          // TerminationDate: new Date(this.newEmployeeForm.value.terminationdate).toLocaleDateString().replace(/\u200E/g, '') ? new Date(this.newEmployeeForm.value.terminationdate).toLocaleDateString().replace(/\u200E/g, '') : null,
-          // EditorType: 'Manager'
+
           TerminationDate: new Date(this.newEmployeeForm.value.terminationdate).toLocaleDateString().replace(/\u200E/g, ''),
           EditorType: this._cookieService.UserRole,
           ManagerId:this.newEmployeeForm.value.Managerlist,
           FLCId:this.newEmployeeForm.value.flclist,
+          OSID:this.newEmployeeForm.value.oslist,
 
       },
       SkillList:[]
@@ -307,8 +314,21 @@ public WhenToDisplayPWField: boolean = false
               this.resetForm();
               this.showTerminationDate = false;
               this.getAllEmployee();
-            } else if(String(data[0].RESULTKEY) === 'Termination Date less Than HireDate'){
+            }  else if(String(data[0].RESULTKEY) === 'Termination Date less Than HireDate'){
               this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail:data[0].RESULTKEY });
+            }
+            else if(String(data[0].RESULTKEY) === 'Manager Is Empty'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail:data[0].RESULTKEY });
+            } else if(String(data[0].RESULTKEY) === 'Select Atleast One FLC or OtherSource'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail:data[0].RESULTKEY });
+            }else if(String(data[0].RESULTKEY) === 'Select Either FLC or OtherSource'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail:data[0].RESULTKEY });
+            }else if(String(data[0].RESULTKEY) === 'The HireDate Is Less Than the Date Of Birth'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail:data[0].RESULTKEY });
+            }else if(String(data[0].RESULTKEY) === 'Already Deleted'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail:data[0].RESULTKEY });
+            }else if(String(data[0].RESULTKEY) === 'Termination Date less Than HireDate'){
+              this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail:data[0].RESULTKEY });
             }else if(String(data[0].RESULTKEY) === 'Date Of Birth Greater Than The HireDate'){
               this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail:data[0].RESULTKEY });
             }else if (String(data).toLocaleUpperCase() === 'NOTUPDATED') {
@@ -667,6 +687,7 @@ onNodeSelect(e){
           const userrole = this.newEmployeeForm.controls['userrole'];
           const managerlist = this.newEmployeeForm.controls['Managerlist'];
           const flclist = this.newEmployeeForm.controls['flclist'];
+          const oslist = this.newEmployeeForm.controls['oslist'];
           const hourlylabourrate = this.newEmployeeForm.controls['hourlylabourrate'];
           const chkIsActive = this.newEmployeeForm.controls['chkIsActive'];
 
@@ -697,7 +718,17 @@ onNodeSelect(e){
         
           userrole.patchValue(this.employeeOnEdit[0].RoleId);
           managerlist.patchValue(this.employeeOnEdit[0].ManagerId);
-          flclist.patchValue(this.employeeOnEdit[0].FLCId);
+          if(this.employeeOnEdit[0].FLCId !=null){
+            flclist.patchValue(this.employeeOnEdit[0].FLCId);
+            this.makeFlcOptional=false;
+            this.makeOSOptional=true;
+          }
+        if(this.employeeOnEdit[0].OSID!=null){
+   oslist.patchValue(this.employeeOnEdit[0].OSID);
+     this.makeFlcOptional=true;
+            this.makeOSOptional=false;
+        }
+       
           hourlylabourrate.patchValue(this.employeeOnEdit[0].HourlyRate);
           chkIsActive.patchValue(this.employeeOnEdit[0].IsActive);
           this.saveButtonText = 'Update';
@@ -874,6 +905,7 @@ onNodeSelect(e){
 
   resetAll() {
     // this.showFlc = false
+  
    this.passwordType='text';
     this.saveButtonText = 'Save';
     this.clear = 'Clear';
@@ -888,6 +920,8 @@ onNodeSelect(e){
   }
   resetForm() {
     // this.showTextbox = true;
+      this.makeOSOptional=false;
+    this.makeFlcOptional=false;
     this.passwordType = 'text';
     this.WhenToDisplayPWField = false;
     this.showUpArrow = false;
@@ -929,7 +963,9 @@ onNodeSelect(e){
 const managerdata = this.newEmployeeForm.get('Managerlist');
 const password = this.newEmployeeForm.get('emppassword')
 const flc = this.newEmployeeForm.get('flclist')
+const os = this.newEmployeeForm.get('oslist')
 this.newEmployeeForm.controls['flclist'].patchValue("") 
+this.newEmployeeForm.controls['oslist'].patchValue("")
 this.newEmployeeForm.controls['Managerlist'].patchValue("")
 // if(this.selectedRole != 'Temp'){
 //   this.showTextbox = true;
@@ -953,6 +989,7 @@ if(this.constantusrRole.Employee==this.selectedRole )
   managerdata.setValidators(Validators.required);
  
   flc.clearValidators();
+  os.clearValidators();
   //flc.updateValueAndValidity();
   // this.showMang = true;
   
@@ -961,7 +998,7 @@ else if(this.constantusrRole.Temp==this.selectedRole){
   this.showPWbox = false
   password.setValidators(Validators.compose([Validators.minLength(6), Validators.maxLength(20)]));
   managerdata.setValidators(Validators.required);
-  flc.setValidators(Validators.required);
+  //flc.setValidators(Validators.required);
   //password.updateValueAndValidity();
 
   // this.showFlc = true;
@@ -1038,6 +1075,19 @@ GetFLClist(){
   error => { console.log(error);
     this.loaderService.display(false); },
   () => console.log('Get all FLClist complete'));
+}
+GetOtherSourceList(){
+  this.dropdownDataService.GetAllosListByClient().subscribe(data=>{
+    if(data != 'No Data Found'){
+      this.othersourceList=this.dropdwonTransformService.transform(data,'OSName','OSId','--Select--');
+    }
+   else{
+    this.othersourceList = [];
+   }
+  },
+  error => { console.log(error);
+    this.loaderService.display(false); },
+  () => console.log('Get all othersource complete'));
 }
 OnUserRoleSave(RoleId: any) {
 this.getAllRoles();

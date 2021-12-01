@@ -44,6 +44,21 @@ export class DropdownValuesService {
     //   return data;
     //  })
   }
+  GetAllosListByClient(){
+    const url = 'api/Grower/GetOtherSourceList';
+    let params = new HttpParams();
+    params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+    return this.http
+    .get(url, {params: params})
+
+    .map(data => {
+
+      console.log('GetAlLosListByClient Service success');
+      // console.log(data);
+      return data;
+    });
+  }
   getAllDetails(){
     const url = 'api/Grower/GetStrainDetailsLD';
     let params = new HttpParams();

@@ -285,6 +285,7 @@ createItem(): FormGroup {
   onStrainSelect(event?: any){
     this.enableFieldSection = false;
 this.Fields = null;
+this.newLabelsEntryForm.controls['lightdept'].patchValue(null);
      this.lightDept = null;
     this.lightDept = [];
     if(this.categoryName === "Pre-Bucked"){

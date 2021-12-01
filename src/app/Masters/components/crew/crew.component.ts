@@ -99,6 +99,10 @@ onSubmit(value: string){
             this.GetCrewList();
             this.CrewIDForUpdate=0;
           }
+          else if (data[0]['RESULTKEY'] === 'Please Inactivate the sub crews') {
+            this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail:data[0]['RESULTKEY']  });
+            this.GetCrewList();
+          }
           else if(data[0]['RESULTKEY'].toLocaleUpperCase() == 'UPDATED'){
             this.msgs.push({
               severity: 'success', summary: this.globalResource.applicationmsg,
@@ -276,8 +280,10 @@ activateDeleteCrew(CrewID, Crew,IsDeleted, ActiveInactiveFlag) {
             }
           }  else if (data[0]['RESULTKEY'] === 'Please Delete the sub crews') {
             this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail:data[0]['RESULTKEY']  });
+            this.GetCrewList();
           } else if (data[0]['RESULTKEY'] === 'Please Inactivate the sub crews') {
             this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail:data[0]['RESULTKEY']  });
+            this.GetCrewList();
           }
           else if (data[0]['RESULTKEY'] === 'Duplicate Record') {
             this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail:data[0]['RESULTKEY']  });
@@ -301,10 +307,12 @@ activateDeleteCrew(CrewID, Crew,IsDeleted, ActiveInactiveFlag) {
             this.msgs.push({severity: 'error', summary: this.globalResource.applicationmsg, detail: this.globalResource.serverError });
           } else if (data === 'Duplicate') {
             this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: this.CrewResources.CrewAlreadyExists });
+            this.GetCrewList();
           } else if (data === 'InUse') {
             this.msgs = [];
             this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg,
             detail: 'Can`t delete. Record is in use.'});
+            this.GetCrewList();
           } else {
             this.msgs.push({severity: 'warn', summary: this.globalResource.applicationmsg, detail: data });
           }
