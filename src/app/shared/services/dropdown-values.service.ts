@@ -44,6 +44,37 @@ export class DropdownValuesService {
     //   return data;
     //  })
   }
+  GetAllosListByClient(){
+    const url = 'api/Grower/GetOtherSourceList';
+    let params = new HttpParams();
+    params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+    return this.http
+    .get(url, {params: params})
+
+    .map(data => {
+
+      console.log('GetAlLosListByClient Service success');
+      // console.log(data);
+      return data;
+    });
+  }
+  getAllDetails(){
+    const url = 'api/Grower/GetStrainDetailsLD';
+    let params = new HttpParams();
+    params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+  
+    return this.http
+    .get(url, {params: params})
+  
+    .map(data => {
+  
+      console.log('GetAllDetails Service success');
+      // console.log(data);
+      return data;
+    });
+
+  }
 
   getAllTask() {
     const url = 'api/TaskType/GetTaskTypeByClient';
@@ -72,6 +103,24 @@ getEmployeeListByClient() {
     return data;
   });
 }
+
+GetAllRetailerListByClient(){
+  const url = 'api/Retailer/GetRetailerListByClient';
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+  return this.http
+  .get(url, {params: params})
+
+  .map(data => {
+
+    console.log('GetAllRetailerListByClient Service success');
+    // console.log(data);
+    return data;
+  });
+
+}
+
 
 getEmployeeListByTaskTypeKey(TaskTypeKey: any) {
   const url = 'api/Employee/GetEmployeeListByTaskTypeKey';
@@ -119,6 +168,86 @@ getBrands() {
     return data;
    });
 }
+getFields() {
+  const url = 'api/Grower/GetFieldsList';
+
+      let params = new HttpParams();
+      params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+    return this.http
+    .get(url, {params: params})
+
+   .map(data => {
+    // console.log('Brands Service success');
+    return data;
+   });
+}
+getBins(TaskId) {
+  const url = 'api/Grower/GetBinsByTaskId';
+
+      let params = new HttpParams();
+      params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+      params = params.append('TaskId', TaskId);
+    return this.http
+    .get(url, {params: params})
+
+   .map(data => {
+    // console.log('Brands Service success');
+    return data;
+   });
+}
+
+getBinsAtReview(){
+  const url='api/Grower/GetBinLabelsList';
+    let params = new HttpParams();
+    params=params.append('ClientId',String(this.appCommonService.getUserProfile().ClientId));
+    return this.http.get(url,{params: params}).map(data=>data);
+}
+getFieldsSectionsInGrowers(TaskTypeId) {
+  const url = 'api/Grower/GetFieldsSectionList';
+
+      let params = new HttpParams();
+      params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+      params = params.append('TaskTypeId', TaskTypeId);
+    return this.http
+    .get(url, {params: params})
+
+   .map(data => {
+    // console.log('Brands Service success');
+    return data;
+   });
+}
+
+getEmpAlreadyWorkingOnATask(sectionId,taskid,batchId,OrderId){
+  const url = 'api/Grower/GetEmpListBySectionId';
+
+  let params = new HttpParams();
+  params = params.append('SectionId', sectionId);
+  params = params.append('TaskTypeId', taskid);
+  params = params.append('BatchId', batchId);
+  params = params.append('OrderId', OrderId);
+return this.http
+.get(url, {params: params})
+
+.map(data => {
+// console.log('Brands Service success');
+return data;
+});
+}
+getTaskType() {
+  const url = 'api/Grower/GetFieldsList';
+
+      let params = new HttpParams();
+      params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+    return this.http
+    .get(url, {params: params})
+
+   .map(data => {
+    // console.log('Brands Service success');
+    return data;
+   });
+}
 
   getStrains() {
     const url = 'api/Strain/GetStrainList';
@@ -134,6 +263,19 @@ getBrands() {
      });
   }
 
+  getStrainsByTaskType(TaskTypeId) {
+    const url = 'api/Grower/GetBinsDataByTaskType';
+
+      let params = new HttpParams();
+      params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+      params = params.append('TaskTypeId', TaskTypeId);
+      return this.http
+      .get(url, {params: params})
+     .map(data => {
+      // console.log('Strains Service success');
+      return data;
+     });
+  }
   getStrainsForLotEdit(StrainId) {
     const url = 'api/Strain/GetStrainListForLotEdit';
 
@@ -200,7 +342,18 @@ getStrainType() {
     return data;
    });
 }
+getChemicalTypes(){
+  const url = 'api/Grower/GetChemicalType';
 
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+  return this.http
+  .get(url, {params: params})
+ .map(data => {
+  // // console.log('Strains Service success');
+  return data;
+ });
+}
 
 getPackageTypeList() {
   const url = 'api/PackagingTypes/GetPackagingTypesList';
@@ -239,7 +392,15 @@ getCountryList() {
   return data;
  });
 }
-
+getUOM(){
+  const url = 'api/Grower/GetUnitofMeasures';
+  return this.http
+    .get(url)
+   .map(data => {
+    // console.log('Strains Service success');
+    return data;
+   });
+}
 getStatesList() {
   const url = 'api/State/GetStateList';
 
@@ -289,10 +450,10 @@ getRoleList() {
 }
 getNewTaskType() {
   const url = 'api/TaskType/GetTaskCategory';
-
-   
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
     return this.http
-    .get(url)
+    .get(url, {params: params})
    .map(data => {
     // // console.log('Strains Service success');
     return data;
@@ -300,6 +461,51 @@ getNewTaskType() {
 }
 getManagerList() {
   const url = 'api/Employee/GetManagerList';
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+  return this.http
+  .get(url, {params: params})
+ .map(data => {
+  // console.log('GetRoleList Service success');
+  return data;
+ });
+}
+
+getAllEmpList(){
+  const url = 'api/employee/GetEmployeeLisForSubCrews';
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+
+  return this.http
+  .get(url, {params: params})
+
+  .map(data => {
+
+  console.log('GetAllSWubCrewListByClient Service success');
+// console.log(data);
+  return data;
+});
+
+}
+
+getAllEmployeeList() {
+  const url = 'api/Employee/GetEmployeeList';
+
+  let params = new HttpParams();
+  params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
+  return this.http
+
+  .get(url , { params: params})
+  // return this.http
+  // .get(url)
+  .map(data => {
+    console.log('GetEmployeeList Service success');
+    // console.log(data);
+    return data;
+  });
+}
+GetFLClist() {
+  const url = 'api/Grower/GetFLCList';
   let params = new HttpParams();
   params = params.append('ClientId', String(this.appCommonService.getUserProfile().ClientId));
   return this.http

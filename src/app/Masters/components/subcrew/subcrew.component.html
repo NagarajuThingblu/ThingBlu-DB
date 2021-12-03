@@ -1,0 +1,246 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel header={{pageheading}} [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+        <form [formGroup]="SubCrewForm" (ngSubmit)="onSubmit(SubCrewForm.value)">
+          <div class="ui-g">
+            <!--Crew -->
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="crew" class="towlable">{{ globalResource.Crew}}<span class="star">*</span></label>:
+                <p-dropdown
+                [filter] ="true"
+                id="crew"
+                formControlName="crew"
+                (onChange)="popupManager($event)"
+                [options]="Crewlist"
+                placeholder="-- Select --"
+                autocomplete="off"
+                [autoWidth]="false"
+                class="clsControl"
+                name="crew">
+                </p-dropdown>
+              </div>
+            </div>
+            <!--End Crew -->
+
+             <!--Primary Supervisor -->
+             <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="primarySupervisor" class="towlable">{{ globalResource.PrimarySupervisor}}<span class="star">*</span></label>:
+                <p-dropdown
+                [filter] ="true"
+                id="primarySupervisor"
+                formControlName="primarySupervisor"
+                [options]="Managerlist"
+                placeholder="-- Select --"
+                autocomplete="off"
+                [autoWidth]="false"
+                class="clsControl"
+                name="primarySupervisor">
+                </p-dropdown>
+              </div>
+            </div>
+            <!--End Primary Supervisor -->
+          </div>
+
+          <div formArrayName="items" style="position: relative">
+            <div style="width:calc(100% - 20px);float:left;">
+              <p-table  [value]="subcrewDetailsArr?.controls" id="subcrewDetails" name="subcrewDetails">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Sub Crew</th>
+                    <th>Employees
+                      <span class="star">*</span>
+                    </th>
+                    <th>Sub Supervisor</th>
+                    <th style="width: 80px;">Is Active</th>
+                    <th style="width: 60px;">Action</th>  
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item let-i="rowIndex" >
+                  <tr [formGroupName]="i">
+                    <td>
+                      <input pInputText
+                        name="subcrew"
+                        id="subcrew"
+                        type="text"
+                        autocomplete="off"
+                        class="clsControl" 
+                        formControlName="subcrew"
+                        placeholder="Enter Sub Crew Name "
+                      >
+                    </td>
+                    <td>
+                      <p-multiSelect
+                      *ngIf="bindEmpNmaes"
+                      id="emp"
+                      formControlName="emp"
+                      [options]="Emplist"
+                      [(ngModel)]="selectedEmps"
+                      placeholder="-- Select --"
+                      class="clsControl"
+                      name="emp">
+                    </p-multiSelect>
+                    <p-multiSelect
+                    *ngIf="!bindEmpNmaes"
+                    id="emp"
+                    formControlName="emp"
+                    [options]="Emplist"
+                    placeholder="-- Select --"
+                    class="clsControl"
+                    name="emp">
+                  </p-multiSelect>
+                  </td>
+                  <td>
+                    <p-dropdown
+                    id="monitor"
+                    formControlName="monitor"
+                    [options]="Managerlist"
+                    placeholder="-- Select --"
+                    class="clsControl"
+                    name="monitor">
+                    </p-dropdown>
+                  </td>
+                  <td>
+                    <p-checkbox value="true"
+                     formControlName="chkSelectAll" checked="true"
+                    binary="true"></p-checkbox>                                      
+                  </td>
+                  <td>
+                    <a (click)="deleteItem(i)" >                                                    
+                        <span style="font-size: 1.4rem;" class="fa fa-minus-circle">
+                        </span>
+                    </a> 
+                      <a (click)="addItem()" *ngIf="SubCrewForm.get('items').valid&&plusOnEdit === true">
+                          <span class="fa fa-plus-circle" style="font-size: 1.4rem;">
+                          </span>
+                      </a>
+                  </td>
+                <div class="ui-message ui-messages-error  ui-corner-all" appErrorTooltip *ngIf="item.hasError('prototypenotpresent')">
+                  This sub crew already exists.
+                </div>  
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+            <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip *ngIf="subcrewDetailsArr.hasError('duplicate')">
+              duplicate entries
+            </div> 
+            <div class="ui-g" style="width:100%;text-align:right;">
+              <div class="ui-g-12">
+                <button pButton type="submit" label="{{saveButtonText}}" ></button>
+                <button 
+                    pButton 
+                    (click)="resetForm()" 
+                    type="button" 
+                    label="Cancel" 
+                    class="ui-button-secondary">
+                </button>
+              </div>
+            </div> 
+          </div>
+        </form>
+      </p-panel>
+    </div>
+  </div>
+</div>
+<div class="ui-g">
+  <div class="ui-g-12">
+    <p-panel header="Sub Crew List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+      <p-table #dtsubcrewList   [value]="allSubCrewlist"  sortMode="single" [responsive]="true" [paginator]="true"
+      [rows]="10" sortField="subcrewId" sortOrder="-1" [rowsPerPageOptions]="paginationValues"
+      (onPage)="onPageChange($event)"
+      [globalFilterFields]="['CrewName','LeadSupervisor','SubCrewName','Employees','SubSupervisor']">
+        <ng-template pTemplate="caption">
+          <div style="text-align: right">
+            <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+            <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" 
+            (input)="dtsubcrewList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th [pSortableColumn]="'CrewName'">Crew Name  <p-sortIcon [field]="'CrewName'"></p-sortIcon></th>   
+            <th [pSortableColumn]="'LeadSupervisor'">Primary Supervisor  <p-sortIcon [field]="'LeadSupervisor'"></p-sortIcon></th>
+            <th [pSortableColumn]="'SubCrewName'">Sub Crew  <p-sortIcon [field]="'SubCrewName'"></p-sortIcon></th>
+            <th [pSortableColumn]="'Employees'">Employees<p-sortIcon [field]="'Employees'"></p-sortIcon></th>
+            <th [pSortableColumn]="'SubSupervisor'">Sub Supervisor <p-sortIcon [field]="'SubSupervisor'"></p-sortIcon></th>  
+            <th style="width:100px;">Action</th> 
+          </tr>
+          <tr>
+            <th>
+              <input pInputText type="text" autocomplete="off" (input)="dtsubcrewList.filter($event.target.value, 'CrewName', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off" (input)="dtsubcrewList.filter($event.target.value, 'LeadSupervisor', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off" (input)="dtsubcrewList.filter($event.target.value, 'SubCrewName', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off" (input)="dtsubcrewList.filter($event.target.value, 'Employees', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off" (input)="dtsubcrewList.filter($event.target.value, 'SubSupervisor', 'contains')" class="clsControl">
+          </th>  
+         <th rowspan="2"></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-SubCrew let-rowData let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+            <td><span class="ui-column-title">Crew Name</span>{{SubCrew?.CrewName }}</td>
+            <td><span class="ui-column-title">Primary Supervisor</span>{{SubCrew?.LeadSupervisor }}</td>
+            <td><span class="ui-column-title">Sub Crew</span>{{SubCrew?.SubCrewName }}</td>
+            <td style="text-align: center;"><span><a class="btn-link" (click)="openEmployeesPopUp(SubCrew?.SubCrewID)"  >{{SubCrew?.EmpCount}}<i style="font-size: 16px;margin-left: 5px;" class="fa fa-info-circle" aria-hidden="true"></i></a></span></td>
+            <td><span class="ui-column-title">Sub Supervisor</span>{{SubCrew?.SubSupervisor }}</td>   
+            <td style="width:65px;" (click)="$event.stopPropagation();"> 
+              <span class="ui-column-title">Action</span>
+              <a href="#" [routerLink]="" (click)="GetSubCrewOnEdit(SubCrew?.SubCrewID)" >                             
+                <span class="fa fa-edit"></span>
+              </a>
+              <a href="#" [routerLink]="" 
+                (click)="ShowConformationMessaegForDelete(SubCrew?.SubCrewID,SubCrew,1,0)" >
+                <span class="fa fa-trash"></span>
+              </a>
+              <div class="clsToggleButtonDiv">
+                <p-toggleButton 
+                  [(ngModel)]="SubCrew.IsActive" 
+                  onLabel="Active" offLabel="InActive"  
+                  [style]="{'width':'90px'}"
+                  id
+                  (onChange)="showConformationMessaegForDeactive(SubCrew?.SubCrewID,SubCrew,
+                    rowIndex,0,1)">                    
+                </p-toggleButton>
+              </div>
+            </td>   
+          </tr>
+        </ng-template>
+    </p-table>
+    </p-panel>
+  </div>
+</div>
+
+<p-dialog header="Employees Details" [(visible)]="openEmpPopUp" modal="modal" [resizable]="true" [responsive]="true" [width]="550" [minWidth]="200" >
+  <div class="ui-g-12 ui-md-12">
+    <label for="subcrewname" class="towlable"><b>Sub Crew Name:-</b>{{subcrewName}}</label>
+    </div>
+  <p-table [value]="EmployeesOnPopUP">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="text-align: center;">Employee Name</th>
+        <!-- <th>Skill</th> -->
+    </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-taskstatus>
+      <tr>
+        <td style="text-align: center;">{{taskstatus.EmpName}}</td>
+        <!-- <td>{{taskstatus.SkillName}}</td> -->
+    </tr>
+    </ng-template>
+  </p-table>
+</p-dialog>
+
+<p-growl [(value)]="msgs" life='5000'></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425" *ngIf="true" class="clsConfirmBox">
+</p-confirmDialog>

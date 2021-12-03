@@ -6,6 +6,7 @@ import { GlobalResources } from '../../../global resource/global.resource';
 import { NewEmployeeService } from '../../services/new-employee.service';
 import { ConfirmationService } from 'primeng/api';
 import { AppCommonService } from '../../../shared/services/app-common.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-employee-listing',
@@ -15,6 +16,8 @@ import { AppCommonService } from '../../../shared/services/app-common.service';
 export class EmployeeListingComponent implements OnInit {
   public event: any;
   userType: any;
+  public openSkillPopUp: boolean = false
+  public EmpName:any
   public newemployee: any = {
     IsActive: true
   };
@@ -27,10 +30,12 @@ export class EmployeeListingComponent implements OnInit {
   //   showLotNoteModal: false
   // };
   @Input() PaginationValues: any;
+  @Input() allSkillsList:any
   @Input() allEmployeeList: any;
   @Output() EmployeeEditEvent = new EventEmitter();
   @Output() EmployeeDeleteEvent = new EventEmitter();
   @Output() EmployeeDeactivateEvent = new EventEmitter();
+  public skillOnPopUP:any[]
   constructor(
     private appComponentData: AppComponent,
     private confirmationService: ConfirmationService,
@@ -106,5 +111,19 @@ export class EmployeeListingComponent implements OnInit {
         newemployee.IsActive = !newemployee.IsActive;
       }
   });
+  }
+
+
+  openSkillsPopUp(empid){
+    this.skillOnPopUP = []
+    this.openSkillPopUp = true;
+    
+      for(let i of this.allSkillsList){
+        if(empid === i.EmpId){
+         this.EmpName = i.EmpName
+          this.skillOnPopUP.push({TaskTypeId:i.TaskTypeId, TaskTypeValue:i.TaskTypeValue, SkillId:i.SkillId, SkillName:i.SkillName})
+        }
+      }
+    
   }
 }

@@ -141,7 +141,7 @@
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                       *ngIf="!addEmpForm.controls['emailId'].valid&&addEmpForm.controls['emailId'].dirty">
                       <span *ngIf="addEmpForm.controls['emailId'].errors['required']">
-                        {{EmailIdlbName}} Id required.
+                        {{EmailIdlbName}}  required.
                       </span>
                       <span *ngIf="addEmpForm.controls['emailId'].errors['pattern']">
                         Email is invalid
@@ -190,7 +190,7 @@
                   <div class="le-su-12">
                     <label for="strain" class="towlable fwLabelBold">Hire Date </label>
 
-                    <p-calendar [showIcon]="true"
+                    <p-calendar 
                      [defaultDate]="defaultDate"
                       [tabindex]="9"
                        showButtonBar="true"
@@ -271,6 +271,7 @@
                     <p-dropdown [filter]="true" id="managerlist" [options]="Managerlist" placeholder="-- Select --"
                       [autoWidth]="false" [tabindex]="10" class="clsControl" name="managerlist" formControlName="Managerlist">
                     </p-dropdown>
+                  
 
                     <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
                       *ngIf="!addEmpForm.controls['Managerlist'].valid&&addEmpForm.controls['Managerlist'].dirty">
@@ -281,7 +282,27 @@
                   </div>
                 </div>
               </div>
+              <div class="ui-g-12 ui-md-4" *ngIf="this.constantusrRole.Temp==this.selectedRole">
+                <div class="paddingRL">
+                  <div class="le-su-12">
+                    <label for="strain" class="towlable fwLabelBold">FLC List<span class="star"> *</span></label>
+                    <p-dropdown [filter]="true" id="flclist" [options]="flclist" placeholder="-- Select --"
+                      [autoWidth]="false" [tabindex]="10" class="clsControl" name="flclist" formControlName="flclist">
+                    </p-dropdown>
+                  
+
+                    <div class="ui-message ui-messages-error ui-corner-all" appErrorTooltip
+                      *ngIf="!addEmpForm.controls['flclist'].valid&&addEmpForm.controls['flclist'].dirty">
+                      <span *ngIf="addEmpForm.controls['flclist'].errors['required']">
+                        Select FLC.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+            
+          
             <div class="ui-g-12 ui-md-12 ui-g-nopad">
               <div class="ui-g-12 ui-md-4">
                 <div class="paddingRL">

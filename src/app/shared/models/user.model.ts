@@ -11,6 +11,7 @@ export class UserModel {
     AutoLogoutValue: number;
     IdleLogoutValue: number;
     UTCTime: number;
+    TaskCategory: string;
     // Added by DEVDAN :: Added variables to get the value from server side
     EncryptDecryptKey: string;
     RefreshInterval: string;

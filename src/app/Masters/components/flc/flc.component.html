@@ -1,0 +1,305 @@
+<div class="content-section implementation GridDemo orderRequest">
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-panel [header]="pageheading"  [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+        <form [formGroup]="flcForm" (ngSubmit)="onSubmit(flcForm.value)">
+          <div class="ui-g">
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                  <label for="flc">FLC Name<span class="star">*</span></label>:
+
+                  <input pInputText
+                        name="flc"
+                        id="flc"
+                        autocomplete="new-password"
+                        type="text"
+                        class="clsControl"
+                        formControlName="flc"
+                        placeholder="Enter FLC Name"
+                  />
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="primaryemail">Primary Email</label>:
+
+                <input pInputText
+                name="primaryemail"
+                autocomplete="new-password"
+                id="primaryemail"
+                type="text"
+                class="clsControl"
+                formControlName="primaryEmail"                                      
+                pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+                placeholder="Enter Primary Email ID"
+                #pemail
+                />
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="secondaryemail">Secondary Email</label>:
+                <input pInputText
+                name="secondaryemail"
+                id="secondaryemail"
+                type="text"
+                autocomplete="new-password"
+                class="clsControl"
+                formControlName="secondaryEmail"
+                pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+                placeholder="Enter Secondary Email ID"
+                #semail
+              />
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="cellphone">Phone Number</label>:
+
+                <input pInputText
+                name="cellphone"
+                id="cellphone"
+                autocomplete="new-password"
+                type="text"
+                class="clsControl"
+                formControlName="cellPhone"
+                placeholder="Enter Phone Number"
+              />
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="country" class="towlable">Country<span class="star">*</span></label>:
+
+                <p-dropdown
+                [filter] ="true"
+                id="country"
+                formControlName="country"
+                [options]="Countries"
+                (onChange)="CountryChange()"
+                placeholder="-- Select --"
+                autocomplete="off"
+                [autoWidth]="false"
+                class="clsControl"
+                name="country">                                    
+                </p-dropdown>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="state" class="towlable">State<span class="star">*</span></label>:
+                <p-dropdown
+                         [filter] ="true"
+                        id="state"
+                        formControlName="state"
+                        (onChange)="StateChange()"
+                        autocomplete="off"
+                        [options]="States"
+                        placeholder="-- Select --"
+                        [autoWidth]="false"
+                        class="clsControl"
+                        name="state">
+                  </p-dropdown>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="city" class="towlable">City<span class="star">*</span></label>:
+                <p-dropdown
+                [filter] ="true"
+                id="city"
+                formControlName="city"
+                autocomplete="off"
+                [options]="Cities"
+                placeholder="-- Select --"
+                [autoWidth]="false"
+                class="clsControl"
+                name="city">
+                </p-dropdown>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="address">Address<span class="star">*</span></label>:
+
+                <textarea 
+                pInputTextarea           
+                name="address"
+                id="address"
+                type="text"
+                autocomplete="new-password"
+                class="clsControl"
+                formControlName="address"
+                placeholder="Enter Address"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="zipcode">Zip Code<span class="star">*</span></label>:
+                <input pInputText
+                       name="zipcode"
+                       autocomplete="new-password"
+                       id="zipcode"
+                       type="text"
+                       class="clsControl"
+                       formControlName="zipCode"
+                       placeholder="Enter Zip Code"
+                />
+              </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+              <div class="paddingRL">
+                <label for="description">Description</label>:
+                <textarea 
+                pInputTextarea           
+                formControlName="description"
+                placeholder="Add Description..."
+                autocomplete="off"
+                maxLength="500"
+                name="description"
+                class="clsControl"
+              ></textarea>
+              </div>
+            </div>
+
+               <!-- IsActive -->
+               <div class="ui-g-12 ui-md-12">
+                <div class="paddingRL">
+                  <p-checkbox value="true" 
+                  [(ngModel)]="IsActive" 
+                  label="{{globalResource.IsActiveFlag}}" 
+                  formControlName="chkIsActive" 
+                  binary="true"></p-checkbox>
+                </div>
+              </div>
+
+                <!--End IsActive -->
+                <div class="ui-g-12 ui-md-12" style="text-align:right;">
+                  <div class="paddingRL">
+                    <p-button  type="submit" id="btnetailerSave" 
+                    label="{{ SaveButtonText}}"  name="btnRetailerSave" ></p-button>
+                    <button pButton (click)="ResetForm()" type="button" label="{{ Clear }}"
+                      class="ui-button-secondary"></button>
+                </div>
+              </div>
+          </div>
+        </form>
+
+        <p-panel header="FLC List" [toggleable]="true" [style]="{'margin-bottom':'20px'}" >
+          <p-table #dtFLCList [value]="allcontractorList" 
+          sortMode="single"                      
+          [responsive]="true" 
+          [paginator]="true" 
+          [rows]="10"          
+          sortOrder="-1"
+          [globalFilterFields]="['FLCName','CellPhone','Description','Email','StateName','CityName','ZipCode']"
+          selectionMode="single"
+          (onPage)="onPageChange($event)"
+          [rowsPerPageOptions]="PaginationValues"
+          dataKey="FLCID"
+          class="clsTableSelection"
+          >
+          <ng-template pTemplate="caption">
+            <div style="text-align: right">
+                <i class="fa fa-search" style="margin:4px 4px 0 0"></i>
+                <input type="text" autocomplete="off" pInputText size="50" placeholder="Global Filter" 
+                  (input)="dtFLCList.filterGlobal($event.target.value, 'contains')" style="width:auto;">
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th [pSortableColumn]="'FLCName'">FLC  <p-sortIcon [field]="'FLCName'"></p-sortIcon></th>   
+            <th [pSortableColumn]="'CellPhone'">Cell Phone <p-sortIcon [field]="'CellPhone'"></p-sortIcon></th>
+            <th [pSortableColumn]="'Description'">Description <p-sortIcon [field]="'Description'"></p-sortIcon></th>    
+            <th [pSortableColumn]="'Email'">Email <p-sortIcon [field]="'Email'"></p-sortIcon></th>              
+            <th [pSortableColumn]="'StateName'">State  <p-sortIcon [field]="'StateName'"></p-sortIcon></th>              
+            <th [pSortableColumn]="'CityName'">City <p-sortIcon [field]="'CityName'"></p-sortIcon></th>
+            <th [pSortableColumn]="'ZipCode'"> ZipCode<p-sortIcon [field]="'ZipCode'"></p-sortIcon></th>              
+            <th style="width:100px;">Action</th>
+          </tr>
+          <tr>
+            <th>
+              <input pInputText type="text" autocomplete="off" (input)="dtFLCList.filter($event.target.value, 'FLCName', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off"  (input)="dtFLCList.filter($event.target.value, 'CellPhone', 'contains')" class="clsControl">
+          </th> 
+          <th>
+            <input pInputText type="text" autocomplete="off" (input)="dtFLCList.filter($event.target.value, 'Description', 'contains')" class="clsControl">
+        </th>
+        <th>
+            <input pInputText type="text" autocomplete="off" (input)="dtFLCList.filter($event.target.value, 'Email', 'contains')" class="clsControl">
+        </th>                
+            <th>
+                <input pInputText type="text" autocomplete="off" (input)="dtFLCList.filter($event.target.value, 'StateName', 'contains')" class="clsControl">
+            </th>
+            <th>
+              <input pInputText type="text" autocomplete="off" (input)="dtFLCList.filter($event.target.value, 'CityName', 'contains')" class="clsControl">
+          </th>
+          <th >
+            <input pInputText type="text" autocomplete="off" (input)="dtFLCList.filter($event.target.value, 'ZipCode', 'contains')" class="clsControl">
+        </th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-flc let-rowData let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+            <td><span class="ui-column-title">FLC</span>{{flc?.FLCName }}</td>
+            <td><span class="ui-column-title">Cell Phone </span>{{flc?.PhoneNo }}</td>   
+            <td><span class="ui-column-title">Description</span>{{flc?.Description }}</td>   
+            <td><span class="ui-column-title">Email</span>{{flc?.PrimaryEmail }}  </td>                  
+            <td><span class="ui-column-title">State</span>{{flc?.StateName }}  </td>
+            <td><span class="ui-column-title">City</span>{{flc?.CityName }}</td>
+            <td><span class="ui-column-title">ZipCode</span>{{flc?.ZipCode }}</td>
+            <td style="width:65px;" (click)="$event.stopPropagation();"> 
+              <span class="ui-column-title">Action</span>
+              <a href="#" [routerLink]="" (click)="GetFlcOnEdit(flc?.FLCId)" >                             
+                <span class="fa fa-edit"></span>
+              </a>
+              <a href="#" [routerLink]="" 
+                (click)="ShowConformationMessaegForDelete(flc?.FLCId,flc,1,0)" >
+                <span class="fa fa-trash"></span>
+              </a>
+              <div class="clsToggleButtonDiv">
+                <p-toggleButton 
+                  [(ngModel)]="flc.IsActive" 
+                  onLabel="Active" offLabel="InActive"  
+                  [style]="{'width':'90px'}"
+                  id
+                  (onChange)="ShowConformationMessaegForDeactive(flc?.FLCId,flc,
+                    rowIndex,0,1)">                    
+                </p-toggleButton>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft" let-state>
+          <pagination-counts
+            *ngIf="allcontractorList?.length"
+            [inputData]="allcontractorList"
+            [inputEvent]="event"
+          ></pagination-counts>
+        </ng-template>
+        </p-table>
+        </p-panel>
+      </p-panel>
+    </div>
+  </div>
+  <p-growl [(value)]="msgs" life='5000'></p-growl>
+  <p-confirmDialog 
+  header="Confirmation" 
+  icon="fa fa-question-circle" 
+  width="425" 
+  *ngIf="true"
+  class="clsConfirmBox" >
+</p-confirmDialog> 
+</div>

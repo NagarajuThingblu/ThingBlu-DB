@@ -13,7 +13,7 @@
           sortOrder="-1"
           [rowsPerPageOptions]="PaginationValues"
           (onPage)="onPageChange($event)"
-          [globalFilterFields]="['FirstName','LastName','Gender','DOB','Role','CityName','CellPhone']"
+          [globalFilterFields]="['FirstName','LastName','Username','Gender','Role','FLCName','OSName','CityName','CellPhone','Skills']"
           >                    
           <ng-template pTemplate="caption">
               <div style="text-align: right">
@@ -25,13 +25,17 @@
               <tr>
                   <!-- <th [pSortableColumn]="'ClientName'">{{ newEmployeeResources.clientname}} <p-sortIcon [field]="'ClientName'"></p-sortIcon></th> -->
                   <th [pSortableColumn]="'FirstName'">{{ newEmployeeResources.firstnameshort}} <p-sortIcon [field]="'FirstName'"></p-sortIcon></th>                  
-                  <th [pSortableColumn]="'LastName'">{{ newEmployeeResources.lastnameshort}} <p-sortIcon [field]="'LastName'"></p-sortIcon></th>              
+                  <th [pSortableColumn]="'LastName'">{{ newEmployeeResources.lastnameshort}} <p-sortIcon [field]="'LastName'"></p-sortIcon></th>    
+                  <th [pSortableColumn]="'Username'">UserName<p-sortIcon [field]="'Username'"></p-sortIcon></th>          
                   <th [pSortableColumn]="'Gender'">{{ newEmployeeResources.gender}} <p-sortIcon [field]="'Gender'"></p-sortIcon></th>  
-                  <th [pSortableColumn]="'DOB'">{{ newEmployeeResources.dob}} <p-sortIcon [field]="'DOB'"></p-sortIcon></th>
+                  <!-- <th [pSortableColumn]="'DOB'">{{ newEmployeeResources.dob}} <p-sortIcon [field]="'DOB'"></p-sortIcon></th> -->
                   <th [pSortableColumn]="'Role'">{{ newEmployeeResources.userrole}} <p-sortIcon [field]="'Role'"></p-sortIcon></th>
+                  <th [pSortableColumn]="'FLCName'">FLC Name <p-sortIcon [field]="'Role'"></p-sortIcon></th>
+                  <th [pSortableColumn]="'OSName'">Other Source Name <p-sortIcon [field]="'Role'"></p-sortIcon></th>
                   <th [pSortableColumn]="'CityName'">{{ newEmployeeResources.city}} <p-sortIcon [field]="'CityName'"></p-sortIcon></th>           
                   <th [pSortableColumn]="'CellPhone'">{{ newEmployeeResources.cellphone}} <p-sortIcon [field]="'CellPhone'"></p-sortIcon></th>
                   <!-- <th [pSortableColumn]="'PrimaryEmail'">{{ newEmployeeResources.primaryemail}} <p-sortIcon [field]="'PrimaryEmail'"></p-sortIcon></th> -->
+                  <th>Skills</th>
                   <th style="width:100px;"> </th>
               </tr>
     
@@ -46,14 +50,23 @@
                     <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'LastName', 'contains')" class="clsControl">
                   </th>
                   <th>
+                    <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'Username', 'contains')" class="clsControl">
+                  </th>
+                  <th>
                       <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'Gender', 'contains')" class="clsControl">
                   </th>                 
-                  <th>
+                  <!-- <th>
                       <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'DOB', 'contains')" class="clsControl">
-                  </th>
+                  </th> -->
                   <th>
                     <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'Role', 'contains')" class="clsControl">
                 </th>
+                <th>
+                  <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'FLCName', 'contains')" class="clsControl">
+              </th>
+              <th>
+                <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'OSName', 'contains')" class="clsControl">
+            </th>
                 <th>
                   <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'CityName', 'contains')" class="clsControl">
                 </th>
@@ -63,21 +76,26 @@
                 <!-- <th>
                   <input pInputText autocomplete="off" type="text" (input)="dtEmployeeListing.filter($event.target.value, 'PrimaryEmail', 'contains')" class="clsControl">
                 </th> -->
+                <th></th>
                 <th rowspan="2"></th>  
           </ng-template>
           <ng-template pTemplate="body" let-newemployee let-rowData let-columns="columns" let-rowIndex="rowIndex">
               <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
                   <!-- <td>{{newemployee?.ClientName}}</td> -->
-                  <td>{{newemployee?.FirstName}}</td>
-                  <td>{{newemployee?.LastName }}</td>
-                  <td>{{newemployee?.GenderName }}</td>                  
-                  <td>{{newemployee?.DOB | date: 'MM/dd/yyyy' }}</td>
-                  <td>{{newemployee?.Role}}</td>
-                  <td>{{newemployee?.CityName}}</td>
-                  <td>{{newemployee?.CellPhone}}</td>
+                  <td><span class="ui-column-title">{{ newEmployeeResources.firstnameshort}}</span>{{newemployee?.FirstName}}</td>
+                  <td><span class="ui-column-title">{{ newEmployeeResources.lastnameshort}}</span>{{newemployee?.LastName }}</td>
+                  <td><span class="ui-column-title">UserName</span>{{newemployee?.Username }}</td>
+                  <td><span class="ui-column-title">{{ newEmployeeResources.gender}}</span>{{newemployee?.GenderName }}</td>                  
+                  <!-- <td>{{newemployee?.DOB | date: 'MM/dd/yyyy' }}</td> -->
+                  <td><span class="ui-column-title">{{ newEmployeeResources.userrole}} </span>{{newemployee?.Role}}</td>
+                  <td><span class="ui-column-title">FLC Name</span>{{newemployee?.FLCName}}</td>
+                  <td><span class="ui-column-title">Other Source Name</span>{{newemployee?.OSName}}</td>
+                  <td><span class="ui-column-title">{{ newEmployeeResources.city}}</span>{{newemployee?.CityName}}</td>
+                  <td><span class="ui-column-title">{{ newEmployeeResources.cellphone}}</span>{{newemployee?.CellPhone}}</td>
+                  <td style="text-align: center;"><span><a class="btn-link" (click)="openSkillsPopUp(newemployee?.EmpId)"  ><i style="font-size: 16px" class="fa fa-info-circle" aria-hidden="true"></i></a></span></td>
                   <!-- <td>{{newemployee?.PrimaryEmail}}</td>    -->
                   <td style="width:65px;"> 
-                      <span class="ui-column-title">{{ newEmployeeResources.edit }}</span>
+                      <span class="ui-column-title">Action</span>
                       <a href="#" [routerLink]="" (click)="editEmployee(newemployee?.EmpId)" >                             
                           <span class="fa fa-edit"></span>
                       </a>
@@ -121,6 +139,26 @@
     </div>
   </div>
 </div>
+
+<p-dialog header="Skill Details" [(visible)]="openSkillPopUp" modal="modal" [resizable]="true" [responsive]="true" [width]="750" [minWidth]="200" >
+  <div class="ui-g-12 ui-md-6">
+    <label for="skill" class="towlable"><b>Employee Name:-</b>{{EmpName}}</label>
+    </div>
+  <p-table [value]="skillOnPopUP">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Task Name</th>
+        <th>Skill</th>
+    </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-taskstatus>
+      <tr>
+        <td>{{taskstatus.TaskTypeValue}}</td>
+        <td>{{taskstatus.SkillName}}</td>
+    </tr>
+    </ng-template>
+  </p-table>
+</p-dialog>
 <p-confirmDialog 
     class="clsConfirmBox" 
     header="Confirmation" 
