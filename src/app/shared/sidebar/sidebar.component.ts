@@ -22,7 +22,7 @@ import { AppCommonService } from '../services/app-common.service';
       })),
       state('active', style({
         overflow: 'hidden',
-        height: '*'
+        height: '*',
       })),
       transition('active <=> inactive', animate('400ms ease-in-out'))
     ])
@@ -42,6 +42,12 @@ export class SidebarComponent implements OnInit {
   public userModel: UserModel;
   public userRoles: any;
   public userRoleName: any;
+ public link;
+ public thirdLink;
+ public subLink;
+ public thirdLevelData
+ public recordActive;
+ public thirdSubLink;
 
   navigationSubState: any = {
     1: 'inactive',
@@ -76,16 +82,47 @@ export class SidebarComponent implements OnInit {
   }
 
   toggleNavigationSub(index: number, event: Event) {
+    this.subLink = null;
       event.preventDefault();
+      // this.plottedmenuItems[index].Hightlight = null
       this.plottedmenuItems[index].subState = (this.plottedmenuItems[index].subState === 'inactive' ? 'active' : 'inactive');
       this.plottedmenuItems[index].arrow = (this.plottedmenuItems[index].arrow === 'pull-right-container' ? 'pull-right-containerr' : 'pull-right-container');
+    //  this.xyz.hight = 'hightlight'
+    
+    this.link =  this.plottedmenuItems[index].routerLink 
 
+   
+    // this.plottedmenuItems[index].Hightlight = "Hightlight"
     //      this.navigationSubState[index] = (this.navigationSubState[index] === 'inactive' ? 'active' : 'inactive');
     //      this.arrow[index] = (this.arrow[index] === 'pull-right-container' ? 'pull-right-containerr' : 'pull-right-container');
     //      this.status = !this.status;
     //      subModuleee.active = !subModuleee.active;
     //      this.wasClicked= !this.wasClicked;
   }
+
+  navigatesubitems(index: number, i:number) {
+    this.link = null
+    this.subLink = this.plottedmenuItems[i].items[index].routerLink
+}
+navigatesubitems1(index: number, i:number){
+  this.link= null;
+  this.plottedmenuItems[i].items[index].subState = (this.plottedmenuItems[i].items[index].subState === 'inactive' ? 'active' : 'inactive');
+  this.plottedmenuItems[i].items[index].arrow = ( this.plottedmenuItems[i].items[index].arrow === 'pull-right-container' ? 'pull-right-containerr' : 'pull-right-container');
+  this.subLink = this.plottedmenuItems[i].items[index].routerLink
+}
+navigatesubitems2(j:number,index: number, i:number){
+  this.link= null;
+  this.plottedmenuItems[i].items[j].items[index].subState = (this.plottedmenuItems[i].items[j].items[index].subState=== 'inactive' ? 'active' : 'inactive');
+  this.plottedmenuItems[i].items[j].items[index].arrow = (this.plottedmenuItems[i].items[j].items[index].arrow === 'pull-right-container' ? 'pull-right-containerr' : 'pull-right-container');
+  this.subLink =this.plottedmenuItems[i].items[j].items[index].routerLink
+}
+navigatesubitems3(j:number,l:number,index: number, i:number){
+  this.link= null;
+  this.plottedmenuItems[i].items[j].items[l].items[index].subState = ( this.plottedmenuItems[i].items[j].items[l].items[index].subState=== 'inactive' ? 'active' : 'inactive');
+  this.plottedmenuItems[i].items[j].items[l].items[index].arrow = ( this.plottedmenuItems[i].items[j].items[l].items[index].arrow === 'pull-right-container' ? 'pull-right-containerr' : 'pull-right-container');
+  this.subLink = this.plottedmenuItems[i].items[j].items[l].items[index].routerLink
+}
+
 
   logOut() {
     this.cookieService.deleteAll();
@@ -176,14 +213,17 @@ export class SidebarComponent implements OnInit {
         Newmenu.name = element.Name;
         Newmenu.num = element.Num;
         Newmenu.items = [];
+        Newmenu.Level = element.Level;
         Newmenu.isParent = element.IsParent;
         Newmenu.parentId = element.ParentId;
         Newmenu.subState = element.SubState;
         Newmenu.arrow = element.SideArrow;
         Newmenu.IsDefault = element.IsDefaultPage;
+        Newmenu.Hightlight = null;
 
-        if (Newmenu.isParent === true) {
+        if (Newmenu.isParent === true &&  Newmenu.Level == 1) {
           this.plottedmenuItems.push(Newmenu);
+          // this.plottedmenuItems.push('Hightlight')
           if (unparentlist.length) {
             this.plottedmenuItems.forEach(unparent => {
               if (unparent.id === Newmenu.id) {
@@ -206,7 +246,82 @@ export class SidebarComponent implements OnInit {
               }
             });
           }
-        } else if (element.IsParent === false) {
+        } else if(Newmenu.isParent === true &&  Newmenu.Level == 2){
+          this.plottedmenuItems.forEach(x =>{
+            if(x.id === element.ParentId){
+              x.items.push(Newmenu)
+              if (unparentlist.length) {
+                this.plottedmenuItems.forEach(unparent => {
+                  unparent.items.forEach(a =>{
+                    if (a.id === Newmenu.id) {
+                      unparentlist.filter(r => r.parentId === Newmenu.id).forEach(unparentelement => {
+                        const unparentMenu: any = {};
+                        unparentMenu.id = unparentelement.id;
+                        unparentMenu.label = unparentelement.label;
+                        unparentMenu.icon = unparentelement.icon;
+                        unparentMenu.routerLink = unparentelement.routerLink;
+                        unparentMenu.name = unparentelement.name;
+                        unparentMenu.num = unparentelement.num;
+                        unparentMenu.items = [];
+                        unparentMenu.isParent = unparentelement.isParent;
+                        unparentMenu.parentId = unparentelement.parentId;
+                        unparentMenu.subState = unparentelement.subState;
+                        unparentMenu.arrow = unparentelement.sideArrow;
+                        unparentMenu.IsDefault = unparentelement.IsDefault;
+                        a.items.push(unparentMenu);
+                      });
+                    }
+                  })
+               
+                });
+              }
+            }
+            else{
+              unparentlist.push(Newmenu);
+            }
+          })
+        }
+         else if(Newmenu.isParent === true &&  Newmenu.Level == 3){
+          this.plottedmenuItems.forEach(x =>{
+           x.items.forEach(y =>{
+              if(y.id === element.ParentId){
+                y.items.push(Newmenu)
+                if (unparentlist.length) {
+                  this.plottedmenuItems.forEach(unparent => {
+                    unparent.items.forEach(a =>{
+                      a.items.forEach(b =>{
+                        if (b.id === Newmenu.id) {
+                          unparentlist.filter(r => r.parentId === Newmenu.id).forEach(unparentelement => {
+                            const unparentMenu: any = {};
+                            unparentMenu.id = unparentelement.id;
+                            unparentMenu.label = unparentelement.label;
+                            unparentMenu.icon = unparentelement.icon;
+                            unparentMenu.routerLink = unparentelement.routerLink;
+                            unparentMenu.name = unparentelement.name;
+                            unparentMenu.num = unparentelement.num;
+                            unparentMenu.items = [];
+                            unparentMenu.isParent = unparentelement.isParent;
+                            unparentMenu.parentId = unparentelement.parentId;
+                            unparentMenu.subState = unparentelement.subState;
+                            unparentMenu.arrow = unparentelement.sideArrow;
+                            unparentMenu.IsDefault = unparentelement.IsDefault;
+                            b.items.push(unparentMenu);
+                          });
+                        }
+                      })
+                   
+                    })
+                 
+                  });
+                }
+              }
+              else{
+                unparentlist.push(Newmenu);
+              }
+            })
+          })
+        }
+        else if (element.IsParent === false && element.Level == 2) {
           if (this.plottedmenuItems.length) {
             this.plottedmenuItems.forEach(parent => {
               if (parent.id === element.ParentId) {
@@ -219,9 +334,43 @@ export class SidebarComponent implements OnInit {
             unparentlist.push(Newmenu);
           }
         }
+        else if (element.IsParent === false && element.Level == 3) {
+          if (this.plottedmenuItems.length) {
+            this.plottedmenuItems.forEach(parent => {
+              parent.items.forEach(a =>{
+                if (a.id === element.ParentId) {
+                  a.items.push(Newmenu);
+                } else {
+                  unparentlist.push(Newmenu);
+                }
+              })
+            });
+          } else {
+            unparentlist.push(Newmenu);
+          }
+        }
+        else if (element.IsParent === false && element.Level == 4) {
+          if (this.plottedmenuItems.length) {
+            this.plottedmenuItems.forEach(parent => {
+              parent.items.forEach(a =>{
+                a.items.forEach(b =>{
+                  if (b.id === element.ParentId) {
+                    b.items.push(Newmenu);
+                  } else {
+                    unparentlist.push(Newmenu);
+                  }
+                })
+               
+              })
+            });
+          } else {
+            unparentlist.push(Newmenu);
+          }
+        }
       });
     }
     this.items = this.plottedmenuItems;
+    console.log(this.items)
   }
 
   PlotSidebarMenu() {
@@ -230,7 +379,7 @@ export class SidebarComponent implements OnInit {
         {
           label: 'New Lot Entry',
           icon: 'fa-cube',
-          'routerLink': 'lotentry',
+          'routerLink': 'lot/lotentry',
           name: 'newLot',
           newLot: 'inactive',
           num: 1
@@ -238,7 +387,7 @@ export class SidebarComponent implements OnInit {
         {
           label: 'Lot List',
           icon: 'fa-cube',
-          'routerLink': 'lotlisting',
+          'routerLink': 'lot/lotlisting',
           name: 'newList',
           newLot: 'inactive',
           num: 2
@@ -251,33 +400,33 @@ export class SidebarComponent implements OnInit {
             {
               label: 'Order Request',
               icon: 'fa-plus',
-              'routerLink': 'orderrequestform'
+              'routerLink': 'order/orderrequestform'
             },
             {
               label: 'All Orders',
               icon: 'fa-plus',
-              'routerLink': 'orderlisting'
+              'routerLink': 'order/orderlisting'
             },
           ]
         },
         {
           label: 'Assign Task',
           icon: 'fa-list-alt',
-          'routerLink': 'assigntask',
+          'routerLink': 'task/assigntask',
           num: 4,
           name: 'Task',
         },
         {
           label: 'Manager Dashboard',
           icon: 'fa-dashboard',
-          'routerLink': 'managerdashboard',
+          'routerLink': 'dashboard/managerdashboard',
           name: 'Dashboard',
           num: 5
         },
         {
           label: 'Joints Production Dashboard',
           icon: 'fa-dashboard',
-          'routerLink': 'jointsproductiondashboard',
+          'routerLink': 'dashboard/jointsproductiondashboard',
           name: 'Dashboard',
           num: 6
         },
@@ -298,19 +447,19 @@ export class SidebarComponent implements OnInit {
           icon: 'fa-list',
           num: 8,
           items: [
-            { label: 'Strain Type', routerLink: 'straintypemaster' },
-            { label: 'Genetics', routerLink: 'addnewsgenetics' },
-            { label: 'Strain', routerLink: 'strainmaster' },
+            { label: 'Strain Type', routerLink: 'master/straintypemaster' },
+            { label: 'Genetics', routerLink: 'master/addnewsgenetics' },
+            { label: 'Strain', routerLink: 'master/strainmaster' },
             { label: 'Brand', routerLink: 'addnewbrand' },
             { label: 'Sub Brand', routerLink: 'addnewsubbrand' },
-            { label: 'Package Type', routerLink: 'addnewpackagetype' },
-            { label: 'Product Type', routerLink: 'newproducttype' },
-            { label: 'Grower', routerLink: 'grower' },
+            { label: 'Package Type', routerLink: 'master/addnewpackagetype' },
+            { label: 'Product Type', routerLink: 'master/newproducttype' },
+            { label: 'Grower', routerLink: 'master/grower' },
             { label: 'TP Processor', routerLink: 'tpprocessor' },
             { label: 'TP Prcsr. Pkg. Type', routerLink: 'addtpppackagetype' },
-            { label: 'Retailer', routerLink: 'retailer' },
-            { label: 'Employee', routerLink: 'addemployee' },
-            { label: 'Task Setting', routerLink: 'tasksetting' },
+            { label: 'Retailer', routerLink: 'master/retailer' },
+            { label: 'Employee', routerLink: 'master/addemployee' },
+            { label: 'Task Setting', routerLink: 'master/tasksetting' },
           ]
         },
       ];
@@ -327,21 +476,21 @@ export class SidebarComponent implements OnInit {
         {
           label: 'Custom Task',
           icon: 'fa-list-alt',
-          'routerLink': 'assigntask',
+          'routerLink': 'task/assigntask',
           name: 'Task',
           Task: 'inactive'
         },
         {
           label: 'My Dashboard',
           icon: 'fa-dashboard',
-          'routerLink': 'empdashboard',
+          'routerLink': 'dashboard/empdashboard',
           name: 'Dashboard',
           num: 3
         },
         {
           label: 'Joints Production Dashboard',
           icon: 'fa-dashboard',
-          'routerLink': 'jointsproductiondashboard',
+          'routerLink': 'dashboard/jointsproductiondashboard',
           name: 'Dashboard',
           num: 4
         },

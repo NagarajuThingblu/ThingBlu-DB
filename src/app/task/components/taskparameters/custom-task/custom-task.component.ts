@@ -20,7 +20,7 @@ import { LoaderService } from '../../../../shared/services/loader.service';
 import { Title } from '@angular/platform-browser';
 import { RefreshService } from '../../../../dashboard/services/refresh.service';
 import { NewEmployeeActionService } from '../../../services/add-employee';
-// import { PTRService } from '../../../../Masters/services/ptr.service';
+import { PTRService } from '../../../../Masters/services/ptr.service';
 
 @Component({
   moduleId: module.id,

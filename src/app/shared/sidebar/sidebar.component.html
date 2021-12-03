@@ -19,24 +19,63 @@
                 </li>
                 <li *ngFor="let item of items  ; let i= index">
                     <div>
-                        <a (click)="toggleNavigationSub(i, $event)" *ngIf="item.items?.length > 0">
+                        <a (click)="toggleNavigationSub(i, $event)" *ngIf="item.items?.length > 0" >
                             <label class="fa {{item.icon}} material-icons"></label>
                             <span>{{ item?.label }}</span>
                             <span [ngClass]="plottedmenuItems[i]?.arrow"><i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
-                        <a (click)="toggleNavigationSub(i, $event)" routerLink="{{item.routerLink}}" *ngIf="item.items?.length <= 0">
+                        <a (click)="toggleNavigationSub(i, $event)" routerLink="{{item.routerLink}}" *ngIf="item.items?.length <= 0" [ngClass]="link === item.routerLink? 'Hightlight':''">
                             <label class="fa {{item.icon}} material-icons"></label>
-                            <span>{{ item?.label }}</span>
+                            <span >{{ item?.label }}</span>
                         </a>
                         <ul [@toggleHeight]="plottedmenuItems[i]?.subState">
-                            <li *ngFor="let subitem of item.items">
-                                <a href="javascript:void(0);" routerLink="{{subitem.routerLink}}">
+                            <li *ngFor="let subitem of item.items; let j= index">
+                                <a *ngIf="subitem.items?.length <= 0" (click)="navigatesubitems(j, i)" href="javascript:void(0);" routerLink="{{subitem.routerLink}}" [ngClass]="subLink === subitem.routerLink? 'Hightlight':''">
                                     <i class="fa fa-circle-o"></i>
                                     <span>{{ subitem?.label }}</span>
                                 </a>
                             </li>
                         </ul>
+                        <ul [@toggleHeight]="plottedmenuItems[i]?.subState">
+                            <li *ngFor="let subitem of item.items; let j= index">
+                                <a *ngIf="subitem.items?.length > 0" (click)="navigatesubitems1(j, i)" href="javascript:void(0);" [ngClass]="subLink === subitem.routerLink? 'Hightlight':''">
+                                    <label class="fa {{subitem.icon}} material-icons"></label>
+                                    <span>{{ subitem?.label }}</span>
+                                    <span [ngClass]="subitem?.arrow"><i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul [@toggleHeight]="plottedmenuItems[i].items[j]?.subState">
+                                   <li *ngFor="let subsubitem of item.items[j].items; let k= index">
+                                      <a *ngIf="subsubitem.items?.length <= 0" (click)="navigatesubitems2(j,k, i)" href="javascript:void(0);" routerLink="{{subsubitem.routerLink}}"[ngClass]="subLink === subsubitem.routerLink? 'Hightlight':''">
+                                        <i class="fa fa-circle-o"></i>
+                                        <span>{{ subsubitem?.label }}</span>
+                                      </a>
+                                   </li>
+                                </ul>
+                                <ul [@toggleHeight]="plottedmenuItems[i].items[j]?.subState">
+                                    <li *ngFor="let subsubitem of item.items[j].items; let k= index">
+                                       <a *ngIf="subsubitem.items?.length > 0" (click)="navigatesubitems2(j,k, i)" href="javascript:void(0);" [ngClass]="subLink === subsubitem.routerLink? 'Hightlight':''">
+                                         <span>{{ subsubitem?.label }}</span>
+                                         <span [ngClass]="subsubitem?.arrow"><i class="fa fa-angle-left pull-right"></i>
+                                         </span>
+                                        
+                                       </a>
+                                       <ul [@toggleHeight]="plottedmenuItems[i].items[j].items[k]?.subState">
+                                        <li *ngFor="let subsubsubitem of item.items[j].items[k].items; let m= index">
+                                           <a *ngIf="subsubsubitem.items?.length <= 0" (click)="navigatesubitems3(j,k,m, i)"routerLink="{{subsubsubitem.routerLink}}" href="javascript:void(0);" [ngClass]="subLink === subsubsubitem.routerLink? 'Hightlight':''">
+                                            <i class="fa fa-circle-o"></i>
+                                             <span>{{ subsubsubitem?.label }}</span>
+                                            
+                                           </a>
+                                        </li>
+                                       
+                                     </ul>
+                                    </li>
+                                 </ul>
+                            </li>
+                        </ul>
+                        
                     </div>
 
                     <!-- 
